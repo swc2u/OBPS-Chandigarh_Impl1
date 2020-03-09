@@ -1,0 +1,677 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="buildingpermit" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="576a1e58-ecb3-4d56-971a-5d1fe019af29">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<import value="org.egov.infra.reporting.util.*"/>
+	<import value="org.egov.infstr.utils.*"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/vinoth/Dev-Tools/eGov-Projects/eGov/egov/egov-bpa/src/main/resources/reports/templates/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="currentDate" class="java.lang.String"/>
+	<parameter name="lawAct" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="ulbName" class="java.lang.String"/>
+	<parameter name="buildingPermitNumber" class="java.lang.String"/>
+	<parameter name="applicationDate" class="java.lang.String"/>
+	<parameter name="applicantName" class="java.lang.String"/>
+	<parameter name="architectName" class="java.lang.String"/>
+	<parameter name="plotNo" class="java.lang.String"/>
+	<parameter name="sectorNo" class="java.lang.String"/>
+	<parameter name="serviceTypeDesc" class="java.lang.String"/>
+	<parameter name="buildingNo" class="java.lang.String"/>
+	<parameter name="nearestBuildingNo" class="java.lang.String"/>
+	<parameter name="surveyNo" class="java.lang.String"/>
+	<parameter name="village" class="java.lang.String"/>
+	<parameter name="taluk" class="java.lang.String"/>
+	<parameter name="district" class="java.lang.String"/>
+	<parameter name="occupancy" class="java.lang.String"/>
+	<parameter name="cityName" class="java.lang.String"/>
+	<parameter name="applicationFloorDetails" class="java.io.InputStream"/>
+	<parameter name="certificateValidity" class="java.lang.String"/>
+	<parameter name="isBusinessUser" class="java.lang.Boolean"/>
+	<parameter name="duplicateWatermarkPath" class="java.lang.String"/>
+	<parameter name="designation" class="java.lang.String"/>
+	<parameter name="permitConditions" class="java.lang.String"/>
+	<parameter name="additionalNotes" class="java.lang.String"/>
+	<parameter name="qrCode" class="java.io.File"/>
+	<parameter name="permitFeeDetails" class="java.util.List"/>
+	<parameter name="logoPath" class="java.io.InputStream"/>
+	<parameter name="permitOrderTitle" class="java.lang.String"/>
+	<parameter name="applicationNumber" class="java.lang.String"/>
+	<parameter name="applicantAddress" class="java.lang.String"/>
+	<parameter name="edcrOutput" class="java.io.InputStream"/>
+	<parameter name="qrCodeEnabled" class="java.lang.Boolean"/>
+	<parameter name="electionWard" class="java.lang.String"/>
+	<parameter name="revenueWard" class="java.lang.String"/>
+	<parameter name="landExtent" class="java.math.BigDecimal"/>
+	<parameter name="totalBuiltUpArea" class="java.lang.String"/>
+	<parameter name="mobileNo" class="java.lang.String"/>
+	<parameter name="stateLogo" class="java.lang.String"/>
+	<parameter name="existingBuildingDetails" class="java.util.List"/>
+	<parameter name="exstTotalBltUpArea" class="java.math.BigDecimal"/>
+	<parameter name="exstTotalFloorArea" class="java.math.BigDecimal"/>
+	<parameter name="exstTotalCarpetArea" class="java.math.BigDecimal"/>
+	<parameter name="totalBltUpArea" class="java.math.BigDecimal"/>
+	<parameter name="totalFloorArea" class="java.math.BigDecimal"/>
+	<parameter name="totalCarpetArea" class="java.math.BigDecimal"/>
+	<parameter name="subHeaderTitle" class="java.lang.String"/>
+	<parameter name="subheader" class="java.lang.String"/>
+	<parameter name="approverName" class="java.lang.String"/>
+	<parameter name="dcrReport" class="java.io.ByteArrayInputStream"/>
+	<parameter name="cityNameLocal" class="java.lang.String"/>
+	<parameter name="nocDetails" class="java.util.Collection"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="buildingDetail" class="java.util.List"/>
+	<field name="existingBuildingDetails" class="java.util.List"/>
+	<variable name="SUB_REPORT_ROW_CNT" class="java.lang.Integer"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle" isUsingCache="true" onErrorType="Blank">
+				<reportElement x="10" y="50" width="534" height="570" uuid="696844a6-436b-49c9-97f6-ac7120c893b8">
+					<printWhenExpression><![CDATA[$P{isBusinessUser}]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{duplicateWatermarkPath}]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<title>
+		<band height="127" splitType="Stretch">
+			<textField>
+				<reportElement x="85" y="48" width="370" height="20" uuid="13d1ee09-016a-44b3-a70c-eeaa9b66affd"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Unicode MS" size="11" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{permitOrderTitle}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement x="104" y="13" width="340" height="30" uuid="5dfe528d-792c-4b15-8716-5ce4671fb539"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Unicode MS" size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CHANDIGARH ADMINISTRATION"]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" hAlign="Center" isUsingCache="true" onErrorType="Blank">
+				<reportElement mode="Transparent" x="21" y="10" width="100" height="100" uuid="430badee-7a36-40e8-b783-daddf3e57830">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{logoPath}]]></imageExpression>
+			</image>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="1" y="107" width="553" height="20" uuid="16cedec8-4f3e-47e8-8ce1-eb3792a04df6">
+					<printWhenExpression><![CDATA[!$P{subheader}.isEmpty()]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial Unicode MS" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{subheader}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="174">
+			<staticText>
+				<reportElement x="0" y="7" width="121" height="20" uuid="6928eb55-27ad-4983-93f8-3539c289ba12"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Plan Permission No. demo :]]></text>
+			</staticText>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement x="121" y="7" width="222" height="20" uuid="6ac37b3a-7df1-4894-b648-4ad0500e0332"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial Unicode MS" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{buildingPermitNumber}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="390" y="7" width="68" height="20" uuid="24e6ae50-2511-4e25-a525-30ef00e5c88e"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dated : ]]></text>
+			</staticText>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement x="456" y="7" width="98" height="20" uuid="48cf6e25-d5a5-495d-a90e-b683786a64e2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{currentDate}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement x="0" y="29" width="555" height="20" uuid="f7a1cee0-eb1e-4bed-a424-cc28aeaf926d"/>
+				<textElement>
+					<font fontName="Arial Unicode MS" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Ref :-  Application number "+ $P{applicationNumber} + " dated " + $P{applicationDate} + "."]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement x="0" y="54" width="100" height="20" uuid="824aa1a3-3bb8-4b86-a40b-d7c59d73b964"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["From,"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="110" y="54" width="442" height="20" uuid="9b393896-3050-4a52-8c24-70b65e1469b0"/>
+				<textElement>
+					<font fontName="Arial Unicode MS" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" The Chief Administrator, " + "\n"  + "UT, Chandigarh."]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement x="2" y="85" width="100" height="20" uuid="d95d47a0-9f49-47f8-84e3-6e590f7a377f"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["To, "]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="112" y="85" width="442" height="38" uuid="613148cf-0323-4680-b12c-6bd6bdd95fe5"/>
+				<textElement>
+					<font fontName="Arial Unicode MS" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Sh. "+$P{applicantName} + " , " + "\n" + $P{applicantAddress} + " , " + "\n" + "Mobile number : " + $P{mobileNo} + " ."]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement x="3" y="129" width="100" height="20" uuid="27de3149-4411-4adf-a429-b84878805754"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["C/O (Architect) "]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="113" y="129" width="442" height="20" uuid="d85c8f71-2e11-4d0d-9427-fdad16d1fc05"/>
+				<textElement>
+					<font fontName="Arial Unicode MS" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Sh. "+$P{architectName} + " ."]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement x="0" y="154" width="555" height="20" uuid="3735d527-db51-4450-87ad-1e0af02ca176"/>
+				<textElement>
+					<font fontName="Arial Unicode MS" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Memo No "+ $P{applicationNumber} + "/ SDO(B)/RP-183."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="364" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="75" width="555" height="183" uuid="d40376b0-bf9f-45f3-8e12-bfd60e451a67"/>
+				<text><![CDATA[1. A notice in writing of the date and time at which erection / re-erection of the building shall be given.
+2. Plan sanctioned are valid for only five years from the date of issue of the plan on valid last date of construction.
+3. For demarcation, plinth level, water connection, etc. you may contact concerned departments as per Endst. below.
+4. On completion of the construction up to plinth level, you are further advised also to furnish a certificate from the architect that the construction of the building is in accordance with the sanctioned plan.
+5. You are requested to obtain permission from the Municipal Corporation, Chandigarh, for stacking building material
+on road berms, back lanes, etc., against the payment of prescribed fee/payment, before starting the
+construction/renovation work as per M.C. norms.
+6. You will have to get O/C for the proposal sanctioned in this plan.
+You are also requested to intimate regarding the construction of building up to DPC level and further construction shall not be
+taken in hand till the same is verified/certified by the Junior Engineer and obtained DPC certificate from office.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="17" width="555" height="63" uuid="05da5634-71fb-4508-acfc-e839e0c570c0"/>
+				<textFieldExpression><![CDATA[" accordance in with the plans submitted with it"+
+"submitted with it, your application is hereby sanctioned for the aforesaid construction under rule 5 of the Punjab Capital"+
+"(Dev. &amp; Reg.) Building Rules, 1952. Your attention is also invited to rules 16, rule 17 &amp; 119 "+"(amended) of the Building Rules for the following: -"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="1" width="406" height="19" uuid="8e76db46-d9be-45be-a803-6890aa3552b8"/>
+				<text><![CDATA[Reference your application to erect/re-erect/add to/alter building on]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="319" y="1" width="350" height="19" uuid="537b4d26-fd09-42db-aabb-35ea3cf1ca2c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Plot no - "+$P{plotNo}+", Sector No- "+$P{sectorNo}+", Chandigarh"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="253" width="555" height="104" uuid="53154b11-225f-4790-b022-50c1fc79da82"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Important:
+
+• You will bound by the decision of Chandigarh Administration regarding imposing of composition fee for taking the additional FAR as per notification dated 16.10.08 in which regard you have already given indemnity bond dated 14.2.2011 that you will pay the amount immediately.
+• You will provide rain water harvesting system at site as per administration order.
+• You will provide solar water heating system at site as per administration order.
+• You will submit NOC from Asstt. Labour Commissioner Chandigarh, Sector 30, Chandigarh before applying for sewerage connection and occupation certificate.]]></text>
+			</staticText>
+		</band>
+		<band height="52" splitType="Stretch">
+			<textField textAdjust="StretchHeight">
+				<reportElement stretchType="RelativeToBandHeight" x="5" y="9" width="555" height="30" uuid="15bb50ec-35b0-4fc9-b773-893fd54a3272"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial Unicode MS" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Permission is granted for " + $P{serviceTypeDesc} + " with " + $P{occupancy}+ " occupancy with Total Built up area "+ ($P{totalBuiltUpArea} != null && $P{totalBuiltUpArea} != "" ? "is " + $P{totalBuiltUpArea} +  " " : "(not applicable)")]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="52" splitType="Stretch">
+			<textField textAdjust="StretchHeight">
+				<reportElement stretchType="RelativeToBandHeight" x="10" y="21" width="545" height="31" uuid="d6a68517-dede-4535-9d26-4f422a495005">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial Unicode MS" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{permitConditions}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="5" width="544" height="15" uuid="aee1c70b-fa27-410a-98cc-204521be33ef">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Subject to the conditions stated below:]]></text>
+			</staticText>
+		</band>
+		<band height="35">
+			<printWhenExpression><![CDATA[new Boolean($F{existingBuildingDetails}.size()!= 0)]]></printWhenExpression>
+			<subreport>
+				<reportElement x="0" y="0" width="570" height="35" isRemoveLineWhenBlank="true" uuid="fee3fe50-b48b-4a76-9b58-a758954b112e">
+					<printWhenExpression><![CDATA[new Boolean($F{existingBuildingDetails}.size()!= 0)]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="occupancy">
+					<subreportParameterExpression><![CDATA[$P{occupancy}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{existingBuildingDetails},false)]]></dataSourceExpression>
+				<returnValue subreportVariable="PAGE_NUMBER" toVariable="SUB_REPORT_ROW_CNT"/>
+				<subreportExpression><![CDATA[ReportUtil.getTemplateAsStream("existingblockdetailssubreport.jasper")]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="76">
+			<printWhenExpression><![CDATA[new Boolean($F{existingBuildingDetails}.size()!= 0)]]></printWhenExpression>
+			<staticText>
+				<reportElement x="8" y="18" width="105" height="20" uuid="026b696b-0513-4a3a-87cf-e645e31804af">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Builtup Area (m²)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="113" y="18" width="92" height="20" uuid="6b49b596-5e04-46f6-a373-6cbd98a48601">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Floor Area (m²)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="205" y="18" width="100" height="20" uuid="1c6491db-651b-4395-ae3a-499ce14e8145">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Carpet Area (m²)]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="8" y="38" width="105" height="20" uuid="a08b820e-9c8d-4436-b833-1949be7deb92"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial Unicode MS" isBold="false"/>
+					<paragraph leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{exstTotalBltUpArea}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="113" y="38" width="92" height="20" uuid="3db4933a-e5e4-4370-9f0b-4405c3e72e43">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial Unicode MS" isBold="false"/>
+					<paragraph leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{exstTotalFloorArea}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="205" y="38" width="100" height="20" uuid="814b0710-c698-4b64-83cb-3247033fbb7a">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial Unicode MS" isBold="false"/>
+					<paragraph leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{exstTotalCarpetArea}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="1" width="295" height="15" uuid="f8995239-5f5c-4853-b388-98365bc48b53">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Existing Area :]]></text>
+			</staticText>
+		</band>
+		<band height="48" splitType="Prevent">
+			<subreport>
+				<reportElement x="0" y="0" width="570" height="35" isRemoveLineWhenBlank="true" uuid="1f313474-b095-4a9a-891c-f4a17562ea2b">
+					<printWhenExpression><![CDATA[new Boolean($F{buildingDetail}.size()!= 0)]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="occupancy">
+					<subreportParameterExpression><![CDATA[$P{occupancy}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{buildingDetail},false)]]></dataSourceExpression>
+				<returnValue subreportVariable="PAGE_NUMBER" toVariable="SUB_REPORT_ROW_CNT"/>
+				<subreportExpression><![CDATA[ReportUtil.getTemplateAsStream("buildingblockdetailssubreport.jasper")]]></subreportExpression>
+			</subreport>
+			<textField evaluationTime="Report">
+				<reportElement x="177" y="18" width="100" height="30" uuid="bdf305ff-9514-4034-ba23-4ffcf1d78ef6"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="57">
+			<printWhenExpression><![CDATA[new Boolean($F{buildingDetail}.size()!= 0)]]></printWhenExpression>
+			<staticText>
+				<reportElement x="8" y="17" width="105" height="20" uuid="b1829889-ffab-44a9-8996-2687e182c990">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Builtup Area (m²)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="113" y="17" width="92" height="20" uuid="3653acb5-4be3-4945-bcda-82aae72b8cb9">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Floor Area (m²)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="205" y="17" width="100" height="20" uuid="b7616605-de5b-4515-a074-28ee7bf8981e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Carpet Area (m²)]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="8" y="37" width="105" height="20" uuid="fca25cc4-2a0f-47be-84ec-1dcc3c963c97"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial Unicode MS" isBold="false"/>
+					<paragraph leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalBltUpArea}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="113" y="37" width="92" height="20" uuid="fe1fbf45-4f10-471d-9e10-b90ede319e52">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial Unicode MS" isBold="false"/>
+					<paragraph leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalFloorArea}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="205" y="37" width="100" height="20" uuid="f986e5fb-d6ef-4571-b23f-6b2e715d5fad">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial Unicode MS" isBold="false"/>
+					<paragraph leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalCarpetArea}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="1" width="295" height="15" uuid="aa3ecde5-500a-4971-b64b-2e75157f771a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Proposed Area :]]></text>
+			</staticText>
+		</band>
+		<band height="69">
+			<printWhenExpression><![CDATA[new Boolean($F{existingBuildingDetails}.size()!= 0)]]></printWhenExpression>
+			<staticText>
+				<reportElement x="8" y="17" width="105" height="20" uuid="19d22812-821e-4021-a350-9529c3a079b4">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Builtup Area (m²)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="113" y="17" width="92" height="20" uuid="211809b7-9441-4129-a663-88ff3927ec4e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Floor Area (m²)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="205" y="17" width="100" height="20" uuid="7385bdd5-e02d-4471-848a-2a0f06be3f4c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Carpet Area (m²)]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="8" y="37" width="105" height="20" uuid="bfa7b5c5-ce14-4cdc-970b-2e2710a1724e"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial Unicode MS" isBold="false"/>
+					<paragraph leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalBltUpArea}.add($P{exstTotalBltUpArea})]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="113" y="37" width="92" height="20" uuid="93ea4c2c-9f19-4d1a-b31b-08c1f345e15a">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial Unicode MS" isBold="false"/>
+					<paragraph leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalFloorArea}.add($P{exstTotalFloorArea})]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="205" y="37" width="100" height="20" uuid="32a37546-0b43-438c-a693-5f298e9a1bb2">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial Unicode MS" isBold="false"/>
+					<paragraph leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalCarpetArea}.add($P{exstTotalCarpetArea})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="1" width="295" height="15" uuid="2cc9f0c0-2ff0-467a-842b-78ec998c2ce0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Area :]]></text>
+			</staticText>
+		</band>
+		<band height="66" splitType="Prevent">
+			<subreport>
+				<reportElement x="0" y="30" width="570" height="35" isRemoveLineWhenBlank="true" uuid="d3ebd9d8-02af-4302-afb9-3d0b794e5c27">
+					<printWhenExpression><![CDATA[new Boolean($P{permitFeeDetails}.size()!= 0)]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="occupancy">
+					<subreportParameterExpression><![CDATA[$P{occupancy}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{permitFeeDetails},false)]]></dataSourceExpression>
+				<returnValue subreportVariable="PAGE_NUMBER" toVariable="SUB_REPORT_ROW_CNT"/>
+				<subreportExpression><![CDATA[ReportUtil.getTemplateAsStream("bpapermitfeedetails.jasper")]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="9" y="9" width="455" height="20" uuid="cf38efb7-a068-456b-8821-8144becd60eb"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Permit fee details is as follows,]]></text>
+			</staticText>
+		</band>
+		<band splitType="Prevent"/>
+		<band height="36">
+			<subreport>
+				<reportElement x="0" y="1" width="570" height="35" isRemoveLineWhenBlank="true" uuid="c010f16c-fa23-4f24-84de-712ff424e48e">
+					<printWhenExpression><![CDATA[new Boolean($P{permitFeeDetails}.size()!= 0)]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="occupancy">
+					<subreportParameterExpression><![CDATA[$P{occupancy}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{nocDetails},false)]]></dataSourceExpression>
+				<returnValue subreportVariable="PAGE_NUMBER" toVariable="SUB_REPORT_ROW_CNT"/>
+				<subreportExpression><![CDATA[ReportUtil.getTemplateAsStream("buildingpermitnocdetailsSubreport.jasper")]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="62">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<image>
+				<reportElement positionType="FixRelativeToBottom" x="403" y="2" width="149" height="60" uuid="8b09590f-cf8d-4a41-ba7d-bce7902173f9">
+					<property name="qrCode" value="$P{qrCode}"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[!$P{qrCodeEnabled}]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{qrCode}]]></imageExpression>
+			</image>
+			<textField textAdjust="StretchHeight" pattern="d/M/yy h:mm a">
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="40" width="113" height="21" uuid="71a8367c-735e-42b8-9dcb-b0053f9b31b3"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
