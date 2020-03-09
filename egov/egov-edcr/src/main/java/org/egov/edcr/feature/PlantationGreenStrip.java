@@ -64,6 +64,8 @@ import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.common.entity.edcr.SetBack;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.DcrConstants;
 import org.springframework.stereotype.Service;
 
@@ -236,7 +238,7 @@ public class PlantationGreenStrip extends FeatureProcess {
 	private void buildResult(Plan pl, ScrutinyDetail scrutinyDetail, boolean valid, String description, String permited,
 			String provided) {
 		Map<String, String> details = new HashMap<>();
-		details.put(RULE_NO, RULE_37_6);
+		details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.ORGANIZED_GREEN_PARKS));
 		details.put(DESCRIPTION, description);
 		details.put(PERMISSIBLE, permited);
 		details.put(PROVIDED, provided);

@@ -370,8 +370,9 @@ public class FrontYardService extends GeneralRule {
 
 							if (errors.isEmpty()) {
 								Map<String, String> details = new HashMap<>();
-								details.put(RULE_NO, frontYardResult.subRule);
-								details.put(LEVEL,
+							//	details.put(RULE_NO, frontYardResult.subRule);
+								details.put(RULE_NO, cdgAdditionalService.getByLaws(pl, CDGAConstant.SETBACKS));
+									details.put(LEVEL,
 										frontYardResult.level != null ? frontYardResult.level.toString() : "");
 								details.put(OCCUPANCY, frontYardResult.occupancy);
 								details.put(FIELDVERIFIED, MINIMUMLABEL);

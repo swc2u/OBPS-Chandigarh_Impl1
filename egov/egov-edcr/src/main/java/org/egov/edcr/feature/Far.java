@@ -125,6 +125,10 @@ public class Far extends FeatureProcess {
 
 	private static final String VALIDATION_NEGATIVE_FLOOR_AREA = "msg.error.negative.floorarea.occupancy.floor";
 	private static final String VALIDATION_NEGATIVE_EXISTING_FLOOR_AREA = "msg.error.negative.existing.floorarea.occupancy.floor";
+	
+	private static final String VALIDATION_NEGATIVE_CARPET_AREA = "msg.error.negative.floorarea.occupancy.carpet";
+	private static final String VALIDATION_NEGATIVE_EXISTING_CARPET_AREA = "msg.error.negative.existing.floorarea.occupancy.carpet";
+	
 	private static final String VALIDATION_NEGATIVE_BUILTUP_AREA = "msg.error.negative.builtuparea.occupancy.floor";
 	private static final String VALIDATION_NEGATIVE_EXISTING_BUILTUP_AREA = "msg.error.negative.existing.builtuparea.occupancy.floor";
 	public static final String RULE_31_1 = "31-1";
@@ -1360,23 +1364,23 @@ public class Far extends FeatureProcess {
 										+ flr.getNumber());
 					}
 				}
-//
-//				if (flrArea.setScale(DcrConstants.DECIMALDIGITS_MEASUREMENTS, DcrConstants.ROUNDMODE_MEASUREMENTS)
-//						.compareTo(carpetArea.setScale(DcrConstants.DECIMALDIGITS_MEASUREMENTS,
-//								DcrConstants.ROUNDMODE_MEASUREMENTS)) < 0) {
-//					pl.addError("Floor area in block " + blk.getNumber() + "floor " + flr.getNumber(),
-//							"Floor area is less than carpet area in block " + blk.getNumber() + "floor "
-//									+ flr.getNumber());
-//				}
 
-//				if (existingBltUpArea.compareTo(BigDecimal.ZERO) > 0 && existingFlrArea
-//						.setScale(DcrConstants.DECIMALDIGITS_MEASUREMENTS, DcrConstants.ROUNDMODE_MEASUREMENTS)
-//						.compareTo(existingCarpetArea.setScale(DcrConstants.DECIMALDIGITS_MEASUREMENTS,
-//								DcrConstants.ROUNDMODE_MEASUREMENTS)) < 0) {
-//					pl.addError("Existing floor area in block " + blk.getNumber() + "floor " + flr.getNumber(),
-//							"Existing Floor area is less than carpet area in block " + blk.getNumber() + "floor "
-//									+ flr.getNumber());
-//				}
+				if (flrArea.setScale(DcrConstants.DECIMALDIGITS_MEASUREMENTS, DcrConstants.ROUNDMODE_MEASUREMENTS)
+						.compareTo(carpetArea.setScale(DcrConstants.DECIMALDIGITS_MEASUREMENTS,
+								DcrConstants.ROUNDMODE_MEASUREMENTS)) < 0) {
+					pl.addError("Floor area in block " + blk.getNumber() + "floor " + flr.getNumber(),
+							"Floor area is less than carpet area in block " + blk.getNumber() + "floor "
+									+ flr.getNumber());
+				}
+
+				if (existingBltUpArea.compareTo(BigDecimal.ZERO) > 0 && existingFlrArea
+						.setScale(DcrConstants.DECIMALDIGITS_MEASUREMENTS, DcrConstants.ROUNDMODE_MEASUREMENTS)
+						.compareTo(existingCarpetArea.setScale(DcrConstants.DECIMALDIGITS_MEASUREMENTS,
+								DcrConstants.ROUNDMODE_MEASUREMENTS)) < 0) {
+					pl.addError("Existing floor area in block " + blk.getNumber() + "floor " + flr.getNumber(),
+							"Existing Floor area is less than carpet area in block " + blk.getNumber() + "floor "
+									+ flr.getNumber());
+				}
 			}
 		}
 
@@ -1621,6 +1625,23 @@ public class Far extends FeatureProcess {
 			pl.addError(VALIDATION_NEGATIVE_FLOOR_AREA, getLocaleMessage(VALIDATION_NEGATIVE_FLOOR_AREA,
 					blk.getNumber(), flr.getNumber().toString(), occupancyTypeHelper));
 		}
+		
+		
+		occupancy.setCarpetArea((occupancy.getCarpetArea() == null ? BigDecimal.ZERO : occupancy.getCarpetArea())
+				.subtract(occupancy.getCarpetAreaDeduction() == null ? BigDecimal.ZERO : occupancy.getCarpetAreaDeduction()));
+		if (occupancy.getCarpetArea() != null && occupancy.getCarpetArea().compareTo(BigDecimal.valueOf(0)) < 0) {
+			pl.addError(VALIDATION_NEGATIVE_CARPET_AREA, getLocaleMessage(VALIDATION_NEGATIVE_CARPET_AREA,
+					blk.getNumber(), flr.getNumber().toString(), occupancyTypeHelper));
+		}
+		
+		
+		occupancy.setExistingCarpetArea((occupancy.getExistingCarpetArea() == null ? BigDecimal.ZERO : occupancy.getExistingCarpetArea())
+				.subtract(occupancy.getExistingCarpetAreaDeduction() == null ? BigDecimal.ZERO : occupancy.getExistingCarpetAreaDeduction()));
+		if (occupancy.getExistingCarpetArea() != null && occupancy.getExistingCarpetArea().compareTo(BigDecimal.valueOf(0)) < 0) {
+			pl.addError(VALIDATION_NEGATIVE_EXISTING_CARPET_AREA, getLocaleMessage(VALIDATION_NEGATIVE_EXISTING_CARPET_AREA,
+					blk.getNumber(), flr.getNumber().toString(), occupancyTypeHelper));
+		}
+		
 		occupancy.setExistingFloorArea(
 				(occupancy.getExistingBuiltUpArea() == null ? BigDecimal.ZERO : occupancy.getExistingBuiltUpArea())
 						.subtract(occupancy.getExistingDeduction() == null ? BigDecimal.ZERO
@@ -2203,7 +2224,8 @@ public class Far extends FeatureProcess {
 			occupancyName = occupancyType.getType().getName();
 
 		Map<String, String> details = new HashMap<>();
-		details.put(RULE_NO, RULE_38);
+		//details.put(RULE_NO, RULE_38);
+		details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyType, CDGAConstant.FAR));
 		details.put(OCCUPANCY, occupancyName);
 		// details.put(AREA_TYPE, typeOfArea);
 		// details.put(ROAD_WIDTH, roadWidth.toString());

@@ -63,6 +63,8 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -174,7 +176,7 @@ public class Ventilation extends FeatureProcess {
 
 				for (Floor f : b.getBuilding().getFloors()) {
 					Map<String, String> details = new HashMap<>();
-					details.put(RULE_NO, RULE_43);
+					details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.LIGHT_AND_VENTILATION));
 					details.put(DESCRIPTION, LIGHT_VENTILATION_DESCRIPTION);
 
 					if (f.getLightAndVentilation() != null && f.getLightAndVentilation().getMeasurements() != null

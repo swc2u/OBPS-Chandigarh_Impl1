@@ -60,6 +60,8 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -126,7 +128,7 @@ public class Parapet extends FeatureProcess {
 		scrutinyDetail.addColumnHeading(5, STATUS);
 
 		Map<String, String> details = new HashMap<>();
-		details.put(RULE_NO, RULE_41_V);
+		details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARAPET));
 		details.put(DESCRIPTION, PARAPET_DESCRIPTION);
 
 		BigDecimal minHeight = BigDecimal.ZERO;

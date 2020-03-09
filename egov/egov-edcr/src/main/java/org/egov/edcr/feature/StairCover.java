@@ -62,6 +62,8 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -90,7 +92,7 @@ public class StairCover extends FeatureProcess {
 
 		Map<String, String> details = new HashMap<>();
 		Map<String, String> errors = new HashMap<>();
-		details.put(RULE_NO, RULE_44_C);
+		details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.STAIRCASE));
 
 		BigDecimal minHeight = BigDecimal.ZERO;
 		OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null

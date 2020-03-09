@@ -19,6 +19,8 @@ import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.common.entity.edcr.StairLanding;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.DcrConstants;
 import org.egov.edcr.utility.Util;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -209,14 +211,14 @@ public class GeneralStair extends FeatureProcess {
                         : " floor " + floor.getNumber();
 
                 if (valid) {
-                    setReportOutputDetailsFloorStairWise(plan, RULE42_5_II, value,
+                    setReportOutputDetailsFloorStairWise(plan, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.STAIRCASE), value,
                             String.format(WIDTH_LANDING_DESCRIPTION, generalStair.getNumber(),
                                     landing.getNumber()),
                             minimumWidth.toString(),
                             String.valueOf(minWidth), Result.Accepted.getResultVal(),
                             scrutinyDetailLanding);
                 } else {
-                    setReportOutputDetailsFloorStairWise(plan, RULE42_5_II, value,
+                    setReportOutputDetailsFloorStairWise(plan, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.STAIRCASE), value,
                             String.format(WIDTH_LANDING_DESCRIPTION, generalStair.getNumber(),
                                     landing.getNumber()),
                             minimumWidth.toString(),
@@ -227,11 +229,11 @@ public class GeneralStair extends FeatureProcess {
             }else {
                 errors.put(
                         "General Stair landing width not defined in block " + block.getNumber() + " floor "
-                                + floor.getNumber()
-                                + " stair " + generalStair.getNumber(),
+                                + floor.getNumber() 
+                                + " stair " + generalStair.getNumber()+" Landing "+landing.getNumber(),
                         "General Stair landing width not defined in block " + block.getNumber() + " floor "
                                 + floor.getNumber()
-                                + " stair " + generalStair.getNumber());
+                                + " stair " + generalStair.getNumber()+" Landing "+landing.getNumber());
                 plan.addErrors(errors);
             }
         }
@@ -254,7 +256,8 @@ public class GeneralStair extends FeatureProcess {
                         block.getNumber(), floor.getNumber(), generalStair.getNumber(),
                         flight.getNumber());
 
-                if (flightPolyLines != null && flightPolyLines.size() > 0) {
+//                if (flightPolyLines != null) {
+              if (flightPolyLines != null && flightPolyLines.size() > 0) {
                     if (flightPolyLineClosed) {
                         if (flightWidths != null && flightWidths.size() > 0) {
                             minFlightWidth = validateWidth(plan, scrutinyDetail2, floor, block,
@@ -343,11 +346,11 @@ public class GeneralStair extends FeatureProcess {
                     : " floor " + floor.getNumber();
 
             if (valid) {
-                setReportOutputDetailsFloorStairWise(plan, RULE42_5_II, value,
+                setReportOutputDetailsFloorStairWise(plan, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.STAIRCASE), value,
                         String.format(WIDTH_DESCRIPTION, generalStair.getNumber(), flight.getNumber()), minimumWidth.toString(),
                         String.valueOf(minFlightWidth), Result.Accepted.getResultVal(), scrutinyDetail2);
             } else {
-                setReportOutputDetailsFloorStairWise(plan, RULE42_5_II, value,
+                setReportOutputDetailsFloorStairWise(plan, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.STAIRCASE), value,
                         String.format(WIDTH_DESCRIPTION, generalStair.getNumber(), flight.getNumber()), minimumWidth.toString(),
                         String.valueOf(minFlightWidth), Result.Not_Accepted.getResultVal(), scrutinyDetail2);
             }
@@ -417,12 +420,12 @@ public class GeneralStair extends FeatureProcess {
                             ? (String) typicalFloorValues.get("typicalFloors")
                             : " floor " + floor.getNumber();
                     if (valid) {
-                        setReportOutputDetailsFloorStairWise(plan, RULE42_5_II, value,
+                        setReportOutputDetailsFloorStairWise(plan, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.STAIRCASE), value,
                                 String.format(TREAD_DESCRIPTION, generalStair.getNumber(), flight.getNumber()),
                                 requiredTread.toString(),
                                 String.valueOf(minTread), Result.Accepted.getResultVal(), scrutinyDetail3);
                     } else {
-                        setReportOutputDetailsFloorStairWise(plan, RULE42_5_II, value,
+                        setReportOutputDetailsFloorStairWise(plan, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.STAIRCASE), value,
                                 String.format(TREAD_DESCRIPTION, generalStair.getNumber(), flight.getNumber()),
                                 requiredTread.toString(),
                                 String.valueOf(minTread), Result.Not_Accepted.getResultVal(), scrutinyDetail3);
@@ -465,12 +468,12 @@ public class GeneralStair extends FeatureProcess {
                     ? (String) typicalFloorValues.get("typicalFloors")
                     : " floor " + floor.getNumber();
             if (valid) {
-                setReportOutputDetailsFloorStairWise(plan, RULE42_5_II, value,
+                setReportOutputDetailsFloorStairWise(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.STAIRCASE), value,
                         String.format(NO_OF_RISER_DESCRIPTION, generalStair.getNumber(), flight.getNumber()),
                         EXPECTED_NO_OF_RISER,
                         String.valueOf(noOfRises), Result.Accepted.getResultVal(), scrutinyDetail3);
             } else {
-                setReportOutputDetailsFloorStairWise(plan, RULE42_5_II, value,
+                setReportOutputDetailsFloorStairWise(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.STAIRCASE), value,
                         String.format(NO_OF_RISER_DESCRIPTION, generalStair.getNumber(), flight.getNumber()),
                         EXPECTED_NO_OF_RISER,
                         String.valueOf(noOfRises), Result.Not_Accepted.getResultVal(), scrutinyDetail3);

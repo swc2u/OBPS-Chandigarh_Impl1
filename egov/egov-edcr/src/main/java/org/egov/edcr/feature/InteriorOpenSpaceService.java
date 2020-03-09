@@ -153,7 +153,7 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 			
 			if (minInteriorCourtYardArea.compareTo(BigDecimal.ZERO) > 0) {
 				Map<String, String> details = new HashMap<>();
-				details.put(RULE_NO, RULE_43);
+				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
 				details.put(DESCRIPTION, INTERNALCOURTYARD_DESCRIPTION);
 
 				if (minInteriorCourtYardArea.compareTo(BigDecimal.valueOf(1.2)) >= 0) {
@@ -173,7 +173,7 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 			}
 			if (minInteriorCourtYardWidth.compareTo(minimumWidht) > 0) {
 				Map<String, String> details = new HashMap<>();
-				details.put(RULE_NO, RULE_43A);
+				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
 				details.put(DESCRIPTION, INTERNALCOURTYARD_DESCRIPTION);
 				if (minInteriorCourtYardWidth.compareTo(BigDecimal.valueOf(0.9)) >= 0) {
 					details.put(REQUIRED, "Minimum width 0.9 M ");
@@ -215,7 +215,7 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 
 			if (minVentilationShaftArea.compareTo(BigDecimal.ZERO) > 0) {
 				Map<String, String> details = new HashMap<>();
-				details.put(RULE_NO, RULE_43);
+				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
 				details.put(DESCRIPTION, VENTILATIONSHAFT_DESCRIPTION);
 
 				if (minVentilationShaftArea.compareTo(BigDecimal.valueOf(1.2)) >= 0) {
@@ -235,7 +235,7 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 			}
 			if (minVentilationShaftWidth.compareTo(BigDecimal.ZERO) > 0) {
 				Map<String, String> details = new HashMap<>();
-				details.put(RULE_NO, RULE_43A);
+				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
 				details.put(DESCRIPTION, VENTILATIONSHAFT_DESCRIPTION);
 				if (minVentilationShaftWidth.compareTo(BigDecimal.valueOf(0.9)) >= 0) {
 					details.put(REQUIRED, "Minimum width 0.9 M ");
@@ -267,7 +267,7 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 
 			if (minInteriorCourtYardArea.compareTo(BigDecimal.ZERO) > 0) {
 				Map<String, String> details = new HashMap<>();
-				details.put(RULE_NO, RULE_43);
+				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
 				details.put(DESCRIPTION, INTERNALCOURTYARD_DESCRIPTION);
 
 				if (minInteriorCourtYardArea.compareTo(BigDecimal.valueOf(9)) >= 0) {
@@ -287,7 +287,7 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 			}
 			if (minInteriorCourtYardWidth.compareTo(BigDecimal.ZERO) > 0) {
 				Map<String, String> details = new HashMap<>();
-				details.put(RULE_NO, RULE_43A);
+				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
 				details.put(DESCRIPTION, INTERNALCOURTYARD_DESCRIPTION);
 				if (minInteriorCourtYardWidth.compareTo(BigDecimal.valueOf(3)) >= 0) {
 					details.put(REQUIRED, "Minimum width 3.0 M ");

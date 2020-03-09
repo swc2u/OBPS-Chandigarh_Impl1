@@ -62,6 +62,8 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -109,7 +111,7 @@ public class Verandah extends FeatureProcess {
 
 							if (minVerandaWidth.compareTo(BigDecimal.ZERO) > 0) {
 								Map<String, String> details = new HashMap<>();
-								details.put(RULE_NO, RULE_43);
+								details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.VERANDAH_FOR_LIGHT_AND_VENTILATION));
 								details.put(DESCRIPTION, VERANDAH_DESCRIPTION);
 
 								if (minVerandaWidth.compareTo(BigDecimal.valueOf(1.8)) >= 0) {
@@ -129,7 +131,7 @@ public class Verandah extends FeatureProcess {
 							}
 							if (minVerandDepth.compareTo(BigDecimal.ZERO) > 0) {
 								Map<String, String> details = new HashMap<>();
-								details.put(RULE_NO, RULE_43A);
+								details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.VERANDAH_FOR_LIGHT_AND_VENTILATION));
 								details.put(DESCRIPTION, VERANDAH_DESCRIPTION);
 								if (minVerandDepth.compareTo(BigDecimal.valueOf(3.66)) <= 0) {
 									details.put(REQUIRED, "Minimum depth not more than 3.66 m ");

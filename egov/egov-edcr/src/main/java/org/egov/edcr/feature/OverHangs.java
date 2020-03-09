@@ -62,6 +62,8 @@ import org.egov.common.entity.edcr.Floor;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -86,7 +88,7 @@ public class OverHangs extends FeatureProcess {
     	}
 
         Map<String, String> details = new HashMap<>();
-        details.put(RULE_NO, RULE_45);
+        details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.CHHAJJA_OR_JAMBS));
         details.put(DESCRIPTION, OVERHANGS_DESCRIPTION);
 
         BigDecimal minWidth = BigDecimal.ZERO;

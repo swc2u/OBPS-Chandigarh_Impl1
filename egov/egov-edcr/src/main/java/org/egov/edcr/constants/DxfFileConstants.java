@@ -16,7 +16,6 @@ public class DxfFileConstants {
 	public static final String ROOT_BOUNDARY_TYPE = "ROOT_BOUNDARY_TYPE";
 	public static final String SECTOR_NUMBER = "SECTOR_NUMBER";
 	public static final String PLOT_TYPE = "PLOT_TYPE";
-	public static final String KHATA_NO = "KHATA_NO";
 
 	// ROOT_BOUNDARY_TYPE values
 	public static final String URBAN = "URBAN";
@@ -41,39 +40,39 @@ public class DxfFileConstants {
 
 	public static final String YES = "YES";
 	public static final String NO = "NO";
-	
-	public static final String ULBNAME = "Chandigarh Administration";
 
 	// CGCL start
-	// occupancies code	
-	public static final String A = "A"; // Residential
+	// occupancies code
+	
+	public static final String A = "A"; // Residential --29
 	public static final String F = "F"; // Mercantile / Commercial
 	public static final String G = "G"; // Industrial
 	public static final String P = "P"; // Public / Semi- Public Buildings
 	public static final String B = "B"; // Educational
 	public static final String IT = "IT";// IT Park
-	public static final String R = "R";// Railway Station, Chandigarh
-	public static final String ITH = "ITH";// IT Habitat
-	public static final String IP = "IP";// Integrated projects
-	public static final String T = "T";// Transit Oriented Development (TOD)
+	public static final String R = "R";// Railway Station, Chandigarh --np
+	public static final String ITH = "ITH";// IT Habitat --np
+	public static final String IP = "IP";// Integrated projects --np
+	public static final String T = "T";// Transit Oriented Development (TOD) --np
 
-	// sub occupancies code	
-	public static final String A_P = "A-P";// Plotted
-	public static final String A_G = "A-G";// Grouped
+	// sub occupancies code
+	
+	public static final String A_P = "A-P";// Plotted --220
+	public static final String A_G = "A-G";// Grouped --223
 
-	public static final String F_SCO = "F-SCO";// SCO’S/ SCF’S / BAYSHOP’S/ SEMI INDUSTRIAL
-	public static final String F_B ="F-B"; // BOOTHS ETC.
-	public static final String F_H = "F-H";// Hotels
-	public static final String F_M = "F-M";// MULTIPLEX/MALLS (specifically earmarked sites)
-	public static final String F_CFI = "F-CFI";// COMMERCIAL (converted from Industrial)
-	public static final String F_BH = "F-BH";// Banquet hall/ marriage palaces
-	public static final String F_BBM = "F-BBM";// Bulk building material
-	public static final String F_TS = "F-TS";// Timber site (single storey)
-	public static final String F_TCIM = "F-TCIM";// Comercial_Theatre converted into multiplex
-	public static final String F_PP = "F-PP"; // Petrol Pump
+	public static final String F_SCO = "F-SCO";// SCOâ€™S/ SCFâ€™S / BAYSHOPâ€™S/ SEMI INDUSTRIAL -- 272
+	public static final String F_B ="F-B"; // BOOTHS ETC. 
+	public static final String F_H = "F-H";// Hotels -- 236
+	public static final String F_M = "F-M";// MULTIPLEX/MALLS (specifically earmarked sites) -- 278
+	public static final String F_CFI = "F-CFI";// COMMERCIAL (converted from Industrial) --237
+	public static final String F_BH = "F-BH";// Banquet hall/ marriage palaces -- 271
+	public static final String F_BBM = "F-BBM";// Bulk building material -- 279
+	public static final String F_TS = "F-TS";// Timber site (single storey) -- 280
+	public static final String F_TCIM = "F-TCIM";// Comercial_Theatre converted into multiplex -- 270
+	public static final String F_PP = "F-PP"; // Petrol Pump -- 234
 	public static final String F_CD = "F-CD"; // Coal Depot
 	
-	public static final String G_GBAC = "G-BACG-";// Governed by Architectural Controls
+	public static final String G_GBAC = "G-GBAC";// Governed by Architectural Controls //CHANGED
 	public static final String G_GBZP = "G-GBZP";// Governed by Zoning Plans
 
 	public static final String P_D = "P-D"; // Dispensary
@@ -98,7 +97,7 @@ public class DxfFileConstants {
 	
 	public static final String R1="R1"; // Railway Station, Chandigarh
 
-	public static final String ITH_H = "ITH_H";// Hospital
+	public static final String ITH_H = "ITH-H";// Hospital //CHANGED
 	public static final String ITH_C = "ITH-C";// COMMERCIAL / HOTEL
 	public static final String ITH_CC = "ITH-CC";// Club
 	public static final String ITH_R = "ITH-R";// RESIDENTIAL

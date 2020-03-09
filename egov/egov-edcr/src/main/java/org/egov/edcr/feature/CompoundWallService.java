@@ -17,6 +17,7 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.service.cdg.CDGAConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
 
@@ -111,17 +112,19 @@ public class CompoundWallService extends FeatureProcess {
 
 		Map<String, Integer> map = pl.getSubFeatureColorCodesMaster().get(COMPOUNDWALL);
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding().getMostRestrictiveFarHelper();
-
-		BigDecimal frontMinFrontHeight = pl.getCompoundWall().getWallHeights().stream()
+		BigDecimal frontMinFrontHeight=BigDecimal.ZERO;
+		BigDecimal frontMinRearHeight=BigDecimal.ZERO;
+		 frontMinFrontHeight = pl.getCompoundWall().getWallHeights().stream()
 				.filter(hm -> hm.getColorCode() == map.get(FRONT_HEIGHT)).map(n -> n.getHeight())
 				.reduce(BigDecimal::min).get();
-		BigDecimal frontMinRearHeight = pl.getCompoundWall().getWallHeights().stream()
+		 frontMinRearHeight = pl.getCompoundWall().getWallHeights().stream()
 				.filter(hm -> hm.getColorCode() == map.get(REAR_HEIGHT)).map(n -> n.getHeight()).reduce(BigDecimal::min)
 				.get();
 
 		Map<String, String> details = new HashMap<>();
 
-		details.put(RULE_NO, RULE_1);
+//		details.put(RULE_NO, RULE_1);
+		details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.COMPOUND_WALL_SERVICE));
 		details.put(DESCRIPTION, WALL_HEIGHT_FRONT_DESCRIPTION);
 		details.put(PROVIDED, frontMinFrontHeight.toString());
 		
@@ -174,7 +177,8 @@ public class CompoundWallService extends FeatureProcess {
 
 		Map<String, String> details2 = new HashMap<>();
 
-		details2.put(RULE_NO, RULE_2);
+//		details2.put(RULE_NO, RULE_2);
+		details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.COMPOUND_WALL_SERVICE));
 		details2.put(DESCRIPTION, WALL_HEIGHT_REAR_DESCRIPTION);
 		details2.put(PROVIDED, frontMinRearHeight.toString());
 
@@ -209,7 +213,8 @@ public class CompoundWallService extends FeatureProcess {
 
 		Map<String, String> details = new HashMap<>();
 
-		details.put(RULE_NO, RULE_3);
+//		details.put(RULE_NO, RULE_3);
+		details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.COMPOUND_WALL_SERVICE));
 		details.put(DESCRIPTION, WALL_RAILING_HIGHT_DESCRIPTION);
 		details.put(PROVIDED, frontMinRailingHeight.toString());
 

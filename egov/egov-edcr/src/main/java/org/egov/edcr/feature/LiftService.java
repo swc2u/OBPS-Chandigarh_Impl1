@@ -64,6 +64,8 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -173,7 +175,7 @@ public class LiftService extends FeatureProcess {
 
 					if (DxfFileConstants.A_P
 							.equals(plan.getVirtualBuilding().getMostRestrictiveFarHelper().getSubtype().getCode())) {
-						setReportOutputDetails(plan, SUBRULE_48, SUBRULE_48_DESCRIPTION, OPTIONAL.toString(),
+						setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.LIFT), SUBRULE_48_DESCRIPTION, OPTIONAL.toString(),
 								block.getNumberOfLifts(), Result.Accepted.getResultVal(), "", scrutinyDetail);
 
 					}
@@ -195,11 +197,11 @@ public class LiftService extends FeatureProcess {
 							valid = true;
 						}
 						if (valid) {
-							setReportOutputDetails(plan, SUBRULE_48, SUBRULE_48_DESCRIPTION, noOfLiftsRqrd.toString(),
-									block.getNumberOfLifts(), Result.Accepted.getResultVal(), "", scrutinyDetail);
+							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.LIFT), SUBRULE_48_DESCRIPTION, noOfLiftsRqrd.toString(),
+									block.getNumberOfLifts(), Result.Accepted.getResultVal(),  CDGAdditionalService.getByLaws(plan, CDGAConstant.LIFT), scrutinyDetail);
 						} else {
-							setReportOutputDetails(plan, SUBRULE_48, SUBRULE_48_DESCRIPTION, noOfLiftsRqrd.toString(),
-									block.getNumberOfLifts(), Result.Not_Accepted.getResultVal(), "", scrutinyDetail);
+							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.LIFT), SUBRULE_48_DESCRIPTION, noOfLiftsRqrd.toString(),
+									block.getNumberOfLifts(), Result.Not_Accepted.getResultVal(),  CDGAdditionalService.getByLaws(plan, CDGAConstant.LIFT), scrutinyDetail);
 						}
 
 					}

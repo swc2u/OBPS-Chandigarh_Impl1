@@ -521,7 +521,7 @@ public class SideYardService extends GeneralRule {
 			SideYardResult sideYard2Result) {
 		if (sideYard1Result != null) {
 			Map<String, String> details = new HashMap<>();
-			details.put(RULE_NO, sideYard1Result.subRule);
+			details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.SETBACKS));
 			details.put(LEVEL, sideYard1Result.level != null ? sideYard1Result.level.toString() : "");
 			details.put(OCCUPANCY, sideYard1Result.occupancy);
 
@@ -544,7 +544,7 @@ public class SideYardService extends GeneralRule {
 		if (errors.isEmpty()) {
 			if (sideYard2Result != null) {
 				Map<String, String> detailsSideYard2 = new HashMap<>();
-				detailsSideYard2.put(RULE_NO, sideYard2Result.subRule);
+				detailsSideYard2.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.SETBACKS));
 				detailsSideYard2.put(LEVEL, sideYard2Result.level != null ? sideYard2Result.level.toString() : "");
 				detailsSideYard2.put(OCCUPANCY, sideYard2Result.occupancy);
 				detailsSideYard2.put(SIDENUMBER, SIDE_YARD2_DESC);
@@ -616,7 +616,7 @@ public class SideYardService extends GeneralRule {
 		BigDecimal widthOfPlot = pl.getPlanInformation().getWidthOfPlot();
 
 		checkCommercialUptoSixteenSkelton(blockName, level, min, max, minMeanlength, maxMeanLength,
-				mostRestrictiveOccupancy, sideYard1Result, sideYard2Result, rule, DxfFileConstants.RULE_28, valid2,
+				mostRestrictiveOccupancy, sideYard1Result, sideYard2Result, CDGAdditionalService.getByLaws(pl, CDGAConstant.SETBACKS), CDGAdditionalService.getByLaws(pl, CDGAConstant.SETBACKS), valid2,
 				valid1, side2val, side1val, widthOfPlot);
 
 //        if (mostRestrictiveOccupancy.getSubtype() != null && (A_R.equalsIgnoreCase(mostRestrictiveOccupancy.getSubtype().getCode())
@@ -973,10 +973,10 @@ public class SideYardService extends GeneralRule {
 			valid2 = true;
 
 		compareSideYard2Result(blockName, side2val, BigDecimal.valueOf(min), BigDecimal.ZERO,
-				BigDecimal.valueOf(minMeanlength), mostRestrictiveOccupancy, sideYard2Result, valid2, subRule, rule,
+				BigDecimal.valueOf(minMeanlength), mostRestrictiveOccupancy, sideYard2Result, valid2, CDGAdditionalService.getByLaws(pl, CDGAConstant.SETBACKS), CDGAdditionalService.getByLaws(pl, CDGAConstant.SETBACKS),
 				level);
 		compareSideYard1Result(blockName, side1val, BigDecimal.valueOf(max), BigDecimal.ZERO,
-				BigDecimal.valueOf(maxMeanLength), mostRestrictiveOccupancy, sideYard1Result, valid1, subRule, rule,
+				BigDecimal.valueOf(maxMeanLength), mostRestrictiveOccupancy, sideYard1Result, valid1, CDGAdditionalService.getByLaws(pl, CDGAConstant.SETBACKS), CDGAdditionalService.getByLaws(pl, CDGAConstant.SETBACKS),
 				level);
 	}
 

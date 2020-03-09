@@ -77,14 +77,14 @@ public class NorthDirection extends FeatureProcess {
 
 		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
 		scrutinyDetail.setKey("Common_North Direction");
-		scrutinyDetail.addColumnHeading(1, RULE_NO);
+		//scrutinyDetail.addColumnHeading(1, RULE_NO);
 		scrutinyDetail.addColumnHeading(2, DESCRIPTION);
 		scrutinyDetail.addColumnHeading(3, PROVIDED);
 		scrutinyDetail.addColumnHeading(4, STATUS);
 
 		HashMap<String, String> errors = new HashMap<>();
 		Map<String, String> details = new HashMap<>();
-		details.put(RULE_NO, RULE_5_4_I_I);
+		//details.put(RULE_NO, RULE_5_4_I_I);
 		details.put(DESCRIPTION, NORTH_DIRECTION_DESCRIPTION);
 		if (pl.getDrawingPreference().getNorthDirection() == null) {
 			errors.put("NORTH_DIRECTION", "NORTH_DIRECTION layer is not provided");

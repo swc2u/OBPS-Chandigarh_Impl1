@@ -180,7 +180,7 @@ public class BuildingHeight extends FeatureProcess {
 					Map<String, String> featureValues = cdgAdditionalService
 							.getFeatureValue(CDGAConstant.PERMISSIBLE_BUILDING_HEIGHT, keyArrgument);
 					exptectedHeight = new BigDecimal(
-							featureValues.get(CDGAdditionalService.PERMISSIBLE_BUILDING_HEIGHT));
+							featureValues.get(CDGAdditionalService.PERMISSIBLE_BUILDING_HEIGHT)!=null?featureValues.get(CDGAdditionalService.PERMISSIBLE_BUILDING_HEIGHT):"0");
 				}
 
 				if (DxfFileConstants.A.equals(occupancyTypeHelper.getType().getCode())) {
@@ -287,8 +287,9 @@ public class BuildingHeight extends FeatureProcess {
 
 					if (buildingHeight.compareTo(exptectedHeight) > 0) {
 						Map<String, String> details = new HashMap<>();
-						details.put(RULE_NO, subRule);
-						details.put(DESCRIPTION, HEIGHT_OF_BUILDING + " for Block " + block.getNumber());
+					//	details.put(RULE_NO, subRule);
+						details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.HIGHT));
+							details.put(DESCRIPTION, HEIGHT_OF_BUILDING + " for Block " + block.getNumber());
 						details.put(UPTO, expectedResult);
 						details.put(PROVIDED, actualResult);
 						details.put(STATUS, Result.Not_Accepted.getResultVal());
@@ -297,7 +298,8 @@ public class BuildingHeight extends FeatureProcess {
 
 					} else {
 						Map<String, String> details = new HashMap<>();
-						details.put(RULE_NO, subRule);
+					//	details.put(RULE_NO, subRule);
+						details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.HIGHT));
 						details.put(DESCRIPTION, HEIGHT_OF_BUILDING + " for Block " + block.getNumber());
 						details.put(UPTO, expectedResult);
 						details.put(PROVIDED, actualResult);

@@ -68,6 +68,8 @@ import org.egov.common.entity.edcr.RoomHeight;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.ProcessHelper;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.DcrConstants;
 import org.springframework.stereotype.Service;
 
@@ -178,7 +180,7 @@ public class Kitchen extends FeatureProcess {
                                     BigDecimal minHeight = kitchenHeights.stream().reduce(BigDecimal::min).get();
 
                                     minimumHeight = MINIMUM_HEIGHT_2_75;
-                                    subRule = SUBRULE_41_III;
+                                    subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.KITCHEN);
                                     subRuleDesc = SUBRULE_41_III_DESC;
 
                                     boolean valid = false;
@@ -196,7 +198,7 @@ public class Kitchen extends FeatureProcess {
                                 }
 
                             }
-                            subRule = SUBRULE_41_III;
+                            subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.KITCHEN);;
 
                             if (!kitchenAreas.isEmpty()) {
                                 totalArea = kitchenAreas.stream().reduce(BigDecimal.ZERO, BigDecimal::add);

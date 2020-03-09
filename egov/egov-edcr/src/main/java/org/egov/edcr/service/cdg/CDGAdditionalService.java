@@ -23,6 +23,7 @@ public class CDGAdditionalService {
 	public static final String FILE_PERMISSIBLE_BUILDING_HEIGHT = "PermissibleBuildingHeight.properties";
 	public static final String FILE_NO_OF_STORY = "NoOfStory.properties";
 	public static final String FILE_BACK_YARD_CONSTRUCTION = "BackYardConstruction.properties";
+	public static final String FILE_BYLAWS="ByLaws.properties";
 
 	public static final String SETBACKS = "setBack";
 	public static final String FAR = "far";
@@ -59,6 +60,7 @@ public class CDGAdditionalService {
 	private Properties permissibleBuildingHightProperties;
 	private Properties noOfStoryProperties;
 	private Properties backYardConstructionProperties;
+	private static Properties byLawsProperties;
 
 	@Autowired
 	public void PwcService(@Value("${pwc.properties.dir}") String featurePropertiesLocation) {
@@ -90,6 +92,12 @@ public class CDGAdditionalService {
 					featurePropertiesLocation + FILE_BACK_YARD_CONSTRUCTION);
 			backYardConstructionProperties = new Properties();
 			backYardConstructionProperties.load(backYardConstructionReader);
+			
+			
+			FileReader byLawsReader = new FileReader(featurePropertiesLocation + FILE_BYLAWS);
+			byLawsProperties = new Properties();
+			byLawsProperties.load(byLawsReader);
+			
 
 		} catch (Exception e) {
 			throw new RuntimeException("Properties file is required. // LOCATION:-" + featurePropertiesLocation
@@ -135,7 +143,21 @@ public class CDGAdditionalService {
 	}
 	
 	public static  String getByLaws(OccupancyTypeHelper occupancyTypeHelper,CDGAConstant cdgaConstant) {
-		return "N/A";
+		
+		String occkey=occupancyTypeHelper.getSubtype()!=null?occupancyTypeHelper.getSubtype().getCode():"";
+		String key=occkey+"."+cdgaConstant.getCDGAConstantValue().toUpperCase();
+		String byLaws=byLawsProperties.getProperty(key);
+		
+		return byLaws!=null?byLaws:"";
+	}
+	
+	public static  String getByLaws(Plan pl,CDGAConstant cdgaConstant) {
+		OccupancyTypeHelper occupancyTypeHelper=pl.getVirtualBuilding().getMostRestrictiveFarHelper();
+		String occkey=occupancyTypeHelper.getSubtype()!=null?occupancyTypeHelper.getSubtype().getCode():"";
+		String key=occkey+"."+cdgaConstant.getCDGAConstantValue();
+		String byLaws=byLawsProperties.getProperty(key.toUpperCase());
+		
+		return byLaws!=null?byLaws:"";
 	}
 
 	public static int getSectorPhase(String sector) {

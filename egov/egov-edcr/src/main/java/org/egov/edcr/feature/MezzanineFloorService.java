@@ -23,6 +23,9 @@ import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
+import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -58,13 +61,30 @@ public class MezzanineFloorService extends FeatureProcess {
 		
 		
 	}
+	
+	
+private boolean getOccupanciesForMezzanineSkelton(OccupancyTypeHelper occupancyTypeHelper) {
+	boolean flage = false;
+	if (DxfFileConstants.F_PP.equals(occupancyTypeHelper.getSubtype().getCode()))
+		flage = true;
+	return flage;
+		
+	}
+
+private boolean getOccupanciesForMezzanineNotAllowed(OccupancyTypeHelper occupancyTypeHelper) {
+	boolean flage = false;
+	if (DxfFileConstants.F_CD.equals(occupancyTypeHelper.getSubtype().getCode()))
+		flage = true;
+	return flage;
+		
+	}
 
 	// CGCL end
 
 	@Override
 	public Plan process(Plan pl) {
 		validate(pl);
-		String subRule = SUBRULE_46;
+		String subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.MEZZANINE_FLOOR);
 		if (pl != null && !pl.getBlocks().isEmpty()) {
 			for (Block block : pl.getBlocks()) {
 				scrutinyDetail = new ScrutinyDetail();
@@ -76,11 +96,15 @@ public class MezzanineFloorService extends FeatureProcess {
 				scrutinyDetail.addColumnHeading(6, STATUS);
 				scrutinyDetail.setKey("Block_" + block.getNumber() + "_" + "Mezzanine Floor");
 				
+				OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
+						? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+						: null;
 				
 				
 				if (block.getBuilding() != null && !block.getBuilding().getFloors().isEmpty()) {
 					BigDecimal totalBuiltupArea = BigDecimal.ZERO;
 					for (Floor floor : block.getBuilding().getFloors()) {
+						
 						BigDecimal builtupArea = BigDecimal.ZERO;
 						for (Occupancy occ : floor.getOccupancies()) {
 							if (!occ.getIsMezzanine() && occ.getBuiltUpArea() != null)
@@ -90,11 +114,18 @@ public class MezzanineFloorService extends FeatureProcess {
 						for (Occupancy mezzanineFloor : floor.getOccupancies()) {
 							if (mezzanineFloor.getIsMezzanine()) {
 
-								if (mezzanineFloor.getBuiltUpArea() != null
-										&& mezzanineFloor.getBuiltUpArea().doubleValue() > 0
-										&& mezzanineFloor.getTypeHelper() == null) {
-									pl.addError(OBJECTNOTDEFINED_DESC,
-											getLocaleMessage("msg.error.mezz.occupancy.not.defined", block.getNumber(),
+//								if (mezzanineFloor.getBuiltUpArea() != null
+//										&& mezzanineFloor.getBuiltUpArea().doubleValue() > 0
+//										&& mezzanineFloor.getTypeHelper() == null) {
+//									pl.addError(OBJECTNOTDEFINED_DESC,
+//											getLocaleMessage("msg.error.mezz.occupancy.not.defined", block.getNumber(),
+//													String.valueOf(floor.getNumber()),
+//													mezzanineFloor.getMezzanineNumber()));
+//								}
+								
+								if(getOccupanciesForMezzanineNotAllowed(mostRestrictiveOccupancyType)) {
+									pl.addError("mezzanineFloor defained",
+											getLocaleMessage("mezzanineFloor not allowed", block.getNumber(),
 													String.valueOf(floor.getNumber()),
 													mezzanineFloor.getMezzanineNumber()));
 								}
@@ -105,10 +136,10 @@ public class MezzanineFloorService extends FeatureProcess {
 								String floorNo = " floor " + floor.getNumber();
 								// CGCL start according to 26jan
 
-								if (!getOccupanciesForMezzanine(mezzanineFloor.getType())) {
+								if (getOccupanciesForMezzanineSkelton(mostRestrictiveOccupancyType) && (mezzanineFloor.getHeight().compareTo(new BigDecimal("2.40"))>=0)) {
 									setReportOutputDetails(pl, subRule,
 											RULE46_DIM_DESC + " " + mezzanineFloor.getMezzanineNumber(), floorNo,
-											mezzanineFloor.getHeight() + IN_METER,
+											"2.4" + IN_METER,
 											mezzanineFloor.getHeight() + IN_METER, Result.Accepted.getResultVal());
 
 									return pl;

@@ -61,6 +61,8 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.RoomHeight;
 import org.egov.common.entity.edcr.ScrutinyDetail;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -88,7 +90,8 @@ public class BathRoom extends FeatureProcess {
 		scrutinyDetail.addColumnHeading(5, STATUS);
 
 		Map<String, String> details = new HashMap<>();
-		details.put(RULE_NO, RULE_41_IV);
+		//details.put(RULE_NO, RULE_41_IV);
+		details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.BATH));
 		details.put(DESCRIPTION, BATHROOM_DESCRIPTION);
 
 		BigDecimal minHeight = BigDecimal.ZERO, totalArea = BigDecimal.ZERO, minWidth = BigDecimal.ZERO;

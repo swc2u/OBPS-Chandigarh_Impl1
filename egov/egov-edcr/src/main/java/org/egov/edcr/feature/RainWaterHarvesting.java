@@ -58,6 +58,8 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.DcrConstants;
 import org.springframework.stereotype.Service;
 
@@ -133,13 +135,16 @@ public class RainWaterHarvesting extends FeatureProcess {
 		scrutinyDetail.addColumnHeading(4, PROVIDED);
 		scrutinyDetail.addColumnHeading(5, STATUS);
 		scrutinyDetail.setKey("Common_Rain Water Harvesting");
-		String subRule = RULE_51;
+		String subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.RAIN_WATER_HERVESTING);
 		String subRuleDesc = RULE_51_DESCRIPTION;
 		BigDecimal expectedTankCapacity = new BigDecimal(100);// default added bcz there are not maintaion in rule
 		BigDecimal plotArea = pl.getPlot() != null ? pl.getPlot().getArea() : BigDecimal.ZERO;
 		OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
+				
+		if(isOccupancyTypeNotApplicable(mostRestrictiveFarHelper))
+			return pl;
 
 		String plotAreaType = pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE);
 
@@ -179,7 +184,7 @@ public class RainWaterHarvesting extends FeatureProcess {
 								Result.Verify.getResultVal());
 					}
 				}
-				else if (pl.getUtility().getRainWaterHarvestingTankCapacity().compareTo(expectedTankCapacity) > 0)
+				else if (pl.getUtility().getRainWaterHarvestingTankCapacity() !=null && (pl.getUtility().getRainWaterHarvestingTankCapacity().compareTo(expectedTankCapacity) > 0))
 					setReportOutputDetails(pl, subRule, subRuleDesc, "Mandatory",
 							pl.getUtility().getRainWaterHarvestingTankCapacity() + " litters",
 							Result.Verify.getResultVal());

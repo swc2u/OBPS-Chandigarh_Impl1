@@ -60,6 +60,8 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -70,7 +72,7 @@ public class SolarWaterHeating extends FeatureProcess {
 	// CGCL start according to 26jan
 
 	private static final String RULE_51 = "51";
-	private static final String RULE_51_DESCRIPTION = "Rain Water Harvesting";
+	private static final String RULE_51_DESCRIPTION = "Solar Water Heating";
 
 	/*
 	 * @Override public Plan validate(Plan pl) {
@@ -78,6 +80,19 @@ public class SolarWaterHeating extends FeatureProcess {
 	 * return pl; }
 	 */
 
+	public  boolean isOccupancyTypeNotApplicable(OccupancyTypeHelper occupancyTypeHelper) {
+		boolean flage = false;
+
+		if (DxfFileConstants.F_SCO.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.F_B.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.F_PP.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.F_CD.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.R1.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.T1.equals(occupancyTypeHelper.getSubtype().getCode()))
+			flage = true;
+
+		return flage;
+	}
 	@Override
 	public Plan process(Plan pl) {
 
@@ -91,8 +106,8 @@ public class SolarWaterHeating extends FeatureProcess {
 		scrutinyDetail.addColumnHeading(3, REQUIRED);
 		scrutinyDetail.addColumnHeading(4, PROVIDED);
 		scrutinyDetail.addColumnHeading(5, STATUS);
-		scrutinyDetail.setKey("Common_Rain Water Harvesting");
-		String subRule = RULE_51;
+		scrutinyDetail.setKey("Common_Solar Water Heating");
+		String subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.SOLAR_WATER_HEATING_SYSTEM);
 		String subRuleDesc = RULE_51_DESCRIPTION;
 		BigDecimal expectedTankCapacity = BigDecimal.ZERO;
 
@@ -101,12 +116,18 @@ public class SolarWaterHeating extends FeatureProcess {
 		OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
+		
+		if(isOccupancyTypeNotApplicable(mostRestrictiveFarHelper))
+			return pl;
 
 		areaType = pl.getPlanInfoProperties().get(DxfFileConstants.AREA_TYPE);
 
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
+				
+				
+		
 		if (mostRestrictiveFarHelper != null)
 			if (checkOccupancyTypeForSolarWaterHeating(mostRestrictiveFarHelper.getType().getCode(), areaType)) {
 				BigDecimal roundOffPlotArea = plotArea.divide(BigDecimal.valueOf(100));
@@ -164,7 +185,7 @@ public class SolarWaterHeating extends FeatureProcess {
 	private void setReportOutputDetails(Plan pl, String ruleNo, String ruleDesc, String expected, String actual,
 			String status) {
 		Map<String, String> details = new HashMap<>();
-		details.put(RULE_NO, ruleNo);
+		details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.SOLAR_WATER_HEATING_SYSTEM));
 		details.put(DESCRIPTION, ruleDesc);
 		details.put(REQUIRED, expected);
 		details.put(PROVIDED, actual);

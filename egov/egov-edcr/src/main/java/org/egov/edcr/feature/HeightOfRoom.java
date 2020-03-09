@@ -69,6 +69,8 @@ import org.egov.common.entity.edcr.RoomHeight;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.ProcessHelper;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.DcrConstants;
 import org.springframework.stereotype.Service;
 
@@ -356,7 +358,7 @@ public class HeightOfRoom extends FeatureProcess {
                                     else
                                         minimumHeight = MINIMUM_HEIGHT_3;
 
-                                    subRule = SUBRULE_41_II_A;
+                                    subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.HABITABLE_ROOM);
                                     subRuleDesc = SUBRULE_41_II_A_AC_DESC;
                                     
                                     
@@ -406,7 +408,7 @@ public class HeightOfRoom extends FeatureProcess {
                                     minimumHeight = MINIMUM_AREA_9_5;
                                     minWidth = MINIMUM_WIDTH_2_1;
                                 }
-                                subRule = SUBRULE_41_II_B;
+                                subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.HABITABLE_ROOM);
                                 subRuleDesc = SUBRULE_41_II_B_AREA_DESC;
 
                                 boolean valid = false;

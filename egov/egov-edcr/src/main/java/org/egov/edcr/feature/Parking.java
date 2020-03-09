@@ -80,6 +80,8 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.DcrConstants;
 import org.egov.edcr.utility.Util;
 import org.springframework.stereotype.Service;
@@ -328,8 +330,16 @@ public class Parking extends FeatureProcess {
             	
             	//requiredCarParkArea
             	
+            }else if(mostRestrictiveOccupancy!=null && DxfFileConstants.IT.equals(mostRestrictiveOccupancy.getType().getCode())) {
+            	BigDecimal totalCoveredArea=pl.getVirtualBuilding().getTotalCoverageArea();
+            	BigDecimal totalEC=totalCoveredArea.multiply(new BigDecimal("0.02"));
+            	requiredCarParkArea=totalEC.multiply(new BigDecimal(OPEN_ECS)).doubleValue();
+            	
+            	if(basementParkingArea.compareTo(totalProvidedCarParkArea.multiply(new BigDecimal("0.80")))<0) {
+            		pl.addError("basment parking", "Basement parking should be more then 80% of Total parking area");
+            	}
+            	
             }
-            
             else {
                 BigDecimal builtupArea = totalBuiltupArea.subtract(totalBuiltupArea.multiply(BigDecimal.valueOf(0.15)));
                 double requiredEcs = builtupArea.divide(BigDecimal.valueOf(100)).multiply(BigDecimal.valueOf(2))
@@ -384,17 +394,17 @@ public class Parking extends FeatureProcess {
             pl.addError(SUB_RULE_40_2_DESCRIPTION,
                     getLocaleMessage("msg.error.not.defined", SUB_RULE_40_2_DESCRIPTION));
         } else if (requiredCarParkArea > 0 && totalProvidedCarParkingArea.compareTo(requiredCarParkingArea) < 0) {
-            setReportOutputDetails(pl, SUB_RULE_40_2, SUB_RULE_40_2_DESCRIPTION, requiredCarParkingArea + SQMTRS,
+            setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING), SUB_RULE_40_2_DESCRIPTION, requiredCarParkingArea + SQMTRS,
                     totalProvidedCarParkingArea + SQMTRS, Result.Not_Accepted.getResultVal());
         } else {
-            setReportOutputDetails(pl, SUB_RULE_40_2, SUB_RULE_40_2_DESCRIPTION, requiredCarParkingArea + SQMTRS,
+            setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING), SUB_RULE_40_2_DESCRIPTION, requiredCarParkingArea + SQMTRS,
                     totalProvidedCarParkingArea + SQMTRS, Result.Accepted.getResultVal());
         }
         if (requiredVisitorParkArea > 0 && providedVisitorParkArea.compareTo(requiredVisitorParkingArea) < 0) {
-            setReportOutputDetails(pl, SUB_RULE_40_10, SUB_RULE_40_10_DESCRIPTION, requiredVisitorParkingArea + SQMTRS,
+            setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING), SUB_RULE_40_10_DESCRIPTION, requiredVisitorParkingArea + SQMTRS,
                     providedVisitorParkArea + SQMTRS, Result.Not_Accepted.getResultVal());
         } else if (requiredVisitorParkArea > 0) {
-            setReportOutputDetails(pl, SUB_RULE_40_10, SUB_RULE_40_10_DESCRIPTION, requiredVisitorParkingArea + SQMTRS,
+            setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING), SUB_RULE_40_10_DESCRIPTION, requiredVisitorParkingArea + SQMTRS,
                     providedVisitorParkingArea + SQMTRS, Result.Accepted.getResultVal());
         }
 

@@ -370,7 +370,7 @@ public class RearYardService extends GeneralRule {
 
 							}
 							Map<String, String> details = new HashMap<>();
-							details.put(RULE_NO, rearYardResult.subRule);
+							details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.SETBACKS));
 							details.put(LEVEL, rearYardResult.level != null ? rearYardResult.level.toString() : "");
 							details.put(OCCUPANCY, rearYardResult.occupancy);
 							if (rearYardResult.expectedmeanDistance != null

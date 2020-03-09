@@ -73,6 +73,8 @@ import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.common.entity.edcr.SetBack;
 import org.egov.common.entity.edcr.Yard;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.DcrConstants;
 import org.egov.infra.utils.StringUtils;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -258,7 +260,7 @@ public class AdditionalFeature extends FeatureProcess {
 					&& DcrConstants.YES.equals(pl.getPlanInformation().getBarrierFreeAccessForPhyChlngdPpl())) {
 
 				Map<String, String> details = new HashMap<>();
-				details.put(RULE_NO, RULE_50);
+				//details.put(RULE_NO, RULE_50);
 				details.put(DESCRIPTION, BARRIER_FREE_ACCESS_FOR_PHYSICALLY_CHALLENGED_PEOPLE_DESC);
 				details.put(PERMISSIBLE, DcrConstants.YES);
 				details.put(PROVIDED, DcrConstants.YES);
@@ -268,7 +270,7 @@ public class AdditionalFeature extends FeatureProcess {
 
 			} else {
 				Map<String, String> details = new HashMap<>();
-				details.put(RULE_NO, RULE_50);
+				//details.put(RULE_NO, RULE_50);
 				details.put(DESCRIPTION, BARRIER_FREE_ACCESS_FOR_PHYSICALLY_CHALLENGED_PEOPLE_DESC);
 				details.put(PERMISSIBLE, "YES");
 				details.put(PROVIDED, pl.getPlanInformation().getBarrierFreeAccessForPhyChlngdPpl());
@@ -346,7 +348,8 @@ public class AdditionalFeature extends FeatureProcess {
 			if (errors.isEmpty() && StringUtils.isNotBlank(requiredFloorCount)) {
 				Map<String, String> details = new HashMap<>();
 				// details.put(RULE_NO, RULE_38);
-				details.put(DESCRIPTION, NO_OF_FLOORS);
+				 details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.NO_OF_STORY));
+					details.put(DESCRIPTION, NO_OF_FLOORS);
 				details.put(PERMISSIBLE, requiredFloorCount);
 				details.put(PROVIDED, String.valueOf(block.getBuilding().getFloorsAboveGround()));
 				details.put(STATUS, isAccepted ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
@@ -384,7 +387,8 @@ public class AdditionalFeature extends FeatureProcess {
 								String desc = String.format(STILT_PARKING_DESCRIPTION, stilt.getName(),
 										block.getNumber());
 								Map<String, String> details = new HashMap<>();
-								details.put(RULE_NO, RULE_38);
+								//details.put(RULE_NO, RULE_38);
+								details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.STLLT_PARKING));
 								details.put(DESCRIPTION, desc);
 								details.put(REQUIRED, STILT_PARKING_REQUIRED_DESCRIPTION);
 								details.put(PROVIDED, String.format(STILT_PARKING_PROVIDED_DESCRIPTION,
@@ -497,7 +501,8 @@ public class AdditionalFeature extends FeatureProcess {
 
 			if (errors.isEmpty() && StringUtils.isNotBlank(requiredBuildingHeight)) {
 				Map<String, String> details = new HashMap<>();
-				details.put(RULE_NO, ruleNo);
+				//details.put(RULE_NO, ruleNo);
+				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.HIGHT));
 				details.put(DESCRIPTION, HEIGHT_BUILDING);
 				details.put(DxfFileConstants.AREA_TYPE, typeOfArea);
 				details.put(DxfFileConstants.ROAD_WIDTH, roadWidth.toString());
@@ -600,7 +605,8 @@ public class AdditionalFeature extends FeatureProcess {
 
 			if (errors.isEmpty() && !isOccupancyTypePlinthNotApplicable(mostRestrictiveOccupancyType)) {
 				Map<String, String> details = new HashMap<>();
-				details.put(RULE_NO, RULE_41_I_A);
+				//details.put(RULE_NO, RULE_41_I_A);
+				details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.PLINTH_LEVEL));
 				details.put(DESCRIPTION, MIN_PLINTH_HEIGHT_DESC);
 
 				if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
@@ -670,7 +676,9 @@ public class AdditionalFeature extends FeatureProcess {
 				}
 
 				Map<String, String> details = new HashMap<>();
-				details.put(RULE_NO, RULE_47);
+				//details.put(RULE_NO, RULE_47);
+
+				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.BASEMENT));
 				details.put(DESCRIPTION, MAX_BSMNT_CELLAR);
 				details.put(PERMISSIBLE, allowedBsmnt);
 				details.put(PROVIDED, String.valueOf(basementSetbacks.size()));
@@ -685,6 +693,10 @@ public class AdditionalFeature extends FeatureProcess {
 		OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
+		
+				if(isOccupancyTypeNotApplicableForGreenBuildingsAndSustainability(mostRestrictiveFarHelper))
+					return;
+				
 		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
 		scrutinyDetail.setKey("Common_Green buildings and sustainability provisions");
 		scrutinyDetail.addColumnHeading(1, RULE_NO);
@@ -789,25 +801,31 @@ public class AdditionalFeature extends FeatureProcess {
 	}
 
 	private void validate2b(Plan pl, ScrutinyDetail scrutinyDetail) {
+		OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
+				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+				: null;
 		if (pl.getUtility().getSolarWaterHeatingSystems() != null
 				&& !pl.getUtility().getSolarWaterHeatingSystems().isEmpty()) {
-			addDetails(scrutinyDetail, "55-2-b", "Installation of Solar Assisted Water Heating Systems",
+			addDetails(scrutinyDetail, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.SOLAR_WATER_HEATING_SYSTEM), "Installation of Solar Assisted Water Heating Systems",
 					"Solar assisted water heating system details",
 					"Provided solar assisted water heating system details", Result.Accepted.getResultVal());
-		} else {
-			addDetails(scrutinyDetail, "55-2-b", "Installation of Solar Assisted Water Heating Systems",
+		} else if(!(this.isOccupancyTypeNotApplicableForGreenBuildingsAndSustainability(mostRestrictiveFarHelper)))  {
+			addDetails(scrutinyDetail, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.SOLAR_WATER_HEATING_SYSTEM), "Installation of Solar Assisted Water Heating Systems",
 					"Solar assisted water heating system details",
 					"Not provided solar assisted water heating system details", Result.Not_Accepted.getResultVal());
 		}
 	}
 
 	private void validate2a(Plan pl, ScrutinyDetail scrutinyDetail) {
+		OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
+				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+				: null;
 		if (pl.getUtility().getSolar() != null && !pl.getUtility().getSolar().isEmpty()) {
-			addDetails(scrutinyDetail, "55-2-a", "Installation of Solar Photovoltaic Panels",
+			addDetails(scrutinyDetail, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.SOLAR_PHOTO_VOLTAIC), "Installation of Solar Photovoltaic Panels",
 					"Solar photovoltaic panel details", "Provided solar photovoltaic panel details",
 					Result.Accepted.getResultVal());
-		} else {
-			addDetails(scrutinyDetail, "55-2-a", "Installation of Solar Photovoltaic Panels",
+		} else if(!(this.isOccupancyTypeNotApplicableForGreenBuildingsAndSustainability(mostRestrictiveFarHelper))) {
+			addDetails(scrutinyDetail, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.SOLAR_PHOTO_VOLTAIC), "Installation of Solar Photovoltaic Panels",
 					"Solar photovoltaic panel details", "Not provided solar photovoltaic panel details",
 					Result.Not_Accepted.getResultVal());
 		}
@@ -820,15 +838,15 @@ public class AdditionalFeature extends FeatureProcess {
 				: null;
 		
 		if (pl.getUtility().getRainWaterHarvest() != null && !pl.getUtility().getRainWaterHarvest().isEmpty()) {
-			addDetails(scrutinyDetail, "55-1-a", "Rain Water Harvesting", "Rain water harvesting details",
+			addDetails(scrutinyDetail, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.RAIN_WATER_HERVESTING), "Rain Water Harvesting", "Rain water harvesting details",
 					"Provided rain water harvesting", Result.Accepted.getResultVal());
-		} else if(!(this.isOccupancyTypeNotApplicable(mostRestrictiveFarHelper))){
-			addDetails(scrutinyDetail, "55-1-a", "Rain Water Harvesting", "Rain water harvesting details",
+		} else if(!(this.isOccupancyTypeNotApplicableForGreenBuildingsAndSustainability(mostRestrictiveFarHelper))){
+			addDetails(scrutinyDetail, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.RAIN_WATER_HERVESTING), "Rain Water Harvesting", "Rain water harvesting details",
 					"Not Provided rain water harvesting", Result.Not_Accepted.getResultVal());
 		}
 	}
 	
-	private  boolean isOccupancyTypeNotApplicable(OccupancyTypeHelper occupancyTypeHelper) {
+	private  boolean isOccupancyTypeNotApplicableForGreenBuildingsAndSustainability(OccupancyTypeHelper occupancyTypeHelper) {
 		boolean flage = false;
 
 		if (DxfFileConstants.F_SCO.equals(occupancyTypeHelper.getSubtype().getCode())

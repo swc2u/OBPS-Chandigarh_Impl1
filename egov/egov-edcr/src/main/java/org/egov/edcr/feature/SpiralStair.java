@@ -62,6 +62,8 @@ import org.egov.common.entity.edcr.Floor;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.Util;
 import org.springframework.stereotype.Service;
 
@@ -119,7 +121,7 @@ public class SpiralStair extends FeatureProcess {
 										: " floor " + floor.getNumber();
 
 								if (valid) {
-									setReportOutputDetailsFloorStairWise(plan, RULE42_5_IV, value,
+									setReportOutputDetailsFloorStairWise(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.STAIRCASE), value,
 											spiralStair.getNumber(), "",
 											"spiral stair of fire stair not allowed for building with height > 9 for block "
 													+ block.getNumber() + " " + value,
@@ -138,12 +140,12 @@ public class SpiralStair extends FeatureProcess {
 										BigDecimal minDiameter = Util.roundOffTwoDecimal(BigDecimal.valueOf(1.50));
 
 										if (diameter.compareTo(minDiameter) >= 0) {
-											setReportOutputDetailsFloorStairWise(plan, RULE42_5_IV, value,
+											setReportOutputDetailsFloorStairWise(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.STAIRCASE), value,
 													String.format(DIAMETER_DESCRIPTION, spiralStair.getNumber()),
 													EXPECTED_DIAMETER, String.valueOf(diameter),
 													Result.Accepted.getResultVal(), scrutinyDetail);
 										} else {
-											setReportOutputDetailsFloorStairWise(plan, RULE42_5_IV, value,
+											setReportOutputDetailsFloorStairWise(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.STAIRCASE), value,
 													String.format(DIAMETER_DESCRIPTION, spiralStair.getNumber()),
 													EXPECTED_DIAMETER, String.valueOf(diameter),
 													Result.Not_Accepted.getResultVal(), scrutinyDetail);

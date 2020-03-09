@@ -80,6 +80,15 @@ public class OccupancyService {
     public List<Occupancy> findAllOrderByOrderNumber() {
         return occupancyRepository.findAll(new Sort(Sort.Direction.ASC, "orderNumber"));
     }
+    
+    public List<SubOccupancy> findSubOccupancyByOccupancy(final String occupancyName){
+    	Occupancy occupancy = occupancyRepository.findByName(occupancyName);
+    	 List<SubOccupancy> list = new ArrayList<SubOccupancy>();
+    	if(occupancy!=null) {
+    		list = subOccupancyRepository.findByOccupancyAndIsActiveTrueOrderByOrderNumberAsc(occupancy);
+    	}
+    	return list;
+    }
 
     public List<Usage> findSubUsagesByOccupancy(final String occupancyName) {
         Occupancy occupancy = occupancyRepository.findByName(occupancyName);

@@ -71,6 +71,8 @@ import org.egov.common.entity.edcr.Ramp;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.DcrConstants;
 import org.egov.edcr.utility.Util;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -473,12 +475,12 @@ public class RampService extends FeatureProcess {
 					for (OccupancyType occupancyType : occupancyTypeList) {
 						if (getOccupanciesForRampskeleton(occupancyType)) {
 							if (!block.getDARamps().isEmpty()) {
-								setReportOutputDetails(pl, SUBRULE_40_A1, SUBRULE_40_A_1_DESC, "",
+								setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP), SUBRULE_40_A_1_DESC, "",
 										DcrConstants.OBJECTDEFINED_DESC, Result.Accepted.getResultVal(),
 										scrutinyDetail);
 								break;
 							} else if(isOccupancyTypehApplicable(mostRestrictiveOccupancyType)){
-								setReportOutputDetails(pl, SUBRULE_40_A1, SUBRULE_40_A_1_DESC, "",
+								setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP), SUBRULE_40_A_1_DESC, "",
 										DcrConstants.OBJECTNOTDEFINED_DESC, Result.Not_Accepted.getResultVal(),
 										scrutinyDetail);
 								break;
@@ -498,10 +500,10 @@ public class RampService extends FeatureProcess {
 							}
 						}
 						if (isSlopeDefined) {
-							setReportOutputDetails(pl, SUBRULE_50_C_4_B, SUBRULE_50_C_4_B_SLOPE_MAN_DESC, "",
+							setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP), SUBRULE_50_C_4_B_SLOPE_MAN_DESC, "",
 									DcrConstants.OBJECTDEFINED_DESC, Result.Accepted.getResultVal(), scrutinyDetail1);
 						} else {
-							setReportOutputDetails(pl, SUBRULE_50_C_4_B, SUBRULE_50_C_4_B_SLOPE_MAN_DESC, "",
+							setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP), SUBRULE_50_C_4_B_SLOPE_MAN_DESC, "",
 									DcrConstants.OBJECTNOTDEFINED_DESC, Result.Not_Accepted.getResultVal(),
 									scrutinyDetail1);
 						}
@@ -524,13 +526,13 @@ public class RampService extends FeatureProcess {
 								}
 							}
 							if (valid) {
-								setReportOutputDetails(pl, SUBRULE_50_C_4_B,
+								setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP),
 										String.format(SUBRULE_50_C_4_B_SLOPE_DESCRIPTION,
 												mapOfRampNumberAndSlopeValues.get("daRampNumber")),
 										expectedSlope.toString(), mapOfRampNumberAndSlopeValues.get("slope"),
 										Result.Accepted.getResultVal(), scrutinyDetail2);
 							} else {
-								setReportOutputDetails(pl, SUBRULE_50_C_4_B,
+								setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP),
 										String.format(SUBRULE_50_C_4_B_SLOPE_DESCRIPTION, ""), expectedSlope.toString(),
 										"Less than 0.08 for all da ramps", Result.Not_Accepted.getResultVal(),
 										scrutinyDetail2);
@@ -643,12 +645,12 @@ public class RampService extends FeatureProcess {
 													? (String) typicalFloorValues.get("typicalFloors")
 													: " floor " + floor.getNumber();
 											if (valid) {
-												setReportOutputDetailsFloorWiseWithDescription(pl, SUBRULE_40,
+												setReportOutputDetailsFloorWiseWithDescription(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP),
 														String.format(SUBRULE_50_C_4_B_DESCRIPTION, ramp.getNumber()),
 														value, expectedSlope.toString(), rampSlope.toString(),
 														Result.Accepted.getResultVal(), scrutinyDetail5);
 											} else {
-												setReportOutputDetailsFloorWiseWithDescription(pl, SUBRULE_40,
+												setReportOutputDetailsFloorWiseWithDescription(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP),
 														String.format(SUBRULE_50_C_4_B_DESCRIPTION, ramp.getNumber()),
 														value, expectedSlope.toString(), rampSlope.toString(),
 														Result.Not_Accepted.getResultVal(), scrutinyDetail5);

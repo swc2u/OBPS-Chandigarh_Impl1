@@ -65,6 +65,8 @@ import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.ProcessHelper;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.DcrConstants;
 import org.egov.infra.utils.StringUtils;
 import org.springframework.stereotype.Service;
@@ -392,7 +394,7 @@ public class Coverage extends FeatureProcess {
 		
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding().getMostRestrictiveFarHelper();
 		
-		if(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE)!=null && mostRestrictiveOccupancyType!=null && mostRestrictiveOccupancyType.getSubtype()!=null) {
+		if(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE)!=null && mostRestrictiveOccupancyType.getSubtype()!=null) {
 			
 			if(DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
 				if(DxfFileConstants.MARLA.equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
@@ -529,7 +531,8 @@ public class Coverage extends FeatureProcess {
 
 		} else {
 			Map<String, String> details = new HashMap<>();
-			details.put(RULE_NO, RULE_38);
+			//details.put(RULE_NO, RULE_38);
+			details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyType, CDGAConstant.GROUND_COVERAGE));
 			details.put(DESCRIPTION, desc);
 			String occupancyName;
 			if (occupancyType.getSubtype() != null)

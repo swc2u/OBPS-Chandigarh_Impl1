@@ -223,7 +223,7 @@ public class PlanReportService {
                 if (STATUS.equalsIgnoreCase(columnHeading.name)) {
                     columnWidth = statusColumnSize.intValue();
                 }
-                if(!"Byelaw".equalsIgnoreCase(columnHeading.name))// disable  ByLaw from report
+               // if(!"Byelaw".equalsIgnoreCase(columnHeading.name))// disable  ByLaw from report
                 	frb.addColumn(columnHeading.name, columnHeading.name, String.class.getName(), columnWidth);
             }
             frb.setMargins(0, 0, 0, 0);

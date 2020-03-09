@@ -66,12 +66,15 @@ import org.egov.common.entity.edcr.Block;
 import org.egov.common.entity.edcr.Floor;
 import org.egov.common.entity.edcr.Measurement;
 import org.egov.common.entity.edcr.Occupancy;
+import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.SanityDetails;
 import org.egov.common.entity.edcr.SanityHelper;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.DcrConstants;
 import org.springframework.stereotype.Service;
 
@@ -323,6 +326,14 @@ public class Sanitation extends FeatureProcess {
 
     @Override
     public Plan process(Plan pl) {
+    	
+    	OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
+				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+				: null;
+				
+		if(DxfFileConstants.F_H.equals(mostRestrictiveFarHelper.getSubtype().getCode()))
+			return pl;
+    	
         verifyDimesions(pl);
         checkCount(pl);
         return pl;
@@ -402,7 +413,7 @@ public class Sanitation extends FeatureProcess {
                     case DxfFileConstants.A:
                     case DxfFileConstants.A_AF:
                         if (b.getResidentialBuilding())
-                            accepted = processSpecialWaterClosetForResidential(b, helper, scrutinyDetail,
+                            accepted = processSpecialWaterClosetForResidential(pl,b, helper, scrutinyDetail,
                                     requiredSpWcMap, providedSpWcMap, failedAreaSpWcMap, failedDimensionSpWcMap);
                         break;
                     case DxfFileConstants.A_SR:
@@ -448,7 +459,7 @@ public class Sanitation extends FeatureProcess {
                         helper.abultionTap += helper.maleWc + helper.femaleWc + carpetArea / (4.75 * 3);
                         processSpecialWaterCloset(b, requiredSpWcMap, providedSpWcMap, failedAreaSpWcMap,
                                 failedDimensionSpWcMap);
-                        helper.ruleNo.add(RULE_55_12);
+                        helper.ruleNo.add(CDGAdditionalService.getByLaws(pl, CDGAConstant.WC_AND_POWER_ROOM));
                         break;
 
                     case DxfFileConstants.C_MOP:
@@ -461,11 +472,11 @@ public class Sanitation extends FeatureProcess {
                         // helper.femaleBath = carpetArea / (4.75 * 3 * 10);
                         processSpecialWaterCloset(b, requiredSpWcMap, providedSpWcMap, failedAreaSpWcMap,
                                 failedDimensionSpWcMap);
-                        helper.ruleNo.add(RULE_55_12);
+                        helper.ruleNo.add(CDGAdditionalService.getByLaws(pl, CDGAConstant.WC_AND_POWER_ROOM));
                         break;
 
                     case DxfFileConstants.C_MA:
-                        helper.ruleNo.add(RULE_55_12);
+                        helper.ruleNo.add(CDGAdditionalService.getByLaws(pl, CDGAConstant.WC_AND_POWER_ROOM));
                         helper.maleWc += carpetArea * 2 / (4.75 * 3 * 25);
                         helper.femaleWc += carpetArea / (4.75 * 3 * 15);
 
@@ -505,10 +516,10 @@ public class Sanitation extends FeatureProcess {
                         // helper.femaleBath += carpetArea / (4.75 * 3 * 10);
                         processSpecialWaterCloset(b, requiredSpWcMap, providedSpWcMap, failedAreaSpWcMap,
                                 failedDimensionSpWcMap);
-                        helper.ruleNo.add(RULE_55_12);
+                        helper.ruleNo.add(CDGAdditionalService.getByLaws(pl, CDGAConstant.WC_AND_POWER_ROOM));
                         break;
                     case DxfFileConstants.D_BT:
-                        helper.ruleNo.add(RULE_55_12);
+                        helper.ruleNo.add(CDGAdditionalService.getByLaws(pl, CDGAConstant.WC_AND_POWER_ROOM));
                         if (carpetArea <= 1000) {
                             helper.maleWc += 4d;
                         } else {
@@ -529,7 +540,7 @@ public class Sanitation extends FeatureProcess {
                                 failedDimensionSpWcMap);
                         // helper.maleBath += carpetArea * 2 / (4.75 * 3 * 10);
                         // helper.femaleBath += carpetArea / (4.75 * 3 * 10);
-                        helper.ruleNo.add(RULE_54_6);
+                        helper.ruleNo.add(CDGAdditionalService.getByLaws(pl, CDGAConstant.WC_AND_POWER_ROOM));
                         break;
                     case DxfFileConstants.E:
                     case DxfFileConstants.F:
@@ -538,7 +549,7 @@ public class Sanitation extends FeatureProcess {
                         helper.femaleWc += carpetArea / (4.75 * 3 * 15);
                         helper.urinal += carpetArea * 2 / (4.75 * 3 * 25);
 
-                        helper.ruleNo.add("56(3C)");
+                        helper.ruleNo.add("CDGAdditionalService.getByLaws(pl, CDGAConstant.WC_AND_POWER_ROOM)");
                         helper.ruleDescription = SANITY_RULE_DESC + o.getCode();
                         if ((o.equals(DxfFileConstants.F) || o.equals(DxfFileConstants.F_K)))
                             processSpecialWaterCloset(b, requiredSpWcMap, providedSpWcMap, failedAreaSpWcMap,
@@ -549,7 +560,7 @@ public class Sanitation extends FeatureProcess {
                         helper.maleWc += carpetArea * 2 / (3 * 30 * 50);
                         helper.femaleWc += carpetArea / (3 * 30 * 25);
                         helper.urinal += carpetArea * 2 / (3 * 30 * 100);
-                        helper.ruleNo.add("58(6)");
+                        helper.ruleNo.add("CDGAdditionalService.getByLaws(pl, CDGAConstant.WC_AND_POWER_ROOM)");
                         break;
                     case DxfFileConstants.F_H:
                         helper.maleWc += carpetArea * 2 / (4.75 * 3 * 25);
@@ -562,7 +573,7 @@ public class Sanitation extends FeatureProcess {
                         processSpecialWaterCloset(b, requiredSpWcMap, providedSpWcMap, failedAreaSpWcMap,
                                 failedDimensionSpWcMap);
                         // helper.femaleBath += carpetArea / (4.75 * 3 * 10);
-                        helper.ruleNo.add(RULE_54_6);
+                        helper.ruleNo.add(CDGAdditionalService.getByLaws(pl, CDGAConstant.WC_AND_POWER_ROOM));
                         break;
                     case DxfFileConstants.G:
                     case DxfFileConstants.G_SI:
@@ -593,7 +604,7 @@ public class Sanitation extends FeatureProcess {
                         helper.maleWash += floorArea / (30 * 50);
                         double noOfPerson = floorArea * 2 / (3 * 30);
                         helper.urinal += noOfPerson / 100;
-                        helper.ruleNo.add("59(7)");
+                        helper.ruleNo.add(CDGAdditionalService.getByLaws(pl, CDGAConstant.WC_AND_POWER_ROOM));
                         // accepted = processSanity(pl, b, floorArea, helper,
                         // scrutinyDetail, type);
                         break;
@@ -619,7 +630,7 @@ public class Sanitation extends FeatureProcess {
 
                 if (helper.requiredSpecialWc > 0) {
                     Set<String> ruleNo = new HashSet<>();
-                    ruleNo.add(RULE_40_A_4);
+                    ruleNo.add(CDGAdditionalService.getByLaws(pl, CDGAConstant.WC_AND_POWER_ROOM));
                     if (helper.providedSpecialWc < helper.requiredSpecialWc) {
                         addReportDetail(ruleNo,
                                 BLDG_PART_SPECIAL_WATER_CLOSET
@@ -718,7 +729,7 @@ public class Sanitation extends FeatureProcess {
         }
     }
 
-    private Boolean processSpecialWaterClosetForResidential(Block block, SanityHelper helper, ScrutinyDetail detail,
+    private Boolean processSpecialWaterClosetForResidential(Plan plan,Block block, SanityHelper helper, ScrutinyDetail detail,
             Map<Integer, Integer> requiredSpWcMap, Map<Integer, Integer> providedSpWcMap,
             Map<Integer, Integer> failedAreaSpWcMap, Map<Integer, Integer> failedDimensionSpWcMap) {
         boolean notFound = false;
@@ -743,7 +754,7 @@ public class Sanitation extends FeatureProcess {
             }
         }
         Set<String> ruleNo = new HashSet<>();
-        ruleNo.add(RULE_40_A_4);
+        ruleNo.add(CDGAdditionalService.getByLaws(plan, CDGAConstant.WC_AND_POWER_ROOM));
         if (notFound) {
             actualResult.append("Not Found");
             addReportDetail(ruleNo, BLDG_PART_SPECIAL_WATER_CLOSET + " - Minimum one at Ground Floor",
@@ -797,7 +808,7 @@ public class Sanitation extends FeatureProcess {
                 wcList.addAll(sanityDetails.getFemaleWaterClosets());
                 wcList.addAll(sanityDetails.getCommonWaterClosets());
                 checkDimension(totalWCExpected.intValue(), detail, wcList, 1d, 1.1d, BLDG_PART_WATER_CLOSET,
-                        DIMESION_DESC_KEY, RULE_38_1);
+                        DIMESION_DESC_KEY, CDGAdditionalService.getByLaws(pl, CDGAConstant.WC_AND_POWER_ROOM));
 
                 expected = "" + totalWCExpected.intValue();
                 actual = "" + totalWCActual.intValue();
@@ -876,10 +887,10 @@ public class Sanitation extends FeatureProcess {
             wcrList.addAll(sanityDetails.getCommonRoomsWithWaterCloset());
             if (totalBathExpected.intValue() >= 0) {
                 checkDimension(totalBathExpected.intValue(), detail, wcList, 1.1d, 1.5d, BLDG_PART_BATHROOM,
-                        DIMESION_DESC_KEY, RULE_38_1);
+                        DIMESION_DESC_KEY, CDGAdditionalService.getByLaws(pl, CDGAConstant.WC_AND_POWER_ROOM));
 
                 checkDimension(totalBathExpected.intValue(), detail, wcrList, 1.1d, 2.2d, MALE_BATH_WITH_WC,
-                        DIMESION_DESC_KEY, RULE_38_1);
+                        DIMESION_DESC_KEY, CDGAdditionalService.getByLaws(pl, CDGAConstant.WC_AND_POWER_ROOM));
 
                 if (totalBathExpected.intValue() > totalActualBath) {
                     addReportDetail(helper.ruleNo, description, expected, actual, Result.Not_Accepted.getResultVal(),

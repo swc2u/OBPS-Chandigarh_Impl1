@@ -58,6 +58,8 @@ import org.egov.common.entity.edcr.Block;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.Util;
 import org.springframework.stereotype.Service;
 
@@ -109,11 +111,11 @@ public class PassageService extends FeatureProcess {
 						BigDecimal minWidth = Util.roundOffTwoDecimal(minPassagePolyLine);
 						
 						if (minWidth.compareTo(BigDecimal.ONE) >= 0) {
-							setReportOutputDetails(plan, RULE41, RULE_41_DESCRIPTION,
+							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.AMAIGAMATION), RULE_41_DESCRIPTION,
 									String.valueOf(1), String.valueOf(minWidth), Result.Accepted.getResultVal(),
 									scrutinyDetail);
 						} else {
-							setReportOutputDetails(plan, RULE41, RULE_41_DESCRIPTION,
+							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.AMAIGAMATION), RULE_41_DESCRIPTION,
 									String.valueOf(1), String.valueOf(minWidth), Result.Not_Accepted.getResultVal(),
 									scrutinyDetail);
 						}
@@ -126,11 +128,11 @@ public class PassageService extends FeatureProcess {
 						BigDecimal minWidth = Util.roundOffTwoDecimal(minPassageStairPolyLine);
 						
 						if (minWidth.compareTo(Util.roundOffTwoDecimal(BigDecimal.valueOf(1.2))) >= 0) {
-							setReportOutputDetails(plan, RULE39_6, RULE39_6_DESCRIPTION,
+							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.AMAIGAMATION), RULE39_6_DESCRIPTION,
 									PASSAGE_STAIR_MINIMUM_WIDTH, String.valueOf(minWidth), Result.Accepted.getResultVal(),
 									scrutinyDetail1);
 						} else {
-							setReportOutputDetails(plan, RULE39_6, RULE39_6_DESCRIPTION,
+							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.AMAIGAMATION), RULE39_6_DESCRIPTION,
 									PASSAGE_STAIR_MINIMUM_WIDTH, String.valueOf(minWidth), Result.Not_Accepted.getResultVal(),
 									scrutinyDetail1);
 						}
