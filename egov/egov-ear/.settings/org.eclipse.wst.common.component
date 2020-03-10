@@ -236,6 +236,18 @@
         <dependent-module archiveName="vecmath-1.3.1.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/java3d/vecmath/1.3.1/vecmath-1.3.1.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="sendgrid-java-4.1.1.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/sendgrid/sendgrid-java/4.1.1/sendgrid-java-4.1.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="java-http-client-4.1.0.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/sendgrid/java-http-client/4.1.0/java-http-client-4.1.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mockito-core-1.10.19.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/mockito/mockito-core/1.10.19/mockito-core-1.10.19.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="jackson-annotations-2.9.2.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/fasterxml/jackson/core/jackson-annotations/2.9.2/jackson-annotations-2.9.2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="egov-config-BPA-3.0.0-SNAPSHOT.jar" deploy-path="/lib" handle="module:/resource/egov-config/egov-config">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -485,9 +497,6 @@
         <dependent-module archiveName="jackson-databind-2.9.2.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/fasterxml/jackson/core/jackson-databind/2.9.2/jackson-databind-2.9.2.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="jackson-annotations-2.9.2.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/fasterxml/jackson/core/jackson-annotations/2.9.2/jackson-annotations-2.9.2.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="embedded-redis-0.6.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/orange/redis-embedded/embedded-redis/0.6/embedded-redis-0.6.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -666,6 +675,9 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="jython-standalone-2.7.1b3.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/python/jython-standalone/2.7.1b3/jython-standalone-2.7.1b3.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="hamcrest-core-1.3.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="log4j-1.2.17.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/log4j/log4j/1.2.17/log4j-1.2.17.jar">
