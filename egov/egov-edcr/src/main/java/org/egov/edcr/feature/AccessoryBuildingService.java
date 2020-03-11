@@ -196,7 +196,7 @@ public class AccessoryBuildingService extends FeatureProcess{
         scrutinyDetail1.addColumnHeading(3, REQUIRED);
         scrutinyDetail1.addColumnHeading(4, PROVIDED);
         scrutinyDetail1.addColumnHeading(5, STATUS);
-        scrutinyDetail1.setKey("Common_Accessory Block - Maximum Height");
+        scrutinyDetail1.setKey("Common_Construction in back courtyard - Maximum Height");
         
         ScrutinyDetail scrutinyDetail2 = new ScrutinyDetail();
         scrutinyDetail2.addColumnHeading(1, RULE_NO);
@@ -204,7 +204,7 @@ public class AccessoryBuildingService extends FeatureProcess{
         scrutinyDetail2.addColumnHeading(3, REQUIRED);
         scrutinyDetail2.addColumnHeading(4, PROVIDED);
         scrutinyDetail2.addColumnHeading(5, STATUS);
-        scrutinyDetail2.setKey("Common_Accessory Block - Minimum distance from plot boundary");
+        scrutinyDetail2.setKey("Common_Construction in back courtyard - Minimum distance from plot boundary");
         if (plan != null && !plan.getAccessoryBlocks().isEmpty()) {
         	OccupancyTypeHelper occupancyTypeHelper = plan.getVirtualBuilding() != null
 	                ? plan.getVirtualBuilding().getMostRestrictiveFarHelper()
@@ -235,11 +235,11 @@ public class AccessoryBuildingService extends FeatureProcess{
                     }
                     if (valid) {
                        
-                        setReportOutputDetails(plan, SUBULE_88_3, String.format(SUBRULE_88_3_DESC, accessoryBlock.getNumber()), exptectedHeight + DcrConstants.IN_METER,
+                        setReportOutputDetails(plan, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.CONSTRUCTION_IN_BACK_COURTYARD), String.format(SUBRULE_88_3_DESC, accessoryBlock.getNumber()), exptectedHeight + DcrConstants.IN_METER,
                                 accessoryBlock.getAccessoryBuilding().getHeight() + DcrConstants.IN_METER, Result.Accepted.getResultVal(), scrutinyDetail1);
                     } else {
                         
-                        setReportOutputDetails(plan, SUBULE_88_3, String.format(SUBRULE_88_3_DESC, accessoryBlock.getNumber()), exptectedHeight + DcrConstants.IN_METER,
+                        setReportOutputDetails(plan, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.CONSTRUCTION_IN_BACK_COURTYARD), String.format(SUBRULE_88_3_DESC, accessoryBlock.getNumber()), exptectedHeight + DcrConstants.IN_METER,
                                 accessoryBlock.getAccessoryBuilding().getHeight() + DcrConstants.IN_METER, Result.Not_Accepted.getResultVal(), scrutinyDetail1);
 
                     }
@@ -259,10 +259,10 @@ public class AccessoryBuildingService extends FeatureProcess{
                         valid = true;
                     }
                     if (valid) {
-                        setReportOutputDetails(plan, SUBRULE_88_5, String.format(SUBRULE_88_5_DESC, accessoryBlock.getNumber()), exptectedDistance + DcrConstants.IN_METER,
+                        setReportOutputDetails(plan, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.CONSTRUCTION_IN_BACK_COURTYARD), String.format(SUBRULE_88_5_DESC, accessoryBlock.getNumber()), exptectedDistance + DcrConstants.IN_METER,
                                 minimumAccBlkDisFromPlotBoundary + DcrConstants.IN_METER, Result.Accepted.getResultVal(), scrutinyDetail2);
                     } else {
-                        setReportOutputDetails(plan, SUBRULE_88_5, String.format(SUBRULE_88_5_DESC, accessoryBlock.getNumber()), exptectedDistance + DcrConstants.IN_METER,
+                        setReportOutputDetails(plan, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.CONSTRUCTION_IN_BACK_COURTYARD), String.format(SUBRULE_88_5_DESC, accessoryBlock.getNumber()), exptectedDistance + DcrConstants.IN_METER,
                                 minimumAccBlkDisFromPlotBoundary + DcrConstants.IN_METER, Result.Not_Accepted.getResultVal(), scrutinyDetail2);
                     }
             	}                
@@ -273,7 +273,7 @@ public class AccessoryBuildingService extends FeatureProcess{
     private void processShortestDistanceOfAccBlkFromPlotBoundary(Plan plan) {
         String subRule = SUBRULE_88_5;
         ScrutinyDetail scrutinyDetail3 = new ScrutinyDetail();
-        scrutinyDetail3.setKey("Common_Accessory Block - Minimum distance from plot boundary");
+        scrutinyDetail3.setKey("Common_Construction in back courtyard - Minimum distance from plot boundary");
         scrutinyDetail3.addColumnHeading(1, RULE_NO);
         scrutinyDetail3.addColumnHeading(2, DESCRIPTION);
         scrutinyDetail3.addColumnHeading(3, REQUIRED);
@@ -435,7 +435,7 @@ public class AccessoryBuildingService extends FeatureProcess{
         scrutinyDetail1.addColumnHeading(3, REQUIRED);
         scrutinyDetail1.addColumnHeading(4, PROVIDED);
         scrutinyDetail1.addColumnHeading(5, STATUS);
-        scrutinyDetail1.setKey("Common_Accessory Block - Maximum Height");
+        scrutinyDetail1.setKey("Common_Construction in back courtyard - Maximum Height");
         String subRuleDesc = SUBRULE_88_3_DESC;
         String subRule = SUBULE_88_3;
         if (plan != null && !plan.getAccessoryBlocks().isEmpty()) {
