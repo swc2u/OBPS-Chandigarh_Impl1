@@ -1721,8 +1721,10 @@ public class Far extends FeatureProcess {
 			return codesMap.get(E_SACA);
 		else if (codes.contains(F))
 			return codesMap.get(F);
-		else if (codes.contains(A))
-			return codesMap.get(A);
+		else if (codes.contains(A_P))
+			return codesMap.get(A_P);
+		else if (codes.contains(A_G))
+			return codesMap.get(A_G);
 		else if (codes.contains(DxfFileConstants.B_HEI))
 			return codesMap.get(DxfFileConstants.B_HEI);
 		else if (codes.contains(DxfFileConstants.B_EC))

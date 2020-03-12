@@ -288,6 +288,10 @@ public class FrontYardService extends GeneralRule {
 
 				FrontYardResult frontYardResult = new FrontYardResult();
 
+				OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
+						? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+						: null;
+						
 				for (SetBack setback : block.getSetBacks()) {
 					BigDecimal min;
 					BigDecimal mean;
@@ -321,7 +325,7 @@ public class FrontYardService extends GeneralRule {
 								//
 								
 								// get excepted minimum front setback start
-								exceptedValue=getSetBack(pl, occupancy).get(CDGAdditionalService.SETBACK_FRONT);
+								exceptedValue=getSetBack(pl, mostRestrictiveOccupancyType).get(CDGAdditionalService.SETBACK_FRONT);
 								//exceptedValue="3.44";
 								// end
 								
@@ -397,14 +401,14 @@ public class FrontYardService extends GeneralRule {
 
 	// CGCL end according to 26jan 
 	
-	private Map<String, String> getSetBack(Plan pl,Occupancy occupancy){
+	private Map<String, String> getSetBack(Plan pl,OccupancyTypeHelper occupancy){
 		
 		String plotAreaType=pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE);
 		String sector=pl.getPlanInfoProperties().get(DxfFileConstants.SECTOR_NUMBER);
 		String plotNo=pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_NO);
 		
 		Map<String, String> input=new HashMap<String, String>();
-		input.put(CDGAdditionalService.OCCUPENCY_CODE, occupancy.getTypeHelper().getSubtype().getCode());
+		input.put(CDGAdditionalService.OCCUPENCY_CODE, occupancy.getSubtype().getCode());
 		input.put(CDGAdditionalService.SECTOR, sector);
 		input.put(CDGAdditionalService.PLOT_NO, plotNo);
 		input.put(CDGAdditionalService.PLOT_TYPE, plotAreaType);
@@ -420,11 +424,15 @@ public class FrontYardService extends GeneralRule {
 
 		// Front yard may not be mandatory at each level. We can check whether in any
 		// level front yard defined or not ?
+		
+		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
+				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+				: null;
 
 		for (Block block : pl.getBlocks()) {
 			
 			for(Occupancy occupancy: block.getBuilding().getTotalArea()) {
-				Map<String, String> map=getSetBack(pl, occupancy);
+				Map<String, String> map=getSetBack(pl, mostRestrictiveOccupancyType);
 				Double frontSetback=Double.valueOf(map.get(CDGAdditionalService.SETBACK_FRONT)!=null?map.get(CDGAdditionalService.SETBACK_FRONT):"0");
 				
 				if(frontSetback>0) {

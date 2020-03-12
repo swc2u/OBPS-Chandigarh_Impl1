@@ -306,12 +306,16 @@ public class RearYardService extends GeneralRule {
 								
 								// get excepted minimum Rear setback start
 								
+								OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
+										? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+										: null;
+								
 								String plotAreaType=pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE);
 								String sector=pl.getPlanInfoProperties().get(DxfFileConstants.SECTOR_NUMBER);
 								String plotNo=pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_NO);
 								
 								Map<String, String> input=new HashMap<String, String>();
-								input.put(CDGAdditionalService.OCCUPENCY_CODE, occupancy.getTypeHelper().getSubtype().getCode());
+								input.put(CDGAdditionalService.OCCUPENCY_CODE,mostRestrictiveOccupancyType.getSubtype().getCode());
 								input.put(CDGAdditionalService.SECTOR, sector);
 								input.put(CDGAdditionalService.PLOT_NO, plotNo);
 								input.put(CDGAdditionalService.PLOT_TYPE, plotAreaType);

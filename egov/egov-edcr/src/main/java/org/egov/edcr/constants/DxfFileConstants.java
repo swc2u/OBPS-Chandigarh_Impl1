@@ -1,6 +1,8 @@
 package org.egov.edcr.constants;
 
 public class DxfFileConstants {
+	
+	public static final String FLUSHING_UNITS_VOLUME_ABOVE_SEVEN_LITRES="FLUSHING_UNITS_VOLUME_ABOVE_SEVEN_LITRES";
 
 	// CGCL SERVIVE_TYPE
 	public static final String RECONSTRUCTION = "Reconstruction";
@@ -59,6 +61,12 @@ public class DxfFileConstants {
 	
 	public static final String A_P = "A-P";// Plotted --220
 	public static final String A_G = "A-G";// Grouped --223
+	
+	
+	public static final String A_SQ="A-SQ";//Servant quarter
+	public static final String A_PO = "A-PO";// Professional Office
+	public static final String A_S="A-S";//STD/ PCO/ fax and photostat machine
+	public static final String A_PG="A-PG";//Creche and paying guest facility
 
 	public static final String F_SCO = "F-SCO";// SCO’S/ SCF’S / BAYSHOP’S/ SEMI INDUSTRIAL -- 272
 	public static final String F_B ="F-B"; // BOOTHS ETC. 
@@ -124,7 +132,7 @@ public class DxfFileConstants {
 	public static final String A_SR = "A-SR";// Special Residential
 	public static final String A_HE = "A-HE";// Hostel Educational
 	public static final String A_SA = "A-SA";// Service Apartment
-	public static final String A_PO = "A-PO";// Professional Office
+	
 	public static final String A_AF_GH = "A-AF-GH";
 
 	public static final String F_K = "F-K";// Kiosk
