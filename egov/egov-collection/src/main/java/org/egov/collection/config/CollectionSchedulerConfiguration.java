@@ -55,6 +55,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.egov.collection.config.properties.CollectionApplicationProperties;
 import org.egov.collection.scheduler.AtomReconciliationJob;
 import org.egov.collection.scheduler.AxisReconciliationJob;
 import org.egov.collection.scheduler.HDFCReconciliationJob;
@@ -62,6 +63,7 @@ import org.egov.collection.scheduler.PnbReconciliationJob;
 import org.egov.collection.scheduler.RemittanceInstrumentJob;
 import org.egov.infra.config.scheduling.QuartzSchedulerConfiguration;
 import org.egov.infra.config.scheduling.SchedulerConfigCondition;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -73,291 +75,298 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 @Conditional(SchedulerConfigCondition.class)
 public class CollectionSchedulerConfiguration extends QuartzSchedulerConfiguration {
 
-    private static final String INSTRUMENT_TYPE_CHEQUE = "cheque";
-    private static final String INSTRUMENT_TYPE_CASH = "cash";
-    private static final String INSTRUMENT_TYPE_DD = "dd";
+	private static final String INSTRUMENT_TYPE_CHEQUE = "cheque";
+	private static final String INSTRUMENT_TYPE_CASH = "cash";
+	private static final String INSTRUMENT_TYPE_DD = "dd";
 
-    @Bean(destroyMethod = "destroy")
-    public SchedulerFactoryBean collectionScheduler(DataSource dataSource) {
-        SchedulerFactoryBean collectionScheduler = createScheduler(dataSource);
-        collectionScheduler.setSchedulerName("collection-scheduler");
-        collectionScheduler.setAutoStartup(true);
-        collectionScheduler.setOverwriteExistingJobs(true);
-        //Registering only pnb,hdfc trigger
-        collectionScheduler.setTriggers(
-                pnbReconciliationCronTrigger().getObject(),hdfcReconciliationCronTrigger().getObject());
-        return collectionScheduler;
-    }
+	@Autowired
+	private CollectionApplicationProperties collectionApplicationProperties;
 
-    @Bean
-    public JobDetailFactoryBean axisReconciliationJobDetail() {
-        JobDetailFactoryBean axisReconciliationJobDetail = new JobDetailFactoryBean();
-        axisReconciliationJobDetail.setGroup("COLLECTION_JOB_GROUP");
-        axisReconciliationJobDetail.setName("COLLECTION_AXIS_RECON_JOB");
-        axisReconciliationJobDetail.setDurability(true);
-        axisReconciliationJobDetail.setJobClass(AxisReconciliationJob.class);
-        axisReconciliationJobDetail.setRequestsRecovery(true);
-        Map<String, String> jobDetailMap = new HashMap<>();
-        jobDetailMap.put("jobBeanName", "axisReconciliationJob");
-        jobDetailMap.put("userName", "system");
-        jobDetailMap.put("cityDataRequired", "true");
-        jobDetailMap.put("moduleName", "collection");
-        axisReconciliationJobDetail.setJobDataAsMap(jobDetailMap);
-        return axisReconciliationJobDetail;
-    }
+	@Bean(destroyMethod = "destroy")
+	public SchedulerFactoryBean collectionScheduler(DataSource dataSource) {
+		SchedulerFactoryBean collectionScheduler = createScheduler(dataSource);
+		collectionScheduler.setSchedulerName("collection-scheduler");
+		collectionScheduler.setAutoStartup(true);
+		collectionScheduler.setOverwriteExistingJobs(true);
+		// Registering only pnb,hdfc trigger
+//        collectionScheduler.setTriggers(
+//                pnbReconciliationCronTrigger().getObject(),hdfcReconciliationCronTrigger().getObject());
+		collectionScheduler.setTriggers(atomReconciliationCronTrigger().getObject());
+		return collectionScheduler;
+	}
 
-    @Bean
-    public CronTriggerFactoryBean axisReconciliationCronTrigger() {
-        CronTriggerFactoryBean axisReconciliationCron = new CronTriggerFactoryBean();
-        axisReconciliationCron.setJobDetail(axisReconciliationJobDetail().getObject());
-        axisReconciliationCron.setGroup("COLLECTION_TRIGGER_GROUP");
-        axisReconciliationCron.setName("COLLECTION_AXIS_RECON_TRIGGER");
-        axisReconciliationCron.setCronExpression("0 */30 * * * ?");
-        axisReconciliationCron.setMisfireInstruction(MISFIRE_INSTRUCTION_DO_NOTHING);
-        return axisReconciliationCron;
-    }
-//    
-//    @Bean("axisReconciliationJob")
-//    public AxisReconciliationJob axisReconciliationJob() {
-//        return new AxisReconciliationJob();
-//    }
-    
-    @Bean
-    public JobDetailFactoryBean pnbReconciliationJobDetail() {
-        JobDetailFactoryBean pnbReconciliationJobDetail = new JobDetailFactoryBean();
-        pnbReconciliationJobDetail.setGroup("COLLECTION_JOB_GROUP");
-        pnbReconciliationJobDetail.setName("COLLECTION_PNB_RECON_JOB");
-        pnbReconciliationJobDetail.setDurability(true);
-        pnbReconciliationJobDetail.setJobClass(PnbReconciliationJob.class);
-        pnbReconciliationJobDetail.setRequestsRecovery(true);
-        Map<String, String> jobDetailMap = new HashMap<>();
-        jobDetailMap.put("jobBeanName", "pnbReconciliationJob");
-        jobDetailMap.put("userName", "system");
-        jobDetailMap.put("cityDataRequired", "true");
-        jobDetailMap.put("moduleName", "collection");
-        pnbReconciliationJobDetail.setJobDataAsMap(jobDetailMap);
-        return pnbReconciliationJobDetail;
-    }
+	@Bean
+	public JobDetailFactoryBean axisReconciliationJobDetail() {
+		JobDetailFactoryBean axisReconciliationJobDetail = new JobDetailFactoryBean();
+		axisReconciliationJobDetail.setGroup("COLLECTION_JOB_GROUP");
+		axisReconciliationJobDetail.setName("COLLECTION_AXIS_RECON_JOB");
+		axisReconciliationJobDetail.setDurability(true);
+		axisReconciliationJobDetail.setJobClass(AxisReconciliationJob.class);
+		axisReconciliationJobDetail.setRequestsRecovery(true);
+		Map<String, String> jobDetailMap = new HashMap<>();
+		jobDetailMap.put("jobBeanName", "axisReconciliationJob");
+		jobDetailMap.put("userName", "system");
+		jobDetailMap.put("cityDataRequired", "true");
+		jobDetailMap.put("moduleName", "collection");
+		axisReconciliationJobDetail.setJobDataAsMap(jobDetailMap);
+		return axisReconciliationJobDetail;
+	}
 
-    @Bean
-    public JobDetailFactoryBean hdfcReconciliationJobDetail() {
-        JobDetailFactoryBean hdfcReconciliationJobDetail = new JobDetailFactoryBean();
-        hdfcReconciliationJobDetail.setGroup("COLLECTION_JOB_GROUP");
-        hdfcReconciliationJobDetail.setName("COLLECTION_HDFC_RECON_JOB");
-        hdfcReconciliationJobDetail.setDurability(true);
-        hdfcReconciliationJobDetail.setJobClass(HDFCReconciliationJob.class);
-        hdfcReconciliationJobDetail.setRequestsRecovery(true);
-        Map<String, String> jobDetailMap = new HashMap<>();
-        jobDetailMap.put("jobBeanName", "hdfcReconciliationJob");
-        jobDetailMap.put("userName", "system");
-        jobDetailMap.put("cityDataRequired", "true");
-        jobDetailMap.put("moduleName", "collection");
-        hdfcReconciliationJobDetail.setJobDataAsMap(jobDetailMap);
-        return hdfcReconciliationJobDetail;
-    }
+	@Bean
+	public CronTriggerFactoryBean axisReconciliationCronTrigger() {
+		CronTriggerFactoryBean axisReconciliationCron = new CronTriggerFactoryBean();
+		axisReconciliationCron.setJobDetail(axisReconciliationJobDetail().getObject());
+		axisReconciliationCron.setGroup("COLLECTION_TRIGGER_GROUP");
+		axisReconciliationCron.setName("COLLECTION_AXIS_RECON_TRIGGER");
+		axisReconciliationCron.setCronExpression("0 */30 * * * ?");
+		axisReconciliationCron.setMisfireInstruction(MISFIRE_INSTRUCTION_DO_NOTHING);
+		return axisReconciliationCron;
+	}
 
-    @Bean
-    public CronTriggerFactoryBean pnbReconciliationCronTrigger() {
-        CronTriggerFactoryBean pnbReconciliationCron = new CronTriggerFactoryBean();
-        pnbReconciliationCron.setJobDetail(pnbReconciliationJobDetail().getObject());
-        pnbReconciliationCron.setGroup("COLLECTION_TRIGGER_GROUP");
-        pnbReconciliationCron.setName("COLLECTION_PNB_RECON_TRIGGER");
-        pnbReconciliationCron.setCronExpression("0 */30 * * * ?");
-        pnbReconciliationCron.setMisfireInstruction(MISFIRE_INSTRUCTION_DO_NOTHING);
-        return pnbReconciliationCron;
-    }
+	@Bean("axisReconciliationJob")
+	public AxisReconciliationJob axisReconciliationJob() {
+		return new AxisReconciliationJob();
+	}
 
-    @Bean
-    public CronTriggerFactoryBean hdfcReconciliationCronTrigger() {
-        CronTriggerFactoryBean hdfcReconciliationCron = new CronTriggerFactoryBean();
-        hdfcReconciliationCron.setJobDetail(hdfcReconciliationJobDetail().getObject());
-        hdfcReconciliationCron.setGroup("COLLECTION_TRIGGER_GROUP");
-        hdfcReconciliationCron.setName("COLLECTION_HDFC_RECON_TRIGGER");
-        hdfcReconciliationCron.setCronExpression("0 */30 * * * ?");
-        hdfcReconciliationCron.setMisfireInstruction(MISFIRE_INSTRUCTION_DO_NOTHING);
-        return hdfcReconciliationCron;
-    }
-//
-//    @Bean("pnbReconciliationJob")
-//    public PnbReconciliationJob pnbReconciliationJob() {
-//        return new PnbReconciliationJob();
-//    }
-//
-//    @Bean("hdfcReconciliationJob")
-//    public HDFCReconciliationJob hdfcReconciliationJob() {
-//        return new HDFCReconciliationJob();
-//    }
+	@Bean
+	public JobDetailFactoryBean pnbReconciliationJobDetail() {
+		JobDetailFactoryBean pnbReconciliationJobDetail = new JobDetailFactoryBean();
+		pnbReconciliationJobDetail.setGroup("COLLECTION_JOB_GROUP");
+		pnbReconciliationJobDetail.setName("COLLECTION_PNB_RECON_JOB");
+		pnbReconciliationJobDetail.setDurability(true);
+		pnbReconciliationJobDetail.setJobClass(PnbReconciliationJob.class);
+		pnbReconciliationJobDetail.setRequestsRecovery(true);
+		Map<String, String> jobDetailMap = new HashMap<>();
+		jobDetailMap.put("jobBeanName", "pnbReconciliationJob");
+		jobDetailMap.put("userName", "system");
+		jobDetailMap.put("cityDataRequired", "true");
+		jobDetailMap.put("moduleName", "collection");
+		pnbReconciliationJobDetail.setJobDataAsMap(jobDetailMap);
+		return pnbReconciliationJobDetail;
+	}
 
-    @Bean
-    public JobDetailFactoryBean remittanceCashInstrumentJobDetail0() {
-        return createJobDetailFactory(INSTRUMENT_TYPE_CASH, 0);
-    }
+	@Bean
+	public JobDetailFactoryBean hdfcReconciliationJobDetail() {
+		JobDetailFactoryBean hdfcReconciliationJobDetail = new JobDetailFactoryBean();
+		hdfcReconciliationJobDetail.setGroup("COLLECTION_JOB_GROUP");
+		hdfcReconciliationJobDetail.setName("COLLECTION_HDFC_RECON_JOB");
+		hdfcReconciliationJobDetail.setDurability(true);
+		hdfcReconciliationJobDetail.setJobClass(HDFCReconciliationJob.class);
+		hdfcReconciliationJobDetail.setRequestsRecovery(true);
+		Map<String, String> jobDetailMap = new HashMap<>();
+		jobDetailMap.put("jobBeanName", "hdfcReconciliationJob");
+		jobDetailMap.put("userName", "system");
+		jobDetailMap.put("cityDataRequired", "true");
+		jobDetailMap.put("moduleName", "collection");
+		hdfcReconciliationJobDetail.setJobDataAsMap(jobDetailMap);
+		return hdfcReconciliationJobDetail;
+	}
 
-    @Bean
-    public JobDetailFactoryBean remittanceCashInstrumentJobDetail1() {
-        return createJobDetailFactory(INSTRUMENT_TYPE_CASH, 1);
-    }
+	@Bean
+	public CronTriggerFactoryBean pnbReconciliationCronTrigger() {
+		CronTriggerFactoryBean pnbReconciliationCron = new CronTriggerFactoryBean();
+		pnbReconciliationCron.setJobDetail(pnbReconciliationJobDetail().getObject());
+		pnbReconciliationCron.setGroup("COLLECTION_TRIGGER_GROUP");
+		pnbReconciliationCron.setName("COLLECTION_PNB_RECON_TRIGGER");
+		pnbReconciliationCron.setCronExpression("0 */30 * * * ?");
+		pnbReconciliationCron.setMisfireInstruction(MISFIRE_INSTRUCTION_DO_NOTHING);
+		return pnbReconciliationCron;
+	}
 
-    @Bean
-    public JobDetailFactoryBean remittanceDDInstrumentJobDetail0() {
-        return createJobDetailFactory(INSTRUMENT_TYPE_DD, 0);
-    }
+	@Bean
+	public CronTriggerFactoryBean hdfcReconciliationCronTrigger() {
+		CronTriggerFactoryBean hdfcReconciliationCron = new CronTriggerFactoryBean();
+		hdfcReconciliationCron.setJobDetail(hdfcReconciliationJobDetail().getObject());
+		hdfcReconciliationCron.setGroup("COLLECTION_TRIGGER_GROUP");
+		hdfcReconciliationCron.setName("COLLECTION_HDFC_RECON_TRIGGER");
+		hdfcReconciliationCron.setCronExpression("0 */30 * * * ?");
+		hdfcReconciliationCron.setMisfireInstruction(MISFIRE_INSTRUCTION_DO_NOTHING);
+		return hdfcReconciliationCron;
+	}
 
-    @Bean
-    public JobDetailFactoryBean remittanceDDInstrumentJobDetail1() {
-        return createJobDetailFactory(INSTRUMENT_TYPE_DD, 1);
-    }
+	@Bean("pnbReconciliationJob")
+	public PnbReconciliationJob pnbReconciliationJob() {
+		return new PnbReconciliationJob();
+	}
 
-    @Bean
-    public JobDetailFactoryBean remittanceChequeInstrumentJobDetail0() {
-        return createJobDetailFactory(INSTRUMENT_TYPE_CHEQUE, 0);
-    }
+	@Bean("hdfcReconciliationJob")
+	public HDFCReconciliationJob hdfcReconciliationJob() {
+		return new HDFCReconciliationJob();
+	}
 
-    @Bean
-    public JobDetailFactoryBean remittanceChequeInstrumentJobDetail1() {
-        return createJobDetailFactory(INSTRUMENT_TYPE_CHEQUE, 1);
-    }
+	@Bean
+	public JobDetailFactoryBean remittanceCashInstrumentJobDetail0() {
+		return createJobDetailFactory(INSTRUMENT_TYPE_CASH, 0);
+	}
 
-    @Bean
-    public CronTriggerFactoryBean remittanceCashInstrumentCronTrigger0() {
-        return createCronTrigger(remittanceCashInstrumentJobDetail0(), INSTRUMENT_TYPE_CASH, 0);
-    }
+	@Bean
+	public JobDetailFactoryBean remittanceCashInstrumentJobDetail1() {
+		return createJobDetailFactory(INSTRUMENT_TYPE_CASH, 1);
+	}
 
-    @Bean
-    public CronTriggerFactoryBean remittanceCashInstrumentCronTrigger1() {
-        return createCronTrigger(remittanceCashInstrumentJobDetail1(), INSTRUMENT_TYPE_CASH, 1);
-    }
+	@Bean
+	public JobDetailFactoryBean remittanceDDInstrumentJobDetail0() {
+		return createJobDetailFactory(INSTRUMENT_TYPE_DD, 0);
+	}
 
-    @Bean
-    public CronTriggerFactoryBean remittanceDDInstrumentCronTrigger0() {
-        return createCronTrigger(remittanceDDInstrumentJobDetail0(), INSTRUMENT_TYPE_DD, 0);
-    }
+	@Bean
+	public JobDetailFactoryBean remittanceDDInstrumentJobDetail1() {
+		return createJobDetailFactory(INSTRUMENT_TYPE_DD, 1);
+	}
 
-    @Bean
-    public CronTriggerFactoryBean remittanceDDInstrumentCronTrigger1() {
-        return createCronTrigger(remittanceDDInstrumentJobDetail1(), INSTRUMENT_TYPE_DD, 1);
-    }
+	@Bean
+	public JobDetailFactoryBean remittanceChequeInstrumentJobDetail0() {
+		return createJobDetailFactory(INSTRUMENT_TYPE_CHEQUE, 0);
+	}
 
-    @Bean
-    public CronTriggerFactoryBean remittanceChequeInstrumentCronTrigger0() {
-        return createCronTrigger(remittanceChequeInstrumentJobDetail0(), INSTRUMENT_TYPE_CHEQUE, 0);
-    }
+	@Bean
+	public JobDetailFactoryBean remittanceChequeInstrumentJobDetail1() {
+		return createJobDetailFactory(INSTRUMENT_TYPE_CHEQUE, 1);
+	}
 
-    @Bean
-    public CronTriggerFactoryBean remittanceChequeInstrumentCronTrigger1() {
-        return createCronTrigger(remittanceChequeInstrumentJobDetail1(), INSTRUMENT_TYPE_CHEQUE, 1);
-    }
+	@Bean
+	public CronTriggerFactoryBean remittanceCashInstrumentCronTrigger0() {
+		return createCronTrigger(remittanceCashInstrumentJobDetail0(), INSTRUMENT_TYPE_CASH, 0);
+	}
 
-    @Bean("remittanceddInstrumentJob0")
-    public RemittanceInstrumentJob remittanceddInstrumentJob0() {
-        RemittanceInstrumentJob remittanceInstrumentJob = new RemittanceInstrumentJob();
-        remittanceInstrumentJob.setModulo(0);
-        remittanceInstrumentJob.setInstrumentType(INSTRUMENT_TYPE_DD);
-        return remittanceInstrumentJob;
+	@Bean
+	public CronTriggerFactoryBean remittanceCashInstrumentCronTrigger1() {
+		return createCronTrigger(remittanceCashInstrumentJobDetail1(), INSTRUMENT_TYPE_CASH, 1);
+	}
 
-    }
+	@Bean
+	public CronTriggerFactoryBean remittanceDDInstrumentCronTrigger0() {
+		return createCronTrigger(remittanceDDInstrumentJobDetail0(), INSTRUMENT_TYPE_DD, 0);
+	}
 
-    @Bean("remittanceddInstrumentJob1")
-    public RemittanceInstrumentJob remittanceddInstrumentJob1() {
-        RemittanceInstrumentJob remittanceInstrumentJob = new RemittanceInstrumentJob();
-        remittanceInstrumentJob.setModulo(1);
-        remittanceInstrumentJob.setInstrumentType(INSTRUMENT_TYPE_DD);
-        return remittanceInstrumentJob;
+	@Bean
+	public CronTriggerFactoryBean remittanceDDInstrumentCronTrigger1() {
+		return createCronTrigger(remittanceDDInstrumentJobDetail1(), INSTRUMENT_TYPE_DD, 1);
+	}
 
-    }
+	@Bean
+	public CronTriggerFactoryBean remittanceChequeInstrumentCronTrigger0() {
+		return createCronTrigger(remittanceChequeInstrumentJobDetail0(), INSTRUMENT_TYPE_CHEQUE, 0);
+	}
 
-    @Bean("remittancechequeInstrumentJob0")
-    public RemittanceInstrumentJob remittancechequeInstrumentJob0() {
-        RemittanceInstrumentJob remittanceInstrumentJob = new RemittanceInstrumentJob();
-        remittanceInstrumentJob.setModulo(0);
-        remittanceInstrumentJob.setInstrumentType(INSTRUMENT_TYPE_CHEQUE);
-        return remittanceInstrumentJob;
+	@Bean
+	public CronTriggerFactoryBean remittanceChequeInstrumentCronTrigger1() {
+		return createCronTrigger(remittanceChequeInstrumentJobDetail1(), INSTRUMENT_TYPE_CHEQUE, 1);
+	}
 
-    }
+	@Bean("remittanceddInstrumentJob0")
+	public RemittanceInstrumentJob remittanceddInstrumentJob0() {
+		RemittanceInstrumentJob remittanceInstrumentJob = new RemittanceInstrumentJob();
+		remittanceInstrumentJob.setModulo(0);
+		remittanceInstrumentJob.setInstrumentType(INSTRUMENT_TYPE_DD);
+		return remittanceInstrumentJob;
 
-    @Bean("remittancechequeInstrumentJob1")
-    public RemittanceInstrumentJob remittancechequeInstrumentJob1() {
-        RemittanceInstrumentJob remittanceInstrumentJob = new RemittanceInstrumentJob();
-        remittanceInstrumentJob.setModulo(1);
-        remittanceInstrumentJob.setInstrumentType(INSTRUMENT_TYPE_CHEQUE);
-        return remittanceInstrumentJob;
+	}
 
-    }
+	@Bean("remittanceddInstrumentJob1")
+	public RemittanceInstrumentJob remittanceddInstrumentJob1() {
+		RemittanceInstrumentJob remittanceInstrumentJob = new RemittanceInstrumentJob();
+		remittanceInstrumentJob.setModulo(1);
+		remittanceInstrumentJob.setInstrumentType(INSTRUMENT_TYPE_DD);
+		return remittanceInstrumentJob;
 
-    @Bean("remittancecashInstrumentJob0")
-    public RemittanceInstrumentJob remittancecashInstrumentJob0() {
-        RemittanceInstrumentJob remittanceInstrumentJob = new RemittanceInstrumentJob();
-        remittanceInstrumentJob.setModulo(0);
-        remittanceInstrumentJob.setInstrumentType(INSTRUMENT_TYPE_CASH);
-        return remittanceInstrumentJob;
+	}
 
-    }
+	@Bean("remittancechequeInstrumentJob0")
+	public RemittanceInstrumentJob remittancechequeInstrumentJob0() {
+		RemittanceInstrumentJob remittanceInstrumentJob = new RemittanceInstrumentJob();
+		remittanceInstrumentJob.setModulo(0);
+		remittanceInstrumentJob.setInstrumentType(INSTRUMENT_TYPE_CHEQUE);
+		return remittanceInstrumentJob;
 
-    @Bean("remittancecashInstrumentJob1")
-    public RemittanceInstrumentJob remittancecashInstrumentJob1() {
-        RemittanceInstrumentJob remittanceInstrumentJob = new RemittanceInstrumentJob();
-        remittanceInstrumentJob.setModulo(1);
-        remittanceInstrumentJob.setInstrumentType(INSTRUMENT_TYPE_CASH);
-        return remittanceInstrumentJob;
+	}
 
-    }
+	@Bean("remittancechequeInstrumentJob1")
+	public RemittanceInstrumentJob remittancechequeInstrumentJob1() {
+		RemittanceInstrumentJob remittanceInstrumentJob = new RemittanceInstrumentJob();
+		remittanceInstrumentJob.setModulo(1);
+		remittanceInstrumentJob.setInstrumentType(INSTRUMENT_TYPE_CHEQUE);
+		return remittanceInstrumentJob;
 
-    private JobDetailFactoryBean createJobDetailFactory(String instrumentType, int modulo) {
-        JobDetailFactoryBean remittanceInstrumentJobDetail = new JobDetailFactoryBean();
-        remittanceInstrumentJobDetail.setGroup("COLLECTION_JOB_GROUP");
-        remittanceInstrumentJobDetail.setName(String.format("COLLECTION_REMIT_INSTRMNT_%s%d_JOB", instrumentType, modulo));
-        remittanceInstrumentJobDetail.setDurability(true);
-        remittanceInstrumentJobDetail.setJobClass(RemittanceInstrumentJob.class);
-        remittanceInstrumentJobDetail.setRequestsRecovery(true);
-        Map<String, String> jobDetailMap = new HashMap<>();
-        jobDetailMap.put("jobBeanName", String.format("remittance%sInstrumentJob%d", instrumentType, modulo));
-        jobDetailMap.put("userName", "system");
-        jobDetailMap.put("cityDataRequired", "true");
-        jobDetailMap.put("moduleName", "collection");
-        remittanceInstrumentJobDetail.setJobDataAsMap(jobDetailMap);
-        return remittanceInstrumentJobDetail;
-    }
+	}
 
-    private CronTriggerFactoryBean createCronTrigger(JobDetailFactoryBean jobDetail, String instrumentType, int modulo) {
-        CronTriggerFactoryBean remittanceCron = new CronTriggerFactoryBean();
-        remittanceCron.setJobDetail(jobDetail.getObject());
-        remittanceCron.setGroup("COLLECTION_TRIGGER_GROUP");
-        remittanceCron.setName(String.format("COLLECTION_REMIT_INSTRMNT_%s%d_TRIGGER", instrumentType, modulo));
-        remittanceCron.setCronExpression("0 */30 * * * ?");
-        remittanceCron.setMisfireInstruction(MISFIRE_INSTRUCTION_DO_NOTHING);
-        return remittanceCron;
-    }
-    
-    @Bean
-    public JobDetailFactoryBean atomReconciliationJobDetail() {
-        JobDetailFactoryBean atomReconciliationJobDetail = new JobDetailFactoryBean();
-        atomReconciliationJobDetail.setGroup("COLLECTION_JOB_GROUP");
-        atomReconciliationJobDetail.setName("COLLECTION_ATOM_RECON_JOB");
-        atomReconciliationJobDetail.setDurability(true);
-        atomReconciliationJobDetail.setJobClass(AtomReconciliationJob.class);
-        atomReconciliationJobDetail.setRequestsRecovery(true);
-        Map<String, String> jobDetailMap = new HashMap<>();
-        jobDetailMap.put("jobBeanName", "atomReconciliationJob");
-        jobDetailMap.put("userName", "system");
-        jobDetailMap.put("cityDataRequired", "true");
-        jobDetailMap.put("moduleName", "collection");
-        atomReconciliationJobDetail.setJobDataAsMap(jobDetailMap);
-        return atomReconciliationJobDetail;
-    }
+	@Bean("remittancecashInstrumentJob0")
+	public RemittanceInstrumentJob remittancecashInstrumentJob0() {
+		RemittanceInstrumentJob remittanceInstrumentJob = new RemittanceInstrumentJob();
+		remittanceInstrumentJob.setModulo(0);
+		remittanceInstrumentJob.setInstrumentType(INSTRUMENT_TYPE_CASH);
+		return remittanceInstrumentJob;
 
-    @Bean
-    public CronTriggerFactoryBean atomReconciliationCronTrigger() {
-        CronTriggerFactoryBean atomReconciliationCron = new CronTriggerFactoryBean();
-        atomReconciliationCron.setJobDetail(atomReconciliationJobDetail().getObject());
-        atomReconciliationCron.setGroup("COLLECTION_TRIGGER_GROUP");
-        atomReconciliationCron.setName("COLLECTION_ATOM_RECON_TRIGGER");
-        atomReconciliationCron.setCronExpression("0 */30 * * * ?");
-        atomReconciliationCron.setMisfireInstruction(MISFIRE_INSTRUCTION_DO_NOTHING);
-        return atomReconciliationCron;
-    }
-    
-    @Bean("atomReconciliationJob")
-    public AtomReconciliationJob atomReconciliationJob() {
-        return new AtomReconciliationJob();
-    }
+	}
+
+	@Bean("remittancecashInstrumentJob1")
+	public RemittanceInstrumentJob remittancecashInstrumentJob1() {
+		RemittanceInstrumentJob remittanceInstrumentJob = new RemittanceInstrumentJob();
+		remittanceInstrumentJob.setModulo(1);
+		remittanceInstrumentJob.setInstrumentType(INSTRUMENT_TYPE_CASH);
+		return remittanceInstrumentJob;
+
+	}
+
+	private JobDetailFactoryBean createJobDetailFactory(String instrumentType, int modulo) {
+		JobDetailFactoryBean remittanceInstrumentJobDetail = new JobDetailFactoryBean();
+		remittanceInstrumentJobDetail.setGroup("COLLECTION_JOB_GROUP");
+		remittanceInstrumentJobDetail
+				.setName(String.format("COLLECTION_REMIT_INSTRMNT_%s%d_JOB", instrumentType, modulo));
+		remittanceInstrumentJobDetail.setDurability(true);
+		remittanceInstrumentJobDetail.setJobClass(RemittanceInstrumentJob.class);
+		remittanceInstrumentJobDetail.setRequestsRecovery(true);
+		Map<String, String> jobDetailMap = new HashMap<>();
+		jobDetailMap.put("jobBeanName", String.format("remittance%sInstrumentJob%d", instrumentType, modulo));
+		jobDetailMap.put("userName", "system");
+		jobDetailMap.put("cityDataRequired", "true");
+		jobDetailMap.put("moduleName", "collection");
+		remittanceInstrumentJobDetail.setJobDataAsMap(jobDetailMap);
+		return remittanceInstrumentJobDetail;
+	}
+
+	private CronTriggerFactoryBean createCronTrigger(JobDetailFactoryBean jobDetail, String instrumentType,
+			int modulo) {
+		CronTriggerFactoryBean remittanceCron = new CronTriggerFactoryBean();
+		remittanceCron.setJobDetail(jobDetail.getObject());
+		remittanceCron.setGroup("COLLECTION_TRIGGER_GROUP");
+		remittanceCron.setName(String.format("COLLECTION_REMIT_INSTRMNT_%s%d_TRIGGER", instrumentType, modulo));
+		remittanceCron.setCronExpression("0 */30 * * * ?");
+		remittanceCron.setMisfireInstruction(MISFIRE_INSTRUCTION_DO_NOTHING);
+		return remittanceCron;
+	}
+
+	@Bean
+	public JobDetailFactoryBean atomReconciliationJobDetail() {
+		JobDetailFactoryBean atomReconciliationJobDetail = new JobDetailFactoryBean();
+		atomReconciliationJobDetail.setGroup("COLLECTION_JOB_GROUP");
+		atomReconciliationJobDetail.setName("COLLECTION_ATOM_RECON_JOB");
+		atomReconciliationJobDetail.setDurability(true);
+		atomReconciliationJobDetail.setJobClass(AtomReconciliationJob.class);
+		atomReconciliationJobDetail.setRequestsRecovery(true);
+		Map<String, String> jobDetailMap = new HashMap<>();
+		jobDetailMap.put("jobBeanName", "atomReconciliationJob");
+		jobDetailMap.put("userName", "system");
+		jobDetailMap.put("cityDataRequired", "true");
+		jobDetailMap.put("moduleName", "collection");
+		atomReconciliationJobDetail.setJobDataAsMap(jobDetailMap);
+		return atomReconciliationJobDetail;
+	}
+
+	@Bean
+	public CronTriggerFactoryBean atomReconciliationCronTrigger() {
+		CronTriggerFactoryBean atomReconciliationCron = new CronTriggerFactoryBean();
+		atomReconciliationCron.setJobDetail(atomReconciliationJobDetail().getObject());
+		atomReconciliationCron.setGroup("COLLECTION_TRIGGER_GROUP");
+		atomReconciliationCron.setName("COLLECTION_ATOM_RECON_TRIGGER");
+		//atomReconciliationCron.setCronExpression("0 */30 * * * ?");
+		atomReconciliationCron.setCronExpression(collectionApplicationProperties.atomCronExpression());
+		atomReconciliationCron.setMisfireInstruction(MISFIRE_INSTRUCTION_DO_NOTHING);
+		return atomReconciliationCron;
+	}
+
+	@Bean("atomReconciliationJob")
+	public AtomReconciliationJob atomReconciliationJob() {
+		return new AtomReconciliationJob();
+	}
 }

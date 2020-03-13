@@ -372,9 +372,9 @@ public final class CollectionConstants {
     public static final String SERVICECODE_PROFESSIONALTAX = "PRFT";
     public static final String SERVICECODE_AXIS = "AXIS";
     public static final String SERVICECODE_SBIMOPS = "SBIMOPS";
-    public static final String SERVICECODE_ATOM = "ATOM";
+    public static final String SERVICECODE_ATOM = "APG";
     public static final String SERVICECODE_LAMS = "LAMS";
-
+    
     // Online Payment Statuses
     public static final String ONLINEPAYMENT_STATUS_CODE_PENDING = "ONLINE_STATUS_PENDING";
     public static final String ONLINEPAYMENT_STATUS_CODE_SUCCESS = "ONLINE_STATUS_SUCCESS";
