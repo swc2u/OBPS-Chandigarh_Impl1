@@ -411,6 +411,7 @@ public class SideYardService extends GeneralRule {
 							}
 						}
 
+						
 						if (buildingHeight != null && (minlength > 0 || max > 0)) {
 							for (final Occupancy occupancy : block.getBuilding().getTotalArea()) {
 								scrutinyDetail.setKey("Block_" + block.getName() + "_" + "Side Setback");
@@ -442,9 +443,13 @@ public class SideYardService extends GeneralRule {
 
 								// exceptedValueLeft = result.get(CDGAdditionalService.SETBACK_LEFT);// side1
 								// exceptedValueRight = result.get(CDGAdditionalService.SETBACK_RIGHT);// side2
+								
+								OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
+										? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+										: null;
 
-								exceptedValueLeft =getSetBack(pl, occupancy).get(CDGAdditionalService.SETBACK_LEFT);
-								exceptedValueRight =getSetBack(pl, occupancy).get(CDGAdditionalService.SETBACK_RIGHT);
+								exceptedValueLeft =getSetBack(pl, mostRestrictiveOccupancyType).get(CDGAdditionalService.SETBACK_LEFT);
+								exceptedValueRight =getSetBack(pl, mostRestrictiveOccupancyType).get(CDGAdditionalService.SETBACK_RIGHT);
 
 								// end
 
@@ -1283,14 +1288,14 @@ public class SideYardService extends GeneralRule {
 		}
 	}
 
-	private Map<String, String> getSetBack(Plan pl, Occupancy occupancy) {
+	private Map<String, String> getSetBack(Plan pl, OccupancyTypeHelper occupancy) {
 
 		String plotAreaType = pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE);
 		String sector = pl.getPlanInfoProperties().get(DxfFileConstants.SECTOR_NUMBER);
 		String plotNo = pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_NO);
 
 		Map<String, String> input = new HashMap<String, String>();
-		input.put(CDGAdditionalService.OCCUPENCY_CODE, occupancy.getTypeHelper().getSubtype().getCode());
+		input.put(CDGAdditionalService.OCCUPENCY_CODE, occupancy.getSubtype().getCode());
 		input.put(CDGAdditionalService.SECTOR, sector);
 		input.put(CDGAdditionalService.PLOT_NO, plotNo);
 		input.put(CDGAdditionalService.PLOT_TYPE, plotAreaType);
@@ -1302,11 +1307,14 @@ public class SideYardService extends GeneralRule {
 	}
 
 	private void validateSideYardRule(final Plan pl) {
-
+		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
+				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+				: null;
+				
 		for (Block block : pl.getBlocks()) {
 
 			for (Occupancy occupancy : block.getBuilding().getTotalArea()) {
-				Map<String, String> map = getSetBack(pl, occupancy);
+				Map<String, String> map = getSetBack(pl, mostRestrictiveOccupancyType);
 				Double frontSetback = Double.valueOf(map.get(CDGAdditionalService.SETBACK_FRONT) != null
 						? map.get(CDGAdditionalService.SETBACK_FRONT)
 						: "0");
