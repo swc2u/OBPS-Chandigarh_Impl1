@@ -199,8 +199,8 @@ public class CollectionApplicationProperties {
 		return environment.getProperty("atom.reconcile.url");
 	}
 	
-	public String atomCronExpression() {
-		return environment.getProperty("atom.cron.expression", String.class);
+	public Integer atomCronExpressionDelayTime() {
+		return environment.getProperty("atom.cron.expression.delay.time", Integer.class);
 	}
 
 	public String pnbMid() {

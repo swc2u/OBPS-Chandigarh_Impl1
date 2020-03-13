@@ -55,6 +55,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.egov.collection.config.properties.CollectionApplicationProperties;
 import org.egov.collection.constants.CollectionConstants;
 import org.egov.collection.entity.OnlinePayment;
 import org.egov.collection.entity.ReceiptHeader;
@@ -97,6 +98,9 @@ public class SchedularService {
 
    // @Autowired
     private HdfcAdaptor hdfcAdaptor;
+    
+    @Autowired
+	private CollectionApplicationProperties collectionApplicationProperties;
 
     @Transactional
     public void reconcileAXIS() {
@@ -152,7 +156,8 @@ public class SchedularService {
         final Calendar fourDaysBackCalender = Calendar.getInstance();
         fourDaysBackCalender.add(Calendar.DATE, -4);
         final Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MINUTE, -30);
+      //  cal.add(Calendar.MINUTE, -30);
+        cal.add(Calendar.MINUTE, collectionApplicationProperties.atomCronExpressionDelayTime()*-1);
         final Query qry = persistenceService
                 .getSession()
                 .createQuery(

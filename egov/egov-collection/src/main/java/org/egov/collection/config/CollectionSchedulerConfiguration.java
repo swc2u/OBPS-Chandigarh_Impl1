@@ -360,7 +360,7 @@ public class CollectionSchedulerConfiguration extends QuartzSchedulerConfigurati
 		atomReconciliationCron.setGroup("COLLECTION_TRIGGER_GROUP");
 		atomReconciliationCron.setName("COLLECTION_ATOM_RECON_TRIGGER");
 		//atomReconciliationCron.setCronExpression("0 */30 * * * ?");
-		atomReconciliationCron.setCronExpression(collectionApplicationProperties.atomCronExpression());
+		atomReconciliationCron.setCronExpression("0 */"+collectionApplicationProperties.atomCronExpressionDelayTime()+" * * * ?");
 		atomReconciliationCron.setMisfireInstruction(MISFIRE_INSTRUCTION_DO_NOTHING);
 		return atomReconciliationCron;
 	}
