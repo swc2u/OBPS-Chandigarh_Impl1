@@ -94,7 +94,7 @@ public class DxfFileConstants {
 	public static final String P_R = "P-R";// Religious
 
 
-	public static final String B_EC = "B_EC";// Education city (Sarangpur)
+	public static final String B_EC = "B-EC";// Education city (Sarangpur)
 	public static final String B_HEI = "B-HEI";// Higher Educational Institute //Educational/ Academic
 	public static final String B_H = "B-H";// Hostels
 	
