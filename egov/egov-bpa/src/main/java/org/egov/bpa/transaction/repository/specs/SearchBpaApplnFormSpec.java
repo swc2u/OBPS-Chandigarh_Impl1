@@ -290,7 +290,7 @@ public final class SearchBpaApplnFormSpec {
                         .add(builder.lessThanOrEqualTo(root.get(APPLICATION_DATE), requestForm.getToDate()));
             predicate.getExpressions().add(root.get("state").isNotNull());
             predicate.getExpressions()
-            .add(root.get(STATUS).get("code").in(BpaConstants.APPLICATION_STATUS_FIELD_INS, BpaConstants.APPLICATION_STATUS_NOCUPDATED,
+            .add(root.get(STATUS).get("code").in(BpaConstants.APPLICATION_STATUS_DOC_VERIFY_COMPLETED, BpaConstants.APPLICATION_STATUS_NOCUPDATED,
                     BpaConstants.APPLICATION_STATUS_ORDER_ISSUED, BpaConstants.APPROVED));
             query.distinct(true);
             return predicate;

@@ -196,17 +196,17 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
             }
         } else if (BpaConstants.WF_INITIATE_REJECTION_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
             pos = bpaWorkFlowService.getApproverPositionOfElectionWardByCurrentStateForOC(oc,
-                    BpaConstants.REJECT_BY_CLERK);
+                    BpaConstants.REJECTION_INITIATED);
             ownerUser = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(), new Date()).get(0).getEmployee();
             wfMatrix = bpaApplicationWorkflowService.getWfMatrix(oc.getStateType(), null,
-                    null, wfBean.getAdditionalRule(), BpaConstants.REJECT_BY_CLERK, null);
+                    null, wfBean.getAdditionalRule(), BpaConstants.REJECTION_INITIATED, null);
             BpaStateInfo bpaStateInfo = bpaWorkFlowService.getBpaStateInfo(oc.getCurrentState(), oc.getStateHistory(),
                     oc.getTownSurveyorInspectionRequire(), new BpaStateInfo(), wfMatrix, wfBean.getWorkFlowAction());
             oc.setStatus(getStatusByPassingCode(BpaConstants.WF_REJECT_STATE));
             oc.transition().progressWithStateCopy()
                     .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                     .withComments(wfBean.getApproverComments())
-                    .withStateValue(BpaConstants.REJECT_BY_CLERK).withDateInfo(currentDate.toDate())
+                    .withStateValue(BpaConstants.REJECTION_INITIATED).withDateInfo(currentDate.toDate())
                     .withOwner(pos).withOwner(ownerUser)
                     .withNextAction(wfMatrix.getNextAction())
                     .withNatureOfTask(NATURE_OF_WORK_OC).withExtraInfo(bpaStateInfo);

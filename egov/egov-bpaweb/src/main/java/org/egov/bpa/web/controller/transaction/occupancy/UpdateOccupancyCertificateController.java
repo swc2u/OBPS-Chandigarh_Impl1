@@ -51,7 +51,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_HISTORY;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_APPROVED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFIED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_FIELD_INS;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFY_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_NOCUPDATED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REJECTED;
@@ -300,7 +300,7 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
                 || isAfterTSInspection && !oc.getInspections().isEmpty())
             mode = "captureAdditionalInspection";
         else if (FORWARDED_TO_NOC_UPDATE.equalsIgnoreCase(pendingAction)
-                && APPLICATION_STATUS_FIELD_INS.equalsIgnoreCase(currentStatus)) {
+                && APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(currentStatus)) {
             model.addAttribute("showUpdateNoc", true);
             nocStatusService.updateOCNocStatus(oc);
         } else if (FWD_TO_AE_FOR_APPROVAL.equalsIgnoreCase(pendingAction)
@@ -325,7 +325,7 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
         if (!oc.getInspections().isEmpty()
                 && ((hasInspectionStatus && hasInspectionPendingAction)
                         || (FIELD_INSPECTION_COMPLETED.equalsIgnoreCase(currentStateValue)
-                                && APPLICATION_STATUS_FIELD_INS.equalsIgnoreCase(currentStatus))))
+                                && APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(currentStatus))))
             model.addAttribute("isTSInspectionRequired", false);
 
         if (mode == null)
@@ -363,7 +363,7 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
         model.addAttribute("inspectionList", inspectionList);
         model.addAttribute("letterToPartyList", ocLetterToPartyService.findAllByOC(oc));
         if ((FWD_TO_AE_FOR_FIELD_ISPECTION.equals(oc.getState().getNextAction())
-                || APPLICATION_STATUS_FIELD_INS.equals(oc.getStatus().getCode())
+                || APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equals(oc.getStatus().getCode())
                 || APPLICATION_STATUS_NOCUPDATED.equalsIgnoreCase(oc.getStatus().getCode()))) {
             model.addAttribute("createlettertoparty", true);
         }
@@ -605,7 +605,7 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
             approvalPosition = Long.valueOf(request.getParameter(APPRIVALPOSITION));
         } else if (WF_REJECT_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
             pos = bpaWorkFlowService.getApproverPositionOfElectionWardByCurrentStateForOC(occupancyCertificate,
-                    BpaConstants.REJECT_BY_CLERK);
+                    BpaConstants.REJECTION_INITIATED);
             approvalPosition = pos.getId();
         }
 

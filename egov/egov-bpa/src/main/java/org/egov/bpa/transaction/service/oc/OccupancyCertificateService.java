@@ -42,7 +42,7 @@ package org.egov.bpa.transaction.service.oc;
 
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_CANCELLED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_CREATED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_FIELD_INS;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFY_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_NOCUPDATED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REJECTED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SUBMITTED;
@@ -324,7 +324,7 @@ public class OccupancyCertificateService {
         oc.setDcrDocuments(persistApplnDCRDocuments(oc, oc.getDcrDocuments()));
         processAndStoreNocDocuments(oc);
         if (!WF_SAVE_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())
-                && APPLICATION_STATUS_FIELD_INS.equalsIgnoreCase(oc.getStatus().getCode())
+                && APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(oc.getStatus().getCode())
                 && NOC_UPDATION_IN_PROGRESS.equalsIgnoreCase(oc.getState().getValue())) {
             String feeCalculationMode = bpaUtils.getOCFeeCalculationMode();
             if (feeCalculationMode.equalsIgnoreCase(BpaConstants.AUTOFEECAL) ||

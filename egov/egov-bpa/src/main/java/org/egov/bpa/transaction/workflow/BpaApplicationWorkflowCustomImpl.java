@@ -238,17 +238,17 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
         } else if (BpaConstants.WF_INITIATE_REJECTION_BUTTON.equalsIgnoreCase(workFlowAction)) {
         	//For one day permit, position need not be set 
         	if(!application.getIsOneDayPermitApplication())  {
-        		pos = bpaWorkFlowService.getApproverPositionOfElectionWardByCurrentState(application, BpaConstants.REJECT_BY_CLERK);
+        		pos = bpaWorkFlowService.getApproverPositionOfElectionWardByCurrentState(application, BpaConstants.REJECTION_INITIATED);
         		ownerUser = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(), new Date()).get(0).getEmployee();
         	}
             wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null,
-                    null, additionalRule, BpaConstants.REJECT_BY_CLERK, null);
+                    null, additionalRule, BpaConstants.REJECTION_INITIATED, BpaConstants.APPLICATION_ACTION_VERIFY_RR);
             BpaStateInfo bpaStateInfo = bpaWorkFlowService.getBpaStateInfo(application.getCurrentState(), application.getStateHistory(), application.getTownSurveyorInspectionRequire(), new BpaStateInfo(), wfmatrix, workFlowAction);
             application.setStatus(getStatusByPassingCode(BpaConstants.WF_REJECT_STATE));
             application.transition().progressWithStateCopy()
                        .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                        .withComments(approvalComent)
-                       .withStateValue(BpaConstants.REJECT_BY_CLERK).withDateInfo(currentDate.toDate())
+                       .withStateValue(BpaConstants.REJECTION_INITIATED).withDateInfo(currentDate.toDate())
                        .withOwner(pos).withOwner(ownerUser)
                        .withNextAction(wfmatrix.getNextAction())
                        .withNatureOfTask(BpaConstants.NATURE_OF_WORK).withExtraInfo(bpaStateInfo);

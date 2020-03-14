@@ -51,7 +51,8 @@ import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_APPROVED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_CANCELLED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DIGI_SIGNED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFIED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_FIELD_INS;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFY_COMPLETED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_APPROVAL_PROCESS_INITIATED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_NOCUPDATED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_PENDING_FOR_RESCHEDULING;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_RECORD_APPROVED;
@@ -69,10 +70,8 @@ import static org.egov.bpa.utils.BpaConstants.FIELD_INSPECTION_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.FORWARDED_TO_CLERK;
 import static org.egov.bpa.utils.BpaConstants.FORWARDED_TO_NOC_UPDATE;
 import static org.egov.bpa.utils.BpaConstants.FWDINGTOLPINITIATORPENDING;
-import static org.egov.bpa.utils.BpaConstants.FWD_TO_AE_AFTER_TS_INSP;
 import static org.egov.bpa.utils.BpaConstants.FWD_TO_AE_FOR_APPROVAL;
 import static org.egov.bpa.utils.BpaConstants.FWD_TO_AE_FOR_FIELD_ISPECTION;
-import static org.egov.bpa.utils.BpaConstants.FWD_TO_OVERSEER_AFTER_TS_INSPN;
 import static org.egov.bpa.utils.BpaConstants.FWD_TO_OVRSR_FOR_FIELD_INS;
 import static org.egov.bpa.utils.BpaConstants.GENERATEPERMITORDER;
 import static org.egov.bpa.utils.BpaConstants.GENERATEREJECTNOTICE;
@@ -91,13 +90,15 @@ import static org.egov.bpa.utils.BpaConstants.WF_REJECT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_REJECT_STATE;
 import static org.egov.bpa.utils.BpaConstants.WF_REVERT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_SAVE_BUTTON;
-import static org.egov.bpa.utils.BpaConstants.WF_TS_APPROVAL_PENDING;
 import static org.egov.bpa.utils.BpaConstants.WF_TS_INSPECTION_INITIATED;
 import static org.egov.bpa.utils.BpaConstants.WF_FORWARD_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_VARIFICATION_INITIATED;
 import static org.egov.bpa.utils.BpaConstants.APPROVED;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_CHECK_NOC_UPDATION;
 import static org.egov.bpa.utils.BpaConstants.WF_PERMIT_FEE_COLL_PENDING;
+import static org.egov.bpa.utils.BpaConstants.WF_BA_AE_APPROVAL;
+import static org.egov.bpa.utils.BpaConstants.WF_BA_SDO_APPROVAL;
+import static org.egov.bpa.utils.BpaConstants.REJECTION_INITIATED;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -632,7 +633,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
             mode = "modifyInspection";
             scheduleType = AppointmentSchedulePurpose.INSPECTION;
         } else if (FORWARDED_TO_NOC_UPDATE.equalsIgnoreCase(pendingAction)
-                && APPLICATION_STATUS_FIELD_INS.equalsIgnoreCase(currentStatus)
+                && APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(currentStatus)
                 && !application.getApplicationType().getName().equals(LOWRISK)) {
             model.addAttribute("showUpdateNoc", true);
             nocStatusService.updateNocStatus(application);
@@ -658,7 +659,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         if (!application.getIsOneDayPermitApplication() && !application.getPermitInspections().isEmpty()
                 && ((hasInspectionStatus && hasInspectionPendingAction)
                         || (FIELD_INSPECTION_COMPLETED.equalsIgnoreCase(currentStateValue)
-                                && APPLICATION_STATUS_FIELD_INS.equalsIgnoreCase(currentStatus))))
+                                && APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(currentStatus))))
             model.addAttribute("isTSInspectionRequired", false);
 
         if (mode == null)
@@ -721,33 +722,10 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
                     && APPLICATION_STATUS_APPROVED.equals(application.getStatus().getCode())
                     && !APPLICATION_STATUS_RECORD_APPROVED.equalsIgnoreCase(application.getState().getValue())) {
                 workflowContainer.setAmountRule(bpaWorkFlowService.getAmountRuleByServiceType(application));
-            }
-            // Town surveyor workflow
-            if (WF_TS_INSPECTION_INITIATED.equalsIgnoreCase(application.getStatus().getCode())) {
-                workflowContainer.setPendingActions(WF_TS_APPROVAL_PENDING);
-                model.addAttribute("captureTSRemarks", true);
-            } else if (APPLICATION_STATUS_TS_INS.equalsIgnoreCase(application.getStatus().getCode())) {
-                Assignment approverAssignment = bpaWorkFlowService
-                        .getApproverAssignment(application.getCurrentState().getOwnerPosition());
-                if (application.getCurrentState().getOwnerUser() != null) {
-                    List<Assignment> assignments = bpaWorkFlowService.getAssignmentByPositionAndUserAsOnDate(
-                            application.getCurrentState().getOwnerPosition().getId(),
-                            application.getCurrentState().getOwnerUser().getId(),
-                            application.getCurrentState().getLastModifiedDate());
-                    if (!assignments.isEmpty())
-                        approverAssignment = assignments.get(0);
-                }
-                if (approverAssignment == null)
-                    approverAssignment = bpaWorkFlowService
-                            .getAssignmentsByPositionAndDate(application.getCurrentState().getOwnerPosition().getId(), new Date())
-                            .get(0);
-                if (DESIGNATION_AE.equals(approverAssignment.getDesignation().getName())) {
-                    workflowContainer.setPendingActions(FWD_TO_AE_AFTER_TS_INSP);
-                } else if (DESIGNATION_OVERSEER.equals(approverAssignment.getDesignation().getName())) {
-                    workflowContainer.setPendingActions(FWD_TO_OVERSEER_AFTER_TS_INSPN);
-                }
-                model.addAttribute("captureTSRemarks", false);
-            }
+            }            
+        }
+        if (application.getState() != null && application.getState().getValue().equalsIgnoreCase(REJECTION_INITIATED)) {
+            workflowContainer.setPendingActions(application.getState().getNextAction());
         }
         prepareWorkflow(model, application, workflowContainer);
         model.addAttribute("pendingActions", workflowContainer.getPendingActions());
@@ -818,7 +796,8 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         
         if (!application.getIsOneDayPermitApplication()
                 && (FWD_TO_AE_FOR_FIELD_ISPECTION.equals(application.getState().getNextAction())
-                        || APPLICATION_STATUS_FIELD_INS.equals(application.getStatus().getCode())
+                        || APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equals(application.getStatus().getCode())
+                        || APPLICATION_STATUS_APPROVAL_PROCESS_INITIATED.equals(application.getStatus().getCode())
                         || APPLICATION_STATUS_NOCUPDATED.equalsIgnoreCase(application.getStatus().getCode()))
                 || (application.getApplicationType().getName().equals(BpaConstants.LOWRISK) &&
                         FORWARDED_TO_CLERK.equals(application.getState().getNextAction()))) {
@@ -898,7 +877,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
 
     private void buildRejectionReasons(Model model, BpaApplication application) {
         if (application.getIsOneDayPermitApplication()
-                && APPLICATION_STATUS_FIELD_INS.equalsIgnoreCase(application.getStatus().getCode())
+                && APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(application.getStatus().getCode())
                 || APPLICATION_STATUS_NOCUPDATED.equals(application.getStatus().getCode())
                 || APPLICATION_STATUS_REJECTED.equalsIgnoreCase(application.getStatus().getCode())
                 || APPLICATION_STATUS_SCHEDULED.equalsIgnoreCase(application.getStatus().getCode())
@@ -958,9 +937,10 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
             }
         }
         
-        if (WF_BA_VARIFICATION_INITIATED.equalsIgnoreCase(application.getCurrentState().getNextAction())
-              || WF_BA_CHECK_NOC_UPDATION.equals(application.getCurrentState().getNextAction())
-                || WF_PERMIT_FEE_COLL_PENDING.equalsIgnoreCase(application.getCurrentState().getNextAction())) {
+        if (WF_BA_CHECK_NOC_UPDATION.equals(application.getCurrentState().getNextAction())
+                || WF_PERMIT_FEE_COLL_PENDING.equalsIgnoreCase(application.getCurrentState().getNextAction())
+                	|| WF_BA_AE_APPROVAL.equalsIgnoreCase(application.getCurrentState().getNextAction())
+                		|| WF_BA_SDO_APPROVAL.equalsIgnoreCase(application.getCurrentState().getNextAction())) {
         	model.addAttribute("showRejectionReasons", true);
 
             List<ChecklistServiceTypeMapping> additionalRejectionReasonList = checklistServiceTypeService

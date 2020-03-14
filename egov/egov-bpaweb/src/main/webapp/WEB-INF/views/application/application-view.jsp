@@ -305,7 +305,7 @@
 							class="btn btn-primary"> <spring:message code="lbl.btn.modify.fee"/> </a>
 
 				</c:if>
-				<c:if test="${bpaApplication.state.value ne 'Field Inspection completed' && bpaApplication.status.code eq 'Field Inspected'}">
+				<c:if test="${bpaApplication.state.value ne 'Field Inspection completed' && bpaApplication.status.code eq 'Document Verification Completed'}">
 					<input type="button" name="save" id="btnSave" value="Save" class="btn btn-primary"/>
 				</c:if>
 				<c:if test="${createlettertoparty}">

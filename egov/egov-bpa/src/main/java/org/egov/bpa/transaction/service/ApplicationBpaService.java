@@ -43,7 +43,7 @@ import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_APPROVED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_CREATED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DIGI_SIGNED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFIED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_FIELD_INS;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFY_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_NOCUPDATED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REJECTED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SECTION_CLRK_APPROVED;
@@ -562,8 +562,8 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
             application.setStatus(bpaStatus);
         }
 
-        if (application.getIsOneDayPermitApplication() && (APPLICATION_STATUS_DOC_VERIFIED
-                .equalsIgnoreCase(application.getState().getValue())
+        if (application.getIsOneDayPermitApplication() && 
+        		(APPLICATION_STATUS_DOC_VERIFIED.equalsIgnoreCase(application.getState().getValue())
                 || APPLICATION_STATUS_SECTION_CLRK_APPROVED.equalsIgnoreCase(application.getState().getValue()))) {
 
             String feeCalculationMode = bpaUtils.getBPAFeeCalculationMode();
@@ -583,17 +583,15 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
             }
         }
         if (!WF_SAVE_BUTTON.equalsIgnoreCase(workFlowAction)
-                && APPLICATION_STATUS_FIELD_INS.equalsIgnoreCase(application.getStatus().getCode())
+        		&& !WF_INITIATE_REJECTION_BUTTON.equalsIgnoreCase(workFlowAction)
+                && APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(application.getStatus().getCode())
                 && NOC_UPDATION_IN_PROGRESS.equalsIgnoreCase(application.getState().getValue())) {
-
             String feeCalculationMode = bpaUtils.getBPAFeeCalculationMode();
-
             if (feeCalculationMode.equalsIgnoreCase(BpaConstants.AUTOFEECAL) ||
                     feeCalculationMode.equalsIgnoreCase(BpaConstants.AUTOFEECALEDIT)) {
                 ApplicationBpaFeeCalculation feeCalculation = (ApplicationBpaFeeCalculation) specificNoticeService
                         .find(PermitFeeCalculationService.class, specificNoticeService.getCityDetails());
                 PermitFee permitFee = feeCalculation.calculateBpaSanctionFees(application);
-
                 ApplicationFee applicationFee = applicationFeeService.saveApplicationFee(permitFee.getApplicationFee());
                 permitFee.setApplicationFee(applicationFee);
                 permitFeeRepository.save(permitFee);
@@ -623,9 +621,6 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
                 || APPLICATION_STATUS_DIGI_SIGNED.equalsIgnoreCase(application.getStatus().getCode())
                 || WF_APPROVE_BUTTON.equals(workFlowAction)) {
             buildPermitConditions(application);
-        }
-        if (APPLICATION_STATUS_TS_INS_INITIATED.equals(application.getStatus().getCode())) {
-            application.setTownSurveyorInspectionRequire(false);
         }
         if (application.getFiles() != null && application.getFiles().length > 0) {
             Set<FileStoreMapper> tsInspnDocs = new HashSet<>();
@@ -772,29 +767,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
 
     public BigDecimal getTotalFeeAmountByPassingServiceTypeAndAmenities(BpaApplication application) {
         BigDecimal totalAmount = BigDecimal.ZERO;
-        /*String feeType;
-        for (Long serviceTypeId : serviceTypeIds) {
-            String serviceType = serviceTypeService.findById(serviceTypeId).getDescription();
-            if (serviceType.equals(WELL))
-                feeType = APPLICATION_FEES_FOR_WELL_CONSTURCTION;
-            else if (serviceType.equals(BpaConstants.AMENITIES))
-                feeType = APPLICATION_FEES_FOR_AMENITIES;
-            else if (serviceType.equals(COMPOUND_WALL))
-                feeType = APPLICATION_FEES_FOR_COMPOUND_WALL;
-            else if (serviceType.equals(ROOF_CONVERSION))
-                feeType = APPLICATION_FEES_FOR_ROOF_CONVERSION;
-            else if (serviceType.equals(SHUTTER_DOOR_CONVERSION))
-                feeType = APPLICATION_FEES_FOR_SHUTTER_OR_DOOR_CONVERSION;
-            else
-                feeType = BpaConstants.BPA_APP_FEE;
-
-            final Criteria feeCrit = applicationBpaBillService.getBpaFeeCriteria(serviceTypeIds, feeType,
-                    FeeSubType.APPLICATION_FEE);
-            @SuppressWarnings(UNCHECKED)
-            final List<BpaFeeMapping> bpaFeeMap = feeCrit.list();
-            for (final BpaFeeMapping feeMap : bpaFeeMap)
-                totalAmount = totalAmount.add(BigDecimal.valueOf(feeMap.getAmount()));
-        }*/
+        
         if (application != null) {	    		
     		Plan plan = getPlanInfo(application.geteDcrNumber());	    		
     		if(null!=plan) {

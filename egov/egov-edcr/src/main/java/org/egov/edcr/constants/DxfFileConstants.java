@@ -18,6 +18,7 @@ public class DxfFileConstants {
 	public static final String ROOT_BOUNDARY_TYPE = "ROOT_BOUNDARY_TYPE";
 	public static final String SECTOR_NUMBER = "SECTOR_NUMBER";
 	public static final String PLOT_TYPE = "PLOT_TYPE";
+	public static final String KHATA_NO = "KHATA_NO";
 
 	// ROOT_BOUNDARY_TYPE values
 	public static final String URBAN = "URBAN";
@@ -42,6 +43,8 @@ public class DxfFileConstants {
 
 	public static final String YES = "YES";
 	public static final String NO = "NO";
+	
+	public static final String ULBNAME = "Chandigarh Administration";
 
 	// CGCL start
 	// occupancies code
@@ -68,7 +71,7 @@ public class DxfFileConstants {
 	public static final String A_S="A-S";//STD/ PCO/ fax and photostat machine
 	public static final String A_PG="A-PG";//Creche and paying guest facility
 
-	public static final String F_SCO = "F-SCO";// SCO’S/ SCF’S / BAYSHOP’S/ SEMI INDUSTRIAL -- 272
+	public static final String F_SCO = "F-SCO";// SCO'S/ SCF'S / BAYSHOP'S/ SEMI INDUSTRIAL -- 272
 	public static final String F_B ="F-B"; // BOOTHS ETC. 
 	public static final String F_H = "F-H";// Hotels -- 236
 	public static final String F_M = "F-M";// MULTIPLEX/MALLS (specifically earmarked sites) -- 278

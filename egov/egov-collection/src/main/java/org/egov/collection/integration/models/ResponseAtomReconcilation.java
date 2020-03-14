@@ -254,6 +254,4 @@ public class ResponseAtomReconcilation {
 				+ atomtxnId + ", discriminator=" + discriminator + ", cardNumber=" + cardNumber + ", surcharge="
 				+ surcharge + ", txnDate=" + txnDate + ", udf9=" + udf9 + "]";
 	}
-
-
 }

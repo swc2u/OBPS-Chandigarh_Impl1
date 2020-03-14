@@ -99,14 +99,14 @@
 					<c:if test="${validButtons ne ''}">
 						<c:choose>
 							<c:when test="${validButtons eq 'Forward'}">
-								<c:if test="${(nextAction eq 'Forwarded to S-SDO Building to check NOC updation') and isAllNOCApproved}">
+								<c:if test="${(nextAction eq 'Forwarded to check NOC updation') and isAllNOCApproved}">
 									<form:button type="submit" id="${validButtons}"
 										class="btn workAction btn-primary" value="${validButtons}"
 										onclick="validateWorkFlowApprover('${validButtons}');">
 										<c:out value="${validButtons}" />
 									</form:button>
 								</c:if>
-								<c:if test="${nextAction ne 'Forwarded to S-SDO Building to check NOC updation'}">
+								<c:if test="${nextAction ne 'Forwarded to check NOC updation'}">
 									<form:button type="submit" id="${validButtons}"
 										class="btn workAction btn-primary" value="${validButtons}"
 										onclick="validateWorkFlowApprover('${validButtons}');">

@@ -302,7 +302,7 @@
 
 				</c:if>
 				<c:if
-					test="${occupancyCertificate.state.value ne 'Field Inspection completed' && occupancyCertificate.status.code eq 'Field Inspected'}">
+					test="${occupancyCertificate.state.value ne 'Field Inspection completed' && occupancyCertificate.status.code eq 'Document Verification Completed'}">
 					<input type="button" name="save" id="btnSave" value="Save"
 						class="btn btn-primary" />
 				</c:if>
