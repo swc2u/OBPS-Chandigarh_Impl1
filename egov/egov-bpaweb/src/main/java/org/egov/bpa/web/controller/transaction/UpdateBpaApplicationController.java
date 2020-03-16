@@ -99,6 +99,10 @@ import static org.egov.bpa.utils.BpaConstants.WF_PERMIT_FEE_COLL_PENDING;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_AE_APPROVAL;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_SDO_APPROVAL;
 import static org.egov.bpa.utils.BpaConstants.REJECTION_INITIATED;
+import static org.egov.bpa.utils.BpaConstants.WF_BA_NOC_UPDATION_IN_PROGRESS;
+import static org.egov.bpa.utils.BpaConstants.WF_BA_FINAL_APPROVAL_PROCESS_INITIATED;
+import static org.egov.bpa.utils.BpaConstants.WF_BA_AEE_APPLICATION_APPROVAL_PENDING;
+import static org.egov.bpa.utils.BpaConstants.WF_BA_FORWARD_TO_SDO_BUILDING;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -795,20 +799,17 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         model.addAttribute("nextAction", nextAction);
         
         if (!application.getIsOneDayPermitApplication()
-                && (FWD_TO_AE_FOR_FIELD_ISPECTION.equals(application.getState().getNextAction())
-                        || APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equals(application.getStatus().getCode())
-                        || APPLICATION_STATUS_APPROVAL_PROCESS_INITIATED.equals(application.getStatus().getCode())
-                        || APPLICATION_STATUS_NOCUPDATED.equalsIgnoreCase(application.getStatus().getCode()))
-                || (application.getApplicationType().getName().equals(BpaConstants.LOWRISK) &&
-                        FORWARDED_TO_CLERK.equals(application.getState().getNextAction()))) {
+        		&& !application.getApplicationType().getName().equals(BpaConstants.LOWRISK)
+                && (WF_BA_NOC_UPDATION_IN_PROGRESS.equalsIgnoreCase(application.getState().getNextAction())
+                	|| REJECTION_INITIATED.equalsIgnoreCase(application.getState().getNextAction())
+                	|| WF_BA_FINAL_APPROVAL_PROCESS_INITIATED.equalsIgnoreCase(application.getState().getNextAction())
+                	|| WF_BA_AEE_APPLICATION_APPROVAL_PENDING.equalsIgnoreCase(application.getState().getNextAction())
+                	|| WF_BA_FORWARD_TO_SDO_BUILDING.equalsIgnoreCase(application.getState().getNextAction())
+                    || APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(application.getStatus().getCode())
+                    || APPLICATION_STATUS_APPROVAL_PROCESS_INITIATED.equalsIgnoreCase(application.getStatus().getCode()))
+           ) {
             model.addAttribute("createlettertoparty", true);
         }
-
-        /*if (application.getApplicationType().getName().equals(BpaConstants.LOWRISK) &&
-                FORWARDED_TO_CLERK.equals(application.getState().getNextAction())) {
-            model.addAttribute("showRejectionReasons", false);
-        }*/
-
     }
 
     private void loadCommonApplicationDetails(Model model, BpaApplication application) {

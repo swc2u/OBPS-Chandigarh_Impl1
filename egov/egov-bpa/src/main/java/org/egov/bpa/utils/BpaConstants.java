@@ -249,13 +249,17 @@ public class BpaConstants {
     public static final String WF_BA_AE_APPROVAL="Forwarded to E- Assistant Estate Officer for Approval";
     public static final String WF_BA_INITIATE_GENERATE_PERMIT_ORDER="Initiated process for generate permit Order";
     public static final String WF_BA_SDO_APPROVAL="Forwarded to SDO Building for Approval";
+    
+    public static final String WF_BA_NOC_UPDATION_IN_PROGRESS="NOC updation in progress";
+    public static final String WF_BA_FINAL_APPROVAL_PROCESS_INITIATED="Final Approval Process initiated";
+    public static final String WF_BA_AEE_APPLICATION_APPROVAL_PENDING="AEE Application Approval Pending";
+    public static final String WF_BA_FORWARD_TO_SDO_BUILDING="Forward to SDO Building";
 
     // application status constants
     public static final String APPROVED = "Approved";
     public static final String APPLICATION_STATUS_APPROVED = APPROVED;
     public static final String PAYMENT_PENDING = "PAYMENT_PENDING";
     public static final String APPLICATION_STATUS_PENDNING = PAYMENT_PENDING;
-    //public static final String APPLICATION_STATUS_FIELD_INS = "Field Inspected";
     public static final String APPLICATION_STATUS_DOC_VERIFY_COMPLETED = "Document Verification Completed";
     public static final String APPLICATION_STATUS_APPROVAL_PROCESS_INITIATED = "Approval Process Initiated";
     public static final String APPLICATION_STATUS_ORDER_ISSUED = "Order Issued to Applicant";

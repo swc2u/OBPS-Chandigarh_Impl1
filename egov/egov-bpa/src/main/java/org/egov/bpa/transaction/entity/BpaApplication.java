@@ -685,7 +685,7 @@ public class BpaApplication extends StateAware<Position> {
     @Override
     public String getStateDetails() {
         return String.format("Application Type: %s Applicant Name: %s Application Number %s Dated %s For the service type - %s.",
-                applicationType == null ? applicationType : applicationType.getName(),
+                applicationType == null ? applicationType : applicationType.getDescription(),
                 owner == null ? "Not Specified" : owner.getName(),
                 applicationNumber == null ? planPermissionNumber : applicationNumber,
                 applicationDate == null ? DateUtils.toDefaultDateFormat(new Date())

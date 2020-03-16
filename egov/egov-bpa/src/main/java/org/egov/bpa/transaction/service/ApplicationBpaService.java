@@ -767,7 +767,6 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
 
     public BigDecimal getTotalFeeAmountByPassingServiceTypeAndAmenities(BpaApplication application) {
         BigDecimal totalAmount = BigDecimal.ZERO;
-        
         if (application != null) {	    		
     		Plan plan = getPlanInfo(application.geteDcrNumber());	    		
     		if(null!=plan) {

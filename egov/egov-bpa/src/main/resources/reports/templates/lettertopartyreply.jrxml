@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reply" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="19a6b87f-b0aa-4611-908a-14a81b44cdbb">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -28,18 +28,11 @@
 	<title>
 		<band height="190" splitType="Stretch">
 			<staticText>
-				<reportElement x="129" y="58" width="342" height="20" uuid="58e1974e-c738-46d8-8c58-f5f6a4e1b962"/>
+				<reportElement x="129" y="40" width="342" height="20" uuid="58e1974e-c738-46d8-8c58-f5f6a4e1b962"/>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Letter to Party Reply Acknowledgement]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="129" y="39" width="342" height="18" uuid="67ea5c35-8b79-4289-9647-3815a7b81375"/>
-				<textElement textAlignment="Center">
-					<font fontName="SansSerif" size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Town Planning Section-Works Department]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="129" y="18" width="342" height="20" uuid="fb0fe1f0-6a41-4333-b2e3-6af102647660"/>
@@ -172,15 +165,8 @@
 				</textElement>
 				<textFieldExpression><![CDATA["Letter to Party No."]]></textFieldExpression>
 			</textField>
-			<image scaleImage="RetainShape" hAlign="Center" isUsingCache="true" onErrorType="Blank">
-				<reportElement mode="Transparent" x="10" y="10" width="90" height="61" uuid="7bbf7e18-e398-4525-a1f9-0740176bd691">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<imageExpression><![CDATA[$P{stateLogo}]]></imageExpression>
-			</image>
 			<image>
-				<reportElement x="476" y="10" width="66" height="58" uuid="dde18249-8028-49d3-ba4b-57708ff41858">
+				<reportElement x="10" y="10" width="66" height="58" uuid="dde18249-8028-49d3-ba4b-57708ff41858">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
