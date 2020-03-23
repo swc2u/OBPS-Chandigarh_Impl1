@@ -91,12 +91,22 @@ public class Floor extends Measurement {
     private InteriorOpenSpace interiorOpenSpace=new InteriorOpenSpace();
     private MeasurementWithHeight verandah = new MeasurementWithHeight();
     private MeasurementWithHeight lightAndVentilation =  new MeasurementWithHeight();
+    
+    private BigDecimal totalHabitableRoomArea=BigDecimal.ZERO;
      
     private List<Balcony> balconies = new ArrayList<>();
 
     private List<Measurement> overHangs;
     
-    public List<FireStair> getFireStairs() {
+    public BigDecimal getTotalHabitableRoomArea() {
+		return totalHabitableRoomArea;
+	}
+
+	public void setTotalHabitableRoomArea(BigDecimal totalHabitableRoomArea) {
+		this.totalHabitableRoomArea = totalHabitableRoomArea;
+	}
+
+	public List<FireStair> getFireStairs() {
         return fireStairs;
     }
 

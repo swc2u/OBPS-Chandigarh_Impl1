@@ -177,35 +177,37 @@ public class Ventilation extends FeatureProcess {
 				for (Floor f : b.getBuilding().getFloors()) {
 					Map<String, String> details = new HashMap<>();
 					details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.LIGHT_AND_VENTILATION));
-					details.put(DESCRIPTION, LIGHT_VENTILATION_DESCRIPTION);
+					details.put(DESCRIPTION, LIGHT_VENTILATION_DESCRIPTION+" blook "+ b.getNumber()+" floor "+f.getNumber());
 
 					if (f.getLightAndVentilation() != null && f.getLightAndVentilation().getMeasurements() != null
 							&& !f.getLightAndVentilation().getMeasurements().isEmpty()) {
 
 						BigDecimal totalVentilationArea = f.getLightAndVentilation().getMeasurements().stream()
 								.map(Measurement::getArea).reduce(BigDecimal.ZERO, BigDecimal::add);
-						BigDecimal totalCarpetArea = f.getOccupancies().stream().map(Occupancy::getCarpetArea)
-								.reduce(BigDecimal.ZERO, BigDecimal::add);
+//						BigDecimal totalCarpetArea = f.getOccupancies().stream().map(Occupancy::getCarpetArea)
+//								.reduce(BigDecimal.ZERO, BigDecimal::add);
+						
+						BigDecimal totalRoomArea = f.getTotalHabitableRoomArea();
+
+						
 
 						if (totalVentilationArea.compareTo(BigDecimal.ZERO) > 0) {
-							if (totalVentilationArea.compareTo(totalCarpetArea.divide(BigDecimal.valueOf(8)).setScale(2,
+							if (totalVentilationArea.compareTo(totalRoomArea.divide(BigDecimal.valueOf(8)).setScale(2,
 									BigDecimal.ROUND_HALF_UP)) >= 0) {
-								details.put(REQUIRED, "Minimum 1/8th of the floor area ");
-								details.put(PROVIDED, "Ventilation area " + totalVentilationArea + " of Carpet Area   "
-										+ totalCarpetArea + " at floor " + f.getNumber());
+								details.put(REQUIRED, "Minimum 1/8th of the habitable area " + totalRoomArea);
+								details.put(PROVIDED, "Ventilation area " + totalVentilationArea );
 								details.put(STATUS, Result.Accepted.getResultVal());
 								scrutinyDetail.getDetail().add(details);
 								pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 							} else {
-								details.put(REQUIRED, "Minimum 1/8th of the floor area ");
-								details.put(PROVIDED, "Ventilation area " + totalVentilationArea + " of Carpet Area   "
-										+ totalCarpetArea + " at floor " + f.getNumber());
+								details.put(REQUIRED, "Minimum 1/8th of the habitable area " + totalRoomArea);
+								details.put(PROVIDED, "Ventilation area " + totalVentilationArea);
 								details.put(STATUS, Result.Not_Accepted.getResultVal());
 								scrutinyDetail.getDetail().add(details);
 								pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 							}
-						} 
+						}
 					}
 //					else {
 //						Map<String, String> map=new HashMap<String, String>();

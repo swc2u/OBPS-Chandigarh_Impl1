@@ -300,7 +300,7 @@ public class HeightOfRoom extends FeatureProcess {
                     ? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
                     : null;
             if (mostRestrictiveOccupancy != null && mostRestrictiveOccupancy.getType() != null && mostRestrictiveOccupancy.getSubtype()!=null
-            		&& !isOccupancyTypePlinthNotApplicable(mostRestrictiveOccupancy)
+            		
                     ) {
                 for (Block block : pl.getBlocks()) {
                     if (block.getBuilding() != null && !block.getBuilding().getFloors().isEmpty()) {
@@ -368,9 +368,9 @@ public class HeightOfRoom extends FeatureProcess {
                                             isTypicalRepititiveFloor);
                                     buildResult(pl, floor, minimumHeight, subRule, subRuleDesc, minHeight, valid,
                                             typicalFloorValues);
-                                } else {
+                                } else if( !isOccupancyTypePlinthNotApplicable(mostRestrictiveOccupancy)){
                                     String layerName = String.format(LAYER_ROOM_HEIGHT, block.getNumber(), floor.getNumber(),
-                                            "AC_ROOM");
+                                            "ROOM");
                                     errors.put(layerName, ROOM_HEIGHT_NOTDEFINED + layerName);
                                     pl.addErrors(errors);
                                 }
@@ -399,6 +399,9 @@ public class HeightOfRoom extends FeatureProcess {
                             if (!roomAreas.isEmpty()) {
                                 totalArea = roomAreas.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
                                 BigDecimal minRoomWidth = roomWidths.stream().reduce(BigDecimal::min).get();
+                                
+                                floor.setTotalHabitableRoomArea(totalArea);// is required for Light & Ventilations
+                                
                                 if (roomAreas.size() == 1) {
                                     minimumHeight = MINIMUM_AREA_9_5;
                                     minWidth = MINIMUM_WIDTH_2_4;

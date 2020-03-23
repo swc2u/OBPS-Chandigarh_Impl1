@@ -65,9 +65,10 @@ public class DxfFileConstants {
 	
 	public static final String A_SQ="A-SQ";//Servant quarter
 	public static final String A_PO = "A-PO";// Professional Office
-	public static final String A_S="A-S";//STD/ PCO/ fax and photostat machine
+	public static final String A_S="A-S";//  STD/ PCO/ fax and photostat machine
 	public static final String A_PG="A-PG";//Creche and paying guest facility
-
+	public static final String A_EWS="A-EWS";//EWS
+	
 	public static final String F_SCO = "F-SCO";// SCO’S/ SCF’S / BAYSHOP’S/ SEMI INDUSTRIAL -- 272
 	public static final String F_B ="F-B"; // BOOTHS ETC. 
 	public static final String F_H = "F-H";// Hotels -- 236

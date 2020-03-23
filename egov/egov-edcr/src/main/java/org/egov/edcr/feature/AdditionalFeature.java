@@ -52,6 +52,7 @@ import static org.egov.edcr.utility.DcrConstants.DECIMALDIGITS_MEASUREMENTS;
 import static org.egov.edcr.utility.DcrConstants.ROUNDMODE_MEASUREMENTS;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -63,6 +64,7 @@ import org.apache.log4j.Logger;
 import org.egov.common.entity.edcr.Block;
 import org.egov.common.entity.edcr.Building;
 import org.egov.common.entity.edcr.Floor;
+import org.egov.common.entity.edcr.FloorUnit;
 import org.egov.common.entity.edcr.Measurement;
 import org.egov.common.entity.edcr.Occupancy;
 import org.egov.common.entity.edcr.OccupancyType;
@@ -77,6 +79,7 @@ import org.egov.edcr.service.cdg.CDGAConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.DcrConstants;
 import org.egov.infra.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -102,7 +105,6 @@ public class AdditionalFeature extends FeatureProcess {
 	private static final BigDecimal NINETEEN = BigDecimal.valueOf(19);
 	private static final BigDecimal FIFTY = BigDecimal.valueOf(50);
 	private static final BigDecimal FIFTEEN = BigDecimal.valueOf(15);
-	
 
 	private static final BigDecimal ROAD_WIDTH_TWO_POINTFOUR = BigDecimal.valueOf(2.4);
 	private static final BigDecimal ROAD_WIDTH_TWO_POINTFOURFOUR = BigDecimal.valueOf(2.44);
@@ -151,6 +153,9 @@ public class AdditionalFeature extends FeatureProcess {
 	private static final String STILT_PARKING_REQUIRED_DESCRIPTION = "Stilt parking should be in ground floor";
 	private static final String STILT_PARKING_PROVIDED_DESCRIPTION = "Stilt parking is in block %s and floor %s";
 
+	@Autowired
+	private CDGAdditionalService cDGAdditionalService;
+
 	@Override
 	public Plan validate(Plan pl) {
 		HashMap<String, String> errors = new HashMap<>();
@@ -197,6 +202,8 @@ public class AdditionalFeature extends FeatureProcess {
 		// validateHeightOfBuilding(pl, errors, typeOfArea, roadWidth);
 		// }
 
+		validateNumberOfFloorsSkelton(pl);
+
 		validatePlinthHeight(pl, errors);
 		// validateIntCourtYard(pl, errors);
 		validateBarrierFreeAccess(pl, errors);
@@ -211,10 +218,78 @@ public class AdditionalFeature extends FeatureProcess {
 		validateProfessionalsConsultantsSpace(pl);
 		validateSTD(pl);
 		validateCrecheAndPayingGuestFacility(pl);
+		validateEWS(pl);
 		// CSCL add end
 		return pl;
 	}
-	
+
+	private void validateEWS(Plan pl) {
+		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
+				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+				: null;
+
+		if (DxfFileConstants.A_G.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
+
+			ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
+			scrutinyDetail.setKey("Common_EWS");
+			scrutinyDetail.addColumnHeading(1, RULE_NO);
+			scrutinyDetail.addColumnHeading(2, DESCRIPTION);
+			scrutinyDetail.addColumnHeading(3, REQUIRED);
+			scrutinyDetail.addColumnHeading(4, PROVIDED);
+			scrutinyDetail.addColumnHeading(5, STATUS);
+			Map<String, String> details = new HashMap<>();
+
+			long totalRequiredDUCount = 0;
+
+			List<FloorUnit> genralDUUnit = new ArrayList<FloorUnit>();
+			List<FloorUnit> eWSDUUnit = new ArrayList<FloorUnit>();
+
+			for (Block b : pl.getBlocks()) {
+				for (Floor floor : b.getBuilding().getFloors()) {
+
+					for (FloorUnit unit : floor.getUnits()) {
+
+						if (unit.getOccupancy() != null && unit.getOccupancy().getTypeHelper() != null
+								&& unit.getOccupancy().getTypeHelper().getSubtype() != null && DxfFileConstants.A_EWS
+										.equals(unit.getOccupancy().getTypeHelper().getSubtype().getCode()))
+							eWSDUUnit.add(unit);
+						else
+							genralDUUnit.add(unit);
+					}
+
+				}
+			}
+
+			BigDecimal minewsArea = BigDecimal.ZERO;
+
+			minewsArea = eWSDUUnit.stream().map(Measurement::getArea).reduce(BigDecimal::min).get();
+
+			if (minewsArea.compareTo(new BigDecimal("30")) < 0) {
+				pl.addError("ews", "ews area is less then 30 sqm");
+			}
+
+			if (genralDUUnit.size() > 0) {
+				totalRequiredDUCount = Math.round(genralDUUnit.size() * 0.15d);
+			}
+
+			details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.EWS));
+			details.put(DESCRIPTION, "EWS");
+			details.put(REQUIRED, totalRequiredDUCount + "");
+			details.put(PROVIDED, eWSDUUnit.size() + "");
+
+			if (eWSDUUnit.size() >= totalRequiredDUCount) {
+				details.put(STATUS, Result.Accepted.getResultVal());
+			} else {
+				details.put(STATUS, Result.Not_Accepted.getResultVal());
+			}
+
+			scrutinyDetail.getDetail().add(details);
+			pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+
+		}
+
+	}
+
 	private void validateCrecheAndPayingGuestFacility(Plan pl) {
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
@@ -237,7 +312,7 @@ public class AdditionalFeature extends FeatureProcess {
 					for (Occupancy occupancy : floor.getOccupancies()) {
 						if (occupancy.getTypeHelper() != null && occupancy.getTypeHelper().getSubtype() != null
 								&& DxfFileConstants.A_PO.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
-							providedPayingGuestSpace=providedPayingGuestSpace.add(occupancy.getBuiltUpArea());
+							providedPayingGuestSpace = providedPayingGuestSpace.add(occupancy.getBuiltUpArea());
 							isPayingGuestProvided = true;
 
 						}
@@ -246,13 +321,13 @@ public class AdditionalFeature extends FeatureProcess {
 			}
 
 			if (isPayingGuestProvided) {
-				details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,
-						CDGAConstant.PAYING_GUEST));
+				details.put(RULE_NO,
+						CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.PAYING_GUEST));
 				details.put(DESCRIPTION, "Creche and paying guest facility");
 				details.put(REQUIRED, " Permitted");
 				details.put(PROVIDED, providedPayingGuestSpace + " sqm");
 				details.put(STATUS, Result.Accepted.getResultVal());
-				
+
 				scrutinyDetail.getDetail().add(details);
 				pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 			}
@@ -260,7 +335,7 @@ public class AdditionalFeature extends FeatureProcess {
 		}
 
 	}
-	
+
 	private void validateSTD(Plan pl) {
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
@@ -296,7 +371,7 @@ public class AdditionalFeature extends FeatureProcess {
 					for (Occupancy occupancy : floor.getOccupancies()) {
 						if (occupancy.getTypeHelper() != null && occupancy.getTypeHelper().getSubtype() != null
 								&& DxfFileConstants.A_PO.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
-							providedStdSpace=providedStdSpace.add(occupancy.getBuiltUpArea());
+							providedStdSpace = providedStdSpace.add(occupancy.getBuiltUpArea());
 							isprovidedStdSpaceSpaceProvided = true;
 
 						}
@@ -305,8 +380,8 @@ public class AdditionalFeature extends FeatureProcess {
 			}
 
 			if (isprovidedStdSpaceSpaceProvided) {
-				details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,
-						CDGAConstant.STD_PCO));
+				details.put(RULE_NO,
+						CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.STD_PCO));
 				details.put(DESCRIPTION, "STD/ PCO/ fax and photostat machine");
 				details.put(REQUIRED, requiredStdSpace + " sqm");
 				details.put(PROVIDED, providedStdSpace + " sqm");
@@ -322,9 +397,6 @@ public class AdditionalFeature extends FeatureProcess {
 		}
 
 	}
-
-	
-	
 
 	private void validateProfessionalsConsultantsSpace(Plan pl) {
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
@@ -361,7 +433,8 @@ public class AdditionalFeature extends FeatureProcess {
 					for (Occupancy occupancy : floor.getOccupancies()) {
 						if (occupancy.getTypeHelper() != null && occupancy.getTypeHelper().getSubtype() != null
 								&& DxfFileConstants.A_PO.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
-							providedProfessionalsConsultantsSpace=providedProfessionalsConsultantsSpace.add(occupancy.getBuiltUpArea());
+							providedProfessionalsConsultantsSpace = providedProfessionalsConsultantsSpace
+									.add(occupancy.getBuiltUpArea());
 							isProfessionalsConsultantsSpaceProvided = true;
 
 						}
@@ -562,6 +635,88 @@ public class AdditionalFeature extends FeatureProcess {
 			}
 		}
 
+	}
+
+	private Map<String, String> getNoOfSTOREYS(Plan pl, OccupancyTypeHelper occupancy) {
+
+		String plotAreaType = pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE);
+		String sector = pl.getPlanInfoProperties().get(DxfFileConstants.SECTOR_NUMBER);
+		String plotNo = pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_NO);
+
+		Map<String, String> input = new HashMap<String, String>();
+		input.put(CDGAdditionalService.OCCUPENCY_CODE, occupancy.getSubtype().getCode());
+		input.put(CDGAdditionalService.SECTOR, sector);
+		input.put(CDGAdditionalService.PLOT_NO, plotNo);
+		input.put(CDGAdditionalService.PLOT_TYPE, plotAreaType);
+
+		Map<String, String> result = cDGAdditionalService.getFeatureValue(CDGAConstant.NO_OF_STORY, input);
+
+		return result;
+
+	}
+
+	private void validateNumberOfFloorsSkelton(Plan pl) {
+		for (Block block : pl.getBlocks()) {
+			boolean isAccepted = false;
+			// CSCL comment start
+			// ScrutinyDetail scrutinyDetail = getNewScrutinyDetail("Block_" +
+			// block.getNumber() + "_" + "Number of Floors");
+			// CSCL comment end
+
+			// CSCL add start
+			ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
+			// scrutinyDetail.addColumnHeading(1, RULE_NO);
+			scrutinyDetail.addColumnHeading(2, DESCRIPTION);
+			scrutinyDetail.addColumnHeading(3, PERMISSIBLE);
+			scrutinyDetail.addColumnHeading(4, PROVIDED);
+			scrutinyDetail.addColumnHeading(5, STATUS);
+			scrutinyDetail.setKey("Block_" + block.getNumber() + "_" + "Number of Floors");
+			// CSCL add end
+			BigDecimal floorAbvGround = block.getBuilding().getFloorsAboveGround();
+			String requiredFloorCount = StringUtils.EMPTY;
+			// CSCL add start
+			OccupancyTypeHelper occupancyTypeHelper = pl.getVirtualBuilding() != null
+					? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+					: null;
+			String occTypeCode = occupancyTypeHelper.getType().getCode();
+			String suboccupancyTypeCode = occupancyTypeHelper.getSubtype().getCode();
+
+			if (DxfFileConstants.A_P.equalsIgnoreCase(suboccupancyTypeCode)) {
+				isAccepted = floorAbvGround.compareTo(THREE) <= 0;
+				requiredFloorCount = "<= 3";
+			}else if (DxfFileConstants.F_PP.equalsIgnoreCase(suboccupancyTypeCode)
+					|| DxfFileConstants.F_CD.equalsIgnoreCase(suboccupancyTypeCode)) {
+				isAccepted = floorAbvGround.compareTo(new BigDecimal("1")) <= 0;
+				requiredFloorCount = "<= 1";
+			}
+			else if (DxfFileConstants.R1.equalsIgnoreCase(suboccupancyTypeCode)) {
+				isAccepted = floorAbvGround.compareTo(new BigDecimal("5")) <= 0;
+				requiredFloorCount = "<= 5";
+			}else if (!DxfFileConstants.F_TCIM.equalsIgnoreCase(suboccupancyTypeCode)) {
+				String noc = getNoOfSTOREYS(pl, occupancyTypeHelper).get(CDGAdditionalService.PERMISSIBLE_BUILDING_STORIES);
+				
+				if(noc==null) {
+					pl.addError("NO OF STOREYS", "NO OF STOREYS can't be validate.");
+				}else {
+					isAccepted = floorAbvGround.compareTo(new BigDecimal(noc)) <= 0;
+					requiredFloorCount = "<= "+noc;
+				}
+				
+				
+			}
+
+			
+				Map<String, String> details = new HashMap<>();
+				// details.put(RULE_NO, RULE_38);
+				details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.NO_OF_STORY));
+				details.put(DESCRIPTION, NO_OF_FLOORS);
+				details.put(PERMISSIBLE, requiredFloorCount);
+				details.put(PROVIDED, String.valueOf(block.getBuilding().getFloorsAboveGround()));
+				details.put(STATUS, isAccepted ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
+				scrutinyDetail.getDetail().add(details);
+				pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+			
+		}
 	}
 
 	private void validateNumberOfFloors(Plan pl, HashMap<String, String> errors, String typeOfArea,

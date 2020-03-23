@@ -77,10 +77,16 @@ public class PlanService {
 
 		AmendmentService repo = (AmendmentService) specificRuleService.find("amendmentService");
 		Amendment amd = repo.getAmendments();
-
-		Plan plan = extractService.extract(dcrApplication.getSavedDxfFile(), amd, asOnDate,
-				featureService.getFeatures());
-		
+		Plan plan=null;
+		try {
+			plan = extractService.extract(dcrApplication.getSavedDxfFile(), amd, asOnDate,
+					featureService.getFeatures());
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.getClass();
+		}
+//		if(plan==null)
+//			plan=new Plan();
 		// add serviceType for validation
 		plan.setServiceType(dcrApplication.getServiceType());
 

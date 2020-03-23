@@ -416,7 +416,7 @@ public class Parking extends FeatureProcess {
     	
     	for(Block block:pl.getBlocks()) {
     		 for (Floor floor : block.getBuilding().getFloors()) {
-    			 
+    			 System.out.println("blook "+ block.getNumber() + " floor "+ floor.getNumber()+"  du"+ floor.getUnits().size());
     			for(FloorUnit floorUnit:floor.getUnits()) {
     				if(floorUnit.getArea().compareTo(new BigDecimal("111.48"))<=0) {
     					ecs=ecs+1.5d;

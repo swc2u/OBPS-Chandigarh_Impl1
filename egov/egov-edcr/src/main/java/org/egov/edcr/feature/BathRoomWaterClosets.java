@@ -70,7 +70,7 @@ public class BathRoomWaterClosets extends FeatureProcess {
 
 	private static final Logger LOG = Logger.getLogger(BathRoomWaterClosets.class);
 	private static final String RULE_41_IV = "41-iv";
-	public static final String BathroomWaterClosets_DESCRIPTION = "Bathroom Water Closets";
+	public static final String BathroomWaterClosets_DESCRIPTION = "Toilet";
 
 	@Override
 	public Plan validate(Plan pl) {
@@ -82,7 +82,7 @@ public class BathRoomWaterClosets extends FeatureProcess {
 	public Plan process(Plan pl) {
 
 		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
-		scrutinyDetail.setKey("Common_Bathroom Water Closets");
+		scrutinyDetail.setKey("Common_Toilet");
 		scrutinyDetail.addColumnHeading(1, RULE_NO);
 		scrutinyDetail.addColumnHeading(2, DESCRIPTION);
 		scrutinyDetail.addColumnHeading(3, REQUIRED);
