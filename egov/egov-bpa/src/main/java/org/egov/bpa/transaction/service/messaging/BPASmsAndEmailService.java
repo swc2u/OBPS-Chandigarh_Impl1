@@ -308,8 +308,7 @@ public class BPASmsAndEmailService {
                 buildSmsAndEmailForBPANewAppln(bpaApplication, applicantName, mobileNo, email, loginUserName, password,
                         reportOutput, fileName);
             }
-            if (applnStakeHolder.getStakeHolder() != null && applnStakeHolder.getStakeHolder().isActive()
-                    && (bpaUtils.isCitizenAcceptanceRequired() && bpaApplication.isCitizenAccepted())) {
+            if (applnStakeHolder.getStakeHolder() != null && applnStakeHolder.getStakeHolder().isActive()) {
                 applicantName = applnStakeHolder.getStakeHolder().getName();
                 email = applnStakeHolder.getStakeHolder().getEmailId();
                 mobileNo = applnStakeHolder.getStakeHolder().getMobileNumber();
@@ -388,8 +387,8 @@ public class BPASmsAndEmailService {
             body = emailBodyByCodeAndArgsWithType(BODY_KEY_EMAIL_CANCELL_APPLN, applicantName,
                     bpaApplication, APPLICATION_STATUS_CANCELLED, EMPTY, EMPTY);
             subject = emailSubjectforEmailByCodeAndArgs(SUBJECT_KEY_EMAIL_CANCELL_APPLN, bpaApplication.getApplicationNumber());
-        } else if ((BpaConstants.APPLICATION_STATUS_CREATED).equalsIgnoreCase(bpaApplication.getStatus().getCode())
-                && bpaUtils.isCitizenAcceptanceRequired() && !bpaApplication.isCitizenAccepted()) {
+        } else if (BpaConstants.APPLICATION_STATUS_CREATED.equalsIgnoreCase(bpaApplication.getStatus().getCode())
+        			|| BpaConstants.APPLICATION_STATUS_SUBMITTED.equalsIgnoreCase(bpaApplication.getStatus().getCode())) {
             smsMsg = smsBodyByCodeAndArgsWithType(MSG_KEY_SMS_BPA_APPLN_STC_TRUE, applicantName, bpaApplication,
                     SMSEMAILTYPENEWBPAREGISTERED, loginUserName, password);
             body = emailBodyByCodeAndArgsWithType(BODY_KEY_EMAIL_BPA_APPLN_NEW_PAWD, applicantName,
@@ -865,8 +864,7 @@ public class BPASmsAndEmailService {
                 buildSmsAndEmailForBPANewAppln(bpaApplication, applicantName, mobileNo, email, loginUserName, password,
                         reportOutput, fileName);
             }
-            if (applnStakeHolder.getStakeHolder() != null && applnStakeHolder.getStakeHolder().isActive()
-                    && (bpaUtils.isCitizenAcceptanceRequired() && bpaApplication.isCitizenAccepted())) {
+            if (applnStakeHolder.getStakeHolder() != null && applnStakeHolder.getStakeHolder().isActive()) {
                 applicantName = applnStakeHolder.getStakeHolder().getName();
                 email = applnStakeHolder.getStakeHolder().getEmailId();
                 mobileNo = applnStakeHolder.getStakeHolder().getMobileNumber();

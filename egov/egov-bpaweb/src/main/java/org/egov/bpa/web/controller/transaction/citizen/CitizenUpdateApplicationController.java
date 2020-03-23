@@ -531,8 +531,7 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
                     bpaUtils.updatePortalUserinbox(bpaApplication, bpaApplication.getOwner().getUser());
             }
         }
-        if (bpaUtils.isCitizenAcceptanceRequired() && bpaApplication.isCitizenAccepted()
-                && workFlowAction.equals(WF_LBE_SUBMIT_BUTTON))
+        if (workFlowAction.equals(WF_LBE_SUBMIT_BUTTON))
             bpaSmsAndEmailService.sendSMSAndEmail(bpaApplication, null, null);
 
         // Will redirect to collection, then after collection success will forward to official

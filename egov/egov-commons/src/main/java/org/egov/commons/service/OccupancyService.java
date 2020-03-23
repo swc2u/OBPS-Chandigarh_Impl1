@@ -113,4 +113,16 @@ public class OccupancyService {
 
         return usagesList;
     }
+    
+    public List<Usage> findSubUsagesBySubOccupancy(final String subOccupancyName) {
+    	SubOccupancy subOccupancy = subOccupancyRepository.findByName(subOccupancyName);
+        List<Usage> usagesList = new ArrayList<>();
+        if (subOccupancy != null) {                
+            List<Usage> usages = usagesRepository
+                    .findBySubOccupancyAndIsActiveTrueOrderByOrderNumberAsc(subOccupancy);
+            usagesList.addAll(usages);
+        }
+
+        return usagesList;
+    }
 }
