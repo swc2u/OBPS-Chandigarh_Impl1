@@ -45,7 +45,7 @@
  */
 package org.egov.bpa.transaction.service;
 
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_FIELD_INS;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFY_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.FORWARDED_TO_NOC_UPDATE;
 
 import java.util.List;
@@ -85,7 +85,7 @@ public class NocStatusService {
         for (PermitNocDocument nocDocument : application.getPermitNocDocuments()) {
         	String code = nocDocument.getNocDocument().getServiceChecklist().getChecklist().getCode();
         	if (FORWARDED_TO_NOC_UPDATE.equalsIgnoreCase(pendingAction)
-	                && APPLICATION_STATUS_FIELD_INS.equalsIgnoreCase(currentStatus)) {
+	                && APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(currentStatus)) {
 				for (PermitNocApplication permitNocApp : permitNoc) {
 		        	if(permitNocApp.getBpaNocApplication().getNocType().equals(code)) {
 		        		if(permitNocApp.getBpaNocApplication().getStatus().getCode().equals(BpaConstants.NOC_APPROVED) || permitNocApp.getBpaNocApplication().getStatus().getCode().equals(BpaConstants.NOC_DEEMED_APPROVED))
@@ -108,7 +108,7 @@ public class NocStatusService {
         for (OCNocDocuments nocDocument : oc.getNocDocuments()) {
         	String code = nocDocument.getNocDocument().getServiceChecklist().getChecklist().getCode();
         	if (FORWARDED_TO_NOC_UPDATE.equalsIgnoreCase(pendingAction)
-	                && APPLICATION_STATUS_FIELD_INS.equalsIgnoreCase(currentStatus)) {
+	                && APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(currentStatus)) {
 				for (OccupancyNocApplication ocNocApp : ocNoc) {
 		        	if(ocNocApp.getBpaNocApplication().getNocType().equals(code)) {
 		        		if(ocNocApp.getBpaNocApplication().getStatus().getCode().equals(BpaConstants.NOC_APPROVED) || ocNocApp.getBpaNocApplication().getStatus().getCode().equals(BpaConstants.NOC_DEEMED_APPROVED))

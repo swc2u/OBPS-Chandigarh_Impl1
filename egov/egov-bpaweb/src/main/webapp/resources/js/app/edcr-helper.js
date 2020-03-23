@@ -508,8 +508,8 @@ $(document).ready(
 
         //***********END - Auto populate existing buildings details*********************
 
-        var occupancySubUsage = '<div class="col-sm-1"></div><div><input type="hidden" name="buildingSubUsages[{{blkIdx}}].application""><input type="hidden" name="buildingSubUsages[{{blkIdx}}].subUsageDetails[{{subUsageIdx}}].mainUsage" value="{{mainUsageId}}">' +
-            '<input type="hidden" name="buildingSubUsages[{{blkIdx}}].blockNumber" value="{{blockNumber}}"><input type="hidden" name="buildingSubUsages[{{blkIdx}}].blockName" value="{{blockName}}"> <div class="form-group col-sm-3">' +
+        var occupancySubUsage = '<div class="col-sm-1"></div><div class="col-sm-3"><input type="hidden" name="buildingSubUsages[{{blkIdx}}].application""><input type="hidden" name="buildingSubUsages[{{blkIdx}}].subUsageDetails[{{subUsageIdx}}].mainUsage" value="{{mainUsageId}}">' +
+            '<input type="hidden" name="buildingSubUsages[{{blkIdx}}].blockNumber" value="{{blockNumber}}"><input type="hidden" name="buildingSubUsages[{{blkIdx}}].blockName" value="{{blockName}}"> <div class="form-group">' +
             '<label for="name" class="col-md-12 view-content">{{mainUsage}}<span class="mandatory"></span></label>'+
         '<div>'+
         '<select name="buildingSubUsages[{{blkIdx}}].subUsageDetails[{{subUsageIdx}}].subUsages" multiple id="{{mainUsage}}"'+
@@ -526,9 +526,9 @@ $(document).ready(
                             async: false,
                             crossDomain: true,
                             type: "GET",
-                            url: '/bpa/occupancy/sub-usages/',
+                            url: '/bpa/sub-occupancy/sub-usages/',
                             data: {
-                                occupancy: occupancy.typeHelper.type.name
+                            	subOccupancy: occupancy.typeHelper.subtype.name
                             },
                             contentType: 'application/json; charset=utf-8',
                             success: function (response) {

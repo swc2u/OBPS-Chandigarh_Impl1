@@ -212,7 +212,7 @@
 							target="_self" class="btn btn-primary"> <spring:message code="lbl.btn.letter.to.party"/> </a>
 				</c:if>
 				
-				<c:if test="${inspectionApplication.state.value ne 'Field Inspection completed' && inspectionApplication.status.code eq 'Field Inspected'}">
+				<c:if test="${inspectionApplication.state.value ne 'Field Inspection completed' && inspectionApplication.status.code eq 'Document Verification Completed'}">
 					<input type="button" name="save" id="btnSave" value="Save" class="btn btn-primary"/>
 				</c:if>
 				

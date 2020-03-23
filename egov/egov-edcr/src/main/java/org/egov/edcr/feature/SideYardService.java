@@ -411,7 +411,6 @@ public class SideYardService extends GeneralRule {
 							}
 						}
 
-						
 						if (buildingHeight != null && (minlength > 0 || max > 0)) {
 							for (final Occupancy occupancy : block.getBuilding().getTotalArea()) {
 								scrutinyDetail.setKey("Block_" + block.getName() + "_" + "Side Setback");

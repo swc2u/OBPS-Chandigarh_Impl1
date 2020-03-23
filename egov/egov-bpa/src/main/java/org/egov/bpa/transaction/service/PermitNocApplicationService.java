@@ -273,21 +273,27 @@ public class PermitNocApplicationService {
 						? edcrPlanInfo.getPlan().getVirtualBuilding().getMostRestrictiveFarHelper()
 						: null;
 				String boundaryType = "";
+				String plotType = "";
 				if(null != edcrPlanInfo.getPlan().getPlanInfoProperties().get(BpaConstants.ROOT_BOUNDARY_TYPE)) {
 					boundaryType = edcrPlanInfo.getPlan().getPlanInfoProperties().get(BpaConstants.ROOT_BOUNDARY_TYPE);
 				}
+				if(null != edcrPlanInfo.getPlan().getPlanInfoProperties().get(BpaConstants.PLOT_TYPE)) {
+					plotType = edcrPlanInfo.getPlan().getPlanInfoProperties().get(BpaConstants.PLOT_TYPE);
+				}
 				if(boundaryType.equalsIgnoreCase(BpaConstants.URBAN)) {
-					if(BpaConstants.A_G.equalsIgnoreCase(occupancyTypeHelper.getSubtype().getCode())
-						|| BpaConstants.A_P.equalsIgnoreCase(occupancyTypeHelper.getSubtype().getCode())){
-						edcrPlanInfo.getPlan().getPlanInformation().setNocPACDept("YES");
-						edcrPlanInfo.getPlan().getPlanInformation().setNocStructureDept("YES");
-					}else {
-						edcrPlanInfo.getPlan().getPlanInformation().setNocPACDept("YES");
-						edcrPlanInfo.getPlan().getPlanInformation().setNocFireDept("YES");
-						edcrPlanInfo.getPlan().getPlanInformation().setNocStructureDept("YES");
-						edcrPlanInfo.getPlan().getPlanInformation().setNocElectricalDept("YES");
-						edcrPlanInfo.getPlan().getPlanInformation().setNocPollutionDept("YES");
-						edcrPlanInfo.getPlan().getPlanInformation().setNocPH7Dept("YES");
+					if(plotType.equalsIgnoreCase(BpaConstants.ABOVE_TWO_KANAL)) {
+						if(BpaConstants.A_G.equalsIgnoreCase(occupancyTypeHelper.getSubtype().getCode())
+							|| BpaConstants.A_P.equalsIgnoreCase(occupancyTypeHelper.getSubtype().getCode())){
+							edcrPlanInfo.getPlan().getPlanInformation().setNocPACDept("YES");
+							edcrPlanInfo.getPlan().getPlanInformation().setNocStructureDept("YES");
+						}else {
+							edcrPlanInfo.getPlan().getPlanInformation().setNocPACDept("YES");
+							edcrPlanInfo.getPlan().getPlanInformation().setNocFireDept("YES");
+							edcrPlanInfo.getPlan().getPlanInformation().setNocStructureDept("YES");
+							edcrPlanInfo.getPlan().getPlanInformation().setNocElectricalDept("YES");
+							edcrPlanInfo.getPlan().getPlanInformation().setNocPollutionDept("YES");
+							edcrPlanInfo.getPlan().getPlanInformation().setNocPH7Dept("YES");
+						}
 					}
 				}else if(boundaryType.equalsIgnoreCase(BpaConstants.RURAL)){
 					edcrPlanInfo.getPlan().getPlanInformation().setNocFireDept("YES");

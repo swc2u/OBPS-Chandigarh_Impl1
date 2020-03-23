@@ -18,6 +18,7 @@ public class DxfFileConstants {
 	public static final String ROOT_BOUNDARY_TYPE = "ROOT_BOUNDARY_TYPE";
 	public static final String SECTOR_NUMBER = "SECTOR_NUMBER";
 	public static final String PLOT_TYPE = "PLOT_TYPE";
+	public static final String KHATA_NO = "KHATA_NO";
 
 	// ROOT_BOUNDARY_TYPE values
 	public static final String URBAN = "URBAN";
@@ -42,6 +43,8 @@ public class DxfFileConstants {
 
 	public static final String YES = "YES";
 	public static final String NO = "NO";
+	
+	public static final String ULBNAME = "Chandigarh Administration";
 
 	// CGCL start
 	// occupancies code

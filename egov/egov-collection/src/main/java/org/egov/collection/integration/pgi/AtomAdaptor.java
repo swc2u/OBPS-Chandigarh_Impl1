@@ -113,78 +113,57 @@ public class AtomAdaptor implements PaymentGatewayAdaptor {
 	@Override
 	public PaymentRequest createPaymentRequest(final ServiceDetails paymentServiceDetails,
 			final ReceiptHeader receiptHeader) {
-		LOGGER.debug("inside  AtomAdaptor createPaymentRequest");
+		if(LOGGER.isDebugEnabled()) {
+			LOGGER.debug("inside  AtomAdaptor createPaymentRequest");
+		}
 		final DefaultPaymentRequest paymentRequest = new DefaultPaymentRequest();
-		String ttype = null, tempTxnId = null, token = null, txnStage = null;
-		final HttpPost httpPost = new HttpPost(paymentServiceDetails.getServiceUrl());
 		final List<NameValuePair> formData = new ArrayList<>(0);
-		// formData.add(new BasicNameValuePair(CollectionConstants.ATOM_LOGIN,
-		// collectionApplicationProperties.atomLogin()));
+		
 		formData.add(new BasicNameValuePair(CollectionConstants.ATOM_PASS, collectionApplicationProperties.atomPass()));
-		formData.add(
-				new BasicNameValuePair(CollectionConstants.ATOM_TTYPE, collectionApplicationProperties.atomTtype()));
-		formData.add(
-				new BasicNameValuePair(CollectionConstants.ATOM_PRODID, collectionApplicationProperties.atomProdid()));
+		formData.add(new BasicNameValuePair(CollectionConstants.ATOM_TTYPE, collectionApplicationProperties.atomTtype()));
+		formData.add(new BasicNameValuePair(CollectionConstants.ATOM_PRODID, collectionApplicationProperties.atomProdid()));
 		
 		String totalAmt = (receiptHeader.getTotalAmount().compareTo(new BigDecimal(50000))>0)?"50000.00":String.valueOf(receiptHeader.getTotalAmount());
 		
-		formData.add(new BasicNameValuePair(CollectionConstants.ATOM_AMT, new BigDecimal(totalAmt)
-				.setScale(CollectionConstants.AMOUNT_PRECISION_DEFAULT, BigDecimal.ROUND_UP).toString()));
-		formData.add(new BasicNameValuePair(CollectionConstants.ATOM_TXNCURR,
-				collectionApplicationProperties.atomTxncurr()));
-		
-		formData.add(new BasicNameValuePair(CollectionConstants.ATOM_TXNSCAMT,
-				collectionApplicationProperties.atomTxnscamt()));
-		formData.add(new BasicNameValuePair(CollectionConstants.ATOM_CLIENTCODE,
-				collectionApplicationProperties.atomClientcode()));
+		formData.add(new BasicNameValuePair(CollectionConstants.ATOM_AMT, new BigDecimal(totalAmt).setScale(CollectionConstants.AMOUNT_PRECISION_DEFAULT, BigDecimal.ROUND_UP).toString()));
+		formData.add(new BasicNameValuePair(CollectionConstants.ATOM_TXNCURR,collectionApplicationProperties.atomTxncurr()));		
+		formData.add(new BasicNameValuePair(CollectionConstants.ATOM_TXNSCAMT,collectionApplicationProperties.atomTxnscamt()));
+		formData.add(new BasicNameValuePair(CollectionConstants.ATOM_CLIENTCODE,collectionApplicationProperties.atomClientcode()));
 		formData.add(new BasicNameValuePair(CollectionConstants.ATOM_TXNID, receiptHeader.getId().toString()));
-		formData.add(new BasicNameValuePair(CollectionConstants.ATOM_DATE,
-				DateUtils.getFormattedDate(receiptHeader.getCreatedDate(), "dd/MM/yyyy HH:mm:ss")));
-
-		formData.add(new BasicNameValuePair(CollectionConstants.ATOM_CUSTACC,
-				collectionApplicationProperties.atomCustacc()));
-
-		// formData.add(new BasicNameValuePair(CollectionConstants.ATOM_MDD,
-		// collectionApplicationProperties.atomMdd()));
+		formData.add(new BasicNameValuePair(CollectionConstants.ATOM_DATE,DateUtils.getFormattedDate(receiptHeader.getCreatedDate(), "dd/MM/yyyy HH:mm:ss")));
+		formData.add(new BasicNameValuePair(CollectionConstants.ATOM_CUSTACC,collectionApplicationProperties.atomCustacc()));
 
 		StringBuilder returnUrl = new StringBuilder();
-		returnUrl.append(paymentServiceDetails.getCallBackurl()).append("?paymentServiceId=")
-				.append(paymentServiceDetails.getId());
+		returnUrl.append(paymentServiceDetails.getCallBackurl()).append("?paymentServiceId=").append(paymentServiceDetails.getId());
 		formData.add(new BasicNameValuePair(CollectionConstants.ATOM_RU, returnUrl.toString()));
-		LOGGER.info("First request ATOM: " + formData);
-		StringBuffer sbb = new StringBuffer(
-				CollectionConstants.ATOM_LOGIN + "=" + collectionApplicationProperties.atomLogin());
+		if(LOGGER.isDebugEnabled()) {
+			LOGGER.debug("First request ATOM: " + formData);
+		}
+		StringBuffer sbb = new StringBuffer(CollectionConstants.ATOM_LOGIN + "=" + collectionApplicationProperties.atomLogin());
 		for (NameValuePair nvp : formData) {
 			sbb.append("&" + nvp.getName() + "=" + nvp.getValue());
 		}
-		System.out.println(sbb);
-		// UrlEncodedFormEntity urlEncodedFormEntity = null;
 		String encrypt = null;
 		try {
-			// get req signature
-
 			String signature_request = getEncodedValueWithSha2(collectionApplicationProperties.atomReqHashKey(),
 					collectionApplicationProperties.atomLogin(), collectionApplicationProperties.atomPass(),
-					collectionApplicationProperties.atomTtype(), collectionApplicationProperties.atomProdid(),
-					receiptHeader.getId().toString(),
-					new BigDecimal(totalAmt)
-							.setScale(CollectionConstants.AMOUNT_PRECISION_DEFAULT, BigDecimal.ROUND_UP).toString(),
+					collectionApplicationProperties.atomTtype(), collectionApplicationProperties.atomProdid(),receiptHeader.getId().toString(),
+					new BigDecimal(totalAmt).setScale(CollectionConstants.AMOUNT_PRECISION_DEFAULT, BigDecimal.ROUND_UP).toString(),
 					collectionApplicationProperties.atomTxncurr());
-
 			sbb.append("&signature=" + signature_request);
-
 			encrypt = atomAES.encrypt(sbb.toString(), collectionApplicationProperties.atomAESRequestKey(),
 					collectionApplicationProperties.atomRequestIV_Salt());
-
 		} catch (Exception exp) {
-			exp.printStackTrace();
+			LOGGER.error("ATOM encryption error : " + exp.getMessage());
 		}
-		String secondRequestStr = paymentServiceDetails.getServiceUrl() + "?login="
-				+ collectionApplicationProperties.atomLogin() + "&encdata=" + encrypt;
-
-		LOGGER.debug("Second request ATOM : " + secondRequestStr);
+		String secondRequestStr = paymentServiceDetails.getServiceUrl() + "?login=" + collectionApplicationProperties.atomLogin() + "&encdata=" + encrypt;
+		if(LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Second request ATOM : " + secondRequestStr);
+		}
 		paymentRequest.setParameter(CollectionConstants.ONLINEPAYMENT_INVOKE_URL, secondRequestStr);
-		LOGGER.info("Second paymentRequest: " + paymentRequest.getRequestParameters());
+		if(LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Second paymentRequest: " + paymentRequest.getRequestParameters());
+		}
 		return paymentRequest;
 	}
 	
@@ -235,34 +214,7 @@ public class AtomAdaptor implements PaymentGatewayAdaptor {
 			reader.close();
 			LOGGER.info("ATOM Reconcile Response : " + data.toString());
 			Gson gson = new Gson();
-			
-//			try {
-//				String decryptEncdata = atomAES.decrypt(data.toString(), collectionApplicationProperties.atomAESResponseKey(),
-//						collectionApplicationProperties.atomResponseIV_Salt());
-//				String[] keyValueStr = decryptEncdata.replace("[{", "").replace("}]", "").split(",");
-//				
-//				for (String pair : keyValueStr) {
-//					String[] entry = pair.split(":");
-//					System.out.println(pair);
-//					
-//					if(entry.length>1)
-//					responseMap.put(entry[0].trim(), entry[1].trim());
-//				}
-//				
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//
-//			System.out.println(responseMap);
-			
-			
-			
-//			HttpPost post=new HttpPost(secondRequestStr);
-//			try (CloseableHttpClient httpClient = HttpClients.createDefault();
-//		             CloseableHttpResponse response1 = httpClient.execute(post)) {
-//
-//		            System.out.println(EntityUtils.toString(response1.getEntity()));
-//		        }
+
 			String decryptEncdata = atomAES.decrypt(data.toString(), collectionApplicationProperties.atomAESResponseKey(),
 					collectionApplicationProperties.atomResponseIV_Salt());
 			ResponseAtomReconcilation[] responseAtomReconcilations = gson.fromJson(decryptEncdata, ResponseAtomReconcilation[].class);

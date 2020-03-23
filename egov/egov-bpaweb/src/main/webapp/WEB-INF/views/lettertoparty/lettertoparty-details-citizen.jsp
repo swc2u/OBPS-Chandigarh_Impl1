@@ -62,6 +62,9 @@
 				<th><spring:message code="lbl.lp.sentdate" /></th>
 				<th><spring:message code="lbl.lpprint" /></th>
 				<th><spring:message code="lbl.lpreplydate" /></th>
+				<%-- <c:if test="${bpaApplication.status.code eq  'Letter To Party Created' && mode eq 'showLPDetails' }">
+					<th><spring:message code="lbl.lpreply"/></th>
+				</c:if> --%>
 				<th><spring:message code="lbl.lpreply.print" /></th>
 				<th><spring:message code="lbl.action" /></th>
 			</tr>
@@ -104,7 +107,20 @@
 									pattern="dd/MM/yyyy" var="replyDate" /> <c:out
 									value="${replyDate}" default="N/A"></c:out>
 							</td>
-
+							<%-- <c:if test="${bpaApplication.status.code eq  'Letter To Party Created' && mode eq 'showLPDetails' }">
+								<td align="center" class="view-content" style="font-size: 90%;">
+									<c:choose>
+										<c:when test="${inspn.letterToParty.replyDate !=null }">
+											LP Reply Received
+										</c:when>
+										<c:otherwise>
+											<a style="cursor: pointer; font-size: 12px;" href="/bpa/lettertoparty/lettertopartyreply/${inspn.id}">
+												<i class="fa fa-reply" aria-hidden="true"></i> LP Reply
+											</a>
+										</c:otherwise>
+									</c:choose>
+								</td>
+							</c:if> --%>
 							<td align="center" class="view-content" style="font-size: 90%;">
 								<a style="cursor: pointer; font-size: 12px;" class="open-popup"
 								href="/bpa/lettertoparty/lettertopartyprint/lpreply?pathVar=${inspn.id}">

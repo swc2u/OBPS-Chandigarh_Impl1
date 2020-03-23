@@ -517,6 +517,12 @@ public class BpaAjaxController {
     public List<Usage> getSubUsagesByOccupancy(@RequestParam String occupancy) {
         return occupancyService.findSubUsagesByOccupancy(occupancy);
     }
+    
+    @GetMapping(value = "/sub-occupancy/sub-usages", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<Usage> getSubUsagesBySubOccupancy(@RequestParam String subOccupancy) {
+        return occupancyService.findSubUsagesBySubOccupancy(subOccupancy);
+    }
 
     @GetMapping(value = "/application/findby-permit-number", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

@@ -134,14 +134,6 @@ public class NewApplicationController extends BpaGenericApplicationController {
                 }
             }
 
-
-    /*    if (!bpaApplicationValidationService.checkStakeholderIsValid(bpaApplication).isEmpty()) {
-            applicationBpaService.buildExistingAndProposedBuildingDetails(bpaApplication);
-            message = bpaApplicationValidationService.getValidationMessageForBusinessResgistration(bpaApplication);
-            model.addAttribute("invalidStakeholder", message);
-            return loadFormData(bpaApplication, model);
-        }      */
-
         List<ApplicationStakeHolder> applicationStakeHolders = new ArrayList<>();
         ApplicationStakeHolder applicationStakeHolder = new ApplicationStakeHolder();
         applicationStakeHolder.setApplication(bpaApplication);

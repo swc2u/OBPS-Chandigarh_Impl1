@@ -47,7 +47,7 @@
 package org.egov.bpa.web.controller.transaction;
 
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFIED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_FIELD_INS;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFY_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_TS_INS;
 import static org.egov.bpa.utils.BpaConstants.DESIGNATION_AE;
 import static org.egov.bpa.utils.BpaConstants.DESIGNATION_OVERSEER;
@@ -299,7 +299,7 @@ public class UpdateInspectionApplicationController extends BpaGenericApplication
         if (!inspectionApplication.getInspections().isEmpty()
                 && ((hasInspectionStatus && hasInspectionPendingAction)
                         || (FIELD_INSPECTION_COMPLETED.equalsIgnoreCase(currentStateValue)
-                                && APPLICATION_STATUS_FIELD_INS.equalsIgnoreCase(currentStatus))))
+                                && APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(currentStatus))))
             model.addAttribute("isTSInspectionRequired", false);
 
         if (mode == null)

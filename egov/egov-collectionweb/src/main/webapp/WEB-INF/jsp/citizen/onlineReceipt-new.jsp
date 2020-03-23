@@ -675,28 +675,28 @@ function onLoad(){
 											<div>
 												<label>Terms And Conditions: </label>
 											</div>
-											<ul>
-												<li>By accepting to make Payment online it is implied
+											<ol>
+												<li style="list-style: decimal;">By accepting to make Payment online it is implied
 													that the customer agrees to the terms and conditions of
 													Netbanking System/credit card company.</li>
-												<li>Once the payment transaction is submitted request
+												<li style="list-style: decimal;">Once the payment transaction is submitted request
 													for refund will not be entertained.</li>
-												<li>After completing payment entries, customer will get
+												<li style="list-style: decimal;">After completing payment entries, customer will get
 													a unique Payment Identification Number (BID Number) which
 													may be quoted for all future communications with reference
 													to this transaction.</li>
-												<li>The actual updation of payment by Corporation will
+												<li style="list-style: decimal;">The actual updation of payment by Corporation will
 													take place after getting confirmation from the Banks.</li>
-												<li>In the exigency of connection getting timedout or
+												<li style="list-style: decimal;">In the exigency of connection getting timedout or
 													user clicking to close the browser before getting payment
 													confirmation message he has to wait for sometime before
 													proceeding to make subsequent payment for the same bill(s).</li>
-												<li>If you are not getting the receipt or any break in
+												<li style="list-style: decimal;">If you are not getting the receipt or any break in
 													connectivity in the middle of the operations check the
 													receipt status on the next day. The System has a provision
 													for Auto Reconcilation and will generate the Receipt if the
 													Payment was actually effected from your side.</li>
-											</ul>
+											</ol>
 
 											<div id="terms">
 												<input type="checkbox" id="checkbox" name="checkbox">

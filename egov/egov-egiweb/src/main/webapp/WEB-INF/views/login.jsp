@@ -345,9 +345,9 @@
 					</div>
 					<div style="background-color: transparent; border: none;" class="modal-footer">
 						<div class="form-group text-right">
-							<%-- <button type="button" class="f-medium btn-login-new btn btn-primary recovrbtn">
+							<button type="button" class="f-medium btn-login-new btn btn-primary recovrbtn">
 								<spring:message code="btn.lbl.recover.link" />
-							</button> --%>
+							</button>
 							<button type="button" id="recoveryotpbtn"
 								class="f-medium btn-login-new btn btn-primary recovrbtn">
 								<spring:message code="btn.lbl.recover.otp" />
