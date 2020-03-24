@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="lettertoparty" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="19a6b87f-b0aa-4611-908a-14a81b44cdbb">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -39,7 +39,7 @@
 				</textElement>
 				<text><![CDATA[Letter To Party]]></text>
 			</staticText>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="119" y="13" width="342" height="15" uuid="01431d36-b938-4dc4-b9ea-1ceef1169192"/>
 				<textElement textAlignment="Center" markup="none">
 					<font fontName="SansSerif" size="11" isBold="true"/>
@@ -84,14 +84,14 @@
 				</textElement>
 				<text><![CDATA[Sir / Madam,]]></text>
 			</staticText>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="68" y="116" width="487" height="26" uuid="72a62876-be77-4d58-bbec-65439c36daf9"/>
 				<textElement verticalAlignment="Middle" markup="none">
 					<font fontName="SansSerif" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Sub:  Letter To Party raised for "+$P{lpReason}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="368" y="23" width="187" height="47" uuid="3497ef93-a84e-4a9d-b4e6-348c82f896e6"/>
 				<textElement textAlignment="Justified" markup="none">
 					<font fontName="SansSerif"/>
@@ -105,21 +105,21 @@
 				</textElement>
 				<textFieldExpression><![CDATA["Ref No. : "+$F{application}.getStateDetails()]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
 				<reportElement positionType="FixRelativeToBottom" x="461" y="74" width="94" height="20" uuid="0bbbcfff-be18-46be-b41d-2289ad5ce893"/>
 				<textElement>
 					<font fontName="SansSerif"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{letterToParty}.getLetterDate()]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement positionType="FixRelativeToBottom" x="410" y="74" width="51" height="20" uuid="3375e27e-24ab-47dd-9c94-0c07f9b84e8a"/>
 				<textElement>
 					<font fontName="SansSerif" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Date : "]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="25" y="23" width="184" height="47" uuid="4f0901c1-e5e5-4570-8d19-b432c078c3fe"/>
 				<textElement textAlignment="Left" markup="none">
 					<font fontName="SansSerif"/>
@@ -154,7 +154,7 @@
 			</textField>
 		</band>
 		<band height="111">
-			<textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="0" y="7" width="544" height="46" uuid="169be3a7-3d60-4d60-9ed1-815067b41d80">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
@@ -165,7 +165,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA["Failure to comply with the above requirements within "+DateUtils.toDefaultDateFormat($F{letterToParty}.getLastReplyDate())+ " will lead to disposal of the above application on its merits without further intimation."]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight">
+			<textField>
 				<reportElement x="0" y="91" width="174" height="20" uuid="55c16c50-7e31-4887-801f-f25af859a0d7"/>
 				<textElement markup="none">
 					<font fontName="SansSerif" isBold="true"/>
@@ -179,7 +179,7 @@
 				</textElement>
 				<text><![CDATA[For The Chief Administrator]]></text>
 			</staticText>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="202" y="91" width="342" height="20" uuid="3202b92b-e649-43f6-bf1e-e6a80a7d1fbb"/>
 				<textElement textAlignment="Center" markup="none">
 					<font fontName="SansSerif" size="11" isBold="true"/>
