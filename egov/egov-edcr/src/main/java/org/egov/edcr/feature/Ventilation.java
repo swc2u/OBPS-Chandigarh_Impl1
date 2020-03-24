@@ -207,6 +207,8 @@ public class Ventilation extends FeatureProcess {
 								scrutinyDetail.getDetail().add(details);
 								pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 							}
+						}
+					}
 //					else {
 //						Map<String, String> map=new HashMap<String, String>();
 //						map.put("Ventilation", "Light & Ventilation not defined in block "+b.getNumber()+" Floor "+f.getNumber());
