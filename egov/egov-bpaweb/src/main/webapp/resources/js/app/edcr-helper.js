@@ -38,6 +38,14 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
+var features = [
+	"A-SQ",		//Servant quarter
+	"A-PO",		//Professional Office
+	"A-S",		//STD/ PCO/ fax and photostat machine
+	"A-PG",		//Creche and paying guest facility
+	"A-EWS",	//EWS
+];
+
 $(document).ready(
     function ($) {
         String.prototype.compose = (function (){
@@ -520,8 +528,16 @@ $(document).ready(
             if (block.building.totalArea.length > 0) {
                 var occupancyIdx=0;
                 for (var i = 0; i < block.building.totalArea.length; i++) {
-                    var occupancy = block.building.totalArea[i];
-                    if(occupancy.builtUpArea && occupancy.builtUpArea > 0) {
+                    var occupancy = block.building.totalArea[i];                    
+                    var isExist=false;
+                    for(var j=0; j<features.length; j++){
+                        var feature = features[j];
+                        if(feature == occupancy.typeHelper.subtype.code){
+                          isExist=true;
+                          break;
+                        }
+                    }
+                    if(occupancy.builtUpArea && occupancy.builtUpArea > 0 && !isExist) {
                         $.ajax({
                             async: false,
                             crossDomain: true,

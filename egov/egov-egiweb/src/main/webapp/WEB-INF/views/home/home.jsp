@@ -217,9 +217,7 @@
 						</li>
 						
 						<li class="dropdown">
-							<a href="javascript:void(0);" target="_blank">
-								<img src="<c:url value='/resources/global/images/digit-logo-black.png' context='/egi'/>" title="" height="35px" style="opacity: 0.8">
-							</a>
+							<div style="width:66px;"></div>
 						</li>
 					</ul>
 				</div>

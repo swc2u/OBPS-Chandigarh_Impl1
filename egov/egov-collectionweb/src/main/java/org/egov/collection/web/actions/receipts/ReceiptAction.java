@@ -340,6 +340,14 @@ public class ReceiptAction extends BaseFormAction {
                     rDetails.getCramountToBePaid().setScale(CollectionConstants.AMOUNT_PRECISION_DEFAULT,
                             BigDecimal.ROUND_UP);
                 setReceiptDetailList(new ArrayList<ReceiptDetail>(receiptHeader.getReceiptDetails()));
+                
+                if(null!=receiptDetailList && !receiptDetailList.isEmpty()) {
+                	for(ReceiptDetail receiptDetail:receiptDetailList) {
+                		final String[] desc = receiptDetail.getDescription().split("-", 2);
+                        final String feeDesc = desc[0].trim();
+                        receiptDetail.setFeeDescription(feeDesc);
+                	}
+                }
 
                 if (totalAmntToBeCollected.compareTo(BigDecimal.ZERO) == -1) {
                     addActionError(getText("billreceipt.totalamountlessthanzero.error"));
@@ -517,7 +525,7 @@ public class ReceiptAction extends BaseFormAction {
                     function = functionDAO.getFunctionById(functionId);
                 ReceiptDetail receiptDetail = new ReceiptDetail(account, function,
                         voucherDetails.getCreditAmountDetail(), voucherDetails.getDebitAmountDetail(), BigDecimal.ZERO,
-                        Long.valueOf(m), null, true, receiptHeader, PURPOSE.OTHERS.toString());
+                        Long.valueOf(m), null, null, true, receiptHeader, PURPOSE.OTHERS.toString());
 
                 if (voucherDetails.getCreditAmountDetail() == null)
                     receiptDetail.setCramount(BigDecimal.ZERO);
@@ -548,7 +556,7 @@ public class ReceiptAction extends BaseFormAction {
                         function = functionDAO.getFunctionById(voucherDetails.getFunctionIdDetail());
                     ReceiptDetail receiptDetail = new ReceiptDetail(account, function,
                             voucherDetails.getCreditAmountDetail(), voucherDetails.getDebitAmountDetail(),
-                            BigDecimal.ZERO, Long.valueOf(m), null, true, receiptHeader, PURPOSE.OTHERS.toString());
+                            BigDecimal.ZERO, Long.valueOf(m), null, null, true, receiptHeader, PURPOSE.OTHERS.toString());
 
                     if (voucherDetails.getDebitAmountDetail() == null)
                         receiptDetail.setDramount(BigDecimal.ZERO);
@@ -1060,7 +1068,7 @@ public class ReceiptAction extends BaseFormAction {
                             .isRevenueAccountHead(oldDetail.getAccounthead(), bankCOAList, persistenceService)) {
                 final ReceiptDetail receiptDetail = new ReceiptDetail(oldDetail.getAccounthead(),
                         oldDetail.getFunction(), oldDetail.getCramount(), oldDetail.getDramount(),
-                        oldDetail.getCramount(), oldDetail.getOrdernumber(), oldDetail.getDescription(),
+                        oldDetail.getCramount(), oldDetail.getOrdernumber(), oldDetail.getDescription(), null,
                         oldDetail.getIsActualDemand(), receiptHeader, oldDetail.getPurpose());
                 receiptDetail.setCramountToBePaid(oldDetail.getCramountToBePaid());
                 receiptDetail.setCramount(oldDetail.getCramount());

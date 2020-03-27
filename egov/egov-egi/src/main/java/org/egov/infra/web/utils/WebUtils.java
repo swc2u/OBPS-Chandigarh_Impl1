@@ -100,9 +100,13 @@ public final class WebUtils {
      **/
     public static String extractRequestDomainURL(HttpServletRequest httpRequest, boolean withContext) {
         StringBuilder url = new StringBuilder(httpRequest.getRequestURL());
-        String uri = httpRequest.getRequestURI();
-        return withContext ? url.substring(0, url.length() - uri.length() + httpRequest.getContextPath().length()) + FORWARD_SLASH
-                : url.substring(0, url.length() - uri.length());
+        String uri = httpRequest.getRequestURI(); 
+        String url1 = url.toString();		
+	    /*if(!httpRequest.isSecure()) { 
+	    	url1 = url1.replaceFirst("http://","https://"); 
+	    }*/
+        return withContext ? url1.substring(0, url1.length() - uri.length() + httpRequest.getContextPath().length()) + FORWARD_SLASH
+                : url1.substring(0, url1.length() - uri.length());
     }
 
     public static String extractQueryParamsFromUrl(String url) {

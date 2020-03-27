@@ -431,6 +431,7 @@ html body .container-fluid .right-content .main-content .services-item [class*='
 .bpa-navbar-new{
 	margin: 0 !important;
 	height: 100%;
+	background-image: url("/egi/resources/global/images/head-banner.jpg");
 }
 
 .center-align-flex{

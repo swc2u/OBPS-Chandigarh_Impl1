@@ -78,6 +78,7 @@ public class ReceiptDetail implements java.io.Serializable {
      * A <code>String</code> representing the glcode description sent from billing system
      */
     private String description;
+    
     private CFunction function;
 
     /**
@@ -90,12 +91,13 @@ public class ReceiptDetail implements java.io.Serializable {
     private CFinancialYear financialYear;
 
     private String purpose;
+    
+    private String feeDescription;
 
-    public ReceiptDetail() {
-    }
+    public ReceiptDetail() {}
 
     public ReceiptDetail(final CChartOfAccounts accounthead, final CFunction function, final BigDecimal cramountToBePaid,
-            final BigDecimal dramount, final BigDecimal cramount, final Long ordernumber, final String description,
+            final BigDecimal dramount, final BigDecimal cramount, final Long ordernumber, final String description, final String feeDescription,
             final Boolean isActualDemand,
             final ReceiptHeader receiptHeader, final String purpose) {
         this.accounthead = accounthead;
@@ -105,6 +107,7 @@ public class ReceiptDetail implements java.io.Serializable {
         this.cramount = cramount;
         this.ordernumber = ordernumber;
         this.description = description;
+        this.setFeeDescription(feeDescription);
         this.isActualDemand = isActualDemand;
         this.receiptHeader = receiptHeader;
         this.purpose = purpose;
@@ -258,4 +261,12 @@ public class ReceiptDetail implements java.io.Serializable {
     public void setPurpose(final String purpose) {
         this.purpose = purpose;
     }
+
+	public String getFeeDescription() {
+		return feeDescription;
+	}
+
+	public void setFeeDescription(String feeDescription) {
+		this.feeDescription = feeDescription;
+	}
 }

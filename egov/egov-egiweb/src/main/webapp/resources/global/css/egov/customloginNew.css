@@ -136,7 +136,9 @@
 	position: absolute;
 	z-index: 3;
 }
-
+.new-login-header-wrapper{
+	background-image: url("/egi/resources/global/images/head-banner.jpg");
+}
 .new-login-header{
 	display: flex;
 	justify-content: space-between;

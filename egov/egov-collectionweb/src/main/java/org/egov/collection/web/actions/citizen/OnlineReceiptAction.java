@@ -470,6 +470,14 @@ public class OnlineReceiptAction extends BaseFormAction {
                     rDetails.getCramountToBePaid().setScale(CollectionConstants.AMOUNT_PRECISION_DEFAULT,
                             BigDecimal.ROUND_UP);
                 setReceiptDetailList(new ArrayList<ReceiptDetail>(receiptHeader.getReceiptDetails()));
+                
+                if(null!=receiptDetailList && !receiptDetailList.isEmpty()) {
+                	for(ReceiptDetail receiptDetail:receiptDetailList) {
+                		final String[] desc = receiptDetail.getDescription().split("-", 2);
+                        final String feeDesc = desc[0].trim();
+                        receiptDetail.setFeeDescription(feeDesc);
+                	}
+                }
 
                 if (totalAmountToBeCollected.compareTo(BigDecimal.ZERO) == -1) {
                     addActionError(getText("billreceipt.totalamountlessthanzero.error"));

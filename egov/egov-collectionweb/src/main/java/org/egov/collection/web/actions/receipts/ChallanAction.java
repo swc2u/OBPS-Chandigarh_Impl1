@@ -754,7 +754,7 @@ public class ChallanAction extends BaseFormAction {
             if (functionId != null)
                 funcn = functionDAO.getFunctionById(functionId);
             ReceiptDetail receiptDetail = new ReceiptDetail(account, funcn, rDetails.getCreditAmountDetail(),
-                    rDetails.getDebitAmountDetail(), null, Long.valueOf(m), null, null, receiptHeader,
+                    rDetails.getDebitAmountDetail(), null, Long.valueOf(m), null, null, null, receiptHeader,
                     PURPOSE.OTHERS.toString());
             receiptDetail.setCramount(rDetails.getCreditAmountDetail());
 

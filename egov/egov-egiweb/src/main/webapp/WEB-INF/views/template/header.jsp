@@ -71,9 +71,7 @@
             <div class="nav-right-menu col-md-2 col-xs-2">
                 <ul class="hr-menu text-right">
                     <li class="ico-menu">
-                        <a href="http://www.egovernments.org" target="_blank">
-                            <img src="<cdn:url  value='/resources/global/images/digit-logo-black.png'/>" title="Powered by eGovernments" height="35px" style="opacity: 0.8">
-                        </a>
+                        <div style="width:66px;"></div>
                     </li>
 
                 </ul>

@@ -336,8 +336,7 @@ public class ApplicationBpaBillService extends BillServiceInterface {
                 billdetail.setCreateDate(currentDate);
                 billdetail.setModifiedDate(currentDate);
                 billdetail.setOrderNo(i++);
-                billdetail.setDescription(
-                        reason.getEgDemandReasonMaster().getReasonMaster() + " - " + installment.getDescription());
+                billdetail.setDescription(reason.getEgDemandReasonMaster().getReasonMaster() + " - " + installment.getDescription());                
                 billdetail.setFunctionCode(BpaConstants.STRING_BPA_FUCNTION_CODE);
                 if (billdetail.getEgDemandReason().getEgInstallmentMaster().getFromDate()
                         .compareTo(finYear.getStartingDate()) >= 0
