@@ -85,7 +85,7 @@ html body .modal.in .modal-dialog {
   right: 0;
   margin: 0; }
 html body .modal.in .modal-dialog .modal-title {
-  color: rgb(254, 122, 81); }
+  color: #E17C1B; }
 html body .modal.in .modal-dialog .modal-body [class*='col-'] {
   margin: 10px 0; }
 html body .modal.in .modal-dialog .modal-body [class*='col-'] label {
@@ -221,7 +221,7 @@ html body .container-fluid .left-menu .modules-ul .modules-li {
   	background-color: rgba(254, 122, 81, 0.12);
   }
   html body .container-fluid .left-menu .modules-ul .modules-li.active {
-  	border-left: 2px solid #FE7A51;
+  	border-left: 2px solid #E17C1B;
   	background-color: rgba(254, 122, 81, 0.12);
    }
   
@@ -243,7 +243,7 @@ html body .container-fluid .left-menu .modules-ul .modules-li a .module-text {
 html body .container-fluid .left-menu .modules-ul .modules-li a:hover, html body .container-fluid .left-menu .modules-ul .modules-li a:focus, html body .container-fluid .left-menu .modules-ul .modules-li a:visited {
   text-decoration: none; }
 html body .container-fluid .left-menu .modules-ul .modules-li a:hover i, html body .container-fluid .left-menu .modules-ul .modules-li a:focus i, html body .container-fluid .left-menu .modules-ul .modules-li a:visited i {
-  color: #FE7A51; 
+  color: #E17C1B; 
  }
 html body .container-fluid .left-menu .modules-ul .modules-li a:hover .module-text, html body .container-fluid .left-menu .modules-ul .modules-li a:focus .module-text, html body .container-fluid .left-menu .modules-ul .modules-li a:visited .module-text {
   color: #000;
@@ -270,7 +270,7 @@ html body .container-fluid .left-menu .modules-ul .modules-li.active .module-tex
   font-family: bold; }
   
 html body .container-fluid .left-menu .modules-ul .modules-li.active i {
-  color: #FE7A51; }
+  color: #E17C1B; }
 html body .container-fluid .right-content {
   /* width: calc(100% - 120px); */
   float: left;
@@ -352,7 +352,7 @@ html body .container-fluid .right-content .main-content .action-bar .action-item
   background-color: transparent;
   color: #333; }
 html body .container-fluid .right-content .main-content table thead {
-  background: #455A64;
+  background: #E17C1B;
   color: #fff; }
 html body .container-fluid .right-content .main-content table thead tr th {
 	font-family: regular;
@@ -388,7 +388,7 @@ html body .container-fluid .right-content .main-content .services-item [class*='
   font-family: bold;
   color: rgba(0, 0, 0, 0.6);}
 html body .container-fluid .right-content .main-content .services-item [class*='col-'].services .content.a, html body .container-fluid .right-content .main-content .stats-item [class*='col-'].services .content.a {
-  border-left: 4px solid #FE7A51; }
+  border-left: 4px solid #E17C1B; }
 html body .container-fluid .right-content .main-content .services-item [class*='col-'].services .content.b, html body .container-fluid .right-content .main-content .stats-item [class*='col-'].services .content.b {
   border-left: 5px solid #00c853; }
 html body .container-fluid .right-content .main-content .services-item [class*='col-'].services .content.c, html body .container-fluid .right-content .main-content .stats-item [class*='col-'].services .content.c {
@@ -441,12 +441,12 @@ html body .container-fluid .right-content .main-content .services-item [class*='
 }
 
 .clicked-card{
-	border-bottom: 5px solid #FE7A51 !important;
-	color: #FE7A51 !important;
+	border-bottom: 5px solid #E17C1B !important;
+	color: #E17C1B !important;
 }
 
 .color-generic-new{
-	color: #FE7A51 !important;
+	color: #E17C1B !important;
 }
 
 .bpa-citizen-main-wrapper{
@@ -467,23 +467,23 @@ html body .container-fluid .right-content .main-content .services-item [class*='
 .pagination .active > span:hover,
 .pagination .active > a:focus,
 .pagination .active > span:focus {
-  background-color: rgb(254, 122, 81);
-  border-color: rgb(254, 122, 81);
+  background-color: #E17C1B;
+  border-color: #E17C1B;
 }
 .btn-primary, .btn-primary:hover{
-	background-color: rgb(254, 122, 81);
-    border-color: rgb(254, 122, 81);
+	background-color: #E17C1B;
+    border-color: #E17C1B;
 }
 .btn-default {
     color: #333;
     background-color: #fff;
-    border-color: rgb(254, 122, 81);
+    border-color: #E17C1B;
 }
 .btn-default:hover {
      color: #fff;
   opacity: 0.9;
-  background-color: #FE7A51;
-  border-color: rgb(254, 122, 81);
+  background-color: #E17C1B;
+  border-color: #E17C1B;
   outline: none;
 }
 .clearfix:after {

@@ -56,22 +56,20 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="description" content="eGov Urban Portal"/>
-    <meta name="author" content="eGovernments Foundation"/>
+    <meta name="description" content="Chandigarh Building Plan Approvals" />
+	<meta name="author" content="Chandigarh Administration"/>
     <spring:eval expression="@environment.getProperty('user.pwd.strength')" var="pwdstrengthmsg"/>
     <spring:message code="usr.pwd.strength.msg.${pwdstrengthmsg}" var="pwdmsg"/>
-    <title>Citizen Signup</title>
+    <title>Chandigarh Building Plan Approvals</title>
     <link rel="icon" href="<cdn:url value='/resources/global/images/favicon.png' context='/egi'/>" sizes="32x32">
     <link rel="stylesheet" href="<cdn:url value='/resources/global/css/bootstrap/bootstrap.css' context='/egi'/>">
     <link rel="stylesheet" href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css' context='/egi'/>">
-    <link rel="stylesheet"
-          href="<cdn:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}' context='/egi'/>">
+    <link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}' context='/egi'/>">
     <script src="<cdn:url value='/resources/global/js/jquery/jquery.js' context='/egi'/>" type="text/javascript"></script>
-
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-    <script src="<cdn:url value='/resources/global/js/ie8/html5shiv.min.js' context='/egi'/>"></script>
-    <script src="<cdn:url value='/resources/global/js/ie8/respond.min.js' context='/egi'/>"></script>
+	    <script src="<cdn:url value='/resources/global/js/ie8/html5shiv.min.js' context='/egi'/>"></script>
+	    <script src="<cdn:url value='/resources/global/js/ie8/respond.min.js' context='/egi'/>"></script>
     <![endif]-->
 </head>
 <body class="page-body">

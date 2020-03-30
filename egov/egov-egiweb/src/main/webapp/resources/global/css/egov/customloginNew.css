@@ -72,7 +72,7 @@
 }
 
 .btn-login-new{
-	background-color:#ff790e !important;
+	background-color:#E17C1B !important;
 	height: 50px !important;
 }
 
@@ -138,6 +138,7 @@
 }
 .new-login-header-wrapper{
 	background-image: url("/egi/resources/global/images/head-banner.jpg");
+	border-bottom: 5px solid #E17C1B;
 }
 .new-login-header{
 	display: flex;
@@ -180,7 +181,7 @@
 }
 
 .forgot-password-text{
-	color: #ff790e;
+	color: #E17C1B;
 	font-size: 14px;
 	font-weight: 400;
 	line-height: 17px;
