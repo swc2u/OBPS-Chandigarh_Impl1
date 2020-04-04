@@ -155,7 +155,7 @@ public class RainWaterHarvesting extends FeatureProcess {
 
 					if (pl.getUtility().getRainWaterHarvestingTankCapacity() != null) {
 						setReportOutputDetails(pl, subRule, subRuleDesc, " optional",
-								pl.getUtility().getRainWaterHarvestingTankCapacity() + " litters",
+								pl.getUtility().getRainWaterHarvestingTankCapacity() + " litre",
 								Result.Verify.getResultVal());
 					} else {
 						setReportOutputDetails(pl, subRule, subRuleDesc, "optional", "not Defined in the plan",
@@ -165,7 +165,7 @@ public class RainWaterHarvesting extends FeatureProcess {
 				} else {
 					if (pl.getUtility().getRainWaterHarvestingTankCapacity().compareTo(expectedTankCapacity) > 0)
 						setReportOutputDetails(pl, subRule, subRuleDesc, "Mandatory",
-								pl.getUtility().getRainWaterHarvestingTankCapacity() + " litters",
+								pl.getUtility().getRainWaterHarvestingTankCapacity() + " litre",
 								Result.Verify.getResultVal());
 					else
 						setReportOutputDetails(pl, subRule, subRuleDesc, "Mandatory", "Not Defined in the plan",
@@ -177,7 +177,7 @@ public class RainWaterHarvesting extends FeatureProcess {
 				if(DxfFileConstants.G.equals(mostRestrictiveFarHelper.getType().getCode()) && (plotAreaType.equals(DxfFileConstants.MARLA) || plotAreaType.equals(DxfFileConstants.ONE_KANAL)) ) {
 					if (pl.getUtility().getRainWaterHarvestingTankCapacity() != null) {
 						setReportOutputDetails(pl, subRule, subRuleDesc, " optional",
-								pl.getUtility().getRainWaterHarvestingTankCapacity() + " litters",
+								pl.getUtility().getRainWaterHarvestingTankCapacity() + " litre",
 								Result.Verify.getResultVal());
 					} else {
 						setReportOutputDetails(pl, subRule, subRuleDesc, "optional", "not Defined in the plan",
@@ -186,7 +186,7 @@ public class RainWaterHarvesting extends FeatureProcess {
 				}
 				else if (pl.getUtility().getRainWaterHarvestingTankCapacity() !=null && (pl.getUtility().getRainWaterHarvestingTankCapacity().compareTo(expectedTankCapacity) > 0))
 					setReportOutputDetails(pl, subRule, subRuleDesc, "Mandatory",
-							pl.getUtility().getRainWaterHarvestingTankCapacity() + " litters",
+							pl.getUtility().getRainWaterHarvestingTankCapacity() + " litre",
 							Result.Verify.getResultVal());
 				else
 					setReportOutputDetails(pl, subRule, subRuleDesc, "Mandatory", "Not Defined in the plan",

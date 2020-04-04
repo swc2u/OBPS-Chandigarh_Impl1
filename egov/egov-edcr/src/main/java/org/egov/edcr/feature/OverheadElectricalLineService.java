@@ -58,6 +58,7 @@ import org.egov.common.entity.edcr.ElectricLine;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
+import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.entity.blackbox.PlanDetail;
 import org.egov.edcr.utility.DcrConstants;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -126,15 +127,15 @@ public class OverheadElectricalLineService extends FeatureProcess {
                     boolean horizontalDistancePassed = false;
                     if (electricalLine.getHorizontalDistance() != null) {
                         String expectedResult = "";
-                        String actualResult = electricalLine.getHorizontalDistance().toString() + DcrConstants.IN_METER;
+                        String actualResult = electricalLine.getHorizontalDistance().toString() + DxfFileConstants.METER;
                         if (electricalLine.getVoltage().compareTo(BigDecimal.valueOf(VOLTAGE_11000)) < 0) {
-                            expectedResult = HORIZONTAL_DISTANCE_11000.toString() + DcrConstants.IN_METER;
+                            expectedResult = HORIZONTAL_DISTANCE_11000.toString() + DxfFileConstants.METER;
                             if (electricalLine.getHorizontalDistance().compareTo(HORIZONTAL_DISTANCE_11000) >= 0)
                                 horizontalDistancePassed = true;
 
                         } else if (electricalLine.getVoltage().compareTo(BigDecimal.valueOf(VOLTAGE_11000)) >= 0
                                 && electricalLine.getVoltage().compareTo(BigDecimal.valueOf(VOLTAGE_33000)) <= 0) {
-                            expectedResult = HORIZONTAL_DISTANCE_33000.toString() + DcrConstants.IN_METER;
+                            expectedResult = HORIZONTAL_DISTANCE_33000.toString() + DxfFileConstants.METER;
                             if (electricalLine.getHorizontalDistance().compareTo(HORIZONTAL_DISTANCE_33000) >= 0)
                                 horizontalDistancePassed = true;
                         } else if (electricalLine.getVoltage().compareTo(BigDecimal.valueOf(VOLTAGE_33000)) > 0) {
@@ -143,7 +144,7 @@ public class OverheadElectricalLineService extends FeatureProcess {
                                             electricalLine.getVoltage().subtract(BigDecimal.valueOf(VOLTAGE_33000))
                                                     .divide(BigDecimal.valueOf(VOLTAGE_33000), 2, RoundingMode.HALF_UP)
                                                     .doubleValue());
-                            expectedResult = totalHorizontalOHE + DcrConstants.IN_METER;
+                            expectedResult = totalHorizontalOHE + DxfFileConstants.METER;
                             if (electricalLine.getHorizontalDistance()
                                     .compareTo(BigDecimal.valueOf(totalHorizontalOHE)) >= 0) {
                                 horizontalDistancePassed = true;
@@ -194,19 +195,19 @@ public class OverheadElectricalLineService extends FeatureProcess {
         boolean verticalDistancePassed = false;
 
         if (electricalLine.getVerticalDistance() != null) {
-            String actualResult = electricalLine.getVerticalDistance().toString() + DcrConstants.IN_METER;
+            String actualResult = electricalLine.getVerticalDistance().toString() + DxfFileConstants.METER;
             String expectedResult = "";
 
             if (electricalLine.getVoltage().compareTo(BigDecimal.valueOf(VOLTAGE_11000)) < 0) {
 
-                expectedResult = VERTICAL_DISTANCE_11000.toString() + DcrConstants.IN_METER;
+                expectedResult = VERTICAL_DISTANCE_11000.toString() + DxfFileConstants.METER;
                 if (electricalLine.getVerticalDistance().compareTo(VERTICAL_DISTANCE_11000) >= 0)
                     verticalDistancePassed = true;
 
             } else if (electricalLine.getVoltage().compareTo(BigDecimal.valueOf(VOLTAGE_11000)) >= 0
                     && electricalLine.getVoltage().compareTo(BigDecimal.valueOf(VOLTAGE_33000)) <= 0) {
 
-                expectedResult = VERTICAL_DISTANCE_33000.toString() + DcrConstants.IN_METER;
+                expectedResult = VERTICAL_DISTANCE_33000.toString() + DxfFileConstants.METER;
                 if (electricalLine.getVerticalDistance().compareTo(VERTICAL_DISTANCE_33000) >= 0)
                     verticalDistancePassed = true;
 
@@ -217,7 +218,7 @@ public class OverheadElectricalLineService extends FeatureProcess {
                                 electricalLine.getVoltage().subtract(BigDecimal.valueOf(VOLTAGE_33000))
                                         .divide(BigDecimal.valueOf(VOLTAGE_33000), 2, RoundingMode.HALF_UP)
                                         .doubleValue());
-                expectedResult = totalVertficalOHE + DcrConstants.IN_METER;
+                expectedResult = totalVertficalOHE + DxfFileConstants.METER;
                 if (electricalLine.getVerticalDistance()
                         .compareTo(BigDecimal.valueOf(totalVertficalOHE)) >= 0) {
                     verticalDistancePassed = true;
@@ -241,19 +242,19 @@ public class OverheadElectricalLineService extends FeatureProcess {
         boolean verticalDistancePassed = false;
 
         if (electricalLine.getVerticalDistance() != null) {
-            String actualResult = electricalLine.getVerticalDistance().toString() + DcrConstants.IN_METER;
+            String actualResult = electricalLine.getVerticalDistance().toString() + DxfFileConstants.METER;
             String expectedResult = "";
 
             if (electricalLine.getVoltage().compareTo(BigDecimal.valueOf(VOLTAGE_11000)) < 0) {
 
-                expectedResult = VERTICAL_DISTANCE_11000.toString() + DcrConstants.IN_METER;
+                expectedResult = VERTICAL_DISTANCE_11000.toString() + DxfFileConstants.METER;
                 if (electricalLine.getVerticalDistance().compareTo(VERTICAL_DISTANCE_11000) >= 0)
                     verticalDistancePassed = true;
 
             } else if (electricalLine.getVoltage().compareTo(BigDecimal.valueOf(VOLTAGE_11000)) >= 0
                     && electricalLine.getVoltage().compareTo(BigDecimal.valueOf(VOLTAGE_33000)) <= 0) {
 
-                expectedResult = VERTICAL_DISTANCE_33000.toString() + DcrConstants.IN_METER;
+                expectedResult = VERTICAL_DISTANCE_33000.toString() + DxfFileConstants.METER;
                 if (electricalLine.getVerticalDistance().compareTo(VERTICAL_DISTANCE_33000) >= 0)
                     verticalDistancePassed = true;
 
@@ -264,7 +265,7 @@ public class OverheadElectricalLineService extends FeatureProcess {
                                 electricalLine.getVoltage().subtract(BigDecimal.valueOf(VOLTAGE_33000))
                                         .divide(BigDecimal.valueOf(VOLTAGE_33000), 2, RoundingMode.HALF_UP)
                                         .doubleValue());
-                expectedResult = totalVertficalOHE + DcrConstants.IN_METER;
+                expectedResult = totalVertficalOHE + DxfFileConstants.METER;
                 if (electricalLine.getVerticalDistance()
                         .compareTo(BigDecimal.valueOf(totalVertficalOHE)) >= 0) {
                     verticalDistancePassed = true;

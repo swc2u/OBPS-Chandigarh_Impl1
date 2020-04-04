@@ -185,8 +185,253 @@ public class PlanInformation implements Serializable {
     private transient String nocElectricalDept = NA;
     //YES/NO/NA.Extracted from Plan info. Permitted with Pollution control department NOC
     private transient String nocPollutionDept = NA;
+    
+    //ROOT_BOUNDARY_TYPE
+    private transient String rootBoundaryType =NA; 
+    
+    //ZONE
+    private transient String zoon=NA;
+    
+    //Sector Number 
+    private transient String sectorNumber =NA;
+    
+    //FLUSHING_UNITS_VOLUME_ABOVE_SEVEN_LITRES
+    private transient String flushingUnitVolume=NA;
+    
+    //PLOT_TYPE
+    private transient String plotType =NA;
+    
+    //TOTAL_USERS
+    private transient String totalNumberOfBuildingUsers=NA;
+    
+    //SOLAR_PHOTOVOLTAIC_KWP
+    private transient String solarPhotovoltaicPanelscapacity =NA;
+    
+    //EXISTING_BUILDING_CONSTRUCTED_WITHOUT_BASEMENT
+    private transient String whetherExistingBuildingConstructedWithoutBasement=NA;
+    
+    //EXISTING_BUILDING_CONSTRUCTED_WITHOUT_BASEMENT
+    private transient String  whetherArtificialAndMechanicalVentilatorsProvided=NA;
+    
+    //SOIL_OR_VENTILATING_PIPE_EXTERNAL_WALL
+    private transient String soilOrVentilatingPipe=NA;
+    
+    //WHETHER_STAIRCASE_TOUCHING_LIFT_SHAFT
+    private transient String WhetherAnyStaircaseTouchingLiftShaft =NA; 
+    
+    //SOLAR_PHOTOVOLTAIC_KWP
+    private transient String solarPhotovoltaicKWP=NA;
+    
+    //BASEMENT_SERVICES_PRINTING PRESS_A.C. PLANTS_ELECTRICAL PANELS_FILTRATIONPLANTS_LAUNDRYPLANTS_OR_MACHINES_ AUTOMATED/STACK PARKING
+    private transient String basementServicePrintingPressACPlantsElectricalPanelFiltrationplantsLaundryplantsOrMachinesAutomated;
+    
+    //SERVICE_FLOOR_HEIGHT_M=
+    private transient String serviceFloorHeight=NA;
+    
+    //FIRE_SAFETY_PROVISIONS_AS_PER_NBC_DFPF_FSA
+    private transient String fireSafetyProvisionsAsPerNbcDFPF=NA;
 
-    public Boolean getGovernmentOrAidedSchool() {
+    //EXIT_REQUIREMENT_FIRE_&_LIFE_SAFETY_AS_PER_NBC=
+    private transient String exitRequirmentFireAndLifeSafetyAsPerNBC=NA;
+    
+    //COMBUSTIBLE_MATERIAL _IN_FIRE_TOWER
+    private transient String combustibleMaterialInFireTower=NA;
+    
+    //DAMP_PROOFING_AT_BASEMENT
+    private transient String dampProofingAtBasement=NA;
+    
+    // Hospital _Bedded 
+    private transient String hospitalBedded=NA;
+    
+    //Hospital_type
+    private transient String hospitalType=NA;
+
+    //SOLOR_WATER_HEATING_IN_LTR
+    private transient String solorWaterHeatingInLtr=NA;
+    
+    //RESIDENTIAL_NO_OWNER
+    private transient String residentialNoOwner=NA;
+    
+	public String getRootBoundaryType() {
+		return rootBoundaryType;
+	}
+
+	public void setRootBoundaryType(String rootBoundaryType) {
+		this.rootBoundaryType = rootBoundaryType;
+	}
+
+	public String getZoon() {
+		return zoon;
+	}
+
+	public void setZoon(String zoon) {
+		this.zoon = zoon;
+	}
+
+	public String getSectorNumber() {
+		return sectorNumber;
+	}
+
+	public void setSectorNumber(String sectorNumber) {
+		this.sectorNumber = sectorNumber;
+	}
+
+	public String getFlushingUnitVolume() {
+		return flushingUnitVolume;
+	}
+
+	public void setFlushingUnitVolume(String flushingUnitVolume) {
+		this.flushingUnitVolume = flushingUnitVolume;
+	}
+
+	public String getPlotType() {
+		return plotType;
+	}
+
+	public void setPlotType(String plotType) {
+		this.plotType = plotType;
+	}
+
+	public String getTotalNumberOfBuildingUsers() {
+		return totalNumberOfBuildingUsers;
+	}
+
+	public void setTotalNumberOfBuildingUsers(String totalNumberOfBuildingUsers) {
+		this.totalNumberOfBuildingUsers = totalNumberOfBuildingUsers;
+	}
+
+	public String getSolarPhotovoltaicPanelscapacity() {
+		return solarPhotovoltaicPanelscapacity;
+	}
+
+	public void setSolarPhotovoltaicPanelscapacity(String solarPhotovoltaicPanelscapacity) {
+		this.solarPhotovoltaicPanelscapacity = solarPhotovoltaicPanelscapacity;
+	}
+
+	public String getWhetherExistingBuildingConstructedWithoutBasement() {
+		return whetherExistingBuildingConstructedWithoutBasement;
+	}
+
+	public void setWhetherExistingBuildingConstructedWithoutBasement(
+			String whetherExistingBuildingConstructedWithoutBasement) {
+		this.whetherExistingBuildingConstructedWithoutBasement = whetherExistingBuildingConstructedWithoutBasement;
+	}
+
+	public String getWhetherArtificialAndMechanicalVentilatorsProvided() {
+		return whetherArtificialAndMechanicalVentilatorsProvided;
+	}
+
+	public void setWhetherArtificialAndMechanicalVentilatorsProvided(
+			String whetherArtificialAndMechanicalVentilatorsProvided) {
+		this.whetherArtificialAndMechanicalVentilatorsProvided = whetherArtificialAndMechanicalVentilatorsProvided;
+	}
+
+	public String getSoilOrVentilatingPipe() {
+		return soilOrVentilatingPipe;
+	}
+
+	public void setSoilOrVentilatingPipe(String soilOrVentilatingPipe) {
+		this.soilOrVentilatingPipe = soilOrVentilatingPipe;
+	}
+
+	public String getWhetherAnyStaircaseTouchingLiftShaft() {
+		return WhetherAnyStaircaseTouchingLiftShaft;
+	}
+
+	public void setWhetherAnyStaircaseTouchingLiftShaft(String whetherAnyStaircaseTouchingLiftShaft) {
+		WhetherAnyStaircaseTouchingLiftShaft = whetherAnyStaircaseTouchingLiftShaft;
+	}
+
+	public String getSolarPhotovoltaicKWP() {
+		return solarPhotovoltaicKWP;
+	}
+
+	public void setSolarPhotovoltaicKWP(String solarPhotovoltaicKWP) {
+		this.solarPhotovoltaicKWP = solarPhotovoltaicKWP;
+	}
+
+	public String getBasementServicePrintingPressACPlantsElectricalPanelFiltrationplantsLaundryplantsOrMachinesAutomated() {
+		return basementServicePrintingPressACPlantsElectricalPanelFiltrationplantsLaundryplantsOrMachinesAutomated;
+	}
+
+	public void setBasementServicePrintingPressACPlantsElectricalPanelFiltrationplantsLaundryplantsOrMachinesAutomated(
+			String basementServicePrintingPressACPlantsElectricalPanelFiltrationplantsLaundryplantsOrMachinesAutomated) {
+		this.basementServicePrintingPressACPlantsElectricalPanelFiltrationplantsLaundryplantsOrMachinesAutomated = basementServicePrintingPressACPlantsElectricalPanelFiltrationplantsLaundryplantsOrMachinesAutomated;
+	}
+
+	public String getServiceFloorHeight() {
+		return serviceFloorHeight;
+	}
+
+	public void setServiceFloorHeight(String serviceFloorHeight) {
+		this.serviceFloorHeight = serviceFloorHeight;
+	}
+
+	public String getFireSafetyProvisionsAsPerNbcDFPF() {
+		return fireSafetyProvisionsAsPerNbcDFPF;
+	}
+
+	public void setFireSafetyProvisionsAsPerNbcDFPF(String fireSafetyProvisionsAsPerNbcDFPF) {
+		this.fireSafetyProvisionsAsPerNbcDFPF = fireSafetyProvisionsAsPerNbcDFPF;
+	}
+
+	public String getExitRequirmentFireAndLifeSafetyAsPerNBC() {
+		return exitRequirmentFireAndLifeSafetyAsPerNBC;
+	}
+
+	public void setExitRequirmentFireAndLifeSafetyAsPerNBC(String exitRequirmentFireAndLifeSafetyAsPerNBC) {
+		this.exitRequirmentFireAndLifeSafetyAsPerNBC = exitRequirmentFireAndLifeSafetyAsPerNBC;
+	}
+
+	public String getCombustibleMaterialInFireTower() {
+		return combustibleMaterialInFireTower;
+	}
+
+	public void setCombustibleMaterialInFireTower(String combustibleMaterialInFireTower) {
+		this.combustibleMaterialInFireTower = combustibleMaterialInFireTower;
+	}
+
+	public String getDampProofingAtBasement() {
+		return dampProofingAtBasement;
+	}
+
+	public void setDampProofingAtBasement(String dampProofingAtBasement) {
+		this.dampProofingAtBasement = dampProofingAtBasement;
+	}
+
+	public String getHospitalBedded() {
+		return hospitalBedded;
+	}
+
+	public void setHospitalBedded(String hospitalBedded) {
+		this.hospitalBedded = hospitalBedded;
+	}
+
+	public String getHospitalType() {
+		return hospitalType;
+	}
+
+	public void setHospitalType(String hospitalType) {
+		this.hospitalType = hospitalType;
+	}
+
+	public String getSolorWaterHeatingInLtr() {
+		return solorWaterHeatingInLtr;
+	}
+
+	public void setSolorWaterHeatingInLtr(String solorWaterHeatingInLtr) {
+		this.solorWaterHeatingInLtr = solorWaterHeatingInLtr;
+	}
+
+	public String getResidentialNoOwner() {
+		return residentialNoOwner;
+	}
+
+	public void setResidentialNoOwner(String residentialNoOwner) {
+		this.residentialNoOwner = residentialNoOwner;
+	}
+
+	public Boolean getGovernmentOrAidedSchool() {
         return governmentOrAidedSchool;
     }
 

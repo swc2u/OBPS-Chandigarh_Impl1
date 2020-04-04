@@ -72,7 +72,7 @@ public class Plan implements Serializable {
 
     private static final long serialVersionUID = 7276648029097296311L;
     
-    // CGCL requirement
+	// CGCL requirement
     private String serviceType;
 
     /**
@@ -570,6 +570,7 @@ public class Plan implements Serializable {
     }
 
     public void setPlanInfoProperties(Map<String, String> planInfoProperties) {
+    	planInfoProperties.putAll(initPlanInfo());
         this.planInfoProperties = planInfoProperties;
     }
 
@@ -587,6 +588,28 @@ public class Plan implements Serializable {
 
 	public void setAsOnDate(Date asOnDate) {
 		this.asOnDate = asOnDate;
+	}
+	
+	private  HashMap<String, String> initPlanInfo() {
+		 HashMap<String, String> planInfo=new HashMap<String, String>();
+		
+		planInfo.put("PLOT_NO", "82/1 (TP:82/100)");
+		planInfo.put("KHATA_NO", "21 (EW:56)");
+		planInfo.put("MAUZA", "MUSHARI");
+		planInfo.put("DISTRICT", "MITHUNPURA");
+		planInfo.put("AVG_PLOT_DEPTH", "N/A");
+		planInfo.put("AVG_PLOT_WIDTH", "N/A");
+		planInfo.put("AREA_TYPE", "OLD");
+		planInfo.put("ROAD_WIDTH", "3");
+		planInfo.put("BUILDING_NEAR_MONUMENT ", "NO");
+		planInfo.put("BUILDING_NEAR_GOVT_BLDG", "NO");
+		planInfo.put("BUILDING_NEAR_TO_RIVER", "NO");
+		planInfo.put("LEASEHOLD_LAND", "NO");
+		//planInfo.put("RWH_DECLARED", value)
+		
+		
+		return planInfo;
+		
 	}
 
 }

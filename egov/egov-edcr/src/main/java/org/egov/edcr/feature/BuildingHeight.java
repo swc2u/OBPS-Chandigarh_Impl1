@@ -194,6 +194,8 @@ public class BuildingHeight extends FeatureProcess {
 							exptectedHeight = new BigDecimal("10.06");
 						else if (DxfFileConstants.MARLA.equals(plotType) && phase == 2)
 							exptectedHeight = new BigDecimal("9.83");
+						else if(!DxfFileConstants.MARLA.equals(plotType))
+							exptectedHeight = new BigDecimal("10.67");
 					} else if (DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode())) {
 						if (DxfFileConstants.ONE_KANAL.equals(plotType) && (phase == 1 || phase == 2))
 							exptectedHeight = new BigDecimal("14.25");
@@ -282,13 +284,16 @@ public class BuildingHeight extends FeatureProcess {
 				buildingHeight = block.getBuilding().getBuildingHeight();
 
 				if (exptectedHeight.compareTo(BigDecimal.ZERO) > 0) {
-					String actualResult = getLocaleMessage(RULE_ACTUAL_KEY, buildingHeight.toString());
-					String expectedResult = getLocaleMessage(RULE_EXPECTED_KEY, exptectedHeight.toString());
+//					String actualResult = getLocaleMessage(RULE_ACTUAL_KEY, buildingHeight.toString());
+//					String expectedResult = getLocaleMessage(RULE_EXPECTED_KEY, exptectedHeight.toString());
+					
+					String actualResult = buildingHeight.toString()+DxfFileConstants.METER;
+					String expectedResult = "Upto "+exptectedHeight.toString()+DxfFileConstants.METER;
 
 					if (buildingHeight.compareTo(exptectedHeight) > 0) {
 						Map<String, String> details = new HashMap<>();
 					//	details.put(RULE_NO, subRule);
-						details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.HIGHT));
+						details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.PERMISSIBLE_BUILDING_HEIGHT));
 							details.put(DESCRIPTION, HEIGHT_OF_BUILDING + " for Block " + block.getNumber());
 						details.put(UPTO, expectedResult);
 						details.put(PROVIDED, actualResult);
@@ -299,7 +304,7 @@ public class BuildingHeight extends FeatureProcess {
 					} else {
 						Map<String, String> details = new HashMap<>();
 					//	details.put(RULE_NO, subRule);
-						details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.HIGHT));
+						details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.PERMISSIBLE_BUILDING_HEIGHT));
 						details.put(DESCRIPTION, HEIGHT_OF_BUILDING + " for Block " + block.getNumber());
 						details.put(UPTO, expectedResult);
 						details.put(PROVIDED, actualResult);

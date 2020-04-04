@@ -48,7 +48,6 @@
 package org.egov.edcr.feature;
 
 import static org.egov.edcr.constants.DxfFileConstants.COLOUR_CODE_LEACHPIT_TO_PLOT_BNDRY;
-import static org.egov.edcr.utility.DcrConstants.IN_METER;
 import static org.egov.edcr.utility.DcrConstants.OBJECTDEFINED_DESC;
 import static org.egov.edcr.utility.DcrConstants.OBJECTNOTDEFINED;
 import static org.egov.edcr.utility.DcrConstants.OBJECTNOTDEFINED_DESC;
@@ -66,6 +65,7 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.RoadOutput;
 import org.egov.common.entity.edcr.ScrutinyDetail;
+import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.utility.DcrConstants;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
@@ -154,11 +154,11 @@ public class WasteDisposal extends FeatureProcess {
                     && roadOutput.distance.compareTo(minimumDistance) >= 0)
                 valid = true;
             if (valid) {
-                setReportOutputDetailsWithoutOccupancy(pl, subRule, subRuleDesc, minimumDistance.toString() + IN_METER,
-                        roadOutput.distance + IN_METER, Result.Accepted.getResultVal());
+                setReportOutputDetailsWithoutOccupancy(pl, subRule, subRuleDesc, minimumDistance.toString() + DxfFileConstants.METER,
+                        roadOutput.distance + DxfFileConstants.METER, Result.Accepted.getResultVal());
             } else {
-                setReportOutputDetailsWithoutOccupancy(pl, subRule, subRuleDesc, minimumDistance.toString() + IN_METER,
-                        roadOutput.distance + IN_METER, Result.Not_Accepted.getResultVal());
+                setReportOutputDetailsWithoutOccupancy(pl, subRule, subRuleDesc, minimumDistance.toString() + DxfFileConstants.METER,
+                        roadOutput.distance + DxfFileConstants.METER, Result.Not_Accepted.getResultVal());
             }
         }
 

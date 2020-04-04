@@ -69,7 +69,7 @@ public abstract class FeatureProcess {
 	public static final String PERMITTED = "Permitted";
 	public static final String PERMISSIBLE = "Permissible";
 	public static final String DESCRIPTION = "Description";
-	public static final String RULE_NO = "Byelaw";
+	public static final String RULE_NO = "Bye-laws";
 	public static final String DISTANCE = "Distance";
 	public static final String VERIFIED = "Verified";
 	public static final String ACTION = "Action";

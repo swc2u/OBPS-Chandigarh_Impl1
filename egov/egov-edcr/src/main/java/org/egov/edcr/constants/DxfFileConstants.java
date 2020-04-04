@@ -34,15 +34,36 @@ public class DxfFileConstants {
 	public static final String ONE_KANAL = "ONE_KANAL"; // 379.35sqm to less than 505.85 sqm //low risk
 	public static final String TWO_KANAL = "TWO_KANAL"; // 505.85sqm to less than 1011.7sqm // low risk
 	public static final String ABOVE_TWO_KANAL = "ABOVE_TWO_KANAL"; // Above 1011.7sqm // high risk
+	
+	
+	//Plan info 
+	public static final String METER=" m";
+	public static final String METER_SQM=" sqm";
+	
+	//
 
 	// Other
-	public static final String EXISTING_BUILDING_CONSTRUCTED_WITHOUT_BASEMENT = "EXISTING_BUILDING_CONSTRUCTED_WITHOUT_BASEMENT";
-	public static final String WHETHER_STAIRCASE_TOUCHING_LIFT_SHAFT = "WHETHER_STAIRCASE_TOUCHING_LIFT_SHAFT";
-	public static final String ARTIFICIAL_AND_MECHANICAL_VENTILATION_PROVIDED = "ARTIFICIAL_AND_MECHANICAL_VENTILATION_PROVIDED";
-	public static final String SOIL_OR_VENTILLATING_TYPE_PIPE_EXTERNAL_WALL = "SOIL_OR_VENTILLATING_TYPE_PIPE_EXTERNAL_WALL";
-
+	public static final String Hospital_Bedded ="Hospital _Bedded";
+	public static final String No_Of_WARD="No_Of_WARD";
+	public static final String IS_BOARDING="IS_BOARDING";
+	public static final String IS_DRINKING_WATER_ON_EACH_FLOOR="IS_DRINKING_WATER_ON_EACH_FLOOR";
 	public static final String YES = "YES";
 	public static final String NO = "NO";
+	public static final String DAMP_PROOFING_AT_BASEMENT="DAMP_PROOFING_AT_BASEMENT";
+	public static final String COMBUSTIBLE_MATERIAL_IN_FIRE_TOWER="COMBUSTIBLE_MATERIAL _IN_FIRE_TOWER";
+	public static final String EXIT_REQUIREMENT_FIRE_And_LIFE_SAFETY_AS_PER_NBC="EXIT_REQUIREMENT_FIRE_&_LIFE_SAFETY_AS_PER_NBC";
+	public static final String FIRE_SAFETY_PROVISIONS_AS_PER_NBC_DFPF_FSA="FIRE_SAFETY_PROVISIONS_AS_PER_NBC_DFPF_FSA";
+	public static final String SERVICE_FLOOR_HEIGHT_M="SERVICE_FLOOR_HEIGHT_M";
+	public static final String BASEMENT_SERVICES_PRINTING_PRESS_A_C_PLANTS_ELECTRICAL_PANELS_FILTRATIONPLANTS_LAUNDRYPLANTS_OR_MACHINES_AUTOMATED_STACK_PARKING="BASEMENT_SERVICES_PRINTING PRESS_A.C. PLANTS_ELECTRICAL PANELS_FILTRATIONPLANTS_LAUNDRYPLANTS_OR_MACHINES_ AUTOMATED/STACK PARKING";
+	public static final String SOLAR_PHOTOVOLTAIC_KWP="SOLAR_PHOTOVOLTAIC_KWP";
+	public static final String WHETHER_STAIRCASE_TOUCHING_LIFT_SHAFT="WHETHER_STAIRCASE_TOUCHING_LIFT_SHAFT";
+	public static final String SOIL_OR_VENTILATING_PIPE_EXTERNAL_WALL="SOIL_OR_VENTILATING_PIPE_EXTERNAL_WALL";
+	public static final String ARTIFICIAL_AND_MECHANICAL_VENTILATION_PROVIDED="ARTIFICIAL_AND_MECHANICAL_VENTILATION_PROVIDED";
+	public static final String EXISTING_BUILDING_CONSTRUCTED_WITHOUT_BASEMENT="EXISTING_BUILDING_CONSTRUCTED_WITHOUT_BASEMENT";
+	public static final String TOTAL_USERS="TOTAL_USERS";
+	public static final String Hospital_type="Hospital_type";
+	public static final String SOLOR_WATER_HEATING_IN_LTR="SOLOR_WATER_HEATING_IN_LTR";
+	public static final String RESIDENTIAL_NO_OWNER="RESIDENTIAL_NO_OWNER";
 	
 	public static final String ULBNAME = "Chandigarh Administration";
 

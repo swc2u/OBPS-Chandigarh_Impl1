@@ -126,7 +126,7 @@ public class CompoundWallService extends FeatureProcess {
 //		details.put(RULE_NO, RULE_1);
 		details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.COMPOUND_WALL_SERVICE));
 		details.put(DESCRIPTION, WALL_HEIGHT_FRONT_DESCRIPTION);
-		details.put(PROVIDED, frontMinFrontHeight.toString());
+		details.put(PROVIDED, frontMinFrontHeight.toString()+DxfFileConstants.METER);
 		
 		BigDecimal exceptedFrontMinFrontHeight=BigDecimal.ZERO;
 		BigDecimal exceptedFrontMinRearHeight=BigDecimal.ZERO;
@@ -166,7 +166,7 @@ public class CompoundWallService extends FeatureProcess {
 			exceptedFrontMinRearHeight=ONE_POINT_EIGHT;
 		}
 
-		details.put(REQUIRED, "minimum height" + exceptedFrontMinFrontHeight + "m");
+		details.put(REQUIRED, "minimum height" + exceptedFrontMinFrontHeight + DxfFileConstants.METER);
 		if (frontMinFrontHeight.compareTo(exceptedFrontMinFrontHeight) >= 0) {
 			details.put(STATUS, Result.Accepted.getResultVal());
 		} else {
@@ -180,9 +180,9 @@ public class CompoundWallService extends FeatureProcess {
 //		details2.put(RULE_NO, RULE_2);
 		details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.COMPOUND_WALL_SERVICE));
 		details2.put(DESCRIPTION, WALL_HEIGHT_REAR_DESCRIPTION);
-		details2.put(PROVIDED, frontMinRearHeight.toString());
+		details2.put(PROVIDED, frontMinRearHeight.toString()+DxfFileConstants.METER);
 
-		details2.put(REQUIRED, "minimum height" + exceptedFrontMinRearHeight + "m");
+		details2.put(REQUIRED, "minimum height" + exceptedFrontMinRearHeight + DxfFileConstants.METER);
 		if (frontMinRearHeight.compareTo(exceptedFrontMinRearHeight) >= 0) {
 			details2.put(STATUS, Result.Accepted.getResultVal());
 		} else {
@@ -216,9 +216,9 @@ public class CompoundWallService extends FeatureProcess {
 //		details.put(RULE_NO, RULE_3);
 		details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.COMPOUND_WALL_SERVICE));
 		details.put(DESCRIPTION, WALL_RAILING_HIGHT_DESCRIPTION);
-		details.put(PROVIDED, frontMinRailingHeight.toString());
+		details.put(PROVIDED, frontMinRailingHeight.toString()+DxfFileConstants.METER);
 
-		details.put(REQUIRED, "minimum height" + exceptedFrontMinRailingHeight + "m");
+		details.put(REQUIRED, "minimum height" + exceptedFrontMinRailingHeight + DxfFileConstants.METER);
 		if (frontMinRailingHeight.compareTo(exceptedFrontMinRailingHeight) >= 0) {
 			details.put(STATUS, Result.Accepted.getResultVal());
 		} else {

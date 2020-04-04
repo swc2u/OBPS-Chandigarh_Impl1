@@ -81,6 +81,8 @@ public class PlanService {
 		try {
 			plan = extractService.extract(dcrApplication.getSavedDxfFile(), amd, asOnDate,
 					featureService.getFeatures());
+			System.out.println("freedy error "+plan.getErrors());
+			setProperties(plan);
 		}catch (Exception e) {
 			// TODO: handle exception
 			e.getClass();
@@ -101,6 +103,28 @@ public class PlanService {
 		InputStream reportStream = generateReport(plan, amd, dcrApplication);
 		saveOutputReport(dcrApplication, reportStream, plan);
 		return plan;
+	}
+	
+	private void setProperties(Plan pl) {
+		pl.getPlanInformation().setFlushingUnitVolume(pl.getPlanInfoProperties().get(DxfFileConstants.FLUSHING_UNITS_VOLUME_ABOVE_SEVEN_LITRES)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.FLUSHING_UNITS_VOLUME_ABOVE_SEVEN_LITRES):"NA");
+		pl.getPlanInformation().setPlotType(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE):"NA");
+		pl.getPlanInformation().setTotalNumberOfBuildingUsers(pl.getPlanInfoProperties().get(DxfFileConstants.TOTAL_USERS)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.TOTAL_USERS):"NA");
+		pl.getPlanInformation().setSolarPhotovoltaicKWP(pl.getPlanInfoProperties().get(DxfFileConstants.SOLAR_PHOTOVOLTAIC_KWP)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.SOLAR_PHOTOVOLTAIC_KWP):"NA");
+		pl.getPlanInformation().setWhetherExistingBuildingConstructedWithoutBasement(pl.getPlanInfoProperties().get(DxfFileConstants.EXISTING_BUILDING_CONSTRUCTED_WITHOUT_BASEMENT)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.EXISTING_BUILDING_CONSTRUCTED_WITHOUT_BASEMENT):"NA");
+		pl.getPlanInformation().setArchitectInformation(pl.getPlanInfoProperties().get(DxfFileConstants.ARTIFICIAL_AND_MECHANICAL_VENTILATION_PROVIDED)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.ARTIFICIAL_AND_MECHANICAL_VENTILATION_PROVIDED):"NA");
+		pl.getPlanInformation().setSoilOrVentilatingPipe(pl.getPlanInfoProperties().get(DxfFileConstants.SOIL_OR_VENTILATING_PIPE_EXTERNAL_WALL)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.SOIL_OR_VENTILATING_PIPE_EXTERNAL_WALL):"NA");
+		pl.getPlanInformation().setWhetherAnyStaircaseTouchingLiftShaft(pl.getPlanInfoProperties().get(DxfFileConstants.WHETHER_STAIRCASE_TOUCHING_LIFT_SHAFT)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.WHETHER_STAIRCASE_TOUCHING_LIFT_SHAFT):"NA");
+		pl.getPlanInformation().setSolarPhotovoltaicKWP(pl.getPlanInfoProperties().get(DxfFileConstants.SOLAR_PHOTOVOLTAIC_KWP)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.SOLAR_PHOTOVOLTAIC_KWP):"NA");
+		pl.getPlanInformation().setBasementServicePrintingPressACPlantsElectricalPanelFiltrationplantsLaundryplantsOrMachinesAutomated(pl.getPlanInfoProperties().get(DxfFileConstants.BASEMENT_SERVICES_PRINTING_PRESS_A_C_PLANTS_ELECTRICAL_PANELS_FILTRATIONPLANTS_LAUNDRYPLANTS_OR_MACHINES_AUTOMATED_STACK_PARKING)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.BASEMENT_SERVICES_PRINTING_PRESS_A_C_PLANTS_ELECTRICAL_PANELS_FILTRATIONPLANTS_LAUNDRYPLANTS_OR_MACHINES_AUTOMATED_STACK_PARKING):"NA");
+		pl.getPlanInformation().setServiceFloorHeight(pl.getPlanInfoProperties().get(DxfFileConstants.SERVICE_FLOOR_HEIGHT_M)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.SERVICE_FLOOR_HEIGHT_M):"NA");
+		pl.getPlanInformation().setFireSafetyProvisionsAsPerNbcDFPF(pl.getPlanInfoProperties().get(DxfFileConstants.FIRE_SAFETY_PROVISIONS_AS_PER_NBC_DFPF_FSA)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.FIRE_SAFETY_PROVISIONS_AS_PER_NBC_DFPF_FSA):"NA");
+		pl.getPlanInformation().setExitRequirmentFireAndLifeSafetyAsPerNBC(pl.getPlanInfoProperties().get(DxfFileConstants.EXIT_REQUIREMENT_FIRE_And_LIFE_SAFETY_AS_PER_NBC)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.EXIT_REQUIREMENT_FIRE_And_LIFE_SAFETY_AS_PER_NBC):"NA");
+		pl.getPlanInformation().setCombustibleMaterialInFireTower(pl.getPlanInfoProperties().get(DxfFileConstants.COMBUSTIBLE_MATERIAL_IN_FIRE_TOWER)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.COMBUSTIBLE_MATERIAL_IN_FIRE_TOWER):"NA");
+		pl.getPlanInformation().setDampProofingAtBasement(pl.getPlanInfoProperties().get(DxfFileConstants.DAMP_PROOFING_AT_BASEMENT)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.DAMP_PROOFING_AT_BASEMENT):"NA");
+		pl.getPlanInformation().setHospitalBedded(pl.getPlanInfoProperties().get(DxfFileConstants. Hospital_Bedded)!=null?pl.getPlanInfoProperties().get(DxfFileConstants. Hospital_Bedded):"NA");
+		pl.getPlanInformation().setHospitalType(pl.getPlanInfoProperties().get(DxfFileConstants.Hospital_type)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.Hospital_type):"NA");
+		pl.getPlanInformation().setSolorWaterHeatingInLtr(pl.getPlanInfoProperties().get(DxfFileConstants.SOLOR_WATER_HEATING_IN_LTR)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.SOLOR_WATER_HEATING_IN_LTR):"NA");
+		pl.getPlanInformation().setResidentialNoOwner(pl.getPlanInfoProperties().get(DxfFileConstants.RESIDENTIAL_NO_OWNER)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.RESIDENTIAL_NO_OWNER):"NA");
 	}
 
 	private void setEDCRmandatoryNOC(Plan plan) {

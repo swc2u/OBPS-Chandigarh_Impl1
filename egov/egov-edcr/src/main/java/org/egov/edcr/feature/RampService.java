@@ -353,14 +353,14 @@ public class RampService extends FeatureProcess {
 	 * typicalFloorValues.get("typicalFloors") : " floor " + floor.getNumber(); if
 	 * (valid) { setReportOutputDetailsFloorWiseWithDescription(pl, SUBRULE_40_A3,
 	 * String.format(SUBRULE_40_A_3_WIDTH_DESCRIPTION, ramp.getNumber()), value,
-	 * BigDecimal.valueOf(1.2).toString() + DcrConstants.IN_METER, String.valueOf(
+	 * BigDecimal.valueOf(1.2).toString() + DxfFileConstants.METER, String.valueOf(
 	 * Math.round(minimumWidth.doubleValue() * Double.valueOf(100)) /
-	 * Double.valueOf(100)) + DcrConstants.IN_METER, Result.Accepted.getResultVal(),
+	 * Double.valueOf(100)) + DxfFileConstants.METER, Result.Accepted.getResultVal(),
 	 * scrutinyDetail4); } else { setReportOutputDetailsFloorWiseWithDescription(pl,
 	 * SUBRULE_40_A3, String.format(SUBRULE_40_A_3_WIDTH_DESCRIPTION,
 	 * ramp.getNumber()), value, BigDecimal.valueOf(1.2).toString() +
-	 * DcrConstants.IN_METER, String.valueOf( Math.round(minimumWidth.doubleValue()
-	 * * Double.valueOf(100)) / Double.valueOf(100)) + DcrConstants.IN_METER,
+	 * DxfFileConstants.METER, String.valueOf( Math.round(minimumWidth.doubleValue()
+	 * * Double.valueOf(100)) / Double.valueOf(100)) + DxfFileConstants.METER,
 	 * Result.Not_Accepted.getResultVal(), scrutinyDetail4); } } }
 	 * 
 	 * 
@@ -595,14 +595,14 @@ public class RampService extends FeatureProcess {
 									 * typicalFloorValues.get("typicalFloors") : " floor " + floor.getNumber(); if
 									 * (valid) { setReportOutputDetailsFloorWiseWithDescription(pl, SUBRULE_40_A3,
 									 * String.format(SUBRULE_40_A_3_WIDTH_DESCRIPTION, ramp.getNumber()), value,
-									 * BigDecimal.valueOf(1.2).toString() + DcrConstants.IN_METER, String.valueOf(
+									 * BigDecimal.valueOf(1.2).toString() + DxfFileConstants.METER, String.valueOf(
 									 * Math.round(minimumWidth.doubleValue() * Double.valueOf(100)) /
-									 * Double.valueOf(100)) + DcrConstants.IN_METER, Result.Accepted.getResultVal(),
+									 * Double.valueOf(100)) + DxfFileConstants.METER, Result.Accepted.getResultVal(),
 									 * scrutinyDetail4); } else { setReportOutputDetailsFloorWiseWithDescription(pl,
 									 * SUBRULE_40_A3, String.format(SUBRULE_40_A_3_WIDTH_DESCRIPTION,
 									 * ramp.getNumber()), value, BigDecimal.valueOf(1.2).toString() +
-									 * DcrConstants.IN_METER, String.valueOf( Math.round(minimumWidth.doubleValue()
-									 * * Double.valueOf(100)) / Double.valueOf(100)) + DcrConstants.IN_METER,
+									 * DxfFileConstants.METER, String.valueOf( Math.round(minimumWidth.doubleValue()
+									 * * Double.valueOf(100)) / Double.valueOf(100)) + DxfFileConstants.METER,
 									 * Result.Not_Accepted.getResultVal(), scrutinyDetail4); } } }
 									 */
 

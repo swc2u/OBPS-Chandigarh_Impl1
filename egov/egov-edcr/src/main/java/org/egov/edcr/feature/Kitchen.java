@@ -47,9 +47,6 @@
 
 package org.egov.edcr.feature;
 
-import static org.egov.edcr.constants.DxfFileConstants.A;
-import static org.egov.edcr.constants.DxfFileConstants.F;
-
 import static org.egov.edcr.utility.DcrConstants.OBJECTNOTDEFINED;
 
 import java.math.BigDecimal;
@@ -60,7 +57,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.ss.formula.functions.Vlookup;
 import org.egov.common.entity.edcr.Block;
 import org.egov.common.entity.edcr.Floor;
 import org.egov.common.entity.edcr.Measurement;
@@ -73,7 +69,6 @@ import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.ProcessHelper;
 import org.egov.edcr.service.cdg.CDGAConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
-import org.egov.edcr.utility.DcrConstants;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -362,11 +357,11 @@ public class Kitchen extends FeatureProcess {
 					? (String) typicalFloorValues.get("typicalFloors")
 					: " floor " + floor.getNumber();
 			if (valid) {
-				setReportOutputDetails(pl, subRule, subRuleDesc, value, expected + DcrConstants.IN_METER,
-						actual + DcrConstants.IN_METER, Result.Accepted.getResultVal());
+				setReportOutputDetails(pl, subRule, subRuleDesc, value, expected + DxfFileConstants.METER,
+						actual + DxfFileConstants.METER, Result.Accepted.getResultVal());
 			} else {
-				setReportOutputDetails(pl, subRule, subRuleDesc, value, expected + DcrConstants.IN_METER,
-						actual + DcrConstants.IN_METER, Result.Not_Accepted.getResultVal());
+				setReportOutputDetails(pl, subRule, subRuleDesc, value, expected + DxfFileConstants.METER,
+						actual + DxfFileConstants.METER, Result.Not_Accepted.getResultVal());
 			}
 		}
 	}

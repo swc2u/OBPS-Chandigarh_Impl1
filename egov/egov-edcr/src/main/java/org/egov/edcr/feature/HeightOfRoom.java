@@ -279,12 +279,12 @@ public class HeightOfRoom extends FeatureProcess {
 //                    : " floor " + floor.getNumber();
 //            if (valid) {
 //                setReportOutputDetails(pl, subRule, subRuleDesc, value,
-//                        expected + DcrConstants.IN_METER,
-//                        actual + DcrConstants.IN_METER, Result.Accepted.getResultVal());
+//                        expected + DxfFileConstants.METER,
+//                        actual + DxfFileConstants.METER, Result.Accepted.getResultVal());
 //            } else {
 //                setReportOutputDetails(pl, subRule, subRuleDesc, value,
-//                        expected + DcrConstants.IN_METER,
-//                        actual + DcrConstants.IN_METER, Result.Not_Accepted.getResultVal());
+//                        expected + DxfFileConstants.METER,
+//                        actual + DxfFileConstants.METER, Result.Not_Accepted.getResultVal());
 //            }
 //        }
 //    }
@@ -445,12 +445,12 @@ public class HeightOfRoom extends FeatureProcess {
                     : " floor " + floor.getNumber();
             if (valid) {
                 setReportOutputDetails(pl, subRule, subRuleDesc, value,
-                        expected + DcrConstants.IN_METER,
-                        actual + DcrConstants.IN_METER, Result.Accepted.getResultVal());
+                        expected + DxfFileConstants.METER,
+                        actual + DxfFileConstants.METER, Result.Accepted.getResultVal());
             } else {
                 setReportOutputDetails(pl, subRule, subRuleDesc, value,
-                        expected + DcrConstants.IN_METER,
-                        actual + DcrConstants.IN_METER, Result.Not_Accepted.getResultVal());
+                        expected + DxfFileConstants.METER,
+                        actual + DxfFileConstants.METER, Result.Not_Accepted.getResultVal());
             }
         }
     }

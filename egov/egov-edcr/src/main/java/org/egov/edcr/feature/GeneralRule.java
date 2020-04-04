@@ -32,7 +32,7 @@ public class GeneralRule extends FeatureProcess {
     public static final String PERMISSIBLE = "Permissible";
     public static final String DESCRIPTION = "Description";
 
-    public static final String RULE_NO = "Byelaw";
+    public static final String RULE_NO = "Bye-laws";
 
     public String getLocaleMessage(String code, String... args) {
         return edcrMessageSource.getMessage(code, args, LocaleContextHolder.getLocale());

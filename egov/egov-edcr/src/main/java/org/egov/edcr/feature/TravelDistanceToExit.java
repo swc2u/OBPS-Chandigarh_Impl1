@@ -66,6 +66,7 @@ import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
+import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.ProcessHelper;
 import org.egov.edcr.utility.DcrConstants;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -137,11 +138,11 @@ public class TravelDistanceToExit extends FeatureProcess {
                             valid = true;
                         }
                         if (valid) {
-                            setReportOutputDetails(pl, subRule, requiredValue + DcrConstants.IN_METER, maximumTravelDistance +
-                                    DcrConstants.IN_METER, Result.Accepted.getResultVal());
+                            setReportOutputDetails(pl, subRule, requiredValue + DxfFileConstants.METER, maximumTravelDistance +
+                                    DxfFileConstants.METER, Result.Accepted.getResultVal());
                         } else {
                             setReportOutputDetails(pl,
-                                    subRule, requiredValue + DcrConstants.IN_METER, maximumTravelDistance + DcrConstants.IN_METER,
+                                    subRule, requiredValue + DxfFileConstants.METER, maximumTravelDistance + DxfFileConstants.METER,
                                     Result.Not_Accepted.getResultVal());
                         }
                     }

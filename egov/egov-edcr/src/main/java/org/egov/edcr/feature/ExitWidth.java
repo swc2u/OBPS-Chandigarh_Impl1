@@ -431,12 +431,12 @@ public class ExitWidth extends FeatureProcess {
                         ? (String) typicalFloorValues.get("typicalFloors")
                         : " floor " + floor.getNumber();
                 if (valid) {
-                    setReportOutputDetails(pl, subRule, typclFloor, occupancyType, value + DcrConstants.IN_METER,
-                            minimumExitWidth + DcrConstants.IN_METER,
+                    setReportOutputDetails(pl, subRule, typclFloor, occupancyType, value + DxfFileConstants.METER,
+                            minimumExitWidth + DxfFileConstants.METER,
                             Result.Accepted.getResultVal());
                 } else {
-                    setReportOutputDetails(pl, subRule, typclFloor, occupancyType, value + DcrConstants.IN_METER,
-                            minimumExitWidth + DcrConstants.IN_METER,
+                    setReportOutputDetails(pl, subRule, typclFloor, occupancyType, value + DxfFileConstants.METER,
+                            minimumExitWidth + DxfFileConstants.METER,
                             Result.Accepted.getResultVal());
                 }
             }

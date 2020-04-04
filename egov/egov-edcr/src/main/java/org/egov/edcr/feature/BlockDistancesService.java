@@ -62,6 +62,7 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.common.entity.edcr.SetBack;
+import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.utility.DcrConstants;
 import org.egov.infra.utils.StringUtils;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -291,21 +292,21 @@ public class BlockDistancesService extends FeatureProcess {
 
 		if (valid1) {
 			setReportOutputDetails(pl, SUBRULE_37_1, String.format(SUB_RULE_DES, b.getNumber(), block.getNumber()),
-					StringUtils.EMPTY, MINIMUM_DISTANCE_BUILDING, actualDistance.toString() + DcrConstants.IN_METER,
+					StringUtils.EMPTY, MINIMUM_DISTANCE_BUILDING, actualDistance.toString() + DxfFileConstants.METER,
 					Result.Accepted.getResultVal());
 		} else {
 			setReportOutputDetails(pl, SUBRULE_37_1, String.format(SUB_RULE_DES, b.getNumber(), block.getNumber()),
-					StringUtils.EMPTY, MINIMUM_DISTANCE_BUILDING, actualDistance.toString() + DcrConstants.IN_METER,
+					StringUtils.EMPTY, MINIMUM_DISTANCE_BUILDING, actualDistance.toString() + DxfFileConstants.METER,
 					Result.Not_Accepted.getResultVal());
 		}
 
 		if (valid2) {
 			setReportOutputDetails(pl, SUBRULE_37_1, String.format(SUB_RULE_DES, b.getNumber(), block.getNumber()),
-					StringUtils.EMPTY, MINIMUM_DISTANCE_SETBACK, actualDistance.toString() + DcrConstants.IN_METER,
+					StringUtils.EMPTY, MINIMUM_DISTANCE_SETBACK, actualDistance.toString() + DxfFileConstants.METER,
 					Result.Accepted.getResultVal());
 		} else {
 			setReportOutputDetails(pl, SUBRULE_37_1, String.format(SUB_RULE_DES, b.getNumber(), block.getNumber()),
-					StringUtils.EMPTY, MINIMUM_DISTANCE_SETBACK, actualDistance.toString() + DcrConstants.IN_METER,
+					StringUtils.EMPTY, MINIMUM_DISTANCE_SETBACK, actualDistance.toString() + DxfFileConstants.METER,
 					Result.Not_Accepted.getResultVal());
 		}
 

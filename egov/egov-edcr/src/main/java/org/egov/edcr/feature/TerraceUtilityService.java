@@ -59,7 +59,7 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.common.entity.edcr.TerraceUtility;
-import org.egov.edcr.utility.DcrConstants;
+import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.utility.Util;
 import org.springframework.stereotype.Service;
 
@@ -101,14 +101,14 @@ public class TerraceUtilityService extends FeatureProcess {
                     BigDecimal minDistance = terraceUtility.getDistances().stream().reduce(BigDecimal::min).get();
                     details.put(DESCRIPTION, terraceUtility.getName());
                     if (Util.roundOffTwoDecimal(minDistance).compareTo(THREE) >= 0) {
-                        details.put(PERMITTED, THREE + DcrConstants.IN_METER);
-                        details.put(PROVIDED, minDistance + DcrConstants.IN_METER);
+                        details.put(PERMITTED, THREE + DxfFileConstants.METER);
+                        details.put(PROVIDED, minDistance + DxfFileConstants.METER);
                         details.put(STATUS, Result.Accepted.getResultVal());
                         scrutinyDetail.getDetail().add(details);
                         pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
                     } else {
-                        details.put(PERMITTED, THREE + DcrConstants.IN_METER);
-                        details.put(PROVIDED, minDistance + DcrConstants.IN_METER);
+                        details.put(PERMITTED, THREE + DxfFileConstants.METER);
+                        details.put(PROVIDED, minDistance + DxfFileConstants.METER);
                         details.put(STATUS, Result.Not_Accepted.getResultVal());
                         scrutinyDetail.getDetail().add(details);
                         pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);

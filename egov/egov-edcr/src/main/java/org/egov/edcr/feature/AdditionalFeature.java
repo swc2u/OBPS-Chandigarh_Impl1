@@ -311,7 +311,7 @@ public class AdditionalFeature extends FeatureProcess {
 				for (Floor floor : b.getBuilding().getFloors()) {
 					for (Occupancy occupancy : floor.getOccupancies()) {
 						if (occupancy.getTypeHelper() != null && occupancy.getTypeHelper().getSubtype() != null
-								&& DxfFileConstants.A_PO.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+								&& DxfFileConstants.A_PG.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
 							providedPayingGuestSpace = providedPayingGuestSpace.add(occupancy.getBuiltUpArea());
 							isPayingGuestProvided = true;
 
@@ -370,7 +370,7 @@ public class AdditionalFeature extends FeatureProcess {
 				for (Floor floor : b.getBuilding().getFloors()) {
 					for (Occupancy occupancy : floor.getOccupancies()) {
 						if (occupancy.getTypeHelper() != null && occupancy.getTypeHelper().getSubtype() != null
-								&& DxfFileConstants.A_PO.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+								&& DxfFileConstants.A_S.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
 							providedStdSpace = providedStdSpace.add(occupancy.getBuiltUpArea());
 							isprovidedStdSpaceSpaceProvided = true;
 
@@ -665,7 +665,7 @@ public class AdditionalFeature extends FeatureProcess {
 
 			// CSCL add start
 			ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
-			// scrutinyDetail.addColumnHeading(1, RULE_NO);
+			scrutinyDetail.addColumnHeading(1, RULE_NO);
 			scrutinyDetail.addColumnHeading(2, DESCRIPTION);
 			scrutinyDetail.addColumnHeading(3, PERMISSIBLE);
 			scrutinyDetail.addColumnHeading(4, PROVIDED);
@@ -1146,7 +1146,7 @@ public class AdditionalFeature extends FeatureProcess {
 		if (pl.getPlot() != null && pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_100)) >= 0) {
 
 			if (StringUtils.isNotBlank(pl.getPlanInformation().getProvisionsForGreenBuildingsAndSustainability())
-					&& pl.getPlanInformation().getProvisionsForGreenBuildingsAndSustainability().equals("YES")) {
+					) {
 
 				if (mostRestrictiveFarHelper != null && mostRestrictiveFarHelper.getType() != null
 						&& DxfFileConstants.A.equalsIgnoreCase(mostRestrictiveFarHelper.getType().getCode())) {
@@ -1220,10 +1220,6 @@ public class AdditionalFeature extends FeatureProcess {
 
 				pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
-			} else {
-				errors.put(GREEN_BUILDINGS_AND_SUSTAINABILITY_PROVISIONS_ERROR_CODE,
-						GREEN_BUILDINGS_AND_SUSTAINABILITY_PROVISIONS_ERROR_MSG);
-				pl.addErrors(errors);
 			}
 		}
 
@@ -1354,7 +1350,7 @@ public class AdditionalFeature extends FeatureProcess {
 
 	private ScrutinyDetail getNewScrutinyDetail(String key) {
 		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
-		// scrutinyDetail.addColumnHeading(1, RULE_NO);
+		scrutinyDetail.addColumnHeading(1, RULE_NO);
 		scrutinyDetail.addColumnHeading(2, DESCRIPTION);
 		scrutinyDetail.addColumnHeading(3, PERMISSIBLE);
 		scrutinyDetail.addColumnHeading(4, PROVIDED);

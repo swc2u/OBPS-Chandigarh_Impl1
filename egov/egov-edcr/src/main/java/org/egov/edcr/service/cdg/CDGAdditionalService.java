@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.egov.common.entity.edcr.Block;
+import org.egov.common.entity.edcr.Floor;
 import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.commons.entity.cdg.ServiceAvailabilityCheckConstant;
@@ -23,7 +25,7 @@ public class CDGAdditionalService {
 	public static final String FILE_PERMISSIBLE_BUILDING_HEIGHT = "PermissibleBuildingHeight.properties";
 	public static final String FILE_NO_OF_STORY = "NoOfStory.properties";
 	public static final String FILE_BACK_YARD_CONSTRUCTION = "BackYardConstruction.properties";
-	public static final String FILE_BYLAWS="ByLaws.properties";
+	public static final String FILE_BYLAWS = "ByLaws.properties";
 
 	public static final String SETBACKS = "setBack";
 	public static final String FAR = "far";
@@ -92,12 +94,10 @@ public class CDGAdditionalService {
 					featurePropertiesLocation + FILE_BACK_YARD_CONSTRUCTION);
 			backYardConstructionProperties = new Properties();
 			backYardConstructionProperties.load(backYardConstructionReader);
-			
-			
+
 			FileReader byLawsReader = new FileReader(featurePropertiesLocation + FILE_BYLAWS);
 			byLawsProperties = new Properties();
 			byLawsProperties.load(byLawsReader);
-			
 
 		} catch (Exception e) {
 			throw new RuntimeException("Properties file is required. // LOCATION:-" + featurePropertiesLocation
@@ -111,9 +111,9 @@ public class CDGAdditionalService {
 		Map<String, String> map = new HashMap<String, String>();
 
 		if (featureName.getCDGAConstantValue().equals(SETBACKS)) {
-			String key=getBaseKey(SETBACKS, keyArrgument);
-			map.put(SETBACK_RIGHT, setbackProperties.getProperty( key+ "." + RIGHT));
-			map.put(SETBACK_LEFT, setbackProperties.getProperty(key+ "." + LEFT));
+			String key = getBaseKey(SETBACKS, keyArrgument);
+			map.put(SETBACK_RIGHT, setbackProperties.getProperty(key + "." + RIGHT));
+			map.put(SETBACK_LEFT, setbackProperties.getProperty(key + "." + LEFT));
 			map.put(SETBACK_FRONT, setbackProperties.getProperty(key + "." + FRONT));
 			map.put(SETBACK_REAR, setbackProperties.getProperty(key + "." + REAR));
 
@@ -141,42 +141,42 @@ public class CDGAdditionalService {
 
 		return map;
 	}
-	
-	public static  String getByLaws(OccupancyTypeHelper occupancyTypeHelper,CDGAConstant cdgaConstant) {
-		
-		String occkey=occupancyTypeHelper.getSubtype()!=null?occupancyTypeHelper.getSubtype().getCode():"";
-		String key=occkey+"."+cdgaConstant.getCDGAConstantValue().toUpperCase();
-		String byLaws=byLawsProperties.getProperty(key);
-		
-		return byLaws!=null?byLaws:"";
+
+	public static String getByLaws(OccupancyTypeHelper occupancyTypeHelper, CDGAConstant cdgaConstant) {
+
+		String occkey = occupancyTypeHelper.getSubtype() != null ? occupancyTypeHelper.getSubtype().getCode() : "";
+		String key = occkey + "." + cdgaConstant.getCDGAConstantValue().toUpperCase();
+		String byLaws = byLawsProperties.getProperty(key);
+
+		return byLaws != null ? byLaws : "";
 	}
-	
-	public static  String getByLaws(Plan pl,CDGAConstant cdgaConstant) {
-		OccupancyTypeHelper occupancyTypeHelper=pl.getVirtualBuilding().getMostRestrictiveFarHelper();
-		String occkey=occupancyTypeHelper.getSubtype()!=null?occupancyTypeHelper.getSubtype().getCode():"";
-		String key=occkey+"."+cdgaConstant.getCDGAConstantValue();
-		String byLaws=byLawsProperties.getProperty(key.toUpperCase());
-		
-		return byLaws!=null?byLaws:"";
+
+	public static String getByLaws(Plan pl, CDGAConstant cdgaConstant) {
+		OccupancyTypeHelper occupancyTypeHelper = pl.getVirtualBuilding().getMostRestrictiveFarHelper();
+		String occkey = occupancyTypeHelper.getSubtype() != null ? occupancyTypeHelper.getSubtype().getCode() : "";
+		String key = occkey + "." + cdgaConstant.getCDGAConstantValue();
+		String byLaws = byLawsProperties.getProperty(key.toUpperCase());
+
+		return byLaws != null ? byLaws : "";
 	}
 
 	public static int getSectorPhase(String sector) {
-		int phase=-1;
-		sector=sector.replaceAll("[^0-9]", "");
-		if(sector==null || sector.isEmpty())
+		int phase = -1;
+		sector = sector.replaceAll("[^0-9]", "");
+		if (sector == null || sector.isEmpty())
 			return phase;
-		long l=Long.parseLong(sector);
-		
-		if(l>=1 && l <= 30)
-			phase=1;
-		else if(l>=31 && l <= 47)
-			phase=2;
-		else if(l>=48)
-			phase=3;
-		
+		long l = Long.parseLong(sector);
+
+		if (l >= 1 && l <= 30)
+			phase = 1;
+		else if (l >= 31 && l <= 47)
+			phase = 2;
+		else if (l >= 48)
+			phase = 3;
+
 		return phase;
 	}
-	
+
 	private String getBaseKey(String prefix, Map<String, String> keyArrgument) {
 
 		StringBuffer stringBuffer = new StringBuffer(prefix + ".");
@@ -230,4 +230,70 @@ public class CDGAdditionalService {
 		return roundBigDecimal(number, mathContext);
 	}
 
+	public static BigDecimal getNumberOfPerson(Plan pl) {
+		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding().getMostRestrictiveFarHelper();
+		BigDecimal numberOfPerson = BigDecimal.ZERO;
+		for (Block block : pl.getBlocks()) {
+			for (Floor floor : block.getBuilding().getFloors()) {
+				if (DxfFileConstants.F.equals(mostRestrictiveOccupancyType.getType().getCode())
+						|| DxfFileConstants.ITH_C.equals(mostRestrictiveOccupancyType.getType().getCode())
+						|| DxfFileConstants.ITH_CC.equals(mostRestrictiveOccupancyType.getType().getCode())
+						|| DxfFileConstants.IP_C.equals(mostRestrictiveOccupancyType.getType().getCode())) {
+					numberOfPerson
+							.add(getNumberPerson(floor.getArea(), mostRestrictiveOccupancyType, floor.getNumber()));
+				} else {
+					numberOfPerson.add(getNumberPerson(floor.getArea(), mostRestrictiveOccupancyType));
+				}
+			}
+		}
+
+		return numberOfPerson;
+
+	}
+
+	private static BigDecimal getNumberPerson(BigDecimal bulidUpArea, OccupancyTypeHelper mostRestrictiveOccupancyType) {
+		BigDecimal numberOfPerson = BigDecimal.ZERO;
+		BigDecimal perPersonBuildupArea = BigDecimal.ZERO;
+		if (DxfFileConstants.A.equals(mostRestrictiveOccupancyType.getType().getCode())
+				|| DxfFileConstants.ITH_R.equals(mostRestrictiveOccupancyType.getType().getCode())
+				|| DxfFileConstants.ITH_GH.equals(mostRestrictiveOccupancyType.getType().getCode())
+				|| DxfFileConstants.IP_R.equals(mostRestrictiveOccupancyType.getType().getCode()))
+			perPersonBuildupArea = BigDecimal.valueOf(12.5);
+		else if (DxfFileConstants.G.equals(mostRestrictiveOccupancyType.getType().getCode())
+				|| DxfFileConstants.IT.equals(mostRestrictiveOccupancyType.getType().getCode()))
+			perPersonBuildupArea = BigDecimal.valueOf(10);
+		else if (DxfFileConstants.P.equals(mostRestrictiveOccupancyType.getType().getCode())
+				|| DxfFileConstants.ITH_H.equals(mostRestrictiveOccupancyType.getType().getCode())
+				|| DxfFileConstants.IP_I.equals(mostRestrictiveOccupancyType.getType().getCode()))
+			perPersonBuildupArea = BigDecimal.valueOf(15);
+		else if (DxfFileConstants.B.equals(mostRestrictiveOccupancyType.getType().getCode()))
+			perPersonBuildupArea = BigDecimal.valueOf(4);
+
+		numberOfPerson = perPersonBuildupArea.divide(perPersonBuildupArea);
+
+		return new BigDecimal(String.format("%.0f", numberOfPerson));
+
+	}
+
+	private static BigDecimal getNumberPerson(BigDecimal bulidUpArea, OccupancyTypeHelper mostRestrictiveOccupancyType,
+			int floor) {
+		BigDecimal numberOfPerson = BigDecimal.ZERO;
+		BigDecimal perPersonBuildupArea = BigDecimal.ZERO;
+		if ((DxfFileConstants.F.equals(mostRestrictiveOccupancyType.getType().getCode())
+				|| DxfFileConstants.ITH_C.equals(mostRestrictiveOccupancyType.getType().getCode())
+				|| DxfFileConstants.ITH_CC.equals(mostRestrictiveOccupancyType.getType().getCode())
+				|| DxfFileConstants.IP_C.equals(mostRestrictiveOccupancyType.getType().getCode())) && floor <= 0)
+			perPersonBuildupArea = BigDecimal.valueOf(1);
+		else
+			perPersonBuildupArea = BigDecimal.valueOf(6);
+
+		numberOfPerson = perPersonBuildupArea.divide(perPersonBuildupArea);
+
+		return new BigDecimal(String.format("%.0f", numberOfPerson));
+
+	}
+
+	public static void main(String[] args) {
+		System.out.println(BigDecimal.valueOf(1267.635).round(new MathContext(2)));
+	}
 }

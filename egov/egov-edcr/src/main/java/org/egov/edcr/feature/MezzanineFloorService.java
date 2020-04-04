@@ -2,10 +2,9 @@ package org.egov.edcr.feature;
 
 import static org.egov.edcr.utility.DcrConstants.DECIMALDIGITS_MEASUREMENTS;
 import static org.egov.edcr.utility.DcrConstants.HEIGHTNOTDEFINED;
-import static org.egov.edcr.utility.DcrConstants.IN_METER;
 import static org.egov.edcr.utility.DcrConstants.OBJECTNOTDEFINED_DESC;
 import static org.egov.edcr.utility.DcrConstants.ROUNDMODE_MEASUREMENTS;
-import static org.egov.edcr.utility.DcrConstants.SQMTRS;
+
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -139,8 +138,8 @@ private boolean getOccupanciesForMezzanineNotAllowed(OccupancyTypeHelper occupan
 								if (getOccupanciesForMezzanineSkelton(mostRestrictiveOccupancyType) && (mezzanineFloor.getHeight().compareTo(new BigDecimal("2.40"))>=0)) {
 									setReportOutputDetails(pl, subRule,
 											RULE46_DIM_DESC + " " + mezzanineFloor.getMezzanineNumber(), floorNo,
-											"2.4" + IN_METER,
-											mezzanineFloor.getHeight() + IN_METER, Result.Accepted.getResultVal());
+											"2.4" + DxfFileConstants.METER,
+											mezzanineFloor.getHeight() + DxfFileConstants.METER, Result.Accepted.getResultVal());
 
 									return pl;
 								}
@@ -164,35 +163,35 @@ private boolean getOccupanciesForMezzanineNotAllowed(OccupancyTypeHelper occupan
 								} else if (height.compareTo(HEIGHT_2_POINT_2) >= 0) {
 									setReportOutputDetails(pl, subRule,
 											RULE46_DIM_DESC + " " + mezzanineFloor.getMezzanineNumber(), floorNo,
-											HEIGHT_2_POINT_2 + IN_METER, height + IN_METER,
+											HEIGHT_2_POINT_2 + DxfFileConstants.METER, height + DxfFileConstants.METER,
 											Result.Accepted.getResultVal());
 								} else {
 									setReportOutputDetails(pl, subRule,
 											RULE46_DIM_DESC + " " + mezzanineFloor.getMezzanineNumber(), floorNo,
-											HEIGHT_2_POINT_2 + IN_METER, height + IN_METER,
+											HEIGHT_2_POINT_2 + DxfFileConstants.METER, height + DxfFileConstants.METER,
 											Result.Not_Accepted.getResultVal());
 								}
 								if (mezzanineFloor.getBuiltUpArea().compareTo(AREA_9_POINT_5) >= 0) {
 									setReportOutputDetails(pl, subRule,
 											RULE46_MINAREA_DESC + " " + mezzanineFloor.getMezzanineNumber(), floorNo,
-											AREA_9_POINT_5 + SQMTRS, mezzanineFloor.getBuiltUpArea() + SQMTRS,
+											AREA_9_POINT_5 + DxfFileConstants.METER_SQM, mezzanineFloor.getBuiltUpArea() + DxfFileConstants.METER_SQM,
 											Result.Accepted.getResultVal());
 								} else {
 									setReportOutputDetails(pl, subRule,
 											RULE46_MINAREA_DESC + " " + mezzanineFloor.getMezzanineNumber(), floorNo,
-											AREA_9_POINT_5 + SQMTRS, mezzanineFloor.getBuiltUpArea() + SQMTRS,
+											AREA_9_POINT_5 + DxfFileConstants.METER_SQM, mezzanineFloor.getBuiltUpArea() + DxfFileConstants.METER_SQM,
 											Result.Not_Accepted.getResultVal());
 								}
 
 								if (valid) {
 									setReportOutputDetails(pl, subRule,
 											RULE46_MAXAREA_DESC + " " + mezzanineFloor.getMezzanineNumber(), floorNo,
-											oneThirdOfBuiltup + SQMTRS, mezzanineFloorArea + SQMTRS,
+											oneThirdOfBuiltup + DxfFileConstants.METER_SQM, mezzanineFloorArea + DxfFileConstants.METER_SQM,
 											Result.Accepted.getResultVal());
 								} else {
 									setReportOutputDetails(pl, subRule,
 											RULE46_MAXAREA_DESC + " " + mezzanineFloor.getMezzanineNumber(), floorNo,
-											oneThirdOfBuiltup + SQMTRS, mezzanineFloorArea + SQMTRS,
+											oneThirdOfBuiltup + DxfFileConstants.METER_SQM, mezzanineFloorArea + DxfFileConstants.METER_SQM,
 											Result.Not_Accepted.getResultVal());
 								}
 							}

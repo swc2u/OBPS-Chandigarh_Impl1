@@ -61,6 +61,7 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.RoomHeight;
 import org.egov.common.entity.edcr.ScrutinyDetail;
+import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.cdg.CDGAConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
@@ -125,21 +126,21 @@ public class BathRoom extends FeatureProcess {
 							}
 						}
 
-						if (minHeight.compareTo(new BigDecimal(2.4)) >= 0
-								&& totalArea.compareTo(new BigDecimal(1.8)) >= 0
-								&& minWidth.compareTo(new BigDecimal(1.2)) >= 0) {
+						if (minHeight.compareTo(new BigDecimal(2.29)) >= 0
+								&& totalArea.compareTo(new BigDecimal(1.85)) >= 0
+								&& minWidth.compareTo(new BigDecimal(1.20)) >= 0) {
 
-							details.put(REQUIRED, "Height >= 2.4, Total Area >= 1.8, Width >= 1.2");
-							details.put(PROVIDED, "Height >= " + minHeight + ", Total Area >= " + totalArea
-									+ ", Width >= " + minWidth);
+							details.put(REQUIRED, "Height >= 2.29"+DxfFileConstants.METER+", Total Area >= 1.85"+DxfFileConstants.METER_SQM+", Width >= 1.20"+DxfFileConstants.METER);
+							details.put(PROVIDED, "Height = " + minHeight +DxfFileConstants.METER +", Total Area = " + totalArea
+									+ DxfFileConstants.METER_SQM+", Width = " + minWidth+DxfFileConstants.METER);
 							details.put(STATUS, Result.Accepted.getResultVal());
 							scrutinyDetail.getDetail().add(details);
 							pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 						} else {
-							details.put(REQUIRED, "Height >= 2.4, Total Area >= 1.8, Width >= 1.2");
-							details.put(PROVIDED, "Height >= " + minHeight + ", Total Area >= " + totalArea
-									+ ", Width >= " + minWidth);
+							details.put(REQUIRED, "Height >= 2.29"+DxfFileConstants.METER+", Total Area >= 1.85"+DxfFileConstants.METER_SQM+", Width >= 1.20"+DxfFileConstants.METER);
+							details.put(PROVIDED, "Height = " + minHeight +DxfFileConstants.METER +", Total Area = " + totalArea
+									+ DxfFileConstants.METER_SQM+", Width = " + minWidth+DxfFileConstants.METER);
 							details.put(STATUS, Result.Not_Accepted.getResultVal());
 							scrutinyDetail.getDetail().add(details);
 							pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);

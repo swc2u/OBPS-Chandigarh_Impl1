@@ -61,6 +61,7 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.RoomHeight;
 import org.egov.common.entity.edcr.ScrutinyDetail;
+import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.cdg.CDGAConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
@@ -78,6 +79,7 @@ public class BathRoomWaterClosets extends FeatureProcess {
 		return pl;
 	}
 
+	
 	@Override
 	public Plan process(Plan pl) {
 
@@ -91,7 +93,7 @@ public class BathRoomWaterClosets extends FeatureProcess {
 
 		Map<String, String> details = new HashMap<>();
 		//details.put(RULE_NO, RULE_41_IV);
-		details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.BATH));
+		details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.TOILET));
 		details.put(DESCRIPTION, BathroomWaterClosets_DESCRIPTION);
 
 		BigDecimal minHeight = BigDecimal.ZERO, totalArea = BigDecimal.ZERO, minWidth = BigDecimal.ZERO;
@@ -112,7 +114,7 @@ public class BathRoomWaterClosets extends FeatureProcess {
 							minHeight = f.getBathRoomWaterClosets().getHeights().get(0).getHeight();
 							for (RoomHeight rh : f.getBathRoomWaterClosets().getHeights()) {
 								if (rh.getHeight().compareTo(minHeight) < 0) {
-									minHeight = rh.getHeight();
+									minHeight = CDGAdditionalService.roundBigDecimal(rh.getHeight());
 								}
 							}
 						}
@@ -121,28 +123,28 @@ public class BathRoomWaterClosets extends FeatureProcess {
 								&& !f.getBathRoomWaterClosets().getRooms().isEmpty()) {
 							minWidth = f.getBathRoomWaterClosets().getRooms().get(0).getWidth();
 							for (Measurement m : f.getBathRoomWaterClosets().getRooms()) {
-								totalArea = totalArea.add(m.getArea());
+								totalArea = totalArea.add(CDGAdditionalService.roundBigDecimal(m.getArea()));
 								if (m.getWidth().compareTo(minWidth) < 0) {
-									minWidth = m.getWidth();
+									minWidth = CDGAdditionalService.roundBigDecimal(m.getWidth());
 								}
 							}
 						}
 
-						if (minHeight.compareTo(new BigDecimal(2.4)) >= 0
+						if (minHeight.compareTo(new BigDecimal(2.29)) >= 0
 								&& totalArea.compareTo(new BigDecimal(2.8)) >= 0
 								&& minWidth.compareTo(new BigDecimal(1.2)) >= 0) {
 
-							details.put(REQUIRED, "Height >= 2.4, Total Area >= 2.8, Width >= 1.2");
-							details.put(PROVIDED, "Height >= " + minHeight + ", Total Area >= " + totalArea
-									+ ", Width >= " + minWidth);
+							details.put(REQUIRED, "Height >= 2.29"+DxfFileConstants.METER+", Total Area >= 2.8"+DxfFileConstants.METER_SQM+", Width >= 1.2"+DxfFileConstants.METER);
+							details.put(PROVIDED, "Height = " + minHeight +DxfFileConstants.METER+ ", Total Area = " + totalArea+DxfFileConstants.METER_SQM
+									+ ", Width = " + minWidth+DxfFileConstants.METER);
 							details.put(STATUS, Result.Accepted.getResultVal());
 							scrutinyDetail.getDetail().add(details);
 							pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 						} else {
-							details.put(REQUIRED, "Height >= 2.4, Total Area >= 2.8, Width >= 1.2");
-							details.put(PROVIDED, "Height >= " + minHeight + ", Total Area >= " + totalArea
-									+ ", Width >= " + minWidth);
+							details.put(REQUIRED, "Height >= 2.29"+DxfFileConstants.METER+", Total Area >= 2.8"+DxfFileConstants.METER_SQM+", Width >= 1.2"+DxfFileConstants.METER);
+							details.put(PROVIDED, "Height = " + minHeight +DxfFileConstants.METER+ ", Total Area = " + totalArea+DxfFileConstants.METER_SQM
+									+ ", Width = " + minWidth+DxfFileConstants.METER);
 							details.put(STATUS, Result.Not_Accepted.getResultVal());
 							scrutinyDetail.getDetail().add(details);
 							pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -157,6 +159,87 @@ public class BathRoomWaterClosets extends FeatureProcess {
 
 		return pl;
 	}
+	
+	
+//	@Override
+//	public Plan process(Plan pl) {
+//
+//		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
+//		scrutinyDetail.setKey("Common_Toilet");
+//		scrutinyDetail.addColumnHeading(1, RULE_NO);
+//		scrutinyDetail.addColumnHeading(2, DESCRIPTION);
+//		scrutinyDetail.addColumnHeading(3, REQUIRED);
+//		scrutinyDetail.addColumnHeading(4, PROVIDED);
+//		scrutinyDetail.addColumnHeading(5, STATUS);
+//
+//		Map<String, String> details = new HashMap<>();
+//		//details.put(RULE_NO, RULE_41_IV);
+//		details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.BATH));
+//		details.put(DESCRIPTION, BathroomWaterClosets_DESCRIPTION);
+//
+//		BigDecimal minHeight = BigDecimal.ZERO, totalArea = BigDecimal.ZERO, minWidth = BigDecimal.ZERO;
+//
+//		for (Block b : pl.getBlocks()) {
+//			if (b.getBuilding() != null && b.getBuilding().getFloors() != null
+//					&& !b.getBuilding().getFloors().isEmpty()) {
+//
+//				for (Floor f : b.getBuilding().getFloors()) {
+//
+//					if (f.getBathRoomWaterClosets() != null && f.getBathRoomWaterClosets().getHeights() != null
+//							&& !f.getBathRoomWaterClosets().getHeights().isEmpty()
+//							&& f.getBathRoomWaterClosets().getRooms() != null
+//							&& !f.getBathRoomWaterClosets().getRooms().isEmpty()) {
+//
+//						if (f.getBathRoomWaterClosets().getHeights() != null
+//								&& !f.getBathRoomWaterClosets().getHeights().isEmpty()) {
+//							minHeight = f.getBathRoomWaterClosets().getHeights().get(0).getHeight();
+//							for (RoomHeight rh : f.getBathRoomWaterClosets().getHeights()) {
+//								if (rh.getHeight().compareTo(minHeight) < 0) {
+//									minHeight = rh.getHeight();
+//								}
+//							}
+//						}
+//
+//						if (f.getBathRoomWaterClosets().getRooms() != null
+//								&& !f.getBathRoomWaterClosets().getRooms().isEmpty()) {
+//							minWidth = f.getBathRoomWaterClosets().getRooms().get(0).getWidth();
+//							for (Measurement m : f.getBathRoomWaterClosets().getRooms()) {
+//								totalArea = totalArea.add(m.getArea());
+//								if (m.getWidth().compareTo(minWidth) < 0) {
+//									minWidth = m.getWidth();
+//								}
+//							}
+//						}
+//
+//						if (minHeight.compareTo(new BigDecimal(2.4)) >= 0
+//								&& totalArea.compareTo(new BigDecimal(2.8)) >= 0
+//								&& minWidth.compareTo(new BigDecimal(1.2)) >= 0) {
+//
+//							details.put(REQUIRED, "Height >= 2.4, Total Area >= 2.8, Width >= 1.2");
+//							details.put(PROVIDED, "Height >= " + minHeight + ", Total Area >= " + totalArea
+//									+ ", Width >= " + minWidth);
+//							details.put(STATUS, Result.Accepted.getResultVal());
+//							scrutinyDetail.getDetail().add(details);
+//							pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+//
+//						} else {
+//							details.put(REQUIRED, "Height >= 2.4, Total Area >= 2.8, Width >= 1.2");
+//							details.put(PROVIDED, "Height >= " + minHeight + ", Total Area >= " + totalArea
+//									+ ", Width >= " + minWidth);
+//							details.put(STATUS, Result.Not_Accepted.getResultVal());
+//							scrutinyDetail.getDetail().add(details);
+//							pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+//						}
+//
+//					}
+//
+//				}
+//			}
+//
+//		}
+//
+//		return pl;
+//	}
 
 	@Override
 	public Map<String, Date> getAmendments() {

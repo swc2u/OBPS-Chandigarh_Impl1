@@ -211,13 +211,13 @@ public class PlanReportService {
             List<ConditionalStyle> listCondStyle = getConditonalStyles();
             FastReportBuilder frb = new FastReportBuilder();
             int size = detail.getColumnHeading().keySet().size();
-            Double byeLawColumnSize = 40d;
+            Double byeLawColumnSize = 45d;
             Double statusColumnSize = 60d;
             Double columnSize = (595d - (byeLawColumnSize + statusColumnSize)) / (size - 2);
             for (Integer s : detail.getColumnHeading().keySet()) {
                 ColumnHeadingDetail columnHeading = detail.getColumnHeading().get(s);
                 int columnWidth = columnSize.intValue();
-                if ("Byelaw".equalsIgnoreCase(columnHeading.name)) {
+                if ("Bye-laws".equalsIgnoreCase(columnHeading.name)) {
                     columnWidth = byeLawColumnSize.intValue();
                 }
                 if (STATUS.equalsIgnoreCase(columnHeading.name)) {
