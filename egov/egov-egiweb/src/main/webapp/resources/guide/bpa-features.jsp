@@ -140,14 +140,14 @@
 		</div>
 	</div>
 		
-	<footer class = "f-regular bpa-login-footer page-common-padding col-md-12 color-white">
+	<footer class = "f-regular bpa-login-footer page-common-padding col-md-12 color-black">
 		<div class = "footer-list-content col-md-4">
-			<div style = "margin-bottom: 16px;" class = "color-white bpa-common-header2 bpa-common-header">About OBPS</div>
-			<div style = "opacity: 0.7;" class = "color-white bpa-common-text">Citizens, Officials, and other stakeholders can submit and track applications in real time and obtain approvals without having to physically visit an office.</div>
+			<div style = "margin-bottom: 16px;" class = "color-black bpa-common-header2 bpa-common-header">About OBPS</div>
+			<div style = "opacity: 0.7;" class = "color-black bpa-common-text">Citizens, Officials, and other stakeholders can submit and track applications in real time and obtain approvals without having to physically visit an office.</div>
 		</div>
-		<div class = "color-white footer-list-content col-md-4">
-			<div style = "margin-bottom: 16px;" class = "color-white bpa-common-header2 bpa-common-header">Help Resources</div>
-			<ul class="tutorial-list color-white">
+		<div class = "color-black footer-list-content col-md-4">
+			<div style = "margin-bottom: 16px;" class = "color-black bpa-common-header2 bpa-common-header">Help Resources</div>
+			<ul class="tutorial-list color-black">
 				<li class="bpa-common-text tutorial-item">
 					<a href="javascript:void(0);" target="_blank">Registered building licensee user manual</a>
 				</li>
@@ -176,9 +176,9 @@
 		</div>
 		
 		<div class = "footer-list-content col-md-4">
-			<div style = "margin-bottom: 16px;" class = "color-white bpa-common-header2 bpa-common-header">Get in Touch</div>
+			<div style = "margin-bottom: 16px;" class = "color-black bpa-common-header2 bpa-common-header">Get in Touch</div>
 			<div class = "footer-contact-info-cont">
-				<div class = "color-white bpa-common-text">Chandigarh Smart City Limited,
+				<div class = "color-black bpa-common-text">Chandigarh Smart City Limited,
 3rd Floor, Building over the New Bridge (Above SCO 17,18,19) Sector 17-A
 Chandigarh 160017</div>
 				<div class = "footer-icon-info-cont">

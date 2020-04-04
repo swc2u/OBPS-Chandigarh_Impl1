@@ -67,32 +67,24 @@
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn"%>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="description" content="eGov Urban Portal" />
-<meta name="author" content="eGovernments Foundation" />
-<title>eGov Urban Portal Login</title>
-<link rel="icon"
-	href="<cdn:url value='/resources/global/images/favicon.png'/>"
-	sizes="32x32">
-<link rel="stylesheet"
-	href="<cdn:url value='/resources/global/css/egov/customloginNew.css?rnd=${app_release_no}'/>">
-<link rel="stylesheet"
-	href="<cdn:url value='/resources/global/css/bootstrap/bootstrap.css'/>">
-<link rel="stylesheet"
-	href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css'/>">
-<link rel="stylesheet"
-	href="<cdn:url value='/resources/global/css/egov/customlogin.css?rnd=${app_release_no}'/>">
-<script src="<cdn:url value='/resources/global/js/jquery/jquery.js'/>"
-	type="text/javascript"></script>
-
-<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!--[if lt IE 9]>
-			<script src="<cdn:url value='/resources/global/js/ie8/html5shiv.min.js'/>"></script>
-			<script src="<cdn:url value='/resources/global/js/ie8/respond.min.js'/>"></script>
-		<![endif]-->
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<meta name="description" content="Chandigarh Building Plan Approvals" />
+	<meta name="author" content="Chandigarh Administration" />
+	<title>Chandigarh Building Plan Approvals</title>
+	<link rel="icon" href="<cdn:url value='/resources/global/images/favicon.png'/>" sizes="32x32">
+	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/customloginNew.css?rnd=${app_release_no}'/>">
+	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bootstrap/bootstrap.css'/>">
+	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css'/>">
+	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/customlogin.css?rnd=${app_release_no}'/>">
+	<script src="<cdn:url value='/resources/global/js/jquery/jquery.js'/>" type="text/javascript"></script>
+	
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+		<script src="<cdn:url value='/resources/global/js/ie8/html5shiv.min.js'/>"></script>
+		<script src="<cdn:url value='/resources/global/js/ie8/respond.min.js'/>"></script>
+	<![endif]-->
 </head>
 <body class="page-body index"
 	style="height: 580px; background: #F8F9F9;">
@@ -101,17 +93,14 @@
 			<div class = "padding0 login-cont">
 				<div class = "login-bg-cont clearfix">
 					<div class = "blue-background"></div>
-					<div class = "login-content-wrapper page-common-padding col-md-12">
-						<div class = "new-login-header padding0 col-md-12">
-							<%-- <span class="f-medium login-title-1 bold color-white">${sessionScope.citymunicipalityname}</span> --%>
-							<span><img src="/egi/downloadfile/logo" height="67" class="rounded"></span>
-							<%-- <a href="http://www.egovernments.org" data-strwindname="egovsite"
-								class="open-popup"> 
-								<img src="<cdn:url value='/resources/global/images/digit-logo-white.png'/>"
-									title="Powered by eGovernments" width = "100" alt="" />
-							</a> --%>
+					<div class = "login-content-wrapper col-md-12" style="padding-left: 0!important;padding-right: 0!important;">
+						<div class = "new-login-header-wrapper page-common-padding col-md-12">
+							<div class = "new-login-header padding0 col-md-12">
+								<span><img src="/egi/downloadfile/logo" height="67" class="rounded"></span>
+							</div>
 						</div>
 						<c:set var="tenantId" value="<%=tenantId%>" />
+						<div class="page-common-padding col-md-12">
 						<div class = "new-login-content padding0 col-md-12">
 							<div class = "login-left-cont padding0 col-md-6" style="color: #ffffff;">
 								<h1 class="animated fadeInUpBig" style="font-size: 46px;margin-bottom: 0;line-height: 27px;letter-spacing: 2px;font-family: 'allerregular';font-weight: normal;margin: 20px 0 60px 0;">
@@ -119,60 +108,7 @@
 								</h1>
 								<div class="animated fadeInDownBig" style="max-width: 700px;">
 									Citizens, Officials, and other stakeholders can submit and track applications in real time and obtain approvals without having to physically visit an office.
-								</div>
-								<%-- <div class = "login-action-cont padding0 f-regular">									
-									<c:if test="${tenantId == 'state' }">
-									   <a class = "login-create-link padding0 col-md-6" href="#"
-											onclick="window.open('/bpa/stakeholder/createbycitizen','BL',config='height=800, width=1100, toolbar=no, menubar=no, scrollbars=yes, resizable=no,location=no, directories=no, status=no')">
-											<div class = "create-button col-md-12">
-												<spring:message code="lbl.bldng.create.ac" />
-											</div>
-										</a>
-									</c:if>
-								</div> --%>
-								
-								<%-- <c:if test="${tenantId == 'state' }">
-									<div class = "application-action-cont">
-										<div class="application-card bpa-card-new card">
-										  <div class="card-body">
-										    <div class="md-form clearfix">
-											    <div class = "f-regular padding0 col-md-8">
-											    	<label class = "login-input-label" for="inputPlaceholderEx">
-											    		<spring:message code="lbl.stakeholder.reg.fee.pay" />
-											    	</label>
-													<input id="stkhldrregfeetxt" style="font-family: Roboto_Regular;" placeholder="Enter Acknowledgement No." type="text" id="inputPlaceholderEx" class="login-input form-control">
-											    </div>
-											    <div class = "col-md-4">
-											    	<button id="stkhldrregfeesearch" style = "width: 170px;" type="button" class="f-medium btn-login-new btn">
-											    		<spring:message code="btn.lbl.search" />
-											    	</button>
-											    </div>
-											</div>
-											<div class="f-regular error-msg search-stkhldr-error-msg display-hide">Acknowledgement number is mandatory</div>
-										  </div>
-										</div>
-									</div>
-								</c:if> --%>
-								<%-- <div class = "application-action-cont">
-									<div class="application-card bpa-card-new card">
-									  <div class="card-body">
-									    <div class="md-form clearfix">
-										    <div class = "f-regular padding0 col-md-8">
-										    	<label class = "login-input-label" for="inputPlaceholderEx">
-										    		<spring:message code="lbl.check.application.status" />
-										    	</label>
-												<input id="appsearchtxt" style="font-family: Roboto_Regular;" placeholder="Enter Application No." type="text" id="inputPlaceholderEx" class="login-input form-control">
-										    </div>
-										    <div class = "col-md-4">
-										    	<button id="appsearch" style = "width: 170px;" type="button" class="f-medium btn-login-new btn">
-										    		<spring:message code="btn.lbl.search" />
-										    	</button>
-										    </div>
-										</div>
-										<div class="f-regular error-msg search-error-msg display-hide">Application number is mandatory</div>
-									  </div>
-									</div>
-								</div> --%>
+								</div>								
 							</div>
 							<div class = "f-regular login-right-cont padding0 col-md-6">
 								<div class = "application-card bpa-card-new card col-md-8">
@@ -180,8 +116,7 @@
 										<div class = "login-card-header">
 											<spring:message code="lbl.login" />
 										</div>
-										<form action="${pageContext.request.contextPath}/j_security_check" 
-											method="post" role="form" id="signform"
+										<form action="${pageContext.request.contextPath}/j_security_check" method="post" role="form" id="signform">
 											<div class = "md-form clearfix">
 												<div class = "col-md-12 padding0" style = "margin: 36px 0 16px 0">
 													<label class = "login-input-label" for="j_username">Login ID</label>
@@ -288,6 +223,7 @@
 									</div>
 								</div>
 							</div>
+						</div>
 						</div>
 					</div>
 				</div>

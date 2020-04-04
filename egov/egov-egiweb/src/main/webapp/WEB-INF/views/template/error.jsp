@@ -53,13 +53,10 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="description" content="eGov Urban Portal"/>
-    <meta name="author" content=""/>
-
-    <title>eGov Urban Portal</title>
-
+    <meta name="description" content="Chandigarh Building Plan Approvals" />
+	<meta name="author" content="Chandigarh Administration"/>
+	<title>Chandigarh Building Plan Approvals</title>	
     <link rel="icon" href="<cdn:url  value='/resources/global/images/favicon.png'/>" sizes="32x32">
     <link rel="stylesheet" href="<cdn:url  value='/resources/global/css/bootstrap/bootstrap.css'/>">
     <link rel="stylesheet" href="<cdn:url  value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css'/>">
@@ -68,11 +65,9 @@
     <script src="<cdn:url  value='/resources/global/js/jquery/jquery.js'/>"></script>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-    <script src="<cdn:url  value='/resources/global/js/ie8/html5shiv.min.js'/>"></script>
-    <script src="<cdn:url  value='/resources/global/js/ie8/respond.min.js'/>"></script>
+	    <script src="<cdn:url  value='/resources/global/js/ie8/html5shiv.min.js'/>"></script>
+	    <script src="<cdn:url  value='/resources/global/js/ie8/respond.min.js'/>"></script>
     <![endif]-->
-
-
 </head>
 <body class="page-body">
 <div class="page-container">

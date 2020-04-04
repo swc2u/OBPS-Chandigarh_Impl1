@@ -304,7 +304,7 @@ public class CollectionCommon {
                                 billAccount.getDrAmount());
                     final ReceiptDetail receiptDetail = new ReceiptDetail(account, function, billAccount.getCrAmount()
                             .subtract(billAccount.getDrAmount()), billAccount.getDrAmount(), billAccount.getCrAmount(),
-                            Long.valueOf(billAccount.getOrder()), billAccount.getDescription(),
+                            Long.valueOf(billAccount.getOrder()), billAccount.getDescription(), null,
                             billAccount.getIsActualDemand(), receiptHeader, billAccount.getPurpose().toString());
                     receiptHeader.addReceiptDetail(receiptDetail);
                 }
@@ -348,19 +348,9 @@ public class CollectionCommon {
         	if(null!=receipt.getReceiptDetails()) {
         		for (ReceiptDetail receiptDetail:receipt.getReceiptDetails()) {
         			if(null!=receiptDetail.getDescription()) {
-        				if(receiptDetail.getDescription().contains("Shelter Fund")) {
-        					String desc = receiptDetail.getDescription();
-        					desc = desc.replace("Shelter Fund", "GST 18%");
-        					receiptDetail.setDescription(desc);
-        				}else if(receiptDetail.getDescription().contains("Scrutiny Fee")) {
-        					String desc = receiptDetail.getDescription();
-        					desc = desc.replace("Scrutiny Fee", "Security fees");
-        					receiptDetail.setDescription(desc);
-        				}else if(receiptDetail.getDescription().contains("Permit Fees")) {
-        					String desc = receiptDetail.getDescription();
-        					desc = desc.replace("Permit Fees", "Scrutiny fees");
-        					receiptDetail.setDescription(desc);
-        				}
+        				final String[] desc = receiptDetail.getDescription().split("-", 2);
+                        final String feeDesc = desc[0].trim();
+                        receiptDetail.setDescription(feeDesc);
         			}
         		}
         	}
@@ -579,7 +569,7 @@ public class CollectionCommon {
             if (!FinancialsUtil.isRevenueAccountHead(oldDetail.getAccounthead(), bankCOAList, persistenceService)) {
                 final ReceiptDetail receiptDetail = new ReceiptDetail(oldDetail.getAccounthead(),
                         oldDetail.getFunction(), oldDetail.getCramountToBePaid(), oldDetail.getDramount(),
-                        oldDetail.getCramount(), oldDetail.getOrdernumber(), oldDetail.getDescription(),
+                        oldDetail.getCramount(), oldDetail.getOrdernumber(), oldDetail.getDescription(), null,
                         oldDetail.getIsActualDemand(), newReceiptHeader, oldDetail.getPurpose());
                 receiptDetail.setCramount(oldDetail.getCramount());
                 receiptDetail.setFinancialYear(oldDetail.getFinancialYear());

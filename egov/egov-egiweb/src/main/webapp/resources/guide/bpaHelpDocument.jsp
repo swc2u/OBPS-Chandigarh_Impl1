@@ -289,29 +289,29 @@
     <p class="subheader">Training & Tutorials</p>
     <ul class="tutorial-list">
       <li class="tutorial-item">
-        <a href="/egi/resources/guide/assets/docs/Business Licensee User.pdf" target="_blank">Registered building licensee user manual</a>
+        <a href="javascript:void(0);" target="_blank">Registered building licensee user manual</a>
       </li>
       <li class="tutorial-item">
-        <a href="/egi/resources/guide/assets/docs/DIGIT DCR-Building Plan Scrutiny.pdf" target="_blank">DIGIT DCR user manual</a>
+        <a href="javascript:void(0);" target="_blank">DIGIT DCR user manual</a>
       </li>
       <li class="tutorial-item">
-        <a href="/egi/resources/guide/assets/docs/Citizen Help Manual.pdf" target="_blank">Citizen Help Manual</a>
+        <a href="javascript:void(0);" target="_blank">Citizen Help Manual</a>
       </li>
       <li class="tutorial-item">
-        <a href="/egi/resources/guide/assets/docs/Fee details.pdf" target="_blank">Fee Details</a>
+        <a href="javascript:void(0);" target="_blank">Fee Details</a>
       </li>
       <li class="tutorial-item">
-        <a href="https://s3.ap-south-1.amazonaws.com/suvega/images/Single+family+residential+layer.dxf" target="_blank">Single family residential building layers</a>
+        <a href="javascript:void(0);" target="_blank">Single family residential building layers</a>
       </li>
       <li class="tutorial-item">
-        <a href="https://s3.ap-south-1.amazonaws.com/suvega/images/LAYER+MATRIX+-+MULTIPLE+OCCUPANCIES-+Revision+01-+Dated+04-01-2019.dwg" target="_blank">Layer Matrix for multiple occupancies</a>
+        <a href="javascript:void(0);" target="_blank">Layer Matrix for multiple occupancies</a>
       </li>
       
         <li class="tutorial-item">
-        <a href="https://s3.ap-south-1.amazonaws.com/suvega/images/Single+Family+Layer.las" target="_blank">Layer Set (las format)</a>
+        <a href="javascript:void(0);" target="_blank">Layer Set (las format)</a>
       </li>
       <li class="tutorial-item">
-        <a href="https://s3.ap-south-1.amazonaws.com/suvega/images/Single+family+residential+building.pdf" target="_blank">Single family residential building - Drawing Guidelines</a>
+        <a href="javascript:void(0);" target="_blank">Single family residential building - Drawing Guidelines</a>
       </li>  
     </ul>
   </div>

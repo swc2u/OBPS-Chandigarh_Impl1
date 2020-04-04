@@ -494,24 +494,21 @@ function onLoad(){
 													cellspacing="0" id="accountdetailtable<%=i%>"
 													name="accountdetailtable<%=i%>" class="tbl-medium">
 													<tr>
-														<th class="bluebgheadtd text-left" width="90%"><s:text
-																name="onlineReceipts.accountdetails.description" />
-														</td>
-														<th class="bluebgheadtd" width="10%"><div
-																align="right">
+														<th class="bluebgheadtd text-left" width="90%">
+															<s:text name="onlineReceipts.accountdetails.description" />
+														</th>
+														<th class="bluebgheadtd" width="10%">
+															<div align="right">
 																<s:text name="onlineReceipts.amount" />
 															</div>
-														</td>
-														<!--td class="head" width="19%" ><s:text name="onlineReceipts.collectedamount"/></td-->
-														<!--td class="head" width="19%" ><s:text name="onlineReceipts.balance"/></td-->
+														</th>
 													</tr>
 													<s:iterator value="%{receiptDetailList}"
 														status="rowreceiptdetailstatus">
 														<tr>
-
-
-															<td class="blueborderfortd"><s:property
-																	value="%{description}" /></td>
+															<td class="blueborderfortd">
+																<s:property value="%{feeDescription}" />
+															</td>
 
 															<td class="blueborderfortd">
 																<div align="right">

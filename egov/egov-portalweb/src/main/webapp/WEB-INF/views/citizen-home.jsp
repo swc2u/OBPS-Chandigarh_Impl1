@@ -66,17 +66,7 @@
 				</span> <span class="corporation-name"><spring:message
 						code="lbl.portalservices" /></span>
 			</div>
-			<%--<div class="col-md-6 col-sm-7 col-xs-12 left-section">
-					<span>
-						<a href="http://www.egovernments.org" target="_blank">
-								<img src="<c:url value='/resources/global/images/logo@2x.png' context='/egi'/>" title="Powered by eGovernments" height="20px">
-							</a>
-					</span>
-				</div>--%>
-
-			<div style="justify-content: flex-end;"
-				class="center-align-flex col-md-6 col-sm-5 col-xs-12 right-section">
-
+			<div style="justify-content: flex-end;" class="center-align-flex col-md-6 col-sm-5 col-xs-12 right-section">
 				<span
 					class="pull-right profile-name"> <span
 					class="text hidden-sm">${userName }</span> <span><i
@@ -91,11 +81,9 @@
 								Password</a></li>
 						<li><a href="/egi/logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out</a></li>
 					</ul>
-				</span> <span class="pull-right profile-dd"> <a
-					href="http://www.egovernments.org" target="_blank"> <img
-						src="<cdn:url value='/resources/global/images/digit-logo-black.png' context='/egi'/>"
-						title="Powered by eGovernments" height="35px" style="opacity: 0.8;">
-				</a>
+				</span> 
+				<span class="pull-right profile-dd"> 
+					<div style="width:66px;"></div>
 				</span>
 			</div>
 		</nav>

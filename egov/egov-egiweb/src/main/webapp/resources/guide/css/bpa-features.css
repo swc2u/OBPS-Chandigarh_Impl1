@@ -102,19 +102,20 @@
 }
 
 .bpa-login-footer{
-	background: #263238;
-	padding-top: 24px;
-	padding-bottom: 30px;
+	background: #ecb301;
+    padding-top: 10px;
+    padding-bottom: 10px;
+	border-top: 5px solid #E17C1B;
 }
 
 .tutorial-item{
 	opacity: 0.7;
-	margin-bottom: 10px;
+	margin-bottom: 5px;
 }
 
 .footer-list-content a{
 	text-decoration: none;
-	color: #fff !important;
+	color: #000 !important;
 }
 
 .footer-list-content{

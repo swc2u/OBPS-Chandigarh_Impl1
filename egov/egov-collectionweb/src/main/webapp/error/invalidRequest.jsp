@@ -76,8 +76,6 @@
 			</div>
 		</div>
 	</div>
-	<div class="buttonbottom" style="position:absolute;bottom:0px;width:100%;clear:both;left:0px;right:0px">
-		eGov Urban Portal Designed and Implemented by <a href="http://www.egovernments.org/">eGovernments Foundation</a> &copy; All Rights Reserved.
-	</div>
+	<!-- <div class="buttonbottom" style="position:absolute;bottom:0px;width:100%;clear:both;left:0px;right:0px"></div> -->
 </body>
 </html>
