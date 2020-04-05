@@ -706,7 +706,7 @@ $(document).ready(
                                     var boundaryType = response.plan.planInfoProperties.ROOT_BOUNDARY_TYPE;
                                     var plotType = response.plan.planInfoProperties.PLOT_TYPE;
                                     var fileNo = response.plan.planInfoProperties.KHATA_NO;
-                                    var plotNo = response.plan.planInfoProperties.PLOT_NO;
+                                    var plotNo = response.plan.planInfoProperties.PLOT_NUMBER;
                                     var zoneOrLocation = response.plan.planInfoProperties.ZONE;
                                     var sectorOrVillage = response.plan.planInfoProperties.SECTOR_NUMBER;
                                     $('#holdingNumber').val("NA"); 

@@ -564,7 +564,7 @@ public class Plan implements Serializable {
     }
 
     public void setPlanInfoProperties(Map<String, String> planInfoProperties) {
-    	planInfoProperties.putAll(initPlanInfo());
+    	//planInfoProperties.putAll(initPlanInfo());
         this.planInfoProperties = planInfoProperties;
     }
 

@@ -109,7 +109,7 @@ public class PermitOrderFormatImpl implements PermitApplicationNoticesFormat {
         BpaNotice bpaNotice = bpaNoticeUtil.findByApplicationAndNoticeType(bpaApplication, PERMIT_ORDER_NOTICE_TYPE);
         if (bpaNotice == null || bpaNotice.getNoticeFileStore() == null) {
             String reportFileName = null;
-            if (getServicesForBuildPermit().contains(bpaApplication.getServiceType().getCode())) {
+            /*if (getServicesForBuildPermit().contains(bpaApplication.getServiceType().getCode())) {
             	if(bpaApplication.getSiteDetail().get(0).getIsappForRegularization())
             		reportFileName = REGULARIZATIONFIILENAME;
             	else
@@ -124,7 +124,8 @@ public class PermitOrderFormatImpl implements PermitApplicationNoticesFormat {
             		reportFileName = REGULARIZATIONOTHERSFIILENAME;
             	else 
                 reportFileName = BUILDINGPERMITOTHERSFILENAME;
-            }
+            }*/
+            reportFileName = BUILDINGPERMITFILENAME;
             final Map<String, Object> reportParams = bpaNoticeUtil.buildParametersForReport(bpaApplication);
             reportParams.putAll(bpaNoticeUtil.getUlbDetails());
             reportInput = new ReportRequest(reportFileName, bpaApplication == null
@@ -138,11 +139,6 @@ public class PermitOrderFormatImpl implements PermitApplicationNoticesFormat {
             String filename = bpaApplication.getApplicationNumber() + "-II-v1";
             bpaNoticeUtil.saveBpaNotices(bpaApplication, reportOutput, reportOutputPermitNote,
             		filename,PERMIT_ORDER_NOTICE_TYPE,null);
-			/*
-			 * bpaNoticeUtil.saveBpaNotices(bpaApplication, reportOutput,
-			 * reportOutputPermitNote,
-			 * bpaApplication.getPlanPermissionNumber(),PERMIT_ORDER_NOTICE_TYPE,null);
-			 */
             List<BpaNotice> permitOrder = bpaApplication.getBpaNotice().stream()
                     .filter(bpaNotice1 -> bpaNotice1.getNoticeType().equalsIgnoreCase("PermitOrder"))
                     .collect(Collectors.toList());

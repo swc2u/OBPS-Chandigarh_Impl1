@@ -356,7 +356,7 @@ public class BpaNoticeUtil {
         String approverDesignation = getApproverDesignation(bpaApplication.getApproverPosition());
 
         String lawAct;
-        if (!bpaApplication.getSiteDetail().isEmpty() && bpaApplication.getSiteDetail().get(0).getIsappForRegularization()
+        /*if (!bpaApplication.getSiteDetail().isEmpty() && bpaApplication.getSiteDetail().get(0).getIsappForRegularization()
                 && bpaApplication.getDemand().getAmtCollected().compareTo(BigDecimal.ZERO) > 0) {
             String applicantName = bpaApplication.getApplicantName();
             String serviceType = bpaApplication.getServiceType().getDescription();
@@ -397,7 +397,8 @@ public class BpaNoticeUtil {
             lawAct = "APPENDIX -I, [See rule 146 (3)]";
         } else {
             lawAct = "APPENDIX C, [See Rule 11 (3)]";
-        }
+        }*/
+        lawAct = "APPENDIX C, [See Rule 11 (3)]";
         reportParams.put("lawAct", lawAct);
         reportParams.put("applicationNumber", bpaApplication.getApplicationNumber());
         reportParams.put("buildingPermitNumber",
@@ -417,35 +418,21 @@ public class BpaNoticeUtil {
             reportParams.put("permitConditions", buildPermitConditions(bpaApplication));
         }
         reportParams.put("additionalNotes", getBuildingCommonPermitNotes());
-        String amenities = bpaApplication.getApplicationAmenity().stream().map(ServiceType::getDescription)
-                .collect(Collectors.joining(", "));
+        String amenities = bpaApplication.getApplicationAmenity().stream().map(ServiceType::getDescription).collect(Collectors.joining(", "));
         if (bpaApplication.getApplicationAmenity().isEmpty()) {
             serviceTypeDesc.append(bpaApplication.getServiceType().getDescription());
         } else {
-            serviceTypeDesc.append(bpaApplication.getServiceType().getDescription()).append(", ")
-                    .append(amenities);
+            serviceTypeDesc.append(bpaApplication.getServiceType().getDescription()).append(", ").append(amenities);
         }
         reportParams.put("serviceTypeDesc", serviceTypeDesc.toString());
         reportParams.put("serviceTypeForDmd", bpaApplication.getServiceType().getDescription());
         reportParams.put("amenities", StringUtils.isBlank(amenities) ? "N/A" : amenities);
         reportParams.put("occupancy", bpaApplication.getOccupanciesName());
         
-        //change start
-        
-        Map<String, String> planInfo=getPlanInfo(bpaApplication.geteDcrNumber());
-        if(planInfo!=null)
-        reportParams.put("plotNo", planInfo.get(PLOT_NO) == null
-                ? EMPTY
-                :  planInfo.get(PLOT_NO));
-        
-        reportParams.put("sectorNo", planInfo.get(SECTOR_NUMBER) == null
-                ? EMPTY
-                :  planInfo.get(SECTOR_NUMBER));
-        
-        //change end
-        
-        
         if (!bpaApplication.getSiteDetail().isEmpty()) {
+        	reportParams.put("plotNo", bpaApplication.getSiteDetail().get(0).getMspPlotNumber() == null? EMPTY :  bpaApplication.getSiteDetail().get(0).getMspPlotNumber());
+        	reportParams.put("sectorNo", bpaApplication.getSiteDetail().get(0).getAdminBoundary() == null? EMPTY :  bpaApplication.getSiteDetail().get(0).getAdminBoundary().getName());
+        	
             reportParams.put("electionWard", bpaApplication.getSiteDetail().get(0).getElectionBoundary() != null
                     ? bpaApplication.getSiteDetail().get(0).getElectionBoundary().getName()
                     : "");
@@ -503,10 +490,11 @@ public class BpaNoticeUtil {
         }
         if (bpaApplication.getIsOneDayPermitApplication())
             reportParams.put(PERMIT_ORDER_TITLE, "ONE DAY BUILDING PERMIT");
-        else if (!bpaApplication.getSiteDetail().isEmpty() && bpaApplication.getSiteDetail().get(0).getIsappForRegularization())
-            reportParams.put(PERMIT_ORDER_TITLE, "REGULARISATION GRANTED- ORDERS ISSUED.");
+        /*else if (!bpaApplication.getSiteDetail().isEmpty() && bpaApplication.getSiteDetail().get(0).getIsappForRegularization())
+            reportParams.put(PERMIT_ORDER_TITLE, "REGULARISATION GRANTED- ORDERS ISSUED.");*/
         else
             reportParams.put(PERMIT_ORDER_TITLE, "GENERAL BUILDING PERMIT");
+        
         if (!bpaApplication.getPermitFee().isEmpty())
             reportParams.put("permitFeeDetails", getPermitFeeDetails(bpaApplication));
 

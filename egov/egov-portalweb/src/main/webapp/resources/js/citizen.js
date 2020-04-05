@@ -75,7 +75,7 @@ $(document).ready(function(){
                     { "data": "applicantName", "orderable": false },
                     { "data": "serviceRequestNo", "orderable": false},
                     { "data": "serviceRequestDate" },
-                    { "data": "serviceGroup" },
+                    { "data": "serviceGroup", "visible": false},
                     { "data": "serviceName" },
                     { "data": "status" },
                     { "data": "pendingAction", "orderable": false},
@@ -129,24 +129,16 @@ $(document).ready(function(){
 
 	$('.totalServicesAppliedHide').hide();
 	$('.totalServicesCompletedHide').hide();
-//	$('#servicesCmpletedDiv').attr('style', 'opacity: 0.7;cursor: pointer');
-//	$('#totalServicesAppliedDiv').attr('style', 'opacity: 0.7;cursor: pointer');
 	$('#totalServicesAppliedDiv').click(function() {
 		$('.servicesUnderScrutinyHide').hide();
 		$('.totalServicesCompletedHide').hide();
 		$('.totalServicesAppliedHide').show();
-//		$('#totalServicesAppliedDiv').attr('style', 'opacity: 1;cursor: pointer');
-//		$('#servicesUnderScrutinyDiv').attr('style', 'opacity: 0.7;cursor: pointer');
-//		$('#servicesCmpletedDiv').attr('style', 'opacity: 0.7;cursor: pointer');
 	});
 	
 	$('#servicesUnderScrutinyDiv').click(function() {
 		$('.totalServicesAppliedHide').hide();
 		$('.totalServicesCompletedHide').hide();
 		$('.servicesUnderScrutinyHide').show();
-//		$('#servicesUnderScrutinyDiv').attr('style', 'opacity: 1;cursor: pointer');
-//		$('#servicesCmpletedDiv').attr('style', 'opacity: 0.7;cursor: pointer');
-//		$('#totalServicesAppliedDiv').attr('style', 'opacity: 0.7;cursor: pointer');
 	});
 	
 	$(".bpa-home-card").click(function(){
@@ -160,9 +152,6 @@ $(document).ready(function(){
 		$('.totalServicesAppliedHide').hide();
 		$('.servicesUnderScrutinyHide').hide();
 		$('.totalServicesCompletedHide').show();
-//		$('#servicesCmpletedDiv').attr('style', 'opacity: 1;cursor: pointer');
-//		$('#totalServicesAppliedDiv').attr('style', 'opacity: 0.7;cursor: pointer');
-//		$('#servicesUnderScrutinyDiv').attr('style', 'opacity: 0.7;cursor: pointer');
 
 	});
 	
@@ -288,36 +277,7 @@ $(document).ready(function(){
   $('#serviceGroup').change(function(){
 	  window.selectedService = getServiceGroup($(this).val());
 	  initiateTable(window.clickedServiceData, window.selectedService, "portalInboxHelper");
-//	  var selected = $(this).val();
-//	  var total = $( "#totalServicesAppliedSize" ).html().trim();
-//	  var length = document.getElementsByClassName($(this).val()).length / 2;
-//	  if($(this).val() == "") {
-//		  $('.showAll').show();
-//		  $( "#totalServicesAppliedSize" ).html($( "#tabelPortal tbody.totalServicesAppliedHide tr.showAll" ).length);
-//		  $( "#totalServicesCompletedSize" ).html($( "#tabelPortal tbody.totalServicesCompletedHide tr.showAll" ).length);
-//		  $( "#totalServicesPendingSize" ).html($( "#tabelPortal tbody.servicesUnderScrutinyHide tr.showAll" ).length);
-//		  var showAllClass ="#tabelPortal tbody.servicesUnderScrutinyHide tr.showAll td:first-child";
-//		  generateSno(showAllClass);
-//
-//	  } else {
-//		  $('.showAll').hide();
-//		  $('.'+$(this).val()).show();
-//		  $( "#totalServicesAppliedSize" ).html($( "#tabelPortal tbody.totalServicesAppliedHide tr."+$(this).val() ).length);
-//		  $( "#totalServicesCompletedSize" ).html($( "#tabelPortal tbody.totalServicesCompletedHide tr."+$(this).val() ).length);
-//		  $( "#totalServicesPendingSize" ).html($( "#tabelPortal tbody.servicesUnderScrutinyHide tr."+$(this).val() ).length);
-//		  
-//		  var servicesUnderScrutinyHideClass ="#tabelPortal tbody.servicesUnderScrutinyHide tr."+ selected + " td:first-child";
-//		  var totalServicesAppliedHideClass="#tabelPortal tbody.totalServicesAppliedHide tr."+ selected + " td:first-child";
-//		  var totalServicesCompletedHideClass="#tabelPortal tbody.totalServicesCompletedHide tr."+ selected + " td:first-child";
-//		  generateSno(servicesUnderScrutinyHideClass);
-//		  generateSno(totalServicesAppliedHideClass);
-//		  generateSno(totalServicesCompletedHideClass);
-//	  }
   });
-  
-  
-  
-
 });
 
 function leftmenuheight(){

@@ -83,16 +83,9 @@ public class PlanService {
 					featureService.getFeatures());
 			setProperties(plan);
 		}catch (Exception e) {
-			// TODO: handle exception
 			e.getClass();
 		}
-//		if(plan==null)
-//			plan=new Plan();
-		// add serviceType for validation
 		plan.setServiceType(dcrApplication.getServiceType());
-
-		System.out.println(plan.getBlocks());
-
 		plan = applyRules(plan, amd, cityDetails);
 		
 		for(ScrutinyDetail scrutinyDetail:plan.getReportOutput().getScrutinyDetails()) {
@@ -128,28 +121,7 @@ public class PlanService {
 		pl.getPlanInformation().setSectorNumber(pl.getPlanInfoProperties().get(pl.getPlanInfoProperties().get(DxfFileConstants.SECTOR_NUMBER)));
 	}
 
-	private void setEDCRmandatoryNOC(Plan plan) {
-		/*if(null != plan.getPlanInfoProperties().get(DxfFileConstants.FIRE_NOC))
-			plan.getPlanInformation().setNocFireDept(plan.getPlanInfoProperties().get(DxfFileConstants.FIRE_NOC));
-		if(null != plan.getPlanInfoProperties().get(DxfFileConstants.PUB_HEALTH_7_NOC))				
-			plan.getPlanInformation().setNocPH7Dept(plan.getPlanInfoProperties().get(DxfFileConstants.PUB_HEALTH_7_NOC));
-		if(null != plan.getPlanInfoProperties().get(DxfFileConstants.TEHSILDAR_NOC))
-			plan.getPlanInformation().setNocTehsildarDept(plan.getPlanInfoProperties().get(DxfFileConstants.TEHSILDAR_NOC));
-		if(null != plan.getPlanInfoProperties().get(DxfFileConstants.PUB_HEALTH_NOC))
-			plan.getPlanInformation().setNocPHDept(plan.getPlanInfoProperties().get(DxfFileConstants.PUB_HEALTH_NOC));
-		if(null != plan.getPlanInfoProperties().get(DxfFileConstants.MANIMAJARA_NOC))
-			plan.getPlanInformation().setNocManimajaraDept(plan.getPlanInfoProperties().get(DxfFileConstants.MANIMAJARA_NOC));
-		if(null != plan.getPlanInfoProperties().get(DxfFileConstants.ROAD_2_NOC))
-			plan.getPlanInformation().setNocRoad2Dept(plan.getPlanInfoProperties().get(DxfFileConstants.ROAD_2_NOC));
-		if(null != plan.getPlanInfoProperties().get(DxfFileConstants.PAC_NOC))
-			plan.getPlanInformation().setNocPACDept(plan.getPlanInfoProperties().get(DxfFileConstants.PAC_NOC));
-		if(null != plan.getPlanInfoProperties().get(DxfFileConstants.STRUCTURE_NOC))
-			plan.getPlanInformation().setNocStructureDept(plan.getPlanInfoProperties().get(DxfFileConstants.STRUCTURE_NOC));
-		if(null != plan.getPlanInfoProperties().get(DxfFileConstants.ELECTRICAL_NOC))
-			plan.getPlanInformation().setNocElectricalDept(plan.getPlanInfoProperties().get(DxfFileConstants.ELECTRICAL_NOC));
-		if(null != plan.getPlanInfoProperties().get(DxfFileConstants.POL_CONTROL_NOC))
-			plan.getPlanInformation().setNocPollutionDept(plan.getPlanInfoProperties().get(DxfFileConstants.POL_CONTROL_NOC));*/
-		
+	private void setEDCRmandatoryNOC(Plan plan) {		
 		plan.getPlanInformation().setNocPACDept("NO");
 		plan.getPlanInformation().setNocStructureDept("NO");
 		plan.getPlanInformation().setNocFireDept("NO");
