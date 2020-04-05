@@ -55,6 +55,7 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.envers.AuditJoinTable;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -87,9 +88,11 @@ public class Feature extends AbstractPersistable<Long> {
     private Long id;
 
     @NotAudited
+	@SafeHtml
     private String name;
 
     @NotAudited
+	@SafeHtml
     private String description;
 
     @ManyToOne

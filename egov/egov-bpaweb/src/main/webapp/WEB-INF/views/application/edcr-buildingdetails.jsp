@@ -312,4 +312,4 @@
 </div>
 
 <script
-        src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/moment.min.js' context='/egi'/>"></script>
+        src="<cdn:url value='/resources/global/js/jq/plugins/datatables/moment.min.js' context='/egi'/>"></script>

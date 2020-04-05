@@ -51,6 +51,7 @@ package org.egov.infra.admin.master.entity;
 import org.egov.infra.persistence.entity.AbstractPersistable;
 import org.egov.infra.persistence.validator.annotation.Unique;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Entity;
@@ -78,9 +79,11 @@ public class Location extends AbstractPersistable<Long> {
 
     @NotNull
     @Length(min = 2, max = 50)
+    @SafeHtml
     private String name;
 
     @Length(max = 100)
+    @SafeHtml
     private String description;
 
     private boolean active;

@@ -50,8 +50,6 @@
 <%@ include file="/includes/taglibs.jsp" %>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
 <head>
-<!-- <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script> -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/autocomplete-debug.js?rnd=${app_release_no}"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/receiptinstrument.js?rnd=${app_release_no}"></script>
 <style type="text/css">
@@ -1271,7 +1269,7 @@ var bobexample=new switchcontent("switchgroup1", "div") //Limit scanning of swit
 bobexample.collapsePrevious(true) //Only one content open at any given time
 bobexample.init()
 </script>
-<script src="<cdn:url value='/resources/global/js/jquery/plugins/jquery.inputmask.bundle.min.js' context='/egi'/>"></script>
+<script src="<cdn:url value='/resources/global/js/jq/plugins/jq.inputmask.bundle.min.js' context='/egi'/>"></script>
 <script>
 jQuery(":input").inputmask();
 </script>

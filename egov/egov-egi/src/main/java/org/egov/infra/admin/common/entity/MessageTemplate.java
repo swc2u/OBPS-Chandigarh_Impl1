@@ -49,6 +49,7 @@
 package org.egov.infra.admin.common.entity;
 
 import org.egov.infra.persistence.entity.AbstractPersistable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Entity;
@@ -71,9 +72,14 @@ public class MessageTemplate extends AbstractPersistable<Long> {
     @Id
     @GeneratedValue(generator = SEQ_MESSAGETEMPLATE, strategy = GenerationType.SEQUENCE)
     private Long id;
-
+    
+	@SafeHtml
     private String templateName;
+
+    @SafeHtml
     private String template;
+
+    @SafeHtml
     private String locale;
 
     public Long getId() {

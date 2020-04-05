@@ -50,13 +50,17 @@ package org.egov.infra.security.audit.contract;
 
 import org.egov.infra.persistence.entity.enums.UserType;
 import org.egov.infra.web.support.search.DataTableSearchRequest;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import java.util.Date;
 
 public class LoginAuditReportRequest extends DataTableSearchRequest {
 
+    @SafeHtml
     private String userName;
     private UserType userType;
+
+    @SafeHtml
     private String ipAddress;
     private Date loginFrom;
     private Date loginTo;

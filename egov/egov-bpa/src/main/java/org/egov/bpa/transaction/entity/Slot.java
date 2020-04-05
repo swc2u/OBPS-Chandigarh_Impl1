@@ -60,6 +60,7 @@ import javax.validation.constraints.NotNull;
 import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egbpa_slot")
@@ -76,6 +77,7 @@ public class Slot extends AbstractAuditable {
     @GeneratedValue(generator = SEQ, strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @SafeHtml
     private String type;
 
     @NotNull
@@ -144,11 +146,11 @@ public class Slot extends AbstractAuditable {
         this.type = type;
     }
 
-    public Slot(){
+    public Slot() {
 
     }
 
-    public Slot(String type, Boundary zone, Date appointmentDate,Boundary electionWard) {
+    public Slot(String type, Boundary zone, Date appointmentDate, Boundary electionWard) {
         this.type = type;
         this.zone = zone;
         this.appointmentDate = appointmentDate;

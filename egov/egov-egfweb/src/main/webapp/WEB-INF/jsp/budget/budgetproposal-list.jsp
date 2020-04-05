@@ -62,9 +62,9 @@
 <script type="text/javascript"
 	src="/EGF/resources/javascript/helper.js?rnd=${app_release_no}"></script>
 <script type="text/javascript"
-	src="/EGF/resources/javascript/jquery-1.7.2.min.js"></script>
+	src="/EGF/resources/javascript/jq-172.min.js"></script>
 <script type="text/javascript"
-	src="/EGF/resources/javascript/jquery/jquery.fixheadertable.js"></script>
+	src="/EGF/resources/javascript/jq/jq.fixheadertable.js"></script>
 <link rel="stylesheet" type="text/css"
 	href="/EGF/resources/css/jquery/base.css?rnd=${app_release_no}" />
 <link rel="stylesheet" type="text/css"

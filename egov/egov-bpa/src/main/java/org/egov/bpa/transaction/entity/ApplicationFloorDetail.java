@@ -55,6 +55,7 @@ import javax.persistence.Table;
 import org.egov.common.entity.bpa.SubOccupancy;
 import org.egov.common.entity.bpa.Usage;
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_APPLICATION_FLOORDETAIL")
@@ -76,6 +77,7 @@ public class ApplicationFloorDetail extends AbstractAuditable {
     @JoinColumn(name = "usage")
     private Usage usage;
     private Integer floorNumber;
+	@SafeHtml
     private String floorDescription;
     private BigDecimal carpetArea;
     private BigDecimal plinthArea;

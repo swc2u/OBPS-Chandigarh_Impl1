@@ -45,6 +45,7 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -58,10 +59,13 @@ public class CheckListDetail extends AbstractAuditable {
     @GeneratedValue(generator = SEQ_CHECKLISTDETAIL, strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @SafeHtml
     @NotNull
     @Length(min = 1, max = 128)
     @Column(name = "code", unique = true)
     private String code;
+
+    @SafeHtml
     @NotNull
     @Length(min = 1, max = 256)
     private String description;

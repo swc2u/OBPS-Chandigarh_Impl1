@@ -58,11 +58,11 @@
 	<meta name="author" content="Chandigarh Administration"/>
 	<title>Chandigarh Building Plan Approvals</title>	
     <link rel="icon" href="<cdn:url  value='/resources/global/images/favicon.png'/>" sizes="32x32">
-    <link rel="stylesheet" href="<cdn:url  value='/resources/global/css/bootstrap/bootstrap.css'/>">
+    <link rel="stylesheet" href="<cdn:url  value='/resources/global/css/bts/bts.css'/>">
     <link rel="stylesheet" href="<cdn:url  value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css'/>">
     <link rel="stylesheet" href="<cdn:url  value='/resources/global/css/egov/custom.css?rnd=${app_release_no}'/>">
 
-    <script src="<cdn:url  value='/resources/global/js/jquery/jquery.js'/>"></script>
+    <script src="<cdn:url  value='/resources/global/js/jq/jq.js'/>"></script>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
 	    <script src="<cdn:url  value='/resources/global/js/ie8/html5shiv.min.js'/>"></script>

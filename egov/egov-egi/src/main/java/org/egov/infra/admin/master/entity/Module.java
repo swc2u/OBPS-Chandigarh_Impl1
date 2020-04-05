@@ -47,6 +47,7 @@
  */
 
 package org.egov.infra.admin.master.entity;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
@@ -78,6 +79,7 @@ public class Module implements Serializable {
     @GeneratedValue(generator = SEQ_MODULE, strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @SafeHtml
     private String name;
 
     private boolean enabled;
@@ -86,6 +88,7 @@ public class Module implements Serializable {
     @JoinColumn(name = "parentModule")
     private Module parentModule;
 
+    @SafeHtml
     private String displayName;
 
     private Integer orderNumber;
@@ -93,7 +96,8 @@ public class Module implements Serializable {
 
     @OneToMany(mappedBy = "parentModule", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Action> actions = Collections.emptySet();
-
+	
+    @SafeHtml
     private String contextRoot;
 
     public Long getId() {

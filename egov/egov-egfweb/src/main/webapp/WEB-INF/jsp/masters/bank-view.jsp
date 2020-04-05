@@ -89,9 +89,9 @@
 		<input type="button" id="Close" value="Close"
 			onclick="javascript:window.close()" class="button" />
 	</div>
-	<script src="../resources/javascript/jquery/grid.locale-en.js"
+	<script src="../resources/javascript/jq/grid.locale-en.js"
 		type="text/javascript"></script>
-	<script src="../resources/javascript/jquery/jquery.jqGrid.min.js"
+	<script src="../resources/javascript/jq/jq.jqGrid.min.js"
 		type="text/javascript"></script>
 	<script>
 	existingCode = '${model.code}';

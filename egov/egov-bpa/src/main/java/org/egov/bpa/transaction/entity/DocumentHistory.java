@@ -49,6 +49,7 @@ import javax.validation.constraints.NotNull;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_DOCUMENTHISTORY")
@@ -64,7 +65,7 @@ public class DocumentHistory extends AbstractAuditable {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "application")
     private BpaApplication application;
-    @NotNull
+    @SafeHtml
     @Length(min = 1, max = 256)
     private String documentNum;
     @ManyToOne(cascade = CascadeType.ALL)
@@ -77,6 +78,7 @@ public class DocumentHistory extends AbstractAuditable {
     private Boolean wheatherdocumentEnclosed;
     private Boolean wheatherplotDevelopedBy;
     private Boolean wheatherpartOfLayout;
+    @SafeHtml
     @Length(min = 1, max = 256)
     private String plotDevelopedBy;
     private Boolean wheatherFmsOrSketchCopyOfReg;

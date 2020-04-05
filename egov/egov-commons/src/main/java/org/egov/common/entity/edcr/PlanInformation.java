@@ -431,7 +431,7 @@ public class PlanInformation implements Serializable {
 		this.residentialNoOwner = residentialNoOwner;
 	}
 
-	public Boolean getGovernmentOrAidedSchool() {
+    public Boolean getGovernmentOrAidedSchool() {
         return governmentOrAidedSchool;
     }
 

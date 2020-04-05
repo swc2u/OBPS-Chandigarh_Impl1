@@ -51,6 +51,8 @@ package org.egov.infra.admin.common.entity;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.persistence.entity.AbstractPersistable;
 import org.hibernate.validator.constraints.NotBlank;
+
+import org.hibernate.validator.constraints.SafeHtml;
 import org.joda.time.DateTime;
 
 import javax.persistence.Entity;
@@ -79,6 +81,7 @@ public class IdentityRecovery extends AbstractPersistable<Long> {
     private Long id;
 
     @NotBlank
+    @SafeHtml
     private String token;
 
     @ManyToOne(optional = false)

@@ -70,7 +70,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.ArrayList;
 import java.util.Date;
+import org.hibernate.validator.constraints.SafeHtml;
 import java.util.List;
+
 @Entity
 @Table(name = "EGBPA_LETTERTOPARTY_COMMON")
 @SequenceGenerator(name = LetterToPartyCommon.SEQ_OC_LETTERTOPARTY, sequenceName = LetterToPartyCommon.SEQ_OC_LETTERTOPARTY, allocationSize = 1)
@@ -87,15 +89,17 @@ public class LetterToPartyCommon extends AbstractAuditable {
 	@JoinColumn(name = "inspection")
 	private InspectionCommon inspection;
 
-	@Length(min = 1, max = 32)
-	private String acknowledgementNumber;
+    @SafeHtml
+    @Length(min = 1, max = 32)
+    private String acknowledgementNumber;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "egbpa_lp_reason_common", joinColumns = @JoinColumn(name = "lettertoparty"), inverseJoinColumns = @JoinColumn(name = "lpreason"))
 	private List<LpReason> lpReason = new ArrayList<>();
 
-	@Length(min = 1, max = 128)
-	private String lpNumber;
+    @SafeHtml
+    @Length(min = 1, max = 128)
+    private String lpNumber;
 
 	@Temporal(TemporalType.DATE)
 	private Date letterDate;
@@ -104,8 +108,9 @@ public class LetterToPartyCommon extends AbstractAuditable {
 	@JoinColumn(name = "scheduledby")
 	private User scheduledBy;
 
-	@Length(min = 1, max = 128)
-	private String scheduledPlace;
+    @SafeHtml
+    @Length(min = 1, max = 128)
+    private String scheduledPlace;
 
 	@Temporal(TemporalType.DATE)
 	private Date scheduledTime;
@@ -116,31 +121,42 @@ public class LetterToPartyCommon extends AbstractAuditable {
 	@Temporal(TemporalType.DATE)
 	private Date replyDate;
 
-	@Length(min = 1, max = 1024)
-	private String lpRemarks;
+    @SafeHtml
+    @Length(min = 1, max = 1024)
+    private String lpRemarks;
 
-	@Length(min = 1, max = 1024)
-	private String lpReplyRemarks;
+    @SafeHtml
+    @Length(min = 1, max = 1024)
+    private String lpReplyRemarks;
 
-	@Length(min = 1, max = 1024)
-	private String lpDesc;
+    @SafeHtml
+    @Length(min = 1, max = 1024)
+    private String lpDesc;
 
-	@Length(min = 1, max = 1024)
-	private String lpReplyDesc;
+    @SafeHtml
+    @Length(min = 1, max = 1024)
+    private String lpReplyDesc;
 
-	private Boolean isHistory;
+    private Boolean isHistory;
 
-	@Length(min = 1, max = 512)
-	private String documentId;
+    @SafeHtml
+    @Length(min = 1, max = 512)
+    private String documentId;
 
 	@Temporal(TemporalType.DATE)
 	private Date lastReplyDate;
 
-	private String currentStateValueOfLP;
+    @SafeHtml
+    @Length(min = 1, max = 200)
+    private String currentStateValueOfLP;
 
-	private String stateForOwnerPosition;
+    @SafeHtml
+    @Length(min = 1, max = 200)
+    private String stateForOwnerPosition;
 
-	private String pendingAction;
+    @SafeHtml
+    @Length(min = 1, max = 200)
+    private String pendingAction;
 
 	@OrderBy("id ASC")
 	@OneToMany(mappedBy = "letterToParty", cascade = CascadeType.ALL)

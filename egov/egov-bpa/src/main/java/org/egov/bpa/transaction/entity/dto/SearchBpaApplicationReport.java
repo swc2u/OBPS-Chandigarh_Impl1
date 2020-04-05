@@ -39,11 +39,16 @@
  */
 package org.egov.bpa.transaction.entity.dto;
 
+import org.hibernate.validator.constraints.SafeHtml;
+
 public class SearchBpaApplicationReport {
     private Long id;
+    @SafeHtml
     private String applicationNumber;
+    @SafeHtml
     private String serviceType;
     private Long serviceTypeId;
+    @SafeHtml
     private String status;
     private Long statusId;
     private Long serviceType01;

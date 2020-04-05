@@ -51,6 +51,7 @@ package org.egov.infra.admin.master.entity;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
@@ -84,8 +85,13 @@ public class Action extends AbstractAuditable {
     private Long id;
 
     @Column(unique = true)
+    @SafeHtml
     private String name;
+
+    @SafeHtml
     private String url;
+
+    @SafeHtml
     private String queryParams;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -97,8 +103,12 @@ public class Action extends AbstractAuditable {
     @JoinColumn(name = "parentModule")
     private Module parentModule;
     private Integer orderNumber;
+
+    @SafeHtml
     private String displayName;
     private boolean enabled;
+
+    @SafeHtml
     private String contextRoot;
 
     @Override

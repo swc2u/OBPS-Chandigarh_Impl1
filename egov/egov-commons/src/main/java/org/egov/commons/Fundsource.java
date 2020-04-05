@@ -50,6 +50,7 @@ package org.egov.commons;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.egov.infra.persistence.validator.annotation.Unique;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -79,14 +80,17 @@ public class Fundsource extends AbstractAuditable {
     @GeneratedValue(generator = SEQ_FUNDSOURCE, strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @SafeHtml
     @Length(min = 1, max = 25)
     @NotNull
     private String code;
 
+    @SafeHtml
     @Length(min = 1, max = 25)
     @NotNull
     private String name;
 
+    @SafeHtml
     @Length(min = 1, max = 25)
     private String type;
 
@@ -104,6 +108,7 @@ public class Fundsource extends AbstractAuditable {
     @JoinColumn(name = "financialinstid")
     private FinancingInstitution finInstId;
 
+    @SafeHtml
     @Length(min = 1, max = 25)
     @Column(name = "funding_type")
     private String fundingType;
@@ -123,6 +128,7 @@ public class Fundsource extends AbstractAuditable {
     @Column(name = "moratorium_period")
     private Double moratoriumPeriod;
 
+    @SafeHtml
     @Length(min = 1, max = 25)
     @Column(name = "repayment_frequency")
     private String repaymentFrequency;
@@ -134,6 +140,7 @@ public class Fundsource extends AbstractAuditable {
     @JoinColumn(name = "bankaccountid")
     private Bankaccount bankAccountId;
 
+    @SafeHtml
     @Length(min = 1, max = 25)
     @Column(name = "govt_order")
     private String govtOrder;
@@ -149,6 +156,7 @@ public class Fundsource extends AbstractAuditable {
     @Column(name = "dp_code_resg")
     private String dpCodeResistration;
 
+    @SafeHtml
     @Length(min = 1, max = 25)
     @Column(name = "fin_inst_letter_num")
     private String finInstLetterNum;
@@ -156,6 +164,7 @@ public class Fundsource extends AbstractAuditable {
     @Column(name = "fin_inst_letter_date")
     private Date finInstLetterDate;
 
+    @SafeHtml
     @Length(min = 1, max = 25)
     @Column(name = "fin_inst_schm_num")
     private String finInstSchmNum;

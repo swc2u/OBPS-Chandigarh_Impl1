@@ -53,6 +53,7 @@ import org.egov.commons.CFunction;
 import org.egov.commons.Fund;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_BPAFEE")
@@ -78,13 +79,19 @@ public class BpaFee extends AbstractAuditable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fund")
     private Fund fund;
+
+    @SafeHtml
     @NotNull
     @Length(min = 1, max = 128)
     private String feeType;
+
+    @SafeHtml
     @NotNull
     @Length(min = 1, max = 128)
     @Column(name = "code", unique = true)
     private String code;
+
+    @SafeHtml
     @NotNull
     @Length(min = 1, max = 256)
     private String description;
@@ -98,12 +105,16 @@ public class BpaFee extends AbstractAuditable {
     private BigDecimal feeAmount;
     @Transient
     private Long demandDetailId;
+
+    @SafeHtml
     @NotNull
     @Length(min = 1, max = 256)
     private String feeDescriptionLocal;
     private Long orderNumber;
     @NotNull
     private Boolean isPlanningPermitFee;
+
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String feeGroup;
 

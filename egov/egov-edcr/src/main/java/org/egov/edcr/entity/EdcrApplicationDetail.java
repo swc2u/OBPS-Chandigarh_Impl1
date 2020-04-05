@@ -58,6 +58,7 @@ import org.egov.common.entity.edcr.PlanInformation;
 import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EDCR_APPLICATION_DETAIL")
@@ -88,8 +89,10 @@ public class EdcrApplicationDetail extends AbstractAuditable {
     private FileStoreMapper planDetailFileStore;
 
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String dcrNumber;
 
+    @SafeHtml
     private String status;
 
     @Transient

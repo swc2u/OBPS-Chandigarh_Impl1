@@ -112,10 +112,10 @@
 <script
 		src="<cdn:url value='/resources/global/js/egov/inbox.js?rnd=${app_release_no}' context='/egi'/>"></script>
 <link rel="stylesheet"
-	href="<c:url value='/resources/global/css/bootstrap/bootstrap-datetimepicker.min.css' context='/egi'/>">
+	href="<c:url value='/resources/global/css/bts/bts-datetimepicker.min.css' context='/egi'/>">
 <script
-	src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/moment.min.js' context='/egi'/>"></script>
+	src="<cdn:url value='/resources/global/js/jq/plugins/datatables/moment.min.js' context='/egi'/>"></script>
 <script
-	src="<cdn:url value='/resources/global/js/bootstrap/bootstrap-datetimepicker.min.js' context='/egi'/>"></script>
+	src="<cdn:url value='/resources/global/js/bts/bts-datetimepicker.min.js' context='/egi'/>"></script>
 <script
 	src="<cdn:url value='/resources/js/app/schedule-appointment.js?rnd=${app_release_no}'/>"></script>

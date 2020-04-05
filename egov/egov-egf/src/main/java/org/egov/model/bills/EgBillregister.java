@@ -53,6 +53,7 @@ import org.egov.infra.workflow.entity.StateAware;
 import org.egov.infstr.models.EgChecklists;
 import org.egov.pims.commons.Position;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -76,22 +77,31 @@ public class EgBillregister extends StateAware<Position> implements java.io.Seri
     private Long id;
     @NotNull
     @Length(min = 1)
+    @SafeHtml
     private String billnumber;
     @NotNull
     private Date billdate;
     @NotNull
     private BigDecimal billamount;
     private BigDecimal fieldid;
+    @SafeHtml
     private String billstatus;
+    @SafeHtml
     private String narration;
     private BigDecimal passedamount;
+    @SafeHtml
     private String billtype;
     @NotNull
+    @SafeHtml
     private String expendituretype;
     private BigDecimal advanceadjusted;
+    @SafeHtml
     private String zone;
+    @SafeHtml
     private String division;
+    @SafeHtml
     private String workordernumber;
+    @SafeHtml
     private String billapprovalstatus;
     private Boolean isactive;
     private Date billpasseddate;
@@ -101,6 +111,7 @@ public class EgBillregister extends StateAware<Position> implements java.io.Seri
     private EgwStatus status;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "egBillregister", targetEntity = EgBillregistermis.class)
     private EgBillregistermis egBillregistermis;
+    @SafeHtml
     private String worksdetailId;
     @Transient
     private User approver;

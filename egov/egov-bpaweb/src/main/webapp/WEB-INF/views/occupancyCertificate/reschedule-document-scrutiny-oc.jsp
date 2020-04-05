@@ -139,6 +139,6 @@
 <script
         src="<cdn:url value='/resources/global/js/egov/inbox.js?rnd=${app_release_no}' context='/egi'/>"></script>
 <script
-        src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/moment.min.js' context='/egi'/>"></script>
+        src="<cdn:url value='/resources/global/js/jq/plugins/datatables/moment.min.js' context='/egi'/>"></script>
 <script
         src="<cdn:url value='/resources/js/app/occupancy-certificate/reschedule-doc-scrutiny-oc.js?rnd=${app_release_no}'/>"></script>

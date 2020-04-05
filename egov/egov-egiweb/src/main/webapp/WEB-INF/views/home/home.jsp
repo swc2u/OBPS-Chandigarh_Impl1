@@ -62,18 +62,18 @@
 		<spring:message code="usr.pwd.strength.msg.${pwdstrengthmsg}" var="pwdmsg" htmlEscape="true"/>
 		<title>Chandigarh Building Plan Approvals</title>		
 		<link rel="icon" href="<cdn:url value='/resources/global/images/favicon.png'/>" sizes="32x32">
-		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bootstrap/bootstrap.css'/>">
+		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts.css'/>">
 		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css'/>">
-		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/multi-level-menu/jquery.multilevelpushmenu.css'/>">
+		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/multi-level-menu/jq.multilevelpushmenu.css'/>">
 		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}'/>">
-		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jquery/plugins/datatables/jquery.dataTables.min.css' context='/egi'/>"/>
-		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jquery/plugins/datatables/dataTables.bootstrap.min.css' context='/egi'/>">
-		<link rel="stylesheet" href="<cdn:url value='/resources/global/js/jquery/plugins/datatables/responsive/css/datatables.responsive.css'/>">
+		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jq/plugins/datatables/jq.dataTables.min.css' context='/egi'/>"/>
+		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jq/plugins/datatables/dataTables.bts.min.css' context='/egi'/>">
+		<link rel="stylesheet" href="<cdn:url value='/resources/global/js/jq/plugins/datatables/responsive/css/datatables.responsive.css'/>">
 		
-		<script src="<cdn:url value='/resources/global/js/jquery/jquery.js'/>"></script>
-		<script src="<cdn:url value='/resources/global/js/bootstrap/bootbox.min.js'/>"></script>
-		<script src="<cdn:url value='/resources/global/js/bootstrap/bootstrap.js'/>"></script>
-		<script src="<cdn:url value='/resources/global/js/multi-level-menu/jquery.multilevelpushmenu.js'/>"></script>
+		<script src="<cdn:url value='/resources/global/js/jq/jq.js'/>"></script>
+		<script src="<cdn:url value='/resources/global/js/bts/bootbox.min.js'/>"></script>
+		<script src="<cdn:url value='/resources/global/js/bts/bts.js'/>"></script>
+		<script src="<cdn:url value='/resources/global/js/multi-level-menu/jq.multilevelpushmenu.js'/>"></script>
 		
 		
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -502,11 +502,11 @@
 		var focussedmenu = "worklist";
 		var now;
 		</script>
-		<script src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/jquery.dataTables.min.js'/>"></script>
-		<script src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/dataTables.bootstrap.js'/>"></script>
-		<script src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/responsive/js/datatables.responsive.js'/>"></script>
-		<script src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/moment.min.js'/>"></script>
-		<script src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/datetime-moment.js'/>"></script>
+		<script src="<cdn:url value='/resources/global/js/jq/plugins/datatables/jq.dataTables.min.js'/>"></script>
+		<script src="<cdn:url value='/resources/global/js/jq/plugins/datatables/dataTables.bts.js'/>"></script>
+		<script src="<cdn:url value='/resources/global/js/jq/plugins/datatables/responsive/js/datatables.responsive.js'/>"></script>
+		<script src="<cdn:url value='/resources/global/js/jq/plugins/datatables/moment.min.js'/>"></script>
+		<script src="<cdn:url value='/resources/global/js/jq/plugins/datatables/datetime-moment.js'/>"></script>
 		<script src="<cdn:url value='/resources/global/js/egov/custom.js?rnd=${app_release_no}'/>"></script>
 		<script src="<cdn:url value='/resources/js/app/custom-menu.js?rnd=${app_release_no}'/>"></script>
 		<script src="<cdn:url value='/resources/js/app/homepageofficial.js?rnd=${app_release_no}'/>"></script>

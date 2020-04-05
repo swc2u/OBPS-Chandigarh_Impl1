@@ -58,7 +58,7 @@
 		<meta name="author" content="Chandigarh Administration"/>		
 		<title>Chandigarh Building Plan Approvals</title>		
 		<link rel="icon" href="<c:url value='/resources/global/images/favicon.png' context='/egi'/>" sizes="32x32">
-	    <link rel="stylesheet" href="<c:url value='/resources/global/css/bootstrap/bootstrap.css' context='/egi'/>">
+	    <link rel="stylesheet" href="<c:url value='/resources/global/css/bts/bts.css' context='/egi'/>">
 		<link rel="stylesheet" href="<c:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}' context='/egi'/>">
 		<link rel="stylesheet" href="<c:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css' context='/egi'/>">
 		

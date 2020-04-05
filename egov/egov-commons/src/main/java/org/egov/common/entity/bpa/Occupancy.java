@@ -65,6 +65,7 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -85,17 +86,20 @@ public class Occupancy extends AbstractAuditable {
     @OneToMany(mappedBy = "occupancy", cascade = CascadeType.ALL)
     private List<SubOccupancy> subOccupancies = new ArrayList<>();
 
-    @NotNull
-    @Length(min = 1, max = 128)
-    @Column(name = "code", unique = true)
-    private String code;
+	@SafeHtml
+	@NotNull
+	@Length(min = 1, max = 128)
+	@Column(name = "code", unique = true)
+	private String code;
 
-    @NotNull
-    @Length(min = 1, max = 256)
-    private String name;
+	@SafeHtml
+	@NotNull
+	@Length(min = 1, max = 256)
+	private String name;
 
-    @Length(min = 1, max = 1024)
-    private String description;
+	@SafeHtml
+	@Length(min = 1, max = 1024)
+	private String description;
 
     private Boolean isactive;
 

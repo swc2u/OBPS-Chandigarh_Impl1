@@ -55,6 +55,7 @@ import javax.validation.constraints.NotNull;
 import org.egov.bpa.master.entity.enums.WorkingDays;
 import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egbpa_mstr_slotmapping")
@@ -92,7 +93,8 @@ public class SlotMapping extends AbstractAuditable {
 
 	@Transient
 	private WorkingDays days;
-
+	
+	@SafeHtml
 	private String day;
 
 	@NotNull

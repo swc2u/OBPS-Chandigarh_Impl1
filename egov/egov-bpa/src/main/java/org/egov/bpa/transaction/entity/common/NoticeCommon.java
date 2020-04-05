@@ -61,6 +61,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.util.Date;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egbpa_notice_common")
@@ -79,6 +80,7 @@ public class NoticeCommon extends AbstractAuditable {
     @JoinColumn(name = "noticeFileStore")
     private FileStoreMapper noticeFileStore;
 
+    @SafeHtml
     private String noticeType;
 
     public Long getId() {

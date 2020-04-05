@@ -43,15 +43,18 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.bpa.transaction.entity.enums.HolidayType;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.egov.infra.persistence.validator.annotation.Unique;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
+
 @Entity
 @Table(name = "EGBPA_MSTR_HOLIDAY")
-@Unique(fields = { "holidaydate"}, enableDfltMsg = true)
+@Unique(fields = { "holidayDate" }, enableDfltMsg = true)
 @SequenceGenerator(name = Holiday.SEQ_HOLIDAY, sequenceName = Holiday.SEQ_HOLIDAY, allocationSize = 1)
 public class Holiday extends AbstractAuditable {
 
@@ -70,9 +73,11 @@ public class Holiday extends AbstractAuditable {
 	@Temporal(value = TemporalType.DATE)
 	private Date holidayDate;
 	
+	@SafeHtml
 	@Length(min = 1, max = 256)
 	private String description;
 	
+	@SafeHtml
 	@Length(min = 1, max = 30)
 	private String year;
 	

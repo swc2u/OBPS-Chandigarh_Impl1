@@ -65,6 +65,7 @@ import org.egov.bpa.master.entity.ChecklistServiceTypeMapping;
 import org.egov.bpa.transaction.entity.enums.ChecklistValues;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_DOCKET_DETAIL_COMMON")
@@ -82,12 +83,15 @@ public class DocketDetailCommon extends AbstractAuditable {
     @Enumerated(EnumType.STRING)
     private ChecklistValues value;
 
+    @SafeHtml
     @Length(min = 1, max = 256)
     private String remarks;
 
+    @SafeHtml
     @Length(min = 1, max = 32)
     private String required;
 
+    @SafeHtml
     @Length(min = 1, max = 32)
     private String provided;
 

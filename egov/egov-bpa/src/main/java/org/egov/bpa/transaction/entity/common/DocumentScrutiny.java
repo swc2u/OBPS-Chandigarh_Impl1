@@ -70,6 +70,7 @@ import org.egov.bpa.master.entity.VillageName;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_DOCUMENT_SCRUTINY")
@@ -83,20 +84,25 @@ public class DocumentScrutiny extends AbstractAuditable {
     @GeneratedValue(generator = SEQ, strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @SafeHtml
     @Length(min = 1, max = 24)
     private String plotSurveyNumber;
 
+    @SafeHtml
     @Length(min = 1, max = 24)
     private String reSurveyNumber;
 
+    @SafeHtml
     @Length(min = 1, max = 12)
     private String subdivisionNumber;
 
     private BigDecimal extentInSqmts;
 
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String natureOfOwnership;
 
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String registrarOffice;
 
@@ -104,12 +110,15 @@ public class DocumentScrutiny extends AbstractAuditable {
     @JoinColumn(name = "village")
     private VillageName village;
 
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String taluk;
 
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String district;
 
+    @SafeHtml
     @Length(min = 1, max = 64)
     private String deedNumber;
 

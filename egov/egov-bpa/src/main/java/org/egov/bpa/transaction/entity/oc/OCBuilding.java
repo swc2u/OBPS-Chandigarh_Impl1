@@ -49,6 +49,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_OC_BUILDING")
@@ -59,13 +60,18 @@ public class OCBuilding extends AbstractAuditable {
     @Id
     @GeneratedValue(generator = SEQEGBPABUILDINGDETAIL, strategy = GenerationType.SEQUENCE)
     private Long id;
-    private String name;
-    private Integer buildingNumber;
+
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Valid
     @NotNull
     @JoinColumn(name = "oc", nullable = false)
     private OccupancyCertificate oc;
+
+    @SafeHtml
+    private String name;
+	
+    private Integer buildingNumber;
+	
     private Integer floorCount;
     private BigDecimal totalPlinthArea;
     private BigDecimal heightFromGroundWithStairRoom;

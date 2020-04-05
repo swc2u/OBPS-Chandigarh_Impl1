@@ -55,7 +55,7 @@
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn"%>
 
 <script
-	src="<cdn:url value='/resources/global/js/bootstrap/typeahead.bundle.js' context='/egi'/>"></script>
+	src="<cdn:url value='/resources/global/js/bts/typeahead.bundle.js' context='/egi'/>"></script>
 
 <script
 	src="<cdn:url value='/resources/js/app/ajaxCommonFunctions.js'/>"></script>
@@ -174,16 +174,16 @@
 <script
 	src="<cdn:url value='/resources/js/reports/employeepositionreport.js'/>"></script>
 <link rel="stylesheet"
-	href="<cdn:url value='/resources/global/js/jquery/plugins/datatables/responsive/css/datatables.responsive.css' context='/egi'/>" />
+	href="<cdn:url value='/resources/global/js/jq/plugins/datatables/responsive/css/datatables.responsive.css' context='/egi'/>" />
 <script
-	src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/jquery.dataTables.min.js' context='/egi'/>"></script>
+	src="<cdn:url value='/resources/global/js/jq/plugins/datatables/jq.dataTables.min.js' context='/egi'/>"></script>
 <script
-	src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/dataTables.bootstrap.js' context='/egi'/>"></script>
+	src="<cdn:url value='/resources/global/js/jq/plugins/datatables/dataTables.bts.js' context='/egi'/>"></script>
 <script
-	src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/responsive/js/datatables.responsive.js' context='/egi'/>"></script>
+	src="<cdn:url value='/resources/global/js/jq/plugins/datatables/responsive/js/datatables.responsive.js' context='/egi'/>"></script>
 <script
-	src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/dataTables.tableTools.js' context='/egi'/>"
+	src="<cdn:url value='/resources/global/js/jq/plugins/datatables/dataTables.tableTools.js' context='/egi'/>"
 	type="text/javascript"></script>
 <script
-	src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/TableTools.min.js' context='/egi'/>"
+	src="<cdn:url value='/resources/global/js/jq/plugins/datatables/TableTools.min.js' context='/egi'/>"
 	type="text/javascript"></script>

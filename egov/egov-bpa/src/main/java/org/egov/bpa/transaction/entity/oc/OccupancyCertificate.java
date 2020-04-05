@@ -82,6 +82,7 @@ import org.egov.infra.utils.DateUtils;
 import org.egov.infra.workflow.entity.StateAware;
 import org.egov.pims.commons.Position;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -101,12 +102,15 @@ public class OccupancyCertificate extends StateAware<Position> {
     @JoinColumn(name = "parent")
     private BpaApplication parent;
 
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String applicationNumber;
 
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String occupancyCertificateNumber;
 
+    @SafeHtml
     @Length(min = 1, max = 20)
     private String eDcrNumber;
 
@@ -127,6 +131,7 @@ public class OccupancyCertificate extends StateAware<Position> {
     @Enumerated(EnumType.STRING)
     private Source source;
 
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String applicationType;
 

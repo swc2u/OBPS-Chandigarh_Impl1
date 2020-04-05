@@ -28,6 +28,7 @@ import org.egov.common.entity.edcr.PlanInformation;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -47,13 +48,14 @@ public class EdcrApplication extends AbstractAuditable {
     @Enumerated(EnumType.STRING)
     private ApplicationType applicationType;
 
-    @NotNull
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String applicationNumber;
 
     @Temporal(value = TemporalType.DATE)
     private Date applicationDate;
 
+    @SafeHtml
     private String status;
 
     @OneToMany(mappedBy = "application", fetch = LAZY, cascade = ALL)
@@ -63,6 +65,7 @@ public class EdcrApplication extends AbstractAuditable {
     private transient PlanInformation planInformation;
     
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String planPermitNumber;
     
     @Temporal(value = TemporalType.DATE)
@@ -71,7 +74,8 @@ public class EdcrApplication extends AbstractAuditable {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "buildingLicensee")
     private User buildingLicensee;
-    
+
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String transactionNumber;
     
@@ -86,18 +90,25 @@ public class EdcrApplication extends AbstractAuditable {
 
     private transient EdcrApplicationDetail savedEdcrApplicationDetail;
 
+    @SafeHtml
     private String applicantName;
 
+    @SafeHtml
     private String occupancy;
 
+    @SafeHtml
     private String serviceType;
 
+    @SafeHtml
     private String amenities;
 
+    @SafeHtml
     private String architectInformation;
 
+    @SafeHtml
     private String projectType;
-    
+
+    @SafeHtml
     private transient String permitDateTemp;
 
     @Override

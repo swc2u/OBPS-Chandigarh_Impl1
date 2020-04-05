@@ -52,6 +52,7 @@ import org.egov.commons.CVoucherHeader;
 import org.egov.eis.entity.DrawingOfficer;
 import org.egov.infra.workflow.entity.StateAware;
 import org.egov.pims.commons.Position;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -62,6 +63,8 @@ public class Paymentheader extends StateAware<Position> {
     private Long id;
     private CVoucherHeader voucherheader;
     private String isSelected;
+	
+    @SafeHtml
     private String type;
     private Date concurrenceDate;
 

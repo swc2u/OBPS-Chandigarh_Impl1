@@ -165,5 +165,5 @@
         </form:form>
     </div>
 </div>
-<script src="<cdn:url  value='/resources/global/js/jquery/plugins/multiselect.js'/>"></script>
+<script src="<cdn:url  value='/resources/global/js/jq/plugins/multiselect.js'/>"></script>
 <script src="<cdn:url  value='/resources/js/app/cross-hierarchy.js'/>"></script>

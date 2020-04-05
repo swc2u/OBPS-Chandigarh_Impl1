@@ -72,33 +72,33 @@
 <link rel="icon"
 	href="<cdn:url value='/resources/global/images/favicon.png' context='/egi'/>" sizes="32x32">
 <link rel="stylesheet"
-	href="<cdn:url value='/resources/global/css/bootstrap/bootstrap.css' context='/egi'/>">
+	href="<cdn:url value='/resources/global/css/bts/bts.css' context='/egi'/>">
 <link rel="stylesheet"
 	href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css' context='/egi'/>">
 <link rel="stylesheet"
-	href="<cdn:url value='/resources/global/css/bootstrap/typeahead.css'  context='/egi'/>">
+	href="<cdn:url value='/resources/global/css/bts/typeahead.css'  context='/egi'/>">
 <link rel="stylesheet"
       href="<cdn:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}' context='/egi'/>">
 <link rel="stylesheet"
-	href="<cdn:url value='/resources/global/css/bootstrap/bootstrap-datepicker.css'  context='/egi'/>" />
+	href="<cdn:url value='/resources/global/css/bts/bts-datepicker.css'  context='/egi'/>" />
 <script
         src="<cdn:url value='/resources/global/js/egov/patternvalidation.js?rnd=${app_release_no}' context='/egi'/>"></script>
 
 <script
-	src="<cdn:url value='/resources/global/js/jquery/jquery.js' context='/egi'/>"></script>
-<%-- <script type="text/javascript" src="/EGF/resources/javascript/jquery-1.7.2.min.js"></script> --%>
+	src="<cdn:url value='/resources/global/js/jq/jq.js' context='/egi'/>"></script>
+<%-- <script type="text/javascript" src="/EGF/resources/javascript/jq-172.min.js"></script> --%>
 <script
-	src="<cdn:url value='/resources/global/js/bootstrap/bootstrap.js' context='/egi'/>"></script>
+	src="<cdn:url value='/resources/global/js/bts/bts.js' context='/egi'/>"></script>
 <script
-	src="<cdn:url value='/resources/global/js/jquery/plugins/jquery.validate.min.js' context='/egi'/>"></script>
+	src="<cdn:url value='/resources/global/js/jq/plugins/jq.validate.min.js' context='/egi'/>"></script>
 <script
         src="<cdn:url value='/resources/global/js/egov/custom.js?rnd=${app_release_no}' context='/egi'/>"></script>
 <script
         src="<cdn:url value='/resources/global/js/egov/patternvalidation.js?rnd=${app_release_no}' context='/egi'/>"></script>
 <script
-	src="<cdn:url value='/resources/global/js/jquery-ui/jquery-ui.js' context='/egi'/>"></script>
+	src="<cdn:url value='/resources/global/js/jq-ui/jq-ui.js' context='/egi'/>"></script>
 <link
-	src="<cdn:url value='/resources/global/js/jquery-ui/jquery-ui.css' context='/egi'/>"></link>
+	src="<cdn:url value='/resources/global/js/jq-ui/jq-ui.css' context='/egi'/>"></link>
 
 
 <link rel="stylesheet" type="text/css"

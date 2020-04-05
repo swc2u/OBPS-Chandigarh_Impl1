@@ -179,15 +179,9 @@ public class Plan implements Serializable {
     @Transient
     @JsonIgnore
     private List<EdcrPdfDetail> edcrPdfDetails;
-   
-    
-    
-    
+       
     private Gate gate;
-
-    
-    
-    
+  
     public String getServiceType() {
 		return serviceType;
 	}
@@ -591,8 +585,7 @@ public class Plan implements Serializable {
 	}
 	
 	private  HashMap<String, String> initPlanInfo() {
-		 HashMap<String, String> planInfo=new HashMap<String, String>();
-		
+	    HashMap<String, String> planInfo=new HashMap<String, String>();		
 		planInfo.put("PLOT_NO", "82/1 (TP:82/100)");
 		planInfo.put("KHATA_NO", "21 (EW:56)");
 		planInfo.put("MAUZA", "MUSHARI");
@@ -605,11 +598,6 @@ public class Plan implements Serializable {
 		planInfo.put("BUILDING_NEAR_GOVT_BLDG", "NO");
 		planInfo.put("BUILDING_NEAR_TO_RIVER", "NO");
 		planInfo.put("LEASEHOLD_LAND", "NO");
-		//planInfo.put("RWH_DECLARED", value)
-		
-		
-		return planInfo;
-		
+		return planInfo;		
 	}
-
 }

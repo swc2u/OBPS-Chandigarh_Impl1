@@ -69,6 +69,7 @@ import javax.persistence.TemporalType;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_INSPECTION_COMMON")
@@ -83,6 +84,7 @@ public class InspectionCommon extends AbstractAuditable {
     @GeneratedValue(generator = SEQ_INSPECTION, strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @SafeHtml
     @Length(min = 1, max = 64)
     private String inspectionNumber;
 
@@ -99,6 +101,7 @@ public class InspectionCommon extends AbstractAuditable {
 
     private Boolean isInspected;
 
+    @SafeHtml
     @Length(min = 1, max = 1000)
     private String inspectionRemarks;
 
@@ -106,6 +109,7 @@ public class InspectionCommon extends AbstractAuditable {
 
     private boolean rightToMakeConstruction;
 
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String typeofLand;
 
