@@ -126,6 +126,7 @@ public class PlanService {
 		pl.getPlanInformation().setSolorWaterHeatingInLtr(pl.getPlanInfoProperties().get(DxfFileConstants.SOLOR_WATER_HEATING_IN_LTR)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.SOLOR_WATER_HEATING_IN_LTR):"NA");
 		pl.getPlanInformation().setResidentialNoOwner(pl.getPlanInfoProperties().get(DxfFileConstants.RESIDENTIAL_NO_OWNER)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.RESIDENTIAL_NO_OWNER):"NA");
 		pl.getPlanInformation().setPlotNo(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_NO));
+		pl.getPlanInformation().setSectorNumber(pl.getPlanInfoProperties().get(pl.getPlanInfoProperties().get(DxfFileConstants.SECTOR_NUMBER)));
 	}
 
 	private void setEDCRmandatoryNOC(Plan plan) {
