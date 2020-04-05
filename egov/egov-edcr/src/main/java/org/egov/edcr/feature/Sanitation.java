@@ -491,7 +491,7 @@ public class Sanitation extends FeatureProcess {
 							helper.femaleWc = noOfPerson * 0.04 + (noOfPerson > 200 ? ((noOfPerson - 200) * 0.02) : 0);
 						else
 							helper.femaleWc = noOfPerson * 0.04;
-					
+
 						helper.drinkingWater = noOfPerson * 0.01 * 2;
 						helper.maleWash = noOfPerson * 0.005;
 						helper.femaleWash = noOfPerson * 0.005;
@@ -501,13 +501,12 @@ public class Sanitation extends FeatureProcess {
 						helper.ruleNo.add(CDGAdditionalService.getByLaws(pl, CDGAConstant.WC_AND_POWER_ROOM));
 						break;
 					case DxfFileConstants.F_BH:
-						
+
 						if (noOfPerson > 200)
 							helper.maleWc = noOfPerson * 0.02 + (noOfPerson > 200 ? ((noOfPerson - 200) * 0.01) : 0);
 						else
 							helper.maleWc = noOfPerson * 0.02;
-						
-						
+
 						if (noOfPerson > 200)
 							helper.femaleWc = noOfPerson * 0.04 + (noOfPerson > 200 ? ((noOfPerson - 200) * 0.02) : 0);
 						else
@@ -715,7 +714,7 @@ public class Sanitation extends FeatureProcess {
 						helper.commonBath = noOfPerson * 0.1;
 						helper.ruleNo.add(CDGAdditionalService.getByLaws(pl, CDGAConstant.WC_AND_POWER_ROOM));
 						break;
-					
+
 					case DxfFileConstants.ITH_R:
 					case DxfFileConstants.ITH_GH:
 
@@ -723,7 +722,7 @@ public class Sanitation extends FeatureProcess {
 								? Float.parseFloat(
 										pl.getPlanInfoProperties().get(DxfFileConstants.RESIDENTIAL_NO_OWNER))
 								: 1;
-						
+
 						double requiredWc1 = 0;
 						if (noOfOwner1 == 1)
 							requiredWc1 = 1;
@@ -734,7 +733,6 @@ public class Sanitation extends FeatureProcess {
 						helper.commonBath = requiredWc1;
 						helper.ruleNo.add(CDGAdditionalService.getByLaws(pl, CDGAConstant.WC_AND_POWER_ROOM));
 						break;
-					
 
 					}
 					if (!accepted) {
@@ -1084,11 +1082,30 @@ public class Sanitation extends FeatureProcess {
 			}
 		}
 
+		List<Measurement> commonBaths = new ArrayList<Measurement>();
+		List<Measurement> maleBaths = new ArrayList<Measurement>();
+
+		// new for separated male and common - start
+		for (Measurement Bath : sanityDetails.getMaleBathRooms()) {
+			if (Bath.getColorCode() == 3) {//
+				commonBaths.add(Bath);
+			} else if (Bath.getColorCode() == 1) {
+				maleBaths.add(Bath);
+			}
+		}
+
+		if (!commonBaths.isEmpty())
+			sanityDetails.setCommonBathRooms(commonBaths);
+		if (!maleBaths.isEmpty())
+			sanityDetails.setMaleBathRooms(maleBaths);
+
+		// new for separated male and common -end
+
 		if (helper.commonBath > 0) {
 			description = BLDG_PART_BATHROOM + " Common - Count";
 
-			int commomBathActual = sanityDetails.getCommonBathRooms().size()
-					+ sanityDetails.getCommonRoomsWithWaterCloset().size();
+			int commomBathActual = sanityDetails.getCommonBathRooms().size();
+
 			int totalActualBath = commomBathActual;
 			Double totalBathExpected = Math.ceil(helper.commonBath);
 
@@ -1122,8 +1139,7 @@ public class Sanitation extends FeatureProcess {
 		}
 		if (helper.maleBath > 0) {
 			description = BLDG_PART_BATHROOM + " Male - Count";
-			int maleBathActual = sanityDetails.getMaleBathRooms().size()
-					+ sanityDetails.getMaleRoomsWithWaterCloset().size();
+			int maleBathActual = sanityDetails.getMaleBathRooms().size();
 
 			int totalActualBath = maleBathActual;
 			Double totalBathExpected = Math.ceil(helper.maleBath);
@@ -1158,8 +1174,7 @@ public class Sanitation extends FeatureProcess {
 		}
 		if (helper.femaleBath > 0) {
 			description = BLDG_PART_BATHROOM + " female - Count";
-			int femaleBathActual = sanityDetails.getFemaleBathRooms().size()
-					+ sanityDetails.getFemaleRoomsWithWaterCloset().size();
+			int femaleBathActual = sanityDetails.getFemaleBathRooms().size();
 
 			int totalActualBath = femaleBathActual;
 			Double totalBathExpected = Math.ceil(helper.femaleBath);
