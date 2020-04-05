@@ -55,11 +55,11 @@
 <%@ include file="/includes/taglibs.jsp" %>
 <script src="<cdn:url value='/resources/js/app/employeedataentry.js'/>"></script>
 
-<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bootstrap/typeahead.css' context='/egi'/>">
-<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bootstrap/bootstrap-datepicker.css' context='/egi'/>"/>
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/typeahead.css' context='/egi'/>">
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts-datepicker.css' context='/egi'/>"/>
 
-<script src="<cdn:url value='/resources/global/js/bootstrap/bootstrap-datepicker.js' context='/egi'/>"></script>
-<script src="<cdn:url value='/resources/global/js/bootstrap/typeahead.bundle.js' context='/egi'/>"></script>
+<script src="<cdn:url value='/resources/global/js/bts/bts-datepicker.js' context='/egi'/>"></script>
+<script src="<cdn:url value='/resources/global/js/bts/typeahead.bundle.js' context='/egi'/>"></script>
 
 <script src="<cdn:url value='/resources/js/app/ajaxCommonFunctions.js'/>"></script>
 

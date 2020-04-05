@@ -68,6 +68,7 @@ import javax.persistence.TemporalType;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_PERMIT_REVOCATION")
@@ -89,21 +90,25 @@ public class PermitRevocation extends AbstractAuditable {
     @JoinColumn(name = "application", nullable = false)
     private BpaApplication application;
 
+    @SafeHtml
     @Length(min = 1, max = 64)
     private String applicationNumber;
 
     @Temporal(value = TemporalType.DATE)
     private Date applicationDate;
 
+    @SafeHtml
     @Length(min = 1, max = 64)
     private String revocationNumber;
 
     @Temporal(value = TemporalType.DATE)
     private Date revocationDate;
 
+    @SafeHtml
     @Length(min = 1, max = 1024)
     private String initiateRemarks;
 
+    @SafeHtml
     @Length(min = 1, max = 1024)
     private String approveCancelRemarks;
 
@@ -111,6 +116,7 @@ public class PermitRevocation extends AbstractAuditable {
     @OrderBy("id asc")
     private List<PermitRevocationDetail> revocationDetails = new ArrayList<>();
 
+    @SafeHtml
     private transient String workflowAction;
 
     @Override

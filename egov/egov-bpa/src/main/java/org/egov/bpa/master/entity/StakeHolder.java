@@ -71,6 +71,7 @@ import org.egov.infra.persistence.validator.annotation.Unique;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_STAKEHOLDER", schema = "state")
@@ -84,11 +85,14 @@ public class StakeHolder extends User {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "stakeholdertype")
     private StakeHolderType stakeHolderType;
-    @NotNull
+
+    @SafeHtml
     @Length(min = 1, max = 128)
-    @Column(name = "code", unique = true)
+    @Column(name = "code", unique = true ,nullable = false)
     @Audited
     private String code;
+
+    @SafeHtml
     @Length(min = 1, max = 64)
     @Audited
     private String licenceNumber;
@@ -98,32 +102,53 @@ public class StakeHolder extends User {
     private Source source;
     @Temporal(value = TemporalType.DATE)
     private Date buildingLicenceExpiryDate;
+
+    @SafeHtml
     @Length(min = 1, max = 64)
     private String coaEnrolmentNumber;
     @Temporal(value = TemporalType.DATE)
     private Date coaEnrolmentDueDate;
     private Boolean isEnrolWithLocalBody;
+
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String organizationName;
+
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String organizationAddress;
+
+    @SafeHtml
     @Length(min = 1, max = 64)
     private String organizationUrl;
+
+    @SafeHtml
     @Length(min = 1, max = 15)
     private String organizationMobNo;
     private Boolean isOnbehalfOfOrganization;
+
+    @SafeHtml
     @Length(max = 11)
     private String tinNumber;
+
+    @SafeHtml
     @Length(max = 256)
     private String contactPerson;
+
+    @SafeHtml
     @Length(max = 50)
     private String designation;
+
+    @SafeHtml
     @Length(max = 64)
     private String cinNumber;
     private transient CorrespondenceAddress correspondenceAddress = new CorrespondenceAddress();
     private transient PermanentAddress permanentAddress = new PermanentAddress();
     private transient List<CheckListDetail> checkListDocuments = new ArrayList<>(0);
     private transient String activationCode;
+	
+	@SafeHtml
+    @Length(max=1024)
     @Audited
     private String comments;
     @Enumerated(EnumType.STRING)
@@ -147,8 +172,12 @@ public class StakeHolder extends User {
     private EgDemand demand;
     private transient Long approvalDepartment;
     private transient Long approvalDesignation;
+
+    @SafeHtml
     private transient String workFlowAction;
     private transient Long nextPosition;
+
+    @SafeHtml
     private transient String approvalComent;
 
     public String getApprovalComent() {

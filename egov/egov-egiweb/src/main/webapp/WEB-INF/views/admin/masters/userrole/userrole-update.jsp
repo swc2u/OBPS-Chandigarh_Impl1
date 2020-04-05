@@ -149,7 +149,7 @@
         window.location = '/egi/userrole/search';
     })
 </script>
-<script src="<cdn:url  value='/resources/global/js/jquery/plugins/multiselect.js'/>"></script>
+<script src="<cdn:url  value='/resources/global/js/jq/plugins/multiselect.js'/>"></script>
 <script type="text/javascript">
     $('#multiselect').multiselect();
 </script>

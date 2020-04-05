@@ -94,8 +94,7 @@
 <html>
     <head>
         <%@ include file="/includes/meta.jsp" %>
-
-        <title>eGov  - <decorator:title/> </title>
+        <title>Chandigarh  - <decorator:title/> </title>
 
    
     <link rel="icon" href="<cdn:url value='/resources/global/images/favicon.png' context='/egi'/>" sizes="32x32">
@@ -103,17 +102,17 @@
 	<link rel="stylesheet" type="text/css" href="/collection/resources/commonyui/yui2.8/fonts/fonts-min.css"/>
 	<link rel="stylesheet" type="text/css" href="/collection/resources/commonyui/yui2.8/datatable/assets/skins/sam/datatable.css"/>
 	
-	<link href="<cdn:url value='/resources/global/css/bootstrap/bootstrap.css' context='/egi'/>" rel="stylesheet" type="text/css" />
+	<link href="<cdn:url value='/resources/global/css/bts/bts.css' context='/egi'/>" rel="stylesheet" type="text/css" />
 	<link href="<cdn:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}' context='/egi'/>" rel="stylesheet" type="text/css" />
-	<link href="<cdn:url value='/resources/global/css/bootstrap/bootstrap-datepicker.css' context='/egi'/>"
+	<link href="<cdn:url value='/resources/global/css/bts/bts-datepicker.css' context='/egi'/>"
 	rel="stylesheet" type="text/css" />
 		
-	<script type="text/javascript" src="<cdn:url value='/resources/global/js/jquery/jquery.js' context='/egi'/>"> </script>
-	<script src="<cdn:url value='/resources/global/js/bootstrap/bootstrap.js' context='/egi'/>"></script>
+	<script type="text/javascript" src="<cdn:url value='/resources/global/js/jq/jq.js' context='/egi'/>"> </script>
+	<script src="<cdn:url value='/resources/global/js/bts/bts.js' context='/egi'/>"></script>
 	
-<script	src="<cdn:url value='/resources/global/js/bootstrap/bootstrap-datepicker.js' context='/egi'/>"
+<script	src="<cdn:url value='/resources/global/js/bts/bts-datepicker.js' context='/egi'/>"
 	type="text/javascript"></script>
-	<script src="<cdn:url value='/resources/global/js/bootstrap/bootbox.min.js' context='/egi'/>"></script>
+	<script src="<cdn:url value='/resources/global/js/bts/bootbox.min.js' context='/egi'/>"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/ajax-script.js?${app_release_no}"></script>
 	
 	<script src="<cdn:url value='/resources/global/js/egov/patternvalidation.js?rnd=${app_release_no}' context='/egi'/>"></script>
@@ -135,7 +134,7 @@
 	<script type="text/javascript" src="<cdn:url value='/resources/js/calender.js' context='/collection'/>"></script>
 
     <decorator:head/>
-    </head>
+</head>
     
 <body <decorator:getProperty property="body.id" writeEntireProperty="yes"/><decorator:getProperty property="body.class" writeEntireProperty="true"/> <decorator:getProperty property="body.onload" writeEntireProperty="true"/>  >
     <div class="page-container">

@@ -51,6 +51,7 @@ import org.hibernate.envers.AuditOverrides;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_BPAFEEDETAIL")
@@ -80,9 +81,13 @@ public class BpaFeeDetail extends AbstractAuditable {
     private Double amount;
     @Transient
     private Long srlNo;
+	
+	@SafeHtml
     @Length(min = 1, max = 128)
     @Audited
     private String subType;
+
+    @SafeHtml
     @Length(min = 1, max = 128)
     @Audited
     private String landUseZone;
@@ -99,6 +104,8 @@ public class BpaFeeDetail extends AbstractAuditable {
     @Temporal(value = TemporalType.DATE)
     @Audited
     private Date endDate;
+
+    @SafeHtml
     @Length(min = 1, max = 128)
     @Audited
     private String additionalType;

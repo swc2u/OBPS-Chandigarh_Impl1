@@ -35,12 +35,9 @@ public class DxfFileConstants {
 	public static final String TWO_KANAL = "TWO_KANAL"; // 505.85sqm to less than 1011.7sqm // low risk
 	public static final String ABOVE_TWO_KANAL = "ABOVE_TWO_KANAL"; // Above 1011.7sqm // high risk
 	
-	
 	//Plan info 
 	public static final String METER=" m";
 	public static final String METER_SQM=" sqm";
-	
-	//
 
 	// Other
 	public static final String Hospital_Bedded ="Hospital _Bedded";
@@ -68,8 +65,7 @@ public class DxfFileConstants {
 	public static final String ULBNAME = "Chandigarh Administration";
 
 	// CGCL start
-	// occupancies code
-	
+	// occupancies code	
 	public static final String A = "A"; // Residential --29
 	public static final String F = "F"; // Mercantile / Commercial
 	public static final String G = "G"; // Industrial
@@ -81,11 +77,9 @@ public class DxfFileConstants {
 	public static final String IP = "IP";// Integrated projects --np
 	public static final String T = "T";// Transit Oriented Development (TOD) --np
 
-	// sub occupancies code
-	
+	// sub occupancies code	
 	public static final String A_P = "A-P";// Plotted --220
-	public static final String A_G = "A-G";// Grouped --223
-	
+	public static final String A_G = "A-G";// Grouped --223	
 	
 	public static final String A_SQ="A-SQ";//Servant quarter
 	public static final String A_PO = "A-PO";// Professional Office
@@ -118,11 +112,9 @@ public class DxfFileConstants {
 	public static final String P_CNA = "P-CNA";// Cultural and Non Academic institutional sites
 	public static final String P_R = "P-R";// Religious
 
-
 	public static final String B_EC = "B-EC";// Education city (Sarangpur)
 	public static final String B_HEI = "B-HEI";// Higher Educational Institute //Educational/ Academic
-	public static final String B_H = "B-H";// Hostels
-	
+	public static final String B_H = "B-H";// Hostels	
 	
 	public static final String IT_MCL = "IT-MCL";// Main Campus (above 6 acre)
 	public static final String IT_MCM = "IT-MCM";// Small Campus (2 to 6 acre)
@@ -139,8 +131,7 @@ public class DxfFileConstants {
 	public static final String IP_R = "IP-R";// Residential (25%)
 	public static final String IP_C = "IP-C";// Commercial (5%)
 
-	public static final String T1 = "T1";// Transit Oriented Development (TOD)
-	
+	public static final String T1 = "T1";// Transit Oriented Development (TOD)	
 	// CGCL end
 
 	public static final String C = "C"; // Medical/Hospital
@@ -148,7 +139,6 @@ public class DxfFileConstants {
 	public static final String E = "E"; // Office/Business
 	public static final String H = "H"; // Storage
 	public static final String I = "I"; // Hazardous
-
 	
 	public static final String A2 = "A2";// Old Age Home
 	public static final String A_R = "A-R"; // Single family Residential

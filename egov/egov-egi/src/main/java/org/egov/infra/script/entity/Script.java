@@ -50,6 +50,7 @@ package org.egov.infra.script.entity;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.egov.infra.persistence.entity.component.Period;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.joda.time.DateTime;
 
 import javax.persistence.Embedded;
@@ -83,8 +84,11 @@ public class Script extends AbstractAuditable {
     @Id
     @GeneratedValue(generator = SEQ_SCRIPT, strategy = GenerationType.SEQUENCE)
     private Long id;
+	@SafeHtml
     private String type;
+	@SafeHtml
     private String script;
+	@SafeHtml
     private String name;
     @Embedded
     private Period period;

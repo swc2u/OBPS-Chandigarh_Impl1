@@ -73,5 +73,4 @@ public class SanityHelper implements Serializable {
     public Double failedDimensionSpecialWc = 0d;
     public Double drinkingWater=0d;
     public boolean drinkingWaterEachFloor=false;
-
 }

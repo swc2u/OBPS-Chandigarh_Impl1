@@ -83,6 +83,7 @@ public class CoApplicant extends AbstractAuditable {
     @SafeHtml
     @Length(min = 2, max = 100)
     private String name;
+	@SafeHtml
     @Length(min = 1, max = 128)
     private String fatherorHusbandName;
     private Date dateofBirth;
@@ -94,19 +95,33 @@ public class CoApplicant extends AbstractAuditable {
     private String emailId;
     @Pattern(regexp = Constants.MOBILE_NUM)
     @SafeHtml
-    @Length(max = 15)
+    @Length(min = 10, max = 15)
     private String mobileNumber;
+	@SafeHtml
     @Length(min = 1, max = 128)
     private String pinCode;
+
+    @SafeHtml
+    @Length(min = 1, max = 1024)
     private String address;
+
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String district;
+
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String taluk;
+
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String area;
+
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String city;
+
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String state;
 

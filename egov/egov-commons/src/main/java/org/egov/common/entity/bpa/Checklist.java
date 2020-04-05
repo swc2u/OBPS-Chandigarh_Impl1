@@ -46,6 +46,7 @@ import javax.persistence.Transient;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "eg_checklist")
@@ -58,12 +59,14 @@ public class Checklist extends AbstractAuditable {
     @GeneratedValue(generator = SEQ_CHECKLIST, strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Length(min = 1, max = 128)
-    @Column(name = "code", unique = true)
-    private String code;
+	@SafeHtml
+	@Length(min = 1, max = 128)
+	@Column(name = "code", unique = true)
+	private String code;
 
-    @Length(min = 1, max = 256)
-    private String description;
+	@SafeHtml
+	@Length(min = 1, max = 256)
+	private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "checklisttypeid")

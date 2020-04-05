@@ -62,7 +62,7 @@
 <script type="text/javascript"
 	src="/EGF/resources/javascript/dateValidation.js?rnd=${app_release_no}"></script>
 <script type="text/javascript"
-	src="${pageContext.request.contextPath}/resources/javascript/jquery.min.js"></script>
+	src="${pageContext.request.contextPath}/resources/javascript/jq.min.js"></script>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/resources/javascript/financingSource.js?rnd=${app_release_no}"></script>
 <meta http-equiv="Content-Type"

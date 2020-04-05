@@ -61,6 +61,7 @@ import javax.persistence.Table;
 import org.egov.bpa.master.entity.ChecklistServiceTypeMapping;
 import org.egov.bpa.transaction.entity.enums.ChecklistValues;
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egbpa_document_scrutiny_checklist")
@@ -85,6 +86,7 @@ public class DocumentScrutinyChecklist extends AbstractAuditable {
     @Enumerated(EnumType.STRING)
     private ChecklistValues scrutinyValue;
 
+    @SafeHtml
     private String remarks;
 
     private Integer orderNumber;

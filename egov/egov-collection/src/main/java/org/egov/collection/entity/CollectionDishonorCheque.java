@@ -73,6 +73,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.egov.collection.entity.CollectionDishonorCheque.SEQ_EGCL_DISHONORCHEQUE;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGCL_DISHONORCHEQUE")
@@ -106,11 +107,14 @@ public class CollectionDishonorCheque extends StateAware<Position> {
 
     private Date transactionDate;
 
+    @SafeHtml
     @Length(max = 20)
     private String bankReferenceNumber;
 
+    @SafeHtml
     private String instrumentDishonorReason;
 
+    @SafeHtml
     private String bankreason;
 
     @ManyToOne

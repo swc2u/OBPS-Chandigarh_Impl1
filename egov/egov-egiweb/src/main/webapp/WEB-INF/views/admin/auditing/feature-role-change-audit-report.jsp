@@ -100,9 +100,9 @@
         </form:form>
     </div>
 </div>
-<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jquery/plugins/datatables/jquery.dataTables.min.css' context='/egi'/>"/>
-<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jquery/plugins/datatables/dataTables.bootstrap.min.css' context='/egi'/>">
-<script src="<cdn:url  value='/resources/global/js/jquery/plugins/datatables/jquery.dataTables.min.js'/>"></script>
-<script src="<cdn:url  value='/resources/global/js/jquery/plugins/datatables/responsive/js/datatables.responsive.js'/>"></script>
-<script src="<cdn:url  value='/resources/global/js/jquery/plugins/datatables/dataTables.bootstrap.js'/>"></script>
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jq/plugins/datatables/jq.dataTables.min.css' context='/egi'/>"/>
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jq/plugins/datatables/dataTables.bts.min.css' context='/egi'/>">
+<script src="<cdn:url  value='/resources/global/js/jq/plugins/datatables/jq.dataTables.min.js'/>"></script>
+<script src="<cdn:url  value='/resources/global/js/jq/plugins/datatables/responsive/js/datatables.responsive.js'/>"></script>
+<script src="<cdn:url  value='/resources/global/js/jq/plugins/datatables/dataTables.bts.js'/>"></script>
 <script src="<cdn:url  value='/resources/js/app/feature-role-change-audit-report.js?rnd=${app_release_no}'/>"></script>

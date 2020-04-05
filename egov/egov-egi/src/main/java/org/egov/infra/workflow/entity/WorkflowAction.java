@@ -50,6 +50,7 @@ package org.egov.infra.workflow.entity;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -73,14 +74,17 @@ public class WorkflowAction extends AbstractAuditable {
     private Long id;
 
     @NotNull
+	@SafeHtml
     @Length(min = 1, max = 255)
     private String name;
 
     @NotNull
+	@SafeHtml
     @Length(min = 1, max = 1024)
     private String description;
 
     @NotNull
+	@SafeHtml
     @Length(min = 1, max = 255)
     private String type;
 

@@ -47,27 +47,33 @@
 
 package org.egov.bpa.transaction.entity.dto;
 
-import org.egov.infra.web.support.search.DataTableSearchRequest;
-
 import java.util.Date;
 
+import org.egov.infra.web.support.search.DataTableSearchRequest;
+import org.hibernate.validator.constraints.SafeHtml;
+
 public class SlotDetailsHelper extends DataTableSearchRequest {
-	private String applicationType;
-	private Long slotId;
-	private Long slotDetailsId;
-	private String appointmentTime;
-	private Date appointmentDate;
-	private Long zoneId;
-	private String zone;
-	private Long revenueWardId;
-	private String revenueWardWard;
-	private Long electionWardId;
-	private String electionWard;
-	private Integer byNoOfDays;
-	private Integer maxScheduledSlots;
-	private Integer maxRescheduledSlots;
-	private Integer utilizedScheduledSlots;
-	private Integer utilizedRescheduledSlots;
+    @SafeHtml
+    private String applicationType;
+    private Long slotId;
+    private Long slotDetailsId;
+    @SafeHtml
+    private String appointmentTime;
+    private Date appointmentDate;
+    private Long zoneId;
+    @SafeHtml
+    private String zone;
+    private Long revenueWardId;
+    @SafeHtml
+    private String revenueWardWard;
+    private Long electionWardId;
+    @SafeHtml
+    private String electionWard;
+    private Integer byNoOfDays;
+    private Integer maxScheduledSlots;
+    private Integer maxRescheduledSlots;
+    private Integer utilizedScheduledSlots;
+    private Integer utilizedRescheduledSlots;
 
 	public String getApplicationType() {
 		return applicationType;

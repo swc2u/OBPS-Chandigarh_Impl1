@@ -50,30 +50,46 @@ package org.egov.bpa.transaction.entity.dto;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
+import org.hibernate.validator.constraints.SafeHtml;
 
 public class PersonalRegisterHelper {
     private Long id;
+    @SafeHtml
     private String applicationNumber;
+    @SafeHtml
     private String applicationType;
+    @SafeHtml
     private String permitType;
     private Date dateOfAdmission;
+    @SafeHtml
     private String applicantName;
+    @SafeHtml
     private String address;
+    @SafeHtml
     private String surveyNo;
+    @SafeHtml
     private String village;
+    @SafeHtml
     private String revenueWard;
+    @SafeHtml
     private String electionWard;
+    @SafeHtml
     private String natureOfOccupancy;
     private BigDecimal totalFloorArea;
     private Integer noOfFloors;
     private BigDecimal far;
+    @SafeHtml
     private String fromWhom;
+    @SafeHtml
     private String toWhom;
+    @SafeHtml
     private String previousStatus;
+    @SafeHtml
     private String currentStatus;
     private Date previousDateAndTime;
     private Date NextDateAndTime;
     private Long userId;
+    @SafeHtml
     private String serviceTypeEnum;
 
     public Long getId() {
@@ -262,11 +278,13 @@ public class PersonalRegisterHelper {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PersonalRegisterHelper)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof PersonalRegisterHelper))
+            return false;
         PersonalRegisterHelper that = (PersonalRegisterHelper) o;
         return Objects.equals(getId(), that.getId()) &&
-               Objects.equals(getApplicationNumber(), that.getApplicationNumber());
+                Objects.equals(getApplicationNumber(), that.getApplicationNumber());
     }
 
     @Override

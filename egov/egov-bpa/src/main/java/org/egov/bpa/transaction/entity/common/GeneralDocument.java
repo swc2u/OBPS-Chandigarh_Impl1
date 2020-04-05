@@ -73,6 +73,7 @@ import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -105,6 +106,7 @@ public class GeneralDocument extends AbstractAuditable {
     @JoinColumn(name = "createduser")
     private User createdUser;
 
+    @SafeHtml
     @Length(min = 1, max = 256)
     private String remarks;
 

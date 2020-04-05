@@ -143,18 +143,18 @@
 	</div>
 </div>
 
-<link href="<cdn:url value='/resources/global/css/bootstrap/bootstrap-datepicker.css' context='/egi'/>" rel="stylesheet" type="text/css" />
-<script	src="<cdn:url value='/resources/global/js/bootstrap/bootstrap-datepicker.js' context='/egi'/>" type="text/javascript"></script>
-<link rel="stylesheet"	href="<cdn:url value='/resources/global/js/jquery/plugins/datatables/responsive/css/datatables.responsive.css' context='/egi'/>">
-<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jquery/plugins/datatables/jquery.dataTables.min.css' context='/egi'/>"/>
-<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jquery/plugins/datatables/dataTables.bootstrap.min.css' context='/egi'/>">
-<script src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/jquery.dataTables.min.js' context='/egi'/>" type="text/javascript"></script>
- <script src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/dataTables.bootstrap.js' context='/egi'/>"
+<link href="<cdn:url value='/resources/global/css/bts/bts-datepicker.css' context='/egi'/>" rel="stylesheet" type="text/css" />
+<script	src="<cdn:url value='/resources/global/js/bts/bts-datepicker.js' context='/egi'/>" type="text/javascript"></script>
+<link rel="stylesheet"	href="<cdn:url value='/resources/global/js/jq/plugins/datatables/responsive/css/datatables.responsive.css' context='/egi'/>">
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jq/plugins/datatables/jq.dataTables.min.css' context='/egi'/>"/>
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jq/plugins/datatables/dataTables.bts.min.css' context='/egi'/>">
+<script src="<cdn:url value='/resources/global/js/jq/plugins/datatables/jq.dataTables.min.js' context='/egi'/>" type="text/javascript"></script>
+ <script src="<cdn:url value='/resources/global/js/jq/plugins/datatables/dataTables.bts.js' context='/egi'/>"
  type="text/javascript"></script>
- <script src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/dataTables.tableTools.js' context='/egi'/>"
+ <script src="<cdn:url value='/resources/global/js/jq/plugins/datatables/dataTables.tableTools.js' context='/egi'/>"
  type="text/javascript"></script>
- <script src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/TableTools.min.js' context='/egi'/>"
+ <script src="<cdn:url value='/resources/global/js/jq/plugins/datatables/TableTools.min.js' context='/egi'/>"
  type="text/javascript"></script>
- <script src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/responsive/js/datatables.responsive.js' context='/egi'/>"
+ <script src="<cdn:url value='/resources/global/js/jq/plugins/datatables/responsive/js/datatables.responsive.js' context='/egi'/>"
  type="text/javascript"></script>
 <script type="text/javascript" src="<cdn:url value='/resources/js/onlinePaymentReport.js?rnd=${app_release_no}'/>"></script>

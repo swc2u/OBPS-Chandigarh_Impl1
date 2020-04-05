@@ -69,6 +69,7 @@ import org.egov.bpa.transaction.entity.enums.BpaUom;
 import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_SITEDETAIL")
@@ -84,32 +85,46 @@ public class SiteDetail extends AbstractAuditable {
     @NotNull
     @JoinColumn(name = "application", nullable = false)
     private BpaApplication application;
+    @SafeHtml
     @Length(min = 1, max = 12)
     private String plotdoornumber;
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String plotlandmark;
+    @SafeHtml
     @Length(min = 1, max = 24)
     private String plotnumber;
+    @SafeHtml
     @Length(min = 1, max = 24)
     private String plotsurveynumber;
+    @SafeHtml
     @Length(min = 1, max = 24)
     private String surveynumberType;
+    @SafeHtml
     @Length(min = 1, max = 24)
     private String oldSurveyNumber;
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String reSurveyNumber;
+    @SafeHtml
     @Length(min = 1, max = 24)
     private String townSurveyNumber;
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String khataNumber;
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String holdingNumber;
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String mspPlotNumber;
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String streetaddress1;
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String streetaddress2;
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String area;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -122,6 +137,7 @@ public class SiteDetail extends AbstractAuditable {
     @JoinColumn(name = "electionBoundary")
     private Boundary electionBoundary;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String citytown;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "street")
@@ -132,6 +148,7 @@ public class SiteDetail extends AbstractAuditable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "postalAddress")
     private PostalAddress postalAddress;
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String natureofOwnership;
     private BigDecimal extentOfLand;
@@ -142,16 +159,21 @@ public class SiteDetail extends AbstractAuditable {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "registrarOffice")
     private RegistrarOfficeVillage registrarOffice;
+    @SafeHtml
     @Length(min = 1, max = 12)
     private String nearestbuildingnumber;
+    @SafeHtml
     @Length(min = 1, max = 12)
     private String subdivisionNumber;
     @Length(min = 1, max = 128)
     private Boolean encroachmentIssuesPresent;
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String encroachmentRemarks;
-    /// this need to be check as we can refer master --statusofsite -- construction in progress,vacant ,completed
+    /// this need to be check as we can refer master --statusofsite -- construction
+    /// in progress,vacant ,completed
     private Boolean siteinApprovedLayout;
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String approvedLayoutDetail;
     private BigDecimal setBackFront;
@@ -160,6 +182,7 @@ public class SiteDetail extends AbstractAuditable {
     private BigDecimal setBackSide2;
     private BigDecimal lengthOfCompoundWall;
     private BigDecimal dwellingunitnt;
+    @SafeHtml
     private String locationOfPlot;
     private BigDecimal roofConversion;
     private BigDecimal shutter;
@@ -170,6 +193,7 @@ public class SiteDetail extends AbstractAuditable {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "conststages")
     private ConstructionStages constStages;
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String stateOfConstruction;
     private Boolean isappForRegularization = false;
@@ -189,9 +213,11 @@ public class SiteDetail extends AbstractAuditable {
     @JoinColumn(name = "landUsage")
     private BpaSchemeLandUsage landUsage;
     private transient Long registrarVillageId;
-    @Length(min = 1,max = 4000)
+    @SafeHtml
+    @Length(min = 1, max = 4000)
     private String previousownerdetails;
-    @Length(min = 1,max = 4000)
+    @SafeHtml
+    @Length(min = 1, max = 4000)
     private String landregistrationdetails;
 
     @Override
@@ -254,7 +280,7 @@ public class SiteDetail extends AbstractAuditable {
     public void setTownSurveyNumber(String townSurveyNumber) {
         this.townSurveyNumber = townSurveyNumber;
     }
-   
+
     public String getKhataNumber() {
         return khataNumber;
     }
@@ -270,7 +296,7 @@ public class SiteDetail extends AbstractAuditable {
     public void setHoldingNumber(String holdingNumber) {
         this.holdingNumber = holdingNumber;
     }
-    
+
     public String getMspPlotNumber() {
         return mspPlotNumber;
     }
@@ -652,35 +678,35 @@ public class SiteDetail extends AbstractAuditable {
         this.registrarVillageId = registrarVillageId;
     }
 
-	public Boolean getCharitableTrustBuilding() {
-		return charitableTrustBuilding;
-	}
+    public Boolean getCharitableTrustBuilding() {
+        return charitableTrustBuilding;
+    }
 
-	public void setCharitableTrustBuilding(Boolean charitableTrustBuilding) {
-		this.charitableTrustBuilding = charitableTrustBuilding;
-	}
+    public void setCharitableTrustBuilding(Boolean charitableTrustBuilding) {
+        this.charitableTrustBuilding = charitableTrustBuilding;
+    }
 
-	public Boolean getAffordableHousingScheme() {
-		return affordableHousingScheme;
-	}
+    public Boolean getAffordableHousingScheme() {
+        return affordableHousingScheme;
+    }
 
-	public void setAffordableHousingScheme(Boolean affordableHousingScheme) {
-		this.affordableHousingScheme = affordableHousingScheme;
-	}
-	
-	public String getPreviousownerdetails() {
-		return previousownerdetails;
-	}
+    public void setAffordableHousingScheme(Boolean affordableHousingScheme) {
+        this.affordableHousingScheme = affordableHousingScheme;
+    }
 
-	public void setPreviousownerdetails(String previousownerdetails) {
-		this.previousownerdetails = previousownerdetails;
-	}
+    public String getPreviousownerdetails() {
+        return previousownerdetails;
+    }
 
-	public String getLandregistrationdetails() {
-		return landregistrationdetails;
-	}
+    public void setPreviousownerdetails(String previousownerdetails) {
+        this.previousownerdetails = previousownerdetails;
+    }
 
-	public void setLandregistrationdetails(String landregistrationdetails) {
-		this.landregistrationdetails = landregistrationdetails;
-	}
+    public String getLandregistrationdetails() {
+        return landregistrationdetails;
+    }
+
+    public void setLandregistrationdetails(String landregistrationdetails) {
+        this.landregistrationdetails = landregistrationdetails;
+    }
 }

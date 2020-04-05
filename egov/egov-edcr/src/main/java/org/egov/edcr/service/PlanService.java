@@ -81,7 +81,6 @@ public class PlanService {
 		try {
 			plan = extractService.extract(dcrApplication.getSavedDxfFile(), amd, asOnDate,
 					featureService.getFeatures());
-			System.out.println("freedy error "+plan.getErrors());
 			setProperties(plan);
 		}catch (Exception e) {
 			// TODO: handle exception

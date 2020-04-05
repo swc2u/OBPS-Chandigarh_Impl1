@@ -54,14 +54,17 @@
 	   http://www.springframework.org/schema/security
 	   http://www.springframework.org/schema/security/spring-security.xsd" default-lazy-init="true">
 
-	<bean id="securityFilterChain" name="securityFilterChain" class="org.springframework.security.web.FilterChainProxy">
-		<constructor-arg>
-			<list>
-				<security:filter-chain pattern="/resources/**" filters="none" />
-				<security:filter-chain pattern="/error/**" filters="none" />
-				<security:filter-chain pattern="/index.jsp" filters="none" />
-				<security:filter-chain pattern="/**"  filters="concurrentSessionFilter,securityContextPersistenceFilter,logoutFilter,authenticationProcessingFilter,securityContextHolderAwareRequestFilter,rememberMeAuthenticationFilter,anonymousAuthenticationFilter,exceptionTranslationFilter,filterSecurityInterceptor" />
-			</list>
-		</constructor-arg>
-	</bean>	
+    <bean id="securityFilterChain" name="securityFilterChain" class="org.springframework.security.web.FilterChainProxy">
+        <constructor-arg>
+            <list>
+                <security:filter-chain pattern="/resources/**" filters="none"/>
+                <security:filter-chain pattern="/error/**" filters="none"/>
+                <security:filter-chain pattern="/index.jsp" filters="none"/>
+                <security:filter-chain pattern="/**" filters="concurrentSessionFilter,securityContextPersistenceFilter,
+                                       logoutFilter,authenticationProcessingFilter,headerWriterFilter,
+                                       securityContextHolderAwareRequestFilter,rememberMeAuthenticationFilter,
+                                       anonymousAuthenticationFilter,exceptionTranslationFilter,filterSecurityInterceptor"/>
+            </list>
+        </constructor-arg>
+    </bean>
 </beans>

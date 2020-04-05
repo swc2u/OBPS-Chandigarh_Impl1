@@ -64,6 +64,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "eg_uom")
@@ -86,9 +87,11 @@ public class UOM extends AbstractAuditable {
 
     @NotNull
     @Length(min = 1, max = 25)
+    @SafeHtml
     private String uom;
 
     @Length(min = 1, max = 25)
+    @SafeHtml
     private String narration;
 
     @NotNull

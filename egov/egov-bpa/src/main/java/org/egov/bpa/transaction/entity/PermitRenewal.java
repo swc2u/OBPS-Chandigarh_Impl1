@@ -82,6 +82,7 @@ import org.egov.infra.utils.DateUtils;
 import org.egov.infra.workflow.entity.StateAware;
 import org.egov.pims.commons.Position;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -113,12 +114,14 @@ public class PermitRenewal extends StateAware<Position> {
     @JoinColumn(name = "parent", nullable = false)
     private BpaApplication parent;
 
+    @SafeHtml
     @Length(min = 1, max = 64)
     private String applicationNumber;
 
     @Temporal(value = TemporalType.DATE)
     private Date applicationDate;
 
+    @SafeHtml
     @Length(min = 1, max = 64)
     private String renewalNumber;
 
@@ -140,6 +143,7 @@ public class PermitRenewal extends StateAware<Position> {
     @JoinColumn(name = "constructionStage")
     private ConstructionStages constructionStage;
 
+    @SafeHtml
     @Length(min = 1, max = 256)
     private String constructionStatus;
 
@@ -157,8 +161,12 @@ public class PermitRenewal extends StateAware<Position> {
     private List<PermitRenewalConditions> additionalRenewalConditions = new ArrayList<>(0);
 
     private transient MultipartFile[] files;
+
+    @SafeHtml
     private transient String workflowAction;
     private transient Long approvalDepartment;
+
+    @SafeHtml
     private transient String approvalComent;
     private transient List<PermitRenewalConditions> dynamicRenewalConditionsTemp = new ArrayList<>(0);
     private transient List<PermitRenewalConditions> staticRenewalConditionsTemp = new ArrayList<>(0);

@@ -55,6 +55,7 @@ import javax.persistence.Table;
 import org.egov.common.entity.bpa.SubOccupancy;
 import org.egov.common.entity.bpa.Usage;
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_EXISTING_BUILDING_FLOORDETAIL")
@@ -70,6 +71,8 @@ public class ExistingBuildingFloorDetail extends AbstractAuditable {
     @JoinColumn(name = "existingBuildingDetail", nullable = false)
     private ExistingBuildingDetail existingBuildingDetail;
     private Integer orderOfFloor;
+
+    @SafeHtml
     private String floorDescription;
     private Integer floorNumber;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

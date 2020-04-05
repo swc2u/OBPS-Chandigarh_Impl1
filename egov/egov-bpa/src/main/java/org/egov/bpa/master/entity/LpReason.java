@@ -40,6 +40,7 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_LPREASON")
@@ -52,11 +53,13 @@ public class LpReason extends AbstractAuditable {
     @GeneratedValue(generator = SEQ_LPREASON, strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @SafeHtml
     @NotNull
     @Length(min = 1, max = 128)
     @Column(name = "code", unique = true)
     private String code;
 
+    @SafeHtml
     @NotNull
     @Length(min = 1, max = 256)
     private String description;
@@ -64,6 +67,7 @@ public class LpReason extends AbstractAuditable {
     @NotNull
     private Boolean isActive;
 
+    @SafeHtml
     @NotNull
     @Length(min = 1, max = 1024)
     private String reason;

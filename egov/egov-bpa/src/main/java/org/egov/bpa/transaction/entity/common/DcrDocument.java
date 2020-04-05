@@ -64,6 +64,7 @@ import javax.validation.constraints.NotNull;
 import org.egov.bpa.master.entity.ChecklistServiceTypeMapping;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -83,6 +84,8 @@ public class DcrDocument extends AbstractAuditable {
     @Temporal(value = TemporalType.DATE)
     private Date submissionDate;
     private Boolean isSubmitted;
+
+    @SafeHtml
     @Length(min = 1, max = 256)
     private String remarks;
     @OrderBy("id ASC")

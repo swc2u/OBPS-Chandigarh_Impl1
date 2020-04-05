@@ -75,6 +75,7 @@ import org.egov.infra.utils.DateUtils;
 import org.egov.infra.workflow.entity.StateAware;
 import org.egov.pims.commons.Position;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -90,6 +91,7 @@ public class InspectionApplication extends StateAware<Position> {
     @GeneratedValue(generator = SEQ_INSPECTIONAPPLICATION, strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @SafeHtml
     @Length(min = 1, max = 64)
     private String applicationNumber;
 
@@ -107,6 +109,7 @@ public class InspectionApplication extends StateAware<Position> {
     @JoinColumn(name = "buildingConstructionStage")
     private BuildingConstructionStage buildingConstructionStage;
 
+    @SafeHtml
     @Length(min = 1, max = 1000)
     private String remarks;
     
@@ -127,12 +130,16 @@ public class InspectionApplication extends StateAware<Position> {
     private List<InConstructionInspection> inspections = new ArrayList<>();
     @OneToMany(mappedBy = "inspectionApplication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<InspectionLetterToParty> inspectionLetterToParties = new ArrayList<>();
+
+    @SafeHtml
     @Length(min = 1, max = 5000)
     private String townSurveyorRemarks;
     private Boolean isTownSurveyorInspectionRequire = false;
     private transient Long approvalDepartment;
     private transient Long approvalDesignation;
     private Boolean isLPRequestInitiated;
+    @SafeHtml
+    @Length(max = 1024)
     private transient String approvalComent;
     private transient MultipartFile[] files;
 

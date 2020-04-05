@@ -68,6 +68,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_APPOINTMENT_SCHEDULE_COMMON")
@@ -88,6 +89,7 @@ public class AppointmentScheduleCommon extends AbstractAuditable {
     @Temporal(value = TemporalType.DATE)
     private Date appointmentDate;
 
+    @SafeHtml
     @Length(min = 1, max = 50)
     private String appointmentTime;
 
@@ -95,9 +97,11 @@ public class AppointmentScheduleCommon extends AbstractAuditable {
     @JoinColumn(name = "appointmentLocation")
     private AppointmentLocations appointmentLocation;
 
+    @SafeHtml
     @Length(min = 1, max = 256)
     private String remarks;
 
+    @SafeHtml
     @Length(min = 1, max = 256)
     private String postponementReason;
 

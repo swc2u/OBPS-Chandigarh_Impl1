@@ -56,6 +56,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egbpa_master_nocconfiguration")
@@ -68,11 +69,13 @@ public class NocConfiguration {
     @GeneratedValue(generator = SEQ_NOCCONFIG, strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @SafeHtml
     @NotNull
     @Length(min = 1, max = 20)
     @Column(name = "department")
     private String department;
 
+    @SafeHtml
     @NotNull
     @Length(min = 1, max = 25)
     @Column(name = "applicationType")
@@ -83,6 +86,7 @@ public class NocConfiguration {
     @Column(name = "integrationtype")
     private String integrationType;
 
+    @SafeHtml
     @NotNull
     @Length(min = 1, max = 20)
     @Column(name = "integrationinitiation")

@@ -45,6 +45,7 @@ import org.egov.commons.CChartOfAccounts;
 import org.egov.demand.model.EgReasonCategory;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_BPAFEE_COMMON")
@@ -60,14 +61,20 @@ public class BpaFeeCommon extends AbstractAuditable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "glcode")
     private CChartOfAccounts glcode;
+
+    @SafeHtml
     @NotNull
     @Length(min = 1, max = 128)
     @Column(name = "code", unique = true)
     private String code;
+
+    @SafeHtml
     @NotNull
     @Length(min = 1, max = 128)
     @Column(name = "name", unique = true)
     private String name;
+
+    @SafeHtml
     @NotNull
     @Length(min = 1, max = 256)
     private String description;

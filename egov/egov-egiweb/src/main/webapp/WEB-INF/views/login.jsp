@@ -75,10 +75,10 @@
 	<title>Chandigarh Building Plan Approvals</title>
 	<link rel="icon" href="<cdn:url value='/resources/global/images/favicon.png'/>" sizes="32x32">
 	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/customloginNew.css?rnd=${app_release_no}'/>">
-	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bootstrap/bootstrap.css'/>">
+	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts.css'/>">
 	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css'/>">
 	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/customlogin.css?rnd=${app_release_no}'/>">
-	<script src="<cdn:url value='/resources/global/js/jquery/jquery.js'/>" type="text/javascript"></script>
+	<script src="<cdn:url value='/resources/global/js/jq/jq.js'/>" type="text/javascript"></script>
 	
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>
@@ -389,13 +389,13 @@
 	</c:if>
 
 	<script
-		src="<cdn:url value='/resources/global/js/bootstrap/bootstrap.js'/>"
+		src="<cdn:url value='/resources/global/js/bts/bts.js'/>"
 		type="text/javascript"></script>
 	<script
 		src="<cdn:url value='/resources/global/js/egov/custom.js?rnd=${app_release_no}'/>"
 		type="text/javascript"></script>
 	<script
-		src="<cdn:url value='/resources/global/js/jquery/plugins/jquery.validate.min.js'/>"></script>
+		src="<cdn:url value='/resources/global/js/jq/plugins/jq.validate.min.js'/>"></script>
 	<script
 		src="<cdn:url value='/resources/js/app/login.js?rnd=${app_release_no}'/>"
 		type="text/javascript"></script>

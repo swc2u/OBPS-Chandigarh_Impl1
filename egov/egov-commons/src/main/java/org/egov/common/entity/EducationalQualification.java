@@ -60,6 +60,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Unique(fields = {"name"}, enableDfltMsg = true)
@@ -75,17 +76,20 @@ public class EducationalQualification extends AbstractAuditable {
 
     @NotNull
     @Length(min = 2, max = 100)
+    @SafeHtml
     private String name;
 
     @NotNull
     @Length(max = 20)
     @Column(name = "code", updatable = false)
+    @SafeHtml
     private String code;
 
     @NotNull
     private Boolean isActive;
 
     @Length(min = 2, max = 100)
+    @SafeHtml
     private String description;
 
     public String getDescription() {

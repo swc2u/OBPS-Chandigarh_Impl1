@@ -63,6 +63,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_APPLICANT")
@@ -78,18 +79,25 @@ public class Applicant extends AbstractAuditable {
 	@Length(min = 1, max = 128)
 	private String fatherorHusbandName;
 	private Date dateofBirth;
+	@SafeHtml
 	@Length(min = 1, max = 128)
 	private String district;
+	@SafeHtml
 	@Length(min = 1, max = 128)
 	private String taluk;
+	@SafeHtml
 	@Length(min = 1, max = 128)
 	private String area;
+	@SafeHtml
 	@Length(min = 1, max = 128)
 	private String city;
+	@SafeHtml
 	@Length(min = 1, max = 128)
 	private String state;
+	@SafeHtml
 	@Length(min = 1, max = 128)
 	private String pinCode;
+	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
@@ -98,6 +106,7 @@ public class Applicant extends AbstractAuditable {
 	@SafeHtml
 	@Length(min = 2, max = 100)
 	private String name;
+	@SafeHtml
 	private String address;
 	@Enumerated(EnumType.ORDINAL)
 	private Gender gender;

@@ -50,6 +50,7 @@ package org.egov.model.bills;
 import org.egov.commons.CChartOfAccounts;
 import org.egov.infra.persistence.entity.AbstractPersistable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -64,6 +65,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -95,6 +97,7 @@ public class EgBilldetails extends AbstractPersistable<Integer> implements java.
 
     private Date lastupdatedtime;
 
+    @SafeHtml
     @Length(max = 250)
     private String narration;
 

@@ -59,13 +59,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <meta name="description" content="eGov ERP System"/>
         <meta name="author" content="eGovernments Foundation"/>
-
         <title><tiles:insertAttribute name="title"/></title>
 
         <spring:eval expression="@environment.getProperty('user.pwd.strength')" var="pwdstrengthmsg"/>
         <spring:message code="usr.pwd.strength.msg.${pwdstrengthmsg}" var="pwdmsg" htmlEscape="true"/>
 
-        <link rel="stylesheet" href="<cdn:url value='/resources/global/css/bootstrap/bootstrap.css' context='/egi'/>">
+        <link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts.css' context='/egi'/>">
         <link rel="stylesheet"
               href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css?rnd=${app_release_no}' context='/egi'/>">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -73,16 +72,12 @@
         <link href="<cdn:url value='/resources/css/scrollbar.css'/>" rel="stylesheet">
         <link rel="icon" href="<cdn:url value='/resources/global/images/favicon.png' context='/egi'/>" sizes="32x32">
 
-        <script src="<cdn:url value='/resources/global/js/jquery/jquery.js' context='/egi'/>"></script>
-        <script src="<cdn:url value='/resources/global/js/bootstrap/bootstrap.js' context='/egi'/>"></script>
-        <script src="<cdn:url value='/resources/global/js/bootstrap/bootbox.min.js' context='/egi'/>"></script>
-        <script src="<cdn:url value='/resources/global/js/jquery/plugins/jquery.validate.min.js' context='/egi'/>"></script>
+        <script src="<cdn:url value='/resources/global/js/jq/jq.js' context='/egi'/>"></script>
+        <script src="<cdn:url value='/resources/global/js/bts/bts.js' context='/egi'/>"></script>
+        <script src="<cdn:url value='/resources/global/js/bts/bootbox.min.js' context='/egi'/>"></script>
+        <script src="<cdn:url value='/resources/global/js/jq/plugins/jq.validate.min.js' context='/egi'/>"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.matchHeight/0.7.0/jquery.matchHeight-min.js"></script>
         <script src="<cdn:url value='/resources/js/citizen.js?rnd=${app_release_no}'/>"></script>
-
-        <%-- <script src="<cdn:url value='/resources/global/js/egov/custom.js?rnd=${app_release_no}' context='/egi'/>"></script> --%>
-        <%-- <script src="<cdn:url value='/resources/js/app/homepagecitizen.js?rnd=${app_release_no}' context='/egi'/>"></script> --%>
-
 
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>

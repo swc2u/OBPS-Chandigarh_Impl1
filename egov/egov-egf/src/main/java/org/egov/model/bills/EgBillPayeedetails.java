@@ -50,6 +50,7 @@ package org.egov.model.bills;
 import org.egov.infra.persistence.entity.AbstractPersistable;
 import org.egov.model.recoveries.Recovery;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -90,9 +91,11 @@ public class EgBillPayeedetails extends AbstractPersistable<Integer> implements 
 
     private Date lastUpdatedTime;
 
+    @SafeHtml
     @Transient
     private String detailTypeName;
 
+    @SafeHtml
     @Transient
     private String detailKeyName;
 
@@ -103,6 +106,7 @@ public class EgBillPayeedetails extends AbstractPersistable<Integer> implements 
     @JoinColumn(name = "tdsid")
     private Recovery recovery;
 
+    @SafeHtml
     @Length(max = 250)
     private String narration;
 

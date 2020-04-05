@@ -60,6 +60,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_OC_EXISTING_BUILDING")
@@ -70,6 +71,8 @@ public class OCExistingBuilding extends AbstractAuditable {
     @Id
     @GeneratedValue(generator = SEQ_EXISTING_BUILDING, strategy = GenerationType.SEQUENCE)
     private Long id;
+
+    @SafeHtml
     private String name;
     private Integer buildingNumber;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

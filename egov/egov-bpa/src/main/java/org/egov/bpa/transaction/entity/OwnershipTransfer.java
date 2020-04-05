@@ -84,6 +84,7 @@ import org.egov.infra.utils.DateUtils;
 import org.egov.infra.workflow.entity.StateAware;
 import org.egov.pims.commons.Position;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -115,12 +116,14 @@ public class OwnershipTransfer extends StateAware<Position> {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Applicant owner;
 
+    @SafeHtml
     @Length(min = 1, max = 64)
     private String applicationNumber;
 
     @Temporal(value = TemporalType.DATE)
     private Date applicationDate;
 
+    @SafeHtml
     @Length(min = 1, max = 64)
     private String ownershipNumber;
 
@@ -143,6 +146,7 @@ public class OwnershipTransfer extends StateAware<Position> {
     @JoinColumn(name = "approverUser")
     private User approverUser;
 
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String remarks;
 
@@ -176,8 +180,12 @@ public class OwnershipTransfer extends StateAware<Position> {
     private List<OwnershipTransferDocument> ownershipTransferDocuments = new ArrayList<>(0);
 
     private transient MultipartFile[] files;
+
+    @SafeHtml
     private transient String workflowAction;
     private transient Long approvalDepartment;
+
+    @SafeHtml
     private transient String approvalComent;
     private transient List<OwnershipTransferConditions> dynamicOwenrshipConditionsTemp = new ArrayList<>(0);
     private transient List<OwnershipTransferConditions> staticOwenrshipConditionsTemp = new ArrayList<>(0);

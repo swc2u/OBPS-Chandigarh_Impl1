@@ -162,33 +162,33 @@
 	</div>
 </div>
 <link rel="stylesheet"
-	  href="<cdn:url value='/resources/global/css/jquery/plugins/datatables/jquery.dataTables.min.css' context='/egi'/>"/>
+	  href="<cdn:url value='/resources/global/css/jq/plugins/datatables/jq.dataTables.min.css' context='/egi'/>"/>
 <link rel="stylesheet"
-	  href="<cdn:url value='/resources/global/css/jquery/plugins/datatables/dataTables.bootstrap.min.css' context='/egi'/>">
+	  href="<cdn:url value='/resources/global/css/jq/plugins/datatables/dataTables.bts.min.css' context='/egi'/>">
 <script type="text/javascript"
-		src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/jquery.dataTables.min.js' context='/egi'/>"></script>
+		src="<cdn:url value='/resources/global/js/jq/plugins/datatables/jq.dataTables.min.js' context='/egi'/>"></script>
 <script type="text/javascript"
-		src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/dataTables.bootstrap.js' context='/egi'/>"></script>
+		src="<cdn:url value='/resources/global/js/jq/plugins/datatables/dataTables.bts.js' context='/egi'/>"></script>
 <script
-		src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/extensions/buttons/dataTables.buttons.min.js' context='/egi'/>"></script>
+		src="<cdn:url value='/resources/global/js/jq/plugins/datatables/extensions/buttons/dataTables.buttons.min.js' context='/egi'/>"></script>
 <script
-		src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/extensions/buttons/buttons.bootstrap.min.js' context='/egi'/>"></script>
+		src="<cdn:url value='/resources/global/js/jq/plugins/datatables/extensions/buttons/buttons.bts.min.js' context='/egi'/>"></script>
 <script
-		src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/extensions/buttons/buttons.flash.min.js' context='/egi'/>"></script>
+		src="<cdn:url value='/resources/global/js/jq/plugins/datatables/extensions/buttons/buttons.flash.min.js' context='/egi'/>"></script>
 <script
-		src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/extensions/buttons/jszip.min.js' context='/egi'/>"></script>
+		src="<cdn:url value='/resources/global/js/jq/plugins/datatables/extensions/buttons/jszip.min.js' context='/egi'/>"></script>
 <script
-		src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/extensions/buttons/pdfmake.min.js' context='/egi'/>"></script>
+		src="<cdn:url value='/resources/global/js/jq/plugins/datatables/extensions/buttons/pdfmake.min.js' context='/egi'/>"></script>
 <script
-		src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/extensions/buttons/vfs_fonts.js' context='/egi'/>"></script>
+		src="<cdn:url value='/resources/global/js/jq/plugins/datatables/extensions/buttons/vfs_fonts.js' context='/egi'/>"></script>
 <script
-		src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/extensions/buttons/buttons.html5.min.js' context='/egi'/>"></script>
+		src="<cdn:url value='/resources/global/js/jq/plugins/datatables/extensions/buttons/buttons.html5.min.js' context='/egi'/>"></script>
 <script
-		src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/extensions/buttons/buttons.print.min.js' context='/egi'/>"></script>
+		src="<cdn:url value='/resources/global/js/jq/plugins/datatables/extensions/buttons/buttons.print.min.js' context='/egi'/>"></script>
 <script type="text/javascript"
-		src="<cdn:url value='/resources/global/js/jquery/plugins/jquery.validate.min.js' context='/egi'/>"></script>
-<script src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/datetime-moment.js' context='/egi'/>"></script>
-<script src="<cdn:url value='/resources/global/js/bootstrap/bootstrap-datepicker.js' context='/egi'/>"
+		src="<cdn:url value='/resources/global/js/jq/plugins/jq.validate.min.js' context='/egi'/>"></script>
+<script src="<cdn:url value='/resources/global/js/jq/plugins/datatables/datetime-moment.js' context='/egi'/>"></script>
+<script src="<cdn:url value='/resources/global/js/bts/bts-datepicker.js' context='/egi'/>"
 		type="text/javascript"></script>
 <script
 		src="<c:url value='/resources/global/js/handlebars/handlebars.js?rnd=${app_release_no}' context='/egi'/>"></script>

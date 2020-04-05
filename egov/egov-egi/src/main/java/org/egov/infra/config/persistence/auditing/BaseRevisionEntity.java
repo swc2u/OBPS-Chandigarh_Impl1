@@ -51,6 +51,7 @@ package org.egov.infra.config.persistence.auditing;
 import org.egov.infra.config.persistence.auditing.listener.AuditableEntityListener;
 import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.RevisionEntity;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -65,6 +66,7 @@ public class BaseRevisionEntity extends DefaultRevisionEntity {
     private Long userId;
 
     @NotNull
+	@SafeHtml
     private String ipAddress;
 
     public Long getUserId() {

@@ -62,6 +62,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.egov.infra.filestore.entity.FileStoreMapper;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egbpa_inspectionnotice")
@@ -76,8 +77,10 @@ public class InspectionNotice implements Serializable {
     @GeneratedValue(generator = SEQ_EGBPA_INSPECTIONNOTICE, strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @SafeHtml
     private String inspectionNumber;
 
+    @SafeHtml
     private String refNumber;
 
     private Date noticeGeneratedDate;
@@ -86,6 +89,7 @@ public class InspectionNotice implements Serializable {
     @JoinColumn(name = "noticeFileStore")
     private FileStoreMapper noticeFileStore;
 
+    @SafeHtml
     private String applicationType;
 
     public Long getId() {

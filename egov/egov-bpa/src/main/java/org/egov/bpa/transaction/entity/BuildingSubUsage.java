@@ -63,6 +63,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egbpa_building_sub_usage")
@@ -82,7 +83,8 @@ public class BuildingSubUsage extends AbstractAuditable {
 
 	private Integer blockNumber;
 
-	private String blockName;
+    @SafeHtml
+    private String blockName;
 
 	@OneToMany(mappedBy = "buildingSubUsage", cascade = CascadeType.ALL)
 	@OrderBy("id ASC")

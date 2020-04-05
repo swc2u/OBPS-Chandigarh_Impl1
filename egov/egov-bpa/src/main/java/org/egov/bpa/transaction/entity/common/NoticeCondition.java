@@ -66,6 +66,7 @@ import javax.validation.constraints.NotNull;
 import org.egov.bpa.master.entity.ChecklistServiceTypeMapping;
 import org.egov.bpa.transaction.entity.enums.ConditionType;
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egbpa_notice_conditions")
@@ -83,6 +84,8 @@ public class NoticeCondition extends AbstractAuditable {
     @JoinColumn(name = "checklistservicetype", nullable = false)
     private ChecklistServiceTypeMapping checklistServicetype;
     private Date conditiondDate;
+
+    @SafeHtml
     private String conditionNumber;
     private Integer orderNumber;
     @NotNull
@@ -90,6 +93,8 @@ public class NoticeCondition extends AbstractAuditable {
 	@Column(name = "type")
     private ConditionType type;
     private boolean isRequired;
+
+    @SafeHtml
     private String additionalCondition;
 
 	@Override

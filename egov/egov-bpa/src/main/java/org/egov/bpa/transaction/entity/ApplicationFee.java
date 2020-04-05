@@ -60,6 +60,7 @@ import javax.validation.constraints.NotNull;
 import org.egov.infra.workflow.entity.StateAware;
 import org.egov.pims.commons.Position;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_APPLICATION_FEE")
@@ -73,6 +74,7 @@ public class ApplicationFee extends StateAware<Position> {
     private Long id;
     @NotNull
     private Date feeDate;
+	@SafeHtml
     @Length(min = 1, max = 1024)
     private String feeRemarks;
     @NotNull
@@ -80,6 +82,7 @@ public class ApplicationFee extends StateAware<Position> {
     @JoinColumn(name = "status")
     private BpaStatus status;
    
+	@SafeHtml
     @Length(min = 1, max = 128)
     private String challanNumber;
     @OrderBy("id ASC")
@@ -87,6 +90,7 @@ public class ApplicationFee extends StateAware<Position> {
     private List<ApplicationFeeDetail> applicationFeeDetail = new ArrayList<>();
   
     private Boolean isRevised = false;
+	@SafeHtml
     @Length(min = 1, max = 512)
     private String modifyFeeReason;
 

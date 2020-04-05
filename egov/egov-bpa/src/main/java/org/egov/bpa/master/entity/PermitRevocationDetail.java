@@ -69,6 +69,7 @@ import javax.persistence.TemporalType;
 import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -88,14 +89,20 @@ public class PermitRevocationDetail extends AbstractAuditable {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "revocation", nullable = false)
     private PermitRevocation revocation;
+
+    @SafeHtml
     @Length(min = 1, max = 256)
     private String natureOfRequest;
     @Temporal(value = TemporalType.DATE)
     private Date requestDate;
     @Temporal(value = TemporalType.DATE)
     private Date replyDate;
+
+    @SafeHtml
     @Length(min = 1, max = 128)
     private String issuedBy;
+
+    @SafeHtml
     @Length(min = 1, max = 512)
     private String remarks;
     private Integer orderNumber;

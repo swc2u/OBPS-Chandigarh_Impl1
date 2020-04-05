@@ -48,6 +48,7 @@
 package org.egov.model.instrument;
 
 import org.egov.infstr.models.BaseModel;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -58,6 +59,7 @@ public class InstrumentType extends BaseModel {
      */
     private static final long serialVersionUID = 8681244690485333431L;
     private Long id;
+    @SafeHtml
     private String type;
     private Boolean isActive;
 

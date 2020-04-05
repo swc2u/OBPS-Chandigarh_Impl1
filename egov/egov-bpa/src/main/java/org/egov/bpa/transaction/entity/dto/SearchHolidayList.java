@@ -41,13 +41,16 @@ package org.egov.bpa.transaction.entity.dto;
 
 import java.util.Date;
 import org.egov.bpa.transaction.entity.enums.HolidayType;
+import org.hibernate.validator.constraints.SafeHtml;
 
 public class SearchHolidayList {
-	private Long id;
-	private Date holidayDate;
-	private HolidayType holidayType;
-	private String description;
-	private String year;
+    private Long id;
+    private Date holidayDate;
+    private HolidayType holidayType;
+    @SafeHtml
+    private String description;
+    @SafeHtml
+    private String year;
 
 	public Long getId() {
 		return id;

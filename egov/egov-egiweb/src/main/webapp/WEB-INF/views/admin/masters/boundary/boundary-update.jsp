@@ -53,7 +53,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="egov" tagdir="/WEB-INF/tags" %>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
-<link rel="stylesheet" href="<cdn:url  value='/resources/global/js/jquery/plugins/datatables/responsive/css/datatables.responsive.css'/>">
+<link rel="stylesheet" href="<cdn:url  value='/resources/global/js/jq/plugins/datatables/responsive/css/datatables.responsive.css'/>">
 <div class="row" id="page-content">
     <div class="col-md-12">
         <div class="panel" data-collapsed="0">
@@ -230,9 +230,9 @@
 </div>
 <table class="table table-bordered datatable" id="view-boundaries">
 </table>
-<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jquery/plugins/datatables/jquery.dataTables.min.css' context='/egi'/>"/>
-<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jquery/plugins/datatables/dataTables.bootstrap.min.css' context='/egi'/>">
-<script src="<cdn:url  value='/resources/global/js/jquery/plugins/datatables/jquery.dataTables.min.js'/>"></script>
-<script src="<cdn:url  value='/resources/global/js/jquery/plugins/datatables/responsive/js/datatables.responsive.js'/>"></script>
-<script src="<cdn:url  value='/resources/global/js/jquery/plugins/datatables/dataTables.bootstrap.js'/>"></script>
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jq/plugins/datatables/jq.dataTables.min.css' context='/egi'/>"/>
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jq/plugins/datatables/dataTables.bts.min.css' context='/egi'/>">
+<script src="<cdn:url  value='/resources/global/js/jq/plugins/datatables/jq.dataTables.min.js'/>"></script>
+<script src="<cdn:url  value='/resources/global/js/jq/plugins/datatables/responsive/js/datatables.responsive.js'/>"></script>
+<script src="<cdn:url  value='/resources/global/js/jq/plugins/datatables/dataTables.bts.js'/>"></script>
 <script src="<cdn:url  value='/resources/js/app/boundary-update.js?rnd=${app_release_no}'/>"></script>

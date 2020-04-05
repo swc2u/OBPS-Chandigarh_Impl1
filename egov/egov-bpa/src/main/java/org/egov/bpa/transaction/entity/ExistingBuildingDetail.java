@@ -59,6 +59,8 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_EXISTING_BUILDINGDETAIL")
@@ -69,6 +71,8 @@ public class ExistingBuildingDetail extends AbstractAuditable {
     @Id
     @GeneratedValue(generator = SEQ_EXISTING_BUILDINGDETAIL, strategy = GenerationType.SEQUENCE)
     private Long id;
+    @SafeHtml
+    @Length(min = 1, max = 50)
     private String name;
     private Integer number;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

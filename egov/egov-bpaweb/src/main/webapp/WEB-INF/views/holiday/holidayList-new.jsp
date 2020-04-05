@@ -149,8 +149,8 @@
 </form:form>
 
 <script
-	src="<cdn:url value='/resources/global/js/bootstrap/bootstrap-datepicker.js' context='/egi'/>"></script>
+	src="<cdn:url value='/resources/global/js/bts/bts-datepicker.js' context='/egi'/>"></script>
 <link rel="stylesheet"
-	href="<cdn:url value='/resources/global/css/bootstrap/bootstrap-datepicker.css' context='/egi'/>">
+	href="<cdn:url value='/resources/global/css/bts/bts-datepicker.css' context='/egi'/>">
 <script
 	src="<cdn:url value='/resources/js/app/holidaylist.js?rnd=${app_release_no}'/> "></script>
