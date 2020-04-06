@@ -108,6 +108,9 @@ public class Verandah extends FeatureProcess {
 									.map(Measurement::getWidth).reduce(BigDecimal::min).get();
 							BigDecimal minVerandDepth = f.getVerandah().getHeightOrDepth().stream().reduce(BigDecimal::min)
 									.get();
+							
+							minVerandaWidth=CDGAdditionalService.roundBigDecimal(minVerandaWidth);
+							minVerandDepth=CDGAdditionalService.roundBigDecimal(minVerandDepth);
 
 							if (minVerandaWidth.compareTo(BigDecimal.ZERO) > 0) {
 								Map<String, String> details = new HashMap<>();

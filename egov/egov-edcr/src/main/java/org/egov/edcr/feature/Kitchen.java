@@ -222,7 +222,7 @@ public class Kitchen extends FeatureProcess {
 									boolean isTypicalRepititiveFloor = false;
 									Map<String, Object> typicalFloorValues = ProcessHelper.getTypicalFloorValues(block,
 											floor, isTypicalRepititiveFloor);
-									buildResult(pl, floor, minimumHeight, subRule, subRuleDesc, minHeight, valid,
+									buildResult(pl, floor, minimumHeight, subRule, subRuleDesc, CDGAdditionalService.roundBigDecimal(minHeight), valid,
 											typicalFloorValues);
 								} else {
 									String layerName = String.format(LAYER_ROOM_HEIGHT, block.getNumber(),

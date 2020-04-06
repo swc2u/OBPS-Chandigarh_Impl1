@@ -446,11 +446,11 @@ public class HeightOfRoom extends FeatureProcess {
             if (valid) {
                 setReportOutputDetails(pl, subRule, subRuleDesc, value,
                         expected + DxfFileConstants.METER,
-                        actual + DxfFileConstants.METER, Result.Accepted.getResultVal());
+                        CDGAdditionalService.roundBigDecimal(actual) + DxfFileConstants.METER, Result.Accepted.getResultVal());
             } else {
                 setReportOutputDetails(pl, subRule, subRuleDesc, value,
                         expected + DxfFileConstants.METER,
-                        actual + DxfFileConstants.METER, Result.Not_Accepted.getResultVal());
+                        CDGAdditionalService.roundBigDecimal(actual) + DxfFileConstants.METER, Result.Not_Accepted.getResultVal());
             }
         }
     }

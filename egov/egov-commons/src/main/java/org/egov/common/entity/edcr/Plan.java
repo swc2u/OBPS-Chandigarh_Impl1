@@ -179,8 +179,21 @@ public class Plan implements Serializable {
     @Transient
     @JsonIgnore
     private List<EdcrPdfDetail> edcrPdfDetails;
-       
-    private Gate gate;
+   
+    @Transient
+    private Boolean strictlyValidateDimension = false;
+    
+    
+    
+    public Boolean getStrictlyValidateDimension() {
+		return strictlyValidateDimension;
+	}
+
+	public void setStrictlyValidateDimension(Boolean strictlyValidateDimension) {
+		this.strictlyValidateDimension = strictlyValidateDimension;
+	}
+
+	private Gate gate;
   
     public String getServiceType() {
 		return serviceType;
@@ -564,7 +577,7 @@ public class Plan implements Serializable {
     }
 
     public void setPlanInfoProperties(Map<String, String> planInfoProperties) {
-    	//planInfoProperties.putAll(initPlanInfo());
+    	planInfoProperties.putAll(initPlanInfo());
         this.planInfoProperties = planInfoProperties;
     }
 
@@ -586,8 +599,7 @@ public class Plan implements Serializable {
 	
 	private  HashMap<String, String> initPlanInfo() {
 	    HashMap<String, String> planInfo=new HashMap<String, String>();		
-		planInfo.put("PLOT_NO", "82/1 (TP:82/100)");
-		planInfo.put("KHATA_NO", "21 (EW:56)");
+		
 		planInfo.put("MAUZA", "MUSHARI");
 		planInfo.put("DISTRICT", "MITHUNPURA");
 		planInfo.put("AVG_PLOT_DEPTH", "N/A");

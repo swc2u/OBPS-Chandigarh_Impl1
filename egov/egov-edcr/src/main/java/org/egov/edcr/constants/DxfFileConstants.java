@@ -58,9 +58,13 @@ public class DxfFileConstants {
 	public static final String ARTIFICIAL_AND_MECHANICAL_VENTILATION_PROVIDED="ARTIFICIAL_AND_MECHANICAL_VENTILATION_PROVIDED";
 	public static final String EXISTING_BUILDING_CONSTRUCTED_WITHOUT_BASEMENT="EXISTING_BUILDING_CONSTRUCTED_WITHOUT_BASEMENT";
 	public static final String TOTAL_USERS="TOTAL_USERS";
-	public static final String Hospital_type="Hospital_type";
+	public static final String HOSPITAL_TYPE="HOSPITAL_TYPE";
 	public static final String SOLOR_WATER_HEATING_IN_LTR="SOLOR_WATER_HEATING_IN_LTR";
 	public static final String RESIDENTIAL_NO_OWNER="RESIDENTIAL_NO_OWNER";
+	
+	public static final String HOSPITAL_GOVERNMENT="Government";
+	public static final String HOSPITAL_PRIVATE="Private";
+	
 	
 	public static final String ULBNAME = "Chandigarh Administration";
 
