@@ -45,6 +45,8 @@ import static org.egov.bpa.utils.BpaConstants.ALTERATION;
 import static org.egov.bpa.utils.BpaConstants.NEW_CONSTRUCTION;
 import static org.egov.bpa.utils.BpaConstants.RECONSTRUCTION;
 import static org.egov.bpa.utils.BpaConstants.LOWRISK;
+import static org.egov.bpa.utils.BpaConstants.IN_PROGRESS;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -244,12 +246,20 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		                            }else if (BpaConstants.RULE_5_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 		                            	 boolean isWorkAlreadyStarted = (null!=checkIsWorkAlreadyStarted(application))?checkIsWorkAlreadyStarted(application):false;
 		                            	 if(isWorkAlreadyStarted) {
-		                            		 BigDecimal totalAmount = getTotalAmountOfRule5(application.getBuildingDetail(), plan, mostRestrictiveFarHelper);
-				                            	if(totalAmount.compareTo(BigDecimal.ZERO)>=0) {
-				                            		permitFee.getApplicationFee()
-				                                    .addApplicationFeeDetail(
-				                                            buildApplicationFeeDetail(bpaFee, permitFee.getApplicationFee(), totalAmount));
-				                            	}  
+		                            		 boolean isWorkInProgress = checkIsWorkInProgress(application);
+		                            		 BigDecimal totalAmount = BigDecimal.ZERO;
+		                            		 if(isWorkInProgress) {
+		                            			 BigDecimal totalConstArea = new BigDecimal(application.getSiteDetail().get(0).getStateOfConstruction());
+		                            			 totalConstArea = totalConstArea.setScale(2, BigDecimal.ROUND_HALF_UP);
+		                            			 totalAmount = getTotalAmountOfRule5(application.getBuildingDetail(), plan, mostRestrictiveFarHelper, isWorkInProgress, totalConstArea);
+		                            		 }else {
+		                            			 totalAmount = getTotalAmountOfRule5(application.getBuildingDetail(), plan, mostRestrictiveFarHelper, isWorkInProgress, BigDecimal.ZERO);
+		                            		 }
+			                            	 if(totalAmount.compareTo(BigDecimal.ZERO)>=0) {
+			                            		permitFee.getApplicationFee()
+			                                    .addApplicationFeeDetail(
+			                                            buildApplicationFeeDetail(bpaFee, permitFee.getApplicationFee(), totalAmount));
+			                            	 }  
 		                            	 }
 		                            }else if (BpaConstants.ADDITIONAL_COVERAGE_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 		                            	/*BigDecimal totalAmount = BigDecimal.ZERO;
@@ -290,6 +300,11 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	     */
 	    protected Boolean checkIsWorkAlreadyStarted(final BpaApplication application) {
 	        return application.getSiteDetail().get(0).getIsappForRegularization();
+	    }
+	    
+	    protected Boolean checkIsWorkInProgress(final BpaApplication application) {
+	        String constStage = (null!=application.getSiteDetail().get(0).getConstStages())? application.getSiteDetail().get(0).getConstStages().getCode() : EMPTY;
+	        return IN_PROGRESS.equalsIgnoreCase(constStage);
 	    }
   
 	    protected BigDecimal getBuiltUpInputUnitForEachServiceType(final BpaApplication application, final String serviceTypeCode) {
@@ -869,27 +884,31 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	        return totalAmount;
 	    }
 	    
-	    public BigDecimal getTotalAmountOfRule5(List<BuildingDetail> buildingDetails, Plan plan, OccupancyTypeHelper mostRestrictiveFarHelper) {
+	    public BigDecimal getTotalAmountOfRule5(List<BuildingDetail> buildingDetails, Plan plan, OccupancyTypeHelper mostRestrictiveFarHelper, boolean isWorkInProgress, BigDecimal totalConstructedArea) {
 	    	BigDecimal totalAmount = BigDecimal.ZERO;
 	    	BigDecimal totalArea = BigDecimal.ZERO;
-	    	BigDecimal totalCoveredArea = BigDecimal.ZERO;
-	    	BigDecimal totalBasementArea = BigDecimal.ZERO;
-	    	for (Block b : plan.getBlocks()) {
-	            Building building = b.getBuilding();
-	            if (building != null) {
-	            	if(null!=building.getCoverageArea()) {
-	            		totalCoveredArea = totalCoveredArea.add(building.getCoverageArea());
-	            	}
-	                for (Floor floor : building.getFloors()) {
-	                	if (floor.getNumber() < 0) {
-	                		if(null!=floor.getArea()) {
-	                			totalBasementArea = totalBasementArea.add(floor.getArea());
-	                		}
-	                	}
-	                }
-	            }
-	        }
-	    	totalArea = totalArea.add(totalCoveredArea).add(totalBasementArea);
+	    	if(!isWorkInProgress) {
+		    	BigDecimal totalCoveredArea = BigDecimal.ZERO;
+		    	BigDecimal totalBasementArea = BigDecimal.ZERO;	    	
+		    	for (Block b : plan.getBlocks()) {
+		            Building building = b.getBuilding();
+		            if (building != null) {
+		            	if(null!=building.getCoverageArea()) {
+		            		totalCoveredArea = totalCoveredArea.add(building.getCoverageArea());
+		            	}
+		                for (Floor floor : building.getFloors()) {
+		                	if (floor.getNumber() < 0) {
+		                		if(null!=floor.getArea()) {
+		                			totalBasementArea = totalBasementArea.add(floor.getArea());
+		                		}
+		                	}
+		                }
+		            }
+		        }
+		    	totalArea = totalArea.add(totalCoveredArea).add(totalBasementArea);
+	    	}else {
+	    		totalArea = totalArea.add(totalConstructedArea);
+	    	}
 	    	BigDecimal multiplier = BigDecimal.ZERO;	    	
 	    	if(BpaConstants.F_H.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
     			|| BpaConstants.F_M.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())

@@ -57,7 +57,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BpaConstants {
-	
+	public static final String IN_PROGRESS = "IN PROGRESS";
 	public static final String PLOT_NO = "PLOT_NUMBER";
 	public static final String AREA_ZONE = "ZONE";
 	public static final String ROOT_BOUNDARY_TYPE = "ROOT_BOUNDARY_TYPE";

@@ -185,7 +185,7 @@
 					<div class="col-sm-3 add-margin">
 						<form:input
 							class="form-control patternvalidation resetRegularization"
-							data-pattern="alphanumericwithspace" maxlength="128"
+							data-pattern="number" maxlength="8"
 							id="stateOfConstruction" path="siteDetail[0].stateOfConstruction" />
 						<form:errors path="siteDetail[0].stateOfConstruction"
 							cssClass="add-margin error-msg" />
