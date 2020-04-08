@@ -126,7 +126,7 @@ public class JasperReportService {
         columnStyle.setBorderBottom(Border.THIN());
         columnStyle.setBorderTop(Border.THIN());
         columnStyle.setTextColor(Color.black);
-        columnStyle.setHorizontalAlign(HorizontalAlign.RIGHT);
+        columnStyle.setHorizontalAlign(HorizontalAlign.LEFT);
         columnStyle.setFont(new Font(9, Font._FONT_TIMES_NEW_ROMAN, false));
         columnStyle.setStreching(Stretching.RELATIVE_TO_BAND_HEIGHT);
         columnStyle.setStretchWithOverflow(true);
@@ -145,7 +145,7 @@ public class JasperReportService {
         columnStyle.setBorderBottom(Border.THIN());
         columnStyle.setBorderTop(Border.THIN());
         columnStyle.setTextColor(Color.black);
-        columnStyle.setHorizontalAlign(HorizontalAlign.RIGHT);
+        columnStyle.setHorizontalAlign(HorizontalAlign.LEFT);
         columnStyle.setFont(new Font(9, Font._FONT_TIMES_NEW_ROMAN, false));
         columnStyle.setStreching(Stretching.RELATIVE_TO_BAND_HEIGHT);
         columnStyle.setStretchWithOverflow(true);
@@ -189,7 +189,7 @@ public class JasperReportService {
         columnheaderStyle.setBorderTop(Border.THIN());
         columnheaderStyle.setBorderBottom(Border.THIN());
         columnheaderStyle.setTextColor(Color.black);
-        columnheaderStyle.setHorizontalAlign(HorizontalAlign.CENTER);
+        columnheaderStyle.setHorizontalAlign(HorizontalAlign.LEFT);
         columnheaderStyle.setVerticalAlign(VerticalAlign.MIDDLE);
         columnheaderStyle.setFont(new Font(9, Font._FONT_ARIAL, true));
         return columnheaderStyle;

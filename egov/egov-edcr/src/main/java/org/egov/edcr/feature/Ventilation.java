@@ -190,18 +190,20 @@ public class Ventilation extends FeatureProcess {
 						BigDecimal totalRoomArea = f.getTotalHabitableRoomArea();
 
 						
+						totalVentilationArea=CDGAdditionalService.roundBigDecimal(totalVentilationArea);
+						
 
 						if (totalVentilationArea.compareTo(BigDecimal.ZERO) > 0) {
 							if (totalVentilationArea.compareTo(totalRoomArea.divide(BigDecimal.valueOf(8)).setScale(2,
 									BigDecimal.ROUND_HALF_UP)) >= 0) {
-								details.put(REQUIRED, "Minimum 1/8th of the habitable area " + totalRoomArea);
+								details.put(REQUIRED, "Minimum 1/8th of the habitable area ");
 								details.put(PROVIDED, "Ventilation area " + totalVentilationArea );
 								details.put(STATUS, Result.Accepted.getResultVal());
 								scrutinyDetail.getDetail().add(details);
 								pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 							} else {
-								details.put(REQUIRED, "Minimum 1/8th of the habitable area " + totalRoomArea);
+								details.put(REQUIRED, "Minimum 1/8th of the habitable area ");
 								details.put(PROVIDED, "Ventilation area " + totalVentilationArea);
 								details.put(STATUS, Result.Not_Accepted.getResultVal());
 								scrutinyDetail.getDetail().add(details);

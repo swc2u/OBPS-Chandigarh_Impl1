@@ -353,6 +353,9 @@ public class Kitchen extends FeatureProcess {
 			if (actual.compareTo(expected) >= 0) {
 				valid = true;
 			}
+			
+			actual=CDGAdditionalService.roundBigDecimal(actual);
+			
 			String value = typicalFloorValues.get("typicalFloors") != null
 					? (String) typicalFloorValues.get("typicalFloors")
 					: " floor " + floor.getNumber();

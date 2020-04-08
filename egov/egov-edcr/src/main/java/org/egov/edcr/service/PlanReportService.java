@@ -46,6 +46,7 @@ import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.entity.ApplicationType;
 import org.egov.edcr.entity.EdcrApplication;
 import org.egov.edcr.entity.EdcrApplicationDetail;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.DcrConstants;
 import org.egov.infra.admin.master.service.CityService;
 import org.egov.infra.config.core.ApplicationThreadLocals;
@@ -222,16 +223,19 @@ public class PlanReportService {
                 }
                 if (STATUS.equalsIgnoreCase(columnHeading.name)) {
                     columnWidth = statusColumnSize.intValue();
+                    
                 }
                // if(!"Byelaw".equalsIgnoreCase(columnHeading.name))// disable  ByLaw from report
                 	frb.addColumn(columnHeading.name, columnHeading.name, String.class.getName(), columnWidth);
             }
             frb.setMargins(0, 0, 0, 0);
             frb.setUseFullPageWidth(true);
+            
             List<AbstractColumn> columns = frb.getColumns();
             for (AbstractColumn col : columns) {
                 if (STATUS.equalsIgnoreCase(col.getTitle()))
                     col.setConditionalStyles(listCondStyle);
+               
 
             }
             if (heading != null)
@@ -254,6 +258,12 @@ public class PlanReportService {
             Style style = new Style();
             style.setStretchWithOverflow(true);
             style.setStreching(RELATIVE_TO_BAND_HEIGHT);
+            
+            for (AbstractColumn col : columns) {
+                if (STATUS.equalsIgnoreCase(col.getTitle()))
+                    style.setHorizontalAlign(HorizontalAlign.CENTER);
+            }
+            
             sub.setStyle(style);
             sub.setDatasource(new DJDataSource(dataSourceName, DJConstants.DATA_SOURCE_ORIGIN_PARAMETER, 0));
             sub.setLayoutManager(new ClassicLayoutManager());
@@ -319,6 +329,7 @@ public class PlanReportService {
                             HorizontalBandAlignment.LEFT, 530);
 
                     autoText.setHeight(40);
+                    autoText.setAlignment(HorizontalBandAlignment.LEFT);
                     autoText.setStyle(reportService.getTotalNumberStyle());
 
                     frb.addAutoText(autoText);
@@ -1002,9 +1013,9 @@ public class PlanReportService {
                                     dcrReportFloorDetail.setOccupancy(occupancyName);
                                     dcrReportFloorDetail.setBuiltUpArea(
                                             occupancy.getExistingBuiltUpArea().compareTo(BigDecimal.ZERO) > 0
-                                                    ? occupancy.getBuiltUpArea()
-                                                            .subtract(occupancy.getExistingBuiltUpArea())
-                                                    : occupancy.getBuiltUpArea());
+                                            ? occupancy.getBuiltUpArea()
+                                                    .subtract(occupancy.getExistingBuiltUpArea())
+                                            : occupancy.getBuiltUpArea());
                                     dcrReportFloorDetail.setFloorArea(
                                             occupancy.getExistingFloorArea().compareTo(BigDecimal.ZERO) > 0
                                                     ? occupancy.getFloorArea()

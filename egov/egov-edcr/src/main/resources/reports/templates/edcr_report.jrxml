@@ -90,13 +90,13 @@
 				<imageExpression><![CDATA[$P{qrCode}]]></imageExpression>
 			</image>
 			<image scaleImage="RetainShape" hAlign="Center" isUsingCache="true" onErrorType="Blank">
-				<reportElement mode="Transparent" x="4" y="0" width="149" height="59" uuid="f778375a-96b7-42de-8819-00bbfd34ae68">
+				<reportElement mode="Transparent" x="12" y="8" width="57" height="59" uuid="f778375a-96b7-42de-8819-00bbfd34ae68">
 					<printWhenExpression><![CDATA[$P{cityLogo}  != null]]></printWhenExpression>
 				</reportElement>
 				<imageExpression><![CDATA[$P{cityLogo}]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="16" y="308" width="186" height="18" uuid="3f3325d3-7390-4b18-a07b-d723a2d91099"/>
+				<reportElement x="12" y="307" width="186" height="18" uuid="3f3325d3-7390-4b18-a07b-d723a2d91099"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -104,7 +104,7 @@
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="12" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Declaration in drawings]]></text>
@@ -170,7 +170,7 @@
 				<textFieldExpression><![CDATA[$P{reportStatus}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="142" y="273" width="406" height="21" uuid="4baabfce-be8c-41ca-a630-4f652544996b"/>
+				<reportElement x="142" y="273" width="146" height="21" uuid="4baabfce-be8c-41ca-a630-4f652544996b"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -255,7 +255,7 @@
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="8"/>
-					<paragraph leftIndent="5"/>
+					<paragraph leftIndent="3"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{plot}.getPlotBndryArea()]]></textFieldExpression>
 			</textField>
@@ -354,7 +354,7 @@
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="8"/>
-					<paragraph leftIndent="5"/>
+					<paragraph leftIndent="3"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{plotNumber}]]></textFieldExpression>
 			</textField>
@@ -444,7 +444,7 @@
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="8"/>
-					<paragraph leftIndent="5"/>
+					<paragraph leftIndent="3"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{planInformation}.getKhataNo()]]></textFieldExpression>
 			</textField>
@@ -534,7 +534,7 @@
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="8"/>
-					<paragraph leftIndent="5"/>
+					<paragraph leftIndent="3"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{planInformation}.getDemolitionArea()]]></textFieldExpression>
 			</textField>
@@ -669,7 +669,7 @@
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="8"/>
-					<paragraph leftIndent="5"/>
+					<paragraph leftIndent="3"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{planInformation}.getPlotArea()]]></textFieldExpression>
 			</textField>
@@ -712,7 +712,7 @@
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
@@ -757,7 +757,7 @@
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
@@ -802,7 +802,7 @@
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
@@ -847,7 +847,7 @@
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
@@ -892,7 +892,7 @@
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
@@ -937,7 +937,7 @@
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
@@ -982,7 +982,7 @@
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
@@ -1027,7 +1027,7 @@
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
@@ -1057,7 +1057,7 @@
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
@@ -1102,7 +1102,7 @@
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
@@ -1169,52 +1169,7 @@
 				<textFieldExpression><![CDATA[$P{applicationType}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement x="289" y="273" width="16" height="21" uuid="e3f80e2e-5048-46b1-adba-bfb8781abcf9"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="8"/>
-					<paragraph leftIndent="3"/>
-				</textElement>
-				<textFieldExpression><![CDATA["7"]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="false">
-				<reportElement x="305" y="273" width="114" height="21" uuid="8de3f87f-c397-4458-87a3-1fd2a2480e88"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font size="8"/>
-					<paragraph leftIndent="3"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Root Boundary "]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="419" y="273" width="130" height="21" uuid="a6fa8954-7cc0-46cc-a0ab-9b29e9a989cc"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font size="8"/>
-					<paragraph leftIndent="5"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{planInformation}.getRootBoundaryType()]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="false">
-				<reportElement x="13" y="617" width="16" height="25" uuid="e31b2a92-a1c2-4531-a909-e5dd6a64a6e3"/>
+				<reportElement x="12" y="616" width="16" height="25" uuid="e31b2a92-a1c2-4531-a909-e5dd6a64a6e3"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -1229,7 +1184,7 @@
 				<textFieldExpression><![CDATA["11"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement x="29" y="617" width="343" height="25" uuid="b1139a9e-1194-4ca6-a987-78a3f3ba9801"/>
+				<reportElement x="28" y="616" width="343" height="25" uuid="b1139a9e-1194-4ca6-a987-78a3f3ba9801"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -1244,7 +1199,37 @@
 				<textFieldExpression><![CDATA["Fire Safety provisions as per National Building Code of India, and Delhi Fire Prevention and Fire Safety Act, 1986 as extended to UT, Chandigarh."]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="372" y="617" width="177" height="25" uuid="425f2991-1041-48fc-894b-1f26c8dc0bdc"/>
+				<reportElement x="371" y="616" width="177" height="25" uuid="425f2991-1041-48fc-894b-1f26c8dc0bdc"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{planInformation}.getFireSafetyProvisionsAsPerNbcDFPF()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement x="288" y="273" width="16" height="21" uuid="d7f9617c-54cd-4c8f-8d6d-e93220ad63c6"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA["7"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="418" y="273" width="130" height="21" uuid="683464a4-bbaf-441c-8810-ba61555beba6"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -1254,12 +1239,27 @@
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="8"/>
-					<paragraph leftIndent="5"/>
+					<paragraph leftIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{planInformation}.getFireSafetyProvisionsAsPerNbcDFPF()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{planInformation}.getRootBoundaryType()]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement x="13" y="643" width="16" height="25" uuid="c15b37f0-caaf-49b1-9dec-804ce48155a2"/>
+				<reportElement x="304" y="273" width="114" height="21" uuid="df24ee6f-784f-42f6-8567-ec3b2bf32a76"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Root Boundary "]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement x="12" y="641" width="16" height="25" uuid="f2aca0b3-8185-467a-8193-9a634c106e37"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -1274,7 +1274,7 @@
 				<textFieldExpression><![CDATA["12"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement x="29" y="643" width="343" height="25" uuid="67f2f821-4bd3-4a1b-b326-7b9aa047edc8"/>
+				<reportElement x="28" y="641" width="343" height="25" uuid="4044f5ef-ec67-4ffc-b9b4-22cb024c51fa"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -1289,22 +1289,7 @@
 				<textFieldExpression><![CDATA["‘Fire and Life Safety’ exit requirements as per National Building Code of India?"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="372" y="643" width="177" height="25" uuid="dca03321-efb9-4262-98e9-deed4926cfe4"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font size="8"/>
-					<paragraph leftIndent="5"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{planInformation}.getExitRequirmentFireAndLifeSafetyAsPerNBC()]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="false">
-				<reportElement x="13" y="667" width="16" height="25" uuid="0fa29c06-734f-41d7-b3c1-b42ad579c4ad"/>
+				<reportElement x="371" y="641" width="177" height="25" uuid="5f9bc00f-1baa-4033-bf0b-cf359dca3dfb"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -1313,13 +1298,28 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="10"/>
-					<paragraph leftIndent="3"/>
+					<font size="8"/>
+					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA["13"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{planInformation}.getExitRequirmentFireAndLifeSafetyAsPerNBC()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="371" y="666" width="177" height="25" uuid="54c0f66b-af2c-4b38-aae9-4e41ee614340"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{planInformation}.getCombustibleMaterialInFireTower()]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement x="29" y="667" width="343" height="25" uuid="08c2e333-76f6-4619-a73c-d8907063634e"/>
+				<reportElement x="28" y="666" width="343" height="25" uuid="e6e170b3-9765-4404-aea2-5aa8f9415099"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -1333,8 +1333,8 @@
 				</textElement>
 				<textFieldExpression><![CDATA["No combustible material shall be allowed in the fire tower?"]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="372" y="667" width="177" height="25" uuid="f6ce5b83-503f-49d0-a944-d45b04815a4f"/>
+			<textField isBlankWhenNull="false">
+				<reportElement x="12" y="666" width="16" height="25" uuid="f83b6d1a-72da-4e1d-9745-bfa92f91774b"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -1342,49 +1342,16 @@
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font size="8"/>
-					<paragraph leftIndent="5"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="10"/>
+					<paragraph leftIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{planInformation}.getCombustibleMaterialInFireTower()]]></textFieldExpression>
+				<textFieldExpression><![CDATA["13"]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
 	<pageFooter>
-		<band height="52">
-			<textField isBlankWhenNull="true">
-				<reportElement x="221" y="27" width="15" height="25" uuid="68b285d7-eec7-41c7-a617-0e666c163f7a"/>
-				<textElement verticalAlignment="Bottom">
-					<font size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-			<textField evaluationTime="Report" isBlankWhenNull="true">
-				<reportElement x="248" y="27" width="22" height="25" uuid="0c301f1e-dfac-47e6-bcce-a509c0366641"/>
-				<textElement verticalAlignment="Bottom">
-					<font size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="231" y="27" width="11" height="25" uuid="2656c6b1-22db-4ad7-962b-92d966d3917d"/>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="9"/>
-				</textElement>
-				<text><![CDATA[of]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="288" y="26" width="260" height="26" uuid="b797c101-877f-4213-8b70-47b46efc4ccd"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Application No:"+$P{applicationNumber}+", Scrutiny Date:"+$P{reportGeneratedDate}]]></textFieldExpression>
-			</textField>
-			<image scaleImage="RetainShape" hAlign="Left" vAlign="Middle" isUsingCache="true" onErrorType="Blank">
-				<reportElement mode="Transparent" x="9" y="27" width="109" height="25" uuid="a44f1994-7654-4816-a0f5-0de0ffecc5ce"/>
-				<imageExpression><![CDATA[$P{egovLogo}]]></imageExpression>
-			</image>
-		</band>
+		<band height="52"/>
 	</pageFooter>
 	<summary>
 		<band height="747">
@@ -1404,7 +1371,9 @@
 				<text><![CDATA[Verify Noc's]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="7" y="19" width="100" height="20" uuid="05a014bb-04c1-4e2c-b8ad-9e768696425b"/>
+				<reportElement x="7" y="19" width="100" height="20" uuid="05a014bb-04c1-4e2c-b8ad-9e768696425b">
+					<printWhenExpression><![CDATA[!$P{errors}.isEmpty()]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Left">
 					<font size="12" isBold="true" isUnderline="false"/>
 				</textElement>
