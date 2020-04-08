@@ -196,7 +196,7 @@ public abstract class BpaGenericApplicationController extends GenericWorkFlowCon
     protected ApplicationSubTypeService applicationTypeService;
 
     protected void prepareFormData(Model model) {
-        model.addAttribute("occupancyList", occupancyService.findAllOrderByOrderNumber());
+        model.addAttribute("occupancyList", occupancyService.findAllByActive());
         model.addAttribute("zones", boundaryService.getActiveBoundariesByBndryTypeNameAndHierarchyTypeName(ZONE,
                 REVENUE_HIERARCHY_TYPE));
         model.addAttribute("serviceTypeList", serviceTypeService.getAllActiveMainServiceTypes());

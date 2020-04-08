@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="buildingpermit" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="576a1e58-ecb3-4d56-971a-5d1fe019af29">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -79,52 +79,59 @@
 		</band>
 	</background>
 	<title>
-		<band height="127" splitType="Stretch">
+		<band height="119" splitType="Stretch">
 			<textField>
-				<reportElement x="85" y="48" width="370" height="20" uuid="13d1ee09-016a-44b3-a70c-eeaa9b66affd"/>
+				<reportElement x="100" y="49" width="380" height="20" uuid="13d1ee09-016a-44b3-a70c-eeaa9b66affd"/>
 				<textElement textAlignment="Center">
 					<font fontName="Arial Unicode MS" size="11" isBold="true" isUnderline="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{permitOrderTitle}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="104" y="13" width="340" height="30" uuid="5dfe528d-792c-4b15-8716-5ce4671fb539"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="5" width="380" height="20" uuid="5dfe528d-792c-4b15-8716-5ce4671fb539"/>
 				<textElement textAlignment="Center">
 					<font fontName="Arial Unicode MS" size="12" isBold="true" isUnderline="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA["CHANDIGARH ADMINISTRATION"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Chandigarh Administration"]]></textFieldExpression>
 			</textField>
 			<image scaleImage="RetainShape" hAlign="Center" isUsingCache="true" onErrorType="Blank">
-				<reportElement mode="Transparent" x="21" y="10" width="100" height="100" uuid="430badee-7a36-40e8-b783-daddf3e57830">
+				<reportElement mode="Transparent" x="0" y="5" width="60" height="60" uuid="430badee-7a36-40e8-b783-daddf3e57830">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<imageExpression><![CDATA[$P{logoPath}]]></imageExpression>
 			</image>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="1" y="107" width="553" height="20" uuid="16cedec8-4f3e-47e8-8ce1-eb3792a04df6">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="1" y="91" width="553" height="20" uuid="16cedec8-4f3e-47e8-8ce1-eb3792a04df6">
 					<printWhenExpression><![CDATA[!$P{subheader}.isEmpty()]]></printWhenExpression>
 				</reportElement>
 				<textElement>
-					<font fontName="Arial Unicode MS" isBold="true"/>
+					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{subheader}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="27" width="380" height="20" uuid="675a566a-48cd-4b29-b3ce-2e11516270d5"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Unicode MS" size="11" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["AUTOMATED BUILDING PERMIT APPROVAL SYSTEM"]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
 	<detail>
 		<band height="174">
 			<staticText>
-				<reportElement x="0" y="7" width="121" height="20" uuid="6928eb55-27ad-4983-93f8-3539c289ba12"/>
+				<reportElement x="0" y="7" width="110" height="20" uuid="6928eb55-27ad-4983-93f8-3539c289ba12"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Plan Permission No. demo :]]></text>
 			</staticText>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="121" y="7" width="222" height="20" uuid="6ac37b3a-7df1-4894-b648-4ad0500e0332"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="111" y="7" width="222" height="20" uuid="6ac37b3a-7df1-4894-b648-4ad0500e0332"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial Unicode MS" size="11" isBold="true"/>
+					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{buildingPermitNumber}]]></textFieldExpression>
 			</textField>
@@ -135,66 +142,66 @@
 				</textElement>
 				<text><![CDATA[Dated : ]]></text>
 			</staticText>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="456" y="7" width="98" height="20" uuid="48cf6e25-d5a5-495d-a90e-b683786a64e2"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{currentDate}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="0" y="29" width="555" height="20" uuid="f7a1cee0-eb1e-4bed-a424-cc28aeaf926d"/>
 				<textElement>
-					<font fontName="Arial Unicode MS" size="10" isBold="true"/>
+					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Ref :-  Application number "+ $P{applicationNumber} + " dated " + $P{applicationDate} + "."]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="0" y="54" width="100" height="20" uuid="824aa1a3-3bb8-4b86-a40b-d7c59d73b964"/>
 				<textElement>
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["From,"]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="110" y="54" width="442" height="20" uuid="9b393896-3050-4a52-8c24-70b65e1469b0"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="110" y="54" width="445" height="20" uuid="9b393896-3050-4a52-8c24-70b65e1469b0"/>
 				<textElement>
-					<font fontName="Arial Unicode MS" size="11" isBold="true"/>
+					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[" The Chief Administrator, " + "\n"  + "UT, Chandigarh."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["The Chief Administrator, " + "\n"  + "UT, Chandigarh."]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="2" y="85" width="100" height="20" uuid="d95d47a0-9f49-47f8-84e3-6e590f7a377f"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="85" width="100" height="20" uuid="d95d47a0-9f49-47f8-84e3-6e590f7a377f"/>
 				<textElement>
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["To, "]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="112" y="85" width="442" height="38" uuid="613148cf-0323-4680-b12c-6bd6bdd95fe5"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="110" y="85" width="444" height="38" uuid="613148cf-0323-4680-b12c-6bd6bdd95fe5"/>
 				<textElement>
-					<font fontName="Arial Unicode MS" size="10" isBold="true"/>
+					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Sh. "+$P{applicantName} + " , " + "\n" + $P{applicantAddress} + " , " + "\n" + "Mobile number : " + $P{mobileNo} + " ."]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="3" y="129" width="100" height="20" uuid="27de3149-4411-4adf-a429-b84878805754"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="129" width="100" height="20" uuid="27de3149-4411-4adf-a429-b84878805754"/>
 				<textElement>
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["C/O (Architect) "]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="113" y="129" width="442" height="20" uuid="d85c8f71-2e11-4d0d-9427-fdad16d1fc05"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="110" y="129" width="445" height="20" uuid="d85c8f71-2e11-4d0d-9427-fdad16d1fc05"/>
 				<textElement>
-					<font fontName="Arial Unicode MS" size="10" isBold="false"/>
+					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Sh. "+$P{architectName} + " ."]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="0" y="154" width="555" height="20" uuid="3735d527-db51-4450-87ad-1e0af02ca176"/>
 				<textElement>
-					<font fontName="Arial Unicode MS" size="10" isBold="true"/>
+					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Memo No "+ $P{applicationNumber} + "/ SDO(B)/RP-183."]]></textFieldExpression>
 			</textField>
@@ -215,20 +222,15 @@ taken in hand till the same is verified/certified by the Junior Engineer and obt
 			</staticText>
 			<textField>
 				<reportElement x="0" y="17" width="555" height="63" uuid="05da5634-71fb-4508-acfc-e839e0c570c0"/>
-				<textFieldExpression><![CDATA[" accordance in with the plans submitted with it"+
-"submitted with it, your application is hereby sanctioned for the aforesaid construction under rule 5 of the Punjab Capital"+
+				<textFieldExpression><![CDATA["accordance in with the plans submitted with it, your application is hereby sanctioned for the aforesaid construction under rule 5 of the Punjab Capital"+
 "(Dev. &amp; Reg.) Building Rules, 1952. Your attention is also invited to rules 16, rule 17 &amp; 119 "+"(amended) of the Building Rules for the following: -"]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="4" y="1" width="406" height="19" uuid="8e76db46-d9be-45be-a803-6890aa3552b8"/>
-				<text><![CDATA[Reference your application to erect/re-erect/add to/alter building on]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="319" y="1" width="350" height="19" uuid="537b4d26-fd09-42db-aabb-35ea3cf1ca2c"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="1" width="555" height="19" uuid="537b4d26-fd09-42db-aabb-35ea3cf1ca2c"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Plot no - "+$P{plotNo}+", Sector No- "+$P{sectorNo}+", Chandigarh"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Reference your application to erect/re-erect/add to/alter building on Plot no - "+$P{plotNo}+", Sector No- "+$P{sectorNo}+", Chandigarh"]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="253" width="555" height="104" uuid="53154b11-225f-4790-b022-50c1fc79da82"/>
@@ -244,8 +246,8 @@ taken in hand till the same is verified/certified by the Junior Engineer and obt
 			</staticText>
 		</band>
 		<band height="52" splitType="Stretch">
-			<textField textAdjust="StretchHeight">
-				<reportElement stretchType="RelativeToBandHeight" x="5" y="9" width="555" height="30" uuid="15bb50ec-35b0-4fc9-b773-893fd54a3272"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="9" width="560" height="30" uuid="15bb50ec-35b0-4fc9-b773-893fd54a3272"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Arial Unicode MS" size="10"/>
 				</textElement>
@@ -253,8 +255,8 @@ taken in hand till the same is verified/certified by the Junior Engineer and obt
 			</textField>
 		</band>
 		<band height="52" splitType="Stretch">
-			<textField textAdjust="StretchHeight">
-				<reportElement stretchType="RelativeToBandHeight" x="10" y="21" width="545" height="31" uuid="d6a68517-dede-4535-9d26-4f422a495005">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="21" width="555" height="31" uuid="d6a68517-dede-4535-9d26-4f422a495005">
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Justified">
@@ -263,7 +265,7 @@ taken in hand till the same is verified/certified by the Junior Engineer and obt
 				<textFieldExpression><![CDATA[$P{permitConditions}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="9" y="5" width="544" height="15" uuid="aee1c70b-fa27-410a-98cc-204521be33ef">
+				<reportElement x="0" y="5" width="553" height="15" uuid="aee1c70b-fa27-410a-98cc-204521be33ef">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -659,8 +661,8 @@ taken in hand till the same is verified/certified by the Junior Engineer and obt
 	<pageFooter>
 		<band height="62">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-			<image>
-				<reportElement positionType="FixRelativeToBottom" x="403" y="2" width="149" height="60" uuid="8b09590f-cf8d-4a41-ba7d-bce7902173f9">
+			<image scaleImage="RetainShape" hAlign="Center" onErrorType="Blank">
+				<reportElement positionType="FixRelativeToBottom" x="403" y="2" width="149" height="56" uuid="8b09590f-cf8d-4a41-ba7d-bce7902173f9">
 					<property name="qrCode" value="$P{qrCode}"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
@@ -668,7 +670,7 @@ taken in hand till the same is verified/certified by the Junior Engineer and obt
 				</reportElement>
 				<imageExpression><![CDATA[$P{qrCode}]]></imageExpression>
 			</image>
-			<textField textAdjust="StretchHeight" pattern="d/M/yy h:mm a">
+			<textField isStretchWithOverflow="true" pattern="d/M/yy h:mm a">
 				<reportElement stretchType="RelativeToBandHeight" x="0" y="40" width="113" height="21" uuid="71a8367c-735e-42b8-9dcb-b0053f9b31b3"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>

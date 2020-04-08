@@ -81,10 +81,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = "/home")
 public class HomeController {
 
-	public static final String BPA_FIRE_NOC_ROLE = "BPA_FIRE_NOC_ROLE";
-	public static final String BPA_AIPORT_AUTH_NOC_ROLE = "BPA_AIPORT_AUTH_NOC_ROLE";
-	public static final String BPA_NMA_NOC_ROLE = "BPA_NMA_NOC_ROLE";
-	public static final String BPA_ENVIRONMENT_NOC_ROLE = "BPA_ENVIRONMENT_NOC_ROLE";
+	public static final String FIRENOCROLE = "BPA_FIRE_NOC_ROLE";
+    public static final String PHNOCROLE = "BPA_PUB_HEALTH_NOC_ROLE";
+    public static final String TEHNOCROLE = "BPA_TEHSILDAR_NOC_ROLE";
+    public static final String PH7NOCROLE = "BPA_PUB_HEALTH_7_NOC_ROLE";
+    public static final String ROAD2NOCROLE = "BPA_ROAD_2_NOC_ROLE";
+    public static final String PACNOCROLE = "BPA_PAC_NOC_ROLE";
+    public static final String STRCNOCROLE = "BPA_STRUCTURE_NOC_ROLE";
+    public static final String ELECNOCROLE = "BPA_ELECTRICAL_NOC_ROLE";
+    public static final String POLNOCROLE = "BPA_POL_CONTROL_NOC_ROLE";
+    public static final String MANINOCROLE = "BPA_MANIMAJARA_NOC_ROLE";
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -194,8 +200,16 @@ public class HomeController {
 	private boolean isNOCDepartmentUser(User user) {
 		Boolean check = false;
 		for (Role r : user.getRoles()) {
-			if (BPA_FIRE_NOC_ROLE.equals(r.getName()) || BPA_AIPORT_AUTH_NOC_ROLE.equals(r.getName())
-					|| BPA_NMA_NOC_ROLE.equals(r.getName()) || BPA_ENVIRONMENT_NOC_ROLE.equals(r.getName())) {
+			if (FIRENOCROLE.equals(r.getName()) 
+				|| PHNOCROLE.equals(r.getName())
+				|| TEHNOCROLE.equals(r.getName()) 
+				|| PH7NOCROLE.equals(r.getName())
+				|| ROAD2NOCROLE.equals(r.getName())
+				|| PACNOCROLE.equals(r.getName()) 
+				|| STRCNOCROLE.equals(r.getName())					
+				|| ELECNOCROLE.equals(r.getName()) 
+				|| POLNOCROLE.equals(r.getName())
+				|| MANINOCROLE.equals(r.getName())) {
 				check = true;
 			}
 		}

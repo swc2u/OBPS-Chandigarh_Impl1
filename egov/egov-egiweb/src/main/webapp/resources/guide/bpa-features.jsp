@@ -146,8 +146,8 @@
 			<div style = "opacity: 0.7;" class = "color-black bpa-common-text">Citizens, Officials, and other stakeholders can submit and track applications in real time and obtain approvals without having to physically visit an office.</div>
 		</div>
 		<div class = "color-black footer-list-content col-md-4">
-			<div style = "margin-bottom: 16px;" class = "color-black bpa-common-header2 bpa-common-header">Help Resources</div>
-			<ul class="tutorial-list color-black">
+			<div style="margin-bottom: 16px;display: none;" class="color-black bpa-common-header2 bpa-common-header">Help Resources</div>
+			<ul class="tutorial-list color-black" style="display: none;">
 				<li class="bpa-common-text tutorial-item">
 					<a href="javascript:void(0);" target="_blank">Registered building licensee user manual</a>
 				</li>
@@ -181,7 +181,7 @@
 				<div class = "color-black bpa-common-text">Chandigarh Smart City Limited,
 3rd Floor, Building over the New Bridge (Above SCO 17,18,19) Sector 17-A
 Chandigarh 160017</div>
-				<div class = "footer-icon-info-cont">
+				<div class = "footer-icon-info-cont" style="display:none;">
 					<div class = "footer-icon">
 						<i class="fa fa-map-marker fa-1x"></i>
 					</div>
@@ -199,7 +199,7 @@ Chandigarh 160017</div>
 					</div>
 				</div>
 				
-				<div class = "footer-icon-info-cont">
+				<div class = "footer-icon-info-cont" style="display:none;">
 					<div class = "footer-icon">
 						<i class="fa fa-envelope fa-1x"></i>
 					</div>
@@ -208,7 +208,7 @@ Chandigarh 160017</div>
 					</div>
 				</div>
 				
-				<div class = "footer-icon-info-cont">
+				<div class = "footer-icon-info-cont" style="display:none;">
 					<div class = "footer-icon">
 						<a href="javascript:void(0);" target="_blank" class="media-link"><i class="fa fa-facebook fa-1x"></i></a>
 					</div>

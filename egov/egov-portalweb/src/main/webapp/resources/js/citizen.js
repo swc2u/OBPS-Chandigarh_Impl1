@@ -59,7 +59,7 @@ $(document).ready(function(){
 	// AJAX Call -------------------
 	$.ajax({
         url: '/portal/rest/fetch/servicespending',
-//        dataType: 'text',
+        // dataType: 'text',
         type: 'POST',
         contentType: 'application/x-www-form-urlencoded',
         data: {
@@ -71,7 +71,6 @@ $(document).ready(function(){
                 data: tableInitData,
                 "columns": [
                     { "data": "srNo", "orderable": false },
-                    { "data": "ulbName", "orderable": false },
                     { "data": "applicantName", "orderable": false },
                     { "data": "serviceRequestNo", "orderable": false},
                     { "data": "serviceRequestDate" },
@@ -80,13 +79,12 @@ $(document).ready(function(){
                     { "data": "status" },
                     { "data": "pendingAction", "orderable": false},
                 ]
-
-            } );
+            });
         	$('#bpa-home-table tbody').on('click', 'tr', function (e) {
         	    var data = table.row( this ).data();
         	    e.stopImmediatePropagation();
         	    openPopUp(data.domainUrl+data.link);
-        	} );
+        	});
         	
         	//Initialize data in global variable
         	window.clickedServiceData = cloneDeep(data);
@@ -97,8 +95,6 @@ $(document).ready(function(){
             console.log( errorThrown );
         }
     });
-	
-	
 	
 	//------------------------------
 		
@@ -373,7 +369,7 @@ function cloneDeep(obj){
 function fetchDataAndInitiateTable(url, dataKey){
 	$.ajax({
         url: url,
-//        dataType: 'text',
+        // dataType: 'text',
         type: 'POST',
         contentType: 'application/x-www-form-urlencoded',
         data: {

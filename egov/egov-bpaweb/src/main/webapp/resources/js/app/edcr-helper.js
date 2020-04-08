@@ -43,7 +43,7 @@ var features = [
 	"A-PO",		//Professional Office
 	"A-S",		//STD/ PCO/ fax and photostat machine
 	"A-PG",		//Creche and paying guest facility
-	"A-EWS",	//EWS
+	"A-EWS"	    //EWS
 ];
 
 $(document).ready(
@@ -321,7 +321,7 @@ $(document).ready(
 
         }
         
-        $( "#applicationType" ).change(function() {
+        /*$( "#applicationType" ).change(function() {
             $( "#applicationType option:selected" ).each(function() {
                var str = $(this).text();
                if(str == "Below two Kanal"){
@@ -332,7 +332,7 @@ $(document).ready(
                	   $('#noc-document-info').removeAttr("style");
                }
             });
-        });
+        });*/
 
 
         // Will Auto Populate existing building details
@@ -558,9 +558,17 @@ $(document).ready(
         }
 
         function loadSubUsages(subUsages, selectBoxName) {
+        	var count=0;
             $.each(subUsages, function(index, subUsage) {
-                $('select[name="'+selectBoxName+'"]').append($('<option title="'+subUsage.description+'">').val(subUsage.id).text(subUsage.description));
+            	if(count==0){
+            		$('select[name="'+selectBoxName+'"]').append($('<option title="'+subUsage.description+'" Selected>').val(subUsage.id).text(subUsage.description));
+            	}else{
+            		$('select[name="'+selectBoxName+'"]').append($('<option title="'+subUsage.description+'">').val(subUsage.id).text(subUsage.description));
+            	}
+            	count++;
             });
+            $('select[name="'+selectBoxName+'"]').trigger('change');
+            $('select[name="'+selectBoxName+'"]').attr("readonly", "true");
         }
         function addSubUsages(blkIdx, subUsageIdx, subUsages, blockName, blockNo, mainUsageDesc, mainUsageId) {
 

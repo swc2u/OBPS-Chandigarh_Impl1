@@ -367,7 +367,7 @@ public class BpaConstants {
     public static final String SECURITY_FEE = "Security fee";
     public static final String LABOURCESS = "Labour cess";
     public static final String SCRUTINY_FEE = "Scrutiny fee";
-    public static final String GST_18 = "GST 18%";
+    public static final String GST_18 = "GST (18% of scrutiny fee)";
     public static final String ADDITIONAL_COVERAGE_FEE = "Additional Coverage fee";
     public static final String RULE_5_FEE = "Rule 5 fee";
     

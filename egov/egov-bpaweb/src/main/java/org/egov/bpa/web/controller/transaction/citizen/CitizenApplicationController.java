@@ -415,9 +415,7 @@ public class CitizenApplicationController extends BpaGenericApplicationControlle
             prepareCommonModelAttribute(model, bpaApplication.isCitizenAccepted());
             model.addAttribute("eDcrApplExistsMessage", eDcrApplDetails.get(BpaConstants.MESSAGE));
             return loadNewForm(bpaApplication, model, bpaApplication.getServiceType().getCode());
-        }
-        
-        
+        }        
 
         if (isEdcrIntegrationRequire) {
             bpaApplication.getBuildingDetail().clear();
@@ -445,8 +443,7 @@ public class CitizenApplicationController extends BpaGenericApplicationControlle
         }
     
         applicationBpaService.buildExistingAndProposedBuildingDetails(bpaApplication);
-        bpaUtils.saveOrUpdateBoundary(bpaApplication);
-        
+        bpaUtils.saveOrUpdateBoundary(bpaApplication);        
 
         if (!isEdcrIntegrationRequire && riskBasedAppTypes.contains(bpaApplication.getApplicationType())) {
         	String rootBoundaryType = BpaConstants.URBAN;
