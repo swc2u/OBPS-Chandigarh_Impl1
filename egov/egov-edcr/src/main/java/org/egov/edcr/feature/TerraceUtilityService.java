@@ -60,6 +60,8 @@ import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.common.entity.edcr.TerraceUtility;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.Util;
 import org.springframework.stereotype.Service;
 
@@ -97,7 +99,7 @@ public class TerraceUtilityService extends FeatureProcess {
 
                 for (TerraceUtility terraceUtility : block.getTerraceUtilities()) {
                     Map<String, String> details = new HashMap<>();
-                    details.put(RULE_NO, RULE_34);
+                    details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.SERVICE_ZONE_ON_TERRACE));
                     BigDecimal minDistance = terraceUtility.getDistances().stream().reduce(BigDecimal::min).get();
                     details.put(DESCRIPTION, terraceUtility.getName());
                     if (Util.roundOffTwoDecimal(minDistance).compareTo(THREE) >= 0) {

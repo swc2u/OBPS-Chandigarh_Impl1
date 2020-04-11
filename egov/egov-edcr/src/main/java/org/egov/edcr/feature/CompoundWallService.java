@@ -114,12 +114,16 @@ public class CompoundWallService extends FeatureProcess {
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding().getMostRestrictiveFarHelper();
 		BigDecimal frontMinFrontHeight=BigDecimal.ZERO;
 		BigDecimal frontMinRearHeight=BigDecimal.ZERO;
-		 frontMinFrontHeight = pl.getCompoundWall().getWallHeights().stream()
-				.filter(hm -> hm.getColorCode() == map.get(FRONT_HEIGHT)).map(n -> n.getHeight())
-				.reduce(BigDecimal::min).get();
-		 frontMinRearHeight = pl.getCompoundWall().getWallHeights().stream()
-				.filter(hm -> hm.getColorCode() == map.get(REAR_HEIGHT)).map(n -> n.getHeight()).reduce(BigDecimal::min)
-				.get();
+		 try {
+			 frontMinFrontHeight = pl.getCompoundWall().getWallHeights().stream()
+						.filter(hm -> hm.getColorCode() == map.get(FRONT_HEIGHT)).map(n -> n.getHeight())
+						.reduce(BigDecimal::min).get();
+				 frontMinRearHeight = pl.getCompoundWall().getWallHeights().stream()
+						.filter(hm -> hm.getColorCode() == map.get(REAR_HEIGHT)).map(n -> n.getHeight()).reduce(BigDecimal::min)
+						.get();
+		 }catch (Exception e) {
+			// TODO: handle exception
+		}
 
 		Map<String, String> details = new HashMap<>();
 
@@ -178,7 +182,7 @@ public class CompoundWallService extends FeatureProcess {
 		Map<String, String> details2 = new HashMap<>();
 
 //		details2.put(RULE_NO, RULE_2);
-		details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.COMPOUND_WALL_SERVICE));
+		details2.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.COMPOUND_WALL_SERVICE));
 		details2.put(DESCRIPTION, WALL_HEIGHT_REAR_DESCRIPTION);
 		details2.put(PROVIDED, frontMinRearHeight.toString()+DxfFileConstants.METER);
 

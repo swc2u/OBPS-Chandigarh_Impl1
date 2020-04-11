@@ -47,7 +47,6 @@
 
 package org.egov.edcr.feature;
 
-import static org.egov.edcr.constants.DxfFileConstants.A_AF;
 import static org.egov.edcr.constants.DxfFileConstants.A_R;
 
 import java.math.BigDecimal;
@@ -97,7 +96,7 @@ public class RampService extends FeatureProcess {
 	private static final String SUBRULE_50_C_4_B_SLOPE_DESCRIPTION = "Maximum Slope of DA Ramp %s";
 	private static final String FLOOR = "Floor";
 	private static final String SUBRULE_40_A_3_WIDTH_DESCRIPTION = "Minimum Width of Ramp %s";
-	private static final String SUBRULE_50_C_4_B_SLOPE_MAN_DESC = "Slope of DA Ramp";
+	private static final String SUBRULE_50_C_4_B_SLOPE_MAN_DESC = "Width of DA Ramp";
 
 	@Override
 	public Plan validate(Plan pl) {
@@ -493,20 +492,42 @@ public class RampService extends FeatureProcess {
 						&& mostRestrictiveOccupancyType != null && mostRestrictiveOccupancyType.getSubtype() != null) {
 					if (!block.getDARamps().isEmpty()) {
 						boolean isSlopeDefined = false;
+						boolean isWidthValid=false;
+						
+						
+						
 						for (DARamp daRamp : block.getDARamps()) {
+							BigDecimal providedWidth=BigDecimal.ZERO;
 							if (daRamp != null && daRamp.getSlope() != null
 									&& daRamp.getSlope().compareTo(BigDecimal.valueOf(0)) > 0) {
 								isSlopeDefined = true;
+							
+								
+								 providedWidth=daRamp.getMeasurements().stream()
+										.map(Measurement::getWidth).reduce(BigDecimal::min).get();
+								
+								providedWidth=providedWidth.setScale(2,BigDecimal.ROUND_HALF_EVEN);
+								
+								if(providedWidth.compareTo(BigDecimal.valueOf(2.4))>=0)
+									isWidthValid=true;
 							}
+							
+							if (isSlopeDefined && isWidthValid) {
+								setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP), SUBRULE_50_C_4_B_SLOPE_MAN_DESC+" block " +block.getNumber(), "2.4"+DxfFileConstants.METER,
+										providedWidth.toString(), Result.Accepted.getResultVal(), scrutinyDetail1);
+							} else if(isSlopeDefined){
+								setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP), SUBRULE_50_C_4_B_SLOPE_MAN_DESC+" block " +block.getNumber(), "2.4"+DxfFileConstants.METER,
+										providedWidth.toString(), Result.Not_Accepted.getResultVal(),
+										scrutinyDetail1);
+							}else{
+								setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP), SUBRULE_50_C_4_B_SLOPE_MAN_DESC+" block " +block.getNumber(), "2.4"+DxfFileConstants.METER,
+										DcrConstants.OBJECTNOTDEFINED, Result.Not_Accepted.getResultVal(),
+										scrutinyDetail1);
+							}
+							
+							
 						}
-						if (isSlopeDefined) {
-							setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP), SUBRULE_50_C_4_B_SLOPE_MAN_DESC, "",
-									DcrConstants.OBJECTDEFINED_DESC, Result.Accepted.getResultVal(), scrutinyDetail1);
-						} else {
-							setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP), SUBRULE_50_C_4_B_SLOPE_MAN_DESC, "",
-									DcrConstants.OBJECTNOTDEFINED_DESC, Result.Not_Accepted.getResultVal(),
-									scrutinyDetail1);
-						}
+						
 						valid = false;
 						if (isSlopeDefined) {
 							Map<String, String> mapOfRampNumberAndSlopeValues = new HashMap<>();
@@ -529,11 +550,11 @@ public class RampService extends FeatureProcess {
 								setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP),
 										String.format(SUBRULE_50_C_4_B_SLOPE_DESCRIPTION,
 												mapOfRampNumberAndSlopeValues.get("daRampNumber")),
-										expectedSlope.toString(), mapOfRampNumberAndSlopeValues.get("slope"),
+										"1/12", mapOfRampNumberAndSlopeValues.get("slope"),
 										Result.Accepted.getResultVal(), scrutinyDetail2);
 							} else {
 								setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP),
-										String.format(SUBRULE_50_C_4_B_SLOPE_DESCRIPTION, ""), expectedSlope.toString(),
+										String.format(SUBRULE_50_C_4_B_SLOPE_DESCRIPTION, ""), "1/12",
 										"Less than 0.08 for all da ramps", Result.Not_Accepted.getResultVal(),
 										scrutinyDetail2);
 							}

@@ -149,12 +149,9 @@ public class Balcony extends FeatureProcess {
 
 	@Override
 	public Plan process(Plan planDetail) {
-
-		boolean flage1 = true;
-
-		if (flage1) {
+		
+		if(true)
 			return planDetail;
-		}
 
 		for (Block block : planDetail.getBlocks()) {
 			if (block.getBuilding() != null) {
@@ -185,9 +182,15 @@ public class Balcony extends FeatureProcess {
 						for (org.egov.common.entity.edcr.Balcony balcony : balconies) {
 							boolean isAccepted = false;
 							List<BigDecimal> widths = balcony.getWidths();
-							BigDecimal minWidth = widths.stream().reduce(BigDecimal::min).get();
+							BigDecimal minWidth = BigDecimal.ZERO;
 
-							BigDecimal maxWidth = widths.stream().reduce(BigDecimal::max).get();
+							BigDecimal maxWidth = BigDecimal.ZERO;
+							
+							if(widths!=null && !widths.isEmpty()) {
+								 minWidth = widths.stream().reduce(BigDecimal::min).get();
+
+								 maxWidth = widths.stream().reduce(BigDecimal::max).get();
+							}
 
 							minWidth = minWidth.setScale(DcrConstants.DECIMALDIGITS_MEASUREMENTS,
 									DcrConstants.ROUNDMODE_MEASUREMENTS);

@@ -111,11 +111,11 @@ public class PassageService extends FeatureProcess {
 						BigDecimal minWidth = Util.roundOffTwoDecimal(minPassagePolyLine);
 						
 						if (minWidth.compareTo(BigDecimal.ONE) >= 0) {
-							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.AMAIGAMATION), RULE_41_DESCRIPTION,
+							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.MINIMUN_PASSAGE), RULE_41_DESCRIPTION,
 									String.valueOf(1), String.valueOf(minWidth), Result.Accepted.getResultVal(),
 									scrutinyDetail);
 						} else {
-							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.AMAIGAMATION), RULE_41_DESCRIPTION,
+							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.MINIMUN_PASSAGE), RULE_41_DESCRIPTION,
 									String.valueOf(1), String.valueOf(minWidth), Result.Not_Accepted.getResultVal(),
 									scrutinyDetail);
 						}
@@ -128,11 +128,11 @@ public class PassageService extends FeatureProcess {
 						BigDecimal minWidth = Util.roundOffTwoDecimal(minPassageStairPolyLine);
 						
 						if (minWidth.compareTo(Util.roundOffTwoDecimal(BigDecimal.valueOf(1.2))) >= 0) {
-							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.AMAIGAMATION), RULE39_6_DESCRIPTION,
+							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.MINIMUN_PASSAGE), RULE39_6_DESCRIPTION,
 									PASSAGE_STAIR_MINIMUM_WIDTH, String.valueOf(minWidth), Result.Accepted.getResultVal(),
 									scrutinyDetail1);
 						} else {
-							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.AMAIGAMATION), RULE39_6_DESCRIPTION,
+							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.MINIMUN_PASSAGE), RULE39_6_DESCRIPTION,
 									PASSAGE_STAIR_MINIMUM_WIDTH, String.valueOf(minWidth), Result.Not_Accepted.getResultVal(),
 									scrutinyDetail1);
 						}

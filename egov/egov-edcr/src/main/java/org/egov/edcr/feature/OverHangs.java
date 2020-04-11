@@ -59,9 +59,11 @@ import org.apache.log4j.Logger;
 import org.egov.common.entity.edcr.Block;
 import org.egov.common.entity.edcr.Building;
 import org.egov.common.entity.edcr.Floor;
+import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
+import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.cdg.CDGAConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
@@ -82,16 +84,30 @@ public class OverHangs extends FeatureProcess {
 
     @Override
     public Plan process(Plan pl) {
-    	boolean flage=true;
-    	if(flage) {
-    		return pl;
-    	}
+//    	boolean flage=true;
+//    	if(flage) {
+//    		return pl;
+//    	}
 
         Map<String, String> details = new HashMap<>();
         details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.CHHAJJA_OR_JAMBS));
         details.put(DESCRIPTION, OVERHANGS_DESCRIPTION);
 
-        BigDecimal minWidth = BigDecimal.ZERO;
+        BigDecimal maxWidthExpected = BigDecimal.ZERO;
+        BigDecimal minWidth=BigDecimal.ZERO;
+        
+        OccupancyTypeHelper occupancyTypeHelper=pl.getVirtualBuilding().getMostRestrictiveFarHelper();
+        if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) {
+        	if(DxfFileConstants.MARLA.equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
+        		maxWidthExpected=BigDecimal.valueOf(0.9);
+        	}
+        	else {
+        		maxWidthExpected=BigDecimal.valueOf(1.8);
+        	}
+        }else {
+    		maxWidthExpected=BigDecimal.valueOf(1.8);
+        }
+        
 
         for (Block b : pl.getBlocks()) {
 
@@ -111,18 +127,21 @@ public class OverHangs extends FeatureProcess {
                                 .collect(Collectors.toList());
 
                         minWidth = widths.stream().reduce(BigDecimal::min).get();
+                        
+                        minWidth=minWidth.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+                        
 
-                        if (minWidth.compareTo(new BigDecimal("0.75")) > 0) {
+                        if (minWidth.compareTo(maxWidthExpected) < 0) {
                             details.put(FLOOR, floor.getNumber().toString());
-                            details.put(PERMISSIBLE, ">0.75");
-                            details.put(PROVIDED, minWidth.toString());
+                            details.put(PERMISSIBLE, "<"+maxWidthExpected.floatValue()+DxfFileConstants.METER);
+                            details.put(PROVIDED, minWidth.toString()+DxfFileConstants.METER);
                             details.put(STATUS, Result.Accepted.getResultVal());
                             scrutinyDetail.getDetail().add(details);
                             pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
                         } else {
                             details.put(FLOOR, floor.getNumber().toString());
-                            details.put(PERMISSIBLE, ">0.75");
-                            details.put(PROVIDED, minWidth.toString());
+                            details.put(PERMISSIBLE, "<"+maxWidthExpected.floatValue()+DxfFileConstants.METER);
+                            details.put(PROVIDED, minWidth.toString()+DxfFileConstants.METER);
                             details.put(STATUS, Result.Not_Accepted.getResultVal());
                             scrutinyDetail.getDetail().add(details);
                             pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);

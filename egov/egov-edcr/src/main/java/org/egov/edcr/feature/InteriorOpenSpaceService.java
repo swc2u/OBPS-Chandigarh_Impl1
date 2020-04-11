@@ -122,7 +122,7 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 					&& !b.getBuilding().getFloors().isEmpty()) {
 				for (Floor f : b.getBuilding().getFloors()) {
 					processVentilationShaftSkeleton(pl, scrutinyDetail, f);
-					processInteriorCourtYardSkeleton(pl, scrutinyDetail, f);
+					processInteriorCourtYardSkeleton(pl, scrutinyDetail, f,b);
 				}
 			}
 
@@ -130,10 +130,7 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 		return pl;
 	}
 	
-	public static void main(String[] args) {//3.775400045924471E7
-		System.out.println(CDGAdditionalService.roundBigDecimal(new BigDecimal("3.775400045924471E7")));
-	}
-	private void processInteriorCourtYardSkeleton(Plan pl, ScrutinyDetail scrutinyDetail, Floor f) {
+	private void processInteriorCourtYardSkeleton(Plan pl, ScrutinyDetail scrutinyDetail, Floor f,Block b) {
 		if (f.getInteriorOpenSpace() != null && f.getInteriorOpenSpace().getInnerCourtYard() != null
 				&& f.getInteriorOpenSpace().getInnerCourtYard().getMeasurements() != null
 				&& !f.getInteriorOpenSpace().getInnerCourtYard().getMeasurements().isEmpty()) {
@@ -142,7 +139,9 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 					.stream().map(Measurement::getArea).reduce(BigDecimal::min).get();
 			BigDecimal minInteriorCourtYardWidth = f.getInteriorOpenSpace().getInnerCourtYard().getMeasurements()
 					.stream().map(Measurement::getWidth).reduce(BigDecimal::min).get();
-			BigDecimal minimumWidht=new BigDecimal(0.90);
+			
+			
+			OccupancyTypeHelper occupancyTypeHelper=pl.getVirtualBuilding().getMostRestrictiveFarHelper();
 			
 			if(minInteriorCourtYardArea!=null && minInteriorCourtYardArea.doubleValue()>0) {
 				minInteriorCourtYardArea=CDGAdditionalService.roundBigDecimal(minInteriorCourtYardArea);
@@ -151,40 +150,82 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 				minInteriorCourtYardWidth=CDGAdditionalService.roundBigDecimal(minInteriorCourtYardWidth);
 			}
 			
-			if (minInteriorCourtYardArea.compareTo(BigDecimal.ZERO) > 0) {
-				Map<String, String> details = new HashMap<>();
-				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
-				details.put(DESCRIPTION, INTERNALCOURTYARD_DESCRIPTION);
+			BigDecimal areaExpected=BigDecimal.ZERO;
+			BigDecimal widthExpected=BigDecimal.ZERO;
+			
+			if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) {
+				areaExpected=BigDecimal.valueOf(9.0);
+				widthExpected=BigDecimal.valueOf(3.0);
+			}else if(DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_H.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_M.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_CFI.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_PP.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.G_GBAC.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.G_GBZP.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.P.equals(occupancyTypeHelper.getType().getCode())
+					|| DxfFileConstants.B.equals(occupancyTypeHelper.getType().getCode())
+					|| DxfFileConstants.IT.equals(occupancyTypeHelper.getType().getCode())
+					|| DxfFileConstants.ITH_R.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.ITH_GH.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.IP.equals(occupancyTypeHelper.getType().getCode())
+					) {
+				
+				if(b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(10))<=0)
+					widthExpected=BigDecimal.valueOf(3.0);
+				else if(b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(15))<=0)
+					widthExpected=BigDecimal.valueOf(5.0);
+				else if(b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(18))<=0)
+					widthExpected=BigDecimal.valueOf(6.0);
+				else if(b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(21))<=0)
+					widthExpected=BigDecimal.valueOf(7.0);
+				else if(b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(24))<=0)
+					widthExpected=BigDecimal.valueOf(8.0);
+				else if(b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(27))<=0)
+					widthExpected=BigDecimal.valueOf(9.0);
+				else if(b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(30))<=0)
+					widthExpected=BigDecimal.valueOf(10.0);
+			}
+			
+			
+			if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) {
+				if (minInteriorCourtYardArea.compareTo(BigDecimal.ZERO) > 0) {
+					Map<String, String> details = new HashMap<>();
+					details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
+					details.put(DESCRIPTION, INTERNALCOURTYARD_DESCRIPTION);
+					
+					
 
-				if (minInteriorCourtYardArea.compareTo(BigDecimal.valueOf(1.2)) >= 0) {
-					details.put(REQUIRED, "Minimum area 1.2 Sq. M  ");
-					details.put(PROVIDED, "Area " + minInteriorCourtYardArea + " at floor " + f.getNumber());
-					details.put(STATUS, Result.Accepted.getResultVal());
-					scrutinyDetail.getDetail().add(details);
-					pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+					if (minInteriorCourtYardArea.compareTo(BigDecimal.valueOf(1.2)) >= 0) {
+						details.put(REQUIRED, "Minimum area "+areaExpected+DxfFileConstants.METER_SQM);
+						details.put(PROVIDED, "Area " + minInteriorCourtYardArea +DxfFileConstants.METER_SQM +" at floor " + f.getNumber());
+						details.put(STATUS, Result.Accepted.getResultVal());
+						scrutinyDetail.getDetail().add(details);
+						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
-				} else {
-					details.put(REQUIRED, "Minimum area 1.2 Sq. M  ");
-					details.put(PROVIDED, "Area " + minInteriorCourtYardArea + " at floor " + f.getNumber());
-					details.put(STATUS, Result.Not_Accepted.getResultVal());
-					scrutinyDetail.getDetail().add(details);
-					pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+					} else {
+						details.put(REQUIRED, "Minimum area "+areaExpected+DxfFileConstants.METER_SQM);
+						details.put(PROVIDED, "Area " + minInteriorCourtYardArea +DxfFileConstants.METER_SQM +" at floor " + f.getNumber());
+						details.put(STATUS, Result.Not_Accepted.getResultVal());
+						scrutinyDetail.getDetail().add(details);
+						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+					}
 				}
 			}
-			if (minInteriorCourtYardWidth.compareTo(minimumWidht) > 0) {
+			if (minInteriorCourtYardWidth.compareTo(BigDecimal.ZERO) > 0) {
 				Map<String, String> details = new HashMap<>();
 				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
 				details.put(DESCRIPTION, INTERNALCOURTYARD_DESCRIPTION);
 				if (minInteriorCourtYardWidth.compareTo(BigDecimal.valueOf(0.9)) >= 0) {
-					details.put(REQUIRED, "Minimum width 0.9 M ");
-					details.put(PROVIDED, "width  " + minInteriorCourtYardWidth + " at floor " + f.getNumber());
+					details.put(REQUIRED, "Minimum width "+widthExpected+DxfFileConstants.METER);
+					details.put(PROVIDED, "width  " + minInteriorCourtYardWidth + DxfFileConstants.METER+" at floor " + f.getNumber());
 					details.put(STATUS, Result.Accepted.getResultVal());
 					scrutinyDetail.getDetail().add(details);
 					pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 				} else {
-					details.put(REQUIRED, "Minimum width 0.9 M ");
-					details.put(PROVIDED, "width  " + minInteriorCourtYardWidth + " at floor " + f.getNumber());
+					details.put(REQUIRED, "Minimum width "+widthExpected+DxfFileConstants.METER);
+					details.put(PROVIDED, "width  " + minInteriorCourtYardWidth + DxfFileConstants.METER+" at floor " + f.getNumber());
 					details.put(STATUS, Result.Not_Accepted.getResultVal());
 					scrutinyDetail.getDetail().add(details);
 					pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -219,15 +260,15 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 				details.put(DESCRIPTION, VENTILATIONSHAFT_DESCRIPTION);
 
 				if (minVentilationShaftArea.compareTo(BigDecimal.valueOf(1.2)) >= 0) {
-					details.put(REQUIRED, "Minimum area 1.2 Sq. M  ");
-					details.put(PROVIDED, "Area " + minVentilationShaftArea + " at floor " + f.getNumber());
+					details.put(REQUIRED, "Minimum area 1.2"+DxfFileConstants.METER_SQM);
+					details.put(PROVIDED, "Area " + minVentilationShaftArea +DxfFileConstants.METER_SQM +" at floor " + f.getNumber());
 					details.put(STATUS, Result.Accepted.getResultVal());
 					scrutinyDetail.getDetail().add(details);
 					pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 				} else {
-					details.put(REQUIRED, "Minimum area 1.2 Sq. M  ");
-					details.put(PROVIDED, "Area " + minVentilationShaftArea + " at floor " + f.getNumber());
+					details.put(REQUIRED, "Minimum area 1.2"+DxfFileConstants.METER_SQM);
+					details.put(PROVIDED, "Area " + minVentilationShaftArea +DxfFileConstants.METER_SQM+ " at floor " + f.getNumber());
 					details.put(STATUS, Result.Not_Accepted.getResultVal());
 					scrutinyDetail.getDetail().add(details);
 					pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -238,15 +279,15 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
 				details.put(DESCRIPTION, VENTILATIONSHAFT_DESCRIPTION);
 				if (minVentilationShaftWidth.compareTo(BigDecimal.valueOf(0.9)) >= 0) {
-					details.put(REQUIRED, "Minimum width 0.9 M ");
-					details.put(PROVIDED, "width  " + minVentilationShaftWidth + " at floor " + f.getNumber());
+					details.put(REQUIRED, "Minimum width 0.9"+DxfFileConstants.METER);
+					details.put(PROVIDED, "width  " + minVentilationShaftWidth +DxfFileConstants.METER +" at floor " + f.getNumber());
 					details.put(STATUS, Result.Accepted.getResultVal());
 					scrutinyDetail.getDetail().add(details);
 					pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 				} else {
-					details.put(REQUIRED, "Minimum width 0.9 M ");
-					details.put(PROVIDED, "width  " + minVentilationShaftWidth + " at floor " + f.getNumber());
+					details.put(REQUIRED, "Minimum width 0.9"+DxfFileConstants.METER);
+					details.put(PROVIDED, "width  " + minVentilationShaftWidth + DxfFileConstants.METER+" at floor " + f.getNumber());
 					details.put(STATUS, Result.Not_Accepted.getResultVal());
 					scrutinyDetail.getDetail().add(details);
 					pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);

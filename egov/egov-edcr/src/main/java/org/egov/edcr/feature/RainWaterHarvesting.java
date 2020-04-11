@@ -163,7 +163,7 @@ public class RainWaterHarvesting extends FeatureProcess {
 					}
 
 				} else {
-					if (pl.getUtility().getRainWaterHarvestingTankCapacity().compareTo(expectedTankCapacity) > 0)
+					if ((pl.getUtility().getRainWaterHarvestingTankCapacity()!=null)&&(pl.getUtility().getRainWaterHarvestingTankCapacity().compareTo(expectedTankCapacity) > 0))
 						setReportOutputDetails(pl, subRule, subRuleDesc, "Mandatory",
 								pl.getUtility().getRainWaterHarvestingTankCapacity() + " litre",
 								Result.Verify.getResultVal());

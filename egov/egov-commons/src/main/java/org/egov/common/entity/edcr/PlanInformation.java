@@ -190,7 +190,7 @@ public class PlanInformation implements Serializable {
     private transient String rootBoundaryType =NA; 
     
     //ZONE
-    private transient String zoon=NA;
+    private transient String zone=NA;
     
     //Sector Number 
     private transient String sectorNumber =NA;
@@ -260,12 +260,12 @@ public class PlanInformation implements Serializable {
 		this.rootBoundaryType = rootBoundaryType;
 	}
 
-	public String getZoon() {
-		return zoon;
+	public String getZone() {
+		return zone;
 	}
 
-	public void setZoon(String zoon) {
-		this.zoon = zoon;
+	public void setZone(String zoon) {
+		this.zone = zoon;
 	}
 
 	public String getSectorNumber() {
