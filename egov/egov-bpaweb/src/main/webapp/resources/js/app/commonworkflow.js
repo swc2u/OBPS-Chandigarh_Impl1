@@ -46,9 +46,28 @@
  *
  */
 $(document).ready(function()
-{	
+{
+	var chandigarhDepartments = [
+		"Accounts",
+		"Buildings",
+		"General",
+		"Health",
+		"Electrical",
+		"Town Planning",
+		"Works",
+		"Engineering",
+		"Administration",
+		"Revenue"
+	];
+	
+	$.each(chandigarhDepartments, function( i, val ) {
+		$('[name=approvalDepartment] option').filter(function(){
+		    return ($.trim($(this).text()) ==  val);
+		}).remove();
+	});
+	
 	if($('#approvalDepartment').val()){
-	$('#approvalDepartment').trigger("change");
+		$('#approvalDepartment').trigger("change");
 	}
 	
 	// On page load setting default department get selected

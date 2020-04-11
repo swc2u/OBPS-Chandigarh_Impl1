@@ -83,7 +83,7 @@ function paintBoundaryForView(genericBoundaryConfigData, selectedAdminBoundary, 
 	var boundaryType;
 	var tempId = [];
 	var domOptionId;
-	var parentId = "";
+	var parentId = "000";
 	
 	var boundaryData=genericBoundaryConfigData['boundaryData'];
 	for(var k in boundaryData) {
@@ -117,11 +117,13 @@ function paintBoundaryForView(genericBoundaryConfigData, selectedAdminBoundary, 
 				document.getElementById(domOptionId).innerHTML=findNameById(boundaryData, selectedLocationBoundary);
 		}
 	}
-	while(parentId==''){
-		parentId = findParentById(genericBoundaryConfigData['boundaryData'], selectedRevenueBoundary);
+	var curBoundaryId=selectedRevenueBoundary;
+	while(parentId!=null && parentId!=''){
+		parentId = findParentById(genericBoundaryConfigData['boundaryData'], curBoundaryId);
 		var domId = findDomIdByParent(genericBoundaryConfigData['boundaryData'], parentId);
-		if(parentId!=null && domId!=null)
-		document.getElementById(domId).innerHTML=findNameById(boundaryData, parentId);
+		curBoundaryId = parentId;
+		if((parentId!=null && parentId!='') && (domId!=null && domId!=''))		
+			document.getElementById(domId).innerHTML=findNameById(boundaryData, parentId);
 	}
 }
 

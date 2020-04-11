@@ -491,7 +491,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         // persistPostalAddress(application);
         // buildRegistrarOfficeForVillage(application);
         buildSchemeLandUsage(application);
-        if (application.getApplicationType() != null && application.getApplicationType().getName() != null
+        /*if (application.getApplicationType() != null && application.getApplicationType().getName() != null
                 && application.getApplicationType().getName().equals(BpaConstants.APPLICATION_TYPE_LOWRISK)
                 && application.getStatus() != null && application.getStatus().getCode() != null
                 && application.getStatus().getCode().equals("Registered")) {
@@ -506,7 +506,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
                 if (LOG.isDebugEnabled())
                     LOG.debug(e.getMessage());
             }
-        }
+        }*/
         applicationBpaRepository.saveAndFlush(application);
     }
 
@@ -982,6 +982,9 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
             applicant.setUser(getCitizen(bpaApplication));
             bpaApplication.setOwner(applicant);
         } else {
+        	existApplicant.setName(bpaApplication.getOwner().getName());
+        	existApplicant.setAddress(bpaApplication.getOwner().getAddress());
+        	existApplicant.setGender(bpaApplication.getOwner().getGender());
             bpaApplication.setOwner(existApplicant);
             bpaApplication.setMailPwdRequired(false);
         }

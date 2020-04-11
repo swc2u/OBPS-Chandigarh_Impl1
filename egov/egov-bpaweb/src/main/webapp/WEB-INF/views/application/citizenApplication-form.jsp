@@ -110,7 +110,7 @@
 							code='lbl.appln.details' /></a></li>
 				<li><a data-toggle="tab" href="#document-info" data-tabidx=1><spring:message
 							code='title.documentdetail' /></a></li>
-				<li id="noc-document-tab-link"><a data-toggle="tab" href="#noc-document-info"
+				<li id="noc-document-tab-link" style="display: none;"><a data-toggle="tab" href="#noc-document-info"
 					data-tabidx=2><spring:message code='lbl.noc.doc.details' /></a></li>
 			</ul>
 			<div class="tab-content">
@@ -180,7 +180,7 @@
 						<jsp:include page="permit-general-documents.jsp"></jsp:include>
 					</div>
 				</div>
-				<div id="noc-document-info" class="tab-pane fade">
+				<div id="noc-document-info" class="tab-pane fade" style="display: none;">
 					<div class="panel panel-primary" data-collapsed="0">
 						<jsp:include page="permit-noc-documents.jsp"></jsp:include>
 					</div>
@@ -210,10 +210,10 @@
 						</c:choose>
 					</c:when>
 					<c:otherwise>
-						<form:button type="submit" id="bpaSave" class="btn btn-primary"
+						<%-- <form:button type="submit" id="bpaSave" class="btn btn-primary"
 							value="Save">
 							<spring:message code="lbl.save" />
-						</form:button>
+						</form:button> --%>
 						<form:button type="submit" id="bpaCreate" class="btn btn-primary"
 							value="Submit">
 							<spring:message code="lbl.submit" />
