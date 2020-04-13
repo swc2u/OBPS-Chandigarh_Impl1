@@ -52,26 +52,24 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <div class="panel-body" id="permitConditions">
-	<c:if
-			test="${bpaApplication.serviceType.code ne '14' && bpaApplication.serviceType.code ne '15'}">
-		<div class="panel-heading">
+	<c:if test="${bpaApplication.serviceType.code ne '14' && bpaApplication.serviceType.code ne '15'}">
+		<%-- <div class="panel-heading">
 			<div class="panel-title"><spring:message code="lbl.permit.conditions.noc" /></div>
 		</div>
 		<table class="table table-bordered  multiheadertbl"
 			   id="bpaDynamicPermitConditions">
 			<thead>
-			<tr>
-				<th><spring:message code="lbl.srl.no" /></th>
-				<th><spring:message code="lbl.select" /></th>
-				<th><spring:message code="lbl.description" /></th>
-				<th><spring:message code="lbl.order.vide.no" /></th>
-				<th><spring:message code="lbl.date" /></th>
-			</tr>
+				<tr>
+					<th><spring:message code="lbl.srl.no" /></th>
+					<th><spring:message code="lbl.select" /></th>
+					<th><spring:message code="lbl.description" /></th>
+					<th><spring:message code="lbl.order.vide.no" /></th>
+					<th><spring:message code="lbl.date" /></th>
+				</tr>
 			</thead>
 			<tbody>
 			<c:choose>
-				<c:when
-						test="${not empty bpaApplication.dynamicPermitConditionsTemp}">
+				<c:when test="${not empty bpaApplication.dynamicPermitConditionsTemp}">
 					<c:forEach var="modifiablePermitCondition"
 							   items="${bpaApplication.dynamicPermitConditionsTemp}"
 							   varStatus="modifyPCStatus">
@@ -151,7 +149,7 @@
 				</c:otherwise>
 			</c:choose>
 			</tbody>
-		</table>
+		</table> --%>
 		<div class="panel-heading">
 			<div class="panel-title"><spring:message code="lbl.permit.conditions.gen" /></div>
 		</div>
@@ -166,8 +164,7 @@
 			</thead>
 			<tbody>
 			<c:choose>
-				<c:when
-						test="${not empty bpaApplication.staticPermitConditionsTemp}">
+				<c:when test="${not empty bpaApplication.staticPermitConditionsTemp}">
 					<c:forEach var="staticPermitCondition"
 							   items="${bpaApplication.staticPermitConditionsTemp}"
 							   varStatus="staticPCStatus">

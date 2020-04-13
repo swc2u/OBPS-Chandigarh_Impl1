@@ -208,7 +208,7 @@
 		</band>
 		<band height="364" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="75" width="555" height="183" uuid="d40376b0-bf9f-45f3-8e12-bfd60e451a67"/>
+				<reportElement x="0" y="90" width="555" height="168" uuid="d40376b0-bf9f-45f3-8e12-bfd60e451a67"/>
 				<text><![CDATA[1. A notice in writing of the date and time at which erection / re-erection of the building shall be given.
 2. Plan sanctioned are valid for only five years from the date of issue of the plan on valid last date of construction.
 3. For demarcation, plinth level, water connection, etc. you may contact concerned departments as per Endst. below.
@@ -221,12 +221,12 @@ You are also requested to intimate regarding the construction of building up to 
 taken in hand till the same is verified/certified by the Junior Engineer and obtained DPC certificate from office.]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="17" width="555" height="63" uuid="05da5634-71fb-4508-acfc-e839e0c570c0"/>
+				<reportElement x="0" y="33" width="555" height="55" uuid="05da5634-71fb-4508-acfc-e839e0c570c0"/>
 				<textFieldExpression><![CDATA["accordance in with the plans submitted with it, your application is hereby sanctioned for the aforesaid construction under rule 5 of the Punjab Capital"+
-"(Dev. &amp; Reg.) Building Rules, 1952. Your attention is also invited to rules 16, rule 17 &amp; 119 "+"(amended) of the Building Rules for the following: -"]]></textFieldExpression>
+"(Dev. and Reg.) Building Rules, 1952. Your attention is also invited to rules 16, rule 17 and 119 "+"(amended) of the Building Rules for the following: -"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="1" width="555" height="19" uuid="537b4d26-fd09-42db-aabb-35ea3cf1ca2c"/>
+				<reportElement x="0" y="1" width="555" height="32" uuid="537b4d26-fd09-42db-aabb-35ea3cf1ca2c"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
