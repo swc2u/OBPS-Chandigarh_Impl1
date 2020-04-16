@@ -78,6 +78,7 @@ public class RainWaterHarvesting extends FeatureProcess {
 	private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
 	private static final String RWH_DECLARATION_ERROR = DxfFileConstants.RWH_DECLARED
 			+ " in PLAN_INFO layer must be declared as YES for plot area greater than 100 sqm.";
+	
 
 	@Override
 	public Plan validate(Plan pl) {
@@ -154,11 +155,11 @@ public class RainWaterHarvesting extends FeatureProcess {
 				if (plotAreaType.equals(DxfFileConstants.MARLA)) {
 
 					if (pl.getUtility().getRainWaterHarvestingTankCapacity() != null) {
-						setReportOutputDetails(pl, subRule, subRuleDesc, " optional",
+						setReportOutputDetails(pl, subRule, subRuleDesc, DxfFileConstants.OPTIONAL,
 								pl.getUtility().getRainWaterHarvestingTankCapacity() + " litre",
 								Result.Verify.getResultVal());
 					} else {
-						setReportOutputDetails(pl, subRule, subRuleDesc, "optional", "not Defined in the plan",
+						setReportOutputDetails(pl, subRule, subRuleDesc, DxfFileConstants.OPTIONAL, "Not Defined in the plan",
 								Result.Verify.getResultVal());
 					}
 
@@ -176,11 +177,11 @@ public class RainWaterHarvesting extends FeatureProcess {
 				
 				if(DxfFileConstants.G.equals(mostRestrictiveFarHelper.getType().getCode()) && (plotAreaType.equals(DxfFileConstants.MARLA) || plotAreaType.equals(DxfFileConstants.ONE_KANAL)) ) {
 					if (pl.getUtility().getRainWaterHarvestingTankCapacity() != null) {
-						setReportOutputDetails(pl, subRule, subRuleDesc, " optional",
+						setReportOutputDetails(pl, subRule, subRuleDesc, DxfFileConstants.OPTIONAL,
 								pl.getUtility().getRainWaterHarvestingTankCapacity() + " litre",
 								Result.Verify.getResultVal());
 					} else {
-						setReportOutputDetails(pl, subRule, subRuleDesc, "optional", "not Defined in the plan",
+						setReportOutputDetails(pl, subRule, subRuleDesc, DxfFileConstants.OPTIONAL, "Not Defined in the plan",
 								Result.Verify.getResultVal());
 					}
 				}

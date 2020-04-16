@@ -67,6 +67,8 @@ public class DxfFileConstants {
 	
 	
 	public static final String ULBNAME = "Chandigarh Administration";
+	
+	public static final String OPTIONAL="Optional";
 
 	// CGCL start
 	// occupancies code	

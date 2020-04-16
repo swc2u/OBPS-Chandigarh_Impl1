@@ -80,7 +80,7 @@ public class LiftService extends FeatureProcess {
 	private static final String SUBRULE_118_DESCRIPTION = "Minimum dimension Of lift %s on floor %s";
 	private static final String SUBRULE_118_DESC = "Minimum dimension Of lift";
 	
-	private static final String OPTIONAL="optional";
+	private static final String OPTIONAL="Optional";
 
 	@Override
 	public Plan validate(Plan plan) {

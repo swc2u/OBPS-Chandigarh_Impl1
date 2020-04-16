@@ -179,6 +179,6 @@ public class Plot extends Measurement {
     }
 
     public void setPlotBndryArea(BigDecimal plotBndryArea) {
-        this.plotBndryArea = plotBndryArea;
+        this.plotBndryArea = plotBndryArea.setScale(2, BigDecimal.ROUND_HALF_EVEN);
     }
 }

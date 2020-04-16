@@ -268,7 +268,7 @@ public class GeneralStair extends FeatureProcess {
 				
 			
 			if(generalStair.getFloorHeight().compareTo(BigDecimal.ZERO)>0)
-			raiserHeightProvided=generalStair.getFloorHeight().divide(totalNoOfRaiser); 
+			raiserHeightProvided=generalStair.getFloorHeight().divide(totalNoOfRaiser,BigDecimal.ROUND_HALF_EVEN); 
 			else
 				pl.addError("STAIRCASE", " Floor Hight not defined Block "+block.getNumber()+" floor "+ floor.getNumber()+" stair "+generalStair.getNumber());
 			BigDecimal raiserHeightexpected=requiredRaiserHeight(occupancyTypeHelper);

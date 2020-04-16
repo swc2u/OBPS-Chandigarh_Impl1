@@ -514,10 +514,10 @@ public class RampService extends FeatureProcess {
 							
 							if (isSlopeDefined && isWidthValid) {
 								setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP), SUBRULE_50_C_4_B_SLOPE_MAN_DESC+" block " +block.getNumber(), "2.4"+DxfFileConstants.METER,
-										providedWidth.toString(), Result.Accepted.getResultVal(), scrutinyDetail1);
+										providedWidth.toString()+DxfFileConstants.METER, Result.Accepted.getResultVal(), scrutinyDetail1);
 							} else if(isSlopeDefined){
 								setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP), SUBRULE_50_C_4_B_SLOPE_MAN_DESC+" block " +block.getNumber(), "2.4"+DxfFileConstants.METER,
-										providedWidth.toString(), Result.Not_Accepted.getResultVal(),
+										providedWidth.toString()+DxfFileConstants.METER, Result.Not_Accepted.getResultVal(),
 										scrutinyDetail1);
 							}else{
 								setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP), SUBRULE_50_C_4_B_SLOPE_MAN_DESC+" block " +block.getNumber(), "2.4"+DxfFileConstants.METER,

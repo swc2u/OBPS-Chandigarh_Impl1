@@ -153,6 +153,7 @@ public class AdditionalFeature extends FeatureProcess {
 	private static final String STILT_PARKING_REQUIRED_DESCRIPTION = "Stilt parking should be in ground floor";
 	private static final String STILT_PARKING_PROVIDED_DESCRIPTION = "Stilt parking is in block %s and floor %s";
 
+	private static final String optional="Optional";
 	@Autowired
 	private CDGAdditionalService cDGAdditionalService;
 
@@ -1054,7 +1055,7 @@ public class AdditionalFeature extends FeatureProcess {
 				else
 					details.put(PERMISSIBLE, MIN_PLINTH_HEIGHT_ALL_AREA);
 
-				details.put(PROVIDED, String.valueOf(minPlinthHeight));
+				details.put(PROVIDED, String.valueOf(minPlinthHeight.setScale(2, BigDecimal.ROUND_HALF_EVEN)));
 				details.put(STATUS, isAccepted ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
 				scrutinyDetail.getDetail().add(details);
 				pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
