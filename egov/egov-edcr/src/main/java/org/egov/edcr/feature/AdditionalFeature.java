@@ -503,7 +503,7 @@ public class AdditionalFeature extends FeatureProcess {
 
 			if (isOptional) {
 				details.put(DESCRIPTION, "SERVANT QUARTER");
-				details.put(REQUIRED, "Optional");
+				details.put(REQUIRED, optional);
 				details.put(PROVIDED, isServantQuarter == true ? "YES" : "NO");
 				details.put(STATUS, Result.Accepted.getResultVal());
 			} else {
