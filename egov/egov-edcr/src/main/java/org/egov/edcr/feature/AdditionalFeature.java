@@ -153,7 +153,7 @@ public class AdditionalFeature extends FeatureProcess {
 	private static final String STILT_PARKING_REQUIRED_DESCRIPTION = "Stilt parking should be in ground floor";
 	private static final String STILT_PARKING_PROVIDED_DESCRIPTION = "Stilt parking is in block %s and floor %s";
 
-	private static final String optional="Optional";
+	private static final String optional = "Optional";
 	@Autowired
 	private CDGAdditionalService cDGAdditionalService;
 
@@ -685,39 +685,41 @@ public class AdditionalFeature extends FeatureProcess {
 			if (DxfFileConstants.A_P.equalsIgnoreCase(suboccupancyTypeCode)) {
 				isAccepted = floorAbvGround.compareTo(THREE) <= 0;
 				requiredFloorCount = "<= 3";
-			}else if (DxfFileConstants.F_PP.equalsIgnoreCase(suboccupancyTypeCode)
+			} else if (DxfFileConstants.F_PP.equalsIgnoreCase(suboccupancyTypeCode)
 					|| DxfFileConstants.F_CD.equalsIgnoreCase(suboccupancyTypeCode)) {
 				isAccepted = floorAbvGround.compareTo(new BigDecimal("1")) <= 0;
 				requiredFloorCount = "<= 1";
-			}
-			else if (DxfFileConstants.R1.equalsIgnoreCase(suboccupancyTypeCode)) {
+			} else if (DxfFileConstants.R1.equalsIgnoreCase(suboccupancyTypeCode)) {
 				isAccepted = floorAbvGround.compareTo(new BigDecimal("5")) <= 0;
 				requiredFloorCount = "<= 5";
-			}else if (!DxfFileConstants.F_TCIM.equalsIgnoreCase(suboccupancyTypeCode)) {
-				String noc = getNoOfSTOREYS(pl, occupancyTypeHelper).get(CDGAdditionalService.PERMISSIBLE_BUILDING_STORIES);
-				
-				if(DxfFileConstants.DATA_NOT_FOUND.equals(noc)) {
-					pl.addError("NO OF STOREYS", "NO OF STOREYS, "+DxfFileConstants.DATA_NOT_FOUND);
-					requiredFloorCount=DxfFileConstants.DATA_NOT_FOUND;
-				}else {
+			} else if (!DxfFileConstants.F_TCIM.equalsIgnoreCase(suboccupancyTypeCode)) {
+				String noc = getNoOfSTOREYS(pl, occupancyTypeHelper)
+						.get(CDGAdditionalService.PERMISSIBLE_BUILDING_STORIES);
+
+				if (DxfFileConstants.DATA_NOT_FOUND.equals(noc)) {
+					pl.addError("NO OF STOREYS", "NO OF STOREYS, " + DxfFileConstants.DATA_NOT_FOUND);
+					requiredFloorCount = DxfFileConstants.DATA_NOT_FOUND;
+				} else if (DxfFileConstants.NOT_PROVIDED.equalsIgnoreCase(noc)) {
+//					isAccepted = false;
+//					requiredFloorCount = "Master data " + DxfFileConstants.NOT_PROVIDED;
+					return;
+				} else {
 					isAccepted = floorAbvGround.compareTo(new BigDecimal(noc)) <= 0;
-					requiredFloorCount = "<= "+noc;
+					requiredFloorCount = "<= " + noc;
 				}
-				
-				
+
 			}
 
-			
-				Map<String, String> details = new HashMap<>();
-				// details.put(RULE_NO, RULE_38);
-				details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.NO_OF_STORY));
-				details.put(DESCRIPTION, NO_OF_FLOORS);
-				details.put(PERMISSIBLE, requiredFloorCount);
-				details.put(PROVIDED, String.valueOf(block.getBuilding().getFloorsAboveGround()));
-				details.put(STATUS, isAccepted ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
-				scrutinyDetail.getDetail().add(details);
-				pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
-			
+			Map<String, String> details = new HashMap<>();
+			// details.put(RULE_NO, RULE_38);
+			details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.NO_OF_STORY));
+			details.put(DESCRIPTION, NO_OF_FLOORS);
+			details.put(PERMISSIBLE, requiredFloorCount);
+			details.put(PROVIDED, String.valueOf(block.getBuilding().getFloorsAboveGround()));
+			details.put(STATUS, isAccepted ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
+			scrutinyDetail.getDetail().add(details);
+			pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+
 		}
 	}
 
@@ -1147,8 +1149,7 @@ public class AdditionalFeature extends FeatureProcess {
 		scrutinyDetail.addColumnHeading(5, STATUS);
 		if (pl.getPlot() != null && pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_100)) >= 0) {
 
-			if (StringUtils.isNotBlank(pl.getPlanInformation().getProvisionsForGreenBuildingsAndSustainability())
-					) {
+			if (StringUtils.isNotBlank(pl.getPlanInformation().getProvisionsForGreenBuildingsAndSustainability())) {
 
 				if (mostRestrictiveFarHelper != null && mostRestrictiveFarHelper.getType() != null
 						&& DxfFileConstants.A.equalsIgnoreCase(mostRestrictiveFarHelper.getType().getCode())) {

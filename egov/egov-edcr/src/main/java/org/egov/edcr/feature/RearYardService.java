@@ -327,7 +327,7 @@ public class RearYardService extends GeneralRule {
 								//exceptedValue="4.96";
 								
 								if(DxfFileConstants.DATA_NOT_FOUND.equals(exceptedValue)) {
-									pl.addError(OBJECTNOTDEFINED, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_REAR");
+									pl.addError(OBJECTNOTDEFINED+CDGAdditionalService.SETBACK_REAR, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_REAR");
 									return;
 								}
 								

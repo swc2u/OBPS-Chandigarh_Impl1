@@ -440,7 +440,7 @@ public class FrontYardService extends GeneralRule {
 				Map<String, String> map=getSetBack(pl, mostRestrictiveOccupancyType);
 				
 				if(DxfFileConstants.DATA_NOT_FOUND.equals(map.get(CDGAdditionalService.SETBACK_FRONT))) {
-					pl.addError(OBJECTNOTDEFINED, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_FRONT");
+					pl.addError(OBJECTNOTDEFINED+CDGAdditionalService.SETBACK_FRONT, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_FRONT");
 					return;
 				}
 				

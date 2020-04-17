@@ -116,23 +116,25 @@ public class CDGAdditionalService {
 			String value2 = setbackProperties.getProperty(key + "." + LEFT);
 			String value3 = setbackProperties.getProperty(key + "." + FRONT);
 			String value4 = setbackProperties.getProperty(key + "." + REAR);
-			map.put(SETBACK_RIGHT, value1 != null ? value1 : DxfFileConstants.DATA_NOT_FOUND);
-			map.put(SETBACK_LEFT, value2 != null ? value2 : DxfFileConstants.DATA_NOT_FOUND);
-			map.put(SETBACK_FRONT, value3 != null ? value3 : DxfFileConstants.DATA_NOT_FOUND);
-			map.put(SETBACK_REAR, value4 != null ? value4 : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(SETBACK_RIGHT, value1 != null && value1.length() > 0 ? value1 : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(SETBACK_LEFT, value2 != null && value2.length() > 0 ? value2 : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(SETBACK_FRONT, value3 != null && value3.length() > 0 ? value3 : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(SETBACK_REAR, value4 != null && value4.length() > 0 ? value4 : DxfFileConstants.DATA_NOT_FOUND);
 
 		} else if (featureName.getCDGAConstantValue().equals(CDGAConstant.FAR.getCDGAConstantValue())) {
 			String value = farProperties.getProperty(getBaseKey(CDGAConstant.FAR.getCDGAConstantValue(), keyArrgument));
-			map.put(MAXMIUM_PERMISSIBLE_FAR, value != null ? value : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(MAXMIUM_PERMISSIBLE_FAR,
+					value != null && value.length() > 0 ? value : DxfFileConstants.DATA_NOT_FOUND);
 		} else if (featureName.getCDGAConstantValue()
 				.equals(CDGAConstant.PERMISSIBLE_BUILDING_HEIGHT.getCDGAConstantValue())) {
 			String value = permissibleBuildingHightProperties.getProperty(
 					getBaseKey(CDGAConstant.PERMISSIBLE_BUILDING_HEIGHT.getCDGAConstantValue(), keyArrgument));
-			map.put(PERMISSIBLE_BUILDING_HEIGHT, value != null ? value : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(PERMISSIBLE_BUILDING_HEIGHT, value != null && value.length()>0? value : DxfFileConstants.DATA_NOT_FOUND);
 		} else if (featureName.getCDGAConstantValue().equals(CDGAConstant.NO_OF_STORY.getCDGAConstantValue())) {
 			String value = noOfStoryProperties
 					.getProperty(getBaseKey(CDGAConstant.NO_OF_STORY.getCDGAConstantValue(), keyArrgument));
-			map.put(PERMISSIBLE_BUILDING_STORIES, value != null ? value : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(PERMISSIBLE_BUILDING_STORIES,
+					value != null && value.length() > 0 ? value : DxfFileConstants.DATA_NOT_FOUND);
 		} else if (featureName.getCDGAConstantValue()
 				.equals(CDGAConstant.BACK_YARD_CONSTRUCTION.getCDGAConstantValue())) {
 			String value1 = backYardConstructionProperties
@@ -141,8 +143,10 @@ public class CDGAdditionalService {
 			String value2 = backYardConstructionProperties
 					.getProperty(getBaseKey(CDGAConstant.BACK_YARD_CONSTRUCTION.getCDGAConstantValue(), keyArrgument)
 							+ "." + BACK_COURTYARD_CONSTRUCTION_HEIGHT);
-			map.put(BACK_COURTYARD_CONSTRUCTION_WIDTH, value1 != null ? value1 : DxfFileConstants.DATA_NOT_FOUND);
-			map.put(BACK_COURTYARD_CONSTRUCTION_HEIGHT, value2 != null ? value2 : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(BACK_COURTYARD_CONSTRUCTION_WIDTH,
+					value1 != null && value1.length() > 0 ? value1 : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(BACK_COURTYARD_CONSTRUCTION_HEIGHT,
+					value2 != null && value2.length() > 0 ? value2 : DxfFileConstants.DATA_NOT_FOUND);
 		}
 
 		return map;

@@ -451,7 +451,7 @@ public class SideYardService extends GeneralRule {
 								exceptedValueRight =getSetBack(pl, mostRestrictiveOccupancyType).get(CDGAdditionalService.SETBACK_RIGHT);
 								
 								if(DxfFileConstants.DATA_NOT_FOUND.equals(exceptedValueLeft)) {
-									pl.addError(OBJECTNOTDEFINED, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_SIDE");
+									pl.addError(OBJECTNOTDEFINED+" SIDE", DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_SIDE");
 									return;
 								}
 

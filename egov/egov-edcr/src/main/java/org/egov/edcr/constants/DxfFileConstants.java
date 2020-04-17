@@ -11,8 +11,9 @@ public class DxfFileConstants {
 	public static final String ADDITION_OR_EXTENSION = "Addition or Extension";
 	public static final String CHANGE_IN_OCCUPANCY = "Change in occupancy";
 	
-	public static final String DATA_NOT_FOUND="Data not found in master rule book";
-	public static final String NOT_PERMITTED="Not Permitted";
+	public static final String DATA_NOT_FOUND="Master data not available";
+	public static final String NOT_PERMITTED="NOT PERMITTED";
+	public static final String NOT_PROVIDED="NOT PROVIDED";
 
 	// CGCL start according to 26jan
 
