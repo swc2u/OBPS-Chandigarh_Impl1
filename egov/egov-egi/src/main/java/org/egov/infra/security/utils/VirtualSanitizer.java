@@ -87,12 +87,12 @@ public final class VirtualSanitizer {
 			}
 			final CleanResults cr = getAntiSamy().scan(input, policy);
 			if (cr.getErrorMessages().size() > 0) {
-				LOG.error(cr.getErrorMessages().toString());
+				//LOG.error(cr.getErrorMessages().toString());
 				throw new ApplicationRuntimeException("Found security threat in user input : " + cr.getErrorMessages());
 			}
 			return input;
 		} catch (final Exception e) {
-			LOG.error(e.getMessage());
+			//LOG.error(e.getMessage());
 			throw new ApplicationRuntimeException("Error occurred while validating inputs", e);
 		}
 
