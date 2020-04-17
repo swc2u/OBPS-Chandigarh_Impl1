@@ -112,31 +112,37 @@ public class CDGAdditionalService {
 
 		if (featureName.getCDGAConstantValue().equals(SETBACKS)) {
 			String key = getBaseKey(SETBACKS, keyArrgument);
-			map.put(SETBACK_RIGHT, setbackProperties.getProperty(key + "." + RIGHT));
-			map.put(SETBACK_LEFT, setbackProperties.getProperty(key + "." + LEFT));
-			map.put(SETBACK_FRONT, setbackProperties.getProperty(key + "." + FRONT));
-			map.put(SETBACK_REAR, setbackProperties.getProperty(key + "." + REAR));
+			String value1 = setbackProperties.getProperty(key + "." + RIGHT);
+			String value2 = setbackProperties.getProperty(key + "." + LEFT);
+			String value3 = setbackProperties.getProperty(key + "." + FRONT);
+			String value4 = setbackProperties.getProperty(key + "." + REAR);
+			map.put(SETBACK_RIGHT, value1 != null ? value1 : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(SETBACK_LEFT, value2 != null ? value2 : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(SETBACK_FRONT, value3 != null ? value3 : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(SETBACK_REAR, value4 != null ? value4 : DxfFileConstants.DATA_NOT_FOUND);
 
 		} else if (featureName.getCDGAConstantValue().equals(CDGAConstant.FAR.getCDGAConstantValue())) {
-			map.put(MAXMIUM_PERMISSIBLE_FAR,
-					farProperties.getProperty(getBaseKey(CDGAConstant.FAR.getCDGAConstantValue(), keyArrgument)));
+			String value = farProperties.getProperty(getBaseKey(CDGAConstant.FAR.getCDGAConstantValue(), keyArrgument));
+			map.put(MAXMIUM_PERMISSIBLE_FAR, value != null ? value : DxfFileConstants.DATA_NOT_FOUND);
 		} else if (featureName.getCDGAConstantValue()
 				.equals(CDGAConstant.PERMISSIBLE_BUILDING_HEIGHT.getCDGAConstantValue())) {
-			map.put(PERMISSIBLE_BUILDING_HEIGHT, permissibleBuildingHightProperties.getProperty(
-					getBaseKey(CDGAConstant.PERMISSIBLE_BUILDING_HEIGHT.getCDGAConstantValue(), keyArrgument)));
+			String value = permissibleBuildingHightProperties.getProperty(
+					getBaseKey(CDGAConstant.PERMISSIBLE_BUILDING_HEIGHT.getCDGAConstantValue(), keyArrgument));
+			map.put(PERMISSIBLE_BUILDING_HEIGHT, value != null ? value : DxfFileConstants.DATA_NOT_FOUND);
 		} else if (featureName.getCDGAConstantValue().equals(CDGAConstant.NO_OF_STORY.getCDGAConstantValue())) {
-			map.put(PERMISSIBLE_BUILDING_STORIES, noOfStoryProperties
-					.getProperty(getBaseKey(CDGAConstant.NO_OF_STORY.getCDGAConstantValue(), keyArrgument)));
+			String value = noOfStoryProperties
+					.getProperty(getBaseKey(CDGAConstant.NO_OF_STORY.getCDGAConstantValue(), keyArrgument));
+			map.put(PERMISSIBLE_BUILDING_STORIES, value != null ? value : DxfFileConstants.DATA_NOT_FOUND);
 		} else if (featureName.getCDGAConstantValue()
 				.equals(CDGAConstant.BACK_YARD_CONSTRUCTION.getCDGAConstantValue())) {
-			map.put(BACK_COURTYARD_CONSTRUCTION_WIDTH,
-					backYardConstructionProperties.getProperty(
-							getBaseKey(CDGAConstant.BACK_YARD_CONSTRUCTION.getCDGAConstantValue(), keyArrgument) + "."
-									+ BACK_COURTYARD_CONSTRUCTION_WIDTH));
-			map.put(BACK_COURTYARD_CONSTRUCTION_HEIGHT,
-					backYardConstructionProperties.getProperty(
-							getBaseKey(CDGAConstant.BACK_YARD_CONSTRUCTION.getCDGAConstantValue(), keyArrgument) + "."
-									+ BACK_COURTYARD_CONSTRUCTION_HEIGHT));
+			String value1 = backYardConstructionProperties
+					.getProperty(getBaseKey(CDGAConstant.BACK_YARD_CONSTRUCTION.getCDGAConstantValue(), keyArrgument)
+							+ "." + BACK_COURTYARD_CONSTRUCTION_WIDTH);
+			String value2 = backYardConstructionProperties
+					.getProperty(getBaseKey(CDGAConstant.BACK_YARD_CONSTRUCTION.getCDGAConstantValue(), keyArrgument)
+							+ "." + BACK_COURTYARD_CONSTRUCTION_HEIGHT);
+			map.put(BACK_COURTYARD_CONSTRUCTION_WIDTH, value1 != null ? value1 : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(BACK_COURTYARD_CONSTRUCTION_HEIGHT, value2 != null ? value2 : DxfFileConstants.DATA_NOT_FOUND);
 		}
 
 		return map;
@@ -251,7 +257,8 @@ public class CDGAdditionalService {
 
 	}
 
-	private static BigDecimal getNumberPerson(BigDecimal bulidUpArea, OccupancyTypeHelper mostRestrictiveOccupancyType) {
+	private static BigDecimal getNumberPerson(BigDecimal bulidUpArea,
+			OccupancyTypeHelper mostRestrictiveOccupancyType) {
 		BigDecimal numberOfPerson = BigDecimal.ZERO;
 		BigDecimal perPersonBuildupArea = BigDecimal.ZERO;
 		if (DxfFileConstants.A.equals(mostRestrictiveOccupancyType.getType().getCode())

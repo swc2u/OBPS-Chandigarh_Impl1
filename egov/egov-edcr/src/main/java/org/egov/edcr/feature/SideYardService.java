@@ -449,6 +449,11 @@ public class SideYardService extends GeneralRule {
 
 								exceptedValueLeft =getSetBack(pl, mostRestrictiveOccupancyType).get(CDGAdditionalService.SETBACK_LEFT);
 								exceptedValueRight =getSetBack(pl, mostRestrictiveOccupancyType).get(CDGAdditionalService.SETBACK_RIGHT);
+								
+								if(DxfFileConstants.DATA_NOT_FOUND.equals(exceptedValueLeft)) {
+									pl.addError(OBJECTNOTDEFINED, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_SIDE");
+									return;
+								}
 
 								// end
 
@@ -1314,6 +1319,12 @@ public class SideYardService extends GeneralRule {
 
 			for (Occupancy occupancy : block.getBuilding().getTotalArea()) {
 				Map<String, String> map = getSetBack(pl, mostRestrictiveOccupancyType);
+				
+				if(DxfFileConstants.DATA_NOT_FOUND.equals(map.get(CDGAdditionalService.SETBACK_FRONT))) {
+					//pl.addError(OBJECTNOTDEFINED, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_FRONT");
+					return;
+				}
+				
 				Double frontSetback = Double.valueOf(map.get(CDGAdditionalService.SETBACK_FRONT) != null
 						? map.get(CDGAdditionalService.SETBACK_FRONT)
 						: "0");

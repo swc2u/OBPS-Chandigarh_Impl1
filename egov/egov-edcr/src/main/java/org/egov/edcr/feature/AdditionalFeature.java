@@ -696,8 +696,9 @@ public class AdditionalFeature extends FeatureProcess {
 			}else if (!DxfFileConstants.F_TCIM.equalsIgnoreCase(suboccupancyTypeCode)) {
 				String noc = getNoOfSTOREYS(pl, occupancyTypeHelper).get(CDGAdditionalService.PERMISSIBLE_BUILDING_STORIES);
 				
-				if(noc==null) {
-					pl.addError("NO OF STOREYS", "NO OF STOREYS can't be validate.");
+				if(DxfFileConstants.DATA_NOT_FOUND.equals(noc)) {
+					pl.addError("NO OF STOREYS", "NO OF STOREYS, "+DxfFileConstants.DATA_NOT_FOUND);
+					requiredFloorCount=DxfFileConstants.DATA_NOT_FOUND;
 				}else {
 					isAccepted = floorAbvGround.compareTo(new BigDecimal(noc)) <= 0;
 					requiredFloorCount = "<= "+noc;

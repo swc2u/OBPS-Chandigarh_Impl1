@@ -1931,11 +1931,13 @@ public class Far extends FeatureProcess {
 
 		expectedResult = result.get(CDGAdditionalService.MAXMIUM_PERMISSIBLE_FAR);
 
-		// expectedResult="2";
+		
 
-		isAccepted = far.compareTo(new BigDecimal(expectedResult)) <= 0;
-		pl.getFarDetails().setPermissableFar(ONE_POINTTWO.doubleValue());
-		expectedResult = "<= " + expectedResult;
+		if(!DxfFileConstants.DATA_NOT_FOUND.equals(expectedResult)) {
+			isAccepted = far.compareTo(new BigDecimal(expectedResult)) <= 0;
+			pl.getFarDetails().setPermissableFar(ONE_POINTTWO.doubleValue());
+			expectedResult = "<= " + expectedResult;
+		}
 
 		if (errors.isEmpty() && StringUtils.isNotBlank(expectedResult)) {
 			buildResult(pl, occupancyType, far, typeOfArea, roadWidth, expectedResult, isAccepted);

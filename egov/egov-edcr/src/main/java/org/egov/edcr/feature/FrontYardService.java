@@ -329,6 +329,10 @@ public class FrontYardService extends GeneralRule {
 								//exceptedValue="3.44";
 								// end
 								
+								if(DxfFileConstants.DATA_NOT_FOUND.equals(exceptedValue)) {
+									//pl.addError(OBJECTNOTDEFINED, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_FRONT");
+									return;
+								}
 								
 								checkFrontYardUptoTenMtSkelton(pl, block.getBuilding(), block.getName(),
 										setback.getLevel(), plot, FRONT_YARD_DESC, min, mean,
@@ -415,6 +419,7 @@ public class FrontYardService extends GeneralRule {
 		
 		Map<String, String> result=cdgAdditionalService.getFeatureValue(CDGAConstant.SETBACKS, input);
 		
+		
 		return result;
 		
 	}
@@ -433,6 +438,12 @@ public class FrontYardService extends GeneralRule {
 			
 			for(Occupancy occupancy: block.getBuilding().getTotalArea()) {
 				Map<String, String> map=getSetBack(pl, mostRestrictiveOccupancyType);
+				
+				if(DxfFileConstants.DATA_NOT_FOUND.equals(map.get(CDGAdditionalService.SETBACK_FRONT))) {
+					pl.addError(OBJECTNOTDEFINED, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_FRONT");
+					return;
+				}
+				
 				Double frontSetback=Double.valueOf(map.get(CDGAdditionalService.SETBACK_FRONT)!=null?map.get(CDGAdditionalService.SETBACK_FRONT):"0");
 				
 				if(frontSetback>0) {

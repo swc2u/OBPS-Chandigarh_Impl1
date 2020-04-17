@@ -326,6 +326,10 @@ public class RearYardService extends GeneralRule {
 								exceptedValue=result.get(CDGAdditionalService.SETBACK_REAR);
 								//exceptedValue="4.96";
 								
+								if(DxfFileConstants.DATA_NOT_FOUND.equals(exceptedValue)) {
+									pl.addError(OBJECTNOTDEFINED, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_REAR");
+									return;
+								}
 								
 								// end
 								
