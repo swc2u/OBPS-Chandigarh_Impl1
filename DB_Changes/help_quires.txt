@@ -1,0 +1,5 @@
+select * from egbpa_occupancy where isactive=true;
+
+select id, "name", colorcode occupancy from egbpa_sub_occupancy where occupancy in (select id from egbpa_occupancy where isactive=false);
+
+select * from egbpa_occupancy where id not in(select occupancy from egbpa_sub_occupancy) and isactive=true;

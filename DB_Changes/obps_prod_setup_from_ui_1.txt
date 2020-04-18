@@ -1,0 +1,29 @@
+###env setup#############################
+1. need to check that all window's fonts are install or not
+sudo apt-get update
+sudo apt-get -f install
+2. need to check server timezone, it should be IST.
+
+/usr/share/fonts/
+
+###app city setup#############################
+1. set logo from ui screen for state and chandigarh tenant
+
+###app config#############################
+~~~update value for key~~~
+1. "BPA_GENERIC_BOUNDARY_CONFIGURATION" : {"validBoundary":{"REVENUE":[{"boundary":"Area Category","displayName":"Area Category"},{"boundary":"Zone or Location","displayName":"Zone or Location"},{"boundary":"Sectors or Villages","displayName":"Sectors or Villages"}]},"crossBoundary": {},"uniformBoundary":{"REVENUE":[{"fromBoundary":"Area Category:Area Category","toBoundary":"Zone or Location:Zone or Location"},{"fromBoundary":"Zone or Location:Zone or Location","toBoundary":"Sectors or Villages:Sectors or Villages"}]}}
+2. "BPA_ONLINE_PAY" : "YES"
+3. "BPA_CITIZENACCEPTANCE_CHECK" : "NO"
+4. "BPAPRIMARYDEPARTMENT" : "SDO Building"
+5. "EIS_EMPLOYEE_JURISDICTION_HIERARCHY" : "REVENUE" (module: EIS)
+6. "BPA_WORKFLOW_EMPLOYEE_BOUNDARY_HIERARCHY" : "REVENUE" (module: BPA)
+
+###fee config#############################
+1. need to check fee configuration whether it is correct or not.
+
+###add positions#############################
+1. Need to add all positions from UI
+
+###add Users#############################
+1. Need to add all employees from UI
+2. Need to set required roles to respective employees from UI
