@@ -83,7 +83,7 @@ public class PlanService {
 					featureService.getFeatures());
 			setProperties(plan);
 		}catch (Exception e) {
-			e.getClass();
+			e.printStackTrace();
 		}
 		plan.setServiceType(dcrApplication.getServiceType());
 		plan = applyRules(plan, amd, cityDetails);

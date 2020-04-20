@@ -320,7 +320,7 @@
         <dependent-module archiveName="egov-edcr-BPA-3.0.0-SNAPSHOT.jar" deploy-path="/lib" handle="module:/resource/egov-edcr/egov-edcr">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="egov-dcr-1.0.0-20200305.083835-146.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/egov/egov-dcr/1.0.0-SNAPSHOT/egov-dcr-1.0.0-SNAPSHOT.jar">
+        <dependent-module archiveName="egov-dcr-1.0.0-20200409.072246-154.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/egov/egov-dcr/1.0.0-SNAPSHOT/egov-dcr-1.0.0-SNAPSHOT.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="kabeja-0.4.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/kabeja/kabeja/0.4/kabeja-0.4.jar">
