@@ -86,6 +86,11 @@ public class FileDownloadController {
     public void getLogo(HttpServletResponse response) throws IOException {
         IOUtils.write(cityService.getCityLogoAsBytes(), response.getOutputStream());
     }
+    
+    @GetMapping("/rural-logo")
+    public void getRuralLogo(HttpServletResponse response) throws IOException {
+        IOUtils.write(cityService.getCityRuralLogoAsBytes(), response.getOutputStream());
+    }
 
     @GetMapping("/gis")
     public void getKML(HttpServletResponse response) throws IOException {

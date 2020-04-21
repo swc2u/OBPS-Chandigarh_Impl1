@@ -252,6 +252,18 @@ public class PlanInformation implements Serializable {
     //RESIDENTIAL_NO_OWNER
     private transient String residentialNoOwner=NA;
     
+    //LOCATION
+    private transient String location=NA;
+    
+    //PLOT_LENGTH
+    private transient String plotLength=NA;
+    
+    //PLOT_WIDTH
+    private transient String plotWidth=NA;
+     
+    //COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE
+    private transient String commercialAreaOccupancyAsPerRule=NA;
+    
 	public String getRootBoundaryType() {
 		return rootBoundaryType;
 	}
@@ -958,5 +970,39 @@ public class PlanInformation implements Serializable {
 	public void setNocPollutionDept(String nocPollutionDept) {
 		this.nocPollutionDept = nocPollutionDept;
 	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getPlotLength() {
+		return plotLength;
+	}
+
+	public void setPlotLength(String plotLength) {
+		this.plotLength = plotLength;
+	}
+
+	public String getPlotWidth() {
+		return plotWidth;
+	}
+
+	public void setPlotWidth(String plotWidth) {
+		this.plotWidth = plotWidth;
+	}
+
+	public String getCommercialAreaOccupancyAsPerRule() {
+		return commercialAreaOccupancyAsPerRule;
+	}
+
+	public void setCommercialAreaOccupancyAsPerRule(String commercialAreaOccupancyAsPerRule) {
+		this.commercialAreaOccupancyAsPerRule = commercialAreaOccupancyAsPerRule;
+	}
+	
+	
 
 }

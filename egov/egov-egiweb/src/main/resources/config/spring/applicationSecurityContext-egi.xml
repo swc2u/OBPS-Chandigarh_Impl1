@@ -70,6 +70,7 @@
 				<security:filter-chain pattern="/login/password/reset**" filters="none" />
 				<security:filter-chain pattern="/login/requiredlocations*" filters="none" />
 				<security:filter-chain pattern="/downloadfile/logo**" filters="none" />
+				<security:filter-chain pattern="/downloadfile/rural-logo**" filters="none" />
 				<security:filter-chain pattern="/downloadfile/gis**" filters="none" />
 				<security:filter-chain pattern="/error/**" filters="none" />
 				<security:filter-chain pattern="/city/details" filters="none" />

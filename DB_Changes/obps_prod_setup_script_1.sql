@@ -316,7 +316,7 @@ INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,
 ,(279,'F-BBM','Bulk building material',61,true,1,now(),now(),1,0,'Commercial Bulk building material',65,3,4,34,29)
 ,(280,'F-TS','Timber site (single storey)',62,true,1,now(),now(),1,0,'Timber site (single storey)',65,3,4,34,45)
 ,(270,'F-TCIM','Comercial_Theatre converted into multiplex',54,true,1,now(),now(),1,0,'Comercial_Theatre converted into multiplex',70,3,4,34,31)
-,(272,'F-SCO','SCO’S/ SCF’S / BAYSHOP’S/ SEMI INDUSTRIALETC ETC.',56,true,1,now(),now(),1,0,'SCO’S/ SCF’S / BAYSHOP’S/ SEMI INDUSTRIALETC ETC.',70,3,4,34,30)
+,(272,'F-SCO','SCOï¿½S/ SCFï¿½S / BAYSHOPï¿½S/ SEMI INDUSTRIALETC ETC.',56,true,1,now(),now(),1,0,'SCOï¿½S/ SCFï¿½S / BAYSHOPï¿½S/ SEMI INDUSTRIALETC ETC.',70,3,4,34,30)
 ,(277,'F-CD','Coal Depot',76,true,1,now(),now(),1,0,'Coal Depot',65,3,4,34,50)
 ,(276,'F-B','BOOTHS',75,true,1,now(),now(),1,0,'BOOTHS',65,3,4,34,60)
 ,(238,'G-LI','Large Industrial',22,true,1,now(),now(),1,0,'G1 (Large scale)',65,2.5,0,35,9)
@@ -342,7 +342,7 @@ INSERT INTO chandigarh.egbpa_usage (id,code,"name",description,isactive,ordernum
 ,(170,'F-CFI','COMMERCIAL (converted from Industrial)','COMMERCIAL (converted from Industrial)',true,1,0,1,now(),1,now(),237,NULL)
 ,(173,'F-TCIM','Comercial_Theatre converted into multiplex','Comercial_Theatre converted into multiplex',true,1,0,1,now(),1,now(),270,NULL)
 ,(188,'F-BH','Banquet hall/ marriage palaces','Banquet hall/ marriage palaces',true,1,0,1,now(),1,now(),271,NULL)
-,(172,'F-SCO','SCO’S/ SCF’S / BAYSHOP’S/ SEMI INDUSTRIALETC ETC.','SCO’S/ SCF’S / BAYSHOP’S/ SEMI INDUSTRIAL ETC',true,1,0,1,now(),1,now(),272,NULL)
+,(172,'F-SCO','SCOï¿½S/ SCFï¿½S / BAYSHOPï¿½S/ SEMI INDUSTRIALETC ETC.','SCOï¿½S/ SCFï¿½S / BAYSHOPï¿½S/ SEMI INDUSTRIAL ETC',true,1,0,1,now(),1,now(),272,NULL)
 ,(187,'F-IT','IT/ITES Building','IT/ITES Building',true,1,0,1,now(),1,now(),273,NULL)
 ,(183,'F-M','Commercial MULTIPLEX/MALLS','MULTIPLEX/MALLS (specifically earmarked sites)',true,1,0,1,now(),1,now(),278,NULL)
 ,(185,'F-BBM','Bulk building material','Commercial Bulk building material',true,1,0,1,now(),1,now(),279,NULL)
@@ -597,7 +597,7 @@ update chandigarh.eg_checklist set description='Self attested undertaking:- a) R
 update chandigarh.eg_checklist set description='Copy of Sewerage Connection / Occupation Certificate or extension in time limit for construction of the building.' where code='DOCUMENTATION-10' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='DOCUMENTATION');
 update chandigarh.eg_checklist set description='In case, sewerage connection/occupation certificate is not issued/obtained then furnish: a) An attested copy of proof of construction i.e., water/electricity bills (prior to 22-1-1993 or construction of building within the stipulated period as per terms and conditions of allotment or within the extended period as the case may be), supported with a certificate issued by the Registered Architect on his/her letter head certifying that the building is constructed as per sanctioned plan and there is no building violations at Site/House. b) Certificate from the concerned water/electricity department certifying there in the date and year of release of permanent / regular water/electricity connection against the house/building in question.' where code='DOCUMENTATION-11' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='DOCUMENTATION');
 update chandigarh.eg_checklist set description='Indemnity Bond is required from each owner (s) duly attested for attorney.' where code='DOCUMENTATION-12' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='DOCUMENTATION');
-update chandigarh.eg_checklist set description='If applicant is GPA / SPA holder, then furnish: a)      Copy of GPA / SPA (attested by notary public). b)     Affidavit regarding validity of GPA / SPA' where code='DOCUMENTATION-13' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='DOCUMENTATION');
+update chandigarh.eg_checklist set description='If applicant is GPA / SPA holder, then furnish: a)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Copy of GPA / SPA (attested by notary public). b)ï¿½ï¿½ï¿½ï¿½ï¿½Affidavit regarding validity of GPA / SPA' where code='DOCUMENTATION-13' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='DOCUMENTATION');
 update chandigarh.eg_checklist set description='If there is no proof of previous sanctioned plan, an undertaking is must require from the owner (s) that my / our plan (s) be treated as fresh with applicable charges.' where code='DOCUMENTATION-14' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='DOCUMENTATION');
 update chandigarh.eg_checklist set description='If there is no proof of previous sanctioned plan / plans is treated as fresh, plot size may also got be verified from the Surveyor.' where code='DOCUMENTATION-15' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='DOCUMENTATION');
 update chandigarh.eg_checklist set description='In case of fresh building plan, the plot size may be got verified from the Surveyor.' where code='DOCUMENTATION-16' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='DOCUMENTATION');
@@ -1034,7 +1034,7 @@ INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactivefor
 ;
 INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactiveforposting,parentid,purposeid,operation,"type","class",classification,functionreqd,budgetcheckreq,scheduleid,receiptscheduleid,receiptoperation,paymentscheduleid,paymentoperation,majorcode,fiescheduleid,fieoperation,createddate,createdby,lastmodifieddate,lastmodifiedby,"version") VALUES 
 (141,'34010','From Contractors Suppliers',NULL,false,26,NULL,'A','L',NULL,2,NULL,NULL,7,NULL,NULL,NULL,NULL,'340',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(142,'34020','Deposits – Revenues',NULL,false,26,NULL,'A','L',NULL,2,NULL,NULL,7,NULL,NULL,NULL,NULL,'340',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(142,'34020','Deposits ï¿½ Revenues',NULL,false,26,NULL,'A','L',NULL,2,NULL,NULL,7,NULL,NULL,NULL,NULL,'340',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(143,'34030','From Staff',NULL,false,26,NULL,'A','L',NULL,2,NULL,NULL,7,NULL,NULL,NULL,NULL,'340',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(144,'34080','From Others',NULL,false,26,NULL,'A','L',NULL,2,NULL,NULL,7,NULL,NULL,NULL,NULL,'340',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(145,'34110','Civil works',NULL,false,27,NULL,'A','L',NULL,2,NULL,NULL,8,NULL,NULL,NULL,NULL,'341',NULL,NULL,NULL,NULL,NULL,NULL,0)
@@ -1165,7 +1165,7 @@ INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactivefor
 ,(254,'46130','Deposits',NULL,false,41,NULL,'A','A',NULL,2,NULL,NULL,22,NULL,NULL,NULL,NULL,'461',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ;
 INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactiveforposting,parentid,purposeid,operation,"type","class",classification,functionreqd,budgetcheckreq,scheduleid,receiptscheduleid,receiptoperation,paymentscheduleid,paymentoperation,majorcode,fiescheduleid,fieoperation,createddate,createdby,lastmodifieddate,lastmodifiedby,"version") VALUES 
-(255,'47010','Deposit Works – Expenditure',NULL,false,42,NULL,'A','A',NULL,2,NULL,NULL,23,NULL,NULL,NULL,NULL,'470',NULL,NULL,NULL,NULL,NULL,NULL,0)
+(255,'47010','Deposit Works ï¿½ Expenditure',NULL,false,42,NULL,'A','A',NULL,2,NULL,NULL,23,NULL,NULL,NULL,NULL,'470',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(256,'47020','Inter Unit Accounts',NULL,false,42,NULL,'A','A',NULL,2,NULL,NULL,23,NULL,NULL,NULL,NULL,'470',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(257,'47030','Interest Control Payable',NULL,false,42,NULL,'A','A',NULL,2,NULL,NULL,23,NULL,NULL,NULL,NULL,'470',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(258,'48010','Loan Issue Expenses',NULL,false,43,NULL,'A','A',NULL,2,NULL,NULL,24,NULL,NULL,NULL,NULL,'480',NULL,NULL,NULL,NULL,NULL,NULL,0)
@@ -1198,11 +1198,11 @@ INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactivefor
 ,(281,'23040','Hire Charges',NULL,false,11,NULL,'A','E',NULL,2,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(282,'23050','Repairs and maintenance Infrastructure Assets',NULL,false,11,NULL,'A','E',NULL,2,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(283,'23051','Repairs and maintenance - Civic Amenities',NULL,false,11,NULL,'A','E',NULL,2,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(284,'23052','Repairs and maintenance – Buildings',NULL,false,11,NULL,'A','E',NULL,2,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(284,'23052','Repairs and maintenance ï¿½ Buildings',NULL,false,11,NULL,'A','E',NULL,2,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ;
 INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactiveforposting,parentid,purposeid,operation,"type","class",classification,functionreqd,budgetcheckreq,scheduleid,receiptscheduleid,receiptoperation,paymentscheduleid,paymentoperation,majorcode,fiescheduleid,fieoperation,createddate,createdby,lastmodifieddate,lastmodifiedby,"version") VALUES 
-(285,'23053','Repairs and maintenance – Vehicles',NULL,false,11,NULL,'A','E',NULL,2,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(286,'23059','Repairs and maintenance – Others',NULL,false,11,NULL,'A','E',NULL,2,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
+(285,'23053','Repairs and maintenance ï¿½ Vehicles',NULL,false,11,NULL,'A','E',NULL,2,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(286,'23059','Repairs and maintenance ï¿½ Others',NULL,false,11,NULL,'A','E',NULL,2,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(287,'23080','Other operating and maintenance expenses',NULL,false,11,NULL,'A','E',NULL,2,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(288,'24010','Interest on Loans from Central Government',NULL,false,12,NULL,'A','E',NULL,2,NULL,NULL,37,NULL,NULL,NULL,NULL,'240',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(289,'24020','Interest on Loans from State Government',NULL,false,12,NULL,'A','E',NULL,2,NULL,NULL,37,NULL,NULL,NULL,NULL,'240',NULL,NULL,NULL,NULL,NULL,NULL,0)
@@ -1244,18 +1244,18 @@ INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactivefor
 ,(319,'27270','Furniture, Fixtures, Fittings and Electrical Appliances',NULL,false,17,NULL,'A','E',NULL,2,NULL,NULL,42,NULL,NULL,NULL,NULL,'272',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(320,'27280','Other Fixed Assets',NULL,false,17,NULL,'A','E',NULL,2,NULL,NULL,42,NULL,NULL,NULL,NULL,'272',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(321,'28010','Taxes',NULL,false,18,NULL,'A','E',NULL,2,NULL,NULL,43,NULL,NULL,NULL,NULL,'280',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(322,'28020','Other – Revenues',NULL,false,18,NULL,'A','E',NULL,2,NULL,NULL,43,NULL,NULL,NULL,NULL,'280',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(322,'28020','Other ï¿½ Revenues',NULL,false,18,NULL,'A','E',NULL,2,NULL,NULL,43,NULL,NULL,NULL,NULL,'280',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(323,'28030','Recovery of revenues written off',NULL,false,18,NULL,'A','E',NULL,2,NULL,NULL,43,NULL,NULL,NULL,NULL,'280',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(324,'28040','Other Income',NULL,false,18,NULL,'A','E',NULL,2,NULL,NULL,43,NULL,NULL,NULL,NULL,'280',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ;
 INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactiveforposting,parentid,purposeid,operation,"type","class",classification,functionreqd,budgetcheckreq,scheduleid,receiptscheduleid,receiptoperation,paymentscheduleid,paymentoperation,majorcode,fiescheduleid,fieoperation,createddate,createdby,lastmodifieddate,lastmodifiedby,"version") VALUES 
 (325,'28050','Refund of Taxes',NULL,false,18,NULL,'A','E',NULL,2,NULL,NULL,43,NULL,NULL,NULL,NULL,'280',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(326,'28060','Refund of Other – Revenues',NULL,false,18,NULL,'A','E',NULL,2,NULL,NULL,43,NULL,NULL,NULL,NULL,'280',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(326,'28060','Refund of Other ï¿½ Revenues',NULL,false,18,NULL,'A','E',NULL,2,NULL,NULL,43,NULL,NULL,NULL,NULL,'280',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(327,'28080','Other Expenses',NULL,false,18,NULL,'A','E',NULL,2,NULL,NULL,43,NULL,NULL,NULL,NULL,'280',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(328,'29010','Transfer to Capital Funds',NULL,false,19,NULL,'A','E',NULL,2,NULL,NULL,44,NULL,NULL,NULL,NULL,'290',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(329,'29020','Transfer to Earmarked Funds',NULL,false,19,NULL,'A','E',NULL,2,NULL,NULL,44,NULL,NULL,NULL,NULL,'290',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(330,'29030','Revenue Surplus',NULL,false,19,NULL,'A','E',NULL,2,NULL,NULL,44,NULL,NULL,NULL,NULL,'290',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(331,'1100101','Property Tax-Properties – General',NULL,true,44,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(331,'1100101','Property Tax-Properties ï¿½ General',NULL,true,44,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(332,'1100102','Property Tax-Vacant Land',NULL,true,44,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(333,'1100103','Property Tax-State Government Properties',NULL,true,44,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(334,'1100104','Property Tax-State Government Undertaking Properties',NULL,true,44,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
@@ -1263,12 +1263,12 @@ INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactivefor
 INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactiveforposting,parentid,purposeid,operation,"type","class",classification,functionreqd,budgetcheckreq,scheduleid,receiptscheduleid,receiptoperation,paymentscheduleid,paymentoperation,majorcode,fiescheduleid,fieoperation,createddate,createdby,lastmodifieddate,lastmodifiedby,"version") VALUES 
 (335,'1100105','Property Tax-Central Government Undertaking Properties',NULL,true,44,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(336,'1100106','Property Tax-Service Charges in lieu of Property Tax',NULL,true,44,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(337,'1100201','Water Tax-Properties – Water Tax',NULL,true,45,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(337,'1100201','Water Tax-Properties ï¿½ Water Tax',NULL,true,45,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(338,'1100202','Water Tax-Direct Water Tax',NULL,true,45,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(339,'1100301','Sewerage Tax-Properties – Sewerage Tax',NULL,true,46,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(340,'1100401','Conservancy Tax-Properties – Conservancy Tax',NULL,true,47,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(341,'1100501','Lighting Tax-Properties – Lighting Tax',NULL,true,48,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(342,'1100601','Education Tax-Properties – Education Tax',NULL,true,49,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(339,'1100301','Sewerage Tax-Properties ï¿½ Sewerage Tax',NULL,true,46,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(340,'1100401','Conservancy Tax-Properties ï¿½ Conservancy Tax',NULL,true,47,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(341,'1100501','Lighting Tax-Properties ï¿½ Lighting Tax',NULL,true,48,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(342,'1100601','Education Tax-Properties ï¿½ Education Tax',NULL,true,49,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(343,'1100700','Vehicle Tax-Vehicle Tax',NULL,true,50,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(344,'1100800','Tax on Animals-Tax on Animals',NULL,true,51,NULL,'A','I',NULL,4,NULL,NULL,25,NULL,NULL,NULL,NULL,'110',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ;
@@ -1422,8 +1422,8 @@ INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactivefor
 ,(467,'1407007','Service Administrative Charges-Removal of Public Nuisances',NULL,true,77,NULL,'A','I',NULL,4,NULL,NULL,28,NULL,NULL,NULL,NULL,'140',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(468,'1407008','Service Administrative Charges-Administrative Charges for Deposit Works',NULL,true,77,NULL,'A','I',NULL,4,NULL,NULL,28,NULL,NULL,NULL,NULL,'140',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(469,'1407009','Service Administrative Charges-NOC of Public Health Section',NULL,true,77,NULL,'A','I',NULL,4,NULL,NULL,28,NULL,NULL,NULL,NULL,'140',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(470,'1407011','Service Administrative Charges-Water Supply – Tap Estimation Charges',NULL,true,77,NULL,'A','I',NULL,4,NULL,NULL,28,NULL,NULL,NULL,NULL,'140',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(471,'1407012','Service Administrative Charges-Water Supply – Tap repairs',NULL,true,77,NULL,'A','I',NULL,4,NULL,NULL,28,NULL,NULL,NULL,NULL,'140',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(470,'1407011','Service Administrative Charges-Water Supply ï¿½ Tap Estimation Charges',NULL,true,77,NULL,'A','I',NULL,4,NULL,NULL,28,NULL,NULL,NULL,NULL,'140',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(471,'1407012','Service Administrative Charges-Water Supply ï¿½ Tap repairs',NULL,true,77,NULL,'A','I',NULL,4,NULL,NULL,28,NULL,NULL,NULL,NULL,'140',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(472,'1407013','Service Administrative Charges-Solvency Certificate',NULL,true,77,NULL,'A','I',NULL,4,NULL,NULL,28,NULL,NULL,NULL,NULL,'140',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(473,'1408001','Other Charges-Compounding fee',NULL,true,78,NULL,'A','I',NULL,4,NULL,NULL,28,NULL,NULL,NULL,NULL,'140',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(474,'1409001','Fees Remission and Refund-Refund of Fees',NULL,true,79,NULL,'A','I',NULL,4,NULL,NULL,28,NULL,NULL,NULL,NULL,'140',NULL,NULL,NULL,NULL,NULL,NULL,0)
@@ -1471,7 +1471,7 @@ INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactivefor
 ,(508,'1603002','Contribution towards schemes-National Slum Development Project',NULL,true,88,NULL,'A','I',NULL,4,NULL,NULL,30,NULL,NULL,NULL,NULL,'160',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(509,'1603003','Contribution towards schemes-Integrated Development of Small and Medium Towns',NULL,true,88,NULL,'A','I',NULL,4,NULL,NULL,30,NULL,NULL,NULL,NULL,'160',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(510,'1603004','Contribution towards schemes-Integrated Low Cost Sanitation',NULL,true,88,NULL,'A','I',NULL,4,NULL,NULL,30,NULL,NULL,NULL,NULL,'160',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(511,'1603005','Contribution towards schemes-Water Supply –Donation',NULL,true,88,NULL,'A','I',NULL,4,NULL,NULL,30,NULL,NULL,NULL,NULL,'160',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(511,'1603005','Contribution towards schemes-Water Supply ï¿½Donation',NULL,true,88,NULL,'A','I',NULL,4,NULL,NULL,30,NULL,NULL,NULL,NULL,'160',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(512,'1603006','Contribution towards schemes-Sewerage Donation',NULL,true,88,NULL,'A','I',NULL,4,NULL,NULL,30,NULL,NULL,NULL,NULL,'160',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(513,'1701001','Interest-Fixed Deposits with Scheduled Banks',NULL,true,89,NULL,'A','I',NULL,4,NULL,NULL,31,NULL,NULL,NULL,NULL,'170',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(514,'1701002','Interest-Fixed Deposits with Private Banks',NULL,true,89,NULL,'A','I',NULL,4,NULL,NULL,31,NULL,NULL,NULL,NULL,'170',NULL,NULL,NULL,NULL,NULL,NULL,0)
@@ -1532,7 +1532,7 @@ INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactivefor
 ,(560,'2101007','Salaries, Wages and Bonus-Surrender Leave Encashment',NULL,true,261,NULL,'A','E',NULL,4,NULL,NULL,34,NULL,NULL,NULL,NULL,'210',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(561,'2101008','Salaries, Wages and Bonus-Performance Bonus',NULL,true,261,NULL,'A','E',NULL,4,NULL,NULL,34,NULL,NULL,NULL,NULL,'210',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(562,'2101009','Salaries, Wages and Bonus-Honorarium/Sitting Fees to Corporators',NULL,true,261,NULL,'A','E',NULL,4,NULL,NULL,34,NULL,NULL,NULL,NULL,'210',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(563,'2101010','Salaries, Wages and Bonus-Honorarium – others',NULL,true,261,NULL,'A','E',NULL,4,NULL,NULL,34,NULL,NULL,NULL,NULL,'210',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(563,'2101010','Salaries, Wages and Bonus-Honorarium ï¿½ others',NULL,true,261,NULL,'A','E',NULL,4,NULL,NULL,34,NULL,NULL,NULL,NULL,'210',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(564,'2101011','Salaries, Wages and Bonus-Wages to workers through Placement Agencies',NULL,true,261,NULL,'A','E',NULL,4,NULL,NULL,34,NULL,NULL,NULL,NULL,'210',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ;
 INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactiveforposting,parentid,purposeid,operation,"type","class",classification,functionreqd,budgetcheckreq,scheduleid,receiptscheduleid,receiptoperation,paymentscheduleid,paymentoperation,majorcode,fiescheduleid,fieoperation,createddate,createdby,lastmodifieddate,lastmodifiedby,"version") VALUES 
@@ -1605,11 +1605,11 @@ INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactivefor
 ,(621,'2202102','Printing and Stationery-Stationery',NULL,true,269,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(622,'2202103','Printing and Stationery-Computer Consumables',NULL,true,269,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(623,'2202104','Printing and Stationery-Service postage',NULL,true,269,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(624,'2203001','Traveling and Conveyance-Traveling – In land',NULL,true,270,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(624,'2203001','Traveling and Conveyance-Traveling ï¿½ In land',NULL,true,270,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ;
 INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactiveforposting,parentid,purposeid,operation,"type","class",classification,functionreqd,budgetcheckreq,scheduleid,receiptscheduleid,receiptoperation,paymentscheduleid,paymentoperation,majorcode,fiescheduleid,fieoperation,createddate,createdby,lastmodifieddate,lastmodifiedby,"version") VALUES 
-(625,'2203002','Traveling and Conveyance-Traveling – Abroad',NULL,true,270,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(626,'2203003','Traveling and Conveyance-Fuel – (Petrol & Diesel)',NULL,true,270,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
+(625,'2203002','Traveling and Conveyance-Traveling ï¿½ Abroad',NULL,true,270,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(626,'2203003','Traveling and Conveyance-Fuel ï¿½ (Petrol & Diesel)',NULL,true,270,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(627,'2204001','Insurance-Buildings',NULL,true,271,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(628,'2204002','Insurance-Vehicles',NULL,true,271,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(629,'2204003','Insurance-Electronic Equipment',NULL,true,271,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
@@ -1626,7 +1626,7 @@ INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactivefor
 ,(638,'2205104','Legal Expenses-Compensation ordered by courts',NULL,true,273,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(639,'2205201','Professional and other Fees-Consultancy Charges',NULL,true,274,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(640,'2205202','Professional and other Fees-Other Professional Charges',NULL,true,274,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(641,'2206001','Advertisement and Publicity-Advertisement – Print Media',NULL,true,275,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(641,'2206001','Advertisement and Publicity-Advertisement ï¿½ Print Media',NULL,true,275,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(642,'2206002','Advertisement and Publicity-Advertisement -TV & Radio media',NULL,true,275,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(643,'2206003','Advertisement and Publicity-Hoardings',NULL,true,275,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(644,'2206004','Advertisement and Publicity-Hospitality Expenses',NULL,true,275,NULL,'A','E',NULL,4,NULL,NULL,35,NULL,NULL,NULL,NULL,'220',NULL,NULL,NULL,NULL,NULL,NULL,0)
@@ -1677,23 +1677,23 @@ INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactivefor
 ,(681,'2305110','Repairs and maintenance - Civic Amenities-Market Yards',NULL,true,283,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(682,'2305111','Repairs and maintenance - Civic Amenities-Parking Lots',NULL,true,283,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(683,'2305112','Repairs and maintenance - Civic Amenities-Avenue and Other Plantations',NULL,true,283,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(684,'2305201','Repairs and maintenance – Buildings-Community Halls',NULL,true,284,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(684,'2305201','Repairs and maintenance ï¿½ Buildings-Community Halls',NULL,true,284,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ;
 INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactiveforposting,parentid,purposeid,operation,"type","class",classification,functionreqd,budgetcheckreq,scheduleid,receiptscheduleid,receiptoperation,paymentscheduleid,paymentoperation,majorcode,fiescheduleid,fieoperation,createddate,createdby,lastmodifieddate,lastmodifiedby,"version") VALUES 
-(685,'2305202','Repairs and maintenance – Buildings-Commercial Complex',NULL,true,284,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(686,'2305203','Repairs and maintenance – Buildings-Office Buildings',NULL,true,284,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(687,'2305204','Repairs and maintenance – Buildings-Staff Quarters',NULL,true,284,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(688,'2305301','Repairs and maintenance – Vehicles-Heavy Vehicles',NULL,true,285,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(689,'2305302','Repairs and maintenance – Vehicles-Light Vehicles',NULL,true,285,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(690,'2305901','Repairs and maintenance – Others-Furniture & Fixtures',NULL,true,286,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(691,'2305902','Repairs and maintenance – Others-Computers & Net Work',NULL,true,286,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(692,'2305903','Repairs and maintenance – Others-Electronic Equipment',NULL,true,286,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(693,'2305904','Repairs and maintenance – Others-Office Equipment',NULL,true,286,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(694,'2305905','Repairs and maintenance – Others-Survey & Drawing Equipment',NULL,true,286,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
+(685,'2305202','Repairs and maintenance ï¿½ Buildings-Commercial Complex',NULL,true,284,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(686,'2305203','Repairs and maintenance ï¿½ Buildings-Office Buildings',NULL,true,284,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(687,'2305204','Repairs and maintenance ï¿½ Buildings-Staff Quarters',NULL,true,284,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(688,'2305301','Repairs and maintenance ï¿½ Vehicles-Heavy Vehicles',NULL,true,285,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(689,'2305302','Repairs and maintenance ï¿½ Vehicles-Light Vehicles',NULL,true,285,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(690,'2305901','Repairs and maintenance ï¿½ Others-Furniture & Fixtures',NULL,true,286,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(691,'2305902','Repairs and maintenance ï¿½ Others-Computers & Net Work',NULL,true,286,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(692,'2305903','Repairs and maintenance ï¿½ Others-Electronic Equipment',NULL,true,286,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(693,'2305904','Repairs and maintenance ï¿½ Others-Office Equipment',NULL,true,286,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(694,'2305905','Repairs and maintenance ï¿½ Others-Survey & Drawing Equipment',NULL,true,286,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ;
 INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactiveforposting,parentid,purposeid,operation,"type","class",classification,functionreqd,budgetcheckreq,scheduleid,receiptscheduleid,receiptoperation,paymentscheduleid,paymentoperation,majorcode,fiescheduleid,fieoperation,createddate,createdby,lastmodifieddate,lastmodifiedby,"version") VALUES 
-(695,'2305906','Repairs and maintenance – Others-Plant & Machinery',NULL,true,286,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(696,'2305907','Repairs and maintenance – Others-Conservancy Tools',NULL,true,286,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
+(695,'2305906','Repairs and maintenance ï¿½ Others-Plant & Machinery',NULL,true,286,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(696,'2305907','Repairs and maintenance ï¿½ Others-Conservancy Tools',NULL,true,286,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(697,'2308001','Other operating and maintenance expenses-Garbage Clearance',NULL,true,287,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(698,'2308002','Other operating and maintenance expenses-Testing & Inspection',NULL,true,287,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(699,'2308003','Other operating and maintenance expenses-Field Survey & Inspection',NULL,true,287,NULL,'A','E',NULL,4,NULL,NULL,36,NULL,NULL,NULL,NULL,'230',NULL,NULL,NULL,NULL,NULL,NULL,0)
@@ -1783,13 +1783,13 @@ INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactivefor
 ,(769,'2727000','Furniture, Fixtures, Fittings and Electrical Appliances-Furniture, Fixtures, Fittings and Electrical Appliances',NULL,true,319,NULL,'A','E',NULL,4,NULL,NULL,42,NULL,NULL,NULL,NULL,'272',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(770,'2728000','Other Fixed Assets-Other Fixed Assets',NULL,true,320,NULL,'A','E',NULL,4,NULL,NULL,42,NULL,NULL,NULL,NULL,'272',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(771,'2801000','Taxes-Taxes',NULL,true,321,NULL,'A','E',NULL,4,NULL,NULL,43,NULL,NULL,NULL,NULL,'280',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(772,'2802000','Other – Revenues-Other – Revenues',NULL,true,322,NULL,'A','E',NULL,4,NULL,NULL,43,NULL,NULL,NULL,NULL,'280',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(772,'2802000','Other ï¿½ Revenues-Other ï¿½ Revenues',NULL,true,322,NULL,'A','E',NULL,4,NULL,NULL,43,NULL,NULL,NULL,NULL,'280',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(773,'2803000','Recovery of revenues written off-Recovery of revenues written off',NULL,true,323,NULL,'A','E',NULL,4,NULL,NULL,43,NULL,NULL,NULL,NULL,'280',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(774,'2804000','Other Income-Other Income',NULL,true,324,NULL,'A','E',NULL,4,NULL,NULL,43,NULL,NULL,NULL,NULL,'280',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ;
 INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactiveforposting,parentid,purposeid,operation,"type","class",classification,functionreqd,budgetcheckreq,scheduleid,receiptscheduleid,receiptoperation,paymentscheduleid,paymentoperation,majorcode,fiescheduleid,fieoperation,createddate,createdby,lastmodifieddate,lastmodifiedby,"version") VALUES 
 (775,'2805000','Refund of Taxes-Refund of Taxes',NULL,true,325,NULL,'A','E',NULL,4,NULL,NULL,43,NULL,NULL,NULL,NULL,'280',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(776,'2806000','Refund of Other – Revenues-Refund of Other – Revenues',NULL,true,326,NULL,'A','E',NULL,4,NULL,NULL,43,NULL,NULL,NULL,NULL,'280',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(776,'2806000','Refund of Other ï¿½ Revenues-Refund of Other ï¿½ Revenues',NULL,true,326,NULL,'A','E',NULL,4,NULL,NULL,43,NULL,NULL,NULL,NULL,'280',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(777,'2808000','Other Expenses-Other Expenses',NULL,true,327,NULL,'A','E',NULL,4,NULL,NULL,43,NULL,NULL,NULL,NULL,'280',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(778,'2901001','Transfer to Capital Funds-City Development Fund',NULL,true,328,NULL,'A','E',NULL,4,NULL,NULL,44,NULL,NULL,NULL,NULL,'290',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(779,'2901002','Transfer to Capital Funds-UCD Fund',NULL,true,328,NULL,'A','E',NULL,4,NULL,NULL,44,NULL,NULL,NULL,NULL,'290',NULL,NULL,NULL,NULL,NULL,NULL,0)
@@ -1861,7 +1861,7 @@ INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactivefor
 ;
 INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactiveforposting,parentid,purposeid,operation,"type","class",classification,functionreqd,budgetcheckreq,scheduleid,receiptscheduleid,receiptoperation,paymentscheduleid,paymentoperation,majorcode,fiescheduleid,fieoperation,createddate,createdby,lastmodifieddate,lastmodifiedby,"version") VALUES 
 (836,'3206001','International Organizations-Water & Sanitation Programme (World Bank)',NULL,true,123,NULL,'A','L',NULL,4,NULL,NULL,4,NULL,NULL,NULL,NULL,'320',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(837,'3206002','International Organizations-Urban Management/Cities Alliance Programme (UNCHS – World Bank)',NULL,true,123,NULL,'A','L',NULL,4,NULL,NULL,4,NULL,NULL,NULL,NULL,'320',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(837,'3206002','International Organizations-Urban Management/Cities Alliance Programme (UNCHS ï¿½ World Bank)',NULL,true,123,NULL,'A','L',NULL,4,NULL,NULL,4,NULL,NULL,NULL,NULL,'320',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(838,'3208001','Others-Public Contribution for Works',NULL,true,124,NULL,'A','L',NULL,4,NULL,NULL,4,NULL,NULL,NULL,NULL,'320',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(839,'3208002','Others-Abatement of Pollution of River (Industry Contribution)',NULL,true,124,NULL,'A','L',NULL,4,NULL,NULL,4,NULL,NULL,NULL,NULL,'320',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(840,'3301001','Loans from Central Government-Short Term Loan',NULL,true,125,NULL,'A','L',NULL,4,NULL,NULL,5,NULL,NULL,NULL,NULL,'330',NULL,NULL,NULL,NULL,NULL,NULL,0)
@@ -1898,8 +1898,8 @@ INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactivefor
 INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactiveforposting,parentid,purposeid,operation,"type","class",classification,functionreqd,budgetcheckreq,scheduleid,receiptscheduleid,receiptoperation,paymentscheduleid,paymentoperation,majorcode,fiescheduleid,fieoperation,createddate,createdby,lastmodifieddate,lastmodifiedby,"version") VALUES 
 (866,'3401002','From Contractors Suppliers-Retention Money Deposit',NULL,true,141,NULL,'A','L',NULL,4,NULL,NULL,7,NULL,NULL,NULL,NULL,'340',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(867,'3401003','From Contractors Suppliers-Further Security Deposit',NULL,true,141,NULL,'A','L',NULL,4,NULL,NULL,7,NULL,NULL,NULL,NULL,'340',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(868,'3402001','Deposits – Revenues-Rental Deposits',NULL,true,142,NULL,'A','L',NULL,4,NULL,NULL,7,NULL,NULL,NULL,NULL,'340',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(869,'3402002','Deposits – Revenues-Security Deposits',NULL,true,142,NULL,'A','L',NULL,4,NULL,NULL,7,NULL,NULL,NULL,NULL,'340',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(868,'3402001','Deposits ï¿½ Revenues-Rental Deposits',NULL,true,142,NULL,'A','L',NULL,4,NULL,NULL,7,NULL,NULL,NULL,NULL,'340',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(869,'3402002','Deposits ï¿½ Revenues-Security Deposits',NULL,true,142,NULL,'A','L',NULL,4,NULL,NULL,7,NULL,NULL,NULL,NULL,'340',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(870,'3403000','From Staff-From Staff',NULL,true,143,NULL,'A','L',NULL,4,NULL,NULL,7,NULL,NULL,NULL,NULL,'340',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(871,'3408000','From Others-From Others',NULL,true,144,NULL,'A','L',NULL,4,NULL,NULL,7,NULL,NULL,NULL,NULL,'340',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(872,'3411001','Civil works-State Government Departments',NULL,true,145,NULL,'A','L',NULL,4,NULL,NULL,8,NULL,NULL,NULL,NULL,'341',NULL,NULL,NULL,NULL,NULL,NULL,0)
@@ -1934,7 +1934,7 @@ INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactivefor
 INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactiveforposting,parentid,purposeid,operation,"type","class",classification,functionreqd,budgetcheckreq,scheduleid,receiptscheduleid,receiptoperation,paymentscheduleid,paymentoperation,majorcode,fiescheduleid,fieoperation,createddate,createdby,lastmodifieddate,lastmodifiedby,"version") VALUES 
 (897,'3501206','Interest Accrued and due-Others',NULL,true,150,NULL,'A','L',NULL,4,NULL,NULL,9,NULL,NULL,NULL,NULL,'350',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(898,'3502001','Recoveries payable-GPF',NULL,true,151,NULL,'A','L',NULL,4,NULL,NULL,9,NULL,NULL,NULL,NULL,'350',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(899,'3502002','Recoveries payable-GPF –Employees on Deputation',NULL,true,151,NULL,'A','L',NULL,4,NULL,NULL,9,NULL,NULL,NULL,NULL,'350',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(899,'3502002','Recoveries payable-GPF ï¿½Employees on Deputation',NULL,true,151,NULL,'A','L',NULL,4,NULL,NULL,9,NULL,NULL,NULL,NULL,'350',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(900,'3502003','Recoveries payable-GIS',NULL,true,151,NULL,'A','L',NULL,4,NULL,NULL,9,NULL,NULL,NULL,NULL,'350',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(901,'3502004','Recoveries payable-Profession Tax',NULL,true,151,NULL,'A','L',NULL,4,NULL,NULL,9,NULL,NULL,NULL,NULL,'350',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(902,'3502005','Recoveries payable-APGLI',NULL,true,151,NULL,'A','L',NULL,4,NULL,NULL,9,NULL,NULL,NULL,NULL,'350',NULL,NULL,NULL,NULL,NULL,NULL,0)
@@ -2167,7 +2167,7 @@ INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactivefor
 ,(1091,'4120073','General-Other Vehicles',NULL,true,183,NULL,'A','A',NULL,4,NULL,NULL,13,NULL,NULL,NULL,NULL,'412',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(1092,'4120081','General-Office Equipment',NULL,true,183,NULL,'A','A',NULL,4,NULL,NULL,13,NULL,NULL,NULL,NULL,'412',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(1093,'4120082','General-Computers, Servers & Net Work Equipment',NULL,true,183,NULL,'A','A',NULL,4,NULL,NULL,13,NULL,NULL,NULL,NULL,'412',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(1094,'4120083','General-Urban Mapping – GIS',NULL,true,183,NULL,'A','A',NULL,4,NULL,NULL,13,NULL,NULL,NULL,NULL,'412',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(1094,'4120083','General-Urban Mapping ï¿½ GIS',NULL,true,183,NULL,'A','A',NULL,4,NULL,NULL,13,NULL,NULL,NULL,NULL,'412',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(1095,'4120084','General-Hospital Equipment',NULL,true,183,NULL,'A','A',NULL,4,NULL,NULL,13,NULL,NULL,NULL,NULL,'412',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(1096,'4120085','General-Play and Sports Equipment',NULL,true,183,NULL,'A','A',NULL,4,NULL,NULL,13,NULL,NULL,NULL,NULL,'412',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ;
@@ -2310,9 +2310,9 @@ INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactivefor
 ,(1210,'4611000','Loans to Others-Loans to Others',NULL,true,252,NULL,'A','A',NULL,4,NULL,NULL,22,NULL,NULL,NULL,NULL,'461',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(1211,'4612000','Advances-Advances',NULL,true,253,NULL,'A','A',NULL,4,NULL,NULL,22,NULL,NULL,NULL,NULL,'461',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(1212,'4613000','Deposits-Deposits',NULL,true,254,NULL,'A','A',NULL,4,NULL,NULL,22,NULL,NULL,NULL,NULL,'461',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(1213,'4701001','Deposit Works – Expenditure-Civil Works',NULL,true,255,NULL,'A','A',NULL,4,NULL,NULL,23,NULL,NULL,NULL,NULL,'470',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(1214,'4701002','Deposit Works – Expenditure-Electric Works',NULL,true,255,NULL,'A','A',NULL,4,NULL,NULL,23,NULL,NULL,NULL,NULL,'470',NULL,NULL,NULL,NULL,NULL,NULL,0)
-,(1215,'4701003','Deposit Works – Expenditure-Other Works',NULL,true,255,NULL,'A','A',NULL,4,NULL,NULL,23,NULL,NULL,NULL,NULL,'470',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(1213,'4701001','Deposit Works ï¿½ Expenditure-Civil Works',NULL,true,255,NULL,'A','A',NULL,4,NULL,NULL,23,NULL,NULL,NULL,NULL,'470',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(1214,'4701002','Deposit Works ï¿½ Expenditure-Electric Works',NULL,true,255,NULL,'A','A',NULL,4,NULL,NULL,23,NULL,NULL,NULL,NULL,'470',NULL,NULL,NULL,NULL,NULL,NULL,0)
+,(1215,'4701003','Deposit Works ï¿½ Expenditure-Other Works',NULL,true,255,NULL,'A','A',NULL,4,NULL,NULL,23,NULL,NULL,NULL,NULL,'470',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ,(1216,'4702000','Inter Unit Accounts-Inter Unit Accounts',NULL,true,256,NULL,'A','A',NULL,4,NULL,NULL,23,NULL,NULL,NULL,NULL,'470',NULL,NULL,NULL,NULL,NULL,NULL,0)
 ;
 INSERT INTO chandigarh.chartofaccounts (id,glcode,"name",description,isactiveforposting,parentid,purposeid,operation,"type","class",classification,functionreqd,budgetcheckreq,scheduleid,receiptscheduleid,receiptoperation,paymentscheduleid,paymentoperation,majorcode,fiescheduleid,fieoperation,createddate,createdby,lastmodifieddate,lastmodifiedby,"version") VALUES 
@@ -2366,7 +2366,7 @@ INSERT INTO chandigarh.bank (id,code,"name",narration,isactive,"type",createddat
 ,(5,'5','Aryavart Gramin Bank',NULL,true,NULL,NULL,NULL,NULL,0,NULL)
 ,(6,'6','Assam Gramin Vikash Bank',NULL,true,NULL,NULL,NULL,NULL,0,NULL)
 ,(7,'7','Baitarani Gramya Bank',NULL,true,NULL,NULL,NULL,NULL,0,NULL)
-,(8,'8','Ballia –Etawah Gramin Bank',NULL,true,NULL,NULL,NULL,NULL,0,NULL)
+,(8,'8','Ballia ï¿½Etawah Gramin Bank',NULL,true,NULL,NULL,NULL,NULL,0,NULL)
 ,(9,'9','Bangiya Gramin Vikash Bank',NULL,true,NULL,NULL,NULL,NULL,0,NULL)
 ,(10,'10','Baroda Gujarat Gramin Bank',NULL,true,NULL,NULL,NULL,NULL,0,NULL)
 ;
@@ -2542,6 +2542,22 @@ update chandigarh.egbpa_mstr_servicetype set renewalvalidity=5;
 update chandigarh.egp_portalservice set userservice=false;
 
 ------------------------------------------------------------------------------------------------------------------------------
+
+
+------------------- Adding new column for Rural Logo ------------------------------------------------------------------------
+
+ALTER TABLE chandigarh.eg_citypreferences
+ADD COLUMN municipalityrurallogo int8 NULL;
+
+ALTER TABLE state.eg_citypreferences
+ADD COLUMN municipalityrurallogo int8 NULL;
+
+
+ALTER TABLE chandigarh.eg_citypreferences ADD CONSTRAINT eg_citypreferences_rural_logo_fkey FOREIGN KEY (municipalityrurallogo) REFERENCES chandigarh.eg_filestoremap(id);
+
+ALTER TABLE state.eg_citypreferences ADD CONSTRAINT eg_citypreferences_rural_state_logo_fkey FOREIGN KEY (municipalityrurallogo) REFERENCES state.eg_filestoremap(id);
+
+--------------------------------------------------------------------------------------------------------------------------
 
 
 

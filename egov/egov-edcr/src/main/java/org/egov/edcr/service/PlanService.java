@@ -110,7 +110,7 @@ public class PlanService {
 		pl.getPlanInformation().setBasementServicePrintingPressACPlantsElectricalPanelFiltrationplantsLaundryplantsOrMachinesAutomated(pl.getPlanInfoProperties().get(DxfFileConstants.BASEMENT_SERVICES_PRINTING_PRESS_A_C_PLANTS_ELECTRICAL_PANELS_FILTRATIONPLANTS_LAUNDRYPLANTS_OR_MACHINES_AUTOMATED_STACK_PARKING)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.BASEMENT_SERVICES_PRINTING_PRESS_A_C_PLANTS_ELECTRICAL_PANELS_FILTRATIONPLANTS_LAUNDRYPLANTS_OR_MACHINES_AUTOMATED_STACK_PARKING):"NA");
 		pl.getPlanInformation().setServiceFloorHeight(pl.getPlanInfoProperties().get(DxfFileConstants.SERVICE_FLOOR_HEIGHT_M)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.SERVICE_FLOOR_HEIGHT_M):"NA");
 		pl.getPlanInformation().setFireSafetyProvisionsAsPerNbcDFPF(pl.getPlanInfoProperties().get(DxfFileConstants.FIRE_SAFETY_PROVISIONS_AS_PER_NBC_DFPF_FSA)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.FIRE_SAFETY_PROVISIONS_AS_PER_NBC_DFPF_FSA):"NA");
-		pl.getPlanInformation().setExitRequirmentFireAndLifeSafetyAsPerNBC(pl.getPlanInfoProperties().get(DxfFileConstants.EXIT_REQUIREMENT_FIRE_And_LIFE_SAFETY_AS_PER_NBC)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.EXIT_REQUIREMENT_FIRE_And_LIFE_SAFETY_AS_PER_NBC):"NA");
+		pl.getPlanInformation().setExitRequirmentFireAndLifeSafetyAsPerNBC(pl.getPlanInfoProperties().get(DxfFileConstants.EXIT_REQUIREMENT_FIRE_AND_LIFE_SAFETY_AS_PER_NBC)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.EXIT_REQUIREMENT_FIRE_AND_LIFE_SAFETY_AS_PER_NBC):"NA");
 		pl.getPlanInformation().setCombustibleMaterialInFireTower(pl.getPlanInfoProperties().get(DxfFileConstants.COMBUSTIBLE_MATERIAL_IN_FIRE_TOWER)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.COMBUSTIBLE_MATERIAL_IN_FIRE_TOWER):"NA");
 		pl.getPlanInformation().setDampProofingAtBasement(pl.getPlanInfoProperties().get(DxfFileConstants.DAMP_PROOFING_AT_BASEMENT)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.DAMP_PROOFING_AT_BASEMENT):"NA");
 		pl.getPlanInformation().setHospitalBedded(pl.getPlanInfoProperties().get(DxfFileConstants. Hospital_Bedded)!=null?pl.getPlanInfoProperties().get(DxfFileConstants. Hospital_Bedded):"NA");
@@ -121,6 +121,10 @@ public class PlanService {
 		pl.getPlanInformation().setSectorNumber(pl.getPlanInfoProperties().get(DxfFileConstants.SECTOR_NUMBER));
 		pl.getPlanInformation().setZone(pl.getPlanInfoProperties().get(DxfFileConstants.ZONE));
 		pl.getPlanInformation().setRootBoundaryType(pl.getPlanInfoProperties().get(DxfFileConstants.ROOT_BOUNDARY_TYPE));
+		pl.getPlanInformation().setLocation(pl.getPlanInfoProperties().get(DxfFileConstants.LOCATION)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.LOCATION):"NA");
+		pl.getPlanInformation().setPlotLength(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_LENGTH)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_LENGTH):"NA");
+		pl.getPlanInformation().setPlotWidth(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_WIDTH)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_WIDTH):"NA");
+		pl.getPlanInformation().setCommercialAreaOccupancyAsPerRule(pl.getPlanInfoProperties().get(DxfFileConstants.COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE):"NA");
 	}
 
 	private void setEDCRmandatoryNOC(Plan plan) {		
@@ -189,39 +193,46 @@ public class PlanService {
 
 	// method for returning list of applicable feature rule
 	private List<PlanFeature> getPlanFeatures(Plan plan) {
-		List<PlanFeature> serviceTypeFeatures = featureService.getFeatures();
-		ListIterator<PlanFeature> features = serviceTypeFeatures.listIterator();
+		List<PlanFeature> serviceTypeFeatures =new ArrayList<PlanFeature>();
+		if(DxfFileConstants.URBAN.equalsIgnoreCase(plan.getPlanInfoProperties().get(DxfFileConstants.ROOT_BOUNDARY_TYPE))) {
+			serviceTypeFeatures = featureService.getFeatures();
+			ListIterator<PlanFeature> features = serviceTypeFeatures.listIterator();
 
-		switch (plan.getServiceType()) {
-		case DxfFileConstants.NEW_CONSTRUCTION:
+			switch (plan.getServiceType()) {
+			case DxfFileConstants.NEW_CONSTRUCTION:
 
-			break;
-		case DxfFileConstants.ALTERATION:
+				break;
+			case DxfFileConstants.ALTERATION:
 
-			while (features.hasNext()) {
+				while (features.hasNext()) {
 
-				PlanFeature feature = features.next();
-				
-				if (feature.getRuleClass().isAssignableFrom(GeneralStair.class)//1. All Staircases
-						|| feature.getRuleClass().isAssignableFrom(org.egov.edcr.feature.SpiralStair.class)
-						|| feature.getRuleClass().isAssignableFrom(FireStair.class)
-						|| feature.getRuleClass().isAssignableFrom(OpenStairService.class)
-						|| feature.getRuleClass().isAssignableFrom(Verandah.class)//2.  Light and Ventilation
-						|| feature.getRuleClass().isAssignableFrom(PassageService.class)//3. Width of passage corridor
-						|| feature.getRuleClass().isAssignableFrom(AccessoryBuildingService.class)//4. Construction in rear courtyard
-						) {
-					System.out.println(feature.getRuleClass());
-					features.remove();
+					PlanFeature feature = features.next();
+					
+					if (feature.getRuleClass().isAssignableFrom(GeneralStair.class)//1. All Staircases
+							|| feature.getRuleClass().isAssignableFrom(org.egov.edcr.feature.SpiralStair.class)
+							|| feature.getRuleClass().isAssignableFrom(FireStair.class)
+							|| feature.getRuleClass().isAssignableFrom(OpenStairService.class)
+							|| feature.getRuleClass().isAssignableFrom(Verandah.class)//2.  Light and Ventilation
+							|| feature.getRuleClass().isAssignableFrom(PassageService.class)//3. Width of passage corridor
+							|| feature.getRuleClass().isAssignableFrom(AccessoryBuildingService.class)//4. Construction in rear courtyard
+							) {
+						System.out.println(feature.getRuleClass());
+						features.remove();
+					}
 				}
-			}
 
-			break;
-		default:
-			break;
+				break;
+			default:
+				break;
+			}
+		}else if(DxfFileConstants.URBAN.equalsIgnoreCase(plan.getPlanInfoProperties().get(DxfFileConstants.ROOT_BOUNDARY_TYPE))) {
+			serviceTypeFeatures = featureService.getRuralFeatures();
 		}
+		
 
 		return serviceTypeFeatures;
 	}
+	
 
 	private Plan applyRules(Plan plan, Amendment amd, Map<String, String> cityDetails) {
 
@@ -283,6 +294,13 @@ public class PlanService {
 	private InputStream generateReport(Plan plan, Amendment amd, EdcrApplication dcrApplication) {
 
 		String beanName = "PlanReportService";
+		
+		if(DxfFileConstants.URBAN.equalsIgnoreCase(plan.getPlanInfoProperties().get(DxfFileConstants.ROOT_BOUNDARY_TYPE))) {
+			beanName = "PlanReportService";
+		}else if(DxfFileConstants.RURAL.equalsIgnoreCase(plan.getPlanInfoProperties().get(DxfFileConstants.ROOT_BOUNDARY_TYPE))) {
+			beanName = "PlanReportRuralService";
+		}
+		
 		PlanReportService service = null;
 		int index = -1;
 		AmendmentDetails[] amdArray = null;

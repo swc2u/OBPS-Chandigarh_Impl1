@@ -86,6 +86,12 @@ public class CityPreferences extends AbstractAuditable {
     @JoinColumn(name = "municipalityLogo")
     @Fetch(FetchMode.JOIN)
     private FileStoreMapper municipalityLogo;
+    
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "municipalityRuralLogo")
+    @Fetch(FetchMode.JOIN)
+    private FileStoreMapper municipalityRularLogo;
+
 
     @NotNull
     @SafeHtml
@@ -241,5 +247,17 @@ public class CityPreferences extends AbstractAuditable {
 
     public boolean logoExist() {
         return municipalityLogo != null && isNotBlank(municipalityLogo.getFileStoreId());
+    }
+
+	public FileStoreMapper getMunicipalityRularLogo() {
+		return municipalityRularLogo;
+	}
+
+	public void setMunicipalityRularLogo(FileStoreMapper municipalityRularLogo) {
+		this.municipalityRularLogo = municipalityRularLogo;
+	}
+    
+	public boolean logoRuralExist() {
+        return municipalityRularLogo != null && isNotBlank(municipalityRularLogo.getFileStoreId());
     }
 }

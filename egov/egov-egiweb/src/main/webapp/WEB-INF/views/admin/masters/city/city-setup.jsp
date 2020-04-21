@@ -214,7 +214,7 @@
 
                         <div id="preferences" class="tab-pane fade">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label"><spring:message code="lbl.city.logo"/></label>
+                                <label class="col-sm-3 control-label"><spring:message code="lbl.city.logo1"/></label>
                                 <c:set var="helptext">
                                     <spring:message code="help.corp.logo"/>
                                 </c:set>
@@ -230,6 +230,25 @@
                                     <form:errors path="preferences.municipalityLogo" cssClass="add-margin error-msg"/>
                                 </div>
                             </div>
+                            
+                             <div class="form-group">
+                                <label class="col-sm-3 control-label"><spring:message code="lbl.city.logo2"/></label>
+                                <c:set var="helptext">
+                                    <spring:message code="help.corp.logo"/>
+                                </c:set>
+                                <div class="col-sm-6" style="padding-top: 7px">
+                                    <img id="imgruralLogo" height="60" width="60"
+                                         src="/egi/downloadfile?fileStoreId=${city.preferences.municipalityRularLogo.fileStoreId}&moduleName=${sessionScope.cityCode}">
+
+                                    <input type="file" name="ruralLogo" id="ruralLogo"
+                                           data-accept="jpg,jpeg,png,gif,PNG,JPG,JPEG"
+                                           data-errormsg="Please select valid image file!"
+                                           class="form-control" placeholder="" autocomplete="off" data-toggle="popover" data-trigger="focus" data-placement="right"
+                                           data-content="${helptext}"/>
+                                    <form:errors path="preferences.municipalityLogo" cssClass="add-margin error-msg"/>
+                                </div>
+                            </div>
+                            
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"><spring:message
                                         code="lbl.corp.name"/><span class="mandatory"></span></label>

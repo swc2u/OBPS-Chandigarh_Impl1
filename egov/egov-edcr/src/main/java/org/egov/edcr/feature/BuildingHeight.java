@@ -179,6 +179,11 @@ public class BuildingHeight extends FeatureProcess {
 
 					Map<String, String> featureValues = cdgAdditionalService
 							.getFeatureValue(CDGAConstant.PERMISSIBLE_BUILDING_HEIGHT, keyArrgument);
+					String str=featureValues.get(CDGAdditionalService.PERMISSIBLE_BUILDING_HEIGHT);
+					if(DxfFileConstants.DATA_NOT_FOUND.equals(str)) {
+						Plan.addError("PERMISSIBLE_BUILDING_HEIGHT ", "PERMISSIBLE_BUILDING_HEIGHT, "+DxfFileConstants.DATA_NOT_FOUND);
+						return;
+					}
 					exptectedHeight = new BigDecimal(
 							featureValues.get(CDGAdditionalService.PERMISSIBLE_BUILDING_HEIGHT)!=null?featureValues.get(CDGAdditionalService.PERMISSIBLE_BUILDING_HEIGHT):"0");
 				}

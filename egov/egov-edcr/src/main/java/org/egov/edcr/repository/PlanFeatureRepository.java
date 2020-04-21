@@ -349,5 +349,11 @@ public class PlanFeatureRepository {
 
         return features;
     }
+    
+    public List<PlanFeature> getRuralFeatures() {
+    	  ArrayList<PlanFeature> features = new ArrayList<>();
+    	  
+    	  return features;
+    }
 
 }

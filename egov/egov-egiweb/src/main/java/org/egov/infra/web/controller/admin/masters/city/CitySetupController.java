@@ -93,12 +93,16 @@ public class CitySetupController {
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public String updateCitySetup(@Valid @ModelAttribute final City city, final BindingResult bindResult,
-            @RequestParam(required = false) final MultipartFile logo, final RedirectAttributes redirectAttrs) throws IOException {
+            @RequestParam(required = false) final MultipartFile logo, @RequestParam(required = false) final MultipartFile ruralLogo, final RedirectAttributes redirectAttrs) throws IOException {
         if (bindResult.hasErrors())
             return "city-setup";
         if (!logo.isEmpty())
             city.getPreferences().setMunicipalityLogo(fileStoreService.store(logo.getInputStream(), logo.getOriginalFilename(),
                     logo.getContentType(), ApplicationThreadLocals.getCityCode()));
+        if (!ruralLogo.isEmpty())
+            city.getPreferences().setMunicipalityRularLogo(fileStoreService.store(ruralLogo.getInputStream(), ruralLogo.getOriginalFilename(),
+            		ruralLogo.getContentType(), ApplicationThreadLocals.getCityCode()));
+        
         cityService.updateCity(city);
         redirectAttrs.addFlashAttribute("message", "msg.city.update.success");
         return "redirect:/city/setup/view";

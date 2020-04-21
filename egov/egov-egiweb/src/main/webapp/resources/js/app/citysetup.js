@@ -114,6 +114,39 @@ $(document).ready(function(){
 				}
 			
 	});
+   
+   
+   $("input:file").change(
+			function(e) {
+				var fileName = $(this).val();
+				if (fileName) {
+					var fileext = fileName.split(".");
+					var acceptedext = $(this).data('accept');
+					if (acceptedext.split(',').indexOf(
+							fileext[fileext.length - 1]) < 0) {
+						bootbox.alert($(this).data('errormsg'));
+						$(this).val('');
+					}
+					else if($(this).attr('id')== 'ruralLogo')
+					{
+						var reader = new FileReader();
+
+			            reader.onload = function (e) {
+			                $('#imgruralLogo').attr('src', e.target.result);
+			            };
+
+			            reader.readAsDataURL(this.files[0]);
+			        }
+				}
+				else {
+					if($(this).attr('id')== 'ruralLogo')
+					{
+						$('#imgruralLogo').attr('src', '');
+					}
+				}
+			
+	});
+   
 	
 	//popup initialize
 	$('[data-toggle="popover"]').popover({ html : true });

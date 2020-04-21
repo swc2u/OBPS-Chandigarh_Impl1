@@ -52,7 +52,7 @@ public class DxfFileConstants {
 	public static final String NO = "NO";
 	public static final String DAMP_PROOFING_AT_BASEMENT="DAMP_PROOFING_AT_BASEMENT";
 	public static final String COMBUSTIBLE_MATERIAL_IN_FIRE_TOWER="COMBUSTIBLE_MATERIAL _IN_FIRE_TOWER";
-	public static final String EXIT_REQUIREMENT_FIRE_And_LIFE_SAFETY_AS_PER_NBC="EXIT_REQUIREMENT_FIRE_&_LIFE_SAFETY_AS_PER_NBC";
+	public static final String EXIT_REQUIREMENT_FIRE_AND_LIFE_SAFETY_AS_PER_NBC="EXIT_REQUIREMENT_FIRE_&_LIFE_SAFETY_AS_PER_NBC";
 	public static final String FIRE_SAFETY_PROVISIONS_AS_PER_NBC_DFPF_FSA="FIRE_SAFETY_PROVISIONS_AS_PER_NBC_DFPF_FSA";
 	public static final String SERVICE_FLOOR_HEIGHT_M="SERVICE_FLOOR_HEIGHT_M";
 	public static final String BASEMENT_SERVICES_PRINTING_PRESS_A_C_PLANTS_ELECTRICAL_PANELS_FILTRATIONPLANTS_LAUNDRYPLANTS_OR_MACHINES_AUTOMATED_STACK_PARKING="BASEMENT_SERVICES_PRINTING PRESS_A.C. PLANTS_ELECTRICAL PANELS_FILTRATIONPLANTS_LAUNDRYPLANTS_OR_MACHINES_ AUTOMATED/STACK PARKING";
@@ -73,7 +73,13 @@ public class DxfFileConstants {
 	public static final String ULBNAME = "Chandigarh Administration";
 	
 	public static final String OPTIONAL="Optional";
-
+	
+	//Rural plan info
+	public static final String LOCATION="LOCATION";
+	public static final String PLOT_LENGTH="PLOT_LENGTH";
+	public static final String PLOT_WIDTH="PLOT_WIDTH";
+	public static final String COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE="COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE";
+	
 	// CGCL start
 	// occupancies code	
 	public static final String A = "A"; // Residential --29

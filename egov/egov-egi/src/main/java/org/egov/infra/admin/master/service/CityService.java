@@ -59,6 +59,7 @@ import static org.egov.infra.utils.ApplicationConstant.CITY_CORP_NAME_KEY;
 import static org.egov.infra.utils.ApplicationConstant.CITY_DIST_NAME_KEY;
 import static org.egov.infra.utils.ApplicationConstant.CITY_LOGO_FS_UUID_KEY;
 import static org.egov.infra.utils.ApplicationConstant.CITY_LOGO_URL;
+import static org.egov.infra.utils.ApplicationConstant.CITY_RURAL_LOGO_URL;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -69,6 +70,7 @@ import javax.annotation.Resource;
 
 import org.egov.infra.admin.master.entity.City;
 import org.egov.infra.admin.master.repository.CityRepository;
+import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.egov.infra.notification.service.NotificationService;
 import org.egov.infra.utils.FileStoreUtils;
 import org.egov.infra.utils.TenantUtils;
@@ -190,12 +192,29 @@ public class CityService {
         Map<String, String> tenants = tenantUtils.tenantsMap();
         return format(CITY_LOGO_URL, tenants.get(getTenantID()));
     }
+    
+    public String getCityRuralLogoURLByCurrentTenant() {
+        Map<String, String> tenants = tenantUtils.tenantsMap();
+        return format(CITY_RURAL_LOGO_URL, tenants.get(getTenantID()));
+    }
 
     public byte[] getCityLogoAsBytes() {
-        byte[] cityLogo = (byte[]) cityLogoCache.get(cityLogoCacheKey(), CITY_LOGO_HASH_KEY);
+    	byte[] cityLogo = (byte[]) cityLogoCache.get(cityLogoCacheKey(), CITY_LOGO_HASH_KEY);
         if (cityLogo == null || cityLogo.length < 1) {
             cityLogo = fileStoreUtils.fileAsByteArray(getCityLogoFileStoreId(), getCityCode());
             cityLogoCache.put(cityLogoCacheKey(), CITY_LOGO_HASH_KEY, cityLogo);
+        }
+        return cityLogo;
+    }
+    
+    public byte[] getCityRuralLogoAsBytes() {
+    	String cityCode=getCityCode();
+    	City city=getCityByCode(cityCode);
+    	FileStoreMapper fm=city.getPreferences().getMunicipalityRularLogo();
+    	
+        byte[] cityLogo=new byte[0];
+        if (cityLogo == null || cityLogo.length < 1) {
+            cityLogo = fileStoreUtils.fileAsByteArray(fm.getFileStoreId(), getCityCode());
         }
         return cityLogo;
     }

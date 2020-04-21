@@ -18,4 +18,8 @@ public class PlanFeatureService {
 
     }
 
+    public List<PlanFeature> getRuralFeatures() {
+        return featureRepository.getRuralFeatures();
+
+    }
 }
