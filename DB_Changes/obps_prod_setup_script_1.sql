@@ -2543,7 +2543,10 @@ update chandigarh.egp_portalservice set userservice=false;
 
 ------------------------------------------------------------------------------------------------------------------------------
 
+INSERT INTO state.egdcr_layername (id,"key",value,createdby,createddate,lastmodifieddate,lastmodifiedby,"version") VALUES 
+(159,'LAYER_NAME_ROOF_AREA','BLK_%s_FLR_%s_ROOF_AREA',1,'2020-03-24 15:00:59.376','2020-03-24 15:00:59.376',1,0)
 
+----------------------------------------------------------------------------------------------------------------------------------
 
 
 
