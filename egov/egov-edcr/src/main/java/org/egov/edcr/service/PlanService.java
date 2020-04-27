@@ -125,6 +125,11 @@ public class PlanService {
 		pl.getPlanInformation().setPlotLength(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_LENGTH)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_LENGTH):"NA");
 		pl.getPlanInformation().setPlotWidth(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_WIDTH)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_WIDTH):"NA");
 		pl.getPlanInformation().setCommercialAreaOccupancyAsPerRule(pl.getPlanInfoProperties().get(DxfFileConstants.COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE):"NA");
+		
+		if(DxfFileConstants.RURAL.equals(pl.getPlanInfoProperties().get(DxfFileConstants.ROOT_BOUNDARY_TYPE)))
+			pl.setRural(true);
+		else
+			pl.setRural(false);
 	}
 
 	private void setEDCRmandatoryNOC(Plan plan) {		
@@ -225,7 +230,7 @@ public class PlanService {
 			default:
 				break;
 			}
-		}else if(DxfFileConstants.URBAN.equalsIgnoreCase(plan.getPlanInfoProperties().get(DxfFileConstants.ROOT_BOUNDARY_TYPE))) {
+		}else if(plan.isRural()) {
 			serviceTypeFeatures = featureService.getRuralFeatures();
 		}
 		

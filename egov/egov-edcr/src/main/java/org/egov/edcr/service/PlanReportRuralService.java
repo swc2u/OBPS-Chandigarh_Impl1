@@ -46,6 +46,7 @@ import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.entity.ApplicationType;
 import org.egov.edcr.entity.EdcrApplication;
 import org.egov.edcr.entity.EdcrApplicationDetail;
+import org.egov.edcr.feature.FeatureProcess;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.DcrConstants;
 import org.egov.infra.admin.master.service.CityService;
@@ -225,7 +226,7 @@ public class PlanReportRuralService extends PlanReportService{
                     columnWidth = statusColumnSize.intValue();
                     
                 }
-               // if(!"Byelaw".equalsIgnoreCase(columnHeading.name))// disable  ByLaw from report
+               if(!FeatureProcess.RULE_NO.equalsIgnoreCase(columnHeading.name))// disable  ByLaw from report
                 	frb.addColumn(columnHeading.name, columnHeading.name, String.class.getName(), columnWidth);
             }
             frb.setMargins(0, 0, 0, 0);

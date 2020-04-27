@@ -1539,6 +1539,7 @@ public class Far extends FeatureProcess {
 			if (mostRestrictiveOccupancyType.getType() != null) {
 				// processFarResidential(pl, mostRestrictiveOccupancyType, providedFar,
 				// typeOfArea, roadWidth, errorMsgs);
+				if(!pl.isRural())
 				processFarResidentialSkeleton(pl, mostRestrictiveOccupancyType, providedFar, typeOfArea, roadWidth,
 						errorMsgs);
 

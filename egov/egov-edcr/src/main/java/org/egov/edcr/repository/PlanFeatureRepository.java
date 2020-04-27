@@ -353,7 +353,18 @@ public class PlanFeatureRepository {
     public List<PlanFeature> getRuralFeatures() {
     	  ArrayList<PlanFeature> features = new ArrayList<>();
     	  
-    	  return features;
+
+    	  PlanFeature pf = new PlanFeature(PlanInfoFeature.class);
+          features.add(pf);
+
+          pf = new PlanFeature(Far.class);
+          features.add(pf);
+
+          pf = new PlanFeature(Coverage.class);
+          features.add(pf);
+          
+          
+          return features;
     }
 
 }

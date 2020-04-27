@@ -223,6 +223,7 @@ public class Coverage extends FeatureProcess {
 	@Override
 	public Plan process(Plan pl) {
 		validate(pl);
+
 		BigDecimal totalCoverage = BigDecimal.ZERO;
 		BigDecimal totalCoverageArea = BigDecimal.ZERO;
 
@@ -379,6 +380,11 @@ public class Coverage extends FeatureProcess {
 //	}
 
 		// old code end
+
+		if (pl.isRural()) {
+			processRuler(pl);
+			return pl;
+		}
 
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding().getMostRestrictiveFarHelper();
 
@@ -575,5 +581,25 @@ public class Coverage extends FeatureProcess {
 	@Override
 	public Map<String, Date> getAmendments() {
 		return new LinkedHashMap<>();
+	}
+
+	public void processRuler(Plan plan) {
+
+		BigDecimal plotArea = plan.getPlot().getArea();
+		BigDecimal expectedCoverage = BigDecimal.ZERO;
+
+		if (plotArea.compareTo(BigDecimal.valueOf(210)) <= 0)
+			expectedCoverage = BigDecimal.valueOf(75);
+		else if (plotArea.compareTo(BigDecimal.valueOf(420)) <= 0)
+			expectedCoverage = BigDecimal.valueOf(60);
+		else if (plotArea.compareTo(BigDecimal.valueOf(840)) <= 0)
+			expectedCoverage = BigDecimal.valueOf(50);
+		else
+			expectedCoverage = BigDecimal.valueOf(40);
+
+		OccupancyTypeHelper mostRestrictiveOccupancyType = plan.getVirtualBuilding().getMostRestrictiveFarHelper();
+
+		BigDecimal totalCoverage = plan.getCoverage();
+		processCoverageSkelton(plan, mostRestrictiveOccupancyType, totalCoverage, expectedCoverage);
 	}
 }

@@ -203,6 +203,11 @@ public class AdditionalFeature extends FeatureProcess {
 		// validateHeightOfBuilding(pl, errors, typeOfArea, roadWidth);
 		// }
 
+		if (pl.isRural()) {
+			validateRuralPlinthHeight(pl, errors);
+			return pl;
+		}
+
 		validateNumberOfFloorsSkelton(pl);
 
 		validatePlinthHeight(pl, errors);
@@ -1004,6 +1009,63 @@ public class AdditionalFeature extends FeatureProcess {
 //            }
 //        }
 //    }
+
+	private void validateRuralPlinthHeight(Plan pl, HashMap<String, String> errors) {
+		for (Block block : pl.getBlocks()) {
+
+			boolean isAccepted = false;
+			BigDecimal minPlinthHeight = BigDecimal.ZERO;
+			BigDecimal maxPlinthHeight = BigDecimal.ZERO;
+			String blkNo = block.getNumber();
+			ScrutinyDetail scrutinyDetail = getNewScrutinyDetail("Block_" + blkNo + "_" + "Plinth");
+			List<BigDecimal> plinthHeights = block.getPlinthHeight();
+			OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding().getMostRestrictiveFarHelper();
+
+			if (pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE) != null) {
+
+				if (!plinthHeights.isEmpty() && mostRestrictiveOccupancyType != null) {
+					minPlinthHeight = plinthHeights.stream().reduce(BigDecimal::min).get();
+					maxPlinthHeight = plinthHeights.stream().reduce(BigDecimal::max).get();
+
+					if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
+							&& DxfFileConstants.MARLA
+									.equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
+						if (minPlinthHeight.compareTo(BigDecimal.valueOf(0.3)) >= 0) {
+							isAccepted = true;
+						}
+					} else if (!isOccupancyTypePlinthNotApplicable(mostRestrictiveOccupancyType)) {
+						if (minPlinthHeight.compareTo(BigDecimal.valueOf(0.3)) >= 0
+								&& maxPlinthHeight.compareTo(BigDecimal.valueOf(1.2)) <= 0) {
+							isAccepted = true;
+						}
+					}
+				} else if (!isOccupancyTypePlinthNotApplicable(mostRestrictiveOccupancyType)) {
+					String plinthHeightLayer = String.format(DxfFileConstants.LAYER_PLINTH_HEIGHT, block.getNumber());
+					errors.put(plinthHeightLayer, "Plinth height is not defined in layer " + plinthHeightLayer);
+					pl.addErrors(errors);
+				}
+
+			} else if (!isOccupancyTypePlinthNotApplicable(mostRestrictiveOccupancyType)) {
+				errors.put(DxfFileConstants.PLOT_TYPE, DxfFileConstants.PLOT_TYPE_NOT_DEFINED);
+				pl.addErrors(errors);
+			}
+
+			if (errors.isEmpty()) {
+				Map<String, String> details = new HashMap<>();
+				// details.put(RULE_NO, RULE_41_I_A);
+				details.put(RULE_NO,
+						CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.PLINTH_LEVEL));
+				details.put(DESCRIPTION, MIN_PLINTH_HEIGHT_DESC);
+
+				details.put(PERMISSIBLE, MIN_PLINTH_HEIGHT);
+
+				details.put(PROVIDED, String.valueOf(minPlinthHeight.setScale(2, BigDecimal.ROUND_HALF_EVEN)));
+				details.put(STATUS, isAccepted ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
+				scrutinyDetail.getDetail().add(details);
+				pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+			}
+		}
+	}
 
 	private void validatePlinthHeight(Plan pl, HashMap<String, String> errors) {
 		for (Block block : pl.getBlocks()) {

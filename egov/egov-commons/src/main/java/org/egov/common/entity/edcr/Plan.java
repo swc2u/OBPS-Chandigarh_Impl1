@@ -183,6 +183,7 @@ public class Plan implements Serializable {
     @Transient
     private Boolean strictlyValidateDimension = false;
     
+    private transient boolean isRural;
     
     
     public Boolean getStrictlyValidateDimension() {
@@ -597,6 +598,14 @@ public class Plan implements Serializable {
 		this.asOnDate = asOnDate;
 	}
 	
+	public boolean isRural() {
+		return isRural;
+	}
+
+	public void setRural(boolean isRural) {
+		this.isRural = isRural;
+	}
+
 	private  HashMap<String, String> initPlanInfo() {
 	    HashMap<String, String> planInfo=new HashMap<String, String>();		
 		
