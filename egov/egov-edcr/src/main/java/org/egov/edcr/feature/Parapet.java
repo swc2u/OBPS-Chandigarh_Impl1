@@ -164,6 +164,34 @@ public class Parapet extends FeatureProcess {
 				}
 			}
 		}
+		
+		
+		if (pl.isRural()) {
+			for (Block b : pl.getBlocks()) {
+				if (b.getParapets() != null && !b.getParapets().isEmpty()) {
+					minHeight = b.getParapets().stream().reduce(BigDecimal::min).get();
+					maxHeight = b.getParapets().stream().reduce(BigDecimal::max).get();
+
+					if (maxHeight.compareTo(new BigDecimal(0.9)) <= 0) {
+						details.put(REQUIRED, "Height <= 0.9");
+						//details.put(PROVIDED, "Height >= " + minHeight + " and height <= " + maxHeight);
+						details.put(PROVIDED, "Minimum height = " + minHeight + " and Maximum height = " + maxHeight);
+						details.put(STATUS, Result.Accepted.getResultVal());
+						scrutinyDetail.getDetail().add(details);
+						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+
+					} else {
+						details.put(REQUIRED, "Height <= 0.9");
+//						details.put(PROVIDED, "Height >= " + minHeight + " and height <= " + maxHeight);
+						details.put(PROVIDED, "Minimum height = " + minHeight + " and Maximum height = " + maxHeight);
+						details.put(STATUS, Result.Not_Accepted.getResultVal());
+						scrutinyDetail.getDetail().add(details);
+						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+					}
+				}
+			}
+		}
+		
 
 		return pl;
 	}

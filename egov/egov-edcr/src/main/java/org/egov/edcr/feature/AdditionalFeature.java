@@ -1021,34 +1021,22 @@ public class AdditionalFeature extends FeatureProcess {
 			List<BigDecimal> plinthHeights = block.getPlinthHeight();
 			OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding().getMostRestrictiveFarHelper();
 
-			if (pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE) != null) {
-
+			
 				if (!plinthHeights.isEmpty() && mostRestrictiveOccupancyType != null) {
 					minPlinthHeight = plinthHeights.stream().reduce(BigDecimal::min).get();
 					maxPlinthHeight = plinthHeights.stream().reduce(BigDecimal::max).get();
 
-					if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
-							&& DxfFileConstants.MARLA
-									.equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
-						if (minPlinthHeight.compareTo(BigDecimal.valueOf(0.3)) >= 0) {
+						if (minPlinthHeight.compareTo(BigDecimal.valueOf(0.45)) >= 0) {
 							isAccepted = true;
 						}
-					} else if (!isOccupancyTypePlinthNotApplicable(mostRestrictiveOccupancyType)) {
-						if (minPlinthHeight.compareTo(BigDecimal.valueOf(0.3)) >= 0
-								&& maxPlinthHeight.compareTo(BigDecimal.valueOf(1.2)) <= 0) {
-							isAccepted = true;
-						}
-					}
+					
 				} else if (!isOccupancyTypePlinthNotApplicable(mostRestrictiveOccupancyType)) {
 					String plinthHeightLayer = String.format(DxfFileConstants.LAYER_PLINTH_HEIGHT, block.getNumber());
 					errors.put(plinthHeightLayer, "Plinth height is not defined in layer " + plinthHeightLayer);
 					pl.addErrors(errors);
 				}
 
-			} else if (!isOccupancyTypePlinthNotApplicable(mostRestrictiveOccupancyType)) {
-				errors.put(DxfFileConstants.PLOT_TYPE, DxfFileConstants.PLOT_TYPE_NOT_DEFINED);
-				pl.addErrors(errors);
-			}
+			
 
 			if (errors.isEmpty()) {
 				Map<String, String> details = new HashMap<>();

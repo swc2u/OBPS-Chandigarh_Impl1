@@ -98,6 +98,37 @@ public class StairCover extends FeatureProcess {
 		OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
+				
+		if(pl.isRural()) {
+
+			for (Block b : pl.getBlocks()) {
+				minHeight = BigDecimal.ZERO;
+				if (b.getStairCovers() != null && !b.getStairCovers().isEmpty() && mostRestrictiveFarHelper != null
+						&& mostRestrictiveFarHelper.getSubtype() != null) {
+					//minHeight = b.getStairCovers().stream().reduce(BigDecimal::min).get();
+					minHeight = b.getStairCovers().stream().reduce(BigDecimal::max).get();
+
+					if (minHeight.compareTo(new BigDecimal(2.44)) <= 0) {
+						details.put(DESCRIPTION, STAIRCOVER_DESCRIPTION);
+						details.put(VERIFIED, "Verified whether stair cover height is <= 2.44 meters");
+						details.put(ACTION, "Not included stair cover height(" + minHeight + ") to building height");
+						details.put(STATUS, Result.Accepted.getResultVal());
+						scrutinyDetail.getDetail().add(details);
+						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+					} else {
+						details.put(DESCRIPTION, STAIRCOVER_DESCRIPTION);
+						details.put(VERIFIED, "Verified whether stair cover height is <= 2.44 meters");
+						details.put(ACTION, "Included stair cover height(" + minHeight + ") to building height");
+						details.put(STATUS, Result.Verify.getResultVal());
+						scrutinyDetail.getDetail().add(details);
+						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+					}
+				}
+
+			}
+		
+		}
+				
 		if (!isOccupancyNotApplicable(mostRestrictiveFarHelper)) {
 			for (Block b : pl.getBlocks()) {
 				minHeight = BigDecimal.ZERO;

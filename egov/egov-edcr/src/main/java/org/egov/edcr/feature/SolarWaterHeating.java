@@ -130,7 +130,7 @@ public class SolarWaterHeating extends FeatureProcess {
 			// TODO: handle exception
 		}
 		
-		if (mostRestrictiveFarHelper != null)
+		if (mostRestrictiveFarHelper != null && !pl.isRural())
 			if (checkOccupancyTypeForSolarWaterHeating(mostRestrictiveFarHelper.getType().getCode(), areaType)) {
 				BigDecimal roundOffPlotArea = plotArea.divide(BigDecimal.valueOf(100));
 				if (areaType.equalsIgnoreCase(DxfFileConstants.ONE_KANAL)) {
@@ -150,6 +150,11 @@ public class SolarWaterHeating extends FeatureProcess {
 			} else {
 				processSolarWaterHeating(pl, "Optional", subRule, subRuleDesc);
 			}
+		
+		if(pl.isRural()) {
+			if(pl.getPlot().getArea().compareTo(BigDecimal.valueOf(250))>=0)
+			processSolarWaterHeating(pl, "Compulsary", subRule, subRuleDesc);
+		}
 
 		return pl;
 	}
@@ -170,12 +175,12 @@ public class SolarWaterHeating extends FeatureProcess {
 //			}
 			
 			if (valid) {
-				setReportOutputDetails(planDetail, subRule, "RAINWATER_HARVESTING_TANK_CAPACITY",
+				setReportOutputDetails(planDetail, subRule, subRuleDesc,
 						expectedTankCapacity.toString(),
 						planDetail.getPlanInfoProperties().get(DxfFileConstants.SOLOR_WATER_HEATING_IN_LTR)!=null?planDetail.getPlanInfoProperties().get(DxfFileConstants.SOLOR_WATER_HEATING_IN_LTR):"0"+ " litre",
 						Result.Accepted.getResultVal());
 			} else {
-				setReportOutputDetails(planDetail, subRule, "RAINWATER_HARVESTING_TANK_CAPACITY",
+				setReportOutputDetails(planDetail, subRule, subRuleDesc,
 						expectedTankCapacity.toString() + "IN_LITRE",
 						planDetail.getPlanInfoProperties().get(DxfFileConstants.SOLOR_WATER_HEATING_IN_LTR)!=null?planDetail.getPlanInfoProperties().get(DxfFileConstants.SOLOR_WATER_HEATING_IN_LTR):"0" + "  litre",
 						Result.Not_Accepted.getResultVal());
@@ -185,7 +190,7 @@ public class SolarWaterHeating extends FeatureProcess {
 
 	private boolean processSolarWaterHeating(Plan planDetail, String rule, String subRule, String subRuleDesc) {
 		if (!planDetail.getUtility().getSolarWaterHeatingSystems().isEmpty()) {
-			setReportOutputDetails(planDetail, subRule, subRuleDesc, rule, planDetail.getPlanInfoProperties().get(DxfFileConstants.SOLOR_WATER_HEATING_IN_LTR)!=null?planDetail.getPlanInfoProperties().get(DxfFileConstants.SOLOR_WATER_HEATING_IN_LTR):"0"+ " litre",
+			setReportOutputDetails(planDetail, subRule, subRuleDesc, rule, planDetail.getPlanInfoProperties().get(DxfFileConstants.SOLOR_WATER_HEATING_IN_LTR)!=null?planDetail.getPlanInfoProperties().get(DxfFileConstants.SOLOR_WATER_HEATING_IN_LTR):"Provided",
 					Result.Accepted.getResultVal());
 			return true;
 		} else if (planDetail.getUtility().getSolarWaterHeatingSystems().isEmpty()) {

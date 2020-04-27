@@ -363,6 +363,24 @@ public class PlanFeatureRepository {
           pf = new PlanFeature(Coverage.class);
           features.add(pf);
           
+          pf = new PlanFeature(AdditionalFeature.class);
+          features.add(pf);
+          
+          pf = new PlanFeature(Kitchen.class);
+          features.add(pf);
+
+          pf = new PlanFeature(BathRoomWaterClosets.class);
+          features.add(pf);
+
+          pf = new PlanFeature(SolarWaterHeating.class);
+          features.add(pf);
+
+          pf = new PlanFeature(RainWaterHarvesting.class);
+          features.add(pf);
+          
+          pf = new PlanFeature(Parapet.class);
+          features.add(pf);
+          
           
           return features;
     }

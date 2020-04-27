@@ -111,15 +111,15 @@ public class Kitchen extends FeatureProcess {
 				|| DxfFileConstants.P_H.equals(occupancyTypeHelper.getSubtype().getCode())
 				|| DxfFileConstants.P_CC.equals(occupancyTypeHelper.getSubtype().getCode())
 				|| DxfFileConstants.P_SS.equals(occupancyTypeHelper.getSubtype().getCode())
-				||	DxfFileConstants.IT.equals(occupancyTypeHelper.getType().getCode())
-				||	DxfFileConstants.ITH_R.equals(occupancyTypeHelper.getSubtype().getCode())
-				||	DxfFileConstants.ITH_GH.equals(occupancyTypeHelper.getSubtype().getCode())
-				||	DxfFileConstants.IP.equals(occupancyTypeHelper.getType().getCode())
-				
-		)
-			flage=true;
+				|| DxfFileConstants.IT.equals(occupancyTypeHelper.getType().getCode())
+				|| DxfFileConstants.ITH_R.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.ITH_GH.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.IP.equals(occupancyTypeHelper.getType().getCode())
 
-			return flage;
+		)
+			flage = true;
+
+		return flage;
 	}
 
 	@Override
@@ -132,9 +132,8 @@ public class Kitchen extends FeatureProcess {
 					? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 					: null;
 			if (mostRestrictiveOccupancy != null && mostRestrictiveOccupancy.getSubtype() != null
-					&& isOccupancyApplicable(mostRestrictiveOccupancy)
-					) {
-				int blockKitchenCount=0;
+					&& isOccupancyApplicable(mostRestrictiveOccupancy)) {
+				int blockKitchenCount = 0;
 				blk: for (Block block : pl.getBlocks()) {
 					if (block.getBuilding() != null && !block.getBuilding().getFloors().isEmpty()) {
 						scrutinyDetail = new ScrutinyDetail();
@@ -146,9 +145,7 @@ public class Kitchen extends FeatureProcess {
 						scrutinyDetail.addColumnHeading(6, STATUS);
 
 						scrutinyDetail.setKey("Block_" + block.getNumber() + "_" + "Kitchen");
-						
-						
-						
+
 						for (Floor floor : block.getBuilding().getFloors()) {
 							List<BigDecimal> kitchenAreas = new ArrayList<>();
 							List<BigDecimal> kitchenStoreAreas = new ArrayList<>();
@@ -164,13 +161,13 @@ public class Kitchen extends FeatureProcess {
 							String kitchenRoomColor = "";
 							String kitchenStoreRoomColor = "";
 							String kitchenDiningRoomColor = "";
-							
-							int floorKitchenCount=0;
+
+							int floorKitchenCount = 0;
 
 							kitchenRoomColor = DxfFileConstants.RESIDENTIAL_KITCHEN_ROOM_COLOR;
 							kitchenStoreRoomColor = DxfFileConstants.RESIDENTIAL_KITCHEN_STORE_ROOM_COLOR;
 							kitchenDiningRoomColor = DxfFileConstants.RESIDENTIAL_KITCHEN_DINING_ROOM_COLOR;
-							
+
 //							if (A.equalsIgnoreCase(mostRestrictiveOccupancy.getType().getCode())) {
 //								kitchenRoomColor = DxfFileConstants.RESIDENTIAL_KITCHEN_ROOM_COLOR;
 //								kitchenStoreRoomColor = DxfFileConstants.RESIDENTIAL_KITCHEN_STORE_ROOM_COLOR;
@@ -182,13 +179,13 @@ public class Kitchen extends FeatureProcess {
 //							}
 
 							if (floor.getKitchen() != null) {
-								
+
 								List<BigDecimal> kitchenHeights = new ArrayList<>();
 								List<RoomHeight> heights = floor.getKitchen().getHeights();
 								List<Measurement> kitchenRooms = floor.getKitchen().getRooms();
-								
-								floorKitchenCount=floorKitchenCount+floor.getKitchen().getRooms().size();
-								blockKitchenCount=blockKitchenCount+floorKitchenCount;
+
+								floorKitchenCount = floorKitchenCount + floor.getKitchen().getRooms().size();
+								blockKitchenCount = blockKitchenCount + floorKitchenCount;
 
 								for (RoomHeight roomHeight : heights) {
 									kitchenHeights.add(roomHeight.getHeight());
@@ -222,8 +219,8 @@ public class Kitchen extends FeatureProcess {
 									boolean isTypicalRepititiveFloor = false;
 									Map<String, Object> typicalFloorValues = ProcessHelper.getTypicalFloorValues(block,
 											floor, isTypicalRepititiveFloor);
-									buildResult(pl, floor, minimumHeight, subRule, subRuleDesc, CDGAdditionalService.roundBigDecimal(minHeight), valid,
-											typicalFloorValues);
+									buildResult(pl, floor, minimumHeight, subRule, subRuleDesc,
+											CDGAdditionalService.roundBigDecimal(minHeight), valid, typicalFloorValues);
 								} else {
 									String layerName = String.format(LAYER_ROOM_HEIGHT, block.getNumber(),
 											floor.getNumber(), "KITCHEN");
@@ -232,7 +229,7 @@ public class Kitchen extends FeatureProcess {
 								}
 
 							}
-							
+
 							subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.KITCHEN);
 							;
 
@@ -313,34 +310,37 @@ public class Kitchen extends FeatureProcess {
 								buildResult(pl, floor, minWidth, subRule, subRuleDesc, minRoomWidth, valid,
 										typicalFloorValues);
 							}
-							//floor 
-							
-							if(mostRestrictiveOccupancy!=null && DxfFileConstants.A_P.equals(mostRestrictiveOccupancy.getSubtype().getCode())) {
-								
-								if(floorKitchenCount>1)
-								pl.addError("MoreThenOnKitchenNotAllowed", "More then one kitchen not allowed block "+block.getNumber()+" floor "+floor.getNumber());
+							// floor
+
+							if (mostRestrictiveOccupancy != null
+									&& DxfFileConstants.A_P.equals(mostRestrictiveOccupancy.getSubtype().getCode())) {
+
+								if (floorKitchenCount > 1)
+									pl.addError("MoreThenOnKitchenNotAllowed",
+											"More then one kitchen not allowed block " + block.getNumber() + " floor "
+													+ floor.getNumber());
 							}
-						
+
 						}
-						
-						
-						
-						
-						
+
 					}
 				}
-			
-			//blook 
-				
-			if(mostRestrictiveOccupancy!=null && DxfFileConstants.A_P.equals(mostRestrictiveOccupancy.getSubtype().getCode())) {
-					if(blockKitchenCount==0)
-						pl.addError("frontyardNodeDefined",
-		                        getLocaleMessage(OBJECTNOTDEFINED, KITCHEN));
+
+				// blook
+
+				if (mostRestrictiveOccupancy != null
+						&& DxfFileConstants.A_P.equals(mostRestrictiveOccupancy.getSubtype().getCode())) {
+					if (blockKitchenCount == 0)
+						pl.addError("frontyardNodeDefined", getLocaleMessage(OBJECTNOTDEFINED, KITCHEN));
 				}
-				
+
+				if (pl.isRural()) {
+					if (blockKitchenCount == 0)
+						pl.addError("frontyardNodeDefined", getLocaleMessage(OBJECTNOTDEFINED, KITCHEN));
+				}
+
 			}
-			
-			
+
 		}
 		return pl;
 
@@ -353,9 +353,9 @@ public class Kitchen extends FeatureProcess {
 			if (actual.compareTo(expected) >= 0) {
 				valid = true;
 			}
-			
-			actual=CDGAdditionalService.roundBigDecimal(actual);
-			
+
+			actual = CDGAdditionalService.roundBigDecimal(actual);
+
 			String value = typicalFloorValues.get("typicalFloors") != null
 					? (String) typicalFloorValues.get("typicalFloors")
 					: " floor " + floor.getNumber();

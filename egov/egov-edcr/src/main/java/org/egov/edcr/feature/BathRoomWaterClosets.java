@@ -47,6 +47,8 @@
 
 package org.egov.edcr.feature;
 
+import static org.egov.edcr.utility.DcrConstants.OBJECTNOTDEFINED;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -79,7 +81,6 @@ public class BathRoomWaterClosets extends FeatureProcess {
 		return pl;
 	}
 
-	
 	@Override
 	public Plan process(Plan pl) {
 
@@ -92,7 +93,7 @@ public class BathRoomWaterClosets extends FeatureProcess {
 		scrutinyDetail.addColumnHeading(5, STATUS);
 
 		Map<String, String> details = new HashMap<>();
-		//details.put(RULE_NO, RULE_41_IV);
+		// details.put(RULE_NO, RULE_41_IV);
 		details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.TOILET));
 		details.put(DESCRIPTION, BathroomWaterClosets_DESCRIPTION);
 
@@ -102,12 +103,16 @@ public class BathRoomWaterClosets extends FeatureProcess {
 			if (b.getBuilding() != null && b.getBuilding().getFloors() != null
 					&& !b.getBuilding().getFloors().isEmpty()) {
 
+				int countInBlock = 0;
+
 				for (Floor f : b.getBuilding().getFloors()) {
 
 					if (f.getBathRoomWaterClosets() != null && f.getBathRoomWaterClosets().getHeights() != null
 							&& !f.getBathRoomWaterClosets().getHeights().isEmpty()
 							&& f.getBathRoomWaterClosets().getRooms() != null
 							&& !f.getBathRoomWaterClosets().getRooms().isEmpty()) {
+
+						countInBlock++;
 
 						if (f.getBathRoomWaterClosets().getHeights() != null
 								&& !f.getBathRoomWaterClosets().getHeights().isEmpty()) {
@@ -134,17 +139,23 @@ public class BathRoomWaterClosets extends FeatureProcess {
 								&& totalArea.compareTo(new BigDecimal(2.8)) >= 0
 								&& minWidth.compareTo(new BigDecimal(1.2)) >= 0) {
 
-							details.put(REQUIRED, "Height >= 2.29"+DxfFileConstants.METER+", Total Area >= 2.8"+DxfFileConstants.METER_SQM+", Width >= 1.2"+DxfFileConstants.METER);
-							details.put(PROVIDED, "Height = " + minHeight +DxfFileConstants.METER+ ", Total Area = " + totalArea+DxfFileConstants.METER_SQM
-									+ ", Width = " + minWidth+DxfFileConstants.METER);
+							details.put(REQUIRED, "Height >= 2.29" + DxfFileConstants.METER + ", Total Area >= 2.8"
+									+ DxfFileConstants.METER_SQM + ", Width >= 1.2" + DxfFileConstants.METER);
+							details.put(PROVIDED,
+									"Height = " + minHeight + DxfFileConstants.METER + ", Total Area = " + totalArea
+											+ DxfFileConstants.METER_SQM + ", Width = " + minWidth
+											+ DxfFileConstants.METER);
 							details.put(STATUS, Result.Accepted.getResultVal());
 							scrutinyDetail.getDetail().add(details);
 							pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 						} else {
-							details.put(REQUIRED, "Height >= 2.29"+DxfFileConstants.METER+", Total Area >= 2.8"+DxfFileConstants.METER_SQM+", Width >= 1.2"+DxfFileConstants.METER);
-							details.put(PROVIDED, "Height = " + minHeight +DxfFileConstants.METER+ ", Total Area = " + totalArea+DxfFileConstants.METER_SQM
-									+ ", Width = " + minWidth+DxfFileConstants.METER);
+							details.put(REQUIRED, "Height >= 2.29" + DxfFileConstants.METER + ", Total Area >= 2.8"
+									+ DxfFileConstants.METER_SQM + ", Width >= 1.2" + DxfFileConstants.METER);
+							details.put(PROVIDED,
+									"Height = " + minHeight + DxfFileConstants.METER + ", Total Area = " + totalArea
+											+ DxfFileConstants.METER_SQM + ", Width = " + minWidth
+											+ DxfFileConstants.METER);
 							details.put(STATUS, Result.Not_Accepted.getResultVal());
 							scrutinyDetail.getDetail().add(details);
 							pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -153,14 +164,20 @@ public class BathRoomWaterClosets extends FeatureProcess {
 					}
 
 				}
+
+				if (pl.isRural()) {
+					if (countInBlock == 0) {
+						pl.addError("ToiltNotFound", getLocaleMessage(OBJECTNOTDEFINED, "Toilet"));
+					}
+				}
+
 			}
 
 		}
 
 		return pl;
 	}
-	
-	
+
 //	@Override
 //	public Plan process(Plan pl) {
 //

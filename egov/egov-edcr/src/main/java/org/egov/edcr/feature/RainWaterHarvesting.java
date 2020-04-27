@@ -144,6 +144,19 @@ public class RainWaterHarvesting extends FeatureProcess {
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
 				
+		if(pl.isRural()) {
+			if(pl.getPlot().getArea().compareTo(BigDecimal.valueOf(250))>=0) {
+				if ((pl.getUtility().getRainWaterHarvestingTankCapacity()!=null)&&(pl.getUtility().getRainWaterHarvestingTankCapacity().compareTo(expectedTankCapacity) > 0))
+					setReportOutputDetails(pl, subRule, subRuleDesc, "Mandatory",
+							pl.getUtility().getRainWaterHarvestingTankCapacity() + " litre",
+							Result.Verify.getResultVal());
+				else
+					setReportOutputDetails(pl, subRule, subRuleDesc, "Mandatory", "Not Defined in the plan",
+							Result.Not_Accepted.getResultVal());
+			}
+			return pl;
+		}
+				
 		if(isOccupancyTypeNotApplicable(mostRestrictiveFarHelper))
 			return pl;
 
