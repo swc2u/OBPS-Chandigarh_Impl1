@@ -91,7 +91,8 @@ public class BpaConstants {
 	// sub occupancies code
 	public static final String A_P = "A-P";// Plotted
 	public static final String A_G = "A-G";// Grouped
-
+	public static final String A_CIR="A-CIR";// commercial in rural
+	
 	public static final String B_EC = "B_EC";// Education city (Sarangpur)
 	public static final String B_HEI = "B-HEI";// Higher Educational Institute //Educational/ Academic
 	public static final String B_H = "B-H";// Hostels
@@ -370,6 +371,8 @@ public class BpaConstants {
     public static final String GST_18 = "GST (18% of scrutiny fee)";
     public static final String ADDITIONAL_COVERAGE_FEE = "Additional Coverage fee";
     public static final String RULE_5_FEE = "Rule 5 fee";
+    public static final String DEVELOPMENT_CHARGES_OF_ROADS = "Development charges of roads";
+    public static final String CONVERSION_CHARGES="Conversion charges";
     
     public static final String TP_DEPT = "TOWN PLANNING DEPARTMENT";
     public static final String DEV_PERMIT_FEE = "DPF";

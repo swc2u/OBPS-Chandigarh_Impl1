@@ -267,7 +267,8 @@ public class AdditionalFeature extends FeatureProcess {
 			}
 
 			BigDecimal minewsArea = BigDecimal.ZERO;
-
+			
+			if(!eWSDUUnit.isEmpty())
 			minewsArea = eWSDUUnit.stream().map(Measurement::getArea).reduce(BigDecimal::min).get();
 
 			if (minewsArea.compareTo(new BigDecimal("30")) < 0) {

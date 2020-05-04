@@ -97,6 +97,8 @@ public class DxfFileConstants {
 	public static final String A_P = "A-P";// Plotted --220
 	public static final String A_G = "A-G";// Grouped --223	
 	
+	public static final String A_CIR="A-CIR";// commercial in rural
+	
 	public static final String A_SQ="A-SQ";//Servant quarter
 	public static final String A_PO = "A-PO";// Professional Office
 	public static final String A_S="A-S";//  STD/ PCO/ fax and photostat machine

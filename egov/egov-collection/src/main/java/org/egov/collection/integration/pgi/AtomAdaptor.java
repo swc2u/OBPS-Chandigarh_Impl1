@@ -228,9 +228,9 @@ public class AtomAdaptor implements PaymentGatewayAdaptor {
 			if (CollectionConstants.PGI_AUTHORISATION_CODE_SUCCESS.equals(atomResponse.getAuthStatus())) {
 				atomResponse.setTxnReferenceNo(responseAtomReconcilation.getAtomtxnId());
 				atomResponse.setTxnAmount(new BigDecimal(responseAtomReconcilation.getAmt()));
-				String[] udf9 = responseAtomReconcilation.getUdf9().split("\\|");
-				atomResponse.setAdditionalInfo6(udf9[1]);
-				atomResponse.setAdditionalInfo2(udf9[0]);
+//				String[] udf9 = responseAtomReconcilation.getUdf9().split("\\|");
+//				atomResponse.setAdditionalInfo6(udf9[1]);
+//				atomResponse.setAdditionalInfo2(udf9[0]);
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 				Date transactionDate = null;
 				try {

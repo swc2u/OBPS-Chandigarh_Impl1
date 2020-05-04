@@ -153,6 +153,9 @@ public class JasperReportService extends AbstractReportService<JasperReport> {
             } else {
                 dataSource = new JRBeanArrayDataSource(new Object[]{reportData}, false);
             }
+            
+            System.out.println( reportInput.getReportParams().values());
+            
             JasperPrint jasperPrint = JasperFillManager.fillReport(getTemplate(reportInput.getReportTemplate()),
                     reportInput.getReportParams(), dataSource);
             return new ReportOutput(exportReport(reportInput, jasperPrint), reportInput);

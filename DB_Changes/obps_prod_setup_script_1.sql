@@ -2566,8 +2566,32 @@ INSERT INTO state.egdcr_layername (id,"key",value,createdby,createddate,lastmodi
 -------------------------------------------------------------------------------------------------------------------------
 
 
+------------Missing Sub-Occupancy----------------------------------
+UPDATE chandigarh.egbpa_sub_occupancy
+SET code='A-EWS', occupancy =(select id from chandigarh.egbpa_occupancy where code ='A'), name='EWS', 
+description='EWS'
+WHERE code ='G-PHI' and colorcode = 33
+-------------------------------------------------
 
 
+--------------------Rural Fee-------------------------------------
+
+update chandigarh.egbpa_mstr_bpafee_common set "name"='Development charges of roads', description='Development charges of roads' where code='LDC';
+
+update chandigarh.eg_demand_reason_master set reasonmaster='Development charges of roads' where code='LDC';
+
+update chandigarh.egbpa_mstr_bpafee_common set "name"='Conversion charges', description='Conversion charges' where code='CW';
+
+update chandigarh.eg_demand_reason_master set reasonmaster='Conversion charges' where code='CW';
+
+
+
+
+--------------------------------- sub occupancy-------------
+
+INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,createdby,createddate,lastmodifieddate,lastmodifiedby,"version",description,maxcoverage,minfar,maxfar,occupancy,colorcode) VALUES 
+(420,'A-CIR','commercial',1,true,1,'2020-04-18 17:51:56.781','2020-04-18 17:51:56.781',1,0,'commercial',65,3,4,29,25)
+;
 
 
 

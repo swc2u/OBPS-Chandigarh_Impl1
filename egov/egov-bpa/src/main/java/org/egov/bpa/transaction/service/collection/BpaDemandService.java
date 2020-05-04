@@ -151,7 +151,7 @@ public class BpaDemandService {
 
         for (ApplicationFeeDetail applicationFeeDtl : applicationFee.getApplicationFeeDetail()) {
 
-            if (applicationFeeDtl.getAmount() != null && !applicationFeeDtl.getAmount().equals(BigDecimal.ZERO)) {
+            if (applicationFeeDtl.getAmount() != null && !applicationFeeDtl.getAmount().equals(BigDecimal.ZERO) && applicationFeeDtl.getBpaFeeMapping()!=null) {
 
                 // DemandDetailid null mean, its a new fee details entered from UI.
                 if (feecodedemanddetailsIdmap.get(applicationFeeDtl.getBpaFeeMapping().getBpaFeeCommon().getCode()) == null) {
