@@ -381,6 +381,11 @@ public class PlanFeatureRepository {
           pf = new PlanFeature(Parapet.class);
           features.add(pf);
           
+          pf = new PlanFeature(StairCover.class);
+          features.add(pf);
+          
+          pf = new PlanFeature(BuildingHeight.class);
+          features.add(pf);
           
           return features;
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BPA_collection_receipt_accounts" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" uuid="097af81c-f4bf-4e72-9596-ed5b89f2e492">
 	<import value="org.egov.infra.reporting.util.*"/>
 	<import value="org.egov.infstr.utils.*"/>
@@ -39,7 +39,7 @@
 		<groupExpression><![CDATA["DUMMY_GROUP"]]></groupExpression>
 		<groupFooter>
 			<band height="20">
-				<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00">
+				<textField textAdjust="StretchHeight" pattern="#,##0.00;-#,##0.00">
 					<reportElement stretchType="RelativeToTallestObject" x="280" y="0" width="275" height="20" uuid="64cbe2fb-deac-4e3d-aa68-ccebe05a3a84"/>
 					<box leftPadding="5" rightPadding="5">
 						<pen lineWidth="0.5"/>
@@ -69,7 +69,7 @@
 				</staticText>
 			</band>
 			<band height="20">
-				<textField isStretchWithOverflow="true">
+				<textField textAdjust="StretchHeight">
 					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="555" height="20" uuid="087e6fb8-b225-494c-baea-9b77d3913f38"/>
 					<box leftPadding="5" rightPadding="5">
 						<pen lineWidth="0.5"/>
@@ -120,7 +120,7 @@
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
-			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="280" y="0" width="275" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="897d5a19-f461-4c54-a0dd-3fe102a8e6bc"/>
 				<box leftPadding="5" rightPadding="5">
 					<pen lineWidth="0.5"/>
@@ -134,7 +134,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{crAmount} > 0 ? $F{crAmount} : $F{drAmount} > 0 ? "(-)  "+$F{drAmount} : $F{drAmount}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="280" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="4ccf97b8-463d-40e4-8ae3-e3120c9b0241"/>
 				<box leftPadding="5" rightPadding="5">
 					<pen lineWidth="0.5"/>

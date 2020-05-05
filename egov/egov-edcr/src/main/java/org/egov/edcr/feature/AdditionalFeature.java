@@ -205,6 +205,8 @@ public class AdditionalFeature extends FeatureProcess {
 
 		if (pl.isRural()) {
 			validateRuralPlinthHeight(pl, errors);
+			validateRuralNumberOfFloorsSkelton(pl);
+			validateRuralCommercialUnitAtGroundFloor(pl);
 			return pl;
 		}
 
@@ -267,9 +269,9 @@ public class AdditionalFeature extends FeatureProcess {
 			}
 
 			BigDecimal minewsArea = BigDecimal.ZERO;
-			
-			if(!eWSDUUnit.isEmpty())
-			minewsArea = eWSDUUnit.stream().map(Measurement::getArea).reduce(BigDecimal::min).get();
+
+			if (!eWSDUUnit.isEmpty())
+				minewsArea = eWSDUUnit.stream().map(Measurement::getArea).reduce(BigDecimal::min).get();
 
 			if (minewsArea.compareTo(new BigDecimal("30")) < 0) {
 				pl.addError("ews", "ews area is less then 30 sqm");
@@ -401,6 +403,58 @@ public class AdditionalFeature extends FeatureProcess {
 				pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 			}
 
+		}
+
+	}
+
+	private void validateRuralCommercialUnitAtGroundFloor(Plan pl) {
+
+		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
+		scrutinyDetail.setKey("Common_Commercial unit at ground floor");
+		scrutinyDetail.addColumnHeading(1, RULE_NO);
+		scrutinyDetail.addColumnHeading(2, DESCRIPTION);
+		scrutinyDetail.addColumnHeading(3, REQUIRED);
+		scrutinyDetail.addColumnHeading(4, PROVIDED);
+		scrutinyDetail.addColumnHeading(5, STATUS);
+
+		BigDecimal totalCoverageArea = BigDecimal.ZERO;
+		totalCoverageArea = pl.getVirtualBuilding().getTotalCoverageArea();
+
+		BigDecimal requiredProfessionalsConsultantsSpace = BigDecimal.ZERO;
+
+		requiredProfessionalsConsultantsSpace = FIFTY;
+
+		Map<String, String> details = new HashMap<>();
+
+		BigDecimal providedProfessionalsConsultantsSpace = BigDecimal.ZERO;
+		boolean isProfessionalsConsultantsSpaceProvided = false;
+		for (Block b : pl.getBlocks()) {
+			for (Floor floor : b.getBuilding().getFloors()) {
+				for (Occupancy occupancy : floor.getOccupancies()) {
+					if (occupancy.getTypeHelper() != null && occupancy.getTypeHelper().getSubtype() != null
+							&& DxfFileConstants.A_CIR.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+						providedProfessionalsConsultantsSpace = providedProfessionalsConsultantsSpace
+								.add(occupancy.getBuiltUpArea());
+						isProfessionalsConsultantsSpaceProvided = true;
+
+					}
+				}
+			}
+		}
+
+		if (isProfessionalsConsultantsSpaceProvided) {
+//			details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,
+//					CDGAConstant.PROFESSIONALS_CONSULTANTS_SPACE));
+			details.put(DESCRIPTION, "Commercial unit at ground floor");
+			details.put(REQUIRED, requiredProfessionalsConsultantsSpace + " sqm");
+			details.put(PROVIDED, providedProfessionalsConsultantsSpace + " sqm");
+			if (providedProfessionalsConsultantsSpace.compareTo(requiredProfessionalsConsultantsSpace) <= 0) {
+				details.put(STATUS, Result.Accepted.getResultVal());
+			} else {
+				details.put(STATUS, Result.Not_Accepted.getResultVal());
+			}
+			scrutinyDetail.getDetail().add(details);
+			pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 		}
 
 	}
@@ -1011,6 +1065,44 @@ public class AdditionalFeature extends FeatureProcess {
 //        }
 //    }
 
+	private void validateRuralNumberOfFloorsSkelton(Plan pl) {
+		for (Block block : pl.getBlocks()) {
+			boolean isAccepted = false;
+			// CSCL comment start
+			// ScrutinyDetail scrutinyDetail = getNewScrutinyDetail("Block_" +
+			// block.getNumber() + "_" + "Number of Floors");
+			// CSCL comment end
+
+			// CSCL add start
+			ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
+			scrutinyDetail.addColumnHeading(1, RULE_NO);
+			scrutinyDetail.addColumnHeading(2, DESCRIPTION);
+			scrutinyDetail.addColumnHeading(3, PERMISSIBLE);
+			scrutinyDetail.addColumnHeading(4, PROVIDED);
+			scrutinyDetail.addColumnHeading(5, STATUS);
+			scrutinyDetail.setKey("Block_" + block.getNumber() + "_" + "Number of Floors");
+			// CSCL add end
+			BigDecimal floorAbvGround = block.getBuilding().getFloorsAboveGround();
+			String requiredFloorCount = StringUtils.EMPTY;
+			// CSCL add start
+
+			isAccepted = floorAbvGround.compareTo(THREE) <= 0;
+			requiredFloorCount = "<= 3";
+
+			Map<String, String> details = new HashMap<>();
+			// details.put(RULE_NO, RULE_38);
+			// details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper,
+			// CDGAConstant.NO_OF_STORY));
+			details.put(DESCRIPTION, NO_OF_FLOORS);
+			details.put(PERMISSIBLE, requiredFloorCount);
+			details.put(PROVIDED, String.valueOf(block.getBuilding().getFloorsAboveGround()));
+			details.put(STATUS, isAccepted ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
+			scrutinyDetail.getDetail().add(details);
+			pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+
+		}
+	}
+
 	private void validateRuralPlinthHeight(Plan pl, HashMap<String, String> errors) {
 		for (Block block : pl.getBlocks()) {
 
@@ -1022,22 +1114,19 @@ public class AdditionalFeature extends FeatureProcess {
 			List<BigDecimal> plinthHeights = block.getPlinthHeight();
 			OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding().getMostRestrictiveFarHelper();
 
-			
-				if (!plinthHeights.isEmpty() && mostRestrictiveOccupancyType != null) {
-					minPlinthHeight = plinthHeights.stream().reduce(BigDecimal::min).get();
-					maxPlinthHeight = plinthHeights.stream().reduce(BigDecimal::max).get();
+			if (!plinthHeights.isEmpty() && mostRestrictiveOccupancyType != null) {
+				minPlinthHeight = plinthHeights.stream().reduce(BigDecimal::min).get();
+				maxPlinthHeight = plinthHeights.stream().reduce(BigDecimal::max).get();
 
-						if (minPlinthHeight.compareTo(BigDecimal.valueOf(0.45)) >= 0) {
-							isAccepted = true;
-						}
-					
-				} else if (!isOccupancyTypePlinthNotApplicable(mostRestrictiveOccupancyType)) {
-					String plinthHeightLayer = String.format(DxfFileConstants.LAYER_PLINTH_HEIGHT, block.getNumber());
-					errors.put(plinthHeightLayer, "Plinth height is not defined in layer " + plinthHeightLayer);
-					pl.addErrors(errors);
+				if (minPlinthHeight.compareTo(BigDecimal.valueOf(0.45)) >= 0) {
+					isAccepted = true;
 				}
 
-			
+			} else if (!isOccupancyTypePlinthNotApplicable(mostRestrictiveOccupancyType)) {
+				String plinthHeightLayer = String.format(DxfFileConstants.LAYER_PLINTH_HEIGHT, block.getNumber());
+				errors.put(plinthHeightLayer, "Plinth height is not defined in layer " + plinthHeightLayer);
+				pl.addErrors(errors);
+			}
 
 			if (errors.isEmpty()) {
 				Map<String, String> details = new HashMap<>();

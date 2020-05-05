@@ -2590,7 +2590,7 @@ update chandigarh.eg_demand_reason_master set reasonmaster='Conversion charges' 
 --------------------------------- sub occupancy-------------
 
 INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,createdby,createddate,lastmodifieddate,lastmodifiedby,"version",description,maxcoverage,minfar,maxfar,occupancy,colorcode) VALUES 
-(420,'A-CIR','commercial',1,true,1,'2020-04-18 17:51:56.781','2020-04-18 17:51:56.781',1,0,'commercial',65,3,4,29,25)
+(420,'A-CIR','commercial',1,true,1,'2020-04-18 17:51:56.781','2020-04-18 17:51:56.781',1,0,'commercial',65,3,4,29,62)
 ;
 
 

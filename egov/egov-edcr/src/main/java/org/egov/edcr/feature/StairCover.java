@@ -127,6 +127,7 @@ public class StairCover extends FeatureProcess {
 
 			}
 		
+			return pl;
 		}
 				
 		if (!isOccupancyNotApplicable(mostRestrictiveFarHelper)) {

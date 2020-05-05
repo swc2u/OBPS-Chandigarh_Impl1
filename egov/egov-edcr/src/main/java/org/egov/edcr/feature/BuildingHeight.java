@@ -133,6 +133,11 @@ public class BuildingHeight extends FeatureProcess {
 		scrutinyDetail.addColumnHeading(4, PROVIDED);
 		scrutinyDetail.addColumnHeading(5, STATUS);
 
+		if (Plan.isRural()) {
+			checkRuralBuildingHeight(Plan);
+			return Plan;
+		}
+
 		if (!ProcessHelper.isSmallPlot(Plan)) {
 			checkBuildingHeight(Plan);
 		}
@@ -140,6 +145,53 @@ public class BuildingHeight extends FeatureProcess {
 		// checkBuildingInSecurityZoneArea(Plan);
 		// CSCL comment end
 		return Plan;
+	}
+
+	private void checkRuralBuildingHeight(Plan Plan) {
+		
+		// get maximum height from buildings.
+		for (Block block : Plan.getBlocks()) {
+
+			BigDecimal exptectedHeight = BigDecimal.ZERO;
+			BigDecimal buildingHeight = BigDecimal.ZERO;
+
+			exptectedHeight = new BigDecimal("10.36");
+
+			buildingHeight = block.getBuilding().getBuildingHeight();
+
+			if (exptectedHeight.compareTo(BigDecimal.ZERO) > 0) {
+//					String actualResult = getLocaleMessage(RULE_ACTUAL_KEY, buildingHeight.toString());
+//					String expectedResult = getLocaleMessage(RULE_EXPECTED_KEY, exptectedHeight.toString());
+
+				String actualResult = buildingHeight.toString() + DxfFileConstants.METER;
+				String expectedResult = "Upto " + exptectedHeight.toString() + DxfFileConstants.METER;
+
+				if (buildingHeight.compareTo(exptectedHeight) > 0) {
+					Map<String, String> details = new HashMap<>();
+					// details.put(RULE_NO, subRule);
+					// details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper,
+					// CDGAConstant.PERMISSIBLE_BUILDING_HEIGHT));
+					details.put(DESCRIPTION, HEIGHT_OF_BUILDING + " for Block " + block.getNumber());
+					details.put(UPTO, expectedResult);
+					details.put(PROVIDED, actualResult);
+					details.put(STATUS, Result.Not_Accepted.getResultVal());
+					scrutinyDetail.getDetail().add(details);
+					Plan.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+
+				} else {
+					Map<String, String> details = new HashMap<>();
+					// details.put(RULE_NO, subRule);
+					// details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper,
+					// CDGAConstant.PERMISSIBLE_BUILDING_HEIGHT));
+					details.put(DESCRIPTION, HEIGHT_OF_BUILDING + " for Block " + block.getNumber());
+					details.put(UPTO, expectedResult);
+					details.put(PROVIDED, actualResult);
+					details.put(STATUS, Result.Accepted.getResultVal());
+					scrutinyDetail.getDetail().add(details);
+					Plan.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+				}
+			}
+		}
 	}
 
 	private void checkBuildingHeight(Plan Plan) {
@@ -179,13 +231,16 @@ public class BuildingHeight extends FeatureProcess {
 
 					Map<String, String> featureValues = cdgAdditionalService
 							.getFeatureValue(CDGAConstant.PERMISSIBLE_BUILDING_HEIGHT, keyArrgument);
-					String str=featureValues.get(CDGAdditionalService.PERMISSIBLE_BUILDING_HEIGHT);
-					if(DxfFileConstants.DATA_NOT_FOUND.equals(str)) {
-						Plan.addError("PERMISSIBLE_BUILDING_HEIGHT ", "PERMISSIBLE_BUILDING_HEIGHT, "+DxfFileConstants.DATA_NOT_FOUND);
+					String str = featureValues.get(CDGAdditionalService.PERMISSIBLE_BUILDING_HEIGHT);
+					if (DxfFileConstants.DATA_NOT_FOUND.equals(str)) {
+						Plan.addError("PERMISSIBLE_BUILDING_HEIGHT ",
+								"PERMISSIBLE_BUILDING_HEIGHT, " + DxfFileConstants.DATA_NOT_FOUND);
 						return;
 					}
 					exptectedHeight = new BigDecimal(
-							featureValues.get(CDGAdditionalService.PERMISSIBLE_BUILDING_HEIGHT)!=null?featureValues.get(CDGAdditionalService.PERMISSIBLE_BUILDING_HEIGHT):"0");
+							featureValues.get(CDGAdditionalService.PERMISSIBLE_BUILDING_HEIGHT) != null
+									? featureValues.get(CDGAdditionalService.PERMISSIBLE_BUILDING_HEIGHT)
+									: "0");
 				}
 
 				if (DxfFileConstants.A.equals(occupancyTypeHelper.getType().getCode())) {
@@ -199,7 +254,7 @@ public class BuildingHeight extends FeatureProcess {
 							exptectedHeight = new BigDecimal("10.06");
 						else if (DxfFileConstants.MARLA.equals(plotType) && phase == 2)
 							exptectedHeight = new BigDecimal("9.83");
-						else if(!DxfFileConstants.MARLA.equals(plotType))
+						else if (!DxfFileConstants.MARLA.equals(plotType))
 							exptectedHeight = new BigDecimal("10.67");
 					} else if (DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode())) {
 						if (DxfFileConstants.ONE_KANAL.equals(plotType) && (phase == 1 || phase == 2))
@@ -291,15 +346,16 @@ public class BuildingHeight extends FeatureProcess {
 				if (exptectedHeight.compareTo(BigDecimal.ZERO) > 0) {
 //					String actualResult = getLocaleMessage(RULE_ACTUAL_KEY, buildingHeight.toString());
 //					String expectedResult = getLocaleMessage(RULE_EXPECTED_KEY, exptectedHeight.toString());
-					
-					String actualResult = buildingHeight.toString()+DxfFileConstants.METER;
-					String expectedResult = "Upto "+exptectedHeight.toString()+DxfFileConstants.METER;
+
+					String actualResult = buildingHeight.toString() + DxfFileConstants.METER;
+					String expectedResult = "Upto " + exptectedHeight.toString() + DxfFileConstants.METER;
 
 					if (buildingHeight.compareTo(exptectedHeight) > 0) {
 						Map<String, String> details = new HashMap<>();
-					//	details.put(RULE_NO, subRule);
-						details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.PERMISSIBLE_BUILDING_HEIGHT));
-							details.put(DESCRIPTION, HEIGHT_OF_BUILDING + " for Block " + block.getNumber());
+						// details.put(RULE_NO, subRule);
+						details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper,
+								CDGAConstant.PERMISSIBLE_BUILDING_HEIGHT));
+						details.put(DESCRIPTION, HEIGHT_OF_BUILDING + " for Block " + block.getNumber());
 						details.put(UPTO, expectedResult);
 						details.put(PROVIDED, actualResult);
 						details.put(STATUS, Result.Not_Accepted.getResultVal());
@@ -308,8 +364,9 @@ public class BuildingHeight extends FeatureProcess {
 
 					} else {
 						Map<String, String> details = new HashMap<>();
-					//	details.put(RULE_NO, subRule);
-						details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.PERMISSIBLE_BUILDING_HEIGHT));
+						// details.put(RULE_NO, subRule);
+						details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper,
+								CDGAConstant.PERMISSIBLE_BUILDING_HEIGHT));
 						details.put(DESCRIPTION, HEIGHT_OF_BUILDING + " for Block " + block.getNumber());
 						details.put(UPTO, expectedResult);
 						details.put(PROVIDED, actualResult);
