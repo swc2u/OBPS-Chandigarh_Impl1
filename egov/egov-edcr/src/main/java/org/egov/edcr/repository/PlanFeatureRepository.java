@@ -387,6 +387,12 @@ public class PlanFeatureRepository {
           pf = new PlanFeature(BuildingHeight.class);
           features.add(pf);
           
+          pf = new PlanFeature(Ventilation.class);
+          features.add(pf);
+          
+          pf = new PlanFeature(HeightOfRoom.class);
+          features.add(pf);
+          
           return features;
     }
 

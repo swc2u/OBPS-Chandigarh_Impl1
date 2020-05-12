@@ -158,6 +158,12 @@ public class Ventilation extends FeatureProcess {
 
 	@Override
 	public Plan process(Plan pl) {
+		
+		if(pl.isRural()) {
+			processRural(pl);
+			return pl;
+		}
+		
 		for (Block b : pl.getBlocks()) {
 			ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
 			scrutinyDetail.setKey("Common_Ventilation");
@@ -225,6 +231,70 @@ public class Ventilation extends FeatureProcess {
 		return pl;
 	}
 
+	public Plan processRural(Plan pl) {
+		for (Block b : pl.getBlocks()) {
+			ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
+			scrutinyDetail.setKey("Common_Ventilation");
+			scrutinyDetail.addColumnHeading(1, RULE_NO);
+			scrutinyDetail.addColumnHeading(2, DESCRIPTION);
+			scrutinyDetail.addColumnHeading(3, REQUIRED);
+			scrutinyDetail.addColumnHeading(4, PROVIDED);
+			scrutinyDetail.addColumnHeading(5, STATUS);
+
+			
+			if (b.getBuilding().getFloors() != null
+					&& !b.getBuilding().getFloors().isEmpty()) {
+
+				for (Floor f : b.getBuilding().getFloors()) {
+					Map<String, String> details = new HashMap<>();
+					details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.LIGHT_AND_VENTILATION));
+					details.put(DESCRIPTION, LIGHT_VENTILATION_DESCRIPTION+" blook "+ b.getNumber()+" floor "+f.getNumber());
+
+					if (f.getLightAndVentilation() != null && f.getLightAndVentilation().getMeasurements() != null
+							&& !f.getLightAndVentilation().getMeasurements().isEmpty()) {
+
+						BigDecimal totalVentilationArea = f.getLightAndVentilation().getMeasurements().stream()
+								.map(Measurement::getArea).reduce(BigDecimal.ZERO, BigDecimal::add);
+//						BigDecimal totalCarpetArea = f.getOccupancies().stream().map(Occupancy::getCarpetArea)
+//								.reduce(BigDecimal.ZERO, BigDecimal::add);
+						
+						BigDecimal totalRoomArea = f.getTotalHabitableRoomArea();
+
+						
+						totalVentilationArea=CDGAdditionalService.roundBigDecimal(totalVentilationArea);
+						BigDecimal totalVentilationAreaExpected=CDGAdditionalService.roundBigDecimal(f.getArea().multiply(BigDecimal.valueOf(0.1)));
+
+						if (totalVentilationArea.compareTo(BigDecimal.ZERO) > 0) {
+							if (totalVentilationArea.compareTo(totalVentilationAreaExpected) >= 0) {
+								details.put(REQUIRED, "Minimum 10% of the floor area ");
+								details.put(PROVIDED, "Ventilation area " + totalVentilationArea );
+								details.put(STATUS, Result.Accepted.getResultVal());
+								scrutinyDetail.getDetail().add(details);
+								pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+
+							} else {
+								details.put(REQUIRED, "Minimum 10% of the floor area ");
+								details.put(PROVIDED, "Ventilation area " + totalVentilationArea);
+								details.put(STATUS, Result.Not_Accepted.getResultVal());
+								scrutinyDetail.getDetail().add(details);
+								pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+							}
+						}
+					}
+//					else {
+//						Map<String, String> map=new HashMap<String, String>();
+//						map.put("Ventilation", "Light & Ventilation not defined in block "+b.getNumber()+" Floor "+f.getNumber());
+//						pl.setErrors(map);
+//					}
+
+				}
+			}
+
+		}
+
+		return pl;
+	}
+	
 	private boolean isOccupancyTypeNotApplicable(OccupancyTypeHelper occupancyTypeHelper) {
 		boolean flage=false;
 		
