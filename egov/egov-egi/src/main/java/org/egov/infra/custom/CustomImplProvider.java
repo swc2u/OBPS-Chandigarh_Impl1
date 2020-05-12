@@ -35,7 +35,7 @@ public class CustomImplProvider {
 
 	@Deprecated()
 	public Map<String, String> getCityDetails() {
-		LOG.info("Getting city Details");
+		LOG.debug("Getting city Details");
 		Map<String, String> cityDetails = new HashMap<>();
 		try {
 			cityDetails.put(STATE_NAME, clientId);
@@ -48,14 +48,14 @@ public class CustomImplProvider {
 				cityDetails.put(STATE_NAME, clientId);
 				cityDetails.put(GRADE, city.getGrade());
 			}
-			LOG.info(cityDetails);
+			LOG.debug(cityDetails);
 
 		} catch (Exception e) {
 
 			LOG.error("Error while getting city Details", e);
 		}
 
-		LOG.info("Getting city Details completed");
+		LOG.debug("Getting city Details completed");
 		return cityDetails;
 	}
 

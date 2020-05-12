@@ -257,7 +257,7 @@ public class PlanService {
 			FeatureProcess rule = null;
 			String str = ruleClass.getRuleClass().getSimpleName();
 			str = str.substring(0, 1).toLowerCase() + str.substring(1);
-			LOG.info("Looking for bean " + str);
+			LOG.debug("Looking for bean " + str);
 			// when amendments are not present
 			if (amd.getDetails().isEmpty() || index == -1)
 				rule = (FeatureProcess) specificRuleService.find(ruleClass.getRuleClass().getSimpleName());
@@ -283,9 +283,9 @@ public class PlanService {
 			}
 
 			if (rule != null) {
-				LOG.info("Looking for bean resulted in " + rule.getClass().getSimpleName());
+				LOG.debug("Looking for bean resulted in " + rule.getClass().getSimpleName());
 				rule.process(plan);
-				LOG.info("Completed Process " + rule.getClass().getSimpleName() + "  " + new Date());
+				LOG.debug("Completed Process " + rule.getClass().getSimpleName() + "  " + new Date());
 			}
 
 			if (plan.getErrors().containsKey(DxfFileConstants.OCCUPANCY_ALLOWED_KEY)

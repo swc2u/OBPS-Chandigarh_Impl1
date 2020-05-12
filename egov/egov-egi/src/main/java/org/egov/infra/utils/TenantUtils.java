@@ -84,14 +84,14 @@ public final class TenantUtils {
         URL url;
 
         if (LOG.isInfoEnabled())
-            LOG.info(String.format("cities %s", applicationConfiguration.cities().isEmpty() ? "" : applicationConfiguration.cities()));
+            LOG.debug(String.format("cities %s", applicationConfiguration.cities().isEmpty() ? "" : applicationConfiguration.cities()));
         try {
             url = new URL(ApplicationThreadLocals.getDomainURL());
 
             // first: get from override properties
             environment.getPropertySources().iterator().forEachRemaining(propertySource -> {
                 if (LOG.isInfoEnabled())
-                    LOG.info(
+                    LOG.debug(
                             "Property Source" + propertySource.getName() + " Class Name"
                                     + propertySource.getClass().getSimpleName());
                 if (propertySource.getName().contains("egov-erp-override.properties")
@@ -100,7 +100,7 @@ public final class TenantUtils {
                         if (key.startsWith(TENANT)) {
                             tenants.put(value.toString(), url.getProtocol() + "://" + key.replace(TENANT, "")
                                     + (url.getPort() == -1 ? "" : ":" + url.getPort()) + "/");
-                            LOG.info("*****override tenants******" + value.toString() + url.getProtocol() + "://"
+                            LOG.debug("*****override tenants******" + value.toString() + url.getProtocol() + "://"
                                     + key.replace(TENANT, "") + (url.getPort() == -1 ? "" : ":" + url.getPort()) + "/");
                         }
                     });
@@ -110,7 +110,7 @@ public final class TenantUtils {
             // second: get it only from application config properties if it is not override
             environment.getPropertySources().iterator().forEachRemaining(propertySource -> {
                 if (LOG.isInfoEnabled())
-                    LOG.info(
+                    LOG.debug(
                             "Property Source" + propertySource.getName() + " Class Name"
                                     + propertySource.getClass().getSimpleName());
                 if (propertySource.getName().contains("application-config.properties")
@@ -119,7 +119,7 @@ public final class TenantUtils {
                         if (key.startsWith(TENANT) && !tenants.containsKey(value)) {
                             tenants.put(value.toString(), url.getProtocol() + "://" + key.replace(TENANT, "")
                                     + (url.getPort() == -1 ? "" : ":" + url.getPort()) + "/");
-                            LOG.info(
+                            LOG.debug(
                                     "*****application config tenants******" + value.toString() + url.getProtocol() + "://"
                                             + key.replace(TENANT, "") + (url.getPort() == -1 ? "" : ":" + url.getPort()) + "/");
                         }

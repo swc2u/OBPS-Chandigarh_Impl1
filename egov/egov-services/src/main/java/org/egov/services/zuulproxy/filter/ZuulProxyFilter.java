@@ -137,7 +137,7 @@ public class ZuulProxyFilter extends ZuulFilter {
             zuulProxyRoutingUrls = (HashMap<String, String>) applicationProperties
                     .zuulProxyRoutingUrls();
             if (log.isInfoEnabled())
-                log.info("Zuul Proxy Routing Mapping Urls... " + zuulProxyRoutingUrls);
+                log.debug("Zuul Proxy Routing Mapping Urls... " + zuulProxyRoutingUrls);
         } catch (final Exception e) {
             throw new ApplicationRuntimeException("Could not get valid routing url mapping for mirco services", e);
         }
@@ -159,7 +159,7 @@ public class ZuulProxyFilter extends ZuulFilter {
                 }
             }
             if (log.isInfoEnabled())
-                log.info(String.format("%s request to the url %s", request.getMethod(), request.getRequestURL().toString()));
+                log.debug(String.format("%s request to the url %s", request.getMethod(), request.getRequestURL().toString()));
 
             final String tenantId = getTanentId(springContext);
             final StringBuilder stringBuilder = new StringBuilder();
@@ -168,7 +168,7 @@ public class ZuulProxyFilter extends ZuulFilter {
             endPointURI = stringBuilder.toString();
 
             if (log.isInfoEnabled())
-                log.info("endPointURI  " + endPointURI);
+                log.debug("endPointURI  " + endPointURI);
 
             final URL routedHost = new URL(mappingURL + endPointURI);
             ctx.setRouteHost(routedHost);
@@ -183,7 +183,7 @@ public class ZuulProxyFilter extends ZuulFilter {
             ctx.setRequestQueryParams(map);
 
             if (log.isInfoEnabled())
-                log.info("TenantId from getRequestQueryParams() " + ctx.getRequestQueryParams().get(TENANT_ID).toString());
+                log.debug("TenantId from getRequestQueryParams() " + ctx.getRequestQueryParams().get(TENANT_ID).toString());
 
             final String userInfo = getUserInfo(request, springContext, tenantId);
             
@@ -192,7 +192,7 @@ public class ZuulProxyFilter extends ZuulFilter {
 
             if (log.isInfoEnabled())
                 if(request.getSession() != null)
-                    log.info("SESSION ID " + request.getSession().getId());
+                    log.debug("SESSION ID " + request.getSession().getId());
 
             if (shouldPutUserInfoOnHeaders(ctx)) {
                 ctx.addZuulRequestHeader(USER_INFO_FIELD_NAME, userInfo);
@@ -247,7 +247,7 @@ public class ZuulProxyFilter extends ZuulFilter {
             userInfoJson = session.getAttribute(USER_INFO_FIELD_NAME).toString();
 
         if (log.isInfoEnabled())
-            log.info("userInfo is from the session... " + userInfoJson);
+            log.debug("userInfo is from the session... " + userInfoJson);
 
         if (StringUtils.isBlank(userInfoJson)) {
             final UserService userService = (UserService) springContext.getBean(USER_SERVICE);
@@ -269,7 +269,7 @@ public class ZuulProxyFilter extends ZuulFilter {
                 throw new ApplicationRuntimeException("Could not convert object to json string", e);
             }
             if (log.isInfoEnabled())
-                log.info("Read userInfo from the DB and set it to the session... " + userInfoJson);
+                log.debug("Read userInfo from the DB and set it to the session... " + userInfoJson);
             session.setAttribute(USER_INFO_FIELD_NAME, userInfoJson);
         }
 

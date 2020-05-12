@@ -365,7 +365,7 @@ public class GeneralStair extends FeatureProcess {
 										typicalFloorValues, generalStair, flight, flightLengths, minTread,
 										mostRestrictiveOccupancyType);
 							} catch (ArithmeticException e) {
-								LOG.info("Denominator is zero");
+								LOG.error("Denominator is zero");
 							}
 						} else {
 							errors.put("Flight PolyLine length" + flightLayerName,
@@ -379,7 +379,7 @@ public class GeneralStair extends FeatureProcess {
 								validateNoOfRises(plan, errors, block, scrutinyDetailRise, floor, typicalFloorValues,
 										generalStair, flight, noOfRises);
 							} catch (ArithmeticException e) {
-								LOG.info("Denominator is zero");
+								LOG.error("Denominator is zero");
 							}
 						} else {
 							/*

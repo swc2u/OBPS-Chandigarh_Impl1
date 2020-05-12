@@ -645,7 +645,7 @@ public class BpaAjaxController {
         }
         boundaryOutputJson.put("boundaryData", boundaryDataJson);
         boundaryOutputJson.put("uniformBoundary", uniformBoundaryJson);
-        LOG.info("getBoundaryConfiguration--->" + boundaryOutputJson.toString());
+        LOG.debug("getBoundaryConfiguration--->" + boundaryOutputJson.toString());
         IOUtils.write(boundaryOutputJson.toString(), response.getWriter());
     }
 
@@ -677,7 +677,7 @@ public class BpaAjaxController {
                 childBoundaryJson.put(childBoundary[i].split(":")[1], boundaryArray);
             }
         }
-        LOG.info("getCrossBoundary--->" + childBoundaryJson.toString());
+        LOG.debug("getCrossBoundary--->" + childBoundaryJson.toString());
         IOUtils.write(childBoundaryJson.toString(), response.getWriter());
     }
 
@@ -708,7 +708,7 @@ public class BpaAjaxController {
             }
             childBoundaryJson.put(childBoundary[0].split(":")[0], boundaryArray);
         }
-        LOG.info("getChildBoundaries--->" + childBoundaryJson.toString());
+        LOG.debug("getChildBoundaries--->" + childBoundaryJson.toString());
         IOUtils.write(childBoundaryJson.toString(), response.getWriter());
     }
 
