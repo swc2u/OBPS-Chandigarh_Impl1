@@ -276,7 +276,7 @@ public class OccupancyCertificateBillService extends BillServiceInterface {
                     billdetail.setCrAmount(demandDetail.getAmount().subtract(demandDetail.getAmtCollected()));
                 }
 
-                LOGGER.info("demandDetail.getEgDemandReason()"
+                LOGGER.debug("demandDetail.getEgDemandReason()"
                         + demandDetail.getEgDemandReason().getEgDemandReasonMaster().getReasonMaster() + " glcodeerror"
                         + demandDetail.getEgDemandReason().getGlcodeId());
                 billdetail.setGlcode(demandDetail.getEgDemandReason().getGlcodeId().getGlcode());

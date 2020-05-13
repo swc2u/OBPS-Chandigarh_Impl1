@@ -104,14 +104,14 @@ public class BpaApplicationCancellationService {
                             .findByApplicationOrderByIdDesc(bpaApplication);
                     if (!slotApplicationList.isEmpty()) {
                         Date appointmentDate = slotApplicationList.get(0).getSlotDetail().getSlot().getAppointmentDate();
-                        logger.info("**********appointmentDate For last scheduled or rescheduled application is*************"
+                        logger.debug("**********appointmentDate For last scheduled or rescheduled application is*************"
                                 + appointmentDate);
-                        logger.info("compare date :" + DateUtils
+                        logger.debug("compare date :" + DateUtils
                                 .toDateUsingDefaultPattern(DateUtils.toDefaultDateFormat(Calendar.getInstance().getTime()))
                                 .after(DateUtils.toDateUsingDefaultPattern(DateUtils.toDefaultDateFormat(appointmentDate))));
                         if (DateUtils.toDateUsingDefaultPattern(DateUtils.toDefaultDateFormat(Calendar.getInstance().getTime()))
                                 .after(DateUtils.toDateUsingDefaultPattern(DateUtils.toDefaultDateFormat(appointmentDate)))) {
-                            logger.info(
+                            logger.debug(
                                     "**********now changing bpa Application Status to Cancelled and close the workflow for ApplicationNumber :************"
                                             + bpaApplication.getApplicationNumber());
                             bpaUtils.redirectToBpaWorkFlow(bpaApplication.getCurrentState().getOwnerPosition().getId(),

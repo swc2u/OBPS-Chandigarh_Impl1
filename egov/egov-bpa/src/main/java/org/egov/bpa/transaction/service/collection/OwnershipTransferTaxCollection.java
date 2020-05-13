@@ -189,7 +189,7 @@ public class OwnershipTransferTaxCollection extends TaxCollection {
                                     demand.setAmtCollected(
                                             demand.getAmtCollected().subtract(instrumentHeader.getInstrumentAmount()));
                             }
-                            LOGGER.info("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : "
+                            LOGGER.debug("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : "
                                     + reason + " and installment : " + installment);
                             break;
                         }
@@ -288,7 +288,7 @@ public class OwnershipTransferTaxCollection extends TaxCollection {
                 }
         if (BpaConstants.APPLICATION_STATUS_APPROVED.equalsIgnoreCase(ot.getStatus().getCode())) {
             if (LOGGER.isInfoEnabled())
-                LOGGER.info(" On Approve *************workflow current state**************" + ot.getCurrentState());
+                LOGGER.debug(" On Approve *************workflow current state**************" + ot.getCurrentState());
             bpaWorkflowRedirectUtility.redirectToBpaWorkFlow(ot,
                     getWorkflowBean(BpaConstants.WF_OWNERSHIP_FEE_PENDING, BpaConstants.OWNERSHIP_FEE_COLLECTED,
                     		ot.getCurrentState().getOwnerPosition().getId(),null));
@@ -368,7 +368,7 @@ public class OwnershipTransferTaxCollection extends TaxCollection {
                                 && demandDetail.getEgDemandReason().getEgDemandReasonMaster().getIsDemand())
                             demand.setAmtCollected(demand.getAmtCollected().subtract(rcptAccInfo.getCrAmount()));
 
-                        LOGGER.info("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : " + reason
+                        LOGGER.debug("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : " + reason
                                 + " and installment : " + installment);
                     }
             }
