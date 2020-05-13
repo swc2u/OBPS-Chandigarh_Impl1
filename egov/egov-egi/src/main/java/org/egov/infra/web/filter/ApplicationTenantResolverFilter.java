@@ -139,14 +139,14 @@ public class ApplicationTenantResolverFilter implements Filter {
         }
 
         // restricted only the state URL to access the rest API
-        // LOG.info("***********Enter to set tenant id and custom header**************" + req.getRequestURL().toString());
+        // LOG.debug("***********Enter to set tenant id and custom header**************" + req.getRequestURL().toString());
         if (req.getRequestURL().toString().contains(tenants.get("state"))
                 && (req.getRequestURL().toString().contains("/edcr/") && (req.getRequestURL().toString().contains("/rest/")
                         || req.getRequestURL().toString().contains("/oauth/")))) {
 
             LOG.debug("All tenants from config" + tenants);
-            LOG.info("tenants.get(state))" + tenants.get("state"));
-            LOG.info("Inside method to set tenant id and custom header");
+            LOG.debug("tenants.get(state))" + tenants.get("state"));
+            LOG.debug("Inside method to set tenant id and custom header");
             String tenantFromBody = StringUtils.EMPTY;
             customRequest = new MultiReadRequestWrapper(req);
             tenantFromBody = setCustomHeader(req, tenantFromBody, customRequest);
@@ -158,8 +158,8 @@ public class ApplicationTenantResolverFilter implements Filter {
                 throw new ApplicationRestException("incorrect_request", "RestUrl does not contain tenantId: " + fullTenant);
             }
             String tenant = fullTenant.substring(fullTenant.lastIndexOf('.') + 1, fullTenant.length());
-            LOG.info("tenant from rest request =" + tenant);
-            LOG.info("City Code from session " + (String) session.getAttribute(CITY_CODE_KEY));
+            LOG.debug("tenant from rest request =" + tenant);
+            LOG.debug("City Code from session " + (String) session.getAttribute(CITY_CODE_KEY));
             boolean found = false;
             City stateCity = cityService.fetchStateCityDetails();
             if (tenant.equalsIgnoreCase("generic") || tenant.equalsIgnoreCase("state")) {
@@ -170,7 +170,7 @@ public class ApplicationTenantResolverFilter implements Filter {
                 found = true;
             } else {
                 for (String city : tenants.keySet()) {
-                    LOG.info("Key :" + city + " ,Value :" + tenants.get(city) + "request tenant" + tenant);
+                    LOG.debug("Key :" + city + " ,Value :" + tenants.get(city) + "request tenant" + tenant);
 
                     if (tenants.get(city).contains(tenant)) {
                         ApplicationThreadLocals.setTenantID(city);
@@ -190,20 +190,20 @@ public class ApplicationTenantResolverFilter implements Filter {
     }
 
     /*
-     * public Map<String, String> tenantsMap() { URL url; LOG.info("cities" + applicationConfiguration.cities()); try { url = new
+     * public Map<String, String> tenantsMap() { URL url; LOG.debug("cities" + applicationConfiguration.cities()); try { url = new
      * URL(ApplicationThreadLocals.getDomainURL()); // first get from override properties
-     * environment.getPropertySources().iterator().forEachRemaining(propertySource -> { LOG.info( "Property Source" +
+     * environment.getPropertySources().iterator().forEachRemaining(propertySource -> { LOG.debug( "Property Source" +
      * propertySource.getName() + " Class Name" + propertySource.getClass().getSimpleName()); if
      * (propertySource.getName().contains("egov-erp-override.properties") && propertySource instanceof MapPropertySource) {
      * ((MapPropertySource) propertySource).getSource().forEach((key, value) -> { if (key.startsWith(TENANT)) {
-     * tenants.put(value.toString(), url.getProtocol() + "://" + key.replace(TENANT, "")); LOG.info("*****override tenants******"
+     * tenants.put(value.toString(), url.getProtocol() + "://" + key.replace(TENANT, "")); LOG.debug("*****override tenants******"
      * + value.toString() + url.getProtocol() + "://" + key.replace(TENANT, "")); } }); } }); // second get from application
      * config only properties if it is not overriden environment.getPropertySources().iterator().forEachRemaining(propertySource
-     * -> { LOG.info( "Property Source" + propertySource.getName() + " Class Name" + propertySource.getClass().getSimpleName());
+     * -> { LOG.debug( "Property Source" + propertySource.getName() + " Class Name" + propertySource.getClass().getSimpleName());
      * if (propertySource.getName().contains("application-config.properties") && propertySource instanceof MapPropertySource) {
      * ((MapPropertySource) propertySource).getSource().forEach((key, value) -> { if (key.startsWith(TENANT) &&
      * !tenants.containsKey(value)) { tenants.put(value.toString(), url.getProtocol() + "://" + key.replace(TENANT, ""));
-     * LOG.info( "*****application config tenants******" + value.toString() + url.getProtocol() + "://" + key.replace(TENANT,
+     * LOG.debug( "*****application config tenants******" + value.toString() + url.getProtocol() + "://" + key.replace(TENANT,
      * "")); } }); } }); } catch (MalformedURLException e) { LOG.error("Error occurred, while forming URL", e); } return tenants;
      * }
      */
@@ -212,7 +212,7 @@ public class ApplicationTenantResolverFilter implements Filter {
             MultiReadRequestWrapper multiReadRequestWrapper) {
 
         if (request.getRequestURL().toString().contains("/rest/")) {
-            LOG.info("***********Inside method to fetch auth token and tenant from reqbody**************");
+            LOG.debug("***********Inside method to fetch auth token and tenant from reqbody**************");
             try {
                 StringWriter writer = new StringWriter();
                 IOUtils.copy(multiReadRequestWrapper.getInputStream(), writer, StandardCharsets.UTF_8);
@@ -223,9 +223,9 @@ public class ApplicationTenantResolverFilter implements Filter {
                     while (m.find()) {
                         CharSequence charSequence = m.group().subSequence(1, m.group().length() - 1);
                         String[] reqBodyParams = String.valueOf(charSequence).split(",");
-                        LOG.info("***********Request Body Params**************" + String.valueOf(charSequence));
+                        LOG.debug("***********Request Body Params**************" + String.valueOf(charSequence));
                         for (String param : reqBodyParams) {
-                            LOG.info("*************************" + param);
+                            LOG.debug("*************************" + param);
                             if (param.contains("userInfo") && StringUtils.isNotBlank(tenantAtBody))
                                 break;
 
@@ -235,13 +235,13 @@ public class ApplicationTenantResolverFilter implements Filter {
                                     tenantAtBody = tenant[1].substring(1, tenant[1].length() - 1);
                                 else
                                     tenantAtBody = tenant[1];
-                                LOG.info("############Tenant From Body######" + tenantAtBody);
+                                LOG.debug("############Tenant From Body######" + tenantAtBody);
                             } /*
                                * else if (param.contains("authToken")) { String[] authTokenVal = param.split(":"); // Next to
                                * 'bearer' word space is required to differentiate token type and access token String tokenType =
                                * "bearer "; if (authTokenVal[1].startsWith("\"") && authTokenVal[1].endsWith("\"")) { String
                                * authToken = authTokenVal[1].substring(1, authTokenVal[1].length() - 1);
-                               * LOG.info("############Auth Token######" + tokenType + authToken);
+                               * LOG.debug("############Auth Token######" + tokenType + authToken);
                                * multiReadRequestWrapper.putHeader("Authorization", tokenType + authToken); } else {
                                * multiReadRequestWrapper.putHeader("Authorization", tokenType + authTokenVal[1]); } }
                                */

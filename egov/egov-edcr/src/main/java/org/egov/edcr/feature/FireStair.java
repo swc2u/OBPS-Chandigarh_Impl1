@@ -332,7 +332,7 @@ public class FireStair extends FeatureProcess {
                                             typicalFloorValues, fireStair, flight, flightLengths, minTread,
                                             mostRestrictiveOccupancyType);
                                 } catch (ArithmeticException e) {
-                                    LOG.info("Denominator is zero");
+                                    LOG.error("Denominator is zero");
                                 }
                             } else {
                                 errors.put("Flight PolyLine length" + flightLayerName,
@@ -346,7 +346,7 @@ public class FireStair extends FeatureProcess {
                                     validateNoOfRises(plan, errors, block, scrutinyDetailRise, floor,
                                             typicalFloorValues, flight, fireStair, noOfRises);
                                 } catch (ArithmeticException e) {
-                                    LOG.info("Denominator is zero");
+                                    LOG.error("Denominator is zero");
                                 }
                             } else {
                                 String layerName = String.format(DxfFileConstants.LAYER_FIRESTAIR_FLIGHT, block.getNumber(),

@@ -543,7 +543,7 @@ public class Far extends FeatureProcess {
 //		if (!distinctOccupancyTypesHelper.isEmpty()) {
 //			int allResidentialOccTypesForPlan = 0;
 //			for (OccupancyTypeHelper occupancy : distinctOccupancyTypesHelper) {
-//				LOG.info("occupancy :" + occupancy);
+//				LOG.debug("occupancy :" + occupancy);
 //				// setting residentialBuilding
 //				int residentialOccupancyType = 0;
 //				if (A.equals(occupancy.getType().getCode())) {
@@ -990,7 +990,7 @@ public class Far extends FeatureProcess {
 //		if (!distinctOccupancyTypesHelper.isEmpty()) {
 //			int allResidentialOccTypesForPlan = 0;
 //			for (OccupancyTypeHelper occupancy : distinctOccupancyTypesHelper) {
-//				LOG.info("occupancy :" + occupancy);
+//				LOG.debug("occupancy :" + occupancy);
 //				// setting residentialBuilding
 //				int residentialOccupancyType = 0;
 //				if (A.equals(occupancy.getType().getCode())) {
@@ -1448,7 +1448,7 @@ public class Far extends FeatureProcess {
 		if (!distinctOccupancyTypesHelper.isEmpty()) {
 			int allResidentialOccTypesForPlan = 0;
 			for (OccupancyTypeHelper occupancy : distinctOccupancyTypesHelper) {
-				LOG.info("occupancy :" + occupancy);
+				LOG.debug("occupancy :" + occupancy);
 				// setting residentialBuilding
 				int residentialOccupancyType = 0;
 				if (occupancy.getType() != null && A.equals(occupancy.getType().getCode())) {

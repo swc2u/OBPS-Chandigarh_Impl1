@@ -384,17 +384,17 @@ public class PdfQrCodeAppendService {
             }
 
             if (LOG.isDebugEnabled()) {
-                LOG.debug(String.format("Path = %s", path));
-                LOG.debug(String.format("Height =%s width =%s", height, width));
-                LOG.debug(String.format("x =%s :: y =%s", x, y));
-                LOG.debug(String.format("Rotation =%s", pageRotation));
-                LOG.debug(String.format("RATIO HEIGT =%s", height1));
-                LOG.debug(String.format("RATIO width =%s", width));
+               LOG.debug(String.format("Path = %s", path));
+               LOG.debug(String.format("Height =%s width =%s", height, width));
+               LOG.debug(String.format("x =%s :: y =%s", x, y));
+               LOG.debug(String.format("Rotation =%s", pageRotation));
+               LOG.debug(String.format("RATIO HEIGT =%s", height1));
+               LOG.debug(String.format("RATIO width =%s", width));
             }
             if (height > width || pageRotation == 0 || pageRotation == 90) {
-                LOG.info(PORTRAIT);
+               LOG.debug(PORTRAIT);
             } else {
-                LOG.info(LAND_SCAPE);
+               LOG.debug(LAND_SCAPE);
             }
 
             String pathOfQrCode = generatePDF417Code(bpaNoticeUtil.buildQRCodeDetails(application), 140, 50)
@@ -423,7 +423,7 @@ public class PdfQrCodeAppendService {
             // yy=yy-15;
             ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase10, x1, yy, 0);
             if (LOG.isInfoEnabled())
-                LOG.info(String.format("Last y position %s", yy));
+               LOG.debug(String.format("Last y position %s", yy));
 
             pdfStamper.close();
             pdfReader.close();
@@ -432,7 +432,7 @@ public class PdfQrCodeAppendService {
             File original = new File(path.toString());
             boolean delete = original.delete();
             if (LOG.isInfoEnabled())
-                LOG.info(String.format("Deleted %s status %s", path, delete));
+               LOG.debug(String.format("Deleted %s status %s", path, delete));
             modified.renameTo(original);
 
         } catch (Exception e) {
@@ -546,17 +546,17 @@ public class PdfQrCodeAppendService {
             }
 
             if (LOG.isDebugEnabled()) {
-                LOG.debug(String.format("Path = %s", path));
-                LOG.debug(String.format("Height =%s width =%s", height, width));
-                LOG.debug(String.format("x =%s :: y =%s", x, y));
-                LOG.debug(String.format("Rotation =%s", pageRotation));
-                LOG.debug(String.format("RATIO HEIGT =%s", height1));
-                LOG.debug(String.format("RATIO width =%s", width));
+               LOG.debug(String.format("Path = %s", path));
+               LOG.debug(String.format("Height =%s width =%s", height, width));
+               LOG.debug(String.format("x =%s :: y =%s", x, y));
+               LOG.debug(String.format("Rotation =%s", pageRotation));
+               LOG.debug(String.format("RATIO HEIGT =%s", height1));
+               LOG.debug(String.format("RATIO width =%s", width));
             }
             if (height > width || pageRotation == 0 || pageRotation == 90) {
-                LOG.info(PORTRAIT);
+               LOG.debug(PORTRAIT);
             } else {
-                LOG.info(LAND_SCAPE);
+               LOG.debug(LAND_SCAPE);
             }
 
             String pathOfQrCode = generatePDF417Code(bpaNoticeUtil.buildQRCodeDetailsForOc(oc), 140, 50)
@@ -585,7 +585,7 @@ public class PdfQrCodeAppendService {
             // yy=yy-15;
             ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase10, x1, yy, 0);
             if (LOG.isInfoEnabled())
-                LOG.info(String.format("Last y position %s", yy));
+               LOG.debug(String.format("Last y position %s", yy));
 
             pdfStamper.close();
             pdfReader.close();
@@ -594,7 +594,7 @@ public class PdfQrCodeAppendService {
             File original = new File(path.toString());
             boolean delete = original.delete();
             if (LOG.isInfoEnabled())
-                LOG.info(String.format("Deleted %s status %s", path, delete));
+               LOG.debug(String.format("Deleted %s status %s", path, delete));
             modified.renameTo(original);
 
         } catch (Exception e) {

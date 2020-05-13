@@ -219,14 +219,14 @@ public class StakeHolderService {
 
     public void populateLicenceDetails(final StakeHolder stakeHolder) {
         if (LOG.isInfoEnabled())
-            LOG.info(" stakeHolder Status ..." + stakeHolder.getStatus().name());
+            LOG.debug(" stakeHolder Status ..." + stakeHolder.getStatus().name());
         if (LOG.isInfoEnabled())
-            LOG.info(" stakeHolderType Name ..." + stakeHolder.getStakeHolderType().getName());
+            LOG.debug(" stakeHolderType Name ..." + stakeHolder.getStakeHolderType().getName());
         if ((StakeHolderStatus.APPROVED.equals(stakeHolder.getStatus())
                 || StakeHolderStatus.PAYMENT_PENDING.equals(stakeHolder.getStatus()))
                 && stakeHolder.getStakeHolderType().getAutoGenerateLicenceDetails()) {
             if (LOG.isInfoEnabled())
-                LOG.info(" Populating licence details");
+                LOG.debug(" Populating licence details");
             stakeHolder.setLicenceNumber(licenceNumberGenerator.generateNumber(stakeHolder));
             stakeHolder.setBuildingLicenceIssueDate(new Date());
             Calendar cal = Calendar.getInstance();

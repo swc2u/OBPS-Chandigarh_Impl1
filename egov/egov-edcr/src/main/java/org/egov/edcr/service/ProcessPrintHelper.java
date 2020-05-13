@@ -90,10 +90,10 @@ public class ProcessPrintHelper {
     public static void printS(List<ScrutinyDetail> sd) {
 
         for (ScrutinyDetail ssd : sd) {
-            LOG.info(ssd.getKey() + "--" + ssd.getHeading() + "--" + ssd.getColumnHeading());
+            LOG.debug(ssd.getKey() + "--" + ssd.getHeading() + "--" + ssd.getColumnHeading());
             for (Map<String, String> m : ssd.getDetail()) {
                 for (Map.Entry<String, String> s : m.entrySet()) {
-                    LOG.info(s.getValue());
+                    LOG.debug(s.getValue());
                 }
             }
         }

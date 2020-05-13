@@ -705,10 +705,10 @@ public class PlanReportService {
             Set<String> common = new TreeSet<>();
             Map<String, ScrutinyDetail> allMap = new HashMap<>();
             Map<String, Set<String>> blocks = new TreeMap<>();
-            LOG.info("Generate Report.......");
+            LOG.debug("Generate Report.......");
             for (ScrutinyDetail sd : scrutinyDetails) {
-                LOG.info(sd.getKey());
-                LOG.info(sd.getHeading());
+                LOG.debug(sd.getKey());
+                LOG.debug(sd.getHeading());
                 String[] split = {};
                 if (sd.getKey() != null)
                     split = sd.getKey().split("_");

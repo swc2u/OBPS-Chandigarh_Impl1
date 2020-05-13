@@ -206,7 +206,7 @@ public class EdcrRestService {
                 edcrApplnDtl.getPlanDetailFileStore().getFileStoreId(),
                 DcrConstants.APPLICATION_MODULE_TYPE) : null;
 
-        if (LOG.isInfoEnabled())
+        if (LOG.isDebugEnabled())
             LOG.info("**************** End - Reading Plan detail file **************" + file);
         try {
             if (file == null) {
@@ -220,8 +220,8 @@ public class EdcrRestService {
                 mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                 Plan pl1 = mapper.readValue(file, Plan.class);
                 pl1.getPlanInformation().setApplicantName(edcrApplnDtl.getApplication().getApplicantName());
-                if (LOG.isInfoEnabled())
-                    LOG.info("**************** Plan detail object **************" + pl1);
+                if (LOG.isDebugEnabled())
+                    LOG.debug("**************** Plan detail object **************" + pl1);
                 edcrDetail.setPlanDetail(pl1);
             }
         } catch (IOException e) {

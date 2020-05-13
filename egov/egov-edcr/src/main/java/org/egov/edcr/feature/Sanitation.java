@@ -395,7 +395,7 @@ public class Sanitation extends FeatureProcess {
 		for (Block b : pl.getBlocks()) {
 			if (!b.getCompletelyExisting()) {
 
-				LOG.info("Starting  Sanitation of ....." + b.getNumber());
+				LOG.debug("Starting  Sanitation of ....." + b.getNumber());
 				/*
 				 * If block is small plot and floors above ground less than or equal to three
 				 * and occupancy type of entire block is either Residential or Commercial then
@@ -418,7 +418,7 @@ public class Sanitation extends FeatureProcess {
 								"Carpet area is not calculated . Some thing wrong with builtup area");
 						return;
 					}
-					LOG.info(type.getType() + " area" + carpetArea);
+					LOG.debug(type.getType() + " area" + carpetArea);
 
 					OccupancyHelperDetail o = type.getTypeHelper().getSubtype() != null
 							? type.getTypeHelper().getSubtype()
@@ -799,7 +799,7 @@ public class Sanitation extends FeatureProcess {
 				accepted = processSanity(pl, b, helper, scrutinyDetail);
 
 				pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
-				LOG.info("Keys of the Sanitation Message ....." + scrutinyDetail.getKey() + "   "
+				LOG.debug("Keys of the Sanitation Message ....." + scrutinyDetail.getKey() + "   "
 						+ scrutinyDetail.getDetail().size());
 			}
 		}
