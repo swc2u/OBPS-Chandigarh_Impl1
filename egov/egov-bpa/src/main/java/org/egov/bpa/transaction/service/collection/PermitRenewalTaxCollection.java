@@ -200,7 +200,7 @@ public class PermitRenewalTaxCollection extends TaxCollection {
                                     demand.setAmtCollected(
                                             demand.getAmtCollected().subtract(instrumentHeader.getInstrumentAmount()));
                             }
-                            LOGGER.info("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : "
+                            LOGGER.debug("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : "
                                     + reason + " and installment : " + installment);
                             break;
                         }
@@ -284,7 +284,7 @@ public class PermitRenewalTaxCollection extends TaxCollection {
             }
         if (BpaConstants.APPLICATION_STATUS_APPROVED.equalsIgnoreCase(renewal.getStatus().getCode())) {
             if (LOGGER.isInfoEnabled())
-                LOGGER.info(" On Approve *************workflow current state**************" + renewal.getCurrentState());
+                LOGGER.debug(" On Approve *************workflow current state**************" + renewal.getCurrentState());
             redirectUtility.redirectToBpaWorkFlow(renewal,
                     getWorkflowBean(renewal.getCurrentState().getValue(), RENEWAL_FEE_COLLECTED,
                             renewal.getCurrentState().getOwnerPosition().getId(),
@@ -367,7 +367,7 @@ public class PermitRenewalTaxCollection extends TaxCollection {
                                 && demandDetail.getEgDemandReason().getEgDemandReasonMaster().getIsDemand())
                             demand.setAmtCollected(demand.getAmtCollected().subtract(rcptAccInfo.getCrAmount()));
 
-                        LOGGER.info("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : " + reason
+                        LOGGER.debug("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : " + reason
                                 + " and installment : " + installment);
                     }
             }

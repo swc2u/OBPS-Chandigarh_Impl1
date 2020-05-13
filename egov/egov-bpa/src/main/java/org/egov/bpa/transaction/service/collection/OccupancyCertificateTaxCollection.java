@@ -202,7 +202,7 @@ public class OccupancyCertificateTaxCollection extends TaxCollection {
                                     demand.setAmtCollected(
                                             demand.getAmtCollected().subtract(instrumentHeader.getInstrumentAmount()));
                             }
-                            LOGGER.info("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : "
+                            LOGGER.debug("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : "
                                     + reason + " and installment : " + installment);
                             break;
                         }
@@ -302,8 +302,7 @@ public class OccupancyCertificateTaxCollection extends TaxCollection {
                             billRcptInfo.getReceiptDate(), demandDetail.getAmtCollected());
                 }
         if (BpaConstants.APPLICATION_STATUS_APPROVED.equalsIgnoreCase(oc.getStatus().getCode())) {
-            if (LOGGER.isInfoEnabled())
-                LOGGER.info(" On Approve *************workflow current state**************" + oc.getCurrentState());
+                LOGGER.debug(" On Approve *************workflow current state**************" + oc.getCurrentState());
             bpaUtils.redirectToBpaWorkFlowForOC(oc,
                     getWorkflowBean(OcConstants.WF_FEE_COLL_PENDING, OcConstants.OC_FEE_COLLECTED,
                             oc.getCurrentState().getOwnerPosition().getId(),
@@ -386,7 +385,7 @@ public class OccupancyCertificateTaxCollection extends TaxCollection {
                                 && demandDetail.getEgDemandReason().getEgDemandReasonMaster().getIsDemand())
                             demand.setAmtCollected(demand.getAmtCollected().subtract(rcptAccInfo.getCrAmount()));
 
-                        LOGGER.info("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : " + reason
+                        LOGGER.debug("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : " + reason
                                 + " and installment : " + installment);
                     }
             }

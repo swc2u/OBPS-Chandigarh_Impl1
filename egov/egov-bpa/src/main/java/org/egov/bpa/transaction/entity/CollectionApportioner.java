@@ -147,7 +147,7 @@ public class CollectionApportioner {
                             BpaConstants.STRING_VALIDATION)));
         }
 
-        LOGGER.info("receiptDetails after reApportion: " + receiptDetails);
+        LOGGER.debug("receiptDetails after reApportion: " + receiptDetails);
         return receiptDetails;
     }
 

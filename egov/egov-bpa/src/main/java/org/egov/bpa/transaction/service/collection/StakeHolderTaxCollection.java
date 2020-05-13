@@ -190,7 +190,7 @@ public class StakeHolderTaxCollection extends TaxCollection {
                                     demand.setAmtCollected(
                                             demand.getAmtCollected().subtract(instrumentHeader.getInstrumentAmount()));
                             }
-                            LOGGER.info("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : "
+                            LOGGER.debug("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : "
                                     + reason + " and installment : " + installment);
                             break;
                         }
@@ -352,7 +352,7 @@ public class StakeHolderTaxCollection extends TaxCollection {
                                 && demandDetail.getEgDemandReason().getEgDemandReasonMaster().getIsDemand())
                             demand.setAmtCollected(demand.getAmtCollected().subtract(rcptAccInfo.getCrAmount()));
 
-                        LOGGER.info("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : " + reason
+                        LOGGER.debug("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : " + reason
                                 + " and installment : " + installment);
                     }
             }
