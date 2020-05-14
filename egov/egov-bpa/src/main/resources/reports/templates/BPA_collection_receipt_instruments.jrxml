@@ -49,12 +49,6 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{instrumentType} == CollectionConstants.INSTRUMENTTYPE_CASH ? "Received Cash: " + ($P{TOTAL_AMOUNT}.setScale(2, BigDecimal.ROUND_UP)) :
-$F{instrumentType} == CollectionConstants.INSTRUMENTTYPE_CHEQUE ? "Cheque # " + $F{instrumentNumber} + " Drawn on " +  $F{bankName} + ", " + $V{branchname}+ " Dated " + new SimpleDateFormat("dd-MM-yyyy").format($F{instrumentDate}) +"\nCheque payments are subject to realisation.":
-$F{instrumentType} == CollectionConstants.INSTRUMENTTYPE_DD ? "Demand Draft # " + $F{instrumentNumber}  + " Drawn on " +  $F{bankName} + ", " + $V{branchname} + " Dated " + new SimpleDateFormat("dd-MM-yyyy").format($F{instrumentDate}) :
-$F{instrumentType} == CollectionConstants.INSTRUMENTTYPE_CARD ? "Transaction No: " +  $F{transactionNumber} + " Dated " + new SimpleDateFormat("dd-MM-yyyy").format($F{transactionDate}):
-$F{instrumentType} == CollectionConstants.INSTRUMENTTYPE_BANK ? "Bank Challan # " + $F{transactionNumber}  + " Drawn on " +  $F{bankName} + ", " + $F{bankBranchName} + ", " + $F{bankAccountNumber} + " Dated " + new SimpleDateFormat("dd-MM-yyyy").format($F{transactionDate}) :
-"Online Transaction Number: " + $F{transactionNumber} + ",Payment Dated: " + new SimpleDateFormat("dd-MM-yyyy").format($F{transactionDate})]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

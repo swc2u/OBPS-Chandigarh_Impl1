@@ -1,5 +1,8 @@
 eclipse.preferences.version=1
 encoding//src/main/java=UTF-8
 encoding//src/main/resources=UTF-8
+encoding//src/main/resources/reports/templates/CL_collection_receipt_instruments.jrxml=UTF-8
+encoding//src/main/resources/reports/templates/LAMS_collection_receipt_instruments.jrxml=UTF-8
+encoding//src/main/resources/reports/templates/collection_receipt_instruments.jrxml=UTF-8
 encoding//src/test/java=UTF-8
 encoding/<project>=UTF-8
