@@ -157,6 +157,8 @@ public class AdditionalFeature extends FeatureProcess {
 	@Autowired
 	private CDGAdditionalService cDGAdditionalService;
 
+	@Autowired
+	private AdditionalFeature2 additionalFeature2;
 	@Override
 	public Plan validate(Plan pl) {
 		HashMap<String, String> errors = new HashMap<>();
@@ -229,6 +231,10 @@ public class AdditionalFeature extends FeatureProcess {
 		validateCrecheAndPayingGuestFacility(pl);
 		validateEWS(pl);
 		// CSCL add end
+		
+		//calling additional feature
+		additionalFeature2.process(pl);
+		
 		return pl;
 	}
 

@@ -1935,6 +1935,7 @@ public class Far extends FeatureProcess {
 		
 
 		if(!DxfFileConstants.DATA_NOT_FOUND.equals(expectedResult)) {
+			pl.getFarDetails().setPermissableFar((new BigDecimal(expectedResult)).doubleValue());
 			isAccepted = far.compareTo(new BigDecimal(expectedResult)) <= 0;
 			pl.getFarDetails().setPermissableFar(ONE_POINTTWO.doubleValue());
 			expectedResult = "<= " + expectedResult;

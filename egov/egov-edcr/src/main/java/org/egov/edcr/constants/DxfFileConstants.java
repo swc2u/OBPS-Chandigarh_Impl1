@@ -104,6 +104,10 @@ public class DxfFileConstants {
 	public static final String A_S="A-S";//  STD/ PCO/ fax and photostat machine
 	public static final String A_PG="A-PG";//Creche and paying guest facility
 	public static final String A_EWS="A-EWS";//EWS
+	public static final String A_CP="A-CP"; // Checkpost
+	public static final String IT_AF="IT-AF";//Ancillary Facilities
+	public static final String A_GF="A-GF";//Gallery floor;
+	public static final String A_RU="A-RU";//Residential use ;
 	
 	public static final String F_SCO = "F-SCO";// SCO'S/ SCF'S / BAYSHOP'S/ SEMI INDUSTRIAL -- 272
 	public static final String F_B ="F-B"; // BOOTHS ETC. 
