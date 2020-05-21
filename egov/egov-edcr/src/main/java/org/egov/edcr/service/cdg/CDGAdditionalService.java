@@ -309,6 +309,6 @@ public class CDGAdditionalService {
 	}
 	
 	public BigDecimal calculatorFarWithOutAdditionalFeature() {
-		
+		return null;
 	}
 }

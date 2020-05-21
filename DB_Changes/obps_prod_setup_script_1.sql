@@ -2593,6 +2593,12 @@ INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,
 (420,'A-CIR','commercial',1,true,1,'2020-04-18 17:51:56.781','2020-04-18 17:51:56.781',1,0,'commercial',65,3,4,29,62)
 ;
 
+-----------------------------payUmoney---------------------
+Insert into chandigarh.egcl_servicecategory (id, name, code, isactive, version, createdby, createddate, lastmodifiedby, lastmodifieddate) values
+(nextval('seq_egcl_servicecategory'), 'PayUmoney Payment Gateway', 'PUPG', true, 0,  (select id from state.eg_user where username='egovernments'), now(), (select id from state.eg_user where username='egovernments'), now());
+
+Insert into chandigarh.egcl_servicedetails (id, name, serviceurl, isenabled, callbackurl, servicetype, code, fund, fundsource, functionary, vouchercreation, scheme, subscheme, servicecategory, isvoucherapproved, vouchercutoffdate, created_by, created_date, modified_by, modified_date, ordernumber) values
+(nextval('seq_egcl_servicedetails'), 'PayUmoney Payment Gateway', 'test.payu.in', true, 'http://ulb.chandigarh.local.org:8080/collection/citizen/onlineReceipt-acceptMessageFromPaymentGateway.action', 'P', 'PUPG', (select id from chandigarh.fund where code='01'), null, null, false, null, null, (select id from chandigarh.egcl_servicecategory where code='PUPG'), false, now(), 1, now(), 1, now(), null);
 
 
 

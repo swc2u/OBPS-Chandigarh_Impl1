@@ -665,6 +665,7 @@ public final class CollectionConstants {
     public static final String ATOM_CUSTOMER_MERCHANT_DATA="udf5";
     		
     
+    
     public static final ArrayList<String> ATOM_AUTHORISATION_CODES_WAITINGFOR_PAY_GATEWAY_RESPONSE = new ArrayList<String>() {
         {
             add("Pending From Bank");
@@ -675,6 +676,10 @@ public final class CollectionConstants {
         } 
     };
 
+ // PayuMoney payment gateway variables name
+    public static final String PAYUMONEY_MERCHANT_KEY="";
+    
+    
     public static final String PNB_MERCHANT_REQUEST = "merchantRequest";
     public static final String PNB_MID = "MID";
     public static final String PNB_TRANSACTION_REFERENCE_NO = "Transaction Reference No";

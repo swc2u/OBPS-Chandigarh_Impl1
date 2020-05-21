@@ -202,7 +202,31 @@ public class CollectionApplicationProperties {
 	public Integer atomCronExpressionDelayTime() {
 		return environment.getProperty("atom.cron.expression.delay.time", Integer.class);
 	}
+	
+	public String payuMerchantkey() {
+		return environment.getProperty("payu.merchant-key");
+	}
+	
+	public String payuMerchantSalt() {
+		return environment.getProperty("payu.merchant-salt");
+	}
+	
+	public String payuUrl() {
+		return environment.getProperty("payu.url");
+	}
+	
+	public String payuUrlStatus() {
+		return environment.getProperty("payu.url-status");
+	}
 
+	public String payuPathPay() {
+		return environment.getProperty("payu.path-pay");
+	}
+	
+	public String payuPathStatus() {
+		return environment.getProperty("payu.path-status");
+	}
+	
 	public String pnbMid() {
 		return environment.getProperty("pnb.mid");
 	}

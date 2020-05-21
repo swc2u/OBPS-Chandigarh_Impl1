@@ -165,11 +165,15 @@
 	<bean id="HDFCPaymentGatewayAdaptor" class="org.egov.collection.integration.pgi.HdfcAdaptor" /> -->
 	
 	<bean id="APGPaymentGatewayAdaptor" class="org.egov.collection.integration.pgi.AtomAdaptor" />
+	
+	<bean id="PUPGPaymentGatewayAdaptor" class="org.egov.collection.integration.pgi.PayUMoneyAdaptor" />
 
 	<bean id="challanPersistenceService" class="org.egov.infstr.services.PersistenceService">
 		<constructor-arg index="0"
 			value="org.egov.collection.entity.Challan" />
 	</bean>
+	
+	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate"></bean>
 
 	<bean id="challanWorkflowService" class="org.egov.infra.workflow.service.SimpleWorkflowService">
 		<constructor-arg name="stateAwarePersistenceService"
