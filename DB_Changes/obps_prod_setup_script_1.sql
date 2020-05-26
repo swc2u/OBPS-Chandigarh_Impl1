@@ -2601,6 +2601,13 @@ Insert into chandigarh.egcl_servicedetails (id, name, serviceurl, isenabled, cal
 (nextval('seq_egcl_servicedetails'), 'PayUmoney Payment Gateway', 'test.payu.in', true, 'http://ulb.chandigarh.local.org:8080/collection/citizen/onlineReceipt-acceptMessageFromPaymentGateway.action', 'P', 'PUPG', (select id from chandigarh.fund where code='01'), null, null, false, null, null, (select id from chandigarh.egcl_servicecategory where code='PUPG'), false, now(), 1, now(), 1, now(), null);
 
 
+-------------------- disable the payUmoney --------------------
+
+update chandigarh.egcl_servicecategory set isactive = false where code ='PUPG'
+
+
+--------------   end payUmoney---------------------------------
+
 
 
 
