@@ -321,11 +321,12 @@ public class CollectionCommon {
      *
      * @param paymentServiceDetails
      * @param response
+     * @param btr 
      * @return
      */
-    public PaymentResponse createPaymentResponse(final ServiceDetails paymentServiceDetails, final String response) {
+    public PaymentResponse createPaymentResponse(final ServiceDetails paymentServiceDetails, final String response,String rbt) {
         final PaymentGatewayAdaptor paymentGatewayAdaptor = getPaymentGatewayAdaptor(paymentServiceDetails.getCode());
-        return paymentGatewayAdaptor.parsePaymentResponse(response);
+        return paymentGatewayAdaptor.parsePaymentResponse(response,rbt);
     }
 
     /**

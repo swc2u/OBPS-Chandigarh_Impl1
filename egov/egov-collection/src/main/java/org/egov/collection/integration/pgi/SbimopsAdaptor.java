@@ -129,7 +129,7 @@ public class SbimopsAdaptor implements PaymentGatewayAdaptor {
     }
 
     @Override
-    public PaymentResponse parsePaymentResponse(final String response) {
+    public PaymentResponse parsePaymentResponse(final String response,final String rbt) {
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("Insider SbimopsAdaptor-parsePaymentResponse");
         final DefaultPaymentResponse sbiPaymentResponse = new DefaultPaymentResponse();

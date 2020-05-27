@@ -134,73 +134,77 @@ public class CollectionApplicationProperties {
 	public String getLamsServiceUrl() {
 		return environment.getProperty("egov.services.lams.hostname");
 	}
-
-	public String atomProdid() {
-		return environment.getProperty("atom.prodid", String.class);
+	
+	public Boolean isPaymentMerchantProduction() {
+		return environment.getProperty("is.payment.merchant.production", Boolean.class);
 	}
 
-	public String atomPass() {
-		return environment.getProperty("atom.pass", String.class);
+	public String atomProdid(String prefix) {
+		return environment.getProperty(prefix+".atom.prodid", String.class);
 	}
 
-	public String atomTtype() {
-		return environment.getProperty("atom.ttype", String.class);
+	public String atomPass(String prefix) {
+		return environment.getProperty(prefix+".atom.pass", String.class);
 	}
 
-	public String atomClientcode() {
-		return environment.getProperty("atom.clientcode", String.class);
+	public String atomTtype(String prefix) {
+		return environment.getProperty(prefix+".atom.ttype", String.class);
 	}
 
-	public String atomCustacc() {
-		return environment.getProperty("atom.custacc", String.class);
+	public String atomClientcode(String prefix) {
+		return environment.getProperty(prefix+".atom.clientcode", String.class);
 	}
 
-	public String atomMdd() {
-		return environment.getProperty("atom.mdd", String.class);
+	public String atomCustacc(String prefix) {
+		return environment.getProperty(prefix+".atom.custacc", String.class);
+	}
+
+	public String atomMdd(String prefix) {
+		return environment.getProperty(prefix+".atom.mdd", String.class);
 	}
 	
-	public String atomReqHashKey() {
-		return environment.getProperty("atom.reqHashKey",String.class);
+	public String atomReqHashKey(String prefix) {
+		return environment.getProperty(prefix+".atom.reqHashKey",String.class);
 	}
 	
-	public String atomAESRequestKey() {
-		return environment.getProperty("atom.AESRequestKey",String.class);
+	public String atomAESRequestKey(String prefix) {
+		return environment.getProperty(prefix+".atom.AESRequestKey",String.class);
 	}
 	
-	public String atomAESResponseKey() {
-		return environment.getProperty("atom.AESResponseKey",String.class);
+	public String atomAESResponseKey(String prefix) {
+		return environment.getProperty(prefix+".atom.AESResponseKey",String.class);
 	}
 	
-	public String atomRequestIV_Salt() {
-		return environment.getProperty("atom.requestIV_Salt",String.class);
+	public String atomRequestIV_Salt(String prefix) {
+		return environment.getProperty(prefix+".atom.requestIV_Salt",String.class);
 	}
 	
-	public String atomResponseIV_Salt() {
-		return environment.getProperty("atom.responseIV_Salt",String.class);
+	public String atomResponseIV_Salt(String prefix) {
+		return environment.getProperty(prefix+".atom.responseIV_Salt",String.class);
 	}
 
-	public String atomTxncurr() {
-		return environment.getProperty("atom.txncurr", String.class);
+	public String atomTxncurr(String prefix) {
+		return environment.getProperty(prefix+".atom.txncurr", String.class);
 	}
 
-	public String atomLogin() {
-		return environment.getProperty("atom.login", String.class);
+	public String atomLogin(String prefix) {
+		return environment.getProperty(prefix+".atom.login", String.class);
 	}
 
-	public String atomTxnscamt() {
-		return environment.getProperty("atom.txnscamt", String.class);
+	public String atomTxnscamt(String prefix) {
+		return environment.getProperty(prefix+".atom.txnscamt", String.class);
 	}
 
-	public String atomTransactionMessage() {
-		return environment.getProperty("ATOM.transactionmessage");
+	public String atomTransactionMessage(String prefix) {
+		return environment.getProperty(prefix+".atom.transactionmessage");
 	}
 
-	public String atomReconcileUrl() {
-		return environment.getProperty("atom.reconcile.url");
+	public String atomReconcileUrl(String prefix) {
+		return environment.getProperty(prefix+".atom.reconcile.url");
 	}
 	
-	public Integer atomCronExpressionDelayTime() {
-		return environment.getProperty("atom.cron.expression.delay.time", Integer.class);
+	public Integer atomCronExpressionDelayTime(String prefix) {
+		return environment.getProperty(prefix+".atom.cron.expression.delay.time", Integer.class);
 	}
 	
 	public String payuMerchantkey() {

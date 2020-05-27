@@ -157,7 +157,7 @@ public class SchedularService {
         fourDaysBackCalender.add(Calendar.DATE, -4);
         final Calendar cal = Calendar.getInstance();
       //  cal.add(Calendar.MINUTE, -30);
-        cal.add(Calendar.MINUTE, collectionApplicationProperties.atomCronExpressionDelayTime()*-1);
+        cal.add(Calendar.MINUTE, collectionApplicationProperties.atomCronExpressionDelayTime("URBAN")*-1);
         final Query qry = persistenceService
                 .getSession()
                 .createQuery(

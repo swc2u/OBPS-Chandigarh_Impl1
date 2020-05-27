@@ -103,7 +103,7 @@ public class PnbAdaptor implements PaymentGatewayAdaptor {
 	 * @return an instance of <code></code> containing the response information
 	 */
 	@Override
-	public PaymentResponse parsePaymentResponse(final String response) {
+	public PaymentResponse parsePaymentResponse(final String response,String rbt) {
 		LOGGER.info("Response message from PNB Payment gateway: " + response);
 		final PaymentResponse pnbResponse = new DefaultPaymentResponse();
 		String merchantResponse = "";

@@ -87,6 +87,6 @@ public interface PaymentGatewayAdaptor {
      * @return The payment response object
      * @see PaymentResponse
      */
-    public PaymentResponse parsePaymentResponse(String response);
+    public PaymentResponse parsePaymentResponse(String response,String rbt);
 
 }

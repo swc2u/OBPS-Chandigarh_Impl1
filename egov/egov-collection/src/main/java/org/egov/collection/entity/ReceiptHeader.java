@@ -130,6 +130,8 @@ public class ReceiptHeader extends StateAware<Position> implements Auditable {
     @SafeHtml
     private String consumerType;
     private Long version;
+    
+    private String rootBoundaryType;
 
     public ReceiptHeader() {}
 
@@ -776,4 +778,14 @@ public class ReceiptHeader extends StateAware<Position> implements Auditable {
     public void setVersion(Long version) {
         this.version = version;
     }
+
+	public String getRootBoundaryType() {
+		return rootBoundaryType;
+	}
+
+	public void setRootBoundaryType(String rootBoundaryType) {
+		this.rootBoundaryType = rootBoundaryType;
+	}
+    
+    
 }

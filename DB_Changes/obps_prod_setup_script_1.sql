@@ -2609,6 +2609,18 @@ update chandigarh.egcl_servicecategory set isactive = false where code ='PUPG'
 --------------   end payUmoney---------------------------------
 
 
+----------------- separating merchant for Urban and Rural ------------
+
+ALTER TABLE chandigarh.EGCL_COLLECTIONHEADER
+ADD COLUMN ROOT_BOUNDARY_TYPE varchar(100)  NULL;
+
+
+ALTER TABLE state.EGCL_COLLECTIONHEADER
+ADD COLUMN ROOT_BOUNDARY_TYPE varchar(100)  NULL;
+
+----------------------------------------------------------------
+
+
 
 
 

@@ -172,7 +172,7 @@ public class PayUMoneyAdaptor implements PaymentGatewayAdaptor{
 	
 
 	@Override
-	public PaymentResponse parsePaymentResponse(String response) {
+	public PaymentResponse parsePaymentResponse(String response,String rtb) {
 		LOGGER.debug("inside  PayUMoneyAdaptor parsePaymentResponse");
 		return null;
 	}

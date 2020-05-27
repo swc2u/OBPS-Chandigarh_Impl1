@@ -197,6 +197,10 @@
 		</property>
 		<property name="consumerType" type="string">
 			<column name="consumertype" length="100" />
+		</property>
+		<property name="rootBoundaryType" type="string">
+			<!-- URBAN or RURAL -->
+			<column name="ROOT_BOUNDARY_TYPE" length="100" />
 		</property>	
 	</class>
 	<query name="RECEIPTS_FOR_VOUCHERS">

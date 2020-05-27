@@ -235,7 +235,7 @@ public class HdfcAdaptor implements PaymentGatewayAdaptor {
     }
 
     @Override
-    public PaymentResponse parsePaymentResponse(String response) {
+    public PaymentResponse parsePaymentResponse(String response,String rbt) {
         PaymentResponse hdfcResponse = new DefaultPaymentResponse();
 
         try {

@@ -8,11 +8,20 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class AtomAES {
-	private String password = "8E41C78439831010F81F61C344B7BFC7";
-	private String salt = "200000054575202";
+//	private String password = "8E41C78439831010F81F61C344B7BFC7";
+//	private String salt = "200000054575202";
+	private String password;
+	private String salt;
 	private static int pswdIterations = 65536;
 	private static int keySize = 256;
 	private final byte[] ivBytes = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+	
+	
+
+	public AtomAES(String password, String salt) {
+		this.password = password;
+		this.salt = salt;
+	}
 
 	public String encrypt(String plainText, String key, String merchantTxnId) throws Exception {
 		this.password = key;

@@ -160,7 +160,17 @@ public class OnlineReceiptAction extends BaseFormAction {
     private String[] transactionDate;
     private String[] statusCode;
     private String[] remarks;
-    @Autowired
+    private String rbt;
+    
+	public String getRbt() {
+		return rbt;
+	}
+
+	public void setRbt(String rbt) {
+		this.rbt = rbt;
+	}
+
+	@Autowired
     private ApplicationContext beanProvider;
 
     @Override
@@ -203,7 +213,6 @@ public class OnlineReceiptAction extends BaseFormAction {
 
         System.currentTimeMillis();
         LOGGER.info("responseMsg:	" + responseMsg);
-
         ServiceDetails paymentService;
         if (null != paymentServiceId && paymentServiceId > 0)
             paymentService = (ServiceDetails) getPersistenceService().findByNamedQuery(
@@ -212,7 +221,7 @@ public class OnlineReceiptAction extends BaseFormAction {
             paymentService = (ServiceDetails) getPersistenceService().findByNamedQuery(
                     CollectionConstants.QUERY_SERVICE_BY_CODE, CollectionConstants.SERVICECODE_PGI_BILLDESK);
         try {
-            setPaymentResponse(collectionCommon.createPaymentResponse(paymentService, getMsg()));
+            setPaymentResponse(collectionCommon.createPaymentResponse(paymentService, getMsg(),rbt));
         } catch (final ApplicationRuntimeException egovEx) {
             LOGGER.error("acceptMessageFromPaymentGateway" + egovEx);
             throw new ValidationException(Arrays.asList(new ValidationError(egovEx.getMessage(), egovEx.getMessage())));

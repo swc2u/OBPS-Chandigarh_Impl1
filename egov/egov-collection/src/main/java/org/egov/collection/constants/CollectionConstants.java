@@ -663,6 +663,13 @@ public final class CollectionConstants {
     public static final String ATOM_CUSTOMER_MOBILE="udf3";
     public static final String ATOM_CUSTOMER_BILLING_ADDRESS="udf4";
     public static final String ATOM_CUSTOMER_MERCHANT_DATA="udf5";
+    
+    //ROOT_BOUNDARY_TYPE values
+ 	public static final String URBAN = "URBAN";
+ 	public static final String RURAL = "RURAL";
+ 	
+ 	public static final String KEY_URBAN="1";
+ 	public static final String KEY_RURAL="2";
     		
     
     
