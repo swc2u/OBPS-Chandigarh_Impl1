@@ -205,11 +205,13 @@ public class AdditionalFeature extends FeatureProcess {
 		// validateHeightOfBuilding(pl, errors, typeOfArea, roadWidth);
 		// }
 
+		validateAr(pl);
 		if (pl.isRural()) {
 			validateRuralPlinthHeight(pl, errors);
 			validateRuralNumberOfFloorsSkelton(pl);
 			validateRuralCommercialUnitAtGroundFloor(pl);
 			validateRuralMinimumFloorToCeilingHeight(pl, errors);
+			
 			return pl;
 		}
 
@@ -236,6 +238,30 @@ public class AdditionalFeature extends FeatureProcess {
 		additionalFeature2.process(pl);
 		
 		return pl;
+	}
+	
+private void validateAr(Plan pl) {
+		
+		String JOB="Job no";
+		String Drawing_name="Drawing name";
+		
+		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
+		scrutinyDetail.setKey("Common_Architecture controls");
+		scrutinyDetail.addColumnHeading(1, RULE_NO);
+		scrutinyDetail.addColumnHeading(2, JOB);
+		scrutinyDetail.addColumnHeading(3, Drawing_name);
+		
+		scrutinyDetail.addColumnHeading(4, STATUS);
+		Map<String, String> details = new HashMap<>();
+		
+		
+		
+		details.put(JOB, "1098");
+		details.put(Drawing_name, "Note test");
+		details.put(STATUS, Result.Verify.getResultVal());
+
+		scrutinyDetail.getDetail().add(details);
+		pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 	}
 
 	private void validateEWS(Plan pl) {
