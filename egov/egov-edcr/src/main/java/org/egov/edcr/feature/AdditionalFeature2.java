@@ -171,35 +171,11 @@ public class AdditionalFeature2 extends FeatureProcess {
 			validateGalleryFloor(pl);
 			validateGateAndCheckpost(pl);
 			validateResidentialUse(pl);
-			validateAr(pl);
 		}
 		
 		return pl;
 	}
 	
-	private void validateAr(Plan pl) {
-		
-		String JOB="Job no";
-		String Drawing_name="Drawing name";
-		
-		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
-		scrutinyDetail.setKey("Common_Architecture controls");
-		scrutinyDetail.addColumnHeading(1, RULE_NO);
-		scrutinyDetail.addColumnHeading(2, JOB);
-		scrutinyDetail.addColumnHeading(3, Drawing_name);
-		
-		scrutinyDetail.addColumnHeading(4, STATUS);
-		Map<String, String> details = new HashMap<>();
-		
-		
-		
-		details.put(JOB, "1098");
-		details.put(Drawing_name, "Note test");
-		details.put(STATUS, Result.Verify.getResultVal());
-
-		scrutinyDetail.getDetail().add(details);
-		pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
-	}
 
 	private void validateGateAndCheckpost(Plan pl) {
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null

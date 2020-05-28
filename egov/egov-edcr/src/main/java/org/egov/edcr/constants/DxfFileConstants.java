@@ -68,7 +68,9 @@ public class DxfFileConstants {
 	
 	public static final String HOSPITAL_GOVERNMENT="Government";
 	public static final String HOSPITAL_PRIVATE="Private";
-	
+	public static final String ARCHITCTURE_CONTROLS_APPLICABLE="ARCHITCTURE_CONTROLS_APPLICABLE";
+	public static final String JOB_NUMBER="JOB_NUMBER";
+	public static final String DWG_NUMBER="DWG_NUMBER";
 	
 	public static final String ULBNAME = "Chandigarh Administration";
 	

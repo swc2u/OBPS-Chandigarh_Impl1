@@ -159,6 +159,7 @@ public class AdditionalFeature extends FeatureProcess {
 
 	@Autowired
 	private AdditionalFeature2 additionalFeature2;
+
 	@Override
 	public Plan validate(Plan pl) {
 		HashMap<String, String> errors = new HashMap<>();
@@ -205,18 +206,18 @@ public class AdditionalFeature extends FeatureProcess {
 		// validateHeightOfBuilding(pl, errors, typeOfArea, roadWidth);
 		// }
 
-		validateAr(pl);
 		if (pl.isRural()) {
 			validateRuralPlinthHeight(pl, errors);
 			validateRuralNumberOfFloorsSkelton(pl);
 			validateRuralCommercialUnitAtGroundFloor(pl);
 			validateRuralMinimumFloorToCeilingHeight(pl, errors);
-			
+			// calling additional feature
+			additionalFeature2.process(pl);
 			return pl;
 		}
 
+		validateAr(pl);
 		validateNumberOfFloorsSkelton(pl);
-
 		validatePlinthHeight(pl, errors);
 		// validateIntCourtYard(pl, errors);
 		validateBarrierFreeAccess(pl, errors);
@@ -233,35 +234,40 @@ public class AdditionalFeature extends FeatureProcess {
 		validateCrecheAndPayingGuestFacility(pl);
 		validateEWS(pl);
 		// CSCL add end
+
 		
-		//calling additional feature
-		additionalFeature2.process(pl);
-		
+
 		return pl;
 	}
-	
-private void validateAr(Plan pl) {
-		
-		String JOB="Job no";
-		String Drawing_name="Drawing name";
-		
-		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
-		scrutinyDetail.setKey("Common_Architecture controls");
-		scrutinyDetail.addColumnHeading(1, RULE_NO);
-		scrutinyDetail.addColumnHeading(2, JOB);
-		scrutinyDetail.addColumnHeading(3, Drawing_name);
-		
-		scrutinyDetail.addColumnHeading(4, STATUS);
-		Map<String, String> details = new HashMap<>();
-		
-		
-		
-		details.put(JOB, "1098");
-		details.put(Drawing_name, "Note test");
-		details.put(STATUS, Result.Verify.getResultVal());
 
-		scrutinyDetail.getDetail().add(details);
-		pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+	private void validateAr(Plan pl) {
+
+		if (DxfFileConstants.YES
+				.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.ARCHITCTURE_CONTROLS_APPLICABLE))) {
+			
+			if(pl.getPlanInfoProperties().get(DxfFileConstants.JOB_NUMBER)==null)
+				pl.addError(DcrConstants.OBJECTNOTDEFINED, DxfFileConstants.JOB_NUMBER+"of PLAN_INFO layer");
+			if(pl.getPlanInfoProperties().get(DxfFileConstants.DWG_NUMBER)==null)
+				pl.addError(DcrConstants.OBJECTNOTDEFINED, DxfFileConstants.DWG_NUMBER+"of PLAN_INFO layer");
+			
+			String JOB = "Job Number";
+			String Drawing_name = "Drawing Number";
+
+			ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
+			scrutinyDetail.setKey("AC_Architecture controls");
+			scrutinyDetail.addColumnHeading(2, JOB);
+			scrutinyDetail.addColumnHeading(3, Drawing_name);
+
+			scrutinyDetail.addColumnHeading(4, STATUS);
+			Map<String, String> details = new HashMap<>();
+
+			details.put(JOB, pl.getPlanInfoProperties().get(DxfFileConstants.JOB_NUMBER));
+			details.put(Drawing_name, pl.getPlanInfoProperties().get(DxfFileConstants.DWG_NUMBER));
+			details.put(STATUS, Result.Verify.getResultVal());
+
+			scrutinyDetail.getDetail().add(details);
+			pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+		}
 	}
 
 	private void validateEWS(Plan pl) {
@@ -1182,41 +1188,41 @@ private void validateAr(Plan pl) {
 		for (Block block : pl.getBlocks()) {
 
 			boolean isAccepted = false;
-			BigDecimal minimumFloorHeightExpected =new BigDecimal("2.75");
-			
+			BigDecimal minimumFloorHeightExpected = new BigDecimal("2.75");
+
 			String blkNo = block.getNumber();
-			ScrutinyDetail scrutinyDetail = getNewScrutinyDetailMinimumFloorToCeilingHeight("Block_" + blkNo + "_" + "Minimum floor to ceiling height");
-			
-			for(Floor floor:block.getBuilding().getFloors()) {
-				BigDecimal minimumFloorHeightProvided=floor.getFloorHeights().stream().reduce(BigDecimal::min).get();
-				
-				if(minimumFloorHeightProvided==null || minimumFloorHeightProvided.compareTo(BigDecimal.ZERO)<=0) {
-					pl.addError("Minimum floor to ceiling height "+blkNo+floor.getNumber(), "Minimum floor is not defined Blook "+blkNo+" floor "+floor.getNumber());
+			ScrutinyDetail scrutinyDetail = getNewScrutinyDetailMinimumFloorToCeilingHeight(
+					"Block_" + blkNo + "_" + "Minimum floor to ceiling height");
+
+			for (Floor floor : block.getBuilding().getFloors()) {
+				BigDecimal minimumFloorHeightProvided = floor.getFloorHeights().stream().reduce(BigDecimal::min).get();
+
+				if (minimumFloorHeightProvided == null || minimumFloorHeightProvided.compareTo(BigDecimal.ZERO) <= 0) {
+					pl.addError("Minimum floor to ceiling height " + blkNo + floor.getNumber(),
+							"Minimum floor is not defined Blook " + blkNo + " floor " + floor.getNumber());
+				} else if (minimumFloorHeightProvided.compareTo(minimumFloorHeightExpected) >= 0) {
+					isAccepted = true;
 				}
-				else if(minimumFloorHeightProvided.compareTo(minimumFloorHeightExpected)>=0) {
-					isAccepted=true;
-				}
-					
-				
-				
-					Map<String, String> details = new HashMap<>();
-					// details.put(RULE_NO, RULE_41_I_A);
+
+				Map<String, String> details = new HashMap<>();
+				// details.put(RULE_NO, RULE_41_I_A);
 //					details.put(RULE_NO,
 //							CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.PLINTH_LEVEL));
-					details.put(DESCRIPTION, "Minimum floor to ceiling height");
-					details.put(FLOOR, floor.getNumber().toString());
-					details.put(PERMISSIBLE, ">= "+minimumFloorHeightExpected.toString());
+				details.put(DESCRIPTION, "Minimum floor to ceiling height");
+				details.put(FLOOR, floor.getNumber().toString());
+				details.put(PERMISSIBLE, ">= " + minimumFloorHeightExpected.toString());
 
-					details.put(PROVIDED, String.valueOf(minimumFloorHeightProvided.setScale(2, BigDecimal.ROUND_HALF_EVEN)));
-					details.put(STATUS, isAccepted ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
-					scrutinyDetail.getDetail().add(details);
-				
+				details.put(PROVIDED,
+						String.valueOf(minimumFloorHeightProvided.setScale(2, BigDecimal.ROUND_HALF_EVEN)));
+				details.put(STATUS, isAccepted ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
+				scrutinyDetail.getDetail().add(details);
+
 			}
 			pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
-			
+
 		}
 	}
-	
+
 	private void validatePlinthHeight(Plan pl, HashMap<String, String> errors) {
 		for (Block block : pl.getBlocks()) {
 
@@ -1573,7 +1579,7 @@ private void validateAr(Plan pl) {
 		scrutinyDetail.setKey(key);
 		return scrutinyDetail;
 	}
-	
+
 	private ScrutinyDetail getNewScrutinyDetailMinimumFloorToCeilingHeight(String key) {
 		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
 		scrutinyDetail.addColumnHeading(1, RULE_NO);
@@ -1582,7 +1588,7 @@ private void validateAr(Plan pl) {
 		scrutinyDetail.addColumnHeading(4, PERMISSIBLE);
 		scrutinyDetail.addColumnHeading(5, PROVIDED);
 		scrutinyDetail.addColumnHeading(6, STATUS);
-		
+
 		scrutinyDetail.setKey(key);
 		return scrutinyDetail;
 	}
