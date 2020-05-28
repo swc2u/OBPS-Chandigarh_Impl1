@@ -215,8 +215,9 @@ public class PaymentAction extends BasePaymentAction {
     DateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy");
     SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
     Date date;
+    
 
-    public PaymentAction() {
+	public PaymentAction() {
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("creating PaymentAction...");
         addRelatedEntity("paymentheader", Paymentheader.class);

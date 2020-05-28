@@ -63,7 +63,7 @@
 <div class="panel-body form-group display-hide" id="boundarydivision" >
 </div>
 
-<input type="hidden" id="planBoundaryType" value="" />
+<input type="hidden" id="planBoundaryType" name="planBoundaryType" value="" />
 <input type="hidden" id="planZoneOrLocation" value="" />
 <input type="hidden" id="planSectorOrVillage" value="" />
 

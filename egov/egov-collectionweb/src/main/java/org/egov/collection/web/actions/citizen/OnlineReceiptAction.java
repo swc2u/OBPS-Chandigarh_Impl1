@@ -69,6 +69,8 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
+import org.egov.bpa.transaction.entity.BpaApplication;
+import org.egov.bpa.transaction.service.ApplicationBpaService;
 import org.egov.collection.constants.CollectionConstants;
 import org.egov.collection.entity.ReceiptDetail;
 import org.egov.collection.entity.ReceiptHeader;
@@ -78,14 +80,18 @@ import org.egov.collection.integration.pgi.PaymentRequest;
 import org.egov.collection.integration.pgi.PaymentResponse;
 import org.egov.collection.integration.services.DebitAccountHeadDetailsService;
 import org.egov.collection.service.CollectionService;
+import org.egov.collection.service.DcrBpaRestService;
 import org.egov.collection.service.ReceiptHeaderService;
 import org.egov.collection.utils.CollectionCommon;
 import org.egov.collection.utils.CollectionsUtil;
 import org.egov.collection.utils.FinancialsUtil;
+import org.egov.common.entity.dcr.helper.EdcrApplicationInfo;
 import org.egov.commons.EgwStatus;
 import org.egov.commons.Fund;
 import org.egov.commons.dao.ChartOfAccountsHibernateDAO;
 import org.egov.commons.dao.FundHibernateDAO;
+import org.egov.edcr.service.EdcrApplicationDetailService;
+import org.egov.edcr.service.EdcrExternalService;
 import org.egov.infra.admin.master.entity.AppConfigValues;
 import org.egov.infra.admin.master.entity.Department;
 import org.egov.infra.exception.ApplicationRuntimeException;
@@ -96,6 +102,9 @@ import org.egov.infra.web.struts.annotation.ValidationErrorPage;
 import org.egov.infstr.models.ServiceDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.egov.collection.constants.CollectionConstants;
 
 @ParentPackage("egov")
 @Results({ @Result(name = OnlineReceiptAction.NEW, location = "onlineReceipt-new.jsp"),
@@ -182,13 +191,41 @@ public class OnlineReceiptAction extends BaseFormAction {
     public String newform() {
         return NEW;
     }
+    @Autowired
+    private ApplicationBpaService applicationBpaService;
 
+    @Autowired
+    private EdcrExternalService edcrExternalService;
+    private Map<String, String> getPlanInfo(String applicationNumber){
+    	Map<String, String> map=new HashMap<String, String>();
+    	try {
+    		BpaApplication bpaApplication=applicationBpaService.findByApplicationNumber(applicationNumber);
+    		EdcrApplicationInfo odcrPlanInfo = edcrExternalService.loadEdcrApplicationDetails(bpaApplication.geteDcrNumber());
+        	
+        	if(odcrPlanInfo!=null && odcrPlanInfo.getPlan()!=null)
+        		map= odcrPlanInfo.getPlan().getPlanInfoProperties();
+    	}catch (Exception e) {
+			e.printStackTrace();
+		}
+    	return map;
+    }
+    
     @ValidationErrorPage(value = "error")
     @Action(value = "/citizen/onlineReceipt-saveNew")
     public String saveNew() {
         /**
          * initialise receipt info,persist receipt, create bill desk payment object and redirect to payment screen
          */
+    	String rootBoundaryType=null;
+    	//get rootBonndaryType start
+    	String dcr=receiptHeader.getConsumerCode();
+    	
+    	
+    	Map<String, String> planInfo=getPlanInfo(dcr);
+    	rootBoundaryType=planInfo.get(CollectionConstants.ROOT_BOUNDARY_TYPE);
+    	
+    	//end
+    	receiptHeader.setRootBoundaryType(rootBoundaryType);
 
         receiptHeaderService.validatePayment(receiptHeader.getService().getCode(), receiptHeader.getReferencenumber(), paymentAmount,
                 (ArrayList<ReceiptDetail>) getReceiptDetailList());

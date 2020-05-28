@@ -478,6 +478,7 @@ function onLoad(){
 									name="isTransactionPending"/>
 									<%
 									    int i = 1;
+									
 									%>
 									<%
 									    int rcptDtlCnt = 0;

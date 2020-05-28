@@ -93,6 +93,7 @@ public class BpaCollectFeesController {
     @GetMapping("/bpageneratebill/{applicationCode}")
     public String showCollectFeeForm(final Model model, @PathVariable final String applicationCode) {
         BpaApplication application = applicationBpaService.findByApplicationNumber(applicationCode);
+        
         Boolean isBpaOnlineReConcilationPending = bpaDemandService.checkIsReconciliationInProgressInOnline(applicationCode);
         if (isBpaOnlineReConcilationPending) {
             model.addAttribute(MESSAGE,
