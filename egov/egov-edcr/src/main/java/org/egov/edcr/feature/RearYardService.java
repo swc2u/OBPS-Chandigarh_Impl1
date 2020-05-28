@@ -320,12 +320,24 @@ public class RearYardService extends GeneralRule {
 								input.put(CDGAdditionalService.PLOT_NO, plotNo);
 								input.put(CDGAdditionalService.PLOT_TYPE, plotAreaType);
 								
-								Map<String, String> result=cdgAdditionalService.getFeatureValue(CDGAConstant.SETBACKS, input);
+							
 								
-								
+								if(pl.isRural()) {
+									BigDecimal rearSeatBackExcepted=pl.getPlanInformation().getDepthOfPlot().multiply(new BigDecimal("0.10"));
+									
+									if(rearSeatBackExcepted.compareTo(new BigDecimal("1.52"))<0)
+										rearSeatBackExcepted=new BigDecimal("1.52");
+									
+									rearSeatBackExcepted=CDGAdditionalService.roundBigDecimal(rearSeatBackExcepted);
+										
+									
+									exceptedValue=rearSeatBackExcepted.toString();
+								}
+								else {
+									Map<String, String> result=cdgAdditionalService.getFeatureValue(CDGAConstant.SETBACKS, input);
 								exceptedValue=result.get(CDGAdditionalService.SETBACK_REAR);
 								//exceptedValue="4.96";
-								
+								}
 								if(DxfFileConstants.DATA_NOT_FOUND.equals(exceptedValue)) {
 									pl.addError(OBJECTNOTDEFINED+CDGAdditionalService.SETBACK_REAR, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_REAR");
 									return;

@@ -579,6 +579,8 @@ public class Plan implements Serializable {
 
     public void setPlanInfoProperties(Map<String, String> planInfoProperties) {
     	planInfoProperties.putAll(initPlanInfo());
+    	if("URBAN".equals(planInfoProperties.get("ROOT_BOUNDARY_TYPE")))
+    		planInfoProperties.put("AVG_PLOT_DEPTH", "N/A");
         this.planInfoProperties = planInfoProperties;
     }
 
@@ -611,7 +613,7 @@ public class Plan implements Serializable {
 		
 		planInfo.put("MAUZA", "MUSHARI");
 		planInfo.put("DISTRICT", "MITHUNPURA");
-		planInfo.put("AVG_PLOT_DEPTH", "N/A");
+		//planInfo.put("AVG_PLOT_DEPTH", "N/A");
 		planInfo.put("AVG_PLOT_WIDTH", "N/A");
 		planInfo.put("AREA_TYPE", "OLD");
 		planInfo.put("ROAD_WIDTH", "3");

@@ -393,6 +393,9 @@ public class PlanFeatureRepository {
           pf = new PlanFeature(HeightOfRoom.class);
           features.add(pf);
           
+          pf = new PlanFeature(SetBackService.class);
+          features.add(pf);
+          
           return features;
     }
 

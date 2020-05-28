@@ -325,7 +325,22 @@ public class FrontYardService extends GeneralRule {
 								//
 								
 								// get excepted minimum front setback start
-								exceptedValue=getSetBack(pl, mostRestrictiveOccupancyType).get(CDGAdditionalService.SETBACK_FRONT);
+								
+								if(pl.isRural()) {
+									BigDecimal rearSeatBackExcepted=pl.getPlanInformation().getDepthOfPlot().multiply(new BigDecimal("0.10"));
+									
+									if(rearSeatBackExcepted.compareTo(new BigDecimal("3.04"))<0)
+										rearSeatBackExcepted=new BigDecimal("3.04");
+									
+									rearSeatBackExcepted=CDGAdditionalService.roundBigDecimal(rearSeatBackExcepted);
+										
+									
+									exceptedValue=rearSeatBackExcepted.toString();
+								}else {
+									exceptedValue=getSetBack(pl, mostRestrictiveOccupancyType).get(CDGAdditionalService.SETBACK_FRONT);
+								}
+								
+								
 								//exceptedValue="3.44";
 								// end
 								
@@ -433,6 +448,10 @@ public class FrontYardService extends GeneralRule {
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
+				
+		if(pl.isRural()) {
+			return;
+		}
 
 		for (Block block : pl.getBlocks()) {
 			

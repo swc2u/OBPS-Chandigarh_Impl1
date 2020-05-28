@@ -447,9 +447,14 @@ public class SideYardService extends GeneralRule {
 										? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 										: null;
 
-								exceptedValueLeft =getSetBack(pl, mostRestrictiveOccupancyType).get(CDGAdditionalService.SETBACK_LEFT);
-								exceptedValueRight =getSetBack(pl, mostRestrictiveOccupancyType).get(CDGAdditionalService.SETBACK_RIGHT);
-								
+								if(!pl.isRural()) {
+									exceptedValueLeft =getSetBack(pl, mostRestrictiveOccupancyType).get(CDGAdditionalService.SETBACK_LEFT);
+									exceptedValueRight =getSetBack(pl, mostRestrictiveOccupancyType).get(CDGAdditionalService.SETBACK_RIGHT);
+
+								}else {
+									exceptedValueLeft="0";
+									exceptedValueRight="0";
+								}
 								if(DxfFileConstants.DATA_NOT_FOUND.equals(exceptedValueLeft)) {
 									pl.addError(OBJECTNOTDEFINED+" SIDE", DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_SIDE");
 									return;
@@ -1314,6 +1319,10 @@ public class SideYardService extends GeneralRule {
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
+				
+		if(pl.isRural()) {
+			return;
+		}
 				
 		for (Block block : pl.getBlocks()) {
 

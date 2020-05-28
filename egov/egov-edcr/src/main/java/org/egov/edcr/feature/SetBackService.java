@@ -162,13 +162,16 @@ public class SetBackService extends FeatureProcess {
     public Plan process(Plan pl) {
         validate(pl);
         
-		
-			frontYardService.processFrontYard(pl);
-			rearYardService.processRearYard(pl);
-		
-			sideYardService.processSideYard(pl);
-		
-
+        if(pl.isRural()) {
+        	frontYardService.processFrontYard(pl);
+    		rearYardService.processRearYard(pl);
+    		sideYardService.processSideYard(pl);
+    		return pl;
+        }
+        
+        frontYardService.processFrontYard(pl);
+		rearYardService.processRearYard(pl);
+		sideYardService.processSideYard(pl);
         return pl;
     }
     
