@@ -48,6 +48,19 @@
 
 package org.egov.infra.notification.service;
 
+import static org.egov.infra.config.core.LocalizationSettings.countryCode;
+import static org.egov.infra.config.core.LocalizationSettings.encoding;
+import static org.egov.infra.notification.entity.NotificationPriority.MEDIUM;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.jms.JMSException;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -64,99 +77,156 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.egov.infra.config.core.LocalizationSettings.countryCode;
-import static org.egov.infra.config.core.LocalizationSettings.encoding;
-import static org.egov.infra.notification.entity.NotificationPriority.MEDIUM;
-
-@Service (value="smsService")
+@Service(value = "smsService")
 public class SMSService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SMSService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SMSService.class);
 
-    private static final String SMS_PRIORITY_PARAM_VALUE = "sms.%s.priority.param.value";
+	private static final String SMS_PRIORITY_PARAM_VALUE = "sms.%s.priority.param.value";
+	private static final String PASSWORD_ENCRYPTION_ALGO = "SHA-1";
+	private static final String SECURITY_KEY_HASHING_ALGO = "SHA-512";
+	private static final String CHARSET = "iso-8859-1";
 
-    @Autowired
-    private Environment environment;
+	@Autowired
+	private Environment environment;
 
-    @Value("${sms.priority.enabled}")
-    private boolean smsPriorityEnabled;
+	@Value("${sms.priority.enabled}")
+	private boolean smsPriorityEnabled;
 
-    @Value("${sms.priority.param.name}")
-    private String smsPriorityParamName;
+	@Value("${sms.priority.param.name}")
+	private String smsPriorityParamName;
 
-    @Value("${sms.provider.url}")
-    private String smsProviderURL;
+	@Value("${sms.provider.url}")
+	private String smsProviderURL;
 
-    @Value("${sms.sender.req.param.name}")
-    private String senderReqParamName;
+	@Value("${sms.sender.req.param.name}")
+	private String senderReqParamName;
 
-    @Value("${sms.sender}")
-    private String sender;
+	@Value("${sms.sender}")
+	private String sender;
 
-    @Value("${sms.sender.username.req.param.name}")
-    private String senderUserNameReqParamName;
+	@Value("${sms.sender.username.req.param.name}")
+	private String senderUserNameReqParamName;
 
-    @Value("${sms.sender.username}")
-    private String senderUserName;
+	@Value("${sms.sender.username}")
+	private String senderUserName;
 
-    @Value("${sms.sender.password.req.param.name}")
-    private String senderPasswordReqParamName;
+	@Value("${sms.sender.password.req.param.name}")
+	private String senderPasswordReqParamName;
 
-    @Value("${sms.sender.password}")
-    private String senderPassword;
+	@Value("${sms.sender.password}")
+	private String senderPassword;
 
-    @Value("${sms.destination.mobile.req.param.name}")
-    private String mobileNumberReqParamName;
+	@Value("${sms.destination.mobile.req.param.name}")
+	private String mobileNumberReqParamName;
 
-    @Value("${sms.message.req.param.name}")
-    private String messageReqParamName;
+	@Value("${sms.message.req.param.name}")
+	private String messageReqParamName;
 
-    @Value("#{'${sms.extra.req.params}'.split('&')}")
-    private List<String> extraRequestParams;
+	@Value("#{'${sms.extra.req.params}'.split('&')}")
+	private List<String> extraRequestParams;
 
-    @Value("#{'${sms.error.codes}'.split(',')}")
-    private List<String> smsErrorCodes;
+	@Value("#{'${sms.error.codes}'.split(',')}")
+	private List<String> smsErrorCodes;
 
-    public boolean sendSMS(String mobileNumber, String message) {
-        return sendSMS(mobileNumber, message, MEDIUM);
-    }
+	@Value("${sms.sender.securekey}")
+	private String secureKey;
 
-    public boolean sendSMS(String mobileNumber, String message, NotificationPriority priority) {
-        try {
-            HttpClient client = HttpClientBuilder.create().build();
-            HttpPost post = new HttpPost(smsProviderURL);
-            List<NameValuePair> urlParameters = new ArrayList<>();
-            urlParameters.add(new BasicNameValuePair(senderUserNameReqParamName, senderUserName));
-            urlParameters.add(new BasicNameValuePair(senderPasswordReqParamName, senderPassword));
-            urlParameters.add(new BasicNameValuePair(senderReqParamName, sender));
-            urlParameters.add(new BasicNameValuePair(mobileNumberReqParamName, countryCode() + mobileNumber));
-            urlParameters.add(new BasicNameValuePair(messageReqParamName, message));
-            setAdditionalParameters(urlParameters, priority);
-            post.setEntity(new UrlEncodedFormEntity(urlParameters, encoding()));
-            HttpResponse response = client.execute(post);
-            String responseCode = IOUtils.toString(response.getEntity().getContent(), encoding());
-            return smsErrorCodes.parallelStream().noneMatch(responseCode::startsWith);
-        } catch (UnsupportedOperationException | IOException e) {
-            LOGGER.error("Error occurred while sending SMS [%s]", e);
-        }
-        return false;
-    }
+	@Value("${sms.sender.securekey.req.param.name}")
+	private String securekeyParameterName;
 
-    private void setAdditionalParameters(List<NameValuePair> urlParameters, NotificationPriority priority) {
-        if (!extraRequestParams.isEmpty()) {
-            for (String extraParm : extraRequestParams) {
-                String[] paramNameValue = extraParm.split("=");
-                urlParameters.add(new BasicNameValuePair(paramNameValue[0], paramNameValue[1]));
-            }
-        }
+	public boolean sendSMS(String mobileNumber, String message) throws JMSException {
+		return sendSMS(mobileNumber, message, MEDIUM);
+	}
 
-        if (smsPriorityEnabled) {
-            urlParameters.add(new BasicNameValuePair(smsPriorityParamName,
-                    environment.getProperty(String.format(SMS_PRIORITY_PARAM_VALUE, priority.toString()))
-            ));
-        }
-    }
+	public boolean sendSMS(String mobileNumber, String message, NotificationPriority priority) throws JMSException {
+		try {
+			HttpClient client = HttpClientBuilder.create().build();
+			HttpPost post = new HttpPost(smsProviderURL);
+			String encryptedPassword = MD5(senderPassword);
+			String genratedhashKey = hashGenerator(senderUserName, sender, message, secureKey);
+
+			List<NameValuePair> urlParameters = new ArrayList<>();
+			urlParameters.add(new BasicNameValuePair(senderUserNameReqParamName, senderUserName));
+			// urlParameters.add(new BasicNameValuePair(senderPasswordReqParamName,
+			// senderPassword));
+			urlParameters.add(new BasicNameValuePair(senderPasswordReqParamName, encryptedPassword));
+			urlParameters.add(new BasicNameValuePair(senderReqParamName, sender));
+			urlParameters.add(new BasicNameValuePair(mobileNumberReqParamName, countryCode() + mobileNumber));
+			urlParameters.add(new BasicNameValuePair(messageReqParamName, message));
+			urlParameters.add(new BasicNameValuePair(securekeyParameterName, genratedhashKey));
+			setAdditionalParameters(urlParameters, priority);
+			post.setEntity(new UrlEncodedFormEntity(urlParameters, encoding()));
+			HttpResponse response = client.execute(post);
+			String responseCode = IOUtils.toString(response.getEntity().getContent(), encoding());
+			return smsErrorCodes.parallelStream().noneMatch(responseCode::startsWith);
+		} catch (UnsupportedOperationException | IOException | NoSuchAlgorithmException e) {
+			LOGGER.error("Error occurred while sending SMS [%s]", e);
+			throw new JMSException(e.getMessage());
+		}
+	}
+
+	private void setAdditionalParameters(List<NameValuePair> urlParameters, NotificationPriority priority) {
+		if (!extraRequestParams.isEmpty()) {
+			for (String extraParm : extraRequestParams) {
+				String[] paramNameValue = extraParm.split("=");
+				urlParameters.add(new BasicNameValuePair(paramNameValue[0], paramNameValue[1]));
+			}
+		}
+
+		if (smsPriorityEnabled) {
+			urlParameters.add(new BasicNameValuePair(smsPriorityParamName,
+					environment.getProperty(String.format(SMS_PRIORITY_PARAM_VALUE, priority.toString()))));
+		}
+	}
+
+	private static String convertedToHex(byte[] data) {
+		StringBuffer buf = new StringBuffer();
+		for (int i = 0; i < data.length; i++) {
+			int halfOfByte = (data[i] >>> 4) & 0x0F;
+			int twoHalfBytes = 0;
+			do {
+				if ((0 <= halfOfByte) && (halfOfByte <= 9)) {
+					buf.append((char) ('0' + halfOfByte));
+				} else {
+					buf.append((char) ('a' + (halfOfByte - 10)));
+				}
+				halfOfByte = data[i] & 0x0F;
+			} while (twoHalfBytes++ < 1);
+		}
+		return buf.toString();
+	}
+
+	/****
+	 * Method to convert Normal Plain Text Password to MD5 encrypted password
+	 ***/
+
+	private static String MD5(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		MessageDigest md;
+		md = MessageDigest.getInstance(PASSWORD_ENCRYPTION_ALGO);
+		byte[] md5 = new byte[64];
+		md.update(text.getBytes(CHARSET), 0, text.length());
+		md5 = md.digest();
+		return convertedToHex(md5);
+	}
+
+	private String hashGenerator(String userName, String senderId, String content, String secureKey)
+			throws NoSuchAlgorithmException {
+		StringBuffer finalString = new StringBuffer();
+		finalString.append(userName.trim()).append(senderId.trim()).append(content.trim()).append(secureKey.trim());
+		// logger.info("Parameters for SHA-512 : "+finalString);
+		String hashGen = finalString.toString();
+		StringBuffer sb = null;
+		MessageDigest md;
+		md = MessageDigest.getInstance(SECURITY_KEY_HASHING_ALGO);
+		md.update(hashGen.getBytes());
+		byte byteData[] = md.digest();
+		// convert the byte to hex format method 1
+		sb = new StringBuffer();
+		for (int i = 0; i < byteData.length; i++) {
+			sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+		}
+
+		return sb.toString();
+	}
+
 }
