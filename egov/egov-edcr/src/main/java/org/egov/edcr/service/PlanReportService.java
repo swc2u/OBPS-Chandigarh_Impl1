@@ -117,6 +117,7 @@ public class PlanReportService {
     private static final String LEVEL = "Level";
     private static final String COMBINED_BLOCKS_SUMMARY_DETAILS = "Overall Summary";
     private static final String BLOCK_WISE_SUMMARY = "Block Wise Summary";
+    private static final String ARCHITCTURE_CONTROLS_SUMMARY="ARCHITCTURE_CONTROLS_SUMMARY";
 
     public InputStream generateDynamicReport(Plan plan, EdcrApplication dcrApplication) {
         FastReportBuilder drb = new FastReportBuilder();
@@ -664,6 +665,16 @@ public class PlanReportService {
             drb.addConcatenatedReport(getTotalAreaDetails());
             valuesMap.put("Total Area Details", Arrays.asList(virtualBuildingReport));
 
+//          //start
+//            List<String> acSummary = new ArrayList<>();
+//            acSummary.add(ARCHITCTURE_CONTROLS_SUMMARY);
+//            drb.addConcatenatedReport(createHeaderSubreport(ARCHITCTURE_CONTROLS_SUMMARY, ARCHITCTURE_CONTROLS_SUMMARY));
+//            
+//            valuesMap.put(ARCHITCTURE_CONTROLS_SUMMARY, acSummary);
+//            
+//            
+//            //end
+            
             List<String> blockSummary = new ArrayList<>();
             blockSummary.add(BLOCK_WISE_SUMMARY);
             drb.addConcatenatedReport(createHeaderSubreport(BLOCK_WISE_SUMMARY, BLOCK_WISE_SUMMARY));
