@@ -672,6 +672,10 @@ public final class CollectionConstants {
  	public static final String KEY_URBAN="1";
  	public static final String KEY_RURAL="2";
  	
+ 	// PayUmoney
+ 	public static final String PAYU_STATUS="status";
+ 	public static final String PAYU_SUCCESS="success";
+ 	public static final String PAYU_FAILURE="failure";
     		
     
     

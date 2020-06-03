@@ -2621,6 +2621,10 @@ ADD COLUMN ROOT_BOUNDARY_TYPE varchar(100)  NULL;
 ----------------------------------------------------------------
 
 
+--------------------  enable payUmoney
+
+update chandigarh.egcl_servicecategory set isactive = true where code ='PUPG'
+
 
 
 
