@@ -387,7 +387,7 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Collected By : "+$F{createdBy}.getName()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="RelativeToTallestObject" x="446" y="122" width="109" height="20" uuid="0d6b3c60-d125-42dc-8c5c-9cc3d2963160">
