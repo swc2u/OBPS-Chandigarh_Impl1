@@ -829,7 +829,7 @@ public class ReceiptHeaderService extends PersistenceService<ReceiptHeader, Long
                             .getBankAccountId().getId());
                 instrumentHeaderMapList.add(instrumentHeaderMap);
                 // should add bankaccount for bank : key = Bank account id;
-                // value = instrumentHeader.getBankAccount.getId()
+                // value = instrumentHeader.getBankAccountId();
             }
         return financialsUtil.createInstrument(instrumentHeaderMapList);
     }

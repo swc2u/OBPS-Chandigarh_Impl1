@@ -59,6 +59,7 @@ import org.egov.collection.config.properties.CollectionApplicationProperties;
 import org.egov.collection.scheduler.AtomReconciliationJob;
 import org.egov.collection.scheduler.AxisReconciliationJob;
 import org.egov.collection.scheduler.HDFCReconciliationJob;
+import org.egov.collection.scheduler.PayUMoneyReconciliationJob;
 import org.egov.collection.scheduler.PnbReconciliationJob;
 import org.egov.collection.scheduler.RemittanceInstrumentJob;
 import org.egov.infra.config.scheduling.QuartzSchedulerConfiguration;
@@ -193,7 +194,7 @@ public class CollectionSchedulerConfiguration extends QuartzSchedulerConfigurati
 	public HDFCReconciliationJob hdfcReconciliationJob() {
 		return new HDFCReconciliationJob();
 	}
-
+	
 	@Bean
 	public JobDetailFactoryBean remittanceCashInstrumentJobDetail0() {
 		return createJobDetailFactory(INSTRUMENT_TYPE_CASH, 0);
@@ -369,4 +370,40 @@ public class CollectionSchedulerConfiguration extends QuartzSchedulerConfigurati
 	public AtomReconciliationJob atomReconciliationJob() {
 		return new AtomReconciliationJob();
 	}
+	
+	
+	@Bean("payUMoneyReconciliationJob")
+	public PayUMoneyReconciliationJob payUMoneyReconciliationJob() {
+		return new PayUMoneyReconciliationJob();
+	}
+
+	@Bean
+	public JobDetailFactoryBean payUMoneyReconciliationJobDetail() {
+		JobDetailFactoryBean payUReconciliationJobDetail = new JobDetailFactoryBean();
+		payUReconciliationJobDetail.setGroup("COLLECTION_JOB_GROUP");
+		payUReconciliationJobDetail.setName("COLLECTION_PUPG_RECON_JOB");
+		payUReconciliationJobDetail.setDurability(true);
+		payUReconciliationJobDetail.setJobClass(PayUMoneyReconciliationJob.class);
+		payUReconciliationJobDetail.setRequestsRecovery(true);
+		Map<String, String> jobDetailMap = new HashMap<>();
+		jobDetailMap.put("jobBeanName", "payUMoneyReconciliationJob");
+		jobDetailMap.put("userName", "system");
+		jobDetailMap.put("cityDataRequired", "true");
+		jobDetailMap.put("moduleName", "collection");
+		payUReconciliationJobDetail.setJobDataAsMap(jobDetailMap);
+		return payUReconciliationJobDetail;
+	}
+
+	@Bean
+	public CronTriggerFactoryBean payUMoneyReconciliationCronTrigger() {
+		CronTriggerFactoryBean pauReconciliationCron = new CronTriggerFactoryBean();
+		pauReconciliationCron.setJobDetail(payUMoneyReconciliationJobDetail().getObject());
+		pauReconciliationCron.setGroup("COLLECTION_TRIGGER_GROUP");
+		pauReconciliationCron.setName("COLLECTION_PUPG_RECON_TRIGGER");
+		//atomReconciliationCron.setCronExpression("0 */30 * * * ?");
+		pauReconciliationCron.setCronExpression("0 */"+collectionApplicationProperties.payUCronExpressionDelayTime()+" * * * ?");
+		pauReconciliationCron.setMisfireInstruction(MISFIRE_INSTRUCTION_DO_NOTHING);
+		return pauReconciliationCron;
+	}
+
 }

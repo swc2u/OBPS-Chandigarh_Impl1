@@ -62,6 +62,18 @@ public class CollectionApplicationProperties {
 
 	@Autowired
 	private Environment environment;
+	
+	public String financeVocherUrl() {
+		return environment.getProperty("finance.vocher.url");
+	}
+	
+	public String financeVocherAuthToken() {
+		return environment.getProperty("finance.vocher.authToken");
+	}
+	
+	public String financeVocherCorrelationId() {
+		return environment.getProperty("finance.vocher.correlationId");
+	}
 
 	public String axisTransactionMessage() {
 		return environment.getProperty("AXIS.transactionmessage");
@@ -207,28 +219,32 @@ public class CollectionApplicationProperties {
 		return environment.getProperty(prefix+".atom.cron.expression.delay.time", Integer.class);
 	}
 	
-	public String payuMerchantkey() {
-		return environment.getProperty("payu.merchant-key");
+	public String payuMerchantkey(String prefix) {
+		return environment.getProperty(prefix+".payu.merchant-key");
 	}
 	
-	public String payuMerchantSalt() {
-		return environment.getProperty("payu.merchant-salt");
+	public String payuMerchantSalt(String prefix) {
+		return environment.getProperty(prefix+".payu.merchant-salt");
 	}
 	
-	public String payuUrl() {
-		return environment.getProperty("payu.url");
+	public String payuUrl(String prefix) {
+		return environment.getProperty(prefix+".payu.url");
 	}
 	
-	public String payuUrlStatus() {
-		return environment.getProperty("payu.url-status");
+	public String payuUrlStatus(String prefix) {
+		return environment.getProperty(prefix+".payu.url-status");
 	}
 
-	public String payuPathPay() {
-		return environment.getProperty("payu.path-pay");
+	public String payuPathPay(String prefix) {
+		return environment.getProperty(prefix+".payu.path-pay");
 	}
 	
-	public String payuPathStatus() {
-		return environment.getProperty("payu.path-status");
+	public String payuPathStatus(String prefix) {
+		return environment.getProperty(prefix+".payu.path-status");
+	}
+	
+	public Integer payUCronExpressionDelayTime() {
+		return environment.getProperty("payu.cron.expression.delay.time", Integer.class);
 	}
 	
 	public String pnbMid() {

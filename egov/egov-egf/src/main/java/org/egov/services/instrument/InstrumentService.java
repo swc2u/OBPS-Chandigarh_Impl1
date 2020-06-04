@@ -410,8 +410,8 @@ public class InstrumentService {
         if (instrMap.get(TRANSACTION_NUMBER) != null)
             instrHeader.setTransactionNumber(instrMap.get(TRANSACTION_NUMBER)
                     .toString());
-        else
-            throw new IllegalArgumentException(TRANSACTION_NUMBER + IS_NULL);
+//        else
+//            throw new IllegalArgumentException(TRANSACTION_NUMBER + IS_NULL);
         if (instrMap.get(TRANSACTION_DATE) == null)
             throw new IllegalArgumentException(TRANSACTION_DATE + IS_NULL);
         else if (new Date().compareTo((Date) instrMap.get(TRANSACTION_DATE)) == -1)

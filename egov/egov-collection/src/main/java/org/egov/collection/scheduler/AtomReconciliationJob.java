@@ -63,5 +63,6 @@ public class AtomReconciliationJob extends AbstractQuartzJob {
     @Override
     public void executeJob() {
         schedularService.reconcileATOM();
+        schedularService.reconcilePayUMoeny();
     }
 }

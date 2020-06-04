@@ -1,11 +1,15 @@
 package org.egov.collection.integration.pgi;
 
 import static java.util.Objects.isNull;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import static org.egov.collection.constants.CollectionConstants.KEY_RURAL;
 import static org.egov.collection.constants.CollectionConstants.KEY_URBAN;
 import static org.egov.collection.constants.CollectionConstants.RURAL;
 import static org.egov.collection.constants.CollectionConstants.URBAN;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -25,6 +29,7 @@ import javax.persistence.Query;
 import org.apache.log4j.Logger;
 import org.egov.collection.config.properties.CollectionApplicationProperties;
 import org.egov.collection.constants.CollectionConstants;
+import org.egov.collection.entity.OnlinePayment;
 import org.egov.collection.entity.ReceiptHeader;
 import org.egov.infra.config.core.ApplicationThreadLocals;
 import org.egov.infra.exception.ApplicationException;
@@ -37,7 +42,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
@@ -60,6 +67,8 @@ public class PayUMoneyAdaptor implements PaymentGatewayAdaptor {
 	private RestTemplate restTemplate;
 	@PersistenceContext
 	private EntityManager entityManager;
+	//@Autowired
+	private ObjectMapper objectMapper=new ObjectMapper();
 
 	@Override
 	public PaymentRequest createPaymentRequest(final ServiceDetails paymentServiceDetails,
@@ -193,6 +202,100 @@ public class PayUMoneyAdaptor implements PaymentGatewayAdaptor {
 			}
 		}
 
+		return payuResponce;
+	}
+	
+	
+	@Transactional
+	public PaymentResponse createOfflinePaymentRequest(final OnlinePayment onlinePayment) {
+		
+		PaymentResponse payuResponce = new DefaultPaymentResponse();
+		String txnRef = onlinePayment.getReceiptHeader().getId().toString();
+		String prefix = onlinePayment.getReceiptHeader().getRootBoundaryType();
+		String merchantKey=collectionApplicationProperties.payuMerchantkey(prefix);
+		String merchantSalt=collectionApplicationProperties.payuMerchantSalt(prefix);
+        String hash = hashCal(merchantKey + "|"
+                + "verify_payment" + "|"
+                + txnRef + "|"
+                + merchantSalt);
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("form", "2");
+        
+        UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme("https").host(collectionApplicationProperties.payuUrlStatus(prefix)).path
+                (collectionApplicationProperties.payuPathStatus(prefix)).queryParams(queryParams).build();
+        
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+            params.add("key", merchantKey);
+            params.add("command", "verify_payment");
+            params.add("hash", hash);
+            params.add("var1", txnRef);
+
+            HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
+            
+            ResponseEntity<String> response = restTemplate.postForEntity(uriComponents.toUriString(), entity, String.class);
+            String responceBody=response.getBody();
+            
+            String[] keyValueStr = responceBody.replace("{", "").replace("}", "").split(",");
+    		Map<String, String> responseMap = new HashMap<String, String>(0);
+    		for (String pair : keyValueStr) {
+    			pair=pair.replace("\"", "");
+    			String[] entry=null;
+    			if(pair.contains("addedon")) {
+    				entry=pair.split(":", 2);
+    			}else {
+    				entry= pair.split(":");
+    			}
+    			if(entry.length>=2)
+    				responseMap.put(entry[0].trim(), entry[1].trim());
+    		}
+
+            LOGGER.info(response.getBody());
+            payuResponce.setAuthStatus(responseMap.get(CollectionConstants.PAYU_STATUS).equalsIgnoreCase(CollectionConstants.PAYU_SUCCESS)
+					? CollectionConstants.PGI_AUTHORISATION_CODE_SUCCESS
+					: responseMap.get(CollectionConstants.PAYU_FAILURE));
+		
+		payuResponce.setErrorDescription(responseMap.get("error_Message"));
+		payuResponce.setReceiptId(responseMap.get("txnid"));
+		payuResponce.setTxnAmount(new BigDecimal(responseMap.get("net_amount_debit")));
+		payuResponce.setTxnReferenceNo(responseMap.get("mihpayid"));
+		
+		final String receiptId = responseMap.get("txnid");
+		final String ulbCode = ApplicationThreadLocals.getCityCode();
+		final ReceiptHeader receiptHeader;
+		final Query qry = entityManager.createNamedQuery(CollectionConstants.QUERY_RECEIPT_BY_ID_AND_CITYCODE);
+		qry.setParameter(1, Long.valueOf(receiptId));
+		qry.setParameter(2, ulbCode);
+		receiptHeader = (ReceiptHeader) qry.getSingleResult();
+		payuResponce.setAdditionalInfo6(receiptHeader.getConsumerCode().replace("-", "").replace("/", ""));
+		payuResponce.setAdditionalInfo2(ulbCode);
+		payuResponce.setBankId(new BigDecimal(responseMap.get("bank_ref_num")).intValue());
+		payuResponce.setBankReferenceNo(responseMap.get("card_no"));
+		
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+		Date transactionDate = null;
+		try {
+			transactionDate = sdf.parse(responseMap.get("addedon"));
+			payuResponce.setTxnDate(transactionDate);
+		} catch (java.text.ParseException e) {
+			LOGGER.error("Error occured in parsing the transaction date [" + transactionDate + "]", e);
+			try {
+				throw new ApplicationException(".transactiondate.parse.error", e);
+			} catch (ApplicationException e1) {
+				e1.printStackTrace();
+			}
+		}
+            
+
+        }catch (RestClientException e){
+            LOGGER.error("Unable to fetch status from payment gateway for txnid: "+ txnRef, e);
+            throw new RuntimeException("Error occurred while fetching status from payment gateway");
+        }
+        
 		return payuResponce;
 	}
 
