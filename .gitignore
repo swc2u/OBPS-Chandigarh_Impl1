@@ -1,1 +1,13 @@
 /.metadata/
+
+MasterDataReader-Project/XlsxReader2/.classpath
+
+MasterDataReader-Project/XlsxReader2/.project
+
+*.prefs
+
+*.xlsx#
+
+*.class
+
+*.MF
