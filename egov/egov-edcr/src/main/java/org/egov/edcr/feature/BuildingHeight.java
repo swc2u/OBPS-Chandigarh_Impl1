@@ -341,7 +341,8 @@ public class BuildingHeight extends FeatureProcess {
 
 				}
 
-				buildingHeight = block.getBuilding().getBuildingHeight();
+			//	buildingHeight = block.getBuilding().getBuildingHeight(); // block height + mumty height
+				buildingHeight = block.getHeight();
 
 				if (exptectedHeight.compareTo(BigDecimal.ZERO) > 0) {
 //					String actualResult = getLocaleMessage(RULE_ACTUAL_KEY, buildingHeight.toString());
