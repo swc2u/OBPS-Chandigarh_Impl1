@@ -201,10 +201,20 @@ public class CompoundWallService extends FeatureProcess {
 
 		Map<String, Integer> map = pl.getSubFeatureColorCodesMaster().get(COMPOUNDWALL);
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding().getMostRestrictiveFarHelper();
-
-		BigDecimal frontMinRailingHeight = pl.getCompoundWall().getRailingHeights().stream()
+		
+		if(isOccupancyNotApplicable(mostRestrictiveOccupancyType))
+			return;
+		
+		BigDecimal frontMinRailingHeight=BigDecimal.ZERO;
+		
+		if(pl.getCompoundWall()!=null && pl.getCompoundWall().getRailingHeights()!=null && pl.getCompoundWall().getRailingHeights().size()!=0)
+			frontMinRailingHeight = pl.getCompoundWall().getRailingHeights().stream()
 				.filter(hm -> hm.getColorCode() == map.get(RAILING_HEIGHT)).map(n -> n.getHeight())
 				.reduce(BigDecimal::min).get();
+		else {
+			if(isRaillingOptional(mostRestrictiveOccupancyType))
+				return;
+		}
 		
 		BigDecimal exceptedFrontMinRailingHeight=BigDecimal.ZERO;
 		
@@ -232,7 +242,28 @@ public class CompoundWallService extends FeatureProcess {
 		pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 	}
-
+	
+	private boolean isRaillingOptional(OccupancyTypeHelper occupancyTypeHelper) {
+		boolean flage = false;
+		if (DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.F_H.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.F_H.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.F_M.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.F_CFI.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.F_BH.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.F_BBM.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.F_TCIM.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.G_GBZP.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.B.equals(occupancyTypeHelper.getType().getCode())
+				|| DxfFileConstants.IT.equals(occupancyTypeHelper.getType().getCode())
+				|| DxfFileConstants.ITH.equals(occupancyTypeHelper.getType().getCode())
+				|| DxfFileConstants.T1.equals(occupancyTypeHelper.getSubtype().getCode())
+				)
+			flage = true;
+		return flage;
+	}
+	
+//
 	private boolean isOccupancyNotApplicable(OccupancyTypeHelper occupancyTypeHelper) {
 		boolean flage = false;
 
