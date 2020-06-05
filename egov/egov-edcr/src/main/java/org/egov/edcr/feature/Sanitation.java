@@ -431,11 +431,16 @@ public class Sanitation extends FeatureProcess {
 //                        if (b.getResidentialBuilding())
 //                            accepted = processSpecialWaterClosetForResidential(pl,b, helper, scrutinyDetail,
 //                                    requiredSpWcMap, providedSpWcMap, failedAreaSpWcMap, failedDimensionSpWcMap);
-
-						float noOfOwner = pl.getPlanInfoProperties().get(DxfFileConstants.RESIDENTIAL_NO_OWNER) != null
-								? Float.parseFloat(
-										pl.getPlanInfoProperties().get(DxfFileConstants.RESIDENTIAL_NO_OWNER))
-								: 1;
+						float noOfOwner=0.0f;
+						 try {
+							 noOfOwner = pl.getPlanInfoProperties().get(DxfFileConstants.RESIDENTIAL_NO_OWNER) != null
+										? Float.parseFloat(
+												pl.getPlanInfoProperties().get(DxfFileConstants.RESIDENTIAL_NO_OWNER))
+										: 1;
+						 }catch (NumberFormatException e) {
+							pl.addError("RESIDENTIAL_NO_OWNER", "RESIDENTIAL_NO_OWNER not defined in plan info layer");
+							return;
+						}
 						double requiredWc = 0;
 						if (noOfOwner == 1)
 							requiredWc = 1;
