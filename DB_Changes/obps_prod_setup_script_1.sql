@@ -791,13 +791,13 @@ update chandigarh.egbpa_checklist_servicetype_mapping set ismandatory=false, isr
 update chandigarh.egbpa_mstr_bpafee_common set "name"='Scrutiny fee', description='Scrutiny fee' where code='PF';
 update chandigarh.egbpa_mstr_bpafee_common set "name"='Application Fees', description='Security fee' where code='AF';
 update chandigarh.egbpa_mstr_bpafee_common set "name"='Additional Coverage fee', description='Additional Coverage fee' where code='ADF';
-update chandigarh.egbpa_mstr_bpafee_common set "name"='GST 18%', description='GST 18%' where code='SF';
+update chandigarh.egbpa_mstr_bpafee_common set "name"='GST (18% of scrutiny fee)', description='GST (18% of scrutiny fee)' where code='SF';
 update chandigarh.egbpa_mstr_bpafee_common set "name"='Rule 5 fee', description='Rule 5 fee' where code='DPF';
 
 update chandigarh.eg_demand_reason_master set reasonmaster='Scrutiny fee' where code='PF';
 update chandigarh.eg_demand_reason_master set reasonmaster='Security fee' where code='AF';
 update chandigarh.eg_demand_reason_master set reasonmaster='Additional Coverage fee' where code='ADF';
-update chandigarh.eg_demand_reason_master set reasonmaster='GST 18%' where code='SF';
+update chandigarh.eg_demand_reason_master set reasonmaster='GST (18% of scrutiny fee)' where code='SF';
 update chandigarh.eg_demand_reason_master set reasonmaster='Rule 5 fee' where code='DPF';
 
 --------------------------------------------------------------------------------------
