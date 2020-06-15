@@ -27,6 +27,10 @@ public class DxfFileConstants {
 	// ROOT_BOUNDARY_TYPE values
 	public static final String URBAN = "URBAN";
 	public static final String RURAL = "RURAL";
+	
+	//DrawingPreference constant
+	public static final String DRAWING_PREFERENCE_FEET="feet";
+	public static final String DRAWING_PREFERENCE_METER="meter";
 
 	// ZONE values
 	public static final String CENTER = "CENTER";
