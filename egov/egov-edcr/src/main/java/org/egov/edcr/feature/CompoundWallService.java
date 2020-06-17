@@ -130,7 +130,7 @@ public class CompoundWallService extends FeatureProcess {
 //		details.put(RULE_NO, RULE_1);
 		details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.COMPOUND_WALL_SERVICE));
 		details.put(DESCRIPTION, WALL_HEIGHT_FRONT_DESCRIPTION);
-		details.put(PROVIDED, frontMinFrontHeight.toString()+DxfFileConstants.METER);
+		details.put(PROVIDED, frontMinFrontHeight.toString());
 		
 		BigDecimal exceptedFrontMinFrontHeight=BigDecimal.ZERO;
 		BigDecimal exceptedFrontMinRearHeight=BigDecimal.ZERO;
@@ -169,8 +169,13 @@ public class CompoundWallService extends FeatureProcess {
 			exceptedFrontMinFrontHeight=ONE_POINT_EIGHT;
 			exceptedFrontMinRearHeight=ONE_POINT_EIGHT;
 		}
+		
+		if(pl.getDrawingPreference().getInFeets()) {
+			exceptedFrontMinFrontHeight=CDGAdditionalService.meterToFoot(exceptedFrontMinFrontHeight.toString());
+			exceptedFrontMinRearHeight=CDGAdditionalService.meterToFoot(exceptedFrontMinRearHeight.toString());
+		}
 
-		details.put(REQUIRED, "minimum height " + exceptedFrontMinFrontHeight + DxfFileConstants.METER);
+		details.put(REQUIRED, "minimum height " + exceptedFrontMinFrontHeight);
 		if (frontMinFrontHeight.compareTo(exceptedFrontMinFrontHeight) >= 0) {
 			details.put(STATUS, Result.Accepted.getResultVal());
 		} else {
@@ -184,9 +189,9 @@ public class CompoundWallService extends FeatureProcess {
 //		details2.put(RULE_NO, RULE_2);
 		details2.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.COMPOUND_WALL_SERVICE));
 		details2.put(DESCRIPTION, WALL_HEIGHT_REAR_DESCRIPTION);
-		details2.put(PROVIDED, frontMinRearHeight.toString()+DxfFileConstants.METER);
+		details2.put(PROVIDED, frontMinRearHeight.toString());
 
-		details2.put(REQUIRED, "minimum height " + exceptedFrontMinRearHeight + DxfFileConstants.METER);
+		details2.put(REQUIRED, "minimum height " + exceptedFrontMinRearHeight);
 		if (frontMinRearHeight.compareTo(exceptedFrontMinRearHeight) >= 0) {
 			details2.put(STATUS, Result.Accepted.getResultVal());
 		} else {
@@ -224,15 +229,19 @@ public class CompoundWallService extends FeatureProcess {
 		}else {
 			exceptedFrontMinRailingHeight=POINT_SIXNINE;
 		}
+		
+		if(pl.getDrawingPreference().getInFeets()) {
+			exceptedFrontMinRailingHeight=CDGAdditionalService.meterToFoot(exceptedFrontMinRailingHeight.toString());
+		}
 
 		Map<String, String> details = new HashMap<>();
 
 //		details.put(RULE_NO, RULE_3);
 		details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.COMPOUND_WALL_SERVICE));
 		details.put(DESCRIPTION, WALL_RAILING_HIGHT_DESCRIPTION);
-		details.put(PROVIDED, frontMinRailingHeight.toString()+DxfFileConstants.METER);
+		details.put(PROVIDED, frontMinRailingHeight.toString());
 
-		details.put(REQUIRED, "minimum height " + exceptedFrontMinRailingHeight + DxfFileConstants.METER);
+		details.put(REQUIRED, "minimum height " + exceptedFrontMinRailingHeight);
 		if (frontMinRailingHeight.compareTo(exceptedFrontMinRailingHeight) >= 0) {
 			details.put(STATUS, Result.Accepted.getResultVal());
 		} else {

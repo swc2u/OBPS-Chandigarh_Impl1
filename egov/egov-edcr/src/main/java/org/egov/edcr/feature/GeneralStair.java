@@ -265,7 +265,11 @@ public class GeneralStair extends FeatureProcess {
 				pl.addError("STAIRCASE", " Raiser not defined Block "+block.getNumber()+" floor "+ floor.getNumber()+" stair "+generalStair.getNumber());
 				return;
 			}
-				
+			
+			if(generalStair.getFloorHeight()==null) {
+				pl.addError("FloorHeight", "FloorHeight not defined. generalStair - "+generalStair.getNumber());
+				return;
+			}
 			
 			if(generalStair.getFloorHeight().compareTo(BigDecimal.ZERO)>0)
 			raiserHeightProvided=generalStair.getFloorHeight().divide(totalNoOfRaiser,BigDecimal.ROUND_HALF_EVEN); 

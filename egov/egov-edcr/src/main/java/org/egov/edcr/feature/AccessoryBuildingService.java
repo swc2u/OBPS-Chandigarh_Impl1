@@ -237,8 +237,14 @@ public class AccessoryBuildingService extends FeatureProcess {
 			// BigDecimal(featureValues.get(CDGAdditionalService.BACK_COURTYARD_CONSTRUCTION_WIDTH));
 			// exptectedHeight = new
 			// BigDecimal(featureValues.get(CDGAdditionalService.BACK_COURTYARD_CONSTRUCTION_HEIGHT));
-			exptectedDistance = new BigDecimal("2.92");
-			exptectedHeight = new BigDecimal("3.35");
+			
+			if(plan.getDrawingPreference().getInFeets()) {
+				exptectedDistance = CDGAdditionalService.meterToFoot("2.92");
+				exptectedHeight = CDGAdditionalService.meterToFoot("3.35");
+			}else {
+				exptectedDistance = new BigDecimal("2.92");
+				exptectedHeight = new BigDecimal("3.35");
+			}
 
 			for (AccessoryBlock accessoryBlock : plan.getAccessoryBlocks()) {
 				BigDecimal accBlockHeight = accessoryBlock.getAccessoryBuilding().getHeight();
@@ -256,8 +262,8 @@ public class AccessoryBuildingService extends FeatureProcess {
 								CDGAdditionalService.getByLaws(occupancyTypeHelper,
 										CDGAConstant.CONSTRUCTION_IN_BACK_COURTYARD),
 								String.format(SUBRULE_88_3_DESC, accessoryBlock.getNumber()),
-								exptectedHeight + DxfFileConstants.METER,
-								accessoryBlock.getAccessoryBuilding().getHeight() + DxfFileConstants.METER,
+								exptectedHeight.toString(),
+								accessoryBlock.getAccessoryBuilding().getHeight().toString(),
 								Result.Accepted.getResultVal(), scrutinyDetail1);
 					} else {
 
@@ -265,8 +271,8 @@ public class AccessoryBuildingService extends FeatureProcess {
 								CDGAdditionalService.getByLaws(occupancyTypeHelper,
 										CDGAConstant.CONSTRUCTION_IN_BACK_COURTYARD),
 								String.format(SUBRULE_88_3_DESC, accessoryBlock.getNumber()),
-								exptectedHeight + DxfFileConstants.METER,
-								accessoryBlock.getAccessoryBuilding().getHeight() + DxfFileConstants.METER,
+								exptectedHeight.toString(),
+								accessoryBlock.getAccessoryBuilding().getHeight().toString(),
 								Result.Not_Accepted.getResultVal(), scrutinyDetail1);
 
 					}
@@ -291,16 +297,16 @@ public class AccessoryBuildingService extends FeatureProcess {
 								CDGAdditionalService.getByLaws(occupancyTypeHelper,
 										CDGAConstant.CONSTRUCTION_IN_BACK_COURTYARD),
 								String.format(SUBRULE_88_5_DESC, accessoryBlock.getNumber()),
-								exptectedDistance + DxfFileConstants.METER,
-								minimumAccBlkDisFromPlotBoundary + DxfFileConstants.METER,
+								exptectedDistance.toString(),
+								minimumAccBlkDisFromPlotBoundary.toString(),
 								Result.Accepted.getResultVal(), scrutinyDetail2);
 					} else {
 						setReportOutputDetails(plan,
 								CDGAdditionalService.getByLaws(occupancyTypeHelper,
 										CDGAConstant.CONSTRUCTION_IN_BACK_COURTYARD),
 								String.format(SUBRULE_88_5_DESC, accessoryBlock.getNumber()),
-								exptectedDistance + DxfFileConstants.METER,
-								minimumAccBlkDisFromPlotBoundary + DxfFileConstants.METER,
+								exptectedDistance.toString(),
+								minimumAccBlkDisFromPlotBoundary.toString(),
 								Result.Not_Accepted.getResultVal(), scrutinyDetail2);
 					}
 				}

@@ -343,13 +343,17 @@ public class BuildingHeight extends FeatureProcess {
 
 			//	buildingHeight = block.getBuilding().getBuildingHeight(); // block height + mumty height
 				buildingHeight = block.getHeight();
+				
+				if(Plan.getDrawingPreference().getInFeets()) {
+					exptectedHeight=CDGAdditionalService.meterToFoot(exptectedHeight.toString());
+				}
 
 				if (exptectedHeight.compareTo(BigDecimal.ZERO) > 0) {
 //					String actualResult = getLocaleMessage(RULE_ACTUAL_KEY, buildingHeight.toString());
 //					String expectedResult = getLocaleMessage(RULE_EXPECTED_KEY, exptectedHeight.toString());
 
-					String actualResult = buildingHeight.toString() + DxfFileConstants.METER;
-					String expectedResult = "Upto " + exptectedHeight.toString() + DxfFileConstants.METER;
+					String actualResult = buildingHeight.toString();
+					String expectedResult = "Upto " + exptectedHeight.toString();
 
 					if (buildingHeight.compareTo(exptectedHeight) > 0) {
 						Map<String, String> details = new HashMap<>();

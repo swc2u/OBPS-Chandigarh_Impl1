@@ -305,10 +305,17 @@ public class CDGAdditionalService {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(BigDecimal.valueOf(1267.635).round(new MathContext(2)));
+		System.out.println(meterToFoot("10.8"));
 	}
 	
 	public BigDecimal calculatorFarWithOutAdditionalFeature() {
 		return null;
+	}
+	
+	public static BigDecimal meterToFoot(String value) {
+		BigDecimal valueInMeter=new BigDecimal(value);
+		BigDecimal valueInFoot=valueInMeter.multiply(new BigDecimal("3.281"));
+		
+		return valueInFoot;
 	}
 }

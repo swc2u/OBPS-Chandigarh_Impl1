@@ -289,16 +289,16 @@ public class PlanReportService {
                     .build();
 
             AbstractColumn builtUpArea = ColumnBuilder.getNew()
-                    .setColumnProperty("builtUpArea", BigDecimal.class.getName()).setTitle("Built Up Area in m²")
+                    .setColumnProperty("builtUpArea", BigDecimal.class.getName()).setTitle("Built Up Area ")
                     .setWidth(120).setStyle(reportService.getNumberStyle()).build();
             frb.addGlobalFooterVariable(builtUpArea, DJCalculation.SUM, reportService.getTotalNumberStyle());
 
             AbstractColumn floorArea = ColumnBuilder.getNew().setColumnProperty("floorArea", BigDecimal.class.getName())
-                    .setTitle("Floor Area in m²").setWidth(120).setStyle(reportService.getNumberStyle()).build();
+                    .setTitle("Floor Area ").setWidth(120).setStyle(reportService.getNumberStyle()).build();
             frb.addGlobalFooterVariable(floorArea, DJCalculation.SUM, reportService.getTotalNumberStyle());
 
             AbstractColumn carpetArea = ColumnBuilder.getNew()
-                    .setColumnProperty("carpetArea", BigDecimal.class.getName()).setTitle("Carpet Area in m²")
+                    .setColumnProperty("carpetArea", BigDecimal.class.getName()).setTitle("Carpet Area ")
                     .setWidth(120).setStyle(reportService.getNumberStyle()).build();
             frb.addGlobalFooterVariable(carpetArea, DJCalculation.SUM, reportService.getTotalNumberStyle());
 
@@ -377,18 +377,18 @@ public class PlanReportService {
             AbstractColumn builtUpArea = ColumnBuilder.getNew()
                     .setColumnProperty(isProposed ? "proposedBuitUpArea" : "totalExistingBuiltUpArea",
                             BigDecimal.class.getName())
-                    .setTitle("Built Up Area in m²").setWidth(120).setStyle(reportService.getTotalNumberStyle())
+                    .setTitle("Built Up Area ").setWidth(120).setStyle(reportService.getTotalNumberStyle())
                     .build();
 
             AbstractColumn floorArea = ColumnBuilder.getNew()
                     .setColumnProperty(isProposed ? "proposedFloorArea" : "totalExistingFloorArea",
                             BigDecimal.class.getName())
-                    .setTitle("Floor Area in m²").setWidth(120).setStyle(reportService.getTotalNumberStyle()).build();
+                    .setTitle("Floor Area ").setWidth(120).setStyle(reportService.getTotalNumberStyle()).build();
 
             AbstractColumn carpetArea = ColumnBuilder.getNew()
                     .setColumnProperty(isProposed ? "proposedCarpetArea" : "totalExistingCarpetArea",
                             BigDecimal.class.getName())
-                    .setTitle("Carpet Area in m²").setWidth(120).setStyle(reportService.getTotalNumberStyle()).build();
+                    .setTitle("Carpet Area ").setWidth(120).setStyle(reportService.getTotalNumberStyle()).build();
 
             frb.addColumn(builtUpArea);
             frb.addColumn(floorArea);
@@ -435,19 +435,19 @@ public class PlanReportService {
             FastReportBuilder frb = new FastReportBuilder();
 
             AbstractColumn builtUpArea = ColumnBuilder.getNew()
-                    .setColumnProperty("totalBuitUpArea", BigDecimal.class.getName()).setTitle("Built Up Area in m²")
+                    .setColumnProperty("totalBuitUpArea", BigDecimal.class.getName()).setTitle("Built Up Area ")
                     .setWidth(120).setStyle(reportService.getTotalNumberStyle()).build();
 
             AbstractColumn floorArea = ColumnBuilder.getNew()
-                    .setColumnProperty("totalFloorArea", BigDecimal.class.getName()).setTitle("Floor Area in m²")
+                    .setColumnProperty("totalFloorArea", BigDecimal.class.getName()).setTitle("Floor Area ")
                     .setWidth(120).setStyle(reportService.getTotalNumberStyle()).build();
 
             AbstractColumn carpetArea = ColumnBuilder.getNew()
-                    .setColumnProperty("totalCarpetArea", BigDecimal.class.getName()).setTitle("Carpet Area in m²")
+                    .setColumnProperty("totalCarpetArea", BigDecimal.class.getName()).setTitle("Carpet Area ")
                     .setWidth(120).setStyle(reportService.getTotalNumberStyle()).build();
 
             AbstractColumn coverageArea = ColumnBuilder.getNew()
-                    .setColumnProperty("totalCoverageArea", BigDecimal.class.getName()).setTitle("Covered Area in m²")
+                    .setColumnProperty("totalCoverageArea", BigDecimal.class.getName()).setTitle("Covered Area ")
                     .setWidth(120).setStyle(reportService.getTotalNumberStyle()).build();
 
             frb.addColumn(builtUpArea);

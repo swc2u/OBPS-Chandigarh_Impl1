@@ -130,6 +130,7 @@ public class PlanService {
 			pl.setRural(true);
 		else
 			pl.setRural(false);
+		
 	}
 
 	private void setEDCRmandatoryNOC(Plan plan) {		

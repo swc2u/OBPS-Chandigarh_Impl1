@@ -185,8 +185,7 @@ public class Plan implements Serializable {
     
     private transient boolean isRural;
     
-    
-    public Boolean getStrictlyValidateDimension() {
+	public Boolean getStrictlyValidateDimension() {
 		return strictlyValidateDimension;
 	}
 

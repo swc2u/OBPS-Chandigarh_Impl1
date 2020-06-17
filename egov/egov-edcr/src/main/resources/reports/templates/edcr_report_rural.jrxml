@@ -242,7 +242,7 @@
 					<font size="8"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA["PLOT AREA (As per measurement) in m²"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["PLOT AREA (As per measurement) "]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="418" y="252" width="130" height="21" uuid="e8d25a86-a1fc-42e5-88e1-a141e99c948c"/>
@@ -521,7 +521,7 @@
 					<font size="8"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA["DEMOLITION AREA in m²"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["DEMOLITION AREA"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="142" y="231" width="146" height="21" uuid="83458a69-6cf0-44af-b9f1-d27925ba674b"/>
@@ -656,7 +656,7 @@
 					<font size="8"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA["PLOT AREA (As per declaration) in m²"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["PLOT AREA (As per declaration) "]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="142" y="252" width="146" height="21" uuid="2280df2e-7f1e-480c-a703-d2fb9a872d0b"/>
