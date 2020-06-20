@@ -90,46 +90,52 @@ public class Verandah extends FeatureProcess {
 			scrutinyDetail.addColumnHeading(3, REQUIRED);
 			scrutinyDetail.addColumnHeading(4, PROVIDED);
 			scrutinyDetail.addColumnHeading(5, STATUS);
-			
+
 			OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
 					? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 					: null;
 
 			if (b.getBuilding() != null && b.getBuilding().getFloors() != null
 					&& !b.getBuilding().getFloors().isEmpty()) {
-				if(DxfFileConstants.A.equals(mostRestrictiveFarHelper.getType().getCode())) {
+				if (DxfFileConstants.A.equals(mostRestrictiveFarHelper.getType().getCode())) {
 
 					for (Floor f : b.getBuilding().getFloors()) {
-						
+
 						if (f.getVerandah() != null && f.getVerandah().getMeasurements() != null
 								&& !f.getVerandah().getMeasurements().isEmpty()) {
+							BigDecimal minVerandaWidth = BigDecimal.ZERO;
+							BigDecimal minVerandDepth = BigDecimal.ZERO;
+							if (f.getVerandah().getMeasurements().size() > 0)
+								minVerandaWidth = f.getVerandah().getMeasurements().stream().map(Measurement::getWidth)
+										.reduce(BigDecimal::min).get();
+							if (f.getVerandah().getHeightOrDepth().size() > 0)
+								minVerandDepth = f.getVerandah().getHeightOrDepth().stream().reduce(BigDecimal::min)
+										.get();
 
-							BigDecimal minVerandaWidth = f.getVerandah().getMeasurements().stream()
-									.map(Measurement::getWidth).reduce(BigDecimal::min).get();
-							BigDecimal minVerandDepth = f.getVerandah().getHeightOrDepth().stream().reduce(BigDecimal::min)
-									.get();
-							
-							minVerandaWidth=CDGAdditionalService.roundBigDecimal(minVerandaWidth);
-							minVerandDepth=CDGAdditionalService.roundBigDecimal(minVerandDepth);
-							
-							minVerandaWidth=minVerandaWidth.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-							minVerandDepth=minVerandDepth.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+							minVerandaWidth = CDGAdditionalService.roundBigDecimal(minVerandaWidth);
+							minVerandDepth = CDGAdditionalService.roundBigDecimal(minVerandDepth);
+
+							minVerandaWidth = minVerandaWidth.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+							minVerandDepth = minVerandDepth.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 
 							if (minVerandaWidth.compareTo(BigDecimal.ZERO) > 0) {
 								Map<String, String> details = new HashMap<>();
-								details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.VERANDAH_FOR_LIGHT_AND_VENTILATION));
+								details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper,
+										CDGAConstant.VERANDAH_FOR_LIGHT_AND_VENTILATION));
 								details.put(DESCRIPTION, VERANDAH_DESCRIPTION);
 
 								if (minVerandaWidth.compareTo(BigDecimal.valueOf(1.8)) >= 0) {
-									details.put(REQUIRED, "Minimum width 1.8"+DxfFileConstants.METER);
-									details.put(PROVIDED, "Width  " + minVerandaWidth + DxfFileConstants.METER+" at floor " + f.getNumber());
+									details.put(REQUIRED, "Minimum width 1.8" + DxfFileConstants.METER);
+									details.put(PROVIDED, "Width  " + minVerandaWidth + DxfFileConstants.METER
+											+ " at floor " + f.getNumber());
 									details.put(STATUS, Result.Accepted.getResultVal());
 									scrutinyDetail.getDetail().add(details);
 									pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 								} else {
-									details.put(REQUIRED, "Minimum width 1.8"+DxfFileConstants.METER);
-									details.put(PROVIDED, "Width  " + minVerandaWidth + DxfFileConstants.METER+" at floor " + f.getNumber());
+									details.put(REQUIRED, "Minimum width 1.8" + DxfFileConstants.METER);
+									details.put(PROVIDED, "Width  " + minVerandaWidth + DxfFileConstants.METER
+											+ " at floor " + f.getNumber());
 									details.put(STATUS, Result.Not_Accepted.getResultVal());
 									scrutinyDetail.getDetail().add(details);
 									pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -137,18 +143,21 @@ public class Verandah extends FeatureProcess {
 							}
 							if (minVerandDepth.compareTo(BigDecimal.ZERO) > 0) {
 								Map<String, String> details = new HashMap<>();
-								details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.VERANDAH_FOR_LIGHT_AND_VENTILATION));
+								details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper,
+										CDGAConstant.VERANDAH_FOR_LIGHT_AND_VENTILATION));
 								details.put(DESCRIPTION, VERANDAH_DESCRIPTION);
 								if (minVerandDepth.compareTo(BigDecimal.valueOf(3.66)) <= 0) {
-									details.put(REQUIRED, "Minimum depth not more than 3.66"+DxfFileConstants.METER);
-									details.put(PROVIDED, " Depth  " + minVerandDepth +DxfFileConstants.METER +" at floor " + f.getNumber());
+									details.put(REQUIRED, "Minimum depth not more than 3.66" + DxfFileConstants.METER);
+									details.put(PROVIDED, " Depth  " + minVerandDepth + DxfFileConstants.METER
+											+ " at floor " + f.getNumber());
 									details.put(STATUS, Result.Accepted.getResultVal());
 									scrutinyDetail.getDetail().add(details);
 									pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 								} else {
-									details.put(REQUIRED, "Minimum depth not more than 3.66"+DxfFileConstants.METER);
-									details.put(PROVIDED, " Depth  " + minVerandDepth +DxfFileConstants.METER +" at floor " + f.getNumber());
+									details.put(REQUIRED, "Minimum depth not more than 3.66" + DxfFileConstants.METER);
+									details.put(PROVIDED, " Depth  " + minVerandDepth + DxfFileConstants.METER
+											+ " at floor " + f.getNumber());
 									details.put(STATUS, Result.Not_Accepted.getResultVal());
 									scrutinyDetail.getDetail().add(details);
 									pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -157,10 +166,9 @@ public class Verandah extends FeatureProcess {
 						}
 
 					}
-				
-					
+
 				}
-				
+
 			}
 
 		}

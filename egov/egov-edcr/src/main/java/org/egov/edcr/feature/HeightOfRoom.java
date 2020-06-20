@@ -416,7 +416,7 @@ public class HeightOfRoom extends FeatureProcess {
 
                                 else if (roomAreas.size() == 2) {
                                     minimumHeight = MINIMUM_AREA_9_5;
-                                    minWidth = MINIMUM_WIDTH_2_1;
+                                    minWidth = MINIMUM_WIDTH_2_4;//as per suggestion by neetika 
                                 }
                                 subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.HABITABLE_ROOM);
                                 subRuleDesc = SUBRULE_41_II_B_AREA_DESC;

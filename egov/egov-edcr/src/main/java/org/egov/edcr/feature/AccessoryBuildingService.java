@@ -217,6 +217,14 @@ public class AccessoryBuildingService extends FeatureProcess {
 		scrutinyDetail2.addColumnHeading(4, PROVIDED);
 		scrutinyDetail2.addColumnHeading(5, STATUS);
 		scrutinyDetail2.setKey("Common_Construction in back courtyard - Minimum distance from plot boundary");
+		
+		ScrutinyDetail scrutinyDetail3 = new ScrutinyDetail();
+		scrutinyDetail3.addColumnHeading(1, RULE_NO);
+		scrutinyDetail3.addColumnHeading(2, DESCRIPTION);
+		scrutinyDetail3.addColumnHeading(3, REQUIRED);
+		scrutinyDetail3.addColumnHeading(4, PROVIDED);
+		scrutinyDetail3.addColumnHeading(5, STATUS);
+		scrutinyDetail3.setKey("Common_Construction in back courtyard - Area");
 		if (plan != null && !plan.getAccessoryBlocks().isEmpty()) {
 			OccupancyTypeHelper occupancyTypeHelper = plan.getVirtualBuilding() != null
 					? plan.getVirtualBuilding().getMostRestrictiveFarHelper()
@@ -271,6 +279,40 @@ public class AccessoryBuildingService extends FeatureProcess {
 
 					}
 				}
+				//validate Area for marala 5% of all A-P 
+				if(DxfFileConstants.A_P.equalsIgnoreCase(occupancyTypeHelper.getSubtype().getCode()) && DxfFileConstants.MARLA.equals(plan.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
+					if(exptectedHeight != null && exptectedHeight.compareTo(BigDecimal.valueOf(0)) > 0
+							&& accessoryBlock.getAccessoryBuilding() != null
+							&& accessoryBlock.getAccessoryBuilding().getHeight() != null
+							&& accessoryBlock.getAccessoryBuilding().getHeight().compareTo(BigDecimal.valueOf(0)) > 0) {
+						BigDecimal expectedArea=BigDecimal.ZERO;
+						expectedArea=plan.getPlot().getArea().multiply(new BigDecimal("0.05"));
+						boolean validArea=false;
+						if(expectedArea.compareTo(accessoryBlock.getAccessoryBuilding().getArea())>=0) {
+							validArea=true;
+						}
+						if (validArea) {
+
+							setReportOutputDetails(plan,
+									CDGAdditionalService.getByLaws(occupancyTypeHelper,
+											CDGAConstant.CONSTRUCTION_IN_BACK_COURTYARD),
+									String.format(SUBRULE_88_1_DESC, accessoryBlock.getNumber()),
+									expectedArea + DxfFileConstants.METER_SQM,
+									accessoryBlock.getAccessoryBuilding().getArea()+ DxfFileConstants.METER_SQM,
+									Result.Accepted.getResultVal(), scrutinyDetail3);
+						} else {
+
+							setReportOutputDetails(plan,
+									CDGAdditionalService.getByLaws(occupancyTypeHelper,
+											CDGAConstant.CONSTRUCTION_IN_BACK_COURTYARD),
+									String.format(SUBRULE_88_1_DESC, accessoryBlock.getNumber()),
+									expectedArea + DxfFileConstants.METER_SQM,
+									accessoryBlock.getAccessoryBuilding().getArea() + DxfFileConstants.METER_SQM,
+									Result.Not_Accepted.getResultVal(), scrutinyDetail3);
+
+						}
+					}
+				}
 
 				if (exptectedDistance != null && exptectedDistance.compareTo(BigDecimal.valueOf(0)) > 0
 						&& accessoryBlock.getAccessoryBuilding() != null
@@ -307,7 +349,7 @@ public class AccessoryBuildingService extends FeatureProcess {
 			}
 		}
 	}
-
+	
 	private void processShortestDistanceOfAccBlkFromPlotBoundary(Plan plan) {
 		String subRule = SUBRULE_88_5;
 		ScrutinyDetail scrutinyDetail3 = new ScrutinyDetail();

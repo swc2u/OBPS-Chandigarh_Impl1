@@ -90,6 +90,8 @@ public class Kitchen extends FeatureProcess {
 	public static final BigDecimal MINIMUM_WIDTH_2_1 = BigDecimal.valueOf(2.1);
 	private static final String FLOOR = "Floor";
 	private static final String ROOM_HEIGHT_NOTDEFINED = "Kitchen height is not defined in layer ";
+	private static final String ROOM_AREA_NOTDEFINED = "Kitchen area is not defined in layer ";
+	private static final String ROOM_WIDTH_NOTDEFINED = "Kitchen width is not defined in layer ";
 	private static final String LAYER_ROOM_HEIGHT = "BLK_%s_FLR_%s_%s";
 	private static final String KITCHEN = "kitchen";
 	private static final String KITCHEN_STORE = "kitchen with store room";
@@ -245,6 +247,11 @@ public class Kitchen extends FeatureProcess {
 								buildResult(pl, floor, minimumHeight, subRule, subRuleDesc, totalArea, valid,
 										typicalFloorValues);
 
+							}else {
+								String layerName = String.format(LAYER_ROOM_HEIGHT, block.getNumber(),
+										floor.getNumber(), "KITCHEN area");
+								errors.put(layerName, ROOM_AREA_NOTDEFINED + layerName);
+								pl.addErrors(errors);
 							}
 
 							if (!kitchenWidths.isEmpty()) {
@@ -257,6 +264,11 @@ public class Kitchen extends FeatureProcess {
 								subRuleDesc = String.format(SUBRULE_41_III_TOTAL_WIDTH, KITCHEN);
 								buildResult(pl, floor, minWidth, subRule, subRuleDesc, minRoomWidth, valid,
 										typicalFloorValues);
+							}else {
+								String layerName = String.format(LAYER_ROOM_HEIGHT, block.getNumber(),
+										floor.getNumber(), "KITCHEN width");
+								errors.put(layerName, ROOM_WIDTH_NOTDEFINED + layerName);
+								pl.addErrors(errors);
 							}
 
 							if (!kitchenStoreAreas.isEmpty()) {

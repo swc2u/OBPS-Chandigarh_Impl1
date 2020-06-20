@@ -86,12 +86,11 @@ public class PlanService {
 			e.printStackTrace();
 		}
 		plan.setServiceType(dcrApplication.getServiceType());
-		plan = applyRules(plan, amd, cityDetails);
-		
-		for(ScrutinyDetail scrutinyDetail:plan.getReportOutput().getScrutinyDetails()) {
-			System.out.println(scrutinyDetail.getKey()+"  "+scrutinyDetail.getDetail());
+		if(plan.getErrors().isEmpty()) {
+			plan = applyRules(plan, amd, cityDetails);
+			setEDCRmandatoryNOC(plan);
 		}
-		setEDCRmandatoryNOC(plan);
+		
 		InputStream reportStream = generateReport(plan, amd, dcrApplication);
 		saveOutputReport(dcrApplication, reportStream, plan);
 		return plan;

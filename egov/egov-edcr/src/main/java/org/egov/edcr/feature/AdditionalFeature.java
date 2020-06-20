@@ -212,10 +212,8 @@ public class AdditionalFeature extends FeatureProcess {
 			validateRuralCommercialUnitAtGroundFloor(pl);
 			validateRuralMinimumFloorToCeilingHeight(pl, errors);
 			// calling additional feature
-			additionalFeature2.process(pl);
 			return pl;
 		}
-
 		validateAr(pl);
 		validateNumberOfFloorsSkelton(pl);
 		validatePlinthHeight(pl, errors);
@@ -234,7 +232,7 @@ public class AdditionalFeature extends FeatureProcess {
 		validateCrecheAndPayingGuestFacility(pl);
 		validateEWS(pl);
 		// CSCL add end
-
+		additionalFeature2.process(pl);
 		
 
 		return pl;
@@ -1369,76 +1367,79 @@ public class AdditionalFeature extends FeatureProcess {
 
 			if (StringUtils.isNotBlank(pl.getPlanInformation().getProvisionsForGreenBuildingsAndSustainability())) {
 
-				if (mostRestrictiveFarHelper != null && mostRestrictiveFarHelper.getType() != null
-						&& DxfFileConstants.A.equalsIgnoreCase(mostRestrictiveFarHelper.getType().getCode())) {
+//				if (mostRestrictiveFarHelper != null && mostRestrictiveFarHelper.getType() != null
+//						&& DxfFileConstants.A.equalsIgnoreCase(mostRestrictiveFarHelper.getType().getCode())) {
+//
+//					if (pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_100)) >= 0
+//							&& pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_500)) < 0) {
+//
+//						validate1a(pl, scrutinyDetail);
+//						validate2a(pl, scrutinyDetail);
+//						validate2b(pl, scrutinyDetail);
+//						//// validate4a(pl, scrutinyDetail);
+//
+//					} else if (pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_500)) >= 0
+//							&& pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_1000)) < 0) {
+//
+//						validate1a(pl, scrutinyDetail);
+//						validate2b(pl, scrutinyDetail);
+//						//// validate4a(pl, scrutinyDetail);
+//
+//					} else if (pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_1000)) >= 0
+//							&& pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_3000)) < 0) {
+//
+//						validate1a(pl, scrutinyDetail);
+//						validate2a(pl, scrutinyDetail);
+//						validate2b(pl, scrutinyDetail);
+//						//// validate4a(pl, scrutinyDetail);
+//
+//					} else {
+//
+//						validate1a(pl, scrutinyDetail);
+//						validate2a(pl, scrutinyDetail);
+//						validate2b(pl, scrutinyDetail);
+//						//// validate4a(pl, scrutinyDetail);
+//
+//					}
+//				} else {
+//
+//					if (pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_100)) >= 0
+//							&& pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_500)) < 0) {
+//
+//						validate1a(pl, scrutinyDetail);
+//						validate2b(pl, scrutinyDetail);
+//						// validate4a(pl, scrutinyDetail);
+//
+//					} else if (pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_500)) >= 0
+//							&& pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_1000)) < 0) {
+//
+//						validate1a(pl, scrutinyDetail);
+//						validate2a(pl, scrutinyDetail);
+//						validate2b(pl, scrutinyDetail);
+//						// validate4a(pl, scrutinyDetail);
+//
+//					} else if (pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_1000)) >= 0
+//							&& pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_3000)) < 0) {
+//
+//						validate1a(pl, scrutinyDetail);
+//						validate2a(pl, scrutinyDetail);
+//						validate2b(pl, scrutinyDetail);
+//						// validate4a(pl, scrutinyDetail);
+//
+//					} else {
+//
+//						validate1a(pl, scrutinyDetail);
+//						validate2a(pl, scrutinyDetail);
+//						validate2b(pl, scrutinyDetail);
+//						// validate4a(pl, scrutinyDetail);
+//
+//					}
+//
+//				}
 
-					if (pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_100)) >= 0
-							&& pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_500)) < 0) {
-
-						validate1a(pl, scrutinyDetail);
-						validate2a(pl, scrutinyDetail);
-						validate2b(pl, scrutinyDetail);
-						//// validate4a(pl, scrutinyDetail);
-
-					} else if (pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_500)) >= 0
-							&& pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_1000)) < 0) {
-
-						validate1a(pl, scrutinyDetail);
-						validate2b(pl, scrutinyDetail);
-						//// validate4a(pl, scrutinyDetail);
-
-					} else if (pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_1000)) >= 0
-							&& pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_3000)) < 0) {
-
-						validate1a(pl, scrutinyDetail);
-						validate2a(pl, scrutinyDetail);
-						validate2b(pl, scrutinyDetail);
-						//// validate4a(pl, scrutinyDetail);
-
-					} else {
-
-						validate1a(pl, scrutinyDetail);
-						validate2a(pl, scrutinyDetail);
-						validate2b(pl, scrutinyDetail);
-						//// validate4a(pl, scrutinyDetail);
-
-					}
-				} else {
-
-					if (pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_100)) >= 0
-							&& pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_500)) < 0) {
-
-						validate1a(pl, scrutinyDetail);
-						validate2b(pl, scrutinyDetail);
-						// validate4a(pl, scrutinyDetail);
-
-					} else if (pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_500)) >= 0
-							&& pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_1000)) < 0) {
-
-						validate1a(pl, scrutinyDetail);
-						validate2a(pl, scrutinyDetail);
-						validate2b(pl, scrutinyDetail);
-						// validate4a(pl, scrutinyDetail);
-
-					} else if (pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_1000)) >= 0
-							&& pl.getPlot().getArea().compareTo(BigDecimal.valueOf(PLOTAREA_3000)) < 0) {
-
-						validate1a(pl, scrutinyDetail);
-						validate2a(pl, scrutinyDetail);
-						validate2b(pl, scrutinyDetail);
-						// validate4a(pl, scrutinyDetail);
-
-					} else {
-
-						validate1a(pl, scrutinyDetail);
-						validate2a(pl, scrutinyDetail);
-						validate2b(pl, scrutinyDetail);
-						// validate4a(pl, scrutinyDetail);
-
-					}
-
-				}
-
+				validate1a(pl, scrutinyDetail);
+				validate2a(pl, scrutinyDetail);
+				validate2b(pl, scrutinyDetail);
 				pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 			}
@@ -1460,19 +1461,33 @@ public class AdditionalFeature extends FeatureProcess {
 		OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
-		if (pl.getUtility().getSolarWaterHeatingSystems() != null
+		boolean flage=false;
+		String providedMsg=null;
+		
+		if(pl.getUtility().getSolarWaterHeatingSystems() != null
 				&& !pl.getUtility().getSolarWaterHeatingSystems().isEmpty()) {
+			providedMsg="Provided solar assisted water heating system details";
+		}
+		else if(!(this.isOccupancyTypeNotApplicableForGreenBuildingsAndSustainability(mostRestrictiveFarHelper))) {
+			providedMsg="Not provided solar assisted water heating system details";
+			if(DxfFileConstants.MARLA.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE)))
+				flage=true;
+			else
+				flage=false;
+		}
+		
+		if (flage) {
 			addDetails(scrutinyDetail,
 					CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.SOLAR_WATER_HEATING_SYSTEM),
 					"Installation of Solar Assisted Water Heating Systems",
 					"Solar assisted water heating system details",
-					"Provided solar assisted water heating system details", Result.Accepted.getResultVal());
-		} else if (!(this.isOccupancyTypeNotApplicableForGreenBuildingsAndSustainability(mostRestrictiveFarHelper))) {
+					providedMsg, Result.Accepted.getResultVal());
+		} else if (!flage) {
 			addDetails(scrutinyDetail,
 					CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.SOLAR_WATER_HEATING_SYSTEM),
 					"Installation of Solar Assisted Water Heating Systems",
 					"Solar assisted water heating system details",
-					"Not provided solar assisted water heating system details", Result.Not_Accepted.getResultVal());
+					providedMsg, Result.Not_Accepted.getResultVal());
 		}
 	}
 
@@ -1480,16 +1495,31 @@ public class AdditionalFeature extends FeatureProcess {
 		OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
-		if (pl.getUtility().getSolar() != null && !pl.getUtility().getSolar().isEmpty()) {
+				
+		boolean flage=false;
+		String providedMsg=null;
+		
+		if(pl.getUtility().getSolar() != null && !pl.getUtility().getSolar().isEmpty()) {
+			flage=true;
+			providedMsg="Provided solar photovoltaic panel details";
+		}else if(!(this.isOccupancyTypeNotApplicableForGreenBuildingsAndSustainability(mostRestrictiveFarHelper))){
+			providedMsg="Not provided solar photovoltaic panel details";
+			if(DxfFileConstants.MARLA.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE)))
+				flage=true;
+			else
+				flage=false;
+		}
+		
+		if (flage) {
 			addDetails(scrutinyDetail,
 					CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.SOLAR_PHOTO_VOLTAIC),
 					"Installation of Solar Photovoltaic Panels", "Solar photovoltaic panel details",
-					"Provided solar photovoltaic panel details", Result.Accepted.getResultVal());
-		} else if (!(this.isOccupancyTypeNotApplicableForGreenBuildingsAndSustainability(mostRestrictiveFarHelper))) {
+					providedMsg, Result.Accepted.getResultVal());
+		} else if (!flage) {
 			addDetails(scrutinyDetail,
 					CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.SOLAR_PHOTO_VOLTAIC),
 					"Installation of Solar Photovoltaic Panels", "Solar photovoltaic panel details",
-					"Not provided solar photovoltaic panel details", Result.Not_Accepted.getResultVal());
+					providedMsg, Result.Not_Accepted.getResultVal());
 		}
 	}
 
@@ -1498,16 +1528,34 @@ public class AdditionalFeature extends FeatureProcess {
 		OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
+		boolean flage=false;
+		String providedMsg=null;
+		
+		
+		if(pl.getUtility().getRainWaterHarvest() != null && !pl.getUtility().getRainWaterHarvest().isEmpty()) {
+			flage=true;
+			providedMsg="Provided rain water harvesting";
+		}
+		else if (!(this.isOccupancyTypeNotApplicableForGreenBuildingsAndSustainability(mostRestrictiveFarHelper))){
+			providedMsg="Not Provided rain water harvesting";
+			if(DxfFileConstants.MARLA.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE)))
+				flage=true;
+			else
+				flage=false;
+		}
+		
 
-		if (pl.getUtility().getRainWaterHarvest() != null && !pl.getUtility().getRainWaterHarvest().isEmpty()) {
+		
+
+		if (flage) {
 			addDetails(scrutinyDetail,
 					CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.RAIN_WATER_HERVESTING),
-					"Rain Water Harvesting", "Rain water harvesting details", "Provided rain water harvesting",
+					"Rain Water Harvesting", "Rain water harvesting details", providedMsg,
 					Result.Accepted.getResultVal());
-		} else if (!(this.isOccupancyTypeNotApplicableForGreenBuildingsAndSustainability(mostRestrictiveFarHelper))) {
+		} else if (!(flage)) {
 			addDetails(scrutinyDetail,
 					CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.RAIN_WATER_HERVESTING),
-					"Rain Water Harvesting", "Rain water harvesting details", "Not Provided rain water harvesting",
+					"Rain Water Harvesting", "Rain water harvesting details", providedMsg,
 					Result.Not_Accepted.getResultVal());
 		}
 	}

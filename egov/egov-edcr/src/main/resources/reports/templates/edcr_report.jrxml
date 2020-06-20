@@ -1451,13 +1451,13 @@
 	<summary>
 		<band height="747">
 			<textField isBlankWhenNull="true">
-				<reportElement key="" stretchType="RelativeToTallestObject" x="5" y="128" width="517" height="18" isRemoveLineWhenBlank="true" uuid="a41cfed2-1239-43a2-aa02-5a86c5ca0b9a">
+				<reportElement key="" stretchType="RelativeToTallestObject" x="5" y="575" width="517" height="18" isRemoveLineWhenBlank="true" uuid="a41cfed2-1239-43a2-aa02-5a86c5ca0b9a">
 					<printWhenExpression><![CDATA[!$P{nocs}.isEmpty()]]></printWhenExpression>
 				</reportElement>
 				<textFieldExpression><![CDATA[$P{nocString}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="5" y="108" width="193" height="19" isRemoveLineWhenBlank="true" uuid="6c9fce2c-90f2-4013-b9d9-719aa716287e">
+				<reportElement x="5" y="555" width="193" height="19" isRemoveLineWhenBlank="true" uuid="6c9fce2c-90f2-4013-b9d9-719aa716287e">
 					<printWhenExpression><![CDATA[!$P{nocs}.isEmpty()]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -1475,7 +1475,7 @@
 				<text><![CDATA[Errors]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="6" y="49" width="538" height="30" uuid="c69e1c51-83a0-411d-bebe-4fa86adfd03d">
+				<reportElement x="6" y="49" width="534" height="401" uuid="c69e1c51-83a0-411d-bebe-4fa86adfd03d">
 					<printWhenExpression><![CDATA[!$P{errors}.isEmpty()]]></printWhenExpression>
 				</reportElement>
 				<textFieldExpression><![CDATA[$P{errorString}]]></textFieldExpression>

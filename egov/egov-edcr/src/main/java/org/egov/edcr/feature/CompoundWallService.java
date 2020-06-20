@@ -21,6 +21,7 @@ import org.egov.edcr.service.cdg.CDGAConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
 
+import B.A.A.C.P;
 import freemarker.core.BugException;
 
 @Service
@@ -122,7 +123,7 @@ public class CompoundWallService extends FeatureProcess {
 						.filter(hm -> hm.getColorCode() == map.get(REAR_HEIGHT)).map(n -> n.getHeight()).reduce(BigDecimal::min)
 						.get();
 		 }catch (Exception e) {
-			// TODO: handle exception
+			LOG.error(e.getMessage());
 		}
 
 		Map<String, String> details = new HashMap<>();
@@ -143,6 +144,7 @@ public class CompoundWallService extends FeatureProcess {
 				) {
 			exceptedFrontMinFrontHeight=ONE_POINT_ONETHREE;
 			exceptedFrontMinRearHeight=ONE_POINT_EIGHT;
+			
 		}
 		
 		else if(DxfFileConstants.A_G.equals(mostRestrictiveFarHelper.getSubtype().getCode())
@@ -176,6 +178,8 @@ public class CompoundWallService extends FeatureProcess {
 		} else {
 			details.put(STATUS, Result.Not_Accepted.getResultVal());
 		}
+		if(DxfFileConstants.A_P.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode()) && DxfFileConstants.MARLA.equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE)) && frontMinFrontHeight.compareTo(BigDecimal.ZERO)==0)
+			details.put(STATUS, Result.Accepted.getResultVal());
 		scrutinyDetail.getDetail().add(details);
 		pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 

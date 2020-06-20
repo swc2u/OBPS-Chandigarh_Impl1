@@ -388,7 +388,7 @@ public class Coverage extends FeatureProcess {
 
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding().getMostRestrictiveFarHelper();
 
-		if (pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE) != null
+		if (pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE) != null && mostRestrictiveOccupancyType!=null
 				&& mostRestrictiveOccupancyType.getSubtype() != null) {
 
 			if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
