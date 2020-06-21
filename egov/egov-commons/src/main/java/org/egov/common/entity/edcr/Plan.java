@@ -104,7 +104,7 @@ public class Plan implements Serializable {
     // Records Accessory building details. Building has outdoor structures such as attached or detached garages, sheds, storage
     // building etc.This will not consider as another block.
     private List<AccessoryBlock> accessoryBlocks = new ArrayList<>();
-
+    private List<BigDecimal> accessoryBlockDistances = new ArrayList<>();
     // Temporary building object used to validate rules based on overall plot/buildings details. Eg: Total buildup area of all the
     // blocks, Unique occupancies present in this plot etc.
     private VirtualBuilding virtualBuilding = new VirtualBuilding();
@@ -179,31 +179,15 @@ public class Plan implements Serializable {
     @Transient
     @JsonIgnore
     private List<EdcrPdfDetail> edcrPdfDetails;
-   
+
     @Transient
     private Boolean strictlyValidateDimension = false;
-    
-    private transient boolean isRural;
-    
-	public Boolean getStrictlyValidateDimension() {
-		return strictlyValidateDimension;
-	}
 
-	public void setStrictlyValidateDimension(Boolean strictlyValidateDimension) {
-		this.strictlyValidateDimension = strictlyValidateDimension;
-	}
+private transient boolean isRural;
 
-	private Gate gate;
-  
-    public String getServiceType() {
-		return serviceType;
-	}
+    private Gate gate;
 
-	public void setServiceType(String serviceType) {
-		this.serviceType = serviceType;
-	}
-
-	// Used to show drawing mistakes, General errors, mistakes in following layer/color coding standard etc
+    // Used to show drawing mistakes, General errors, mistakes in following layer/color coding standard etc
     private transient Map<String, String> errors = new LinkedHashMap<>();
     /**
      * The report output object. Based on type of building and occupancies,the rules are validated and rules which are considered
@@ -213,7 +197,10 @@ public class Plan implements Serializable {
     // System will evaluate the list of noc's required based on the plan input
     private transient Map<String, String> noObjectionCertificates = new HashMap<>();
     private List<String> nocDeptCodes = new ArrayList<String>();
-
+    private HashMap<String, String> featureAmendments = new LinkedHashMap<>();
+    private transient Map<String, List<Object>> mdmsMasterData;
+    private transient Boolean mainDcrPassed = false;
+    
     public List<BigDecimal> getCanopyDistanceFromPlotBoundary() {
         return canopyDistanceFromPlotBoundary;
     }
@@ -246,6 +233,14 @@ public class Plan implements Serializable {
 
     public void setAccessoryBlocks(List<AccessoryBlock> accessoryBlocks) {
         this.accessoryBlocks = accessoryBlocks;
+    }
+    
+    public List<BigDecimal> getAccessoryBlockDistances() {
+        return accessoryBlockDistances;
+    }
+
+    public void setAccessoryBlockDistances(List<BigDecimal> accessoryBlockDistances) {
+        this.accessoryBlockDistances = accessoryBlockDistances;
     }
 
     public List<Occupancy> getOccupancies() {
@@ -583,23 +578,31 @@ public class Plan implements Serializable {
         this.planInfoProperties = planInfoProperties;
     }
 
-	public Gate getGate() {
-		return gate;
-	}
+    public Gate getGate() {
+        return gate;
+    }
 
-	public void setGate(Gate gate) {
-		this.gate = gate;
-	}
+    public void setGate(Gate gate) {
+        this.gate = gate;
+    }
 
-	public Date getAsOnDate() {
-		return asOnDate;
-	}
+    public Date getAsOnDate() {
+        return asOnDate;
+    }
 
-	public void setAsOnDate(Date asOnDate) {
-		this.asOnDate = asOnDate;
-	}
-	
-	public boolean isRural() {
+    public void setAsOnDate(Date asOnDate) {
+        this.asOnDate = asOnDate;
+    }
+
+    public Boolean getStrictlyValidateDimension() {
+        return strictlyValidateDimension;
+    }
+
+    public void setStrictlyValidateDimension(Boolean strictlyValidateDimension) {
+        this.strictlyValidateDimension = strictlyValidateDimension;
+    }
+
+public boolean isRural() {
 		return isRural;
 	}
 
@@ -622,4 +625,54 @@ public class Plan implements Serializable {
 		planInfo.put("LEASEHOLD_LAND", "NO");
 		return planInfo;		
 	}
+	
+	
+    public String getServiceType() {
+		return serviceType;
+	}
+
+	public void setServiceType(String serviceType) {
+		this.serviceType = serviceType;
+	}
+
+	public Double getParkingRequired() {
+		return parkingRequired;
+	}
+
+	public void setParkingRequired(Double parkingRequired) {
+		this.parkingRequired = parkingRequired;
+	}
+
+	public List<String> getNocDeptCodes() {
+		return nocDeptCodes;
+	}
+
+	public void setNocDeptCodes(List<String> nocDeptCodes) {
+		this.nocDeptCodes = nocDeptCodes;
+	}
+
+	public HashMap<String, String> getFeatureAmendments() {
+        return featureAmendments;
+    }
+
+    public void setFeatureAmendments(HashMap<String, String> featureAmendments) {
+        this.featureAmendments = featureAmendments;
+    }
+
+    public Map<String, List<Object>> getMdmsMasterData() {
+        return mdmsMasterData;
+    }
+
+    public void setMdmsMasterData(Map<String, List<Object>> mdmsMasterData) {
+        this.mdmsMasterData = mdmsMasterData;
+    }
+
+    public Boolean getMainDcrPassed() {
+        return mainDcrPassed;
+    }
+
+    public void setMainDcrPassed(Boolean mainDcrPassed) {
+        this.mainDcrPassed = mainDcrPassed;
+    }
+
 }
