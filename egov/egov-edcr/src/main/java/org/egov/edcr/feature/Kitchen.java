@@ -223,7 +223,7 @@ public class Kitchen extends FeatureProcess {
 											floor, isTypicalRepititiveFloor);
 									buildResult(pl, floor, minimumHeight, subRule, subRuleDesc,
 											CDGAdditionalService.roundBigDecimal(minHeight), valid, typicalFloorValues);
-								} else {
+								} else if(floor.getKitchen()!=null){
 									String layerName = String.format(LAYER_ROOM_HEIGHT, block.getNumber(),
 											floor.getNumber(), "KITCHEN");
 									errors.put(layerName, ROOM_HEIGHT_NOTDEFINED + layerName);
@@ -235,7 +235,7 @@ public class Kitchen extends FeatureProcess {
 							subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.KITCHEN);
 							;
 
-							if (!kitchenAreas.isEmpty()) {
+							if (floor.getKitchen()!=null && !kitchenAreas.isEmpty()) {
 								totalArea = kitchenAreas.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
 								minimumHeight = MINIMUM_AREA_5;
 								subRuleDesc = String.format(SUBRULE_41_III_AREA_DESC, KITCHEN);
@@ -247,14 +247,14 @@ public class Kitchen extends FeatureProcess {
 								buildResult(pl, floor, minimumHeight, subRule, subRuleDesc, totalArea, valid,
 										typicalFloorValues);
 
-							}else {
+							}else if(floor.getKitchen()!=null){
 								String layerName = String.format(LAYER_ROOM_HEIGHT, block.getNumber(),
 										floor.getNumber(), "KITCHEN area");
 								errors.put(layerName, ROOM_AREA_NOTDEFINED + layerName);
 								pl.addErrors(errors);
 							}
 
-							if (!kitchenWidths.isEmpty()) {
+							if (floor.getKitchen()!=null && !kitchenWidths.isEmpty()) {
 								boolean valid = false;
 								boolean isTypicalRepititiveFloor = false;
 								Map<String, Object> typicalFloorValues = ProcessHelper.getTypicalFloorValues(block,
@@ -264,14 +264,14 @@ public class Kitchen extends FeatureProcess {
 								subRuleDesc = String.format(SUBRULE_41_III_TOTAL_WIDTH, KITCHEN);
 								buildResult(pl, floor, minWidth, subRule, subRuleDesc, minRoomWidth, valid,
 										typicalFloorValues);
-							}else {
+							}else if(floor.getKitchen()!=null){
 								String layerName = String.format(LAYER_ROOM_HEIGHT, block.getNumber(),
 										floor.getNumber(), "KITCHEN width");
 								errors.put(layerName, ROOM_WIDTH_NOTDEFINED + layerName);
 								pl.addErrors(errors);
 							}
 
-							if (!kitchenStoreAreas.isEmpty()) {
+							if (floor.getKitchen()!=null && !kitchenStoreAreas.isEmpty()) {
 								totalArea = kitchenStoreAreas.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
 								minimumHeight = MINIMUM_AREA_4_5;
 								subRuleDesc = String.format(SUBRULE_41_III_AREA_DESC, KITCHEN_STORE);
@@ -324,7 +324,7 @@ public class Kitchen extends FeatureProcess {
 							}
 							// floor
 
-							if (mostRestrictiveOccupancy != null
+							if (!pl.isRural() && mostRestrictiveOccupancy != null
 									&& DxfFileConstants.A_P.equals(mostRestrictiveOccupancy.getSubtype().getCode())) {
 
 								if (floorKitchenCount > 1)

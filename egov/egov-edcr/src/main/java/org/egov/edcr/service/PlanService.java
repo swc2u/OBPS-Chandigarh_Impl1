@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -86,6 +87,7 @@ public class PlanService {
 			e.printStackTrace();
 		}
 		plan.setServiceType(dcrApplication.getServiceType());
+		removeError(plan);
 		if(plan.getErrors().isEmpty()) {
 			plan = applyRules(plan, amd, cityDetails);
 			setEDCRmandatoryNOC(plan);
@@ -94,6 +96,19 @@ public class PlanService {
 		InputStream reportStream = generateReport(plan, amd, dcrApplication);
 		saveOutputReport(dcrApplication, reportStream, plan);
 		return plan;
+	}
+	
+	public void removeError(Plan plan) {
+		if(DxfFileConstants.ALTERATION.equalsIgnoreCase(plan.getServiceType()) || DxfFileConstants.ADDITION_OR_EXTENSION.equalsIgnoreCase(plan.getServiceType())) {
+			HashMap<String, String> errors=new HashMap<String, String>();
+			for(String key:plan.getErrors().keySet()) {
+				String value=plan.getErrors().get(key);
+				/*
+				 * if(!value.contains("_STAIR_")) errors.put(key, value);
+				 */
+			}
+			plan.addErrors(errors);
+		}
 	}
 	
 	private void setProperties(Plan pl) {
