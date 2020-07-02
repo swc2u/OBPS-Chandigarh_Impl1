@@ -376,7 +376,7 @@ public class CDGAdditionalService {
 	public static String viewLenght(Plan pl,BigDecimal value) {
 		String result=null;
 		if(pl.getDrawingPreference().getInMeters()) {
-			result= value+DxfFileConstants.METER;
+			result= roundBigDecimal(value)+DxfFileConstants.METER;
 		}else if(pl.getDrawingPreference().getInFeets()){
 			result=getFeetAndInch(value);
 		}
@@ -393,7 +393,7 @@ public class CDGAdditionalService {
 	public static String viewArea(Plan pl,BigDecimal value) {
 		String result=null;
 		if(pl.getDrawingPreference().getInMeters()) {
-			result= value+" "+DxfFileConstants.METER_SQM;
+			result= roundBigDecimal(value)+" "+DxfFileConstants.METER_SQM;
 		}else if(pl.getDrawingPreference().getInFeets()){
 			result=value+" "+DxfFileConstants.FEET_SQM;
 		}
