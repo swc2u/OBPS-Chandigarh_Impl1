@@ -82,20 +82,11 @@ public class DrawingPreference implements Serializable {
 	@Transient
 	private Boolean lengthFactor = true;
 	
-	private String uom;
 
 	private transient String uom;
 
 	private transient NorthDirection northDirection;
 	private transient List<Measurement> locationPlans;
-	
-	public String getUom() {
-		return uom;
-	}
-
-	public void setUom(String uom) {
-		this.uom = uom;
-	}
 
 	public Boolean getInMeters() {
 		return inMeters;

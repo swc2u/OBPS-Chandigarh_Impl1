@@ -90,65 +90,56 @@ public class Verandah extends FeatureProcess {
 			scrutinyDetail.addColumnHeading(3, REQUIRED);
 			scrutinyDetail.addColumnHeading(4, PROVIDED);
 			scrutinyDetail.addColumnHeading(5, STATUS);
-
+			
 			OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
 					? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 					: null;
 
 			if (b.getBuilding() != null && b.getBuilding().getFloors() != null
 					&& !b.getBuilding().getFloors().isEmpty()) {
-				if (DxfFileConstants.A.equals(mostRestrictiveFarHelper.getType().getCode())) {
+				if(DxfFileConstants.A.equals(mostRestrictiveFarHelper.getType().getCode())) {
 
 					for (Floor f : b.getBuilding().getFloors()) {
-
+						
 						if (f.getVerandah() != null && f.getVerandah().getMeasurements() != null
 								&& !f.getVerandah().getMeasurements().isEmpty()) {
-							BigDecimal minVerandaWidth = BigDecimal.ZERO;
-							BigDecimal minVerandDepth = BigDecimal.ZERO;
-							if (f.getVerandah().getMeasurements().size() > 0)
-								minVerandaWidth = f.getVerandah().getMeasurements().stream().map(Measurement::getWidth)
-										.reduce(BigDecimal::min).get();
-							if (f.getVerandah().getHeightOrDepth().size() > 0)
-								minVerandDepth = f.getVerandah().getHeightOrDepth().stream().reduce(BigDecimal::min)
-										.get();
 
+							BigDecimal minVerandaWidth = f.getVerandah().getMeasurements().stream()
+									.map(Measurement::getWidth).reduce(BigDecimal::min).get();
+							BigDecimal minVerandDepth = f.getVerandah().getHeightOrDepth().stream().reduce(BigDecimal::min)
+									.get();
 							
-							}
-								expectedMindepth=CDGAdditionalService.meterToFoot(expectedMindepth);
-								expectedMinWidth=CDGAdditionalService.meterToFoot(expectedMinWidth);
-								minVerandDepth=CDGAdditionalService.inchToFeet(minVerandDepth);
-								minVerandaWidth=CDGAdditionalService.inchToFeet(minVerandaWidth);
-							if(pl.getDrawingPreference().getInFeets()) {
+							minVerandaWidth=CDGAdditionalService.roundBigDecimal(minVerandaWidth);
+							minVerandDepth=CDGAdditionalService.roundBigDecimal(minVerandDepth);
+							
+							minVerandaWidth=minVerandaWidth.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+							minVerandDepth=minVerandDepth.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 							
 							BigDecimal expectedMinWidth=new BigDecimal(1.8);
 							BigDecimal expectedMindepth=new BigDecimal(3.66);
 							
-							minVerandDepth=minVerandDepth.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-							minVerandaWidth=minVerandaWidth.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+							if(pl.getDrawingPreference().getInFeets()) {
+								minVerandaWidth=CDGAdditionalService.inchToFeet(minVerandaWidth);
+								minVerandDepth=CDGAdditionalService.inchToFeet(minVerandDepth);
+								expectedMinWidth=CDGAdditionalService.meterToFoot(expectedMinWidth);
+								expectedMindepth=CDGAdditionalService.meterToFoot(expectedMindepth);
+							}
 							
-							minVerandDepth=CDGAdditionalService.roundBigDecimal(minVerandDepth);
-							minVerandaWidth=CDGAdditionalService.roundBigDecimal(minVerandaWidth);
-							
-									.get();
-							BigDecimal minVerandDepth = f.getVerandah().getHeightOrDepth().stream().reduce(BigDecimal::min)
-									.map(Measurement::getWidth).reduce(BigDecimal::min).get();
-							BigDecimal minVerandaWidth = f.getVerandah().getMeasurements().stream()
 							if (minVerandaWidth.compareTo(BigDecimal.ZERO) > 0) {
 								Map<String, String> details = new HashMap<>();
-								details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper,
-										CDGAConstant.VERANDAH_FOR_LIGHT_AND_VENTILATION));
+								details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.VERANDAH_FOR_LIGHT_AND_VENTILATION));
 								details.put(DESCRIPTION, VERANDAH_DESCRIPTION);
 
-									details.put(PROVIDED, "Width  " + CDGAdditionalService.viewLenght(pl, minVerandaWidth) +" at floor " + f.getNumber());
 								if (minVerandaWidth.compareTo(expectedMinWidth) >= 0) {
 									details.put(REQUIRED, "Minimum width "+CDGAdditionalService.viewLenght(pl, expectedMinWidth));
+									details.put(PROVIDED, "Width  " + CDGAdditionalService.viewLenght(pl, minVerandaWidth) +" at floor " + f.getNumber());
 									details.put(STATUS, Result.Accepted.getResultVal());
 									scrutinyDetail.getDetail().add(details);
 									pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 								} else {
-									details.put(PROVIDED, "Width  " + CDGAdditionalService.viewLenght(pl, minVerandaWidth) +" at floor " + f.getNumber());
 									details.put(REQUIRED, "Minimum width "+CDGAdditionalService.viewLenght(pl, expectedMinWidth));
+									details.put(PROVIDED, "Width  " + CDGAdditionalService.viewLenght(pl, minVerandaWidth) +" at floor " + f.getNumber());
 									details.put(STATUS, Result.Not_Accepted.getResultVal());
 									scrutinyDetail.getDetail().add(details);
 									pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -156,8 +147,7 @@ public class Verandah extends FeatureProcess {
 							}
 							if (minVerandDepth.compareTo(BigDecimal.ZERO) > 0) {
 								Map<String, String> details = new HashMap<>();
-								details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper,
-										CDGAConstant.VERANDAH_FOR_LIGHT_AND_VENTILATION));
+								details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.VERANDAH_FOR_LIGHT_AND_VENTILATION));
 								details.put(DESCRIPTION, VERANDAH_DESCRIPTION);
 								if (minVerandDepth.compareTo(expectedMindepth) <= 0) {
 									details.put(REQUIRED, "Minimum depth not more than "+CDGAdditionalService.viewLenght(pl, expectedMindepth));
@@ -167,8 +157,8 @@ public class Verandah extends FeatureProcess {
 									pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 								} else {
-									details.put(PROVIDED, " Depth  " +CDGAdditionalService.viewLenght(pl, minVerandDepth)+" at floor " + f.getNumber());
 									details.put(REQUIRED, "Minimum depth not more than "+CDGAdditionalService.viewLenght(pl, expectedMindepth));
+									details.put(PROVIDED, " Depth  " +CDGAdditionalService.viewLenght(pl, minVerandDepth)+" at floor " + f.getNumber());
 									details.put(STATUS, Result.Not_Accepted.getResultVal());
 									scrutinyDetail.getDetail().add(details);
 									pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -177,9 +167,10 @@ public class Verandah extends FeatureProcess {
 						}
 
 					}
-
+				
+					
 				}
-
+				
 			}
 
 		}
