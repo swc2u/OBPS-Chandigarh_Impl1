@@ -137,10 +137,7 @@ public class BuildingHeight extends FeatureProcess {
 			checkRuralBuildingHeight(Plan);
 			return Plan;
 		}
-
-		if (!ProcessHelper.isSmallPlot(Plan)) {
-			checkBuildingHeight(Plan);
-		}
+		checkBuildingHeight(Plan);
 		// CSCL comment start
 		// checkBuildingInSecurityZoneArea(Plan);
 		// CSCL comment end
@@ -158,13 +155,18 @@ public class BuildingHeight extends FeatureProcess {
 			exptectedHeight = new BigDecimal("10.36");
 
 			buildingHeight = block.getBuilding().getBuildingHeight();
+			
+			if(Plan.getDrawingPreference().getInFeets()) {
+				exptectedHeight=CDGAdditionalService.meterToFoot(exptectedHeight);
+				buildingHeight=CDGAdditionalService.inchToFeet(buildingHeight);
+			}
 
 			if (exptectedHeight.compareTo(BigDecimal.ZERO) > 0) {
 //					String actualResult = getLocaleMessage(RULE_ACTUAL_KEY, buildingHeight.toString());
 //					String expectedResult = getLocaleMessage(RULE_EXPECTED_KEY, exptectedHeight.toString());
 
-				String actualResult = buildingHeight.toString() + DxfFileConstants.METER;
-				String expectedResult = "Upto " + exptectedHeight.toString() + DxfFileConstants.METER;
+				String actualResult = CDGAdditionalService.viewLenght(Plan, buildingHeight);
+				String expectedResult = "Upto " + CDGAdditionalService.viewLenght(Plan, exptectedHeight);
 
 				if (buildingHeight.compareTo(exptectedHeight) > 0) {
 					Map<String, String> details = new HashMap<>();
@@ -343,13 +345,18 @@ public class BuildingHeight extends FeatureProcess {
 
 			//	buildingHeight = block.getBuilding().getBuildingHeight(); // block height + mumty height
 				buildingHeight = block.getHeight();
+				
+				if(Plan.getDrawingPreference().getInFeets()) {
+					exptectedHeight=CDGAdditionalService.meterToFoot(exptectedHeight.toString());
+					buildingHeight=CDGAdditionalService.inchToFeet(buildingHeight);
+				}
 
 				if (exptectedHeight.compareTo(BigDecimal.ZERO) > 0) {
 //					String actualResult = getLocaleMessage(RULE_ACTUAL_KEY, buildingHeight.toString());
 //					String expectedResult = getLocaleMessage(RULE_EXPECTED_KEY, exptectedHeight.toString());
 
-					String actualResult = buildingHeight.toString() + DxfFileConstants.METER;
-					String expectedResult = "Upto " + exptectedHeight.toString() + DxfFileConstants.METER;
+					String actualResult = CDGAdditionalService.viewLenght(Plan, buildingHeight);
+					String expectedResult = "Upto " + CDGAdditionalService.viewLenght(Plan, exptectedHeight);
 
 					if (buildingHeight.compareTo(exptectedHeight) > 0) {
 						Map<String, String> details = new HashMap<>();

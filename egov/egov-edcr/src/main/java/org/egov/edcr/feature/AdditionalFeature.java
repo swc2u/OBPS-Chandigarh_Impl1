@@ -212,8 +212,10 @@ public class AdditionalFeature extends FeatureProcess {
 			validateRuralCommercialUnitAtGroundFloor(pl);
 			validateRuralMinimumFloorToCeilingHeight(pl, errors);
 			// calling additional feature
+			
 			return pl;
 		}
+		additionalFeature2.process(pl);
 		validateAr(pl);
 		validateNumberOfFloorsSkelton(pl);
 		validatePlinthHeight(pl, errors);
@@ -306,12 +308,18 @@ public class AdditionalFeature extends FeatureProcess {
 			}
 
 			BigDecimal minewsArea = BigDecimal.ZERO;
+			BigDecimal expectedArea=new BigDecimal(30);
 
 			if (!eWSDUUnit.isEmpty())
 				minewsArea = eWSDUUnit.stream().map(Measurement::getArea).reduce(BigDecimal::min).get();
+			
+			if(pl.getDrawingPreference().getInFeets()) {
+				minewsArea=CDGAdditionalService.inchtoFeetArea(minewsArea);
+				expectedArea=CDGAdditionalService.meterToFootArea(expectedArea);
+			}
 
-			if (minewsArea.compareTo(new BigDecimal("30")) < 0) {
-				pl.addError("ews", "ews area is less then 30 sqm");
+			if (minewsArea.compareTo(expectedArea) < 0) {
+				pl.addError("ews", "ews area is less then "+CDGAdditionalService.viewArea(pl, expectedArea));
 			}
 
 			if (genralDUUnit.size() > 0) {
@@ -371,7 +379,7 @@ public class AdditionalFeature extends FeatureProcess {
 						CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.PAYING_GUEST));
 				details.put(DESCRIPTION, "Creche and paying guest facility");
 				details.put(REQUIRED, " Permitted");
-				details.put(PROVIDED, providedPayingGuestSpace + " sqm");
+				details.put(PROVIDED, CDGAdditionalService.viewArea(pl, providedPayingGuestSpace));
 				details.put(STATUS, Result.Accepted.getResultVal());
 
 				scrutinyDetail.getDetail().add(details);
@@ -429,8 +437,8 @@ public class AdditionalFeature extends FeatureProcess {
 				details.put(RULE_NO,
 						CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.STD_PCO));
 				details.put(DESCRIPTION, "STD/ PCO/ fax and photostat machine");
-				details.put(REQUIRED, requiredStdSpace + " sqm");
-				details.put(PROVIDED, providedStdSpace + " sqm");
+				details.put(REQUIRED, CDGAdditionalService.viewArea(pl, requiredStdSpace));
+				details.put(PROVIDED, CDGAdditionalService.viewArea(pl, providedStdSpace));
 				if (providedStdSpace.compareTo(requiredStdSpace) <= 0) {
 					details.put(STATUS, Result.Accepted.getResultVal());
 				} else {
@@ -478,13 +486,18 @@ public class AdditionalFeature extends FeatureProcess {
 				}
 			}
 		}
+		
+		if(pl.getDrawingPreference().getInFeets()) {
+			providedProfessionalsConsultantsSpace=CDGAdditionalService.inchtoFeetArea(providedProfessionalsConsultantsSpace);
+			requiredProfessionalsConsultantsSpace=CDGAdditionalService.meterToFootArea(requiredProfessionalsConsultantsSpace);
+		}
 
 		if (isProfessionalsConsultantsSpaceProvided) {
 //			details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,
 //					CDGAConstant.PROFESSIONALS_CONSULTANTS_SPACE));
 			details.put(DESCRIPTION, "Commercial unit at ground floor");
-			details.put(REQUIRED, requiredProfessionalsConsultantsSpace + " sqm");
-			details.put(PROVIDED, providedProfessionalsConsultantsSpace + " sqm");
+			details.put(REQUIRED, CDGAdditionalService.viewArea(pl, requiredProfessionalsConsultantsSpace));
+			details.put(PROVIDED, CDGAdditionalService.viewArea(pl, providedProfessionalsConsultantsSpace));
 			if (providedProfessionalsConsultantsSpace.compareTo(requiredProfessionalsConsultantsSpace) <= 0) {
 				details.put(STATUS, Result.Accepted.getResultVal());
 			} else {
@@ -521,6 +534,7 @@ public class AdditionalFeature extends FeatureProcess {
 				requiredProfessionalsConsultantsSpace = totalCoverageAreaOf25Percent;
 			else
 				requiredProfessionalsConsultantsSpace = FIFTY;
+			
 
 			Map<String, String> details = new HashMap<>();
 
@@ -544,8 +558,8 @@ public class AdditionalFeature extends FeatureProcess {
 				details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,
 						CDGAConstant.PROFESSIONALS_CONSULTANTS_SPACE));
 				details.put(DESCRIPTION, "Professional consultant space");
-				details.put(REQUIRED, requiredProfessionalsConsultantsSpace + " sqm");
-				details.put(PROVIDED, providedProfessionalsConsultantsSpace + " sqm");
+				details.put(REQUIRED, CDGAdditionalService.viewArea(pl, requiredProfessionalsConsultantsSpace));
+				details.put(PROVIDED, CDGAdditionalService.viewArea(pl, providedProfessionalsConsultantsSpace));
 				if (providedProfessionalsConsultantsSpace.compareTo(requiredProfessionalsConsultantsSpace) <= 0) {
 					details.put(STATUS, Result.Accepted.getResultVal());
 				} else {
@@ -706,31 +720,41 @@ public class AdditionalFeature extends FeatureProcess {
 				&& pl.getVirtualBuilding().getMostRestrictiveFarHelper().getSubtype() != null
 				&& !DxfFileConstants.A_R
 						.equals(pl.getVirtualBuilding().getMostRestrictiveFarHelper().getSubtype().getCode())
-				&& pl.getPlot() != null && pl.getPlot().getArea().compareTo(new BigDecimal(2000)) > 0) {
-
-			if (pl.getPlanInformation() != null
-					&& !pl.getPlanInformation().getBarrierFreeAccessForPhyChlngdPpl().isEmpty()
-					&& DcrConstants.YES.equals(pl.getPlanInformation().getBarrierFreeAccessForPhyChlngdPpl())) {
-
-				Map<String, String> details = new HashMap<>();
-				// details.put(RULE_NO, RULE_50);
-				details.put(DESCRIPTION, BARRIER_FREE_ACCESS_FOR_PHYSICALLY_CHALLENGED_PEOPLE_DESC);
-				details.put(PERMISSIBLE, DcrConstants.YES);
-				details.put(PROVIDED, DcrConstants.YES);
-				details.put(STATUS, Result.Accepted.getResultVal());
-				scrutinyDetail.getDetail().add(details);
-				pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
-
-			} else {
-				Map<String, String> details = new HashMap<>();
-				// details.put(RULE_NO, RULE_50);
-				details.put(DESCRIPTION, BARRIER_FREE_ACCESS_FOR_PHYSICALLY_CHALLENGED_PEOPLE_DESC);
-				details.put(PERMISSIBLE, "YES");
-				details.put(PROVIDED, pl.getPlanInformation().getBarrierFreeAccessForPhyChlngdPpl());
-				details.put(STATUS, Result.Not_Accepted.getResultVal());
-				scrutinyDetail.getDetail().add(details);
-				pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+				&& pl.getPlot() != null) {
+			
+			BigDecimal expectedArea=new BigDecimal(2000);
+			BigDecimal providedArea=pl.getPlot().getArea();
+			if(pl.getDrawingPreference().getInFeets()) {
+				expectedArea=CDGAdditionalService.meterToFootArea(expectedArea);
+				providedArea=CDGAdditionalService.inchtoFeetArea(providedArea);
 			}
+			
+			if(providedArea.compareTo(expectedArea) > 0) {
+				if (pl.getPlanInformation() != null
+						&& !pl.getPlanInformation().getBarrierFreeAccessForPhyChlngdPpl().isEmpty()
+						&& DcrConstants.YES.equals(pl.getPlanInformation().getBarrierFreeAccessForPhyChlngdPpl())) {
+
+					Map<String, String> details = new HashMap<>();
+					// details.put(RULE_NO, RULE_50);
+					details.put(DESCRIPTION, BARRIER_FREE_ACCESS_FOR_PHYSICALLY_CHALLENGED_PEOPLE_DESC);
+					details.put(PERMISSIBLE, DcrConstants.YES);
+					details.put(PROVIDED, DcrConstants.YES);
+					details.put(STATUS, Result.Accepted.getResultVal());
+					scrutinyDetail.getDetail().add(details);
+					pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+
+				} else {
+					Map<String, String> details = new HashMap<>();
+					// details.put(RULE_NO, RULE_50);
+					details.put(DESCRIPTION, BARRIER_FREE_ACCESS_FOR_PHYSICALLY_CHALLENGED_PEOPLE_DESC);
+					details.put(PERMISSIBLE, "YES");
+					details.put(PROVIDED, pl.getPlanInformation().getBarrierFreeAccessForPhyChlngdPpl());
+					details.put(STATUS, Result.Not_Accepted.getResultVal());
+					scrutinyDetail.getDetail().add(details);
+					pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+				}	
+			}
+						
 		}
 
 	}
@@ -1150,12 +1174,17 @@ public class AdditionalFeature extends FeatureProcess {
 			ScrutinyDetail scrutinyDetail = getNewScrutinyDetail("Block_" + blkNo + "_" + "Plinth");
 			List<BigDecimal> plinthHeights = block.getPlinthHeight();
 			OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding().getMostRestrictiveFarHelper();
-
+			BigDecimal expectedMinPlinth=new BigDecimal(0.45);
 			if (!plinthHeights.isEmpty() && mostRestrictiveOccupancyType != null) {
 				minPlinthHeight = plinthHeights.stream().reduce(BigDecimal::min).get();
 				maxPlinthHeight = plinthHeights.stream().reduce(BigDecimal::max).get();
+				
+				if(pl.getDrawingPreference().getInFeets()) {
+					expectedMinPlinth=CDGAdditionalService.meterToFoot(expectedMinPlinth);
+					minPlinthHeight=CDGAdditionalService.inchToFeet(minPlinthHeight);
+				}
 
-				if (minPlinthHeight.compareTo(BigDecimal.valueOf(0.45)) >= 0) {
+				if (minPlinthHeight.compareTo(expectedMinPlinth) >= 0) {
 					isAccepted = true;
 				}
 
@@ -1172,9 +1201,9 @@ public class AdditionalFeature extends FeatureProcess {
 						CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.PLINTH_LEVEL));
 				details.put(DESCRIPTION, MIN_PLINTH_HEIGHT_DESC);
 
-				details.put(PERMISSIBLE, MIN_PLINTH_HEIGHT);
+				details.put(PERMISSIBLE, ">="+CDGAdditionalService.viewLenght(pl, expectedMinPlinth));
 
-				details.put(PROVIDED, String.valueOf(minPlinthHeight.setScale(2, BigDecimal.ROUND_HALF_EVEN)));
+				details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minPlinthHeight));
 				details.put(STATUS, isAccepted ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
 				scrutinyDetail.getDetail().add(details);
 				pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -1185,15 +1214,19 @@ public class AdditionalFeature extends FeatureProcess {
 	private void validateRuralMinimumFloorToCeilingHeight(Plan pl, HashMap<String, String> errors) {
 		for (Block block : pl.getBlocks()) {
 
-			boolean isAccepted = false;
-			BigDecimal minimumFloorHeightExpected = new BigDecimal("2.75");
-
 			String blkNo = block.getNumber();
 			ScrutinyDetail scrutinyDetail = getNewScrutinyDetailMinimumFloorToCeilingHeight(
 					"Block_" + blkNo + "_" + "Minimum floor to ceiling height");
 
 			for (Floor floor : block.getBuilding().getFloors()) {
+				boolean isAccepted = false;
+				BigDecimal minimumFloorHeightExpected = new BigDecimal("2.75");
 				BigDecimal minimumFloorHeightProvided = floor.getFloorHeights().stream().reduce(BigDecimal::min).get();
+				
+				if(pl.getDrawingPreference().getInFeets()) {
+					minimumFloorHeightExpected=CDGAdditionalService.meterToFoot(minimumFloorHeightExpected);
+					minimumFloorHeightProvided=CDGAdditionalService.inchToFeet(minimumFloorHeightProvided);
+				}
 
 				if (minimumFloorHeightProvided == null || minimumFloorHeightProvided.compareTo(BigDecimal.ZERO) <= 0) {
 					pl.addError("Minimum floor to ceiling height " + blkNo + floor.getNumber(),
@@ -1208,10 +1241,9 @@ public class AdditionalFeature extends FeatureProcess {
 //							CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.PLINTH_LEVEL));
 				details.put(DESCRIPTION, "Minimum floor to ceiling height");
 				details.put(FLOOR, floor.getNumber().toString());
-				details.put(PERMISSIBLE, ">= " + minimumFloorHeightExpected.toString());
+				details.put(PERMISSIBLE, ">= " + CDGAdditionalService.viewLenght(pl, minimumFloorHeightExpected));
 
-				details.put(PROVIDED,
-						String.valueOf(minimumFloorHeightProvided.setScale(2, BigDecimal.ROUND_HALF_EVEN)));
+				details.put(PROVIDED,CDGAdditionalService.viewLenght(pl, minimumFloorHeightProvided));
 				details.put(STATUS, isAccepted ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
 				scrutinyDetail.getDetail().add(details);
 
@@ -1232,21 +1264,31 @@ public class AdditionalFeature extends FeatureProcess {
 			List<BigDecimal> plinthHeights = block.getPlinthHeight();
 			OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding().getMostRestrictiveFarHelper();
 
+			BigDecimal expectedMinPlinthHeight=new BigDecimal(0.3);
+			BigDecimal expectedMaxPlinthHeight=new BigDecimal(1.2);
+			
 			if (pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE) != null) {
 
 				if (!plinthHeights.isEmpty() && mostRestrictiveOccupancyType != null) {
 					minPlinthHeight = plinthHeights.stream().reduce(BigDecimal::min).get();
 					maxPlinthHeight = plinthHeights.stream().reduce(BigDecimal::max).get();
+					
+					if(pl.getDrawingPreference().getInFeets()) {
+						expectedMinPlinthHeight=CDGAdditionalService.meterToFoot(expectedMinPlinthHeight);
+						expectedMaxPlinthHeight=CDGAdditionalService.meterToFoot(expectedMaxPlinthHeight);
+						minPlinthHeight=CDGAdditionalService.inchToFeet(minPlinthHeight);
+						maxPlinthHeight=CDGAdditionalService.inchToFeet(maxPlinthHeight);
+					}
 
 					if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 							&& DxfFileConstants.MARLA
 									.equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
-						if (minPlinthHeight.compareTo(BigDecimal.valueOf(0.3)) >= 0) {
+						if (minPlinthHeight.compareTo(expectedMinPlinthHeight) >= 0) {
 							isAccepted = true;
 						}
 					} else if (!isOccupancyTypePlinthNotApplicable(mostRestrictiveOccupancyType)) {
-						if (minPlinthHeight.compareTo(BigDecimal.valueOf(0.3)) >= 0
-								&& maxPlinthHeight.compareTo(BigDecimal.valueOf(1.2)) <= 0) {
+						if (minPlinthHeight.compareTo(expectedMinPlinthHeight) >= 0
+								&& maxPlinthHeight.compareTo(expectedMaxPlinthHeight) <= 0) {
 							isAccepted = true;
 						}
 					}
@@ -1270,11 +1312,11 @@ public class AdditionalFeature extends FeatureProcess {
 
 				if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 						&& DxfFileConstants.MARLA.equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE)))
-					details.put(PERMISSIBLE, MIN_PLINTH_HEIGHT_MARALA);
+					details.put(PERMISSIBLE, " >= "+CDGAdditionalService.viewLenght(pl, expectedMinPlinthHeight));
 				else
-					details.put(PERMISSIBLE, MIN_PLINTH_HEIGHT_ALL_AREA);
+					details.put(PERMISSIBLE, " >= "+CDGAdditionalService.viewLenght(pl, expectedMinPlinthHeight)+" and <= "+CDGAdditionalService.viewLenght(pl, expectedMaxPlinthHeight));
 
-				details.put(PROVIDED, String.valueOf(minPlinthHeight.setScale(2, BigDecimal.ROUND_HALF_EVEN)));
+				details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minPlinthHeight));
 				details.put(STATUS, isAccepted ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
 				scrutinyDetail.getDetail().add(details);
 				pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);

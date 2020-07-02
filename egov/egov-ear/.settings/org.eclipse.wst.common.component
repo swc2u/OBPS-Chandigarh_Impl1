@@ -257,6 +257,15 @@
         <dependent-module archiveName="DynamicJasper-5.0.2.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/ar/com/fdvs/DynamicJasper/5.0.2/DynamicJasper-5.0.2.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="json-path-2.2.0.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/jayway/jsonpath/json-path/2.2.0/json-path-2.2.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="json-smart-2.2.1.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/net/minidev/json-smart/2.2.1/json-smart-2.2.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="accessors-smart-1.1.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/net/minidev/accessors-smart/1.1/accessors-smart-1.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="egov-eis-BPA-3.0.0-SNAPSHOT.jar" deploy-path="/lib" handle="module:/resource/egov-eis/egov-eis">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -320,19 +329,7 @@
         <dependent-module archiveName="egov-edcr-BPA-3.0.0-SNAPSHOT.jar" deploy-path="/lib" handle="module:/resource/egov-edcr/egov-edcr">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="egov-dcr-1.0.0-20200409.072246-154.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/egov/egov-dcr/1.0.0-SNAPSHOT/egov-dcr-1.0.0-SNAPSHOT.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="kabeja-0.4.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/kabeja/kabeja/0.4/kabeja-0.4.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="batik-all-1.0.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/edcr/batik-all/1.0/batik-all-1.0.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="kabeja-svg-0.4.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/edcr/kabeja-svg/0.4/kabeja-svg-0.4.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="pdf-transcoder-1.1.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/edcr/pdf-transcoder/1.1/pdf-transcoder-1.1.jar">
+        <dependent-module archiveName="egov-dcr-5.0.0.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/egov/egov-dcr/5.0.0/egov-dcr-5.0.0.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="egov-portal-BPA-3.0.0-SNAPSHOT.jar" deploy-path="/lib" handle="module:/resource/egov-portal/egov-portal">

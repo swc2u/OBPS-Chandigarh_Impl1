@@ -420,12 +420,12 @@ public class HeightOfRoom extends FeatureProcess {
                                 }
                                 subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.HABITABLE_ROOM);
                                 subRuleDesc = SUBRULE_41_II_B_AREA_DESC;
-
+                                
                                 boolean valid = false;
                                 boolean isTypicalRepititiveFloor = false;
                                 Map<String, Object> typicalFloorValues = ProcessHelper.getTypicalFloorValues(block, floor,
                                         isTypicalRepititiveFloor);
-                                buildResult(pl, floor, minimumHeight, subRule, subRuleDesc, totalArea, valid, typicalFloorValues);
+                                buildResultArea(pl, floor, minimumHeight, subRule, subRuleDesc, totalArea, valid, typicalFloorValues);
 
                                 subRuleDesc = SUBRULE_41_II_B_TOTAL_WIDTH;
                                 buildResult(pl, floor, minWidth, subRule, subRuleDesc, minRoomWidth, valid, typicalFloorValues);
@@ -577,14 +577,20 @@ public class HeightOfRoom extends FeatureProcess {
             String value = typicalFloorValues.get("typicalFloors") != null
                     ? (String) typicalFloorValues.get("typicalFloors")
                     : " floor " + floor.getNumber();
+            
+            if(pl.getDrawingPreference().getInFeets()) {
+            	expected=CDGAdditionalService.meterToFoot(expected);
+            	actual=CDGAdditionalService.inchToFeet(actual);
+            }
+            
             if (valid) {
                 setReportOutputDetails(pl, subRule, subRuleDesc, value,
-                        expected + DxfFileConstants.METER,
-                        CDGAdditionalService.roundBigDecimal(actual) + DxfFileConstants.METER, Result.Accepted.getResultVal());
+                        CDGAdditionalService.viewLenght(pl, expected),
+                        CDGAdditionalService.viewLenght(pl, actual), Result.Accepted.getResultVal());
             } else {
                 setReportOutputDetails(pl, subRule, subRuleDesc, value,
-                        expected + DxfFileConstants.METER,
-                        CDGAdditionalService.roundBigDecimal(actual) + DxfFileConstants.METER, Result.Not_Accepted.getResultVal());
+                        CDGAdditionalService.viewLenght(pl, expected),
+                        CDGAdditionalService.viewLenght(pl, actual), Result.Not_Accepted.getResultVal());
             }
         }
     }
@@ -594,6 +600,12 @@ public class HeightOfRoom extends FeatureProcess {
         if (!(Boolean) typicalFloorValues.get("isTypicalRepititiveFloor")
                 && expected.compareTo(BigDecimal.valueOf(0)) > 0 &&
                 subRule != null && subRuleDesc != null) {
+        	
+        	if(pl.getDrawingPreference().getInFeets()) {
+        		expected=CDGAdditionalService.meterToFoot(expected);
+        		actual=CDGAdditionalService.inchToFeet(actual);
+        	}
+        	
             if (actual.compareTo(expected) >= 0) {
                 valid = true;
             }
@@ -602,12 +614,12 @@ public class HeightOfRoom extends FeatureProcess {
                     : " floor " + floor.getNumber();
             if (valid) {
                 setReportOutputDetails(pl, subRule, subRuleDesc, value,
-                        expected + DxfFileConstants.METER_SQM,
-                        CDGAdditionalService.roundBigDecimal(actual) + DxfFileConstants.METER_SQM, Result.Accepted.getResultVal());
+                        CDGAdditionalService.viewArea(pl, expected),
+                        CDGAdditionalService.viewArea(pl, actual), Result.Accepted.getResultVal());
             } else {
                 setReportOutputDetails(pl, subRule, subRuleDesc, value,
-                        expected + DxfFileConstants.METER_SQM,
-                        CDGAdditionalService.roundBigDecimal(actual) + DxfFileConstants.METER_SQM, Result.Not_Accepted.getResultVal());
+                        CDGAdditionalService.viewArea(pl, expected),
+                        CDGAdditionalService.viewArea(pl, actual), Result.Not_Accepted.getResultVal());
             }
         }
     }

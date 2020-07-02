@@ -134,27 +134,31 @@ private boolean getOccupanciesForMezzanineNotAllowed(OccupancyTypeHelper occupan
 											.subtract(mezzanineFloor.getDeduction());
 								String floorNo = " floor " + floor.getNumber();
 								// CGCL start according to 26jan
-
-								if (getOccupanciesForMezzanineSkelton(mostRestrictiveOccupancyType) && (mezzanineFloor.getHeight().compareTo(new BigDecimal("2.40"))>=0)) {
+								BigDecimal expectedHeight=new BigDecimal(2.4);
+								BigDecimal providedHeight=mezzanineFloor.getHeight();
+								if(pl.getDrawingPreference().getInFeets()) {
+									expectedHeight=CDGAdditionalService.meterToFoot(expectedHeight);
+								}
+								if (getOccupanciesForMezzanineSkelton(mostRestrictiveOccupancyType) && (providedHeight.compareTo(expectedHeight)>=0)) {
 									setReportOutputDetails(pl, subRule,
 											RULE46_DIM_DESC + " " + mezzanineFloor.getMezzanineNumber(), floorNo,
-											"2.4" + DxfFileConstants.METER,
-											mezzanineFloor.getHeight() + DxfFileConstants.METER, Result.Accepted.getResultVal());
+											CDGAdditionalService.viewLenght(pl, expectedHeight),
+											CDGAdditionalService.viewLenght(pl, providedHeight), Result.Accepted.getResultVal());
 
 									return pl;
 								}
 
 								// CGCL end
 
-								boolean valid = false;
-								BigDecimal oneThirdOfBuiltup = builtupArea.divide(BigDecimal.valueOf(3),
-										DECIMALDIGITS_MEASUREMENTS, ROUNDMODE_MEASUREMENTS);
-								if (mezzanineFloorArea.doubleValue() > 0
-										&& mezzanineFloorArea.compareTo(oneThirdOfBuiltup) <= 0) {
-									valid = true;
-								}
-
+								
+								expectedHeight=HEIGHT_2_POINT_2;
 								BigDecimal height = mezzanineFloor.getHeight();
+								
+								if(pl.getDrawingPreference().getInFeets()) {
+									expectedHeight=CDGAdditionalService.meterToFoot(expectedHeight);
+									height=CDGAdditionalService.inchToFeet(height);
+								}
+								
 								if (height.compareTo(BigDecimal.ZERO) == 0) {
 									pl.addError(RULE46_DIM_DESC,
 											getLocaleMessage(HEIGHTNOTDEFINED,
@@ -163,35 +167,57 @@ private boolean getOccupanciesForMezzanineNotAllowed(OccupancyTypeHelper occupan
 								} else if (height.compareTo(HEIGHT_2_POINT_2) >= 0) {
 									setReportOutputDetails(pl, subRule,
 											RULE46_DIM_DESC + " " + mezzanineFloor.getMezzanineNumber(), floorNo,
-											HEIGHT_2_POINT_2 + DxfFileConstants.METER, height + DxfFileConstants.METER,
+											CDGAdditionalService.viewLenght(pl, expectedHeight), CDGAdditionalService.viewLenght(pl, height),
 											Result.Accepted.getResultVal());
 								} else {
 									setReportOutputDetails(pl, subRule,
 											RULE46_DIM_DESC + " " + mezzanineFloor.getMezzanineNumber(), floorNo,
-											HEIGHT_2_POINT_2 + DxfFileConstants.METER, height + DxfFileConstants.METER,
+											CDGAdditionalService.viewLenght(pl, expectedHeight), CDGAdditionalService.viewLenght(pl, height),
 											Result.Not_Accepted.getResultVal());
 								}
+								BigDecimal expectedBuilUpArea=AREA_9_POINT_5;
+								BigDecimal providedBuilUpArea=mezzanineFloor.getBuiltUpArea();
+								if(pl.getDrawingPreference().getInFeets()) {
+									expectedBuilUpArea=CDGAdditionalService.meterToFootArea(expectedBuilUpArea);
+									providedBuilUpArea=CDGAdditionalService.inchtoFeetArea(providedBuilUpArea);
+								}
+								
 								if (mezzanineFloor.getBuiltUpArea().compareTo(AREA_9_POINT_5) >= 0) {
 									setReportOutputDetails(pl, subRule,
 											RULE46_MINAREA_DESC + " " + mezzanineFloor.getMezzanineNumber(), floorNo,
-											AREA_9_POINT_5 + DxfFileConstants.METER_SQM, mezzanineFloor.getBuiltUpArea() + DxfFileConstants.METER_SQM,
+											CDGAdditionalService.viewArea(pl, expectedBuilUpArea), CDGAdditionalService.viewArea(pl, providedBuilUpArea),
 											Result.Accepted.getResultVal());
 								} else {
 									setReportOutputDetails(pl, subRule,
 											RULE46_MINAREA_DESC + " " + mezzanineFloor.getMezzanineNumber(), floorNo,
-											AREA_9_POINT_5 + DxfFileConstants.METER_SQM, mezzanineFloor.getBuiltUpArea() + DxfFileConstants.METER_SQM,
+											CDGAdditionalService.viewArea(pl, expectedBuilUpArea), CDGAdditionalService.viewArea(pl, providedBuilUpArea),
 											Result.Not_Accepted.getResultVal());
 								}
 
+								boolean valid = false;
+								BigDecimal oneThirdOfBuiltup = builtupArea.divide(BigDecimal.valueOf(3),
+										DECIMALDIGITS_MEASUREMENTS, ROUNDMODE_MEASUREMENTS);
+								BigDecimal expectedFloorArea=oneThirdOfBuiltup;
+								BigDecimal providedFloorArea=mezzanineFloorArea;
+								if(pl.getDrawingPreference().getInFeets()) {
+									expectedFloorArea=CDGAdditionalService.inchtoFeetArea(expectedFloorArea);
+									providedFloorArea=CDGAdditionalService.inchToFeet(providedFloorArea);
+								}
+								
+								if (providedFloorArea.doubleValue() > 0
+										&& providedFloorArea.compareTo(expectedFloorArea) <= 0) {
+									valid = true;
+								}
+								
 								if (valid) {
 									setReportOutputDetails(pl, subRule,
 											RULE46_MAXAREA_DESC + " " + mezzanineFloor.getMezzanineNumber(), floorNo,
-											oneThirdOfBuiltup + DxfFileConstants.METER_SQM, mezzanineFloorArea + DxfFileConstants.METER_SQM,
+											CDGAdditionalService.viewArea(pl, expectedFloorArea), CDGAdditionalService.viewArea(pl, providedFloorArea),
 											Result.Accepted.getResultVal());
 								} else {
 									setReportOutputDetails(pl, subRule,
 											RULE46_MAXAREA_DESC + " " + mezzanineFloor.getMezzanineNumber(), floorNo,
-											oneThirdOfBuiltup + DxfFileConstants.METER_SQM, mezzanineFloorArea + DxfFileConstants.METER_SQM,
+											CDGAdditionalService.viewArea(pl, expectedFloorArea), CDGAdditionalService.viewArea(pl, providedFloorArea),
 											Result.Not_Accepted.getResultVal());
 								}
 							}

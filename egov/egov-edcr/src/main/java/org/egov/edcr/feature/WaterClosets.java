@@ -123,22 +123,34 @@ public class WaterClosets extends FeatureProcess {
 								}
 							}
 						}
+						BigDecimal expectedMinHeight=new BigDecimal(2.4);
+						BigDecimal expectedMinWidth=new BigDecimal(1);
+						BigDecimal expectedTotalArea=new BigDecimal(1.2);
+						
+						if(pl.getDrawingPreference().getInFeets()) {
+							expectedMinHeight=CDGAdditionalService.meterToFoot(expectedMinHeight);
+							expectedMinWidth=CDGAdditionalService.meterToFoot(expectedMinWidth);
+							expectedTotalArea=CDGAdditionalService.meterToFootArea(expectedTotalArea);
+							minHeight=CDGAdditionalService.inchToFeet(minHeight);
+							minWidth=CDGAdditionalService.inchToFeet(minWidth);
+							totalArea=CDGAdditionalService.inchtoFeetArea(totalArea);
+						}
+						
+						if (minHeight.compareTo(expectedMinHeight) >= 0
+								&& totalArea.compareTo(expectedTotalArea) >= 0
+								&& minWidth.compareTo(expectedMinWidth) >= 0) {
 
-						if (minHeight.compareTo(new BigDecimal(2.4)) >= 0
-								&& totalArea.compareTo(new BigDecimal(1.2)) >= 0
-								&& minWidth.compareTo(new BigDecimal(1)) >= 0) {
-
-							details.put(REQUIRED, "Height >= 2.4, Total Area >= 1.2, Width >= 1");
-							details.put(PROVIDED, "Height >= " + minHeight + ", Total Area >= " + totalArea
-									+ ", Width >= " + minWidth);
+							details.put(REQUIRED, "Height >= "+CDGAdditionalService.viewLenght(pl, expectedMinHeight)+", Total Area >= "+CDGAdditionalService.viewArea(pl, expectedTotalArea)+", Width >= "+CDGAdditionalService.viewLenght(pl, expectedMinWidth));
+							details.put(PROVIDED, "Height >= " + CDGAdditionalService.viewLenght(pl, minHeight) + ", Total Area >= " + CDGAdditionalService.viewArea(pl, totalArea)
+									+ ", Width >= " + CDGAdditionalService.viewLenght(pl, minWidth));
 							details.put(STATUS, Result.Accepted.getResultVal());
 							scrutinyDetail.getDetail().add(details);
 							pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 						} else {
-							details.put(REQUIRED, "Height >= 2.4, Total Area >= 1.2, Width >= 1");
-							details.put(PROVIDED, "Height >= " + minHeight + ", Total Area >= " + totalArea
-									+ ", Width >= " + minWidth);
+							details.put(REQUIRED, "Height >= "+CDGAdditionalService.viewLenght(pl, expectedMinHeight)+", Total Area >= "+CDGAdditionalService.viewArea(pl, expectedTotalArea)+", Width >= "+CDGAdditionalService.viewLenght(pl, expectedMinWidth));
+							details.put(PROVIDED, "Height >= " + CDGAdditionalService.viewLenght(pl, minHeight) + ", Total Area >= " + CDGAdditionalService.viewArea(pl, totalArea)
+									+ ", Width >= " + CDGAdditionalService.viewLenght(pl, minWidth));
 							details.put(STATUS, Result.Not_Accepted.getResultVal());
 							scrutinyDetail.getDetail().add(details);
 							pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);

@@ -206,21 +206,26 @@ public class AdditionalFeature2 extends FeatureProcess {
 			scrutinyDetail.addColumnHeading(5, STATUS);
 			Map<String, String> details = new HashMap<>();
 
-			BigDecimal requiredCheckpostArea = new BigDecimal("14");
-
 			if (checkPosts.size() < 2) {
 				pl.addError("CheckPost", "Minimum 2 checkPost is required. but provided: " + checkPosts.size());
 			}
 			int i = 1;
 			for (Occupancy occupancy : checkPosts) {
+				BigDecimal requiredCheckpostArea = new BigDecimal("14");
+				BigDecimal providedCheckpostArea=occupancy.getBuiltUpArea();
+				
+				if(pl.getDrawingPreference().getInFeets()) {
+					requiredCheckpostArea=CDGAdditionalService.meterToFoot(requiredCheckpostArea);
+					providedCheckpostArea=CDGAdditionalService.inchToFeet(providedCheckpostArea);
+				}
+				
 				details.put(RULE_NO,
 						CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.CHECKPOST));
 				details.put(DESCRIPTION, "Checkpost " + i);
-				details.put(REQUIRED, "<= " + requiredCheckpostArea + DxfFileConstants.METER_SQM);
-				details.put(PROVIDED,
-						CDGAdditionalService.roundBigDecimal(occupancy.getBuiltUpArea()) + DxfFileConstants.METER_SQM);
+				details.put(REQUIRED, "<= " + CDGAdditionalService.viewArea(pl, requiredCheckpostArea));
+				details.put(PROVIDED,CDGAdditionalService.viewArea(pl, providedCheckpostArea));
 
-				if (occupancy.getBuiltUpArea().compareTo(requiredCheckpostArea) <= 0) {
+				if (providedCheckpostArea.compareTo(requiredCheckpostArea) <= 0) {
 					details.put(STATUS, Result.Accepted.getResultVal());
 				} else {
 					details.put(STATUS, Result.Not_Accepted.getResultVal());
@@ -286,7 +291,7 @@ public class AdditionalFeature2 extends FeatureProcess {
 			BigDecimal plotArea = pl.getPlot() != null ? pl.getPlot().getArea() : BigDecimal.ZERO;
 			;
 			if (plotArea.doubleValue() > 0)
-				ancillaryFacilitiesFar = calulateFar(floorTotalFloorArea, pl.getPlot().getArea());
+				ancillaryFacilitiesFar = calulateFar(floorTotalFloorArea, pl.getPlot().getArea(),pl.getDrawingPreference().getInFeets());
 
 			double expectedFar = pl.getFarDetails().getPermissableFar() - pl.getFarDetails().getProvidedFar();
 
@@ -313,8 +318,12 @@ public class AdditionalFeature2 extends FeatureProcess {
 		}
 	}
 
-	private BigDecimal calulateFar(BigDecimal floorArea, BigDecimal plotArea) {
-		BigDecimal far = floorArea.divide(plotArea, DECIMALDIGITS_MEASUREMENTS, ROUNDMODE_MEASUREMENTS);
+	private BigDecimal calulateFar(BigDecimal floorArea, BigDecimal plotArea,boolean isInFeet) {
+		BigDecimal far=BigDecimal.ZERO;
+		if(isInFeet)
+			far=CDGAdditionalService.inchtoFeetArea(floorArea).divide(plotArea, DECIMALDIGITS_MEASUREMENTS, ROUNDMODE_MEASUREMENTS);
+		else
+			far = floorArea.divide(plotArea, DECIMALDIGITS_MEASUREMENTS, ROUNDMODE_MEASUREMENTS);
 		return far;
 	}
 
@@ -343,22 +352,28 @@ public class AdditionalFeature2 extends FeatureProcess {
 						if (DxfFileConstants.A_GF.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
 							BigDecimal providedHeight = occupancy.getHeight();
 							boolean isValid = false;
+							BigDecimal expectedHeight=new BigDecimal(2.4);
+							
+							if(pl.getDrawingPreference().getInFeets()) {
+								expectedHeight=CDGAdditionalService.meterToFoot(expectedHeight);
+								providedHeight=CDGAdditionalService.inchToFeet(providedHeight);
+							}
 
-							if (providedHeight.compareTo(new BigDecimal("2.4")) <= 0)
+							if (providedHeight.compareTo(expectedHeight) <= 0)
 								isValid = true;
 							if (isValid)
 								setReportOutputDetails(pl,
 										CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,
 												CDGAConstant.CHECKPOST),
-										"Gallery Floors" + DxfFileConstants.METER, " floor " + floor.getNumber(),
-										"2.4" + DxfFileConstants.METER, providedHeight + DxfFileConstants.METER,
+										"Gallery Floors", " floor " + floor.getNumber(),
+										CDGAdditionalService.viewLenght(pl, expectedHeight), CDGAdditionalService.viewLenght(pl, providedHeight),
 										Result.Accepted.getResultVal());
 							else
 								setReportOutputDetails(pl,
 										CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,
 												CDGAConstant.CHECKPOST),
-										"Gallery Floors" + DxfFileConstants.METER, " floor " + floor.getNumber(),
-										"2.4" + DxfFileConstants.METER, providedHeight + DxfFileConstants.METER,
+										"Gallery Floors", " floor " + floor.getNumber(),
+										CDGAdditionalService.viewLenght(pl, expectedHeight), CDGAdditionalService.viewLenght(pl, providedHeight),
 										Result.Accepted.getResultVal());
 
 						}
@@ -397,7 +412,7 @@ public class AdditionalFeature2 extends FeatureProcess {
 			BigDecimal plotArea = pl.getPlot() != null ? pl.getPlot().getArea() : BigDecimal.ZERO;
 			;
 			if (plotArea.doubleValue() > 0)
-				residentialUseFar = calulateFar(floorTotalFloorArea, pl.getPlot().getArea());
+				residentialUseFar = calulateFar(floorTotalFloorArea, pl.getPlot().getArea(),pl.getDrawingPreference().getInFeets());
 
 			double expectedFar = pl.getFarDetails().getPermissableFar() - pl.getFarDetails().getProvidedFar();
 

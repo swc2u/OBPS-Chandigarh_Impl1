@@ -108,32 +108,45 @@ public class PassageService extends FeatureProcess {
 						BigDecimal minPassagePolyLine = 
 						passagePolylines.stream().reduce(BigDecimal::min).get();
 
-						BigDecimal minWidth = Util.roundOffTwoDecimal(minPassagePolyLine);
+						BigDecimal minWidth =minPassagePolyLine;
+						BigDecimal expectedWidth=BigDecimal.ONE;
+						if(plan.getDrawingPreference().getInFeets()) {
+							minWidth=CDGAdditionalService.inchToFeet(minWidth);
+							expectedWidth=CDGAdditionalService.meterToFoot(expectedWidth);
+						}else
+							minWidth = Util.roundOffTwoDecimal(minPassagePolyLine);
 						
-						if (minWidth.compareTo(BigDecimal.ONE) >= 0) {
+						if (minWidth.compareTo(expectedWidth) >= 0) {
 							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.MINIMUN_PASSAGE), RULE_41_DESCRIPTION,
-									String.valueOf(1), String.valueOf(minWidth), Result.Accepted.getResultVal(),
+									CDGAdditionalService.viewLenght(plan, expectedWidth), CDGAdditionalService.viewLenght(plan, minWidth), Result.Accepted.getResultVal(),
 									scrutinyDetail);
 						} else {
 							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.MINIMUN_PASSAGE), RULE_41_DESCRIPTION,
-									String.valueOf(1), String.valueOf(minWidth), Result.Not_Accepted.getResultVal(),
+									CDGAdditionalService.viewLenght(plan, expectedWidth), CDGAdditionalService.viewLenght(plan, minWidth), Result.Not_Accepted.getResultVal(),
 									scrutinyDetail);
 						}
 					}
 
 					if (passageStairPolylines != null && passageStairPolylines.size() > 0) {
 
-						BigDecimal minPassageStairPolyLine = passageStairPolylines.stream().reduce(BigDecimal::min).get();;
+						BigDecimal minPassageStairPolyLine = passageStairPolylines.stream().reduce(BigDecimal::min).get();
 
-						BigDecimal minWidth = Util.roundOffTwoDecimal(minPassageStairPolyLine);
+						BigDecimal minWidth =minPassageStairPolyLine;
+						BigDecimal expectedMinWidth=new BigDecimal(1.2);
+						
+						if(plan.getDrawingPreference().getInFeets()) {
+							expectedMinWidth=CDGAdditionalService.meterToFoot(expectedMinWidth);
+							minWidth=CDGAdditionalService.inchToFeet(minWidth);
+						}else
+							minWidth= Util.roundOffTwoDecimal(minPassageStairPolyLine);;
 						
 						if (minWidth.compareTo(Util.roundOffTwoDecimal(BigDecimal.valueOf(1.2))) >= 0) {
 							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.MINIMUN_PASSAGE), RULE39_6_DESCRIPTION,
-									PASSAGE_STAIR_MINIMUM_WIDTH, String.valueOf(minWidth), Result.Accepted.getResultVal(),
+									CDGAdditionalService.viewLenght(plan, expectedMinWidth), CDGAdditionalService.viewLenght(plan, minWidth), Result.Accepted.getResultVal(),
 									scrutinyDetail1);
 						} else {
 							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.MINIMUN_PASSAGE), RULE39_6_DESCRIPTION,
-									PASSAGE_STAIR_MINIMUM_WIDTH, String.valueOf(minWidth), Result.Not_Accepted.getResultVal(),
+									CDGAdditionalService.viewLenght(plan, expectedMinWidth), CDGAdditionalService.viewLenght(plan, minWidth), Result.Not_Accepted.getResultVal(),
 									scrutinyDetail1);
 						}
 					}

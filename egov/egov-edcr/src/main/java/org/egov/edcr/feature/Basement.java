@@ -130,13 +130,19 @@ public class Basement extends FeatureProcess {
 									&& !f.getHeightFromTheFloorToCeiling().isEmpty()) {
 
 								minLength = f.getHeightFromTheFloorToCeiling().stream().reduce(BigDecimal::min).get();
+								BigDecimal expectedLength=new BigDecimal(2.4);
+								
+								if(pl.getDrawingPreference().getInFeets()) {
+									minLength=CDGAdditionalService.inchToFeet(minLength);
+									expectedLength=CDGAdditionalService.meterToFoot(expectedLength);
+								}
 
-								if (minLength.compareTo(BigDecimal.valueOf(2.4)) >= 0) {
+								if (minLength.compareTo(expectedLength) >= 0) {
 									//details.put(RULE_NO, RULE_46_6A);
 									details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.BASEMENT));
 									details.put(DESCRIPTION, BASEMENT_DESCRIPTION_ONE);
-									details.put(REQUIRED, ">= 2.4");
-									details.put(PROVIDED, minLength.toString());
+									details.put(REQUIRED, ">= "+CDGAdditionalService.viewLenght(pl, expectedLength));
+									details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minLength));
 									details.put(STATUS, Result.Accepted.getResultVal());
 									scrutinyDetail.getDetail().add(details);
 
@@ -145,8 +151,8 @@ public class Basement extends FeatureProcess {
 									//details.put(RULE_NO, RULE_46_6A);
 									details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.BASEMENT));
 									details.put(DESCRIPTION, BASEMENT_DESCRIPTION_ONE);
-									details.put(REQUIRED, ">= 2.4");
-									details.put(PROVIDED, minLength.toString());
+									details.put(REQUIRED, ">= "+CDGAdditionalService.viewLenght(pl, expectedLength));
+									details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minLength));
 									details.put(STATUS, Result.Not_Accepted.getResultVal());
 									scrutinyDetail.getDetail().add(details);
 								}
@@ -157,15 +163,23 @@ public class Basement extends FeatureProcess {
 
 								minLength = f.getHeightOfTheCeilingOfUpperBasement().stream().reduce(BigDecimal::min)
 										.get();
-
-								if (minLength.compareTo(BigDecimal.valueOf(1.2)) >= 0
-										&& minLength.compareTo(BigDecimal.valueOf(1.5)) < 0) {
+								BigDecimal expectedLenght1=new BigDecimal(1.2);
+								BigDecimal expectedLenght2=new BigDecimal(1.5);
+								
+								if(pl.getDrawingPreference().getInFeets()) {
+									expectedLenght1=CDGAdditionalService.meterToFoot(expectedLenght1);
+									expectedLenght2=CDGAdditionalService.meterToFoot(expectedLenght2);
+									minLength=CDGAdditionalService.inchToFeet(minLength);
+								}
+								
+								if (minLength.compareTo(expectedLenght1) >= 0
+										&& minLength.compareTo(expectedLenght2) < 0) {
 									details = new HashMap<>();
 									//details.put(RULE_NO, RULE_46_6C);
 									details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.BASEMENT));
 									details.put(DESCRIPTION, BASEMENT_DESCRIPTION_TWO);
-									details.put(REQUIRED, "Between 1.2 to 1.5");
-									details.put(PROVIDED, minLength.toString());
+									details.put(REQUIRED, "Between "+CDGAdditionalService.viewLenght(pl, expectedLenght1)+" to "+CDGAdditionalService.viewLenght(pl, expectedLenght2));
+									details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minLength));
 									details.put(STATUS, Result.Accepted.getResultVal());
 									scrutinyDetail.getDetail().add(details);
 
@@ -174,8 +188,8 @@ public class Basement extends FeatureProcess {
 									//details.put(RULE_NO, RULE_46_6C);
 									details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.BASEMENT));
 									details.put(DESCRIPTION, BASEMENT_DESCRIPTION_TWO);
-									details.put(REQUIRED, "Between 1.2 to 1.5");
-									details.put(PROVIDED, minLength.toString());
+									details.put(REQUIRED, "Between "+CDGAdditionalService.viewLenght(pl, expectedLenght1)+" to "+CDGAdditionalService.viewLenght(pl, expectedLenght2));
+									details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minLength));
 									details.put(STATUS, Result.Not_Accepted.getResultVal());
 									scrutinyDetail.getDetail().add(details);
 								}

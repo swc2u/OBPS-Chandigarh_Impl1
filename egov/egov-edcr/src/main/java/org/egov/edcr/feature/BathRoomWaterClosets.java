@@ -134,28 +134,38 @@ public class BathRoomWaterClosets extends FeatureProcess {
 								}
 							}
 						}
+						BigDecimal expectedMinHeight=new BigDecimal(2.29);
+						BigDecimal expectedArea=new BigDecimal(2.8);
+						BigDecimal expectedMinWidth=new BigDecimal(1.2);
+						
+						if(pl.getDrawingPreference().getInFeets()) {
+							minHeight=CDGAdditionalService.inchToFeet(minHeight);
+							expectedMinHeight=CDGAdditionalService.meterToFoot(expectedMinHeight);
+							totalArea=CDGAdditionalService.inchtoFeetArea(totalArea);
+							expectedArea=CDGAdditionalService.meterToFootArea(expectedArea);
+							minWidth=CDGAdditionalService.inchToFeet(minWidth);
+							expectedMinWidth=CDGAdditionalService.meterToFoot(expectedMinWidth);
+						}
 
-						if (minHeight.compareTo(new BigDecimal(2.29)) >= 0
-								&& totalArea.compareTo(new BigDecimal(2.8)) >= 0
-								&& minWidth.compareTo(new BigDecimal(1.2)) >= 0) {
+						if (minHeight.compareTo(expectedMinHeight) >= 0
+								&& totalArea.compareTo(expectedArea) >= 0
+								&& minWidth.compareTo(expectedMinWidth) >= 0) {
 
-							details.put(REQUIRED, "Height >= 2.29" + DxfFileConstants.METER + ", Total Area >= 2.8"
-									+ DxfFileConstants.METER_SQM + ", Width >= 1.2" + DxfFileConstants.METER);
+							details.put(REQUIRED, "Height >=" + CDGAdditionalService.viewLenght(pl, expectedMinHeight) + ", Total Area >= "
+									+ CDGAdditionalService.viewArea(pl, expectedArea)+ ", Width >= " + CDGAdditionalService.viewLenght(pl, expectedArea));
 							details.put(PROVIDED,
-									"Height = " + minHeight + DxfFileConstants.METER + ", Total Area = " + totalArea
-											+ DxfFileConstants.METER_SQM + ", Width = " + minWidth
-											+ DxfFileConstants.METER);
+									"Height = " + CDGAdditionalService.viewLenght(pl, minHeight) + ", Total Area = " + CDGAdditionalService.viewArea(pl, totalArea)
+											+", Width = " + CDGAdditionalService.viewLenght(pl, minWidth));
 							details.put(STATUS, Result.Accepted.getResultVal());
 							scrutinyDetail.getDetail().add(details);
 							pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 						} else {
-							details.put(REQUIRED, "Height >= 2.29" + DxfFileConstants.METER + ", Total Area >= 2.8"
-									+ DxfFileConstants.METER_SQM + ", Width >= 1.2" + DxfFileConstants.METER);
+							details.put(REQUIRED, "Height >=" + CDGAdditionalService.viewLenght(pl, expectedMinHeight) + ", Total Area >= "
+									+ CDGAdditionalService.viewArea(pl, expectedArea)+ ", Width >= " + CDGAdditionalService.viewLenght(pl, expectedArea));
 							details.put(PROVIDED,
-									"Height = " + minHeight + DxfFileConstants.METER + ", Total Area = " + totalArea
-											+ DxfFileConstants.METER_SQM + ", Width = " + minWidth
-											+ DxfFileConstants.METER);
+									"Height = " + CDGAdditionalService.viewLenght(pl, minHeight) + ", Total Area = " + CDGAdditionalService.viewArea(pl, totalArea)
+											+", Width = " + CDGAdditionalService.viewLenght(pl, minWidth));
 							details.put(STATUS, Result.Not_Accepted.getResultVal());
 							scrutinyDetail.getDetail().add(details);
 							pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);

@@ -968,7 +968,7 @@ public class RearYardService extends GeneralRule {
 				Boolean rearYardDefined = false;
 				for (SetBack setback : block.getSetBacks()) {
 					if (setback.getRearYard() != null
-							&& setback.getRearYard().getMean().compareTo(BigDecimal.valueOf(0)) > 0) {
+							&& setback.getRearYard().getMinimumDistance().compareTo(BigDecimal.valueOf(0)) > 0) {
 						rearYardDefined = true;
 					}
 				}

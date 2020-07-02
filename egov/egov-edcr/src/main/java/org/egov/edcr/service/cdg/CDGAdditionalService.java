@@ -3,6 +3,7 @@ package org.egov.edcr.service.cdg;
 import java.io.FileReader;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -304,11 +305,105 @@ public class CDGAdditionalService {
 
 	}
 
-	public static void main(String[] args) {
-		System.out.println(BigDecimal.valueOf(1267.635).round(new MathContext(2)));
-	}
-	
 	public BigDecimal calculatorFarWithOutAdditionalFeature() {
 		return null;
 	}
+	
+	public static BigDecimal meterToFoot(String value) {
+		return meterToFoot(new BigDecimal(value));
+	}
+	
+	public static BigDecimal meterToFoot(BigDecimal value) {
+		BigDecimal valueInFoot=value.multiply(new BigDecimal("3.281"));
+		return valueInFoot;
+	}
+	
+	public static BigDecimal meterToFootArea(BigDecimal value) {
+		BigDecimal valueInFoot=value.multiply(new BigDecimal("10.764"),MathContext.DECIMAL32);
+		return valueInFoot;
+	}
+	
+	public static BigDecimal meterToFootArea(String value) {
+		return meterToFootArea(new BigDecimal(value));
+	}
+	
+	public static BigDecimal inchToFeet(BigDecimal value) {
+		BigDecimal feet=BigDecimal.ZERO;
+		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
+			return feet;
+		feet=value.divide(new BigDecimal("12"),MathContext.DECIMAL32);
+		return feet;
+	}
+	
+	public static BigDecimal inchToFeet(String value) {
+		if(value.length()<=0)
+			return BigDecimal.ZERO;
+		BigDecimal inch=new BigDecimal(value);
+		return inchToFeet(inch);
+	}
+	
+	public static BigDecimal feetToInch(String value) {
+		if(value.length()<=0)
+			return BigDecimal.ZERO;
+		BigDecimal inch=new BigDecimal(value);
+		return feetToInch(inch);
+	}
+	
+	public static BigDecimal feetToInch(BigDecimal value) {
+		BigDecimal inch=BigDecimal.ZERO;
+		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
+			return inch;
+		inch=value.multiply(new BigDecimal("12"),MathContext.DECIMAL32);
+		inch = inch.setScale(2, RoundingMode.CEILING);
+		return inch;
+	}
+	
+	public static BigDecimal inchToMeter(BigDecimal value) {
+		BigDecimal meter=BigDecimal.ZERO;
+		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
+			return meter;
+		meter=value.divide(new BigDecimal("39.37"));
+		return meter;
+	}
+
+	public static BigDecimal inchToMeter(String value) {
+		if(value.length()<=0)
+			return BigDecimal.ZERO;
+		BigDecimal inch=new BigDecimal(value);
+		return inchToFeet(inch);
+	}
+	
+	public static String viewLenght(Plan pl,BigDecimal value) {
+		String result=null;
+		if(pl.getDrawingPreference().getInMeters()) {
+			result= value+DxfFileConstants.METER;
+		}else if(pl.getDrawingPreference().getInFeets()){
+			result=getFeetAndInch(value);
+		}
+		return result;
+	}
+	
+	public static String getFeetAndInch(BigDecimal feet) {
+		String numberD = String.valueOf(feet.doubleValue());
+		String result=numberD.substring(0,numberD.indexOf ( "." ))+DxfFileConstants.FEET;
+		result=result+" "+feetToInch("0."+numberD.substring(numberD.indexOf ( "." )+1))+DxfFileConstants.INCH;
+		return result;
+	}
+	
+	public static String viewArea(Plan pl,BigDecimal value) {
+		String result=null;
+		if(pl.getDrawingPreference().getInMeters()) {
+			result= value+" "+DxfFileConstants.METER_SQM;
+		}else if(pl.getDrawingPreference().getInFeets()){
+			result=value+" "+DxfFileConstants.FEET_SQM;
+		}
+		return result;
+	}
+	
+	public static BigDecimal inchtoFeetArea(BigDecimal value) {
+		value=value.divide(new BigDecimal(144),MathContext.DECIMAL32);
+		//value=value.setScale(2, RoundingMode.HALF_UP);
+		return value;
+	}
+	
 }

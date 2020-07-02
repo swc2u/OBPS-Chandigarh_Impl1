@@ -139,6 +139,13 @@ public class PlantationGreenStrip extends FeatureProcess {
 				}
 				
 				BigDecimal providedMinWidth = providedWidths.stream().reduce(BigDecimal::min).get();
+				
+				if(pl.getDrawingPreference().getInFeets()) {
+					providedMinWidth=CDGAdditionalService.inchToFeet(providedMinWidth);
+					exceptedWidth=CDGAdditionalService.meterToFoot(exceptedWidth);
+					providedArea=CDGAdditionalService.inchtoFeetArea(providedArea);
+					exceptedArea=CDGAdditionalService.meterToFootArea(exceptedArea);
+				}
 
 				if (providedMinWidth.compareTo(exceptedWidth) >= 0)
 					isWidthAccepted = true;
@@ -147,21 +154,15 @@ public class PlantationGreenStrip extends FeatureProcess {
 					isAreaAccepted = true;
 
 				buildResult(pl, scrutinyDetail, isWidthAccepted, "Width of Organized plantation green strip",
-						">= " + exceptedWidth,
-						providedMinWidth
-								.setScale(DcrConstants.DECIMALDIGITS_MEASUREMENTS, DcrConstants.ROUNDMODE_MEASUREMENTS)
-								.toString());
+						">= " + CDGAdditionalService.viewLenght(pl, exceptedWidth),CDGAdditionalService.viewLenght(pl, providedMinWidth));
 
 				buildResult(pl, scrutinyDetail, isAreaAccepted, "Area of Organized plantation green strip",
-						">= " + exceptedArea + " sqm",
-						providedArea
-								.setScale(DcrConstants.DECIMALDIGITS_MEASUREMENTS, DcrConstants.ROUNDMODE_MEASUREMENTS)
-								.toString());
+						">= " + CDGAdditionalService.viewArea(pl, exceptedArea),CDGAdditionalService.viewLenght(pl, providedArea));
 
 			}
 
-			for (Block block : pl.getBlocks()) {
-				/*
+			/*for (Block block : pl.getBlocks()) {
+				
 				 * 
 				 * ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
 				 * scrutinyDetail.addColumnHeading(1, RULE_NO);
@@ -226,7 +227,7 @@ public class PlantationGreenStrip extends FeatureProcess {
 				 * ROUNDMODE_MEASUREMENTS).toString()) ;
 				 * 
 				 * }
-				 */}
+				 }*/
 		}
 		return pl;
 	}

@@ -95,10 +95,11 @@ public class StairCover extends FeatureProcess {
 		details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.STAIRCASE));
 
 		BigDecimal minHeight = BigDecimal.ZERO;
+		BigDecimal expactedHeiht=new BigDecimal(2.44);
 		OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
-				
+		
 		if(pl.isRural()) {
 
 			for (Block b : pl.getBlocks()) {
@@ -107,18 +108,20 @@ public class StairCover extends FeatureProcess {
 						&& mostRestrictiveFarHelper.getSubtype() != null) {
 					//minHeight = b.getStairCovers().stream().reduce(BigDecimal::min).get();
 					minHeight = b.getStairCovers().stream().reduce(BigDecimal::max).get();
+					if(pl.getDrawingPreference().getInFeets())
+						minHeight=CDGAdditionalService.inchToFeet(minHeight);
 
-					if (minHeight.compareTo(new BigDecimal(2.44)) <= 0) {
+					if (minHeight.compareTo(expactedHeiht) <= 0) {
 						details.put(DESCRIPTION, STAIRCOVER_DESCRIPTION);
-						details.put(REQUIRED, "Verified whether stair cover height is <= 2.44 meters");
-						details.put(VERIFIED, "Not included stair cover height(" + minHeight + ") to building height");
+						details.put(REQUIRED, "Verified whether stair cover height is <= "+CDGAdditionalService.viewLenght(pl, expactedHeiht));
+						details.put(VERIFIED, "Not included stair cover height(" + CDGAdditionalService.viewLenght(pl, minHeight) + ") to building height");
 						details.put(STATUS, Result.Accepted.getResultVal());
 						scrutinyDetail.getDetail().add(details);
 						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 					} else {
 						details.put(DESCRIPTION, STAIRCOVER_DESCRIPTION);
-						details.put(REQUIRED, "Verified whether stair cover height is <= 2.44 meters");
-						details.put(VERIFIED, "Included stair cover height(" + minHeight + ") to building height");
+						details.put(REQUIRED, "Verified whether stair cover height is <= "+CDGAdditionalService.viewLenght(pl, expactedHeiht));
+						details.put(VERIFIED, "Included stair cover height(" + CDGAdditionalService.viewLenght(pl, minHeight) + ") to building height");
 						details.put(STATUS, Result.Verify.getResultVal());
 						scrutinyDetail.getDetail().add(details);
 						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -137,7 +140,8 @@ public class StairCover extends FeatureProcess {
 						&& mostRestrictiveFarHelper.getSubtype() != null) {
 					//minHeight = b.getStairCovers().stream().reduce(BigDecimal::min).get();
 					minHeight = b.getStairCovers().stream().reduce(BigDecimal::max).get();
-
+					if(pl.getDrawingPreference().getInFeets())
+						minHeight=CDGAdditionalService.inchToFeet(minHeight);
 					if (DxfFileConstants.MARLA.equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))
 							&& DxfFileConstants.A_P.equals(mostRestrictiveFarHelper.getSubtype().getCode())) {
 						errors.put("MumtyNotAllowed",
@@ -145,17 +149,18 @@ public class StairCover extends FeatureProcess {
 					}
 					
 					if(DxfFileConstants.A_G.equals(mostRestrictiveFarHelper.getSubtype().getCode())) {
-						if (minHeight.compareTo(new BigDecimal(2.75)) <= 0) {
+						expactedHeiht=new BigDecimal(2.75);
+						if (minHeight.compareTo(expactedHeiht) <= 0) {
 							details.put(DESCRIPTION, STAIRCOVER_DESCRIPTION);
-							details.put(REQUIRED, "Verified whether stair cover height is <= 2.75 meters");
-							details.put(PROVIDED, minHeight + DxfFileConstants.METER);
+							details.put(REQUIRED, "Verified whether stair cover height is <= "+CDGAdditionalService.viewLenght(pl, expactedHeiht));
+							details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minHeight));
 							details.put(STATUS, Result.Accepted.getResultVal());
 							scrutinyDetail.getDetail().add(details);
 							pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 						} else {
 							details.put(DESCRIPTION, STAIRCOVER_DESCRIPTION);
-							details.put(REQUIRED, "Verified whether stair cover height is <= 2.75 meters");
-							details.put(PROVIDED, minHeight + DxfFileConstants.METER);
+							details.put(REQUIRED, "Verified whether stair cover height is <= "+CDGAdditionalService.viewLenght(pl, expactedHeiht));
+							details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minHeight));
 							details.put(STATUS, Result.Not_Accepted.getResultVal());
 							scrutinyDetail.getDetail().add(details);
 							pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -163,7 +168,7 @@ public class StairCover extends FeatureProcess {
 					}else {
 						details.put(DESCRIPTION, STAIRCOVER_DESCRIPTION);
 						details.put(REQUIRED, "Allowed");
-						details.put(PROVIDED, minHeight + DxfFileConstants.METER);
+						details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minHeight));
 						details.put(STATUS, Result.Verify.getResultVal());
 						scrutinyDetail.getDetail().add(details);
 						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);

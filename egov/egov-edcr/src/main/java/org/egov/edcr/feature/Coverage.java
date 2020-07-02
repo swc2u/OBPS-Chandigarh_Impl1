@@ -257,9 +257,14 @@ public class Coverage extends FeatureProcess {
 		// pl.setCoverageArea(totalCoverageArea);
 		// use plotBoundaryArea
 		if (pl.getPlot() != null && pl.getPlot().getArea().doubleValue() > 0)
+			if(pl.getDrawingPreference().getInMeters())
 			totalCoverage = totalCoverageArea.multiply(BigDecimal.valueOf(100)).divide(
 					pl.getPlanInformation().getPlotArea(), DcrConstants.DECIMALDIGITS_MEASUREMENTS,
 					DcrConstants.ROUNDMODE_MEASUREMENTS);
+			else if(pl.getDrawingPreference().getInFeets())
+				totalCoverage = CDGAdditionalService.inchtoFeetArea(totalCoverageArea).multiply(BigDecimal.valueOf(100)).divide(
+						pl.getPlanInformation().getPlotArea(), DcrConstants.DECIMALDIGITS_MEASUREMENTS,
+						DcrConstants.ROUNDMODE_MEASUREMENTS);
 		pl.setCoverage(totalCoverage);
 		if (pl.getVirtualBuilding() != null) {
 			pl.getVirtualBuilding().setTotalCoverageArea(totalCoverageArea);

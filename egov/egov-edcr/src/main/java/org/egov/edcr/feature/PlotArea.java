@@ -66,6 +66,7 @@ import org.egov.common.entity.dcr.helper.OccupancyHelperDetail;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -117,17 +118,27 @@ public class PlotArea extends FeatureProcess {
                     if (occupancyType != null) {
                         details.put(OCCUPANCY, occupancyType.getName());
                         BigDecimal occupancyValues = occupancyValuesMap.get(occupancyType.getCode());
+                        
+                        if(pl.getDrawingPreference().getInFeets()&& occupancyValues!=null) {
+                        	occupancyValues=CDGAdditionalService.inchtoFeetArea(occupancyValues);
+                        	plotArea=CDGAdditionalService.inchToFeet(plotArea);
+                        }
+                        
                         if (occupancyValues != null) {
                             if (plotArea.compareTo(occupancyValues) >= 0) {
-                                details.put(PERMITTED, String.valueOf(occupancyValues) + "m2");
-                                details.put(PROVIDED, plotArea.toString() + "m2");
+//                            	details.put(PERMITTED, String.valueOf(occupancyValues) + "m2");
+//                                details.put(PROVIDED, plotArea.toString() + "m2");
+                                details.put(PERMITTED, CDGAdditionalService.viewArea(pl, occupancyValues));
+                                details.put(PROVIDED, CDGAdditionalService.viewArea(pl, plotArea));
                                 details.put(STATUS, Result.Accepted.getResultVal());
                                 scrutinyDetail.getDetail().add(details);
                                 pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
                             } else {
-                                details.put(PERMITTED, String.valueOf(occupancyValues) + "m2");
-                                details.put(PROVIDED, plotArea.toString() + "m2");
-                                details.put(STATUS, Result.Not_Accepted.getResultVal());
+//                            	 details.put(PERMITTED, String.valueOf(occupancyValues) + "m2");
+//                                 details.put(PROVIDED, plotArea.toString() + "m2");
+                            	details.put(PERMITTED, CDGAdditionalService.viewArea(pl, occupancyValues));
+                                details.put(PROVIDED, CDGAdditionalService.viewArea(pl, plotArea));
+                                 details.put(STATUS, Result.Not_Accepted.getResultVal());
                                 scrutinyDetail.getDetail().add(details);
                                 pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
                             }

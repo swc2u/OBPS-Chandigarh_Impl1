@@ -67,15 +67,24 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class DrawingPreference implements Serializable {
 
 	private static final long serialVersionUID = 5705288339053140008L;
+	// DrawingPreference constant
+	public static final String DRAWING_PREFERENCE_FEET = "feet";
+	public static final String DRAWING_PREFERENCE_METER = "meter";
 
 	@Transient
 	@JsonIgnore
-	private Boolean inMeters = true;
+	private Boolean inMeters = false;
+
+	@Transient
+	@JsonIgnore
+	private Boolean inFeets = false;
 
 	@Transient
 	private Boolean lengthFactor = true;
 	
 	private String uom;
+
+	private transient String uom;
 
 	private transient NorthDirection northDirection;
 	private transient List<Measurement> locationPlans;
@@ -94,6 +103,14 @@ public class DrawingPreference implements Serializable {
 
 	public void setInMeters(Boolean inMeters) {
 		this.inMeters = inMeters;
+	}
+
+	public Boolean getInFeets() {
+		return inFeets;
+	}
+
+	public void setInFeets(Boolean inFeets) {
+		this.inFeets = inFeets;
 	}
 
 	public Boolean getLengthFactor() {
@@ -118,6 +135,21 @@ public class DrawingPreference implements Serializable {
 
 	public void setLocationPlans(List<Measurement> locationPlans) {
 		this.locationPlans = locationPlans;
+	}
+
+	public String getUom() {
+		return uom;
+	}
+
+	public void setUom(String uom) {
+		this.uom = uom;
+		if(DRAWING_PREFERENCE_METER.equalsIgnoreCase(uom)) {
+			this.inMeters=true;
+			this.inFeets=false;
+		}else if(DRAWING_PREFERENCE_FEET.equalsIgnoreCase(uom)) {
+			this.inMeters=false;
+			this.inFeets=true;
+		}
 	}
 
 }

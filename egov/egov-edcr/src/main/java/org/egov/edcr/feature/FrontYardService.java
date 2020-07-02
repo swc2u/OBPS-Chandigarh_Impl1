@@ -469,7 +469,7 @@ public class FrontYardService extends GeneralRule {
 					Boolean frontYardDefined = false;
 					for (SetBack setback : block.getSetBacks()) {
 						if (setback.getFrontYard() != null
-								&& setback.getFrontYard().getMean().compareTo(BigDecimal.valueOf(0)) > 0) {
+								&& setback.getFrontYard().getMinimumDistance().compareTo(BigDecimal.valueOf(0)) > 0) {
 							frontYardDefined = true;
 						}
 					}
