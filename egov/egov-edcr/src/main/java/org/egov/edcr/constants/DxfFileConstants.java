@@ -46,6 +46,9 @@ public class DxfFileConstants {
 	//Plan info 
 	public static final String METER=" m";
 	public static final String METER_SQM=" sqm";
+	public static final String FEET="'";
+	public static final String INCH="\"";
+	public static final String FEET_SQM="sqft";
 
 	// Other
 	public static final String Hospital_Bedded ="Hospital _Bedded";
@@ -511,4 +514,8 @@ public class DxfFileConstants {
 	public static final String NEWCONSTRUCTION_SERVICE = "New Construction";
 	public static final String MAINRIVER = "MainRiver";
 	public static final String SUBRIVER = "SubRiver";
+	
+	// dimensioning message
+	public static final String MESSAGE_FEET="All provided values are in feets and Sq ft.";
+	public static final String MESSAGE_METER="All provided values are in meters and Sq m.";
 }

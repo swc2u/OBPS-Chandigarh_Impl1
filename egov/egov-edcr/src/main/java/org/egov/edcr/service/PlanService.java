@@ -32,6 +32,7 @@ import org.egov.edcr.feature.GeneralStair;
 import org.egov.edcr.feature.OpenStairService;
 import org.egov.edcr.feature.PassageService;
 import org.egov.edcr.feature.Verandah;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.DcrConstants;
 import org.egov.infra.custom.CustomImplProvider;
 import org.egov.infra.filestore.entity.FileStoreMapper;
@@ -130,6 +131,9 @@ public class PlanService {
 			pl.setRural(true);
 		else
 			pl.setRural(false);
+		
+		if(pl.getDrawingPreference().getInFeets())
+			pl.getPlot().setPlotBndryArea(CDGAdditionalService.inchtoFeetArea(pl.getPlot().getPlotBndryArea()));
 		
 	}
 

@@ -89,26 +89,7 @@ public class OverHangs extends FeatureProcess {
 //    		return pl;
 //    	}
 
-        Map<String, String> details = new HashMap<>();
-        details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.CHHAJJA_OR_JAMBS));
-        details.put(DESCRIPTION, OVERHANGS_DESCRIPTION);
-
-        BigDecimal maxWidthExpected = BigDecimal.ZERO;
-        BigDecimal minWidth=BigDecimal.ZERO;
-        
-        OccupancyTypeHelper occupancyTypeHelper=pl.getVirtualBuilding().getMostRestrictiveFarHelper();
-        if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) {
-        	if(DxfFileConstants.MARLA.equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
-        		maxWidthExpected=BigDecimal.valueOf(0.9);
-        	}
-        	else {
-        		maxWidthExpected=BigDecimal.valueOf(1.8);
-        	}
-        }else {
-    		maxWidthExpected=BigDecimal.valueOf(1.8);
-        }
-        
-
+      
         for (Block b : pl.getBlocks()) {
 
             ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
@@ -125,31 +106,54 @@ public class OverHangs extends FeatureProcess {
                     if (floor.getOverHangs() != null && !floor.getOverHangs().isEmpty()) {
                         List<BigDecimal> widths = floor.getOverHangs().stream().map(overhang -> overhang.getWidth())
                                 .collect(Collectors.toList());
+                        
+                        BigDecimal maxWidthExpected = BigDecimal.ZERO;
+                        BigDecimal minWidth=BigDecimal.ZERO;
+                        
+                        OccupancyTypeHelper occupancyTypeHelper=pl.getVirtualBuilding().getMostRestrictiveFarHelper();
+                        if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) {
+                        	if(DxfFileConstants.MARLA.equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
+                        		maxWidthExpected=BigDecimal.valueOf(0.9);
+                        	}
+                        	else {
+                        		maxWidthExpected=BigDecimal.valueOf(1.8);
+                        	}
+                        }else {
+                    		maxWidthExpected=BigDecimal.valueOf(1.8);
+                        }
 
+                        Map<String, String> details = new HashMap<>();
+                        details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.CHHAJJA_OR_JAMBS));
+                        details.put(DESCRIPTION, OVERHANGS_DESCRIPTION);
+                        
                         minWidth = widths.stream().reduce(BigDecimal::min).get();
                         
                         minWidth=minWidth.setScale(2, BigDecimal.ROUND_HALF_EVEN);
                         
+                        if(pl.getDrawingPreference().getInFeets()) {
+                        	minWidth=CDGAdditionalService.inchToFeet(minWidth);
+                        	maxWidthExpected=CDGAdditionalService.meterToFoot(maxWidthExpected);
+                        }
 
                         if (minWidth.compareTo(maxWidthExpected) < 0) {
                             details.put(FLOOR, floor.getNumber().toString());
-                            details.put(PERMISSIBLE, "<"+maxWidthExpected.floatValue()+DxfFileConstants.METER);
-                            details.put(PROVIDED, minWidth.toString()+DxfFileConstants.METER);
+                            details.put(PERMISSIBLE, "<"+CDGAdditionalService.viewLenght(pl, maxWidthExpected));
+                            details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minWidth));
                             details.put(STATUS, Result.Accepted.getResultVal());
                             scrutinyDetail.getDetail().add(details);
-                            pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+                           
                         } else {
                             details.put(FLOOR, floor.getNumber().toString());
-                            details.put(PERMISSIBLE, "<"+maxWidthExpected.floatValue()+DxfFileConstants.METER);
-                            details.put(PROVIDED, minWidth.toString()+DxfFileConstants.METER);
+                            details.put(PERMISSIBLE, "<"+CDGAdditionalService.viewLenght(pl, maxWidthExpected));
+                            details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minWidth));
                             details.put(STATUS, Result.Not_Accepted.getResultVal());
                             scrutinyDetail.getDetail().add(details);
-                            pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+                        
                         }
                     }
                 }
             }
-
+            pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
         }
         return pl;
     }

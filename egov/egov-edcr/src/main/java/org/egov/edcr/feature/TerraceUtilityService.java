@@ -102,15 +102,23 @@ public class TerraceUtilityService extends FeatureProcess {
                     details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.SERVICE_ZONE_ON_TERRACE));
                     BigDecimal minDistance = terraceUtility.getDistances().stream().reduce(BigDecimal::min).get();
                     details.put(DESCRIPTION, terraceUtility.getName());
-                    if (Util.roundOffTwoDecimal(minDistance).compareTo(THREE) >= 0) {
-                        details.put(PERMITTED, THREE + DxfFileConstants.METER);
-                        details.put(PROVIDED, minDistance + DxfFileConstants.METER);
+                    
+                    BigDecimal providedMinDistance=minDistance;
+                    BigDecimal expectedMinDistance=THREE;
+                    if(pl.getDrawingPreference().getInFeets()) {
+                    	providedMinDistance=CDGAdditionalService.inchToFeet(providedMinDistance);
+                    	expectedMinDistance=CDGAdditionalService.meterToFoot(expectedMinDistance);
+                    }
+                    
+                    if (providedMinDistance.compareTo(expectedMinDistance) >= 0) {
+                        details.put(PERMITTED, CDGAdditionalService.viewLenght(pl, expectedMinDistance));
+                        details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, providedMinDistance));
                         details.put(STATUS, Result.Accepted.getResultVal());
                         scrutinyDetail.getDetail().add(details);
                         pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
                     } else {
-                        details.put(PERMITTED, THREE + DxfFileConstants.METER);
-                        details.put(PROVIDED, minDistance + DxfFileConstants.METER);
+                    	details.put(PERMITTED, CDGAdditionalService.viewLenght(pl, expectedMinDistance));
+                        details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, providedMinDistance));
                         details.put(STATUS, Result.Not_Accepted.getResultVal());
                         scrutinyDetail.getDetail().add(details);
                         pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);

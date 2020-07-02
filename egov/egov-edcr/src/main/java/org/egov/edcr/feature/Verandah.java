@@ -114,22 +114,32 @@ public class Verandah extends FeatureProcess {
 							
 							minVerandaWidth=minVerandaWidth.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 							minVerandDepth=minVerandDepth.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-
+							
+							BigDecimal expectedMinWidth=new BigDecimal(1.8);
+							BigDecimal expectedMindepth=new BigDecimal(3.66);
+							
+							if(pl.getDrawingPreference().getInFeets()) {
+								minVerandaWidth=CDGAdditionalService.inchToFeet(minVerandaWidth);
+								minVerandDepth=CDGAdditionalService.inchToFeet(minVerandDepth);
+								expectedMinWidth=CDGAdditionalService.meterToFoot(expectedMinWidth);
+								expectedMindepth=CDGAdditionalService.meterToFoot(expectedMindepth);
+							}
+							
 							if (minVerandaWidth.compareTo(BigDecimal.ZERO) > 0) {
 								Map<String, String> details = new HashMap<>();
 								details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.VERANDAH_FOR_LIGHT_AND_VENTILATION));
 								details.put(DESCRIPTION, VERANDAH_DESCRIPTION);
 
-								if (minVerandaWidth.compareTo(BigDecimal.valueOf(1.8)) >= 0) {
-									details.put(REQUIRED, "Minimum width 1.8"+DxfFileConstants.METER);
-									details.put(PROVIDED, "Width  " + minVerandaWidth + DxfFileConstants.METER+" at floor " + f.getNumber());
+								if (minVerandaWidth.compareTo(expectedMinWidth) >= 0) {
+									details.put(REQUIRED, "Minimum width "+CDGAdditionalService.viewLenght(pl, expectedMinWidth));
+									details.put(PROVIDED, "Width  " + CDGAdditionalService.viewLenght(pl, minVerandaWidth) +" at floor " + f.getNumber());
 									details.put(STATUS, Result.Accepted.getResultVal());
 									scrutinyDetail.getDetail().add(details);
 									pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 								} else {
-									details.put(REQUIRED, "Minimum width 1.8"+DxfFileConstants.METER);
-									details.put(PROVIDED, "Width  " + minVerandaWidth + DxfFileConstants.METER+" at floor " + f.getNumber());
+									details.put(REQUIRED, "Minimum width "+CDGAdditionalService.viewLenght(pl, expectedMinWidth));
+									details.put(PROVIDED, "Width  " + CDGAdditionalService.viewLenght(pl, minVerandaWidth) +" at floor " + f.getNumber());
 									details.put(STATUS, Result.Not_Accepted.getResultVal());
 									scrutinyDetail.getDetail().add(details);
 									pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -139,16 +149,16 @@ public class Verandah extends FeatureProcess {
 								Map<String, String> details = new HashMap<>();
 								details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveFarHelper, CDGAConstant.VERANDAH_FOR_LIGHT_AND_VENTILATION));
 								details.put(DESCRIPTION, VERANDAH_DESCRIPTION);
-								if (minVerandDepth.compareTo(BigDecimal.valueOf(3.66)) <= 0) {
-									details.put(REQUIRED, "Minimum depth not more than 3.66"+DxfFileConstants.METER);
-									details.put(PROVIDED, " Depth  " + minVerandDepth +DxfFileConstants.METER +" at floor " + f.getNumber());
+								if (minVerandDepth.compareTo(expectedMindepth) <= 0) {
+									details.put(REQUIRED, "Minimum depth not more than "+CDGAdditionalService.viewLenght(pl, expectedMindepth));
+									details.put(PROVIDED, " Depth  " +CDGAdditionalService.viewLenght(pl, minVerandDepth)+" at floor " + f.getNumber());
 									details.put(STATUS, Result.Accepted.getResultVal());
 									scrutinyDetail.getDetail().add(details);
 									pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 								} else {
-									details.put(REQUIRED, "Minimum depth not more than 3.66"+DxfFileConstants.METER);
-									details.put(PROVIDED, " Depth  " + minVerandDepth +DxfFileConstants.METER +" at floor " + f.getNumber());
+									details.put(REQUIRED, "Minimum depth not more than "+CDGAdditionalService.viewLenght(pl, expectedMindepth));
+									details.put(PROVIDED, " Depth  " +CDGAdditionalService.viewLenght(pl, minVerandDepth)+" at floor " + f.getNumber());
 									details.put(STATUS, Result.Not_Accepted.getResultVal());
 									scrutinyDetail.getDetail().add(details);
 									pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);

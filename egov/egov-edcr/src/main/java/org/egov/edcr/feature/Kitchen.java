@@ -242,7 +242,7 @@ public class Kitchen extends FeatureProcess {
 								boolean isTypicalRepititiveFloor = false;
 								Map<String, Object> typicalFloorValues = ProcessHelper.getTypicalFloorValues(block,
 										floor, isTypicalRepititiveFloor);
-								buildResult(pl, floor, minimumHeight, subRule, subRuleDesc, totalArea, valid,
+								buildResultArea(pl, floor, minimumHeight, subRule, subRuleDesc, totalArea, valid,
 										typicalFloorValues);
 
 							}
@@ -350,6 +350,12 @@ public class Kitchen extends FeatureProcess {
 			BigDecimal actual, boolean valid, Map<String, Object> typicalFloorValues) {
 		if (!(Boolean) typicalFloorValues.get("isTypicalRepititiveFloor")
 				&& expected.compareTo(BigDecimal.valueOf(0)) > 0 && subRule != null && subRuleDesc != null) {
+			
+			if(pl.getDrawingPreference().getInFeets()) {
+				expected=CDGAdditionalService.meterToFoot(expected);
+				actual=CDGAdditionalService.inchToFeet(actual);
+			}
+			
 			if (actual.compareTo(expected) >= 0) {
 				valid = true;
 			}
@@ -360,11 +366,40 @@ public class Kitchen extends FeatureProcess {
 					? (String) typicalFloorValues.get("typicalFloors")
 					: " floor " + floor.getNumber();
 			if (valid) {
-				setReportOutputDetails(pl, subRule, subRuleDesc, value, expected + DxfFileConstants.METER,
-						actual + DxfFileConstants.METER, Result.Accepted.getResultVal());
+				setReportOutputDetails(pl, subRule, subRuleDesc, value, CDGAdditionalService.viewLenght(pl, expected),
+						CDGAdditionalService.viewLenght(pl, actual), Result.Accepted.getResultVal());
 			} else {
-				setReportOutputDetails(pl, subRule, subRuleDesc, value, expected + DxfFileConstants.METER,
-						actual + DxfFileConstants.METER, Result.Not_Accepted.getResultVal());
+				setReportOutputDetails(pl, subRule, subRuleDesc, value, CDGAdditionalService.viewLenght(pl, expected),
+						CDGAdditionalService.viewLenght(pl, actual), Result.Not_Accepted.getResultVal());
+			}
+		}
+	}
+	
+	private void buildResultArea(Plan pl, Floor floor, BigDecimal expected, String subRule, String subRuleDesc,
+			BigDecimal actual, boolean valid, Map<String, Object> typicalFloorValues) {
+		if (!(Boolean) typicalFloorValues.get("isTypicalRepititiveFloor")
+				&& expected.compareTo(BigDecimal.valueOf(0)) > 0 && subRule != null && subRuleDesc != null) {
+			
+			if(pl.getDrawingPreference().getInFeets()) {
+				expected=CDGAdditionalService.meterToFootArea(expected);
+				actual=CDGAdditionalService.inchtoFeetArea(actual);
+			}
+			
+			if (actual.compareTo(expected) >= 0) {
+				valid = true;
+			}
+
+			//actual = CDGAdditionalService.roundBigDecimal(actual);
+
+			String value = typicalFloorValues.get("typicalFloors") != null
+					? (String) typicalFloorValues.get("typicalFloors")
+					: " floor " + floor.getNumber();
+			if (valid) {
+				setReportOutputDetails(pl, subRule, subRuleDesc, value, CDGAdditionalService.viewArea(pl, expected),
+						CDGAdditionalService.viewArea(pl, actual), Result.Accepted.getResultVal());
+			} else {
+				setReportOutputDetails(pl, subRule, subRuleDesc, value, CDGAdditionalService.viewArea(pl, expected),
+						CDGAdditionalService.viewArea(pl, actual), Result.Not_Accepted.getResultVal());
 			}
 		}
 	}

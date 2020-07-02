@@ -213,6 +213,11 @@ public class GeneralStair extends FeatureProcess {
 				if (!(Boolean) typicalFloorValues.get("isTypicalRepititiveFloor")) {
 					minWidth = Util.roundOffTwoDecimal(landingWidth);
 					BigDecimal minimumWidth = getRequiredWidth(plan,block, mostRestrictiveOccupancyType);
+					
+					if(plan.getDrawingPreference().getInFeets()) {
+						minWidth=CDGAdditionalService.inchToFeet(minWidth);
+						minimumWidth=CDGAdditionalService.meterToFoot(minimumWidth);
+					}
 
 					if (minWidth.compareTo(minimumWidth) >= 0) {
 						valid = true;
@@ -226,14 +231,14 @@ public class GeneralStair extends FeatureProcess {
 								CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.STAIRCASE),
 								value,
 								String.format(WIDTH_LANDING_DESCRIPTION, generalStair.getNumber(), landing.getNumber()),
-								minimumWidth.toString(), String.valueOf(minWidth), Result.Accepted.getResultVal(),
+								CDGAdditionalService.viewLenght(plan, minimumWidth), CDGAdditionalService.viewLenght(plan, minWidth), Result.Accepted.getResultVal(),
 								scrutinyDetailLanding);
 					} else {
 						setReportOutputDetailsFloorStairWise(plan,
 								CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.STAIRCASE),
 								value,
 								String.format(WIDTH_LANDING_DESCRIPTION, generalStair.getNumber(), landing.getNumber()),
-								minimumWidth.toString(), String.valueOf(minWidth), Result.Not_Accepted.getResultVal(),
+								CDGAdditionalService.viewLenght(plan, minimumWidth), CDGAdditionalService.viewLenght(plan, minWidth), Result.Not_Accepted.getResultVal(),
 								scrutinyDetailLanding);
 					}
 				}
@@ -276,6 +281,12 @@ public class GeneralStair extends FeatureProcess {
 			else
 				pl.addError("STAIRCASE", " Floor Hight not defined Block "+block.getNumber()+" floor "+ floor.getNumber()+" stair "+generalStair.getNumber());
 			BigDecimal raiserHeightexpected=requiredRaiserHeight(occupancyTypeHelper);
+			
+			if(pl.getDrawingPreference().getInFeets()) {
+				raiserHeightProvided=CDGAdditionalService.inchToFeet(raiserHeightProvided);
+				raiserHeightexpected=CDGAdditionalService.meterToFoot(raiserHeightexpected);
+			}
+			
 			boolean valid=false;
 			if(raiserHeightProvided.compareTo(raiserHeightexpected)<=0)
 				valid=true;
@@ -283,9 +294,9 @@ public class GeneralStair extends FeatureProcess {
 			
 			
 			if(valid)
-				setReportOutputDetailsFloorStairWise(pl, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.STAIRCASE), floor.getNumber().toString(),String.format(HEIGHT_OF_RISER_DESCRIPTION, generalStair.getNumber()) , raiserHeightexpected.toString()+DxfFileConstants.METER, raiserHeightProvided.toString()+DxfFileConstants.METER, Result.Accepted.getResultVal(), scrutinyDetailHeightRise);
+				setReportOutputDetailsFloorStairWise(pl, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.STAIRCASE), floor.getNumber().toString(),String.format(HEIGHT_OF_RISER_DESCRIPTION, generalStair.getNumber()) ,CDGAdditionalService.viewLenght(pl, raiserHeightexpected), CDGAdditionalService.viewLenght(pl, raiserHeightProvided), Result.Accepted.getResultVal(), scrutinyDetailHeightRise);
 			else
-				setReportOutputDetailsFloorStairWise(pl, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.STAIRCASE), floor.getNumber().toString(),String.format(HEIGHT_OF_RISER_DESCRIPTION, generalStair.getNumber()), raiserHeightexpected.toString()+DxfFileConstants.METER, raiserHeightProvided.toString()+DxfFileConstants.METER, Result.Not_Accepted.getResultVal(), scrutinyDetailHeightRise);
+				setReportOutputDetailsFloorStairWise(pl, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.STAIRCASE), floor.getNumber().toString(),String.format(HEIGHT_OF_RISER_DESCRIPTION, generalStair.getNumber()), CDGAdditionalService.viewLenght(pl, raiserHeightexpected), CDGAdditionalService.viewLenght(pl, raiserHeightProvided), Result.Not_Accepted.getResultVal(), scrutinyDetailHeightRise);
 			
 			
 		}
@@ -424,6 +435,11 @@ public class GeneralStair extends FeatureProcess {
 		if (!(Boolean) typicalFloorValues.get("isTypicalRepititiveFloor")) {
 			minFlightWidth = Util.roundOffTwoDecimal(flightPolyLine);
 			BigDecimal minimumWidth = getRequiredWidth(plan,block, mostRestrictiveOccupancyType);
+			
+			if(plan.getDrawingPreference().getInFeets()) {
+				minFlightWidth=CDGAdditionalService.inchToFeet(minFlightWidth);
+				minimumWidth=CDGAdditionalService.meterToFoot(minimumWidth);
+			}
 
 			if (minFlightWidth.compareTo(minimumWidth) >= 0) {
 				valid = true;
@@ -436,13 +452,13 @@ public class GeneralStair extends FeatureProcess {
 				setReportOutputDetailsFloorStairWise(plan,
 						CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.STAIRCASE), value,
 						String.format(WIDTH_DESCRIPTION, generalStair.getNumber(), flight.getNumber()),
-						minimumWidth.toString(), String.valueOf(minFlightWidth), Result.Accepted.getResultVal(),
+						CDGAdditionalService.viewLenght(plan, minimumWidth), CDGAdditionalService.viewLenght(plan, minFlightWidth), Result.Accepted.getResultVal(),
 						scrutinyDetail2);
 			} else {
 				setReportOutputDetailsFloorStairWise(plan,
 						CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.STAIRCASE), value,
 						String.format(WIDTH_DESCRIPTION, generalStair.getNumber(), flight.getNumber()),
-						minimumWidth.toString(), String.valueOf(minFlightWidth), Result.Not_Accepted.getResultVal(),
+						CDGAdditionalService.viewLenght(plan, minimumWidth), CDGAdditionalService.viewLenght(plan, minFlightWidth), Result.Not_Accepted.getResultVal(),
 						scrutinyDetail2);
 			}
 		}
@@ -504,6 +520,11 @@ public class GeneralStair extends FeatureProcess {
 		totalLength = Util.roundOffTwoDecimal(totalLength);
 
 		BigDecimal requiredTread = getRequiredTread(mostRestrictiveOccupancyType);
+		
+		if(plan.getDrawingPreference().getInFeets()) {
+			totalLength=CDGAdditionalService.inchToFeet(totalLength);
+			requiredTread=CDGAdditionalService.meterToFoot(requiredTread);
+		}
 
 		if (flight.getNoOfRises() != null) {
 			/*
@@ -534,13 +555,13 @@ public class GeneralStair extends FeatureProcess {
 						setReportOutputDetailsFloorStairWise(plan,
 								CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.STAIRCASE),
 								value, String.format(TREAD_DESCRIPTION, generalStair.getNumber(), flight.getNumber()),
-								requiredTread.toString(), String.valueOf(minTread), Result.Accepted.getResultVal(),
+								CDGAdditionalService.viewLenght(plan, requiredTread), CDGAdditionalService.viewLenght(plan, minTread), Result.Accepted.getResultVal(),
 								scrutinyDetail3);
 					} else {
 						setReportOutputDetailsFloorStairWise(plan,
 								CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.STAIRCASE),
 								value, String.format(TREAD_DESCRIPTION, generalStair.getNumber(), flight.getNumber()),
-								requiredTread.toString(), String.valueOf(minTread), Result.Not_Accepted.getResultVal(),
+								CDGAdditionalService.viewLenght(plan, requiredTread), CDGAdditionalService.viewLenght(plan, minTread), Result.Not_Accepted.getResultVal(),
 								scrutinyDetail3);
 					}
 				}

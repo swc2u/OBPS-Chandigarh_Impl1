@@ -104,7 +104,7 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 //		}
 //		return pl;
 //	}
-	
+
 	@Override
 	public Plan process(Plan pl) {
 
@@ -122,41 +122,51 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 					&& !b.getBuilding().getFloors().isEmpty()) {
 				for (Floor f : b.getBuilding().getFloors()) {
 					processVentilationShaftSkeleton(pl, scrutinyDetail, f);
-					processInteriorCourtYardSkeleton(pl, scrutinyDetail, f,b);
+					processInteriorCourtYardSkeleton(pl, scrutinyDetail, f, b);
 				}
 			}
 
 		}
 		return pl;
 	}
-	
-	private void processInteriorCourtYardSkeleton(Plan pl, ScrutinyDetail scrutinyDetail, Floor f,Block b) {
+
+	private void processInteriorCourtYardSkeleton(Plan pl, ScrutinyDetail scrutinyDetail, Floor f, Block b) {
 		if (f.getInteriorOpenSpace() != null && f.getInteriorOpenSpace().getInnerCourtYard() != null
 				&& f.getInteriorOpenSpace().getInnerCourtYard().getMeasurements() != null
 				&& !f.getInteriorOpenSpace().getInnerCourtYard().getMeasurements().isEmpty()) {
+			BigDecimal minInteriorCourtYardArea = BigDecimal.ZERO;
+			BigDecimal minInteriorCourtYardWidth = BigDecimal.ZERO;
+			try {
+				minInteriorCourtYardArea = f.getInteriorOpenSpace().getInnerCourtYard().getMeasurements().stream()
+						.map(Measurement::getArea).reduce(BigDecimal::min).get();
+				minInteriorCourtYardWidth = f.getInteriorOpenSpace().getInnerCourtYard().getMeasurements().stream()
+						.map(Measurement::getWidth).reduce(BigDecimal::min).get();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
-			BigDecimal minInteriorCourtYardArea = f.getInteriorOpenSpace().getInnerCourtYard().getMeasurements()
-					.stream().map(Measurement::getArea).reduce(BigDecimal::min).get();
-			BigDecimal minInteriorCourtYardWidth = f.getInteriorOpenSpace().getInnerCourtYard().getMeasurements()
-					.stream().map(Measurement::getWidth).reduce(BigDecimal::min).get();
-			
-			
-			OccupancyTypeHelper occupancyTypeHelper=pl.getVirtualBuilding().getMostRestrictiveFarHelper();
-			
-			if(minInteriorCourtYardArea!=null && minInteriorCourtYardArea.doubleValue()>0) {
-				minInteriorCourtYardArea=CDGAdditionalService.roundBigDecimal(minInteriorCourtYardArea);
+			OccupancyTypeHelper occupancyTypeHelper = pl.getVirtualBuilding().getMostRestrictiveFarHelper();
+
+			if (minInteriorCourtYardArea != null && minInteriorCourtYardArea.doubleValue() > 0) {
+				if (pl.getDrawingPreference().getInFeets())
+					minInteriorCourtYardArea = CDGAdditionalService.inchtoFeetArea(minInteriorCourtYardArea);
+				else
+					minInteriorCourtYardArea = CDGAdditionalService.roundBigDecimal(minInteriorCourtYardArea);
 			}
-			if(minInteriorCourtYardWidth!=null && minInteriorCourtYardWidth.doubleValue()>0) {
-				minInteriorCourtYardWidth=CDGAdditionalService.roundBigDecimal(minInteriorCourtYardWidth);
+			if (minInteriorCourtYardWidth != null && minInteriorCourtYardWidth.doubleValue() > 0) {
+				if (pl.getDrawingPreference().getInFeets())
+					minInteriorCourtYardWidth = CDGAdditionalService.inchToFeet(minInteriorCourtYardWidth);
+				else
+					minInteriorCourtYardWidth = CDGAdditionalService.roundBigDecimal(minInteriorCourtYardWidth);
 			}
-			
-			BigDecimal areaExpected=BigDecimal.ZERO;
-			BigDecimal widthExpected=BigDecimal.ZERO;
-			
-			if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) {
-				areaExpected=BigDecimal.valueOf(9.0);
-				widthExpected=BigDecimal.valueOf(3.0);
-			}else if(DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode())
+
+			BigDecimal areaExpected = BigDecimal.ZERO;
+			BigDecimal widthExpected = BigDecimal.ZERO;
+
+			if (DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) {
+				areaExpected = BigDecimal.valueOf(9.0);
+				widthExpected = BigDecimal.valueOf(3.0);
+			} else if (DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_H.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_M.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_CFI.equals(occupancyTypeHelper.getSubtype().getCode())
@@ -168,44 +178,48 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 					|| DxfFileConstants.IT.equals(occupancyTypeHelper.getType().getCode())
 					|| DxfFileConstants.ITH_R.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.ITH_GH.equals(occupancyTypeHelper.getSubtype().getCode())
-					|| DxfFileConstants.IP.equals(occupancyTypeHelper.getType().getCode())
-					) {
-				
-				if(b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(10))<=0)
-					widthExpected=BigDecimal.valueOf(3.0);
-				else if(b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(15))<=0)
-					widthExpected=BigDecimal.valueOf(5.0);
-				else if(b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(18))<=0)
-					widthExpected=BigDecimal.valueOf(6.0);
-				else if(b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(21))<=0)
-					widthExpected=BigDecimal.valueOf(7.0);
-				else if(b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(24))<=0)
-					widthExpected=BigDecimal.valueOf(8.0);
-				else if(b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(27))<=0)
-					widthExpected=BigDecimal.valueOf(9.0);
-				else if(b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(30))<=0)
-					widthExpected=BigDecimal.valueOf(10.0);
+					|| DxfFileConstants.IP.equals(occupancyTypeHelper.getType().getCode())) {
+
+				if (b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(10)) <= 0)
+					widthExpected = BigDecimal.valueOf(3.0);
+				else if (b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(15)) <= 0)
+					widthExpected = BigDecimal.valueOf(5.0);
+				else if (b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(18)) <= 0)
+					widthExpected = BigDecimal.valueOf(6.0);
+				else if (b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(21)) <= 0)
+					widthExpected = BigDecimal.valueOf(7.0);
+				else if (b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(24)) <= 0)
+					widthExpected = BigDecimal.valueOf(8.0);
+				else if (b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(27)) <= 0)
+					widthExpected = BigDecimal.valueOf(9.0);
+				else if (b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(30)) <= 0)
+					widthExpected = BigDecimal.valueOf(10.0);
 			}
-			
-			
-			if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) {
+
+			if (pl.getDrawingPreference().getInFeets()) {
+				widthExpected = CDGAdditionalService.meterToFoot(widthExpected);
+				areaExpected = CDGAdditionalService.meterToFootArea(areaExpected);
+			}
+
+			if (DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) {
 				if (minInteriorCourtYardArea.compareTo(BigDecimal.ZERO) > 0) {
 					Map<String, String> details = new HashMap<>();
-					details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
+					details.put(RULE_NO, CDGAdditionalService.getByLaws(pl,
+							CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
 					details.put(DESCRIPTION, INTERNALCOURTYARD_DESCRIPTION);
-					
-					
 
 					if (minInteriorCourtYardArea.compareTo(BigDecimal.valueOf(1.2)) >= 0) {
-						details.put(REQUIRED, "Minimum area "+areaExpected+DxfFileConstants.METER_SQM);
-						details.put(PROVIDED, "Area " + minInteriorCourtYardArea +DxfFileConstants.METER_SQM +" at floor " + f.getNumber());
+						details.put(REQUIRED, "Minimum area " + CDGAdditionalService.viewArea(pl, areaExpected));
+						details.put(PROVIDED, "Area " + CDGAdditionalService.viewArea(pl, minInteriorCourtYardArea)
+								+ " at floor " + f.getNumber());
 						details.put(STATUS, Result.Accepted.getResultVal());
 						scrutinyDetail.getDetail().add(details);
 						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 					} else {
-						details.put(REQUIRED, "Minimum area "+areaExpected+DxfFileConstants.METER_SQM);
-						details.put(PROVIDED, "Area " + minInteriorCourtYardArea +DxfFileConstants.METER_SQM +" at floor " + f.getNumber());
+						details.put(REQUIRED, "Minimum area " + CDGAdditionalService.viewArea(pl, areaExpected));
+						details.put(PROVIDED, "Area " + CDGAdditionalService.viewArea(pl, minInteriorCourtYardArea)
+								+ " at floor " + f.getNumber());
 						details.put(STATUS, Result.Not_Accepted.getResultVal());
 						scrutinyDetail.getDetail().add(details);
 						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -214,18 +228,21 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 			}
 			if (minInteriorCourtYardWidth.compareTo(BigDecimal.ZERO) > 0) {
 				Map<String, String> details = new HashMap<>();
-				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
+				details.put(RULE_NO,
+						CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
 				details.put(DESCRIPTION, INTERNALCOURTYARD_DESCRIPTION);
 				if (minInteriorCourtYardWidth.compareTo(BigDecimal.valueOf(0.9)) >= 0) {
-					details.put(REQUIRED, "Minimum width "+widthExpected+DxfFileConstants.METER);
-					details.put(PROVIDED, "width  " + minInteriorCourtYardWidth + DxfFileConstants.METER+" at floor " + f.getNumber());
+					details.put(REQUIRED, "Minimum width " + CDGAdditionalService.viewLenght(pl, widthExpected));
+					details.put(PROVIDED, "width  " + CDGAdditionalService.viewLenght(pl, minInteriorCourtYardWidth)
+							+ " at floor " + f.getNumber());
 					details.put(STATUS, Result.Accepted.getResultVal());
 					scrutinyDetail.getDetail().add(details);
 					pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 				} else {
-					details.put(REQUIRED, "Minimum width "+widthExpected+DxfFileConstants.METER);
-					details.put(PROVIDED, "width  " + minInteriorCourtYardWidth + DxfFileConstants.METER+" at floor " + f.getNumber());
+					details.put(REQUIRED, "Minimum width " + CDGAdditionalService.viewLenght(pl, widthExpected));
+					details.put(PROVIDED, "width  " + CDGAdditionalService.viewLenght(pl, minInteriorCourtYardWidth)
+							+ " at floor " + f.getNumber());
 					details.put(STATUS, Result.Not_Accepted.getResultVal());
 					scrutinyDetail.getDetail().add(details);
 					pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -234,41 +251,58 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 		}
 	}
 
-	
-	
 	private void processVentilationShaftSkeleton(Plan pl, ScrutinyDetail scrutinyDetail, Floor f) {
 		if (f.getInteriorOpenSpace() != null && f.getInteriorOpenSpace().getVentilationShaft() != null
 				&& f.getInteriorOpenSpace().getVentilationShaft().getMeasurements() != null
 				&& !f.getInteriorOpenSpace().getVentilationShaft().getMeasurements().isEmpty()) {
 
-			BigDecimal minVentilationShaftArea = f.getInteriorOpenSpace().getVentilationShaft().getMeasurements()
-					.stream().map(Measurement::getArea).reduce(BigDecimal::min).get();
-			BigDecimal minVentilationShaftWidth = f.getInteriorOpenSpace().getVentilationShaft().getMeasurements()
-					.stream().map(Measurement::getWidth).reduce(BigDecimal::min).get();
-			
-			if(minVentilationShaftArea!=null) {
-				minVentilationShaftArea=CDGAdditionalService.roundBigDecimal(minVentilationShaftArea);
+			BigDecimal minVentilationShaftArea = BigDecimal.ZERO;
+			BigDecimal minVentilationShaftWidth = BigDecimal.ZERO;
+			BigDecimal expectedWidth = new BigDecimal(0.9);
+			BigDecimal expectedArea = new BigDecimal(1.2);
+
+			try {
+				minVentilationShaftArea = f.getInteriorOpenSpace().getVentilationShaft().getMeasurements().stream()
+						.map(Measurement::getArea).reduce(BigDecimal::min).get();
+				minVentilationShaftWidth = f.getInteriorOpenSpace().getVentilationShaft().getMeasurements().stream()
+						.map(Measurement::getWidth).reduce(BigDecimal::min).get();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			if(minVentilationShaftWidth!=null) {
-				minVentilationShaftWidth=CDGAdditionalService.roundBigDecimal(minVentilationShaftWidth);
+
+			if (minVentilationShaftArea != null) {
+				if (pl.getDrawingPreference().getInFeets()) {
+					minVentilationShaftArea = CDGAdditionalService.inchtoFeetArea(minVentilationShaftArea);
+					expectedArea = CDGAdditionalService.meterToFootArea(expectedArea);
+				}
+				minVentilationShaftArea = CDGAdditionalService.roundBigDecimal(minVentilationShaftArea);
 			}
-			
+			if (minVentilationShaftWidth != null) {
+				if (pl.getDrawingPreference().getInFeets()) {
+					minVentilationShaftWidth = CDGAdditionalService.inchToFeet(minVentilationShaftWidth);
+					expectedWidth = CDGAdditionalService.meterToFoot(expectedWidth);
+				}
+				minVentilationShaftWidth = CDGAdditionalService.roundBigDecimal(minVentilationShaftWidth);
+			}
 
 			if (minVentilationShaftArea.compareTo(BigDecimal.ZERO) > 0) {
 				Map<String, String> details = new HashMap<>();
-				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
+				details.put(RULE_NO,
+						CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
 				details.put(DESCRIPTION, VENTILATIONSHAFT_DESCRIPTION);
 
-				if (minVentilationShaftArea.compareTo(BigDecimal.valueOf(1.2)) >= 0) {
-					details.put(REQUIRED, "Minimum area 1.2"+DxfFileConstants.METER_SQM);
-					details.put(PROVIDED, "Area " + minVentilationShaftArea +DxfFileConstants.METER_SQM +" at floor " + f.getNumber());
+				if (minVentilationShaftArea.compareTo(expectedArea) >= 0) {
+					details.put(REQUIRED, "Minimum area " + CDGAdditionalService.viewArea(pl, expectedArea));
+					details.put(PROVIDED, "Area " + CDGAdditionalService.viewArea(pl, minVentilationShaftArea)
+							+ " at floor " + f.getNumber());
 					details.put(STATUS, Result.Accepted.getResultVal());
 					scrutinyDetail.getDetail().add(details);
 					pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 				} else {
-					details.put(REQUIRED, "Minimum area 1.2"+DxfFileConstants.METER_SQM);
-					details.put(PROVIDED, "Area " + minVentilationShaftArea +DxfFileConstants.METER_SQM+ " at floor " + f.getNumber());
+					details.put(REQUIRED, "Minimum area " + CDGAdditionalService.viewArea(pl, expectedArea));
+					details.put(PROVIDED, "Area " + CDGAdditionalService.viewArea(pl, minVentilationShaftArea)
+							+ " at floor " + f.getNumber());
 					details.put(STATUS, Result.Not_Accepted.getResultVal());
 					scrutinyDetail.getDetail().add(details);
 					pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -276,18 +310,21 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 			}
 			if (minVentilationShaftWidth.compareTo(BigDecimal.ZERO) > 0) {
 				Map<String, String> details = new HashMap<>();
-				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
+				details.put(RULE_NO,
+						CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
 				details.put(DESCRIPTION, VENTILATIONSHAFT_DESCRIPTION);
-				if (minVentilationShaftWidth.compareTo(BigDecimal.valueOf(0.9)) >= 0) {
-					details.put(REQUIRED, "Minimum width 0.9"+DxfFileConstants.METER);
-					details.put(PROVIDED, "width  " + minVentilationShaftWidth +DxfFileConstants.METER +" at floor " + f.getNumber());
+				if (minVentilationShaftWidth.compareTo(expectedWidth) >= 0) {
+					details.put(REQUIRED, "Minimum width " + CDGAdditionalService.viewLenght(pl, expectedWidth));
+					details.put(PROVIDED, "width  " + CDGAdditionalService.viewLenght(pl, minVentilationShaftWidth)
+							+ " at floor " + f.getNumber());
 					details.put(STATUS, Result.Accepted.getResultVal());
 					scrutinyDetail.getDetail().add(details);
 					pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 				} else {
-					details.put(REQUIRED, "Minimum width 0.9"+DxfFileConstants.METER);
-					details.put(PROVIDED, "width  " + minVentilationShaftWidth + DxfFileConstants.METER+" at floor " + f.getNumber());
+					details.put(REQUIRED, "Minimum width " + CDGAdditionalService.viewLenght(pl, expectedWidth));
+					details.put(PROVIDED, "width  " + CDGAdditionalService.viewLenght(pl, minVentilationShaftWidth)
+							+ " at floor " + f.getNumber());
 					details.put(STATUS, Result.Not_Accepted.getResultVal());
 					scrutinyDetail.getDetail().add(details);
 					pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -308,7 +345,8 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 
 			if (minInteriorCourtYardArea.compareTo(BigDecimal.ZERO) > 0) {
 				Map<String, String> details = new HashMap<>();
-				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
+				details.put(RULE_NO,
+						CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
 				details.put(DESCRIPTION, INTERNALCOURTYARD_DESCRIPTION);
 
 				if (minInteriorCourtYardArea.compareTo(BigDecimal.valueOf(9)) >= 0) {
@@ -328,7 +366,8 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 			}
 			if (minInteriorCourtYardWidth.compareTo(BigDecimal.ZERO) > 0) {
 				Map<String, String> details = new HashMap<>();
-				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
+				details.put(RULE_NO,
+						CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
 				details.put(DESCRIPTION, INTERNALCOURTYARD_DESCRIPTION);
 				if (minInteriorCourtYardWidth.compareTo(BigDecimal.valueOf(3)) >= 0) {
 					details.put(REQUIRED, "Minimum width 3.0 M ");
@@ -399,39 +438,36 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 			}
 		}
 	}
-	
+
 	public static boolean isInteriCorourtyardOccupancyTypeNotApplicable(OccupancyTypeHelper occupancyHelperDetail) {
-		boolean flage=false;
-		
-		if(DxfFileConstants.F_SCO.equals(occupancyHelperDetail.getSubtype().getCode())
-			|| DxfFileConstants.F_B.equals(occupancyHelperDetail.getSubtype().getCode())
-			|| DxfFileConstants.F_BH.equals(occupancyHelperDetail.getSubtype().getCode())	
-			|| DxfFileConstants.F_BBM.equals(occupancyHelperDetail.getSubtype().getCode())
-			|| DxfFileConstants.F_TS.equals(occupancyHelperDetail.getSubtype().getCode())	
-			|| DxfFileConstants.F_TCIM.equals(occupancyHelperDetail.getSubtype().getCode())	
-			|| DxfFileConstants.R1.equals(occupancyHelperDetail.getSubtype().getCode())	
-			|| DxfFileConstants.ITH_H.equals(occupancyHelperDetail.getSubtype().getCode())	
-			|| DxfFileConstants.ITH_C.equals(occupancyHelperDetail.getSubtype().getCode())	
-			|| DxfFileConstants.ITH_CC.equals(occupancyHelperDetail.getSubtype().getCode())	
-			|| DxfFileConstants.T1.equals(occupancyHelperDetail.getSubtype().getCode())	
-				)
-			flage=true;
-		
+		boolean flage = false;
+
+		if (DxfFileConstants.F_SCO.equals(occupancyHelperDetail.getSubtype().getCode())
+				|| DxfFileConstants.F_B.equals(occupancyHelperDetail.getSubtype().getCode())
+				|| DxfFileConstants.F_BH.equals(occupancyHelperDetail.getSubtype().getCode())
+				|| DxfFileConstants.F_BBM.equals(occupancyHelperDetail.getSubtype().getCode())
+				|| DxfFileConstants.F_TS.equals(occupancyHelperDetail.getSubtype().getCode())
+				|| DxfFileConstants.F_TCIM.equals(occupancyHelperDetail.getSubtype().getCode())
+				|| DxfFileConstants.R1.equals(occupancyHelperDetail.getSubtype().getCode())
+				|| DxfFileConstants.ITH_H.equals(occupancyHelperDetail.getSubtype().getCode())
+				|| DxfFileConstants.ITH_C.equals(occupancyHelperDetail.getSubtype().getCode())
+				|| DxfFileConstants.ITH_CC.equals(occupancyHelperDetail.getSubtype().getCode())
+				|| DxfFileConstants.T1.equals(occupancyHelperDetail.getSubtype().getCode()))
+			flage = true;
+
 		return flage;
 	}
-	
-	
+
 	public static boolean isVentilationShaftsOccupancyTypeNotApplicable(OccupancyTypeHelper occupancyHelperDetail) {
-		boolean flage=false;
-		
-		if(DxfFileConstants.F_TCIM.equals(occupancyHelperDetail.getSubtype().getCode())
-			|| DxfFileConstants.F_PP.equals(occupancyHelperDetail.getSubtype().getCode())
-			|| DxfFileConstants.F_CD.equals(occupancyHelperDetail.getSubtype().getCode())	
-			|| DxfFileConstants.R1.equals(occupancyHelperDetail.getSubtype().getCode())	
-			|| DxfFileConstants.T1.equals(occupancyHelperDetail.getSubtype().getCode())	
-				)
-			flage=true;
-		
+		boolean flage = false;
+
+		if (DxfFileConstants.F_TCIM.equals(occupancyHelperDetail.getSubtype().getCode())
+				|| DxfFileConstants.F_PP.equals(occupancyHelperDetail.getSubtype().getCode())
+				|| DxfFileConstants.F_CD.equals(occupancyHelperDetail.getSubtype().getCode())
+				|| DxfFileConstants.R1.equals(occupancyHelperDetail.getSubtype().getCode())
+				|| DxfFileConstants.T1.equals(occupancyHelperDetail.getSubtype().getCode()))
+			flage = true;
+
 		return flage;
 	}
 

@@ -63,6 +63,7 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -160,47 +161,63 @@ public class VehicleRamp extends FeatureProcess {
 										for (org.egov.common.entity.edcr.VehicleRamp vehicleRamp : floor
 												.getVehicleRamps()) {
 											minWidth = BigDecimal.ZERO;
+											BigDecimal expectedMinWidth=new BigDecimal(5.4);
+											BigDecimal expectedSlop=new BigDecimal(0.12);
+											BigDecimal povidedSlop=BigDecimal.ZERO;
+											if(vehicleRamp.getSlope() != null)
+												povidedSlop=vehicleRamp.getSlope();
 											for (Measurement polyLine : vehicleRamp.getRamps()) {
 												if (polyLine.getWidth().compareTo(minWidth) < 0) {
 													minWidth = polyLine.getWidth();
 												}
 											}
-
-											if (minWidth.compareTo(new BigDecimal(5.4)) >= 0
+											if(pl.getDrawingPreference().getInFeets()) {
+												minWidth=CDGAdditionalService.inchToFeet(minWidth);
+												expectedMinWidth=CDGAdditionalService.meterToFoot(expectedMinWidth);
+											}
+											if (minWidth.compareTo(expectedMinWidth) >= 0
 													&& vehicleRamp.getSlope() != null
-													&& vehicleRamp.getSlope().compareTo(new BigDecimal(0.12)) <= 0) {
+													&& povidedSlop.compareTo(expectedSlop) <= 0) {
 												valid = true;
 											}
 
-											if (valid1 && minWidth.compareTo(new BigDecimal(3.6)) >= 0
+											if (valid1 && minWidth.compareTo(expectedMinWidth) >= 0
 													&& vehicleRamp.getSlope() != null
-													&& vehicleRamp.getSlope().compareTo(new BigDecimal(0.12)) <= 0) {
+													&& povidedSlop.compareTo(expectedSlop) <= 0) {
 												valid2 = true;
 											}
 
-											if (!valid1 && minWidth.compareTo(new BigDecimal(3.6)) >= 0
+											if (!valid1 && minWidth.compareTo(expectedMinWidth) >= 0
 													&& vehicleRamp.getSlope() != null
-													&& vehicleRamp.getSlope().compareTo(new BigDecimal(0.12)) <= 0) {
+													&& povidedSlop.compareTo(expectedSlop) <= 0) {
 												valid1 = true;
 											}
 
 										}
-
+										String REQUIRED_VALUE=null;
+										String PROVIDED_VALID=null;
+										String PROVIDED_NOT_VALID=null;
+										if(pl.getDrawingPreference().getInFeets()) {
+											 REQUIRED_VALUE="At least two vehicle ramps of minimum "+CDGAdditionalService.viewLenght(pl, CDGAdditionalService.meterToFoot("3.6"))+" width or one vehicle ramp of minimum "+CDGAdditionalService.viewLenght(pl, CDGAdditionalService.meterToFoot("5.4"))+" width and in maximum 1:8 slope";
+											 PROVIDED_VALID="Provided vehicle ramp with minimum "+CDGAdditionalService.viewLenght(pl, CDGAdditionalService.meterToFoot("5.4"))+" width";
+											 PROVIDED_NOT_VALID="Provided two vehicle ramps of minimum "+CDGAdditionalService.viewLenght(pl, CDGAdditionalService.meterToFoot("3.6"))+" width";
+										}else {
+											REQUIRED_VALUE="At least two vehicle ramps of minimum "+CDGAdditionalService.viewLenght(pl, BigDecimal.valueOf(3.6))+" width or one vehicle ramp of minimum "+CDGAdditionalService.viewLenght(pl, BigDecimal.valueOf(5.4))+" width and in maximum 1:8 slope";
+											 PROVIDED_VALID="Provided vehicle ramp with minimum "+CDGAdditionalService.viewLenght(pl, BigDecimal.valueOf(5.4))+" width";
+											 PROVIDED_NOT_VALID="Provided two vehicle ramps of minimum "+CDGAdditionalService.viewLenght(pl, BigDecimal.valueOf(3.6))+" width";
+										}
+										
 										if (valid || (valid1 && valid2)) {
 											details.put(FLOOR, "Floor " + floor.getNumber());
-											details.put(REQUIRED,
-													"At least two vehicle ramps of minimum 3.6 m width or one vehicle ramp of minimum 5.4 m width and in maximum 1:8 slope");
-											details.put(PROVIDED, valid ? "Provided vehicle ramp with minimum 5.4 width"
-													: "Provided two vehicle ramps of minimum 3.6 m width");
+											details.put(REQUIRED,REQUIRED_VALUE);
+											details.put(PROVIDED, valid ? PROVIDED_VALID : PROVIDED_NOT_VALID);
 											details.put(STATUS, Result.Accepted.getResultVal());
 											scrutinyDetail.getDetail().add(details);
 											pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 										} else {
 											details.put(FLOOR, "Floor " + floor.getNumber());
-											details.put(REQUIRED,
-													"At least two vehicle ramps of minimum 3.6 m width or one vehicle ramp of minimum 5.4 m width and in maximum 1:8 slope");
-											details.put(PROVIDED,
-													"Not Provided vehicle ramp with minimum 5.4 width or  two vehicle ramps of minimum 3.6 m width");
+											details.put(REQUIRED,REQUIRED_VALUE);
+											details.put(PROVIDED, valid ? PROVIDED_VALID : PROVIDED_NOT_VALID);
 											details.put(STATUS, Result.Not_Accepted.getResultVal());
 											scrutinyDetail.getDetail().add(details);
 											pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);

@@ -143,20 +143,29 @@ public class Parapet extends FeatureProcess {
 				if (b.getParapets() != null && !b.getParapets().isEmpty()) {
 					minHeight = b.getParapets().stream().reduce(BigDecimal::min).get();
 					maxHeight = b.getParapets().stream().reduce(BigDecimal::max).get();
-
-					if (minHeight.compareTo(new BigDecimal(1.0)) >= 0
-							&& maxHeight.compareTo(new BigDecimal(1.2)) <= 0) {
-						details.put(REQUIRED, "Height >= 1.0 and height <= 1.2");
+					BigDecimal expectedMinHeight=new BigDecimal(1.0);
+					BigDecimal expectedMaxheight=new BigDecimal(1.2);
+					
+					if(pl.getDrawingPreference().getInFeets()) {
+						minHeight=CDGAdditionalService.inchToFeet(minHeight);
+						maxHeight=CDGAdditionalService.inchToFeet(maxHeight);
+						expectedMinHeight=CDGAdditionalService.meterToFoot(expectedMinHeight);
+						expectedMaxheight=CDGAdditionalService.meterToFoot(expectedMaxheight);
+					}
+					
+					if (minHeight.compareTo(expectedMinHeight) >= 0
+							&& maxHeight.compareTo(expectedMaxheight) <= 0) {
+						details.put(REQUIRED, "Height >= "+CDGAdditionalService.viewLenght(pl, expectedMinHeight)+" and height <= "+CDGAdditionalService.viewLenght(pl, expectedMaxheight));
 						//details.put(PROVIDED, "Height >= " + minHeight + " and height <= " + maxHeight);
-						details.put(PROVIDED, "Minimum height = " + minHeight + " and Maximum height = " + maxHeight);
+						details.put(PROVIDED, "Minimum height = " + CDGAdditionalService.viewLenght(pl, minHeight) + " and Maximum height = " + CDGAdditionalService.viewLenght(pl, maxHeight));
 						details.put(STATUS, Result.Accepted.getResultVal());
 						scrutinyDetail.getDetail().add(details);
 						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 					} else {
-						details.put(REQUIRED, "Height >= 1.0 and height <= 1.2");
-//						details.put(PROVIDED, "Height >= " + minHeight + " and height <= " + maxHeight);
-						details.put(PROVIDED, "Minimum height = " + minHeight + " and Maximum height = " + maxHeight);
+						details.put(REQUIRED, "Height >= "+CDGAdditionalService.viewLenght(pl, expectedMinHeight)+" and height <= "+CDGAdditionalService.viewLenght(pl, expectedMaxheight));
+						details.put(PROVIDED, "Height >= " + minHeight + " and height <= " + maxHeight);
+						details.put(PROVIDED, "Minimum height = " + CDGAdditionalService.viewLenght(pl, minHeight) + " and Maximum height = " + CDGAdditionalService.viewLenght(pl, maxHeight));
 						details.put(STATUS, Result.Not_Accepted.getResultVal());
 						scrutinyDetail.getDetail().add(details);
 						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -171,19 +180,27 @@ public class Parapet extends FeatureProcess {
 				if (b.getParapets() != null && !b.getParapets().isEmpty()) {
 					minHeight = b.getParapets().stream().reduce(BigDecimal::min).get();
 					maxHeight = b.getParapets().stream().reduce(BigDecimal::max).get();
+					
+					BigDecimal expectedMaxHeight=new BigDecimal(0.9);
+					
+					if(pl.getDrawingPreference().getInFeets()) {
+						minHeight=CDGAdditionalService.inchToFeet(minHeight);
+						maxHeight=CDGAdditionalService.inchToFeet(maxHeight);
+						expectedMaxHeight=CDGAdditionalService.meterToFoot(expectedMaxHeight);
+					}
 
-					if (maxHeight.compareTo(new BigDecimal(0.9)) <= 0) {
-						details.put(REQUIRED, "Height <= 0.9");
+					if (maxHeight.compareTo(expectedMaxHeight) <= 0) {
+						details.put(REQUIRED, "Height <= "+CDGAdditionalService.viewLenght(pl, expectedMaxHeight));
 						//details.put(PROVIDED, "Height >= " + minHeight + " and height <= " + maxHeight);
-						details.put(PROVIDED, "Minimum height = " + minHeight + " and Maximum height = " + maxHeight);
+						details.put(PROVIDED, "Minimum height = " + CDGAdditionalService.viewLenght(pl, minHeight) + " and Maximum height = " + CDGAdditionalService.viewLenght(pl, maxHeight));
 						details.put(STATUS, Result.Accepted.getResultVal());
 						scrutinyDetail.getDetail().add(details);
 						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 					} else {
-						details.put(REQUIRED, "Height <= 0.9");
-//						details.put(PROVIDED, "Height >= " + minHeight + " and height <= " + maxHeight);
-						details.put(PROVIDED, "Minimum height = " + minHeight + " and Maximum height = " + maxHeight);
+						details.put(REQUIRED, "Height <= "+CDGAdditionalService.viewLenght(pl, expectedMaxHeight));
+						//details.put(PROVIDED, "Height >= " + minHeight + " and height <= " + maxHeight);
+						details.put(PROVIDED, "Minimum height = " + CDGAdditionalService.viewLenght(pl, minHeight) + " and Maximum height = " + CDGAdditionalService.viewLenght(pl, maxHeight));
 						details.put(STATUS, Result.Not_Accepted.getResultVal());
 						scrutinyDetail.getDetail().add(details);
 						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);

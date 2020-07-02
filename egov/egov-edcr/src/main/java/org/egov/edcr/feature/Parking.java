@@ -380,13 +380,26 @@ public class Parking extends FeatureProcess {
 //          }
 //        }
         BigDecimal requiredCarParkingArea=BigDecimal.ZERO;
-        if(DxfFileConstants.P_R.equals(mostRestrictiveOccupancy.getSubtype().getCode()))
-        	requiredCarParkingArea = Util.roundOffTwoDecimal(BigDecimal.valueOf(requiredCarParkArea));
-        else
-        	requiredCarParkingArea = Util.roundOffTwoDecimal(BigDecimal.valueOf(requiredCarParkArea));
-        BigDecimal totalProvidedCarParkingArea = Util.roundOffTwoDecimal(totalProvidedCarParkArea);
-        BigDecimal requiredVisitorParkingArea = Util.roundOffTwoDecimal(BigDecimal.valueOf(requiredVisitorParkArea));
-        BigDecimal providedVisitorParkingArea = Util.roundOffTwoDecimal(providedVisitorParkArea);
+        BigDecimal totalProvidedCarParkingArea =BigDecimal.ZERO;
+        BigDecimal requiredVisitorParkingArea=BigDecimal.ZERO;
+        BigDecimal providedVisitorParkingArea=BigDecimal.ZERO;
+        
+       if(pl.getDrawingPreference().getInMeters()) {
+//    	   if(DxfFileConstants.P_R.equals(mostRestrictiveOccupancy.getSubtype().getCode()))
+//           	requiredCarParkingArea = Util.roundOffTwoDecimal(BigDecimal.valueOf(requiredCarParkArea));
+//           else
+           	requiredCarParkingArea = Util.roundOffTwoDecimal(BigDecimal.valueOf(requiredCarParkArea));
+            totalProvidedCarParkingArea = Util.roundOffTwoDecimal(totalProvidedCarParkArea);
+            requiredVisitorParkingArea = Util.roundOffTwoDecimal(BigDecimal.valueOf(requiredVisitorParkArea));
+            providedVisitorParkingArea = Util.roundOffTwoDecimal(providedVisitorParkArea);
+       }
+        
+        if(pl.getDrawingPreference().getInFeets()) {
+        	requiredCarParkingArea=CDGAdditionalService.meterToFootArea(new BigDecimal(requiredCarParkArea));
+        	requiredVisitorParkingArea=CDGAdditionalService.meterToFootArea(new BigDecimal(requiredVisitorParkArea));
+        	totalProvidedCarParkingArea=CDGAdditionalService.inchtoFeetArea(totalProvidedCarParkArea);
+        	providedVisitorParkingArea=CDGAdditionalService.inchtoFeetArea(providedVisitorParkArea);
+        }
         
         //checkDimensionForTwoWheelerParking(pl, helper);
        //  checkAreaForLoadUnloadSpaces(pl);
@@ -394,18 +407,18 @@ public class Parking extends FeatureProcess {
             pl.addError(SUB_RULE_40_2_DESCRIPTION,
                     getLocaleMessage("msg.error.not.defined", SUB_RULE_40_2_DESCRIPTION));
         } else if (requiredCarParkArea > 0 && totalProvidedCarParkingArea.compareTo(requiredCarParkingArea) < 0) {
-            setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING), SUB_RULE_40_2_DESCRIPTION, requiredCarParkingArea + DxfFileConstants.METER_SQM,
-                    totalProvidedCarParkingArea + DxfFileConstants.METER_SQM, Result.Not_Accepted.getResultVal());
+            setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING), SUB_RULE_40_2_DESCRIPTION, CDGAdditionalService.viewArea(pl, requiredCarParkingArea),
+                    CDGAdditionalService.viewArea(pl, totalProvidedCarParkingArea), Result.Not_Accepted.getResultVal());
         } else {
-            setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING), SUB_RULE_40_2_DESCRIPTION, requiredCarParkingArea + DxfFileConstants.METER_SQM,
-                    totalProvidedCarParkingArea + DxfFileConstants.METER_SQM, Result.Accepted.getResultVal());
+            setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING), SUB_RULE_40_2_DESCRIPTION, CDGAdditionalService.viewArea(pl, requiredCarParkingArea),
+            		CDGAdditionalService.viewArea(pl, totalProvidedCarParkingArea), Result.Accepted.getResultVal());
         }
-        if (requiredVisitorParkArea > 0 && providedVisitorParkArea.compareTo(requiredVisitorParkingArea) < 0) {
-            setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING), SUB_RULE_40_10_DESCRIPTION, requiredVisitorParkingArea + DxfFileConstants.METER_SQM,
-                    providedVisitorParkArea + DxfFileConstants.METER_SQM, Result.Not_Accepted.getResultVal());
+        if (requiredVisitorParkArea > 0 && providedVisitorParkingArea.compareTo(requiredVisitorParkingArea) < 0) {
+            setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING), SUB_RULE_40_10_DESCRIPTION, CDGAdditionalService.viewArea(pl, requiredCarParkingArea),
+            		CDGAdditionalService.viewArea(pl, totalProvidedCarParkingArea), Result.Not_Accepted.getResultVal());
         } else if (requiredVisitorParkArea > 0) {
-            setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING), SUB_RULE_40_10_DESCRIPTION, requiredVisitorParkingArea + DxfFileConstants.METER_SQM,
-                    providedVisitorParkingArea + DxfFileConstants.METER_SQM, Result.Accepted.getResultVal());
+            setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING), SUB_RULE_40_10_DESCRIPTION, CDGAdditionalService.viewArea(pl, requiredCarParkingArea),
+            		CDGAdditionalService.viewArea(pl, totalProvidedCarParkingArea), Result.Accepted.getResultVal());
         }
 
         LOGGER.info("******************Require no of Car Parking***************" + helper.totalRequiredCarParking);

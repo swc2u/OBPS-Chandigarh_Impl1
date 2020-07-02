@@ -498,6 +498,7 @@ public class RampService extends FeatureProcess {
 						
 						for (DARamp daRamp : block.getDARamps()) {
 							BigDecimal providedWidth=BigDecimal.ZERO;
+							BigDecimal expectedWidth=new BigDecimal(2.4);
 							if (daRamp != null && daRamp.getSlope() != null
 									&& daRamp.getSlope().compareTo(BigDecimal.valueOf(0)) > 0) {
 								isSlopeDefined = true;
@@ -508,19 +509,24 @@ public class RampService extends FeatureProcess {
 								
 								providedWidth=providedWidth.setScale(2,BigDecimal.ROUND_HALF_EVEN);
 								
-								if(providedWidth.compareTo(BigDecimal.valueOf(2.4))>=0)
+								if(pl.getDrawingPreference().getInFeets()) {
+									providedWidth=CDGAdditionalService.inchToFeet(providedWidth);
+									expectedWidth=CDGAdditionalService.meterToFoot(expectedWidth);
+								}
+								
+								if(providedWidth.compareTo(expectedWidth)>=0)
 									isWidthValid=true;
 							}
 							
 							if (isSlopeDefined && isWidthValid) {
-								setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP), SUBRULE_50_C_4_B_SLOPE_MAN_DESC+" block " +block.getNumber(), "2.4"+DxfFileConstants.METER,
-										providedWidth.toString()+DxfFileConstants.METER, Result.Accepted.getResultVal(), scrutinyDetail1);
+								setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP), SUBRULE_50_C_4_B_SLOPE_MAN_DESC+" block " +block.getNumber(), CDGAdditionalService.viewLenght(pl, expectedWidth),
+										CDGAdditionalService.viewLenght(pl, providedWidth), Result.Accepted.getResultVal(), scrutinyDetail1);
 							} else if(isSlopeDefined){
-								setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP), SUBRULE_50_C_4_B_SLOPE_MAN_DESC+" block " +block.getNumber(), "2.4"+DxfFileConstants.METER,
-										providedWidth.toString()+DxfFileConstants.METER, Result.Not_Accepted.getResultVal(),
+								setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP), SUBRULE_50_C_4_B_SLOPE_MAN_DESC+" block " +block.getNumber(), CDGAdditionalService.viewLenght(pl, expectedWidth),
+										CDGAdditionalService.viewLenght(pl, providedWidth), Result.Not_Accepted.getResultVal(),
 										scrutinyDetail1);
 							}else{
-								setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP), SUBRULE_50_C_4_B_SLOPE_MAN_DESC+" block " +block.getNumber(), "2.4"+DxfFileConstants.METER,
+								setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.RAMP), SUBRULE_50_C_4_B_SLOPE_MAN_DESC+" block " +block.getNumber(), CDGAdditionalService.viewLenght(pl, expectedWidth),
 										DcrConstants.OBJECTNOTDEFINED, Result.Not_Accepted.getResultVal(),
 										scrutinyDetail1);
 							}

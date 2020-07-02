@@ -194,23 +194,28 @@ public class Ventilation extends FeatureProcess {
 //								.reduce(BigDecimal.ZERO, BigDecimal::add);
 						
 						BigDecimal totalRoomArea = f.getTotalHabitableRoomArea();
-
-						
+						BigDecimal expectedArea=totalRoomArea.divide(BigDecimal.valueOf(8)).setScale(2,
+								BigDecimal.ROUND_HALF_UP);
 						totalVentilationArea=CDGAdditionalService.roundBigDecimal(totalVentilationArea);
+						
+						if(pl.getDrawingPreference().getInFeets()) {
+							totalVentilationArea=CDGAdditionalService.inchtoFeetArea(totalVentilationArea);
+							expectedArea=CDGAdditionalService.inchtoFeetArea(expectedArea);
+						}
+						
 						
 
 						if (totalVentilationArea.compareTo(BigDecimal.ZERO) > 0) {
-							if (totalVentilationArea.compareTo(totalRoomArea.divide(BigDecimal.valueOf(8)).setScale(2,
-									BigDecimal.ROUND_HALF_UP)) >= 0) {
+							if (totalVentilationArea.compareTo(expectedArea) >= 0) {
 								details.put(REQUIRED, "Minimum 1/8th of the habitable area ");
-								details.put(PROVIDED, "Ventilation area " + totalVentilationArea );
+								details.put(PROVIDED, "Ventilation area " + CDGAdditionalService.viewArea(pl, totalVentilationArea) );
 								details.put(STATUS, Result.Accepted.getResultVal());
 								scrutinyDetail.getDetail().add(details);
 								pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 							} else {
 								details.put(REQUIRED, "Minimum 1/8th of the habitable area ");
-								details.put(PROVIDED, "Ventilation area " + totalVentilationArea);
+								details.put(PROVIDED, "Ventilation area " + CDGAdditionalService.viewArea(pl, totalVentilationArea));
 								details.put(STATUS, Result.Not_Accepted.getResultVal());
 								scrutinyDetail.getDetail().add(details);
 								pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -263,18 +268,23 @@ public class Ventilation extends FeatureProcess {
 						
 						totalVentilationArea=CDGAdditionalService.roundBigDecimal(totalVentilationArea);
 						BigDecimal totalVentilationAreaExpected=CDGAdditionalService.roundBigDecimal(f.getArea().multiply(BigDecimal.valueOf(0.1)));
+						
+						if(pl.getDrawingPreference().getInFeets()) {
+							totalVentilationArea=CDGAdditionalService.inchtoFeetArea(totalVentilationArea);
+							totalVentilationAreaExpected=CDGAdditionalService.inchtoFeetArea(totalVentilationAreaExpected);
+						}
 
 						if (totalVentilationArea.compareTo(BigDecimal.ZERO) > 0) {
 							if (totalVentilationArea.compareTo(totalVentilationAreaExpected) >= 0) {
 								details.put(REQUIRED, "Minimum 10% of the floor area ");
-								details.put(PROVIDED, "Ventilation area " + totalVentilationArea );
+								details.put(PROVIDED, "Ventilation area " + CDGAdditionalService.viewArea(pl, totalVentilationArea) );
 								details.put(STATUS, Result.Accepted.getResultVal());
 								scrutinyDetail.getDetail().add(details);
 								pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 							} else {
 								details.put(REQUIRED, "Minimum 10% of the floor area ");
-								details.put(PROVIDED, "Ventilation area " + totalVentilationArea);
+								details.put(PROVIDED, "Ventilation area " + CDGAdditionalService.viewArea(pl, totalVentilationArea));
 								details.put(STATUS, Result.Not_Accepted.getResultVal());
 								scrutinyDetail.getDetail().add(details);
 								pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);

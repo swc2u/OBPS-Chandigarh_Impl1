@@ -1516,8 +1516,11 @@ public class Far extends FeatureProcess {
 		pl.setTotalSurrenderRoadArea(surrenderRoadArea.setScale(DcrConstants.DECIMALDIGITS_MEASUREMENTS,
 				DcrConstants.ROUNDMODE_MEASUREMENTS));
 		BigDecimal plotArea = pl.getPlot() != null ? pl.getPlot().getArea().add(surrenderRoadArea) : BigDecimal.ZERO;
-		if (plotArea.doubleValue() > 0)
+		if (plotArea.doubleValue() > 0 && pl.getDrawingPreference().getInMeters())
 			providedFar = pl.getVirtualBuilding().getTotalFloorArea().divide(plotArea, DECIMALDIGITS_MEASUREMENTS,
+					ROUNDMODE_MEASUREMENTS);
+		else if(plotArea.doubleValue() > 0 && pl.getDrawingPreference().getInFeets())
+			providedFar = CDGAdditionalService.inchtoFeetArea(pl.getVirtualBuilding().getTotalFloorArea()).divide(plotArea, DECIMALDIGITS_MEASUREMENTS,
 					ROUNDMODE_MEASUREMENTS);
 
 		pl.setFarDetails(new FarDetails());
