@@ -47,6 +47,8 @@
 
 package org.egov.edcr.feature;
 
+import static org.egov.edcr.utility.DcrConstants.OBJECTDEFINED;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -58,6 +60,7 @@ import org.egov.common.entity.edcr.Block;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.Util;
 import org.springframework.stereotype.Service;
 
@@ -86,7 +89,10 @@ public class HeadRoom extends FeatureProcess {
                 scrutinyDetail.setKey("Block_" + block.getNumber() + "_" + "Stair Headroom");
 
                 org.egov.common.entity.edcr.HeadRoom headRoom = block.getBuilding().getHeadRoom();
-
+                
+                if(!block.getStairCovers().isEmpty() && headRoom==null)
+                	plan.addError("Stair Headroom", getLocaleMessage(OBJECTDEFINED, " Stair Headroom is not allowed in block " + block.getNumber())+",");
+                
                 if (headRoom != null) {
 
                     List<BigDecimal> headRoomDimensions = headRoom.getHeadRoomDimensions();
@@ -95,15 +101,21 @@ public class HeadRoom extends FeatureProcess {
 
                         BigDecimal minHeadRoomDimension = headRoomDimensions.stream().reduce(BigDecimal::min).get();
 
-                        BigDecimal minWidth = Util.roundOffTwoDecimal(minHeadRoomDimension);
+                       // BigDecimal minWidth = Util.roundOffTwoDecimal(minHeadRoomDimension);
+                        BigDecimal expectedMinWidth=TWO_POINTTWO;
+                        if(plan.getDrawingPreference().getInFeets()) {
+                        	minHeadRoomDimension=CDGAdditionalService.inchToFeet(minHeadRoomDimension);
+                        	expectedMinWidth=CDGAdditionalService.meterToFoot(expectedMinWidth);
+                        }
+                        String RULE="";
 
-                        if (minWidth.compareTo(TWO_POINTTWO) >= 0) {
-                            setReportOutputDetails(plan, RULE42_5_ii, RULE_42_5_ii_DESCRIPTION,
-                                    String.valueOf(TWO_POINTTWO), String.valueOf(minWidth), Result.Accepted.getResultVal(),
+                        if (minHeadRoomDimension.compareTo(expectedMinWidth) >= 0) {
+                            setReportOutputDetails(plan, RULE, RULE_42_5_ii_DESCRIPTION,
+                                    CDGAdditionalService.viewLenght(plan, expectedMinWidth), CDGAdditionalService.viewLenght(plan, minHeadRoomDimension), Result.Accepted.getResultVal(),
                                     scrutinyDetail);
                         } else {
-                            setReportOutputDetails(plan, RULE42_5_ii, RULE_42_5_ii_DESCRIPTION,
-                                    String.valueOf(TWO_POINTTWO), String.valueOf(minWidth), Result.Not_Accepted.getResultVal(),
+                        	setReportOutputDetails(plan, RULE, RULE_42_5_ii_DESCRIPTION,
+                                    CDGAdditionalService.viewLenght(plan, expectedMinWidth), CDGAdditionalService.viewLenght(plan, minHeadRoomDimension), Result.Not_Accepted.getResultVal(),
                                     scrutinyDetail);
                         }
                     }
