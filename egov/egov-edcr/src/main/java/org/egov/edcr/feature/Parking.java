@@ -253,6 +253,8 @@ public class Parking extends FeatureProcess {
         OccupancyTypeHelper mostRestrictiveOccupancy = pl.getVirtualBuilding() != null
                 ? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
                 : null;
+             if(mostRestrictiveOccupancy==null || mostRestrictiveOccupancy.getSubtype()==null)
+            	 return;
          
               if(DxfFileConstants.P_N.equals(mostRestrictiveOccupancy.getSubtype().getCode()))//is not applicable because parking area is  excluded
             	  return;

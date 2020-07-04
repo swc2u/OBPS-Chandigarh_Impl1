@@ -88,8 +88,13 @@ public class PlanService {
 			e.printStackTrace();
 		}
 		plan.setServiceType(dcrApplication.getServiceType());
-		removeError(plan);
-		if(plan.getErrors().isEmpty()) {
+//		removeError(plan);
+//		if(plan.getErrors().isEmpty()) {
+//			plan = applyRules(plan, amd, cityDetails);
+//			setEDCRmandatoryNOC(plan);
+//		}
+		
+		if(plan!=null) {
 			plan = applyRules(plan, amd, cityDetails);
 			setEDCRmandatoryNOC(plan);
 		}
@@ -104,9 +109,7 @@ public class PlanService {
 			HashMap<String, String> errors=new HashMap<String, String>();
 			for(String key:plan.getErrors().keySet()) {
 				String value=plan.getErrors().get(key);
-				/*
-				 * if(!value.contains("_STAIR_")) errors.put(key, value);
-				 */
+				  if(!value.contains("_STAIR_")) errors.put(key, value);
 			}
 			plan.addErrors(errors);
 		}
@@ -166,6 +169,8 @@ public class PlanService {
 			OccupancyTypeHelper occupancyTypeHelper = plan.getVirtualBuilding() != null
 					? plan.getVirtualBuilding().getMostRestrictiveFarHelper()
 					: null;
+			if(occupancyTypeHelper==null || occupancyTypeHelper.getSubtype() ==null)
+				return;
 			String boundaryType = "";
 			if(null != plan.getPlanInfoProperties().get(DxfFileConstants.ROOT_BOUNDARY_TYPE)) {
 				boundaryType = plan.getPlanInfoProperties().get(DxfFileConstants.ROOT_BOUNDARY_TYPE);

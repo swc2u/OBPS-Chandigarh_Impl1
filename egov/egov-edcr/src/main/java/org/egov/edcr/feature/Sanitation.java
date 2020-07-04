@@ -336,7 +336,7 @@ public class Sanitation extends FeatureProcess {
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
 
-		if (DxfFileConstants.F_H.equals(mostRestrictiveFarHelper.getSubtype().getCode()))
+		if (mostRestrictiveFarHelper==null || mostRestrictiveFarHelper.getSubtype() ==null || DxfFileConstants.F_H.equals(mostRestrictiveFarHelper.getSubtype().getCode()))
 			return pl;
 
 		verifyDimesions(pl);

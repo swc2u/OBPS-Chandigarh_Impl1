@@ -157,7 +157,7 @@ public class RainWaterHarvesting extends FeatureProcess {
 			return pl;
 		}
 				
-		if(isOccupancyTypeNotApplicable(mostRestrictiveFarHelper))
+		if(mostRestrictiveFarHelper==null || mostRestrictiveFarHelper.getSubtype() ==null || isOccupancyTypeNotApplicable(mostRestrictiveFarHelper))
 			return pl;
 
 		String plotAreaType = pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE);

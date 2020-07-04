@@ -274,7 +274,8 @@ public class AdditionalFeature extends FeatureProcess {
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
-
+				if(mostRestrictiveOccupancyType==null || mostRestrictiveOccupancyType.getSubtype() ==null)
+					return;
 		if (DxfFileConstants.A_G.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
 
 			ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
@@ -348,7 +349,8 @@ public class AdditionalFeature extends FeatureProcess {
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
-
+				if(mostRestrictiveOccupancyType==null || mostRestrictiveOccupancyType.getSubtype() ==null)
+					return;
 		if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
 
 			ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
@@ -394,7 +396,8 @@ public class AdditionalFeature extends FeatureProcess {
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
-
+				if(mostRestrictiveOccupancyType==null || mostRestrictiveOccupancyType.getSubtype() ==null)
+					return;
 		if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
 
 			ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
@@ -513,6 +516,9 @@ public class AdditionalFeature extends FeatureProcess {
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
+				
+				if(mostRestrictiveOccupancyType==null || mostRestrictiveOccupancyType.getSubtype() ==null)
+					return;
 
 		if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
 
@@ -578,7 +584,8 @@ public class AdditionalFeature extends FeatureProcess {
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
 		String areaType = pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE);
-
+		if(mostRestrictiveOccupancyType==null || mostRestrictiveOccupancyType.getSubtype() ==null)
+			return;
 		if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
 
 			ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
@@ -645,7 +652,8 @@ public class AdditionalFeature extends FeatureProcess {
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
-
+				if(mostRestrictiveOccupancyType==null || mostRestrictiveOccupancyType.getSubtype() ==null)
+					return;
 		if (!OccupancyNotApplicableForValidateFlushingUnitVolume(mostRestrictiveOccupancyType)) {
 			if (flushingUnitDeclr != null) {
 				if (DxfFileConstants.NO.equalsIgnoreCase(flushingUnitDeclr)) {
@@ -1394,6 +1402,9 @@ public class AdditionalFeature extends FeatureProcess {
 		OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
+				
+				if(mostRestrictiveFarHelper==null || mostRestrictiveFarHelper.getSubtype() ==null)
+					return;
 
 		if (isOccupancyTypeNotApplicableForGreenBuildingsAndSustainability(mostRestrictiveFarHelper))
 			return;

@@ -119,7 +119,7 @@ public class SolarWaterHeating extends FeatureProcess {
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
 		
-		if(isOccupancyTypeNotApplicable(mostRestrictiveFarHelper))
+		if(mostRestrictiveFarHelper !=null && mostRestrictiveFarHelper.getSubtype() !=null && isOccupancyTypeNotApplicable(mostRestrictiveFarHelper))
 			return pl;
 
 		areaType = pl.getPlanInfoProperties().get(DxfFileConstants.AREA_TYPE);

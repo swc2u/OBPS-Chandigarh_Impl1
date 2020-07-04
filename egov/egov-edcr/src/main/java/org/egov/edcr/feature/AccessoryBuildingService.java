@@ -229,6 +229,8 @@ public class AccessoryBuildingService extends FeatureProcess {
 			OccupancyTypeHelper occupancyTypeHelper = plan.getVirtualBuilding() != null
 					? plan.getVirtualBuilding().getMostRestrictiveFarHelper()
 					: null;
+					if(occupancyTypeHelper==null || occupancyTypeHelper.getSubtype() ==null)
+						return;
 			String suboccTypeCode = occupancyTypeHelper.getSubtype().getCode();
 			Map<String, String> keyArrgument = new HashMap<String, String>();
 			keyArrgument.put(CDGAdditionalService.OCCUPENCY_CODE, suboccTypeCode);

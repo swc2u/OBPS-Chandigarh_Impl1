@@ -164,7 +164,9 @@ public class CDGAdditionalService {
 
 	public static String getByLaws(Plan pl, CDGAConstant cdgaConstant) {
 		OccupancyTypeHelper occupancyTypeHelper = pl.getVirtualBuilding().getMostRestrictiveFarHelper();
-		String occkey = occupancyTypeHelper.getSubtype() != null ? occupancyTypeHelper.getSubtype().getCode() : "";
+		String occkey="";
+		if(occupancyTypeHelper!=null)
+		occkey = occupancyTypeHelper.getSubtype() != null ? occupancyTypeHelper.getSubtype().getCode() : "";
 		String key = occkey + "." + cdgaConstant.getCDGAConstantValue();
 		String byLaws = byLawsProperties.getProperty(key.toUpperCase());
 

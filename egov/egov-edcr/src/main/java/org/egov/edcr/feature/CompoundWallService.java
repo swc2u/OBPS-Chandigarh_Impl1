@@ -68,8 +68,8 @@ public class CompoundWallService extends FeatureProcess {
 		OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
-
-		if(!isOccupancyNotApplicable(mostRestrictiveFarHelper)) {
+				
+		if(mostRestrictiveFarHelper!=null && mostRestrictiveFarHelper.getSubtype()!=null &&!isOccupancyNotApplicable(mostRestrictiveFarHelper)) {
 			
 			if(!isOccupancyOptional(mostRestrictiveFarHelper)) {
 				if (pl.getCompoundWall() == null) {

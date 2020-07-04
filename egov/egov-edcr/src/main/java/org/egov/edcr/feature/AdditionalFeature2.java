@@ -275,6 +275,9 @@ public class AdditionalFeature2 extends FeatureProcess {
 		BigDecimal floorTotalFloorArea = BigDecimal.ZERO;
 		BigDecimal ancillaryFacilitiesFar = BigDecimal.ZERO;
 		boolean isProvided = false;
+		if(mostRestrictiveOccupancyType==null || mostRestrictiveOccupancyType.getSubtype() ==null)
+			return;
+		
 		if (DxfFileConstants.IT.equals(mostRestrictiveOccupancyType.getType().getCode())) {
 			for (Occupancy occupancy : pl.getOccupancies()) {
 				if (DxfFileConstants.IT_AF.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
@@ -401,7 +404,8 @@ public class AdditionalFeature2 extends FeatureProcess {
 				: null;
 		BigDecimal floorTotalFloorArea = BigDecimal.ZERO;
 		BigDecimal residentialUseFar = BigDecimal.ZERO;
-
+		if(mostRestrictiveOccupancyType==null || mostRestrictiveOccupancyType.getSubtype() ==null)
+			return;
 		if (DxfFileConstants.G.equals(mostRestrictiveOccupancyType.getType().getCode())) {
 			for (Occupancy occupancy : pl.getOccupancies()) {
 				if (DxfFileConstants.A_RU.equals(occupancy.getTypeHelper().getSubtype().getCode())) {

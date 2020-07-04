@@ -138,7 +138,7 @@ public class Parapet extends FeatureProcess {
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
 
-		if (!isOccupancyTypeNotApplicable(mostRestrictiveOccupancy)) {
+		if (mostRestrictiveOccupancy!=null && mostRestrictiveOccupancy.getSubtype()!=null && !isOccupancyTypeNotApplicable(mostRestrictiveOccupancy)) {
 			for (Block b : pl.getBlocks()) {
 				if (b.getParapets() != null && !b.getParapets().isEmpty()) {
 					minHeight = b.getParapets().stream().reduce(BigDecimal::min).get();

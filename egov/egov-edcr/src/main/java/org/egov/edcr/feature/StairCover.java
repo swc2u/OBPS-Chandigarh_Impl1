@@ -133,7 +133,7 @@ public class StairCover extends FeatureProcess {
 			return pl;
 		}
 				
-		if (!isOccupancyNotApplicable(mostRestrictiveFarHelper)) {
+		if (mostRestrictiveFarHelper!=null && mostRestrictiveFarHelper.getSubtype()!=null && !isOccupancyNotApplicable(mostRestrictiveFarHelper)) {
 			for (Block b : pl.getBlocks()) {
 				minHeight = BigDecimal.ZERO;
 				if (b.getStairCovers() != null && !b.getStairCovers().isEmpty() && mostRestrictiveFarHelper != null
