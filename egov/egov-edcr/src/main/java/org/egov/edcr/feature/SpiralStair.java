@@ -77,6 +77,8 @@ public class SpiralStair extends FeatureProcess {
 
 	@Override
 	public Plan process(Plan plan) {
+		if(!CDGAdditionalService.isFeatureValidationRequired(plan, SpiralStair.class))
+			return plan;
 		blk: for (Block block : plan.getBlocks()) {
 			if (block.getBuilding() != null && !block.getBuilding().getOccupancies().isEmpty()) {
 				/*

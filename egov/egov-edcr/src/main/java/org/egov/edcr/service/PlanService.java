@@ -227,33 +227,33 @@ public class PlanService {
 			serviceTypeFeatures = featureService.getFeatures();
 			ListIterator<PlanFeature> features = serviceTypeFeatures.listIterator();
 
-			switch (plan.getServiceType()) {
-			case DxfFileConstants.NEW_CONSTRUCTION:
-
-				break;
-			case DxfFileConstants.ALTERATION:
-
-				while (features.hasNext()) {
-
-					PlanFeature feature = features.next();
-					
-					if (feature.getRuleClass().isAssignableFrom(GeneralStair.class)//1. All Staircases
-							|| feature.getRuleClass().isAssignableFrom(org.egov.edcr.feature.SpiralStair.class)
-							|| feature.getRuleClass().isAssignableFrom(FireStair.class)
-							|| feature.getRuleClass().isAssignableFrom(OpenStairService.class)
-							|| feature.getRuleClass().isAssignableFrom(Verandah.class)//2.  Light and Ventilation
-							|| feature.getRuleClass().isAssignableFrom(PassageService.class)//3. Width of passage corridor
-							|| feature.getRuleClass().isAssignableFrom(AccessoryBuildingService.class)//4. Construction in rear courtyard
-							) {
-						System.out.println(feature.getRuleClass());
-						features.remove();
-					}
-				}
-
-				break;
-			default:
-				break;
-			}
+//			switch (plan.getServiceType()) {
+//			case DxfFileConstants.NEW_CONSTRUCTION:
+//
+//				break;
+//			case DxfFileConstants.ALTERATION:
+//
+//				while (features.hasNext()) {
+//
+//					PlanFeature feature = features.next();
+//					
+//					if (feature.getRuleClass().isAssignableFrom(GeneralStair.class)//1. All Staircases
+//							|| feature.getRuleClass().isAssignableFrom(org.egov.edcr.feature.SpiralStair.class)
+//							|| feature.getRuleClass().isAssignableFrom(FireStair.class)
+//							|| feature.getRuleClass().isAssignableFrom(OpenStairService.class)
+//							|| feature.getRuleClass().isAssignableFrom(Verandah.class)//2.  Light and Ventilation
+//							|| feature.getRuleClass().isAssignableFrom(PassageService.class)//3. Width of passage corridor
+//							|| feature.getRuleClass().isAssignableFrom(AccessoryBuildingService.class)//4. Construction in rear courtyard
+//							) {
+//						System.out.println(feature.getRuleClass());
+//						features.remove();
+//					}
+//				}
+//
+//				break;
+//			default:
+//				break;
+//			}
 		}else if(plan.isRural()) {
 			serviceTypeFeatures = featureService.getRuralFeatures();
 		}

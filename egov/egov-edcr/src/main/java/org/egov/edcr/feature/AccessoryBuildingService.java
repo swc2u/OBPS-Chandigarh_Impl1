@@ -118,6 +118,8 @@ public class AccessoryBuildingService extends FeatureProcess {
 
 	@Override
 	public Plan validate(Plan plan) {
+		if(!CDGAdditionalService.isFeatureValidationRequired(plan, AccessoryBuildingService.class))
+			return plan;
 		HashMap<String, String> errors = new HashMap<>();
 		if (plan != null && !plan.getAccessoryBlocks().isEmpty()) {
 			for (AccessoryBlock accessoryBlock : plan.getAccessoryBlocks()) {
@@ -186,6 +188,8 @@ public class AccessoryBuildingService extends FeatureProcess {
 
 	@Override
 	public Plan process(Plan plan) {
+		if(!CDGAdditionalService.isFeatureValidationRequired(plan, AccessoryBuildingService.class))
+			return plan;
 		validate(plan);
 		// CSCL comment start
 		/*
@@ -196,7 +200,8 @@ public class AccessoryBuildingService extends FeatureProcess {
 		// CSCL comment end
 
 		// CSCL add start
-		processHeightAndDistanceOfAccessoryBlock(plan);
+		if(CDGAdditionalService.isFeatureValidationRequired(plan, AccessoryBuildingService.class))
+			processHeightAndDistanceOfAccessoryBlock(plan);
 		// CSCL add end
 		return plan;
 	}

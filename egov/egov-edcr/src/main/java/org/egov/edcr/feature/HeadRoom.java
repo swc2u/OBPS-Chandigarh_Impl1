@@ -61,6 +61,7 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
+import org.egov.edcr.utility.DcrConstants;
 import org.egov.edcr.utility.Util;
 import org.springframework.stereotype.Service;
 
@@ -91,7 +92,7 @@ public class HeadRoom extends FeatureProcess {
                 org.egov.common.entity.edcr.HeadRoom headRoom = block.getBuilding().getHeadRoom();
                 
                 if(!block.getStairCovers().isEmpty() && headRoom==null)
-                	plan.addError("Stair Headroom", getLocaleMessage(OBJECTDEFINED, " Stair Headroom is not allowed in block " + block.getNumber())+",");
+                	plan.addError("Stair Headroom", getLocaleMessage(DcrConstants.OBJECTNOTDEFINED, " Stair Headroom in block " + block.getNumber()));
                 
                 if (headRoom != null) {
 

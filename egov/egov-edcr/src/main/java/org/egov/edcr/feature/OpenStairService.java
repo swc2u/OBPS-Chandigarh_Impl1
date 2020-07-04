@@ -14,6 +14,7 @@ import org.egov.common.entity.edcr.Measurement;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,7 +30,11 @@ public class OpenStairService extends FeatureProcess {
     }
 
     @Override
-    public Plan process(Plan plan) {/*
+    public Plan process(Plan plan) {
+    	if(!CDGAdditionalService.isFeatureValidationRequired(plan, OpenStairService.class))
+    		return plan;
+    	
+    	/*
                                      * List<Block> blocks = plan.getBlocks(); for (Block block : blocks) { if (block.getBuilding()
                                      * != null && block.getOpenStairs() != null && block.getOpenStairs().size() > 0) {
                                      * scrutinyDetail = new ScrutinyDetail(); scrutinyDetail.addColumnHeading(1, RULE_NO);

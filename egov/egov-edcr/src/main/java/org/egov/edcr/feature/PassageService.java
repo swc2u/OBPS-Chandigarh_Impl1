@@ -79,6 +79,8 @@ public class PassageService extends FeatureProcess {
 
 	@Override
 	public Plan process(Plan plan) {
+		if(!CDGAdditionalService.isFeatureValidationRequired(plan, PassageService.class))
+			return plan;
 		for (Block block : plan.getBlocks()) {
 			if (block.getBuilding() != null) {
 

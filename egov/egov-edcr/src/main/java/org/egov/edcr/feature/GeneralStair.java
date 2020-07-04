@@ -50,6 +50,8 @@ public class GeneralStair extends FeatureProcess {
 
 	@Override
 	public Plan process(Plan plan) {
+		if(!CDGAdditionalService.isFeatureValidationRequired(plan, GeneralStair.class))
+			return plan;
 		// validate(planDetail);
 		HashMap<String, String> errors = new HashMap<>();
 		blk: for (Block block : plan.getBlocks()) {

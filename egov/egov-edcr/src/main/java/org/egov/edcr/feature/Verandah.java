@@ -82,6 +82,8 @@ public class Verandah extends FeatureProcess {
 
 	@Override
 	public Plan process(Plan pl) {
+		if(!CDGAdditionalService.isFeatureValidationRequired(pl, Verandah.class))
+			return pl;
 		for (Block b : pl.getBlocks()) {
 			ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
 			scrutinyDetail.setKey("Common_Verandah");

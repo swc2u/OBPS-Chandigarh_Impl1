@@ -155,15 +155,14 @@ public class Ventilation extends FeatureProcess {
 //		return pl;
 //	}
 
-
 	@Override
 	public Plan process(Plan pl) {
-		
-		if(pl.isRural()) {
+
+		if (pl.isRural()) {
 			processRural(pl);
 			return pl;
 		}
-		
+
 		for (Block b : pl.getBlocks()) {
 			ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
 			scrutinyDetail.setKey("Common_Ventilation");
@@ -176,14 +175,15 @@ public class Ventilation extends FeatureProcess {
 			OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
 					? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 					: null;
-			
-			if (!isOccupancyTypeNotApplicable(mostRestrictiveFarHelper) && b.getBuilding() != null && b.getBuilding().getFloors() != null
-					&& !b.getBuilding().getFloors().isEmpty()) {
+
+			if (!isOccupancyTypeNotApplicable(mostRestrictiveFarHelper) && b.getBuilding() != null
+					&& b.getBuilding().getFloors() != null && !b.getBuilding().getFloors().isEmpty()) {
 
 				for (Floor f : b.getBuilding().getFloors()) {
 					Map<String, String> details = new HashMap<>();
 					details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.LIGHT_AND_VENTILATION));
-					details.put(DESCRIPTION, LIGHT_VENTILATION_DESCRIPTION+" blook "+ b.getNumber()+" floor "+f.getNumber());
+					details.put(DESCRIPTION,
+							LIGHT_VENTILATION_DESCRIPTION + " blook " + b.getNumber() + " floor " + f.getNumber());
 
 					if (f.getLightAndVentilation() != null && f.getLightAndVentilation().getMeasurements() != null
 							&& !f.getLightAndVentilation().getMeasurements().isEmpty()) {
@@ -192,30 +192,36 @@ public class Ventilation extends FeatureProcess {
 								.map(Measurement::getArea).reduce(BigDecimal.ZERO, BigDecimal::add);
 //						BigDecimal totalCarpetArea = f.getOccupancies().stream().map(Occupancy::getCarpetArea)
 //								.reduce(BigDecimal.ZERO, BigDecimal::add);
-						
-						BigDecimal totalRoomArea = f.getTotalHabitableRoomArea();
-						BigDecimal expectedArea=totalRoomArea.divide(BigDecimal.valueOf(8)).setScale(2,
-								BigDecimal.ROUND_HALF_UP);
-						totalVentilationArea=CDGAdditionalService.roundBigDecimal(totalVentilationArea);
-						
-						if(pl.getDrawingPreference().getInFeets()) {
-							totalVentilationArea=CDGAdditionalService.inchtoFeetArea(totalVentilationArea);
-							expectedArea=CDGAdditionalService.inchtoFeetArea(expectedArea);
-						}
-						
-						
 
+						BigDecimal totalRoomArea = f.getTotalHabitableRoomArea();
+						BigDecimal expectedArea = BigDecimal.ZERO;
+						if (f.getNumber() < 0)
+							expectedArea = totalRoomArea.divide(BigDecimal.valueOf(20)).setScale(2,
+									BigDecimal.ROUND_HALF_UP);
+						else
+							expectedArea = totalRoomArea.divide(BigDecimal.valueOf(8)).setScale(2,
+									BigDecimal.ROUND_HALF_UP);
+						totalVentilationArea = CDGAdditionalService.roundBigDecimal(totalVentilationArea);
+
+						if (pl.getDrawingPreference().getInFeets()) {
+							totalVentilationArea = CDGAdditionalService.inchtoFeetArea(totalVentilationArea);
+							expectedArea = CDGAdditionalService.inchtoFeetArea(expectedArea);
+						}
+						if (f.getNumber() < 0)
+							details.put(REQUIRED, "Minimum 1/20th of the habitable area ");
+						else
+							details.put(REQUIRED, "Minimum 1/8th of the habitable area ");
 						if (totalVentilationArea.compareTo(BigDecimal.ZERO) > 0) {
 							if (totalVentilationArea.compareTo(expectedArea) >= 0) {
-								details.put(REQUIRED, "Minimum 1/8th of the habitable area ");
-								details.put(PROVIDED, "Ventilation area " + CDGAdditionalService.viewArea(pl, totalVentilationArea) );
+								details.put(PROVIDED,
+										"Ventilation area " + CDGAdditionalService.viewArea(pl, totalVentilationArea));
 								details.put(STATUS, Result.Accepted.getResultVal());
 								scrutinyDetail.getDetail().add(details);
 								pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 							} else {
-								details.put(REQUIRED, "Minimum 1/8th of the habitable area ");
-								details.put(PROVIDED, "Ventilation area " + CDGAdditionalService.viewArea(pl, totalVentilationArea));
+								details.put(PROVIDED,
+										"Ventilation area " + CDGAdditionalService.viewArea(pl, totalVentilationArea));
 								details.put(STATUS, Result.Not_Accepted.getResultVal());
 								scrutinyDetail.getDetail().add(details);
 								pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -246,14 +252,13 @@ public class Ventilation extends FeatureProcess {
 			scrutinyDetail.addColumnHeading(4, PROVIDED);
 			scrutinyDetail.addColumnHeading(5, STATUS);
 
-			
-			if (b.getBuilding().getFloors() != null
-					&& !b.getBuilding().getFloors().isEmpty()) {
+			if (b.getBuilding().getFloors() != null && !b.getBuilding().getFloors().isEmpty()) {
 
 				for (Floor f : b.getBuilding().getFloors()) {
 					Map<String, String> details = new HashMap<>();
 					details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.LIGHT_AND_VENTILATION));
-					details.put(DESCRIPTION, LIGHT_VENTILATION_DESCRIPTION+" blook "+ b.getNumber()+" floor "+f.getNumber());
+					details.put(DESCRIPTION,
+							LIGHT_VENTILATION_DESCRIPTION + " blook " + b.getNumber() + " floor " + f.getNumber());
 
 					if (f.getLightAndVentilation() != null && f.getLightAndVentilation().getMeasurements() != null
 							&& !f.getLightAndVentilation().getMeasurements().isEmpty()) {
@@ -262,29 +267,32 @@ public class Ventilation extends FeatureProcess {
 								.map(Measurement::getArea).reduce(BigDecimal.ZERO, BigDecimal::add);
 //						BigDecimal totalCarpetArea = f.getOccupancies().stream().map(Occupancy::getCarpetArea)
 //								.reduce(BigDecimal.ZERO, BigDecimal::add);
-						
+
 						BigDecimal totalRoomArea = f.getTotalHabitableRoomArea();
 
-						
-						totalVentilationArea=CDGAdditionalService.roundBigDecimal(totalVentilationArea);
-						BigDecimal totalVentilationAreaExpected=CDGAdditionalService.roundBigDecimal(f.getArea().multiply(BigDecimal.valueOf(0.1)));
-						
-						if(pl.getDrawingPreference().getInFeets()) {
-							totalVentilationArea=CDGAdditionalService.inchtoFeetArea(totalVentilationArea);
-							totalVentilationAreaExpected=CDGAdditionalService.inchtoFeetArea(totalVentilationAreaExpected);
+						totalVentilationArea = CDGAdditionalService.roundBigDecimal(totalVentilationArea);
+						BigDecimal totalVentilationAreaExpected = CDGAdditionalService
+								.roundBigDecimal(f.getArea().multiply(BigDecimal.valueOf(0.1)));
+
+						if (pl.getDrawingPreference().getInFeets()) {
+							totalVentilationArea = CDGAdditionalService.inchtoFeetArea(totalVentilationArea);
+							totalVentilationAreaExpected = CDGAdditionalService
+									.inchtoFeetArea(totalVentilationAreaExpected);
 						}
 
 						if (totalVentilationArea.compareTo(BigDecimal.ZERO) > 0) {
 							if (totalVentilationArea.compareTo(totalVentilationAreaExpected) >= 0) {
 								details.put(REQUIRED, "Minimum 10% of the floor area ");
-								details.put(PROVIDED, "Ventilation area " + CDGAdditionalService.viewArea(pl, totalVentilationArea) );
+								details.put(PROVIDED,
+										"Ventilation area " + CDGAdditionalService.viewArea(pl, totalVentilationArea));
 								details.put(STATUS, Result.Accepted.getResultVal());
 								scrutinyDetail.getDetail().add(details);
 								pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 							} else {
 								details.put(REQUIRED, "Minimum 10% of the floor area ");
-								details.put(PROVIDED, "Ventilation area " + CDGAdditionalService.viewArea(pl, totalVentilationArea));
+								details.put(PROVIDED,
+										"Ventilation area " + CDGAdditionalService.viewArea(pl, totalVentilationArea));
 								details.put(STATUS, Result.Not_Accepted.getResultVal());
 								scrutinyDetail.getDetail().add(details);
 								pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -304,20 +312,18 @@ public class Ventilation extends FeatureProcess {
 
 		return pl;
 	}
-	
+
 	private boolean isOccupancyTypeNotApplicable(OccupancyTypeHelper occupancyTypeHelper) {
-		boolean flage=false;
-		
+		boolean flage = false;
+
 		if (DxfFileConstants.F_TCIM.equals(occupancyTypeHelper.getSubtype().getCode())
 				|| DxfFileConstants.R1.equals(occupancyTypeHelper.getSubtype().getCode())
 				|| DxfFileConstants.T1.equals(occupancyTypeHelper.getSubtype().getCode()))
 			flage = true;
 
-		
 		return flage;
 	}
-	
-	
+
 	@Override
 	public Map<String, Date> getAmendments() {
 		return new LinkedHashMap<>();

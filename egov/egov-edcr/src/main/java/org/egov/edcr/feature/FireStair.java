@@ -66,6 +66,7 @@ import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.common.entity.edcr.StairLanding;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.DcrConstants;
 import org.egov.edcr.utility.Util;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -94,6 +95,8 @@ public class FireStair extends FeatureProcess {
 
     @Override
     public Plan process(Plan plan) {
+    	if(!CDGAdditionalService.isFeatureValidationRequired(plan, FireStair.class))
+    		return plan;
         // validate(planDetail);
         HashMap<String, String> errors = new HashMap<>();
         blk: for (Block block : plan.getBlocks()) {

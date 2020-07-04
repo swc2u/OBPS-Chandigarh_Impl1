@@ -8,12 +8,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.swing.text.StyledEditorKit.BoldAction;
+
 import org.egov.common.entity.edcr.Block;
 import org.egov.common.entity.edcr.Floor;
 import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.commons.entity.cdg.ServiceAvailabilityCheckConstant;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.feature.AccessoryBuildingService;
+import org.egov.edcr.feature.FireStair;
+import org.egov.edcr.feature.GeneralStair;
+import org.egov.edcr.feature.OpenStairService;
+import org.egov.edcr.feature.PassageService;
+import org.egov.edcr.feature.SpiralStair;
+import org.egov.edcr.feature.Verandah;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -406,6 +415,68 @@ public class CDGAdditionalService {
 		value=value.divide(new BigDecimal(144),MathContext.DECIMAL32);
 		//value=value.setScale(2, RoundingMode.HALF_UP);
 		return value;
+	}
+	
+	public static boolean isFeatureValidationRequired(Plan plan,Class clazz) {
+		boolean flage=false;
+		if(DxfFileConstants.ALTERATION.equals(plan.getServiceType()) || DxfFileConstants.ADDITION_OR_EXTENSION.equals(plan.getServiceType())) {
+			if(clazz.isAssignableFrom(SpiralStair.class)) {
+				for(Block block:plan.getBlocks()) {
+					for (Floor floor : block.getBuilding().getFloors()) {
+						if(floor.getSpiralStairs().size()!=0) {
+							flage=true;
+							return flage;
+						}
+					}
+				}
+			}else if(clazz.isAssignableFrom(GeneralStair.class)) {
+				for(Block block:plan.getBlocks()) {
+					for (Floor floor : block.getBuilding().getFloors()) {
+						if(!floor.getGeneralStairs().isEmpty()) {
+							flage=true;
+							return flage;
+						}
+					}
+				}
+			}else if(clazz.isAssignableFrom(FireStair.class)) {
+				for(Block block:plan.getBlocks()) {
+					for (Floor floor : block.getBuilding().getFloors()) {
+						if(!floor.getFireStairs().isEmpty()) {
+							flage=true;
+							return flage;
+						}
+					}
+				}
+			}else if(clazz.isAssignableFrom(OpenStairService.class)) {
+				return flage;
+			}else if(clazz.isAssignableFrom(Verandah.class)) {
+				for(Block block:plan.getBlocks()) {
+					for (Floor floor : block.getBuilding().getFloors()) {
+						if(floor.getVerandah()!=null) {
+							flage=true;
+							return flage;
+						}
+					}
+				}
+			}
+			else if(clazz.isAssignableFrom(PassageService.class)) {
+				for(Block block:plan.getBlocks()) {
+						if(block.getBuilding().getPassage()!=null) {
+							flage=true;
+							return flage;
+					}
+				}
+			}else if(clazz.isAssignableFrom(AccessoryBuildingService.class)) {
+				if(!plan.getAccessoryBlocks().isEmpty()) {
+					flage=true;
+					return flage;
+				}
+			}
+		}else {
+			flage=true;
+		}
+		
+		return flage;
 	}
 	
 }
