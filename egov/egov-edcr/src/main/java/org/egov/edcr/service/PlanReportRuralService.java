@@ -276,7 +276,7 @@ public class PlanReportRuralService extends PlanReportService{
 
     }
 
-    private Subreport getBlkDetails(DcrReportBlockDetail dcrReportBlockDetail, boolean isProposed) {
+    private Subreport getBlkDetails(Plan plan,DcrReportBlockDetail dcrReportBlockDetail, boolean isProposed) {
         try {
 
             FastReportBuilder frb = new FastReportBuilder();
@@ -313,16 +313,25 @@ public class PlanReportRuralService extends PlanReportService{
                     frb.setTitle("Block No " + dcrReportBlockDetail.getBlockNo() + " - Proposed Details");
 
                     StringBuilder text = new StringBuilder();
-
-                    String coveredAreaText = "1. Covered Area is " + (dcrReportBlockDetail.getCoverageArea() != null
+                    
+                    BigDecimal coveredArea=dcrReportBlockDetail.getCoverageArea() != null
                             ? dcrReportBlockDetail.getCoverageArea().setScale(DcrConstants.DECIMALDIGITS_MEASUREMENTS,
                                     DcrConstants.ROUNDMODE_MEASUREMENTS)
-                            : BigDecimal.ZERO) + " m²";
+                            : BigDecimal.ZERO;
+                    if(plan.getDrawingPreference().getInFeets()) {
+                    	coveredArea=CDGAdditionalService.inchtoFeetArea(coveredArea);
+                    }
 
-                    String blgHgtText = "2. Height of building is " + (dcrReportBlockDetail.getBuildingHeight() != null
+                    String coveredAreaText = "1. Covered Area is " + coveredArea;
+                    
+                    BigDecimal blgHgt=dcrReportBlockDetail.getBuildingHeight() != null
                             ? dcrReportBlockDetail.getBuildingHeight().setScale(DcrConstants.DECIMALDIGITS_MEASUREMENTS,
                                     DcrConstants.ROUNDMODE_MEASUREMENTS)
-                            : BigDecimal.ZERO) + " m";
+                            : BigDecimal.ZERO;
+                     if(plan.getDrawingPreference().getInFeets()) {
+                    	 blgHgt=CDGAdditionalService.inchToFeet(blgHgt);
+                     }
+                    String blgHgtText = "2. Height of building is " + blgHgt;
 
                     text = text.append(coveredAreaText).append("\\n").append(blgHgtText);
 
@@ -654,7 +663,7 @@ public class PlanReportRuralService extends PlanReportService{
             List<DcrReportBlockDetail> blockDetails = new ArrayList<>();
 
             List<DcrReportBlockDetail> existingBlockDetails = buildBlockWiseExistingInfo(plan);
-            VirtualBuildingReport virtualBuildingReport = buildVirtualBuilding(plan.getVirtualBuilding());
+            VirtualBuildingReport virtualBuildingReport = buildVirtualBuilding(plan,plan.getVirtualBuilding());
 
             List<String> combinedSummary = new ArrayList<>();
             combinedSummary.add(COMBINED_BLOCKS_SUMMARY_DETAILS);
@@ -674,7 +683,7 @@ public class PlanReportRuralService extends PlanReportService{
             if (existingBlockDetails != null && !existingBlockDetails.isEmpty()) {
                 for (DcrReportBlockDetail existingBlockDetail : existingBlockDetails) {
                     blockDetails.add(existingBlockDetail);
-                    drb.addConcatenatedReport(getBlkDetails(existingBlockDetail, false));
+                    drb.addConcatenatedReport(getBlkDetails(plan,existingBlockDetail, false));
                     valuesMap.put("Existing Block No " + existingBlockDetail.getBlockNo(),
                             existingBlockDetail.getDcrReportFloorDetails());
                 }
@@ -687,7 +696,7 @@ public class PlanReportRuralService extends PlanReportService{
             // Add proposed block details
             for (DcrReportBlockDetail dcrReportBlockDetail : proposedBlockDetails) {
                 blockDetails.add(dcrReportBlockDetail);
-                drb.addConcatenatedReport(getBlkDetails(dcrReportBlockDetail, true));
+                drb.addConcatenatedReport(getBlkDetails(plan,dcrReportBlockDetail, true));
                 valuesMap.put("Block No " + dcrReportBlockDetail.getBlockNo(),
                         dcrReportBlockDetail.getDcrReportFloorDetails());
             }
@@ -1012,21 +1021,32 @@ public class PlanReportRuralService extends PlanReportService{
                                         floorNo = String.valueOf(floor.getNumber());
                                     dcrReportFloorDetail.setFloorNo(floorNo);
                                     dcrReportFloorDetail.setOccupancy(occupancyName);
-                                    dcrReportFloorDetail.setBuiltUpArea(
+                                    BigDecimal builtUpArea=
                                             occupancy.getExistingBuiltUpArea().compareTo(BigDecimal.ZERO) > 0
                                             ? occupancy.getBuiltUpArea()
                                                     .subtract(occupancy.getExistingBuiltUpArea())
-                                            : occupancy.getBuiltUpArea());
-                                    dcrReportFloorDetail.setFloorArea(
+                                            : occupancy.getBuiltUpArea();
+                                     if(plan.getDrawingPreference().getInFeets()) {
+                                    	 builtUpArea=CDGAdditionalService.inchtoFeetArea(builtUpArea);
+                                     }
+                                    dcrReportFloorDetail.setBuiltUpArea(builtUpArea);
+                                    BigDecimal floorArea=
                                             occupancy.getExistingFloorArea().compareTo(BigDecimal.ZERO) > 0
-                                                    ? occupancy.getFloorArea()
-                                                            .subtract(occupancy.getExistingFloorArea())
-                                                    : occupancy.getFloorArea());
-                                    dcrReportFloorDetail.setCarpetArea(
-                                            occupancy.getExistingCarpetArea().compareTo(BigDecimal.ZERO) > 0
-                                                    ? occupancy.getCarpetArea()
-                                                            .subtract(occupancy.getExistingCarpetArea())
-                                                    : occupancy.getCarpetArea());
+                                            ? occupancy.getFloorArea()
+                                                    .subtract(occupancy.getExistingFloorArea())
+                                            : occupancy.getFloorArea();
+                                    if(plan.getDrawingPreference().getInFeets()) {
+                                    	floorArea=CDGAdditionalService.inchtoFeetArea(floorArea);
+                                    }
+                                    dcrReportFloorDetail.setFloorArea(floorArea);
+                                    BigDecimal carpetArea=occupancy.getExistingCarpetArea().compareTo(BigDecimal.ZERO) > 0
+                                            ? occupancy.getCarpetArea()
+                                                    .subtract(occupancy.getExistingCarpetArea())
+                                            : occupancy.getCarpetArea();
+                                    if(plan.getDrawingPreference().getInFeets()) {
+                                    	carpetArea=CDGAdditionalService.inchtoFeetArea(carpetArea);
+                                    }
+                                    dcrReportFloorDetail.setCarpetArea(carpetArea);
                                     if (dcrReportFloorDetail.getBuiltUpArea().compareTo(BigDecimal.ZERO) > 0) {
                                         dcrReportFloorDetails.add(dcrReportFloorDetail);
                                     }
@@ -1114,10 +1134,10 @@ public class PlanReportRuralService extends PlanReportService{
         return dcrReportBlockDetails;
     }
 
-    private VirtualBuildingReport buildVirtualBuilding(VirtualBuilding virtualBuilding) {
+    private VirtualBuildingReport buildVirtualBuilding(Plan plan,VirtualBuilding virtualBuilding) {
         VirtualBuildingReport virtualBuildingReport = new VirtualBuildingReport();
 
-        if (virtualBuilding != null) {
+        if (virtualBuilding != null && plan.getDrawingPreference().getInMeters()) {
             if (virtualBuilding.getTotalExistingBuiltUpArea() != null) {
                 virtualBuildingReport.setProposedBuitUpArea(
                         virtualBuilding.getTotalBuitUpArea().subtract(virtualBuilding.getTotalExistingBuiltUpArea()));
@@ -1136,6 +1156,25 @@ public class PlanReportRuralService extends PlanReportService{
             virtualBuildingReport.setTotalBuitUpArea(virtualBuilding.getTotalBuitUpArea());
             virtualBuildingReport.setTotalFloorArea(virtualBuilding.getTotalFloorArea());
             virtualBuildingReport.setTotalCarpetArea(virtualBuilding.getTotalCarpetArea());
+        }else if(virtualBuilding != null && plan.getDrawingPreference().getInFeets()) {
+        	 if (virtualBuilding.getTotalExistingBuiltUpArea() != null) {
+                 virtualBuildingReport.setProposedBuitUpArea(CDGAdditionalService.inchtoFeetArea(
+                         virtualBuilding.getTotalBuitUpArea().subtract(virtualBuilding.getTotalExistingBuiltUpArea())));
+                 virtualBuildingReport.setProposedFloorArea(CDGAdditionalService.inchtoFeetArea(
+                         virtualBuilding.getTotalFloorArea().subtract(virtualBuilding.getTotalExistingFloorArea())));
+                 virtualBuildingReport.setProposedCarpetArea(CDGAdditionalService.inchtoFeetArea(
+                         virtualBuilding.getTotalCarpetArea().subtract(virtualBuilding.getTotalExistingCarpetArea())));
+             }
+             virtualBuildingReport.setTotalExistingBuiltUpArea(CDGAdditionalService.inchtoFeetArea(virtualBuilding.getTotalExistingBuiltUpArea()));
+
+             virtualBuildingReport.setTotalExistingFloorArea(CDGAdditionalService.inchtoFeetArea(virtualBuilding.getTotalExistingFloorArea()));
+             virtualBuildingReport.setTotalExistingCarpetArea(CDGAdditionalService.inchtoFeetArea(virtualBuilding.getTotalExistingCarpetArea()));
+
+             virtualBuildingReport.setTotalCoverageArea(CDGAdditionalService.inchtoFeetArea(virtualBuilding.getTotalCoverageArea()));
+
+             virtualBuildingReport.setTotalBuitUpArea(CDGAdditionalService.inchtoFeetArea(virtualBuilding.getTotalBuitUpArea()));
+             virtualBuildingReport.setTotalFloorArea(CDGAdditionalService.inchtoFeetArea(virtualBuilding.getTotalFloorArea()));
+             virtualBuildingReport.setTotalCarpetArea(CDGAdditionalService.inchtoFeetArea(virtualBuilding.getTotalCarpetArea()));
         }
         return virtualBuildingReport;
     }
