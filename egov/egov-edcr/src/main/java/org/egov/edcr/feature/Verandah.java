@@ -105,11 +105,18 @@ public class Verandah extends FeatureProcess {
 						
 						if (f.getVerandah() != null && f.getVerandah().getMeasurements() != null
 								&& !f.getVerandah().getMeasurements().isEmpty()) {
+							BigDecimal minVerandaWidth=BigDecimal.ZERO;
+							BigDecimal minVerandDepth=BigDecimal.ZERO;
 
-							BigDecimal minVerandaWidth = f.getVerandah().getMeasurements().stream()
-									.map(Measurement::getWidth).reduce(BigDecimal::min).get();
-							BigDecimal minVerandDepth = f.getVerandah().getHeightOrDepth().stream().reduce(BigDecimal::min)
-									.get();
+							try {
+								minVerandaWidth = f.getVerandah().getMeasurements().stream()
+										.map(Measurement::getWidth).reduce(BigDecimal::min).get();
+								minVerandDepth = f.getVerandah().getHeightOrDepth().stream().reduce(BigDecimal::min)
+										.get();
+							}catch (Exception e) {
+								// TODO: handle exception
+								LOG.error(e);
+							}
 							
 							minVerandaWidth=CDGAdditionalService.roundBigDecimal(minVerandaWidth);
 							minVerandDepth=CDGAdditionalService.roundBigDecimal(minVerandDepth);
