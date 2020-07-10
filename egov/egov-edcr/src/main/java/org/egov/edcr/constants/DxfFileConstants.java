@@ -518,4 +518,6 @@ public class DxfFileConstants {
 	// dimensioning message
 	public static final String MESSAGE_FEET="All provided values are in feets and Sq ft.";
 	public static final String MESSAGE_METER="All provided values are in meters and Sq m.";
+	
+	public static final String LITTERS="litres";
 }

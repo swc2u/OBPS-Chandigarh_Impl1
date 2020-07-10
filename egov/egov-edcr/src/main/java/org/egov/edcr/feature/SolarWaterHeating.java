@@ -114,6 +114,8 @@ public class SolarWaterHeating extends FeatureProcess {
 		BigDecimal actualTankCapacity=BigDecimal.ZERO;
 
 		boolean valid = false;
+		boolean isCompulsory=true;
+		
 		BigDecimal plotArea = pl.getPlot() != null ? pl.getPlot().getArea() : BigDecimal.ZERO;
 		OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
@@ -122,34 +124,75 @@ public class SolarWaterHeating extends FeatureProcess {
 		if(mostRestrictiveFarHelper !=null && mostRestrictiveFarHelper.getSubtype() !=null && isOccupancyTypeNotApplicable(mostRestrictiveFarHelper))
 			return pl;
 
-		areaType = pl.getPlanInfoProperties().get(DxfFileConstants.AREA_TYPE);
+		areaType = pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE);
 		try{
 			actualTankCapacity = new BigDecimal(
 					(String) pl.getPlanInfoProperties().get(DxfFileConstants.SOLOR_WATER_HEATING_IN_LTR));
 		}catch (Exception e) {
-			// TODO: handle exception
+			LOG.error(e);
 		}
 		
-		if (mostRestrictiveFarHelper != null && !pl.isRural())
-			if (checkOccupancyTypeForSolarWaterHeating(mostRestrictiveFarHelper.getType().getCode(), areaType)) {
+		if(mostRestrictiveFarHelper !=null && !pl.isRural() && mostRestrictiveFarHelper.getType()!=null){
+			if(DxfFileConstants.A_P.equals(mostRestrictiveFarHelper.getSubtype().getCode())) {
 				BigDecimal roundOffPlotArea = plotArea.divide(BigDecimal.valueOf(100));
-				if (areaType.equalsIgnoreCase(DxfFileConstants.ONE_KANAL)) {
+				if(DxfFileConstants.MARLA.equals(areaType)) {
+					isCompulsory=false;
+					valid=true;
+				}else if(DxfFileConstants.ONE_KANAL.equals(areaType)) {
+					isCompulsory=true;
 					expectedTankCapacity = BigDecimal.valueOf(100)
 							.multiply(roundOffPlotArea.setScale(0, BigDecimal.ROUND_HALF_UP));
-
-				} else if (areaType.equalsIgnoreCase(DxfFileConstants.TWO_KANAL)
-						|| areaType.equalsIgnoreCase(DxfFileConstants.ABOVE_TWO_KANAL)) {
+					if (actualTankCapacity.compareTo(expectedTankCapacity) >= 0)
+						valid = true;
+				}else {
+					isCompulsory=true;
 					expectedTankCapacity = BigDecimal.valueOf(200)
 							.multiply(roundOffPlotArea.setScale(0, BigDecimal.ROUND_HALF_UP));
-
+					if (actualTankCapacity.compareTo(expectedTankCapacity) >= 0)
+						valid = true;
 				}
-
-				if (actualTankCapacity.compareTo(expectedTankCapacity) >= 0)
-					valid = true;
-				processSolarWaterTankCapacity(pl, "Compulsary", subRule, subRuleDesc, expectedTankCapacity, valid);
-			} else {
-				processSolarWaterHeating(pl, "Optional", subRule, subRuleDesc);
+			}else if(DxfFileConstants.F_CD.equals(mostRestrictiveFarHelper.getSubtype().getCode()) 
+					|| DxfFileConstants.F_PP.equals(mostRestrictiveFarHelper.getSubtype().getCode()) 
+					|| DxfFileConstants.R1.equals(mostRestrictiveFarHelper.getSubtype().getCode()) 
+					|| DxfFileConstants.T1.equals(mostRestrictiveFarHelper.getSubtype().getCode()) 
+					) {
+				isCompulsory=false;
+				if(actualTankCapacity.longValue()>0)
+					valid=true;
 			}
+			
+			String expectedTankCapacityString=isCompulsory?"Compulsary":"Optional";
+			String providedTankCapacityString=actualTankCapacity+" "+DxfFileConstants.LITTERS;
+			String statusString=valid?Result.Verify.getResultVal():Result.Not_Accepted.getResultVal();
+			
+			if(expectedTankCapacity.longValue()>0)
+				expectedTankCapacityString=expectedTankCapacityString+"( "+ expectedTankCapacity.toString()+DxfFileConstants.LITTERS+" )";
+			
+			setReportOutputDetails(pl, subRule, subRuleDesc,
+					expectedTankCapacityString,providedTankCapacityString,statusString);
+			
+		}
+		
+//		if (mostRestrictiveFarHelper != null && !pl.isRural())
+//			if (checkOccupancyTypeForSolarWaterHeating(mostRestrictiveFarHelper.getType().getCode(), areaType)) {
+//				BigDecimal roundOffPlotArea = plotArea.divide(BigDecimal.valueOf(100));
+//				if (areaType.equalsIgnoreCase(DxfFileConstants.ONE_KANAL)) {
+//					expectedTankCapacity = BigDecimal.valueOf(100)
+//							.multiply(roundOffPlotArea.setScale(0, BigDecimal.ROUND_HALF_UP));
+//
+//				} else if (areaType.equalsIgnoreCase(DxfFileConstants.TWO_KANAL)
+//						|| areaType.equalsIgnoreCase(DxfFileConstants.ABOVE_TWO_KANAL)) {
+//					expectedTankCapacity = BigDecimal.valueOf(200)
+//							.multiply(roundOffPlotArea.setScale(0, BigDecimal.ROUND_HALF_UP));
+//
+//				}
+//
+//				if (actualTankCapacity.compareTo(expectedTankCapacity) >= 0)
+//					valid = true;
+//				processSolarWaterTankCapacity(pl, "Compulsary", subRule, subRuleDesc, expectedTankCapacity, valid);
+//			} else {
+//				processSolarWaterHeating(pl, "Optional", subRule, subRuleDesc);
+//			}
 		
 		if(pl.isRural()) {
 			if(pl.getPlot().getArea().compareTo(BigDecimal.valueOf(250))>=0)
