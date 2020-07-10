@@ -72,6 +72,7 @@ import org.egov.edcr.feature.FireStair;
 import org.egov.edcr.feature.FireTenderMovement;
 import org.egov.edcr.feature.GateService;
 import org.egov.edcr.feature.GeneralStair;
+import org.egov.edcr.feature.GeneralStairRural;
 import org.egov.edcr.feature.GovtBuildingDistance;
 import org.egov.edcr.feature.GuardRoom;
 import org.egov.edcr.feature.HeadRoom;
@@ -394,6 +395,9 @@ public class PlanFeatureRepository {
           features.add(pf);
           
           pf = new PlanFeature(SetBackService.class);
+          features.add(pf);
+          
+          pf = new PlanFeature(GeneralStairRural.class);
           features.add(pf);
           
           return features;

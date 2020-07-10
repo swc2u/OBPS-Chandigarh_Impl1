@@ -19,6 +19,7 @@ import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.feature.AccessoryBuildingService;
 import org.egov.edcr.feature.FireStair;
 import org.egov.edcr.feature.GeneralStair;
+import org.egov.edcr.feature.GeneralStairRural;
 import org.egov.edcr.feature.OpenStairService;
 import org.egov.edcr.feature.PassageService;
 import org.egov.edcr.feature.SpiralStair;
@@ -430,6 +431,15 @@ public class CDGAdditionalService {
 					}
 				}
 			}else if(clazz.isAssignableFrom(GeneralStair.class)) {
+				for(Block block:plan.getBlocks()) {
+					for (Floor floor : block.getBuilding().getFloors()) {
+						if(!floor.getGeneralStairs().isEmpty()) {
+							flage=true;
+							return flage;
+						}
+					}
+				}
+			}else if(clazz.isAssignableFrom(GeneralStairRural.class)) {
 				for(Block block:plan.getBlocks()) {
 					for (Floor floor : block.getBuilding().getFloors()) {
 						if(!floor.getGeneralStairs().isEmpty()) {
