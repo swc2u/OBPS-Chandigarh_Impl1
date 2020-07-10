@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.entity.edcr.Block;
+import org.egov.common.entity.edcr.Floor;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
@@ -92,7 +93,7 @@ public class HeadRoom extends FeatureProcess {
 
                 org.egov.common.entity.edcr.HeadRoom headRoom = block.getBuilding().getHeadRoom();
                 
-                if(!block.getStairCovers().isEmpty() && headRoom==null)
+                if(isRequiredToValidate(block) && headRoom==null)
                 	plan.addError("Stair Headroom", getLocaleMessage(DcrConstants.OBJECTNOTDEFINED, " Stair Headroom in block " + block.getNumber()));
                 
                 if (headRoom != null) {
@@ -128,6 +129,17 @@ public class HeadRoom extends FeatureProcess {
         return plan;
     }
 
+    private boolean isRequiredToValidate(Block block) {
+    	boolean flage=false;
+    	for (Floor floor : block.getBuilding().getFloors()) {
+			if(!floor.getGeneralStairs().isEmpty()) {
+				flage=true;
+				return flage;
+			}
+		}
+    	return flage;
+    }
+    
     private void setReportOutputDetails(Plan pl, String ruleNo, String ruleDesc, String expected, String actual,
             String status, ScrutinyDetail scrutinyDetail) {
         Map<String, String> details = new HashMap<>();

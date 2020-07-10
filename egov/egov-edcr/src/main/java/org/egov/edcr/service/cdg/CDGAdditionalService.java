@@ -327,6 +327,7 @@ public class CDGAdditionalService {
 	
 	public static BigDecimal meterToFoot(BigDecimal value) {
 		BigDecimal valueInFoot=value.multiply(new BigDecimal("3.281"));
+		valueInFoot=valueInFoot.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		return valueInFoot;
 	}
 	

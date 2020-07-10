@@ -1525,6 +1525,7 @@ public class AdditionalFeature extends FeatureProcess {
 		if(pl.getUtility().getSolarWaterHeatingSystems() != null
 				&& !pl.getUtility().getSolarWaterHeatingSystems().isEmpty()) {
 			providedMsg="Provided solar assisted water heating system details";
+			flage=true;
 		}
 		else if(!(this.isOccupancyTypeNotApplicableForGreenBuildingsAndSustainability(mostRestrictiveFarHelper))) {
 			providedMsg="Not provided solar assisted water heating system details";
