@@ -47,10 +47,6 @@
 
 package org.egov.edcr.feature;
 
-import static org.egov.edcr.constants.DxfFileConstants.A;
-import static org.egov.edcr.constants.DxfFileConstants.F;
-import static org.egov.edcr.constants.DxfFileConstants.G;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,7 +67,6 @@ import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.ProcessHelper;
 import org.egov.edcr.service.cdg.CDGAConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
-import org.egov.edcr.utility.DcrConstants;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -315,9 +310,10 @@ public class HeightOfRoom extends FeatureProcess {
                         scrutinyDetail.addColumnHeading(1, RULE_NO);
                         scrutinyDetail.addColumnHeading(2, DESCRIPTION);
                         scrutinyDetail.addColumnHeading(3, FLOOR);
-                        scrutinyDetail.addColumnHeading(4, REQUIRED);
-                        scrutinyDetail.addColumnHeading(5, PROVIDED);
-                        scrutinyDetail.addColumnHeading(6, STATUS);
+                        scrutinyDetail.addColumnHeading(4, ROOM);
+                        scrutinyDetail.addColumnHeading(5, REQUIRED);
+                        scrutinyDetail.addColumnHeading(6, PROVIDED);
+                        scrutinyDetail.addColumnHeading(7, STATUS);
 
                         scrutinyDetail.setKey("Block_" + block.getNumber() + "_" + "Room");
 
@@ -357,30 +353,30 @@ public class HeightOfRoom extends FeatureProcess {
                                     }
                                 }
 
-                                if (!residentialAcRoomHeights.isEmpty()) {
-                                    BigDecimal minHeight = residentialAcRoomHeights.stream().reduce(BigDecimal::min).get();
-
-                                    if (!G.equalsIgnoreCase(mostRestrictiveOccupancy.getType().getCode()))
-                                        minimumHeight = MINIMUM_HEIGHT_2_4;
-                                    else
-                                        minimumHeight = MINIMUM_HEIGHT_3;
-
-                                    subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.HABITABLE_ROOM);
-                                    subRuleDesc = SUBRULE_41_II_A_AC_DESC;
-                                    
-                                    
-                                    boolean valid = false;
-                                    boolean isTypicalRepititiveFloor = false;
-                                    Map<String, Object> typicalFloorValues = ProcessHelper.getTypicalFloorValues(block, floor,
-                                            isTypicalRepititiveFloor);
-                                    buildResult(pl, floor, minimumHeight, subRule, subRuleDesc, minHeight, valid,
-                                            typicalFloorValues);
-                                } else if( !isOccupancyTypePlinthNotApplicable(mostRestrictiveOccupancy)){
-                                    String layerName = String.format(LAYER_ROOM_HEIGHT, block.getNumber(), floor.getNumber(),
-                                            "ROOM");
-                                    errors.put(layerName, ROOM_HEIGHT_NOTDEFINED + layerName);
-                                    pl.addErrors(errors);
-                                }
+//                                if (!residentialAcRoomHeights.isEmpty()) {
+//                                    BigDecimal minHeight = residentialAcRoomHeights.stream().reduce(BigDecimal::min).get();
+//
+//                                    if (!G.equalsIgnoreCase(mostRestrictiveOccupancy.getType().getCode()))
+//                                        minimumHeight = MINIMUM_HEIGHT_2_4;
+//                                    else
+//                                        minimumHeight = MINIMUM_HEIGHT_3;
+//
+//                                    subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.HABITABLE_ROOM);
+//                                    subRuleDesc = SUBRULE_41_II_A_AC_DESC;
+//                                    
+//                                    
+//                                    boolean valid = false;
+//                                    boolean isTypicalRepititiveFloor = false;
+//                                    Map<String, Object> typicalFloorValues = ProcessHelper.getTypicalFloorValues(block, floor,
+//                                            isTypicalRepititiveFloor);
+//                                    buildResult(pl, floor, minimumHeight, subRule, subRuleDesc, minHeight, valid,
+//                                            typicalFloorValues);
+//                                } else if( !isOccupancyTypePlinthNotApplicable(mostRestrictiveOccupancy)){
+//                                    String layerName = String.format(LAYER_ROOM_HEIGHT, block.getNumber(), floor.getNumber(),
+//                                            "ROOM");
+//                                    errors.put(layerName, ROOM_HEIGHT_NOTDEFINED + layerName);
+//                                    pl.addErrors(errors);
+//                                }
 
                             }
 
@@ -401,38 +397,43 @@ public class HeightOfRoom extends FeatureProcess {
                                         roomWidths.add(room.getWidth());
                                     }
                                 }
+                                int roomNumber=1;
+                                for(Measurement room:rooms) {
+                                	minimumHeight = MINIMUM_HEIGHT_2_75;
+                                	BigDecimal minimumArea=MINIMUM_AREA_9_5;
+                                    minWidth = MINIMUM_WIDTH_2_4;
+                                    
+                                    subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.HABITABLE_ROOM);
+                                    subRuleDesc = SUBRULE_41_II_B_AREA_DESC;
+                                    
+                                    boolean valid = false;
+                                    boolean isTypicalRepititiveFloor = false;
+                                    Map<String, Object> typicalFloorValues = ProcessHelper.getTypicalFloorValues(block, floor,
+                                            isTypicalRepititiveFloor);
+                                    
+                                    buildResultArea(pl, floor, roomNumber,minimumArea, subRule, subRuleDesc, room.getArea(), valid, typicalFloorValues);
+
+                                    subRuleDesc = SUBRULE_41_II_B_TOTAL_WIDTH;
+                                    buildResult(pl, floor, roomNumber,minWidth, subRule, subRuleDesc, room.getWidth(), valid, typicalFloorValues);
+                                   
+                                    subRuleDesc = SUBRULE_41_II_A_REGULAR_DESC;
+                                    buildResult(pl, floor, roomNumber,minimumHeight, subRule, subRuleDesc, room.getHeight(), valid, typicalFloorValues);
+                                   
+                                    
+                                    roomNumber++;
+                                }
+                                
 
                             }
                             if (!roomAreas.isEmpty()) {
                                 totalArea = roomAreas.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
-                                BigDecimal minRoomWidth = roomWidths.stream().reduce(BigDecimal::min).get();
-                                
                                 floor.setTotalHabitableRoomArea(totalArea);// is required for Light & Ventilations
                                 
-                                if (roomAreas.size() == 1) {
-                                    minimumHeight = MINIMUM_AREA_9_5;
-                                    minWidth = MINIMUM_WIDTH_2_4;
-                                }
-
-                                else if (roomAreas.size() == 2) {
-                                    minimumHeight = MINIMUM_AREA_9_5;
-                                    minWidth = MINIMUM_WIDTH_2_4;//as per suggestion by neetika 
-                                }
-                                subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.HABITABLE_ROOM);
-                                subRuleDesc = SUBRULE_41_II_B_AREA_DESC;
-                                
-                                boolean valid = false;
-                                boolean isTypicalRepititiveFloor = false;
-                                Map<String, Object> typicalFloorValues = ProcessHelper.getTypicalFloorValues(block, floor,
-                                        isTypicalRepititiveFloor);
-                                buildResultArea(pl, floor, minimumHeight, subRule, subRuleDesc, totalArea, valid, typicalFloorValues);
-
-                                subRuleDesc = SUBRULE_41_II_B_TOTAL_WIDTH;
-                                buildResult(pl, floor, minWidth, subRule, subRuleDesc, minRoomWidth, valid, typicalFloorValues);
                             }
                         }
                     }
                 }
+                pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
             }
         }
         return pl;
@@ -455,9 +456,10 @@ public class HeightOfRoom extends FeatureProcess {
                         scrutinyDetail.addColumnHeading(1, RULE_NO);
                         scrutinyDetail.addColumnHeading(2, DESCRIPTION);
                         scrutinyDetail.addColumnHeading(3, FLOOR);
-                        scrutinyDetail.addColumnHeading(4, REQUIRED);
-                        scrutinyDetail.addColumnHeading(5, PROVIDED);
-                        scrutinyDetail.addColumnHeading(6, STATUS);
+                        scrutinyDetail.addColumnHeading(4, ROOM);
+                        scrutinyDetail.addColumnHeading(5, REQUIRED);
+                        scrutinyDetail.addColumnHeading(6, PROVIDED);
+                        scrutinyDetail.addColumnHeading(7, STATUS);
 
                         scrutinyDetail.setKey("Block_" + block.getNumber() + "_" + "Room");
 
@@ -479,42 +481,42 @@ public class HeightOfRoom extends FeatureProcess {
 //                                color = DxfFileConstants.COLOR_INDUSTRIAL_ROOM;
                             color = DxfFileConstants.COLOR_RESIDENTIAL_ROOM;
 
-                            if (floor.getAcRoom() != null) {
-                                List<BigDecimal> residentialAcRoomHeights = new ArrayList<>();
-                                List<RoomHeight> acHeights = floor.getAcRoom().getHeights();
-                                List<Measurement> acRooms = floor.getAcRoom().getRooms();
-
-                                for (RoomHeight roomHeight : acHeights) {
-                                    if (heightOfRoomFeaturesColor.get(color) == roomHeight.getColorCode()) {
-                                        residentialAcRoomHeights.add(roomHeight.getHeight());
-                                    }
-                                }
-
-                                for (Measurement acRoom : acRooms) {
-                                    if (heightOfRoomFeaturesColor.get(color) == acRoom.getColorCode()) {
-                                        roomAreas.add(acRoom.getArea());
-                                        roomWidths.add(acRoom.getWidth());
-                                    }
-                                }
-
-                               
-                                    BigDecimal minHeight = residentialAcRoomHeights.stream().reduce(BigDecimal::min).get();
-
-                                    minimumHeight =new  BigDecimal("2.75");
-
-                                    subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.HABITABLE_ROOM);
-                                    subRuleDesc = SUBRULE_41_II_A_AC_DESC;
-                                    
-                                    
-                                    boolean valid = false;
-                                    boolean isTypicalRepititiveFloor = false;
-                                    Map<String, Object> typicalFloorValues = ProcessHelper.getTypicalFloorValues(block, floor,
-                                            isTypicalRepititiveFloor);
-                                    buildResult(pl, floor, minimumHeight, subRule, subRuleDesc, minHeight, valid,
-                                            typicalFloorValues);
-                                
-
-                            }
+//                            if (floor.getAcRoom() != null) {
+//                                List<BigDecimal> residentialAcRoomHeights = new ArrayList<>();
+//                                List<RoomHeight> acHeights = floor.getAcRoom().getHeights();
+//                                List<Measurement> acRooms = floor.getAcRoom().getRooms();
+//
+//                                for (RoomHeight roomHeight : acHeights) {
+//                                    if (heightOfRoomFeaturesColor.get(color) == roomHeight.getColorCode()) {
+//                                        residentialAcRoomHeights.add(roomHeight.getHeight());
+//                                    }
+//                                }
+//
+//                                for (Measurement acRoom : acRooms) {
+//                                    if (heightOfRoomFeaturesColor.get(color) == acRoom.getColorCode()) {
+//                                        roomAreas.add(acRoom.getArea());
+//                                        roomWidths.add(acRoom.getWidth());
+//                                    }
+//                                }
+//
+//                               
+//                                    BigDecimal minHeight = residentialAcRoomHeights.stream().reduce(BigDecimal::min).get();
+//
+//                                    minimumHeight =new  BigDecimal("2.75");
+//
+//                                    subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.HABITABLE_ROOM);
+//                                    subRuleDesc = SUBRULE_41_II_A_AC_DESC;
+//                                    
+//                                    
+//                                    boolean valid = false;
+//                                    boolean isTypicalRepititiveFloor = false;
+//                                    Map<String, Object> typicalFloorValues = ProcessHelper.getTypicalFloorValues(block, floor,
+//                                            isTypicalRepititiveFloor);
+//                                    buildResult(pl, floor, minimumHeight, subRule, subRuleDesc, minHeight, valid,
+//                                            typicalFloorValues);
+//                                
+//
+//                            }
 
                             if (floor.getRegularRoom() != null) {
                                 List<BigDecimal> residentialRoomHeights = new ArrayList<>();
@@ -533,40 +535,47 @@ public class HeightOfRoom extends FeatureProcess {
                                         roomWidths.add(room.getWidth());
                                     }
                                 }
+                                int roomNumber=1;
+                                for(Measurement room : rooms) {
+                                	totalArea = room.getArea();
+                                    BigDecimal minRoomWidth = room.getWidth();
+                                	
+                                	 minimumHeight = new BigDecimal("9.29");
+                                     minWidth = new BigDecimal("2.2");
+                                     
+                                     subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.HABITABLE_ROOM);
+                                     subRuleDesc = SUBRULE_41_II_B_AREA_DESC;
+
+                                     boolean valid = false;
+                                     boolean isTypicalRepititiveFloor = false;
+                                     Map<String, Object> typicalFloorValues = ProcessHelper.getTypicalFloorValues(block, floor,
+                                             isTypicalRepititiveFloor);
+                                     buildResultArea(pl, floor,roomNumber ,minimumHeight, subRule, subRuleDesc, totalArea, valid, typicalFloorValues);
+
+                                     subRuleDesc = SUBRULE_41_II_B_TOTAL_DIMENSION;
+                                     buildResult(pl, floor, roomNumber,minWidth, subRule, subRuleDesc, minRoomWidth, valid, typicalFloorValues);
+                                     roomNumber++;
+                                }
 
                             }
+                            
+                            
+                            
                             if (!roomAreas.isEmpty()) {
                                 totalArea = roomAreas.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
-                                BigDecimal minRoomWidth = roomWidths.stream().reduce(BigDecimal::add).get();
-                                
                                 floor.setTotalHabitableRoomArea(totalArea);// is required for Light & Ventilations
-                                
-                                
-                                    minimumHeight = new BigDecimal("9.29");
-                                    minWidth = new BigDecimal("2.2");
-                               
-                                subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.HABITABLE_ROOM);
-                                subRuleDesc = SUBRULE_41_II_B_AREA_DESC;
-
-                                boolean valid = false;
-                                boolean isTypicalRepititiveFloor = false;
-                                Map<String, Object> typicalFloorValues = ProcessHelper.getTypicalFloorValues(block, floor,
-                                        isTypicalRepititiveFloor);
-                                buildResultArea(pl, floor, minimumHeight, subRule, subRuleDesc, totalArea, valid, typicalFloorValues);
-
-                                subRuleDesc = SUBRULE_41_II_B_TOTAL_DIMENSION;
-                                buildResult(pl, floor, minWidth, subRule, subRuleDesc, minRoomWidth, valid, typicalFloorValues);
                             }
                         }
                     }
                 }
+                pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
             }
         }
         return pl;
 
     }
 
-    private void buildResult(Plan pl, Floor floor, BigDecimal expected, String subRule, String subRuleDesc,
+    private void buildResult(Plan pl, Floor floor,int roomNumber, BigDecimal expected, String subRule, String subRuleDesc,
             BigDecimal actual, boolean valid, Map<String, Object> typicalFloorValues) {
         if (!(Boolean) typicalFloorValues.get("isTypicalRepititiveFloor")
                 && expected.compareTo(BigDecimal.valueOf(0)) > 0 &&
@@ -584,26 +593,26 @@ public class HeightOfRoom extends FeatureProcess {
             }
             
             if (valid) {
-                setReportOutputDetails(pl, subRule, subRuleDesc, value,
+                setReportOutputDetails(pl, subRule, subRuleDesc, value,roomNumber,
                         CDGAdditionalService.viewLenght(pl, expected),
                         CDGAdditionalService.viewLenght(pl, actual), Result.Accepted.getResultVal());
             } else {
-                setReportOutputDetails(pl, subRule, subRuleDesc, value,
+                setReportOutputDetails(pl, subRule, subRuleDesc, value,roomNumber,
                         CDGAdditionalService.viewLenght(pl, expected),
                         CDGAdditionalService.viewLenght(pl, actual), Result.Not_Accepted.getResultVal());
             }
         }
     }
     
-    private void buildResultArea(Plan pl, Floor floor, BigDecimal expected, String subRule, String subRuleDesc,
+    private void buildResultArea(Plan pl, Floor floor,int room,BigDecimal expected, String subRule, String subRuleDesc,
             BigDecimal actual, boolean valid, Map<String, Object> typicalFloorValues) {
         if (!(Boolean) typicalFloorValues.get("isTypicalRepititiveFloor")
                 && expected.compareTo(BigDecimal.valueOf(0)) > 0 &&
                 subRule != null && subRuleDesc != null) {
         	
         	if(pl.getDrawingPreference().getInFeets()) {
-        		expected=CDGAdditionalService.meterToFoot(expected);
-        		actual=CDGAdditionalService.inchToFeet(actual);
+        		expected=CDGAdditionalService.meterToFootArea(expected);
+        		actual=CDGAdditionalService.inchtoFeetArea(actual);
         	}
         	
             if (actual.compareTo(expected) >= 0) {
@@ -613,11 +622,11 @@ public class HeightOfRoom extends FeatureProcess {
                     ? (String) typicalFloorValues.get("typicalFloors")
                     : " floor " + floor.getNumber();
             if (valid) {
-                setReportOutputDetails(pl, subRule, subRuleDesc, value,
+                setReportOutputDetails(pl, subRule, subRuleDesc, value,room,
                         CDGAdditionalService.viewArea(pl, expected),
                         CDGAdditionalService.viewArea(pl, actual), Result.Accepted.getResultVal());
             } else {
-                setReportOutputDetails(pl, subRule, subRuleDesc, value,
+                setReportOutputDetails(pl, subRule, subRuleDesc, value,room,
                         CDGAdditionalService.viewArea(pl, expected),
                         CDGAdditionalService.viewArea(pl, actual), Result.Not_Accepted.getResultVal());
             }
@@ -641,17 +650,18 @@ public class HeightOfRoom extends FeatureProcess {
 		return flage;
 	}
 
-    private void setReportOutputDetails(Plan pl, String ruleNo, String ruleDesc, String floor, String expected, String actual,
+    private void setReportOutputDetails(Plan pl, String ruleNo, String ruleDesc, String floor,int room ,String expected, String actual,
             String status) {
         Map<String, String> details = new HashMap<>();
         details.put(RULE_NO, ruleNo);
         details.put(DESCRIPTION, ruleDesc);
         details.put(FLOOR, floor);
+        details.put(ROOM, room+"");
         details.put(REQUIRED, expected);
         details.put(PROVIDED, actual);
         details.put(STATUS, status);
         scrutinyDetail.getDetail().add(details);
-        pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+      //  pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
     }
 
     @Override
