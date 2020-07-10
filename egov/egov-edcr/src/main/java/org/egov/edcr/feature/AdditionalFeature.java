@@ -1229,7 +1229,12 @@ public class AdditionalFeature extends FeatureProcess {
 			for (Floor floor : block.getBuilding().getFloors()) {
 				boolean isAccepted = false;
 				BigDecimal minimumFloorHeightExpected = new BigDecimal("2.75");
-				BigDecimal minimumFloorHeightProvided = floor.getFloorHeights().stream().reduce(BigDecimal::min).get();
+				BigDecimal minimumFloorHeightProvided=BigDecimal.ZERO;
+				try {
+				minimumFloorHeightProvided = floor.getFloorHeights().stream().reduce(BigDecimal::min).get();
+				}catch (Exception e) {
+					LOG.error(e);
+				}
 				
 				if(pl.getDrawingPreference().getInFeets()) {
 					minimumFloorHeightExpected=CDGAdditionalService.meterToFoot(minimumFloorHeightExpected);
