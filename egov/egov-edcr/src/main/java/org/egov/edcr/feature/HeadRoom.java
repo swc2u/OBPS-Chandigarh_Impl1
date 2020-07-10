@@ -60,6 +60,7 @@ import org.egov.common.entity.edcr.Block;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
+import org.egov.edcr.service.cdg.CDGAConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.DcrConstants;
 import org.egov.edcr.utility.Util;
@@ -108,7 +109,7 @@ public class HeadRoom extends FeatureProcess {
                         	minHeadRoomDimension=CDGAdditionalService.inchToFeet(minHeadRoomDimension);
                         	expectedMinWidth=CDGAdditionalService.meterToFoot(expectedMinWidth);
                         }
-                        String RULE="";
+                        String RULE=CDGAdditionalService.getByLaws(plan, CDGAConstant.HEADWAY);
 
                         if (minHeadRoomDimension.compareTo(expectedMinWidth) >= 0) {
                             setReportOutputDetails(plan, RULE, RULE_42_5_ii_DESCRIPTION,
