@@ -1168,7 +1168,13 @@ public class AdditionalFeature extends FeatureProcess {
 			details.put(STATUS, isAccepted ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
 			scrutinyDetail.getDetail().add(details);
 			pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
-
+			
+			for(Floor floor:block.getBuilding().getFloors()) {
+				if(floor.getNumber()<0) {
+					pl.addError("Basement Block "+block.getNumber()+" Floor "+floor.getNumber(), "Basement is not allowed, Block "+block.getNumber()+" Floor "+floor.getNumber());
+				}
+			}
+			
 		}
 	}
 
