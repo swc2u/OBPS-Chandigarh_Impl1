@@ -520,4 +520,6 @@ public class DxfFileConstants {
 	public static final String MESSAGE_METER="All provided values are in meters and Sq m.";
 	
 	public static final String LITTERS="litres";
+	
+	public static final String BLT_UP_AREA_ERROR_MSG="Please cross verify *_BLT_UP_AREA layer";
 }

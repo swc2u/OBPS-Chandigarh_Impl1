@@ -27,6 +27,8 @@ import org.egov.edcr.entity.AmendmentDetails;
 import org.egov.edcr.entity.EdcrApplication;
 import org.egov.edcr.entity.EdcrApplicationDetail;
 import org.egov.edcr.feature.AccessoryBuildingService;
+import org.egov.edcr.feature.Coverage;
+import org.egov.edcr.feature.Far;
 import org.egov.edcr.feature.FeatureProcess;
 import org.egov.edcr.feature.FireStair;
 import org.egov.edcr.feature.GeneralStair;
@@ -309,7 +311,18 @@ public class PlanService {
 			if (rule != null) {
 				LOG.debug("Looking for bean resulted in " + rule.getClass().getSimpleName());
 				rule.process(plan);
-				LOG.debug("Completed Process " + rule.getClass().getSimpleName() + "  " + new Date());
+				LOG.debug("Completed Process " + rule.getClass().getSimpleName() + "  " + new Date());	
+			}
+			
+			// check occupancy type is present or not
+			if (ruleClass.getRuleClass().isAssignableFrom(Coverage.class)) {
+				OccupancyTypeHelper occupancyTypeHelper = plan.getVirtualBuilding().getMostRestrictiveFarHelper() != null
+						? plan.getVirtualBuilding().getMostRestrictiveFarHelper()
+						: null;
+				if (occupancyTypeHelper == null && !isOccupancyTypeHelperValid(occupancyTypeHelper)) {
+					plan.addError("buildupArea-occ", DxfFileConstants.BLT_UP_AREA_ERROR_MSG);
+					return plan;
+				}
 			}
 
 			if (plan.getErrors().containsKey(DxfFileConstants.OCCUPANCY_ALLOWED_KEY)
@@ -318,6 +331,13 @@ public class PlanService {
 				return plan;
 		}
 		return plan;
+	}
+	
+	private boolean isOccupancyTypeHelperValid(OccupancyTypeHelper occupancyTypeHelper) {
+		boolean flage=false;
+		if(occupancyTypeHelper!=null && occupancyTypeHelper.getType()!=null && occupancyTypeHelper.getType().getCode()!=null && occupancyTypeHelper.getSubtype()!=null && occupancyTypeHelper.getSubtype().getCode()!=null)
+			flage=true;
+		return flage;
 	}
 
 	private InputStream generateReport(Plan plan, Amendment amd, EdcrApplication dcrApplication) {
