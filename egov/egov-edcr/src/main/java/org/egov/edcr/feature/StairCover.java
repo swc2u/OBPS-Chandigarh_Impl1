@@ -119,6 +119,7 @@ public class StairCover extends FeatureProcess {
 								+ CDGAdditionalService.viewLenght(pl, expactedHeiht));
 						details.put(VERIFIED, "Not included stair cover height("
 								+ CDGAdditionalService.viewLenght(pl, minHeight) + ") to building height");
+						details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minHeight));
 						details.put(STATUS, Result.Accepted.getResultVal());
 						scrutinyDetail.getDetail().add(details);
 						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
@@ -128,6 +129,7 @@ public class StairCover extends FeatureProcess {
 								+ CDGAdditionalService.viewLenght(pl, expactedHeiht));
 						details.put(VERIFIED, "Included stair cover height("
 								+ CDGAdditionalService.viewLenght(pl, minHeight) + ") to building height");
+						details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minHeight));
 						details.put(STATUS, Result.Verify.getResultVal());
 						scrutinyDetail.getDetail().add(details);
 						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
