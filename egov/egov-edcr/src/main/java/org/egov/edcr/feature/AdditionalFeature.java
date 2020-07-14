@@ -211,6 +211,7 @@ public class AdditionalFeature extends FeatureProcess {
 			validateRuralNumberOfFloorsSkelton(pl);
 			validateRuralCommercialUnitAtGroundFloor(pl);
 			validateRuralMinimumFloorToCeilingHeight(pl, errors);
+			validateRuralOccupancy(pl);
 			// calling additional feature
 			
 			return pl;
@@ -455,6 +456,23 @@ public class AdditionalFeature extends FeatureProcess {
 
 	}
 
+	private void validateRuralOccupancy(Plan plan) {
+		if(!plan.isRural())
+			return;
+		
+		for(Block block:plan.getBlocks()) {
+			for(Floor floor:block.getBuilding().getFloors()) {
+				for(Occupancy occupancy:floor.getOccupancies()) {
+					if(occupancy.getTypeHelper()!=null && occupancy.getTypeHelper().getSubtype()!=null) {
+						if(!(DxfFileConstants.A_P.equals(occupancy.getTypeHelper().getSubtype().getCode()) || DxfFileConstants.A_CIR.equals(occupancy.getTypeHelper().getSubtype().getCode())))
+							plan.addError("occupancy_blk"+block.getNumber()+"flr"+floor.getNumber(), occupancy.getTypeHelper().getSubtype().getName()+"Occupancy is not allowed in block "+block.getNumber()+" floor "+floor.getNumber());
+					}
+				}
+			}
+		}
+		
+	}
+	
 	private void validateRuralCommercialUnitAtGroundFloor(Plan pl) {
 
 		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();

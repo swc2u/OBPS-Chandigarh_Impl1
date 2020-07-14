@@ -831,7 +831,8 @@ public class PlanReportService {
                     if (blkFeature.equals(FRONT_YARD_DESC) || blkFeature.equals(REAR_YARD_DESC)
                             || blkFeature.equals(SIDE_YARD_DESC)) {
                         continue;
-                    } else {
+                    } else 
+                    {
                         j++;
                         drb.addConcatenatedReport(getSub(allMap.get(blkName + blkFeature), j, j + "." + blkFeature,
                                 allMap.get(blkName + blkFeature).getHeading(),

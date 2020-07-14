@@ -1326,8 +1326,9 @@ public class SideYardService extends GeneralRule {
 				
 		for (Block block : pl.getBlocks()) {
 
-			for (Occupancy occupancy : block.getBuilding().getTotalArea()) {
-				Map<String, String> map = getSetBack(pl, mostRestrictiveOccupancyType);
+			//for (Occupancy occupancy : block.getBuilding().getTotalArea()) {
+			if (mostRestrictiveOccupancyType!=null && mostRestrictiveOccupancyType.getSubtype()!=null) {
+						Map<String, String> map = getSetBack(pl, mostRestrictiveOccupancyType);
 				
 				if(DxfFileConstants.DATA_NOT_FOUND.equals(map.get(CDGAdditionalService.SETBACK_FRONT))) {
 					//pl.addError(OBJECTNOTDEFINED, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_FRONT");
@@ -1350,7 +1351,7 @@ public class SideYardService extends GeneralRule {
 						HashMap<String, String> errors = new HashMap<>();
 						errors.put(FRONT_YARD_DESC,
 								prepareMessage(OBJECTNOTDEFINED, FRONT_YARD_DESC + " for Block " + block.getName()
-										+ " for Occupancy " + occupancy.getTypeHelper().getSubtype().getName()));
+										+ " for Occupancy " + mostRestrictiveOccupancyType.getSubtype().getName()));
 						pl.addErrors(errors);
 					}
 

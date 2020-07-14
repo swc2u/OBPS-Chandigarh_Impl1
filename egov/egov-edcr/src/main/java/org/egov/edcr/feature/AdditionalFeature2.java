@@ -61,6 +61,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.formula.functions.Vlookup;
 import org.egov.common.entity.edcr.Block;
 import org.egov.common.entity.edcr.Building;
 import org.egov.common.entity.edcr.Floor;
@@ -186,14 +187,25 @@ public class AdditionalFeature2 extends FeatureProcess {
 				&& mostRestrictiveOccupancyType.getSubtype() != null
 				&& mostRestrictiveOccupancyType.getSubtype().getCode() != null
 				&& !isCheckPostNotApplicable(mostRestrictiveOccupancyType)) {
-			for (Occupancy occupancy : pl.getOccupancies()) {
-				if (occupancy.getTypeHelper() != null & occupancy.getTypeHelper().getSubtype() != null
-						&& occupancy.getTypeHelper().getSubtype().getCode() != null) {
-					if (DxfFileConstants.A_CP.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
-						checkPosts.add(occupancy);
+			
+			for(Block block:pl.getBlocks()) {
+				for(Floor floor:block.getBuilding().getFloors()) {
+					for(Occupancy occupancy:floor.getOccupancies()) {
+						if (DxfFileConstants.A_CP.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+							checkPosts.add(occupancy);
+						}
 					}
 				}
 			}
+			
+//			for (Occupancy occupancy : pl.getOccupancies()) {
+//				if (occupancy.getTypeHelper() != null & occupancy.getTypeHelper().getSubtype() != null
+//						&& occupancy.getTypeHelper().getSubtype().getCode() != null) {
+//					if (DxfFileConstants.A_CP.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+//						checkPosts.add(occupancy);
+//					}
+//				}
+//			}
 		}
 
 		if (!checkPosts.isEmpty()) {
@@ -251,6 +263,8 @@ public class AdditionalFeature2 extends FeatureProcess {
 				|| DxfFileConstants.F_CD.equals(occupancyTypeHelper.getSubtype().getCode())
 				|| DxfFileConstants.G_GBAC.equals(occupancyTypeHelper.getSubtype().getCode())
 				|| DxfFileConstants.R1.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.ITH_R.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.ITH_GH.equals(occupancyTypeHelper.getSubtype().getCode())
 				|| DxfFileConstants.T1.equals(occupancyTypeHelper.getSubtype().getCode())) {
 			flage = true;
 
@@ -279,12 +293,25 @@ public class AdditionalFeature2 extends FeatureProcess {
 			return;
 		
 		if (DxfFileConstants.IT.equals(mostRestrictiveOccupancyType.getType().getCode())) {
-			for (Occupancy occupancy : pl.getOccupancies()) {
-				if (DxfFileConstants.IT_AF.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
-					floorTotalFloorArea.add(occupancy.getBuiltUpArea());
-					isProvided = true;
+			
+			for(Block block:pl.getBlocks()) {
+				for(Floor floor:block.getBuilding().getFloors()) {
+					for(Occupancy occupancy:floor.getOccupancies()) {
+						if (DxfFileConstants.IT_AF.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+							floorTotalFloorArea.add(occupancy.getBuiltUpArea());
+							isProvided = true;
+						}
+					}
 				}
 			}
+			
+			
+//			for (Occupancy occupancy : pl.getOccupancies()) {
+//				if (DxfFileConstants.IT_AF.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+//					floorTotalFloorArea.add(occupancy.getBuiltUpArea());
+//					isProvided = true;
+//				}
+//			}
 
 			if (!isProvided || floorTotalFloorArea.doubleValue() > 0) {
 				pl.addError("AncillaryFacilities", "AncillaryFacilities is not defined");

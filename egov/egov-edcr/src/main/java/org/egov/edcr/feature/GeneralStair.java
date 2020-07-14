@@ -45,6 +45,17 @@ public class GeneralStair extends FeatureProcess {
 
 	@Override
 	public Plan validate(Plan plan) {
+		
+		for(Block block:plan.getBlocks()) {
+			for(Floor floor:block.getBuilding().getFloors()) {
+				if(floor.getNumber()<0) {
+					if(floor.getGeneralStairs()==null || floor.getGeneralStairs().size()<2) {
+						plan.addError("MINIMUM_TWO_STAIR_Required"+block.getNumber()+"f"+floor.getNumber(), "Minimum two GenralStair are required in blook "+block.getNumber()+" Floor "+floor.getNumber()+" but provided "+floor.getGeneralStairs().size());
+					}
+				}
+			}
+		}
+		
 		return plan;
 	}
 
@@ -52,7 +63,7 @@ public class GeneralStair extends FeatureProcess {
 	public Plan process(Plan plan) {
 		if(!CDGAdditionalService.isFeatureValidationRequired(plan, GeneralStair.class))
 			return plan;
-		// validate(planDetail);
+		validate(plan);
 		HashMap<String, String> errors = new HashMap<>();
 		blk: for (Block block : plan.getBlocks()) {
 			int generalStairCount = 0;
@@ -161,7 +172,7 @@ public class GeneralStair extends FeatureProcess {
 
 									}
 								}
-							} else {
+							} else if(!isStairOptional(plan, block, floor)){
 								stairAbsent.add("Block " + block.getNumber() + " floor " + floor.getNumber());
 							}
 
@@ -187,6 +198,20 @@ public class GeneralStair extends FeatureProcess {
 		}
 
 		return plan;
+	}
+	
+	public boolean isStairOptional(Plan plan,Block block, Floor floor) {
+		boolean flage=false;
+		OccupancyTypeHelper occupancyTypeHelper=plan.getVirtualBuilding().getMostRestrictiveFarHelper();
+		
+		if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) {
+			int tf=block.getBuilding().getFloorsAboveGround().intValue()-1;
+			if(tf==floor.getNumber()) 
+				if(block.getStairCovers()==null || block.getStairCovers().isEmpty())
+					flage=true;
+			
+		}
+		return flage;
 	}
 
 	private boolean isOccupancyTypehNotApplicable(OccupancyTypeHelper occupancyTypeHelper) {

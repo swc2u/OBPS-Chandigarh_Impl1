@@ -972,8 +972,9 @@ public class RearYardService extends GeneralRule {
 						rearYardDefined = true;
 					}
 				}
-				if (!rearYardDefined && !pl.getPlanInformation().getNocToAbutRearDesc().equalsIgnoreCase(YES)) {
-					HashMap<String, String> errors = new HashMap<>();
+				if (!rearYardDefined ) {
+					//if (!rearYardDefined && !pl.getPlanInformation().getNocToAbutRearDesc().equalsIgnoreCase(YES)) {
+							HashMap<String, String> errors = new HashMap<>();
 					errors.put(REAR_YARD_DESC,
 							prepareMessage(OBJECTNOTDEFINED, REAR_YARD_DESC + " for Block " + block.getName()));
 					pl.addErrors(errors);

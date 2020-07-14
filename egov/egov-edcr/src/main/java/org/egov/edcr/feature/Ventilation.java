@@ -47,6 +47,8 @@
 
 package org.egov.edcr.feature;
 
+import static org.egov.edcr.utility.DcrConstants.OBJECTNOTDEFINED;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -76,6 +78,17 @@ public class Ventilation extends FeatureProcess {
 
 	@Override
 	public Plan validate(Plan pl) {
+		
+		for(Block block:pl.getBlocks()) {
+			for(Floor f:block.getBuilding().getFloors()) {
+				if(f.getTotalHabitableRoomArea().compareTo(BigDecimal.ZERO)>0 && (f.getLightAndVentilation() == null || f.getLightAndVentilation().getMeasurements() == null
+						|| f.getLightAndVentilation().getMeasurements().isEmpty()))
+				{
+					pl.addError("LIGHT_VENTILATION_OBJECTNOTDEFINED "+block.getNumber()+"floor"+f.getNumber(), "LIGHT_VENTILATION not defined in block "+block.getNumber()+" floor "+f.getNumber());
+				}
+			}
+		}
+		
 		return pl;
 	}
 //
@@ -157,7 +170,7 @@ public class Ventilation extends FeatureProcess {
 
 	@Override
 	public Plan process(Plan pl) {
-
+		validate(pl);
 		if (pl.isRural()) {
 			processRural(pl);
 			return pl;
