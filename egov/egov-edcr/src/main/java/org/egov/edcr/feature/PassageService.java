@@ -89,7 +89,7 @@ public class PassageService extends FeatureProcess {
 				scrutinyDetail.addColumnHeading(2, REQUIRED);
 				scrutinyDetail.addColumnHeading(3, PROVIDED);
 				scrutinyDetail.addColumnHeading(4, STATUS);
-				scrutinyDetail.setKey("Block_" + block.getNumber() + "_" + "Passage");
+				scrutinyDetail.setKey("Block_" + block.getNumber() + "_" + "Minimum Passage Width");
 
 				ScrutinyDetail scrutinyDetail1 = new ScrutinyDetail();
 				scrutinyDetail1.addColumnHeading(1, RULE_NO);

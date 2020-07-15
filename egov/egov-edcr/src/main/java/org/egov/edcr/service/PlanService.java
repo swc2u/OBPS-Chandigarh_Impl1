@@ -89,7 +89,7 @@ public class PlanService {
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-		plan.setServiceType(dcrApplication.getServiceType());
+		
 //		removeError(plan);
 //		if(plan.getErrors().isEmpty()) {
 //			plan = applyRules(plan, amd, cityDetails);
@@ -97,6 +97,7 @@ public class PlanService {
 //		}
 		
 		if(plan!=null) {
+			plan.setServiceType(dcrApplication.getServiceType());
 			plan = applyRules(plan, amd, cityDetails);
 			setEDCRmandatoryNOC(plan);
 		}
