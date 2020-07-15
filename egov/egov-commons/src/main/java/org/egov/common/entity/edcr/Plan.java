@@ -576,7 +576,7 @@ private transient boolean isRural;
     	if("URBAN".equals(planInfoProperties.get("ROOT_BOUNDARY_TYPE")))
     		planInfoProperties.put("AVG_PLOT_DEPTH", "N/A");
     	else if("RURAL".equals(planInfoProperties.get("ROOT_BOUNDARY_TYPE"))){//as per OBPS-30 request
-    		planInfoProperties.put("AVG_PLOT_DEPTH", planInfoProperties.get("PLOT_WIDTH"));
+    		planInfoProperties.put("AVG_PLOT_DEPTH", planInfoProperties.get("PLOT_LENGTH"));
     	}
         this.planInfoProperties = planInfoProperties;
     }
