@@ -164,8 +164,8 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 			BigDecimal widthExpected = BigDecimal.ZERO;
 
 			if (DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) {
-				areaExpected = BigDecimal.valueOf(9.0);
-				widthExpected = BigDecimal.valueOf(3.0);
+				areaExpected =new BigDecimal("9.0");
+				widthExpected =new BigDecimal("3.0");
 			} else if (DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_H.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_M.equals(occupancyTypeHelper.getSubtype().getCode())
@@ -181,19 +181,19 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 					|| DxfFileConstants.IP.equals(occupancyTypeHelper.getType().getCode())) {
 
 				if (b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(10)) <= 0)
-					widthExpected = BigDecimal.valueOf(3.0);
+					widthExpected =new BigDecimal("3.0");
 				else if (b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(15)) <= 0)
-					widthExpected = BigDecimal.valueOf(5.0);
+					widthExpected =new BigDecimal("5.0");
 				else if (b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(18)) <= 0)
-					widthExpected = BigDecimal.valueOf(6.0);
+					widthExpected =new BigDecimal("6.0");
 				else if (b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(21)) <= 0)
-					widthExpected = BigDecimal.valueOf(7.0);
+					widthExpected =new BigDecimal("7.0");
 				else if (b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(24)) <= 0)
-					widthExpected = BigDecimal.valueOf(8.0);
+					widthExpected =new BigDecimal("8.0");
 				else if (b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(27)) <= 0)
-					widthExpected = BigDecimal.valueOf(9.0);
+					widthExpected =new BigDecimal("9.0");
 				else if (b.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(30)) <= 0)
-					widthExpected = BigDecimal.valueOf(10.0);
+					widthExpected =new BigDecimal("10.0");
 			}
 
 			if (pl.getDrawingPreference().getInFeets()) {
@@ -208,7 +208,7 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 							CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
 					details.put(DESCRIPTION, INTERNALCOURTYARD_DESCRIPTION);
 
-					if (minInteriorCourtYardArea.compareTo(BigDecimal.valueOf(1.2)) >= 0) {
+					if (minInteriorCourtYardArea.compareTo(areaExpected) >= 0) {
 						details.put(REQUIRED, "Minimum area " + CDGAdditionalService.viewArea(pl, areaExpected));
 						details.put(PROVIDED, "Area " + CDGAdditionalService.viewArea(pl, minInteriorCourtYardArea)
 								+ " at floor " + f.getNumber());
@@ -231,7 +231,7 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 				details.put(RULE_NO,
 						CDGAdditionalService.getByLaws(pl, CDGAConstant.INTERIOR_COURTYARD_FOR_LIGHT_AND_VENTILATION));
 				details.put(DESCRIPTION, INTERNALCOURTYARD_DESCRIPTION);
-				if (minInteriorCourtYardWidth.compareTo(BigDecimal.valueOf(0.9)) >= 0) {
+				if (minInteriorCourtYardWidth.compareTo(widthExpected) >= 0) {
 					details.put(REQUIRED, "Minimum width " + CDGAdditionalService.viewLenght(pl, widthExpected));
 					details.put(PROVIDED, "width  " + CDGAdditionalService.viewLenght(pl, minInteriorCourtYardWidth)
 							+ " at floor " + f.getNumber());
@@ -258,8 +258,8 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 
 			BigDecimal minVentilationShaftArea = BigDecimal.ZERO;
 			BigDecimal minVentilationShaftWidth = BigDecimal.ZERO;
-			BigDecimal expectedWidth = new BigDecimal(0.9);
-			BigDecimal expectedArea = new BigDecimal(1.2);
+			BigDecimal expectedWidth = new BigDecimal("0.9");
+			BigDecimal expectedArea = new BigDecimal("1.2");
 
 			try {
 				minVentilationShaftArea = f.getInteriorOpenSpace().getVentilationShaft().getMeasurements().stream()
