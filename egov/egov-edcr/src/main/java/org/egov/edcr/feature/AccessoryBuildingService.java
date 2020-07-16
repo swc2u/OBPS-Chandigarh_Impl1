@@ -221,7 +221,7 @@ public class AccessoryBuildingService extends FeatureProcess {
 		scrutinyDetail2.addColumnHeading(3, REQUIRED);
 		scrutinyDetail2.addColumnHeading(4, PROVIDED);
 		scrutinyDetail2.addColumnHeading(5, STATUS);
-		scrutinyDetail2.setKey("Common_Construction in back courtyard - Minimum distance from plot boundary");
+		scrutinyDetail2.setKey("Common_Construction in back courtyard - Mximum distance from plot boundary");
 		
 		ScrutinyDetail scrutinyDetail3 = new ScrutinyDetail();
 		scrutinyDetail3.addColumnHeading(1, RULE_NO);
@@ -338,7 +338,7 @@ public class AccessoryBuildingService extends FeatureProcess {
 							minimumAccBlkDisFromPlotBoundary = disOfAccBlkFromPlotBndry;
 						}
 					}
-					if (minimumAccBlkDisFromPlotBoundary.compareTo(exptectedDistance) >= 0) {
+					if (minimumAccBlkDisFromPlotBoundary.compareTo(exptectedDistance) <= 0) {
 						valid = true;
 					}
 					if (valid) {
