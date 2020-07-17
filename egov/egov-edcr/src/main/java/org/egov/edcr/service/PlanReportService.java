@@ -318,9 +318,7 @@ public class PlanReportService {
                             ? dcrReportBlockDetail.getCoverageArea().setScale(DcrConstants.DECIMALDIGITS_MEASUREMENTS,
                                     DcrConstants.ROUNDMODE_MEASUREMENTS)
                             : BigDecimal.ZERO;
-                    if(plan.getDrawingPreference().getInFeets()) {
-                    	coveredArea=CDGAdditionalService.inchtoFeetArea(coveredArea);
-                    }
+                    	
 
                     String coveredAreaText = "1. Covered Area is " + coveredArea;
                     
@@ -328,9 +326,7 @@ public class PlanReportService {
                             ? dcrReportBlockDetail.getBuildingHeight().setScale(DcrConstants.DECIMALDIGITS_MEASUREMENTS,
                                     DcrConstants.ROUNDMODE_MEASUREMENTS)
                             : BigDecimal.ZERO;
-                     if(plan.getDrawingPreference().getInFeets()) {
-                    	 blgHgt=CDGAdditionalService.inchToFeet(blgHgt);
-                     }
+                    	 
                     String blgHgtText = "2. Height of building is " + blgHgt;
 
                     text = text.append(coveredAreaText).append("\\n").append(blgHgtText);
@@ -1001,8 +997,13 @@ public class PlanReportService {
                 if (building != null) {
                     DcrReportBlockDetail dcrReportBlockDetail = new DcrReportBlockDetail();
                     dcrReportBlockDetail.setBlockNo(block.getNumber());
-                    dcrReportBlockDetail.setCoverageArea(building.getCoverageArea());
-                    dcrReportBlockDetail.setBuildingHeight(building.getBuildingHeight());
+                    if(plan.getDrawingPreference().getInMeters()) {
+                    	dcrReportBlockDetail.setCoverageArea(building.getCoverageArea());
+                        dcrReportBlockDetail.setBuildingHeight(building.getBuildingHeight());
+                    }else if(plan.getDrawingPreference().getInFeets()) {
+                    	dcrReportBlockDetail.setCoverageArea(CDGAdditionalService.inchtoFeetArea(building.getCoverageArea()));
+                        dcrReportBlockDetail.setBuildingHeight(CDGAdditionalService.inchToFeet(building.getBuildingHeight()));
+                    }
                     List<Floor> floors = building.getFloors();
 
                     if (!floors.isEmpty()) {
@@ -1120,9 +1121,15 @@ public class PlanReportService {
                                         dcrReportFloorDetail
                                                 .setFloorNo(floor.getTerrace() ? "Terrace" : floor.getNumber().toString());
                                         dcrReportFloorDetail.setOccupancy(occupancyName);
-                                        dcrReportFloorDetail.setBuiltUpArea(occupancy.getExistingBuiltUpArea());
-                                        dcrReportFloorDetail.setFloorArea(occupancy.getExistingFloorArea());
-                                        dcrReportFloorDetail.setCarpetArea(occupancy.getExistingCarpetArea());
+                                        if(plan.getDrawingPreference().getInMeters()) {
+                                        	dcrReportFloorDetail.setBuiltUpArea(occupancy.getExistingBuiltUpArea());
+                                            dcrReportFloorDetail.setFloorArea(occupancy.getExistingFloorArea());
+                                            dcrReportFloorDetail.setCarpetArea(occupancy.getExistingCarpetArea());
+                                        }else if(plan.getDrawingPreference().getInFeets()){
+                                        	dcrReportFloorDetail.setBuiltUpArea(CDGAdditionalService.inchtoFeetArea(occupancy.getExistingBuiltUpArea()));
+                                            dcrReportFloorDetail.setFloorArea(CDGAdditionalService.inchtoFeetArea(occupancy.getExistingFloorArea()));
+                                            dcrReportFloorDetail.setCarpetArea(CDGAdditionalService.inchtoFeetArea(occupancy.getExistingCarpetArea()));
+                                        }
                                         dcrReportFloorDetails.add(dcrReportFloorDetail);
                                     }
                                 }
