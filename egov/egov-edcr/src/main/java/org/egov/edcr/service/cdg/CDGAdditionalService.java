@@ -12,6 +12,7 @@ import javax.swing.text.StyledEditorKit.BoldAction;
 
 import org.egov.common.entity.edcr.Block;
 import org.egov.common.entity.edcr.Floor;
+import org.egov.common.entity.edcr.Occupancy;
 import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.commons.entity.cdg.ServiceAvailabilityCheckConstant;
@@ -487,6 +488,21 @@ public class CDGAdditionalService {
 		}else {
 			flage=true;
 		}
+		
+		return flage;
+	}
+	
+	public boolean isOccupancyExcludedFromFar(OccupancyTypeHelper helper) {
+		boolean flage=false;
+		
+		if(DxfFileConstants.A_SQ.equals(helper.getSubtype().getCode())
+				|| DxfFileConstants.A_PO.equals(helper.getSubtype().getCode())
+				|| DxfFileConstants.A_S.equals(helper.getSubtype().getCode())
+				|| DxfFileConstants.A_PG.equals(helper.getSubtype().getCode())
+				|| DxfFileConstants.A_ICP.equals(helper.getSubtype().getCode())
+				|| DxfFileConstants.A_OCP.equals(helper.getSubtype().getCode())
+												)
+			flage=true;
 		
 		return flage;
 	}
