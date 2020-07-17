@@ -129,16 +129,21 @@ public class OccupancyTypeHelper implements Serializable {
         if (!(other instanceof OccupancyTypeHelper))
             return false;
         final OccupancyTypeHelper that = (OccupancyTypeHelper) other;
-        if (that.usage != null) {
+        if (that.usage != null  && usage!=null) {
             return that.usage != null && Objects.equals(usage.getCode(), that.usage.getCode());
-        } else if (that.subtype != null) {
+        } else if (that.subtype != null && subtype!=null && subtype.getCode()!=null) { 
             return that.subtype != null && Objects.equals(subtype.getCode(), that.subtype.getCode());
         }
-        return that.type != null && Objects.equals(type.getCode(), that.type.getCode());
+        return that.type != null && type!=null && Objects.equals(type.getCode(), that.type.getCode());
     }
 
     @Override
     public int hashCode() {
+        if (usage != null) {
+            return Objects.hash(usage != null ? usage.getCode() : "");
+        } else if (subtype != null) {
+            return Objects.hash(subtype != null ? subtype.getCode() : "");
+        }
         return Objects.hash(type != null ? type.getCode() : "");
     }
 }

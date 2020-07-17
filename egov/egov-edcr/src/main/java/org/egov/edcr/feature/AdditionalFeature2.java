@@ -58,30 +58,19 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.ss.formula.functions.Vlookup;
 import org.egov.common.entity.edcr.Block;
-import org.egov.common.entity.edcr.Building;
 import org.egov.common.entity.edcr.Floor;
-import org.egov.common.entity.edcr.FloorUnit;
-import org.egov.common.entity.edcr.Measurement;
 import org.egov.common.entity.edcr.Occupancy;
-import org.egov.common.entity.edcr.OccupancyType;
 import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
-import org.egov.common.entity.edcr.SetBack;
-import org.egov.common.entity.edcr.Yard;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.cdg.CDGAConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
-import org.egov.edcr.utility.DcrConstants;
-import org.egov.infra.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -182,7 +171,8 @@ public class AdditionalFeature2 extends FeatureProcess {
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
-		List<Occupancy> checkPosts = new ArrayList<Occupancy>();
+		List<Occupancy> inCheckPosts = new ArrayList<Occupancy>();
+		List<Occupancy> outCheckPosts = new ArrayList<Occupancy>();
 		if (mostRestrictiveOccupancyType != null && mostRestrictiveOccupancyType.getType() != null
 				&& mostRestrictiveOccupancyType.getSubtype() != null
 				&& mostRestrictiveOccupancyType.getSubtype().getCode() != null
@@ -190,9 +180,23 @@ public class AdditionalFeature2 extends FeatureProcess {
 			
 			for(Block block:pl.getBlocks()) {
 				for(Floor floor:block.getBuilding().getFloors()) {
-					for(Occupancy occupancy:floor.getOccupancies()) {
-						if (DxfFileConstants.A_CP.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
-							checkPosts.add(occupancy);
+					if(floor.getNumber()==0) {
+						for(Occupancy occupancy:floor.getOccupancies()) {
+							if (DxfFileConstants.A_ICP.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+								inCheckPosts.add(occupancy);
+							}
+							if (DxfFileConstants.A_OCP.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+								outCheckPosts.add(occupancy);
+							}
+						}
+					}else {
+						for(Occupancy occupancy:floor.getOccupancies()) {
+							if (DxfFileConstants.A_ICP.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+								pl.addError("A_ICP "+block.getNumber()+floor.getNumber(), "In checkpost not allowed in block "+block.getNumber()+" floor "+floor.getNumber());
+							}
+							if (DxfFileConstants.A_OCP.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+								pl.addError("A_OCP "+block.getNumber()+floor.getNumber(), "out checkpost not allowed in block "+block.getNumber()+" floor "+floor.getNumber());
+							}
 						}
 					}
 				}
@@ -207,22 +211,22 @@ public class AdditionalFeature2 extends FeatureProcess {
 //				}
 //			}
 		}
+		
+		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
+		scrutinyDetail.setKey("Common_checkPost");
+		scrutinyDetail.addColumnHeading(1, RULE_NO);
+		scrutinyDetail.addColumnHeading(2, DESCRIPTION);
+		scrutinyDetail.addColumnHeading(3, REQUIRED);
+		scrutinyDetail.addColumnHeading(4, PROVIDED);
+		scrutinyDetail.addColumnHeading(5, STATUS);
 
-		if (!checkPosts.isEmpty()) {
-			ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
-			scrutinyDetail.setKey("Common_checkPost");
-			scrutinyDetail.addColumnHeading(1, RULE_NO);
-			scrutinyDetail.addColumnHeading(2, DESCRIPTION);
-			scrutinyDetail.addColumnHeading(3, REQUIRED);
-			scrutinyDetail.addColumnHeading(4, PROVIDED);
-			scrutinyDetail.addColumnHeading(5, STATUS);
+		if (!inCheckPosts.isEmpty()) {
 			Map<String, String> details = new HashMap<>();
-
-			if (checkPosts.size() < 2) {
-				pl.addError("CheckPost", "Minimum 2 checkPost is required. but provided: " + checkPosts.size());
-			}
+//			if (checkPosts.size() < 2) {
+//				pl.addError("CheckPost", "Minimum 2 checkPost is required. but provided: " + checkPosts.size());
+//			}
 			int i = 1;
-			for (Occupancy occupancy : checkPosts) {
+			for (Occupancy occupancy : inCheckPosts) {
 				BigDecimal requiredCheckpostArea = new BigDecimal("14");
 				BigDecimal providedCheckpostArea=occupancy.getBuiltUpArea();
 				
@@ -233,7 +237,7 @@ public class AdditionalFeature2 extends FeatureProcess {
 				
 				details.put(RULE_NO,
 						CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.CHECKPOST));
-				details.put(DESCRIPTION, "Checkpost " + i);
+				details.put(DESCRIPTION, "In checkpost " + i);
 				details.put(REQUIRED, "<= " + CDGAdditionalService.viewArea(pl, requiredCheckpostArea));
 				details.put(PROVIDED,CDGAdditionalService.viewArea(pl, providedCheckpostArea));
 
@@ -244,10 +248,42 @@ public class AdditionalFeature2 extends FeatureProcess {
 				}
 				i++;
 			}
-
 			scrutinyDetail.getDetail().add(details);
-			pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 		}
+		
+		if (!outCheckPosts.isEmpty()) {
+			Map<String, String> details = new HashMap<>();
+//			if (checkPosts.size() < 2) {
+//				pl.addError("CheckPost", "Minimum 2 checkPost is required. but provided: " + checkPosts.size());
+//			}
+			int i = 1;
+			for (Occupancy occupancy : outCheckPosts) {
+				BigDecimal requiredCheckpostArea = new BigDecimal("14");
+				BigDecimal providedCheckpostArea=occupancy.getBuiltUpArea();
+				
+				if(pl.getDrawingPreference().getInFeets()) {
+					requiredCheckpostArea=CDGAdditionalService.meterToFoot(requiredCheckpostArea);
+					providedCheckpostArea=CDGAdditionalService.inchToFeet(providedCheckpostArea);
+				}
+				
+				details.put(RULE_NO,
+						CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType, CDGAConstant.CHECKPOST));
+				details.put(DESCRIPTION, "Out checkpost " + i);
+				details.put(REQUIRED, "<= " + CDGAdditionalService.viewArea(pl, requiredCheckpostArea));
+				details.put(PROVIDED,CDGAdditionalService.viewArea(pl, providedCheckpostArea));
+
+				if (providedCheckpostArea.compareTo(requiredCheckpostArea) <= 0) {
+					details.put(STATUS, Result.Accepted.getResultVal());
+				} else {
+					details.put(STATUS, Result.Not_Accepted.getResultVal());
+				}
+				i++;
+			}
+			scrutinyDetail.getDetail().add(details);
+		}
+		
+		
+		pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 	}
 
 	private boolean isCheckPostNotApplicable(OccupancyTypeHelper occupancyTypeHelper) {
@@ -298,7 +334,7 @@ public class AdditionalFeature2 extends FeatureProcess {
 				for(Floor floor:block.getBuilding().getFloors()) {
 					for(Occupancy occupancy:floor.getOccupancies()) {
 						if (DxfFileConstants.IT_AF.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
-							floorTotalFloorArea.add(occupancy.getBuiltUpArea());
+							floorTotalFloorArea=floorTotalFloorArea.add(occupancy.getBuiltUpArea());
 							isProvided = true;
 						}
 					}
@@ -313,7 +349,7 @@ public class AdditionalFeature2 extends FeatureProcess {
 //				}
 //			}
 
-			if (!isProvided || floorTotalFloorArea.doubleValue() > 0) {
+			if (!isProvided || floorTotalFloorArea.doubleValue() <= 0) {
 				pl.addError("AncillaryFacilities", "AncillaryFacilities is not defined");
 				return;
 			}
@@ -357,8 +393,80 @@ public class AdditionalFeature2 extends FeatureProcess {
 		return far;
 	}
 
-	private void validateCommunityFacilitiesInGroupHousingBuilding(Plan plan) {
+	private void validateCommunityFacilitiesInGroupHousingBuilding(Plan pl) {//color code-> 120
 
+		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
+				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+				: null;
+		
+		if(!DxfFileConstants.A_G.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
+			return;
+		}
+				scrutinyDetail = new ScrutinyDetail();
+				scrutinyDetail.addColumnHeading(1, RULE_NO);
+				scrutinyDetail.addColumnHeading(2, DESCRIPTION);
+				scrutinyDetail.addColumnHeading(3, FLOOR);
+				scrutinyDetail.addColumnHeading(4, REQUIRED);
+				scrutinyDetail.addColumnHeading(5, PROVIDED);
+				scrutinyDetail.addColumnHeading(6, STATUS);
+				scrutinyDetail.setKey("Common_Community Facilities");
+				
+				List<Occupancy> communityFacilities=new ArrayList<Occupancy>();
+				BigDecimal totalArea=BigDecimal.ZERO;
+
+		boolean isProvided=false;
+		for (Block block : pl.getBlocks()) {
+			for(Floor floor:block.getBuilding().getFloors()) {
+				for(Occupancy occupancy:floor.getOccupancies()) {
+					if(DxfFileConstants.A_CC.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+						communityFacilities.add(occupancy);
+						totalArea=totalArea.add(occupancy.getBuiltUpArea());
+						isProvided=true;
+					}
+				}
+			}
+		}
+
+		if(!isProvided) {
+			pl.addError("Community Facilities", "Community Facilities is not defined");
+			return;
+		}
+		
+		String sector=pl.getPlanInfoProperties().get(DxfFileConstants.SECTOR_NUMBER);
+		
+		if(!("49C".equalsIgnoreCase(sector) || "49D".equalsIgnoreCase(sector))) {
+			pl.addError("Community Facilities error", "Community Facilities zoning plan is not available in system for "+sector);
+			return;
+		}
+		
+		//557.4sqm -> 6000sqf
+		BigDecimal expectedArea=new BigDecimal("557.4182");
+		if(pl.getDrawingPreference().getInFeets()) {
+			expectedArea=CDGAdditionalService.meterToFootArea(expectedArea);
+			totalArea=CDGAdditionalService.inchtoFeetArea(totalArea);
+		}
+			
+		if((pl.getPlot().getArea().multiply(new BigDecimal("0.025"))).compareTo(expectedArea)<0)
+			expectedArea=pl.getPlot().getArea().multiply(new BigDecimal("0.025"));
+		
+		boolean isValid=false;
+		if(totalArea.compareTo(expectedArea)<=0)
+			isValid=true;
+		
+		
+		if (isValid)
+			setReportOutputDetails(pl,CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,
+							CDGAConstant.COMMERCAIL_OR_COMMUNLTY_FACLTITIES),
+					"Community Facilities ","",
+					CDGAdditionalService.viewArea(pl, expectedArea), CDGAdditionalService.viewArea(pl, totalArea),
+					Result.Accepted.getResultVal());
+		else
+			setReportOutputDetails(pl,CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,
+					CDGAConstant.COMMERCAIL_OR_COMMUNLTY_FACLTITIES),
+			"Community Facilities ","",
+			CDGAdditionalService.viewArea(pl, expectedArea), CDGAdditionalService.viewArea(pl, totalArea),
+			Result.Not_Accepted.getResultVal());
+	
 	}
 
 	private void validateGalleryFloor(Plan pl) {
@@ -374,7 +482,7 @@ public class AdditionalFeature2 extends FeatureProcess {
 			scrutinyDetail.addColumnHeading(4, REQUIRED);
 			scrutinyDetail.addColumnHeading(5, PROVIDED);
 			scrutinyDetail.addColumnHeading(6, STATUS);
-			scrutinyDetail.setKey("Block_" + block.getNumber() + "_" + "Mezzanine Floor");
+			scrutinyDetail.setKey("Block_" + block.getNumber() + "_" + "Gallery Floor");
 
 			if (block.getBuilding() != null && !block.getBuilding().getFloors().isEmpty()) {
 				for (Floor floor : block.getBuilding().getFloors()) {
@@ -382,29 +490,29 @@ public class AdditionalFeature2 extends FeatureProcess {
 						if (DxfFileConstants.A_GF.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
 							BigDecimal providedHeight = occupancy.getHeight();
 							boolean isValid = false;
-							BigDecimal expectedHeight=new BigDecimal(2.4);
+							BigDecimal expectedHeight=new BigDecimal("2.4");
 							
 							if(pl.getDrawingPreference().getInFeets()) {
 								expectedHeight=CDGAdditionalService.meterToFoot(expectedHeight);
 								providedHeight=CDGAdditionalService.inchToFeet(providedHeight);
 							}
 
-							if (providedHeight.compareTo(expectedHeight) <= 0)
+							if (providedHeight.compareTo(expectedHeight) >= 0)
 								isValid = true;
 							if (isValid)
 								setReportOutputDetails(pl,
 										CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,
 												CDGAConstant.CHECKPOST),
-										"Gallery Floors", " floor " + floor.getNumber(),
+										"Gallery Floors Height", " floor " + floor.getNumber(),
 										CDGAdditionalService.viewLenght(pl, expectedHeight), CDGAdditionalService.viewLenght(pl, providedHeight),
 										Result.Accepted.getResultVal());
 							else
 								setReportOutputDetails(pl,
 										CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,
 												CDGAConstant.CHECKPOST),
-										"Gallery Floors", " floor " + floor.getNumber(),
+										"Gallery Floors Height", " floor " + floor.getNumber(),
 										CDGAdditionalService.viewLenght(pl, expectedHeight), CDGAdditionalService.viewLenght(pl, providedHeight),
-										Result.Accepted.getResultVal());
+										Result.Not_Accepted.getResultVal());
 
 						}
 					}
@@ -436,25 +544,35 @@ public class AdditionalFeature2 extends FeatureProcess {
 		if (DxfFileConstants.G.equals(mostRestrictiveOccupancyType.getType().getCode())) {
 			for (Occupancy occupancy : pl.getOccupancies()) {
 				if (DxfFileConstants.A_RU.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
-					floorTotalFloorArea.add(occupancy.getBuiltUpArea());
+					floorTotalFloorArea=floorTotalFloorArea.add(occupancy.getBuiltUpArea());
 				}
 			}
 
 			BigDecimal plotArea = pl.getPlot() != null ? pl.getPlot().getArea() : BigDecimal.ZERO;
-			;
-			if (plotArea.doubleValue() > 0)
+			
+			
+			
+			if (plotArea.doubleValue() > 0 && floorTotalFloorArea.compareTo(BigDecimal.ZERO)>0)
 				residentialUseFar = calulateFar(floorTotalFloorArea, pl.getPlot().getArea(),pl.getDrawingPreference().getInFeets());
+			
+			if(pl.getFarDetails().getPermissableFar()==null)
+				pl.addError("ResidentialUse", "Residential Use  cannot be validated.");
 
-			double expectedFar = pl.getFarDetails().getPermissableFar() - pl.getFarDetails().getProvidedFar();
+			double expectedFar=0;
+			if(pl.getFarDetails().getPermissableFar()!=null)
+				expectedFar = pl.getFarDetails().getPermissableFar() - pl.getFarDetails().getProvidedFar();
 
-			if ((pl.getFarDetails().getPermissableFar() * 0.25) > expectedFar) {
+			if(pl.getFarDetails().getPermissableFar()==null)
+				return;
+			
+			if ((pl.getFarDetails().getPermissableFar() * 0.025) > expectedFar) {
 				expectedFar = pl.getFarDetails().getPermissableFar() * 0.025;
 			}
 
 			// details.put(RULE_NO,
 			// CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,
 			// CDGAConstant.CHECKPOST));
-			details.put(DESCRIPTION, "Ancillary Facilities ");
+			details.put(DESCRIPTION, "Residential Use");
 			details.put(REQUIRED, "Maximum 2.5% of permissible FAR (" + expectedFar + ")");
 			details.put(PROVIDED, CDGAdditionalService.roundBigDecimal(residentialUseFar) + "");
 

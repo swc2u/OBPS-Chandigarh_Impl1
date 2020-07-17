@@ -2626,11 +2626,35 @@ ADD COLUMN ROOT_BOUNDARY_TYPE varchar(100)  NULL;
 update chandigarh.egcl_servicecategory set isactive = true where code ='PUPG';
 
 
+-- feature Ancillary Facilities
+
+INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,createdby,createddate,lastmodifieddate,lastmodifiedby,"version",description,maxcoverage,minfar,maxfar,occupancy,colorcode) VALUES 
+(301,'IT-AF','Ancillary Facilities',5,true,1,now(),now(),1,0,'Ancillary Facilities',65,3,4,29,40);
+
+
+INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,createdby,createddate,lastmodifieddate,lastmodifiedby,"version",description,maxcoverage,minfar,maxfar,occupancy,colorcode) VALUES 
+(303,'A-GF','Gallery floor',5,true,1,now(),now(),1,0,'Gallery floor',65,3,4,29,54);
+
+
+INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,createdby,createddate,lastmodifieddate,lastmodifiedby,"version",description,maxcoverage,minfar,maxfar,occupancy,colorcode) VALUES 
+(304,'A-RU','Residential use',5,true,1,'2020-07-13 11:46:51.420','2020-07-13 11:46:51.420',1,0,'Residential use',65,3,4,29,150);
 
 
 
 
+INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,createdby,createddate,lastmodifieddate,lastmodifiedby,"version",description,maxcoverage,minfar,maxfar,occupancy,colorcode) VALUES 
+(306,'A-OCP','Out Checkpost',5,true,1,'2020-07-13 11:46:51.420','2020-07-13 11:46:51.420',1,0,'Out Checkpost',65,3,4,29,172)
+,(302,'A-ICP','In Checkpost',5,true,1,'2020-07-13 11:46:51.420','2020-07-13 11:46:51.420',1,0,'In Checkpost',65,3,4,29,171)
+;
 
+INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,createdby,createddate,lastmodifieddate,lastmodifiedby,"version",description,maxcoverage,minfar,maxfar,occupancy,colorcode) VALUES 
+(307,'G-GBAC','Governed by Architectural Controls',5,true,1,'2020-07-13 11:46:51.420','2020-07-13 11:46:51.420',1,0,'Governed by Architectural Controls',65,3,4,(select id from chandigarh.egbpa_occupancy eo where code ='G'),245)
+;
 
+INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,createdby,createddate,lastmodifieddate,lastmodifiedby,"version",description,maxcoverage,minfar,maxfar,occupancy,colorcode) VALUES 
+(308,'G-GBZP','Governed by Zoning Plans',5,true,1,'2020-07-13 11:46:51.420','2020-07-13 11:46:51.420',1,0,'Governed by Zoning Plans',65,3,4,(select id from chandigarh.egbpa_occupancy eo where code ='G'),14)
+;
 
-
+INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,createdby,createddate,lastmodifieddate,lastmodifiedby,"version",description,maxcoverage,minfar,maxfar,occupancy,colorcode) VALUES 
+(309,'A-CC','Community Facilities',5,true,1,'2020-07-13 11:46:51.420','2020-07-13 11:46:51.420',1,0,'Community Facilities',65,3,4,(select id from chandigarh.egbpa_occupancy eo where code ='A'),120)
+;

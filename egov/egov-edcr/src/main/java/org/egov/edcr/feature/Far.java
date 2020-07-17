@@ -1940,8 +1940,11 @@ public class Far extends FeatureProcess {
 		if(!DxfFileConstants.DATA_NOT_FOUND.equals(expectedResult)) {
 			pl.getFarDetails().setPermissableFar((new BigDecimal(expectedResult)).doubleValue());
 			isAccepted = far.compareTo(new BigDecimal(expectedResult)) <= 0;
-			pl.getFarDetails().setPermissableFar(ONE_POINTTWO.doubleValue());
+			//pl.getFarDetails().setPermissableFar(ONE_POINTTWO.doubleValue());
 			expectedResult = "<= " + expectedResult;
+		}else {
+			errors.put(OBJECTNOTDEFINED+CDGAdditionalService.FAR, DxfFileConstants.DATA_NOT_FOUND+" : FAR");
+			pl.addErrors(errors);
 		}
 
 		if (errors.isEmpty() && StringUtils.isNotBlank(expectedResult)) {

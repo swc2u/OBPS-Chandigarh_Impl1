@@ -244,7 +244,8 @@ public class CDGAdditionalService {
 
 	public static BigDecimal roundBigDecimal(BigDecimal number, int mathContext) {
 		MathContext m = new MathContext(mathContext);
-		return number.round(m);
+		number=number.setScale(mathContext, RoundingMode.HALF_UP);
+		return number;
 
 	}
 

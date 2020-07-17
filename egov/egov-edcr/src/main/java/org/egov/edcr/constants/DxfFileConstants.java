@@ -113,10 +113,12 @@ public class DxfFileConstants {
 	public static final String A_S="A-S";//  STD/ PCO/ fax and photostat machine
 	public static final String A_PG="A-PG";//Creche and paying guest facility
 	public static final String A_EWS="A-EWS";//EWS
-	public static final String A_CP="A-CP"; // Checkpost
+	public static final String A_ICP="A-ICP"; // In Checkpost
+	public static final String A_OCP="A-OCP"; // Out Checkpost
 	public static final String IT_AF="IT-AF";//Ancillary Facilities
 	public static final String A_GF="A-GF";//Gallery floor;
 	public static final String A_RU="A-RU";//Residential use ;
+	public static final String A_CC="A-CC";//Community Facilities In Group Housing Building 
 	
 	public static final String F_SCO = "F-SCO";// SCO'S/ SCF'S / BAYSHOP'S/ SEMI INDUSTRIAL -- 272
 	public static final String F_B ="F-B"; // BOOTHS ETC. 
@@ -130,8 +132,8 @@ public class DxfFileConstants {
 	public static final String F_PP = "F-PP"; // Petrol Pump -- 234
 	public static final String F_CD = "F-CD"; // Coal Depot
 	
-	public static final String G_GBAC = "G-GBAC";// Governed by Architectural Controls //CHANGED
-	public static final String G_GBZP = "G-GBZP";// Governed by Zoning Plans
+	public static final String G_GBAC = "G-GBAC";// Governed by Architectural Controls //CHANGED //245
+	public static final String G_GBZP = "G-GBZP";// Governed by Zoning Plans //14
 
 	public static final String P_D = "P-D"; // Dispensary
 	public static final String P_P = "P-P";// Police Station
