@@ -282,7 +282,7 @@ public class RearYardService extends GeneralRule {
 					BigDecimal mean;
 
 					if (setback.getRearYard() != null
-							&& setback.getRearYard().getMean().compareTo(BigDecimal.ZERO) > 0) {
+							&& setback.getRearYard().getMinimumDistance().compareTo(BigDecimal.ZERO) > 0) {
 						min = setback.getRearYard().getMinimumDistance();
 						mean = setback.getRearYard().getMean();
 
@@ -293,102 +293,60 @@ public class RearYardService extends GeneralRule {
 										: block.getBuilding().getBuildingHeight();
 
 						if (buildingHeight != null && (min.doubleValue() > 0 || mean.doubleValue() > 0)) {
-							for (final Occupancy occupancy : block.getBuilding().getTotalArea()) {
-								scrutinyDetail.setKey("Block_" + block.getName() + "_" + "Rear Setback");
-
-//								if (setback.getLevel() < 0) {
-//									scrutinyDetail.setKey("Block_" + block.getName() + "_" + "Basement Rear Setback");
-//									checkRearYardBasement(pl, block.getBuilding(), block.getName(), setback.getLevel(),
-//											plot, BSMT_REAR_YARD_DESC, min, mean, occupancy.getTypeHelper(),
-//											rearYardResult);
-//
-//								}
-								
-								// get excepted minimum Rear setback start
-								
-								OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
-										? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
-										: null;
-								
-								String plotAreaType=pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE);
-								String sector=pl.getPlanInfoProperties().get(DxfFileConstants.SECTOR_NUMBER);
-								String plotNo=pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_NO);
-								
-								Map<String, String> input=new HashMap<String, String>();
-								input.put(CDGAdditionalService.OCCUPENCY_CODE,mostRestrictiveOccupancyType.getSubtype().getCode());
-								input.put(CDGAdditionalService.SECTOR, sector);
-								input.put(CDGAdditionalService.PLOT_NO, plotNo);
-								input.put(CDGAdditionalService.PLOT_TYPE, plotAreaType);
-								
+						//	for (final Occupancy occupancy : block.getBuilding().getTotalArea()) {}
 							
-								
-								if(pl.isRural()) {
-									BigDecimal rearSeatBackExcepted=pl.getPlanInformation().getDepthOfPlot().multiply(new BigDecimal("0.10"));
-									
-									if(rearSeatBackExcepted.compareTo(new BigDecimal("1.52"))<0)
-										rearSeatBackExcepted=new BigDecimal("1.52");
-									
-									rearSeatBackExcepted=CDGAdditionalService.roundBigDecimal(rearSeatBackExcepted);
-										
-									
-									exceptedValue=rearSeatBackExcepted.toString();
-								}
-								else {
-									Map<String, String> result=cdgAdditionalService.getFeatureValue(CDGAConstant.SETBACKS, input);
-								exceptedValue=result.get(CDGAdditionalService.SETBACK_REAR);
-								//exceptedValue="4.96";
-								}
-								if(DxfFileConstants.DATA_NOT_FOUND.equals(exceptedValue)) {
-									pl.addError(OBJECTNOTDEFINED+CDGAdditionalService.SETBACK_REAR, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_REAR");
-									return;
-								}
-								
-								// end
-								
-								checkRearYardUptoTenMtSkelton(pl, block.getBuilding(), block, setback.getLevel(),
-										plot, REAR_YARD_DESC, min, mean, occupancy.getTypeHelper(),
-										rearYardResult, buildingHeight);
-								
-								
-//								if ((occupancy.getTypeHelper().getSubtype() != null
-//										&& (A_R.equalsIgnoreCase(occupancy.getTypeHelper().getSubtype().getCode())
-//										|| A_AF.equalsIgnoreCase(occupancy.getTypeHelper().getSubtype().getCode()))
-//										|| F.equalsIgnoreCase(occupancy.getTypeHelper().getType().getCode()))) {
-//									if (buildingHeight.compareTo(BigDecimal.valueOf(10)) <= 0 && block.getBuilding()
-//											.getFloorsAboveGround().compareTo(BigDecimal.valueOf(3)) <= 0) {
-//										checkRearYardUptoTenMts(pl, block.getBuilding(), block, setback.getLevel(),
-//												plot, REAR_YARD_DESC, min, mean, occupancy.getTypeHelper(),
-//												rearYardResult, buildingHeight);
-//
-//									} else if (buildingHeight.compareTo(BigDecimal.valueOf(12)) <= 0
-//											&& block.getBuilding().getFloorsAboveGround()
-//													.compareTo(BigDecimal.valueOf(4)) <= 0) {
-//										checkRearYardUptoToTweleveMts(setback, block.getBuilding(), pl, block,
-//												setback.getLevel(), plot, REAR_YARD_DESC, min, mean,
-//												occupancy.getTypeHelper(), rearYardResult, errors);
-//
-//									} else if (buildingHeight.compareTo(BigDecimal.valueOf(16)) <= 0) {
-//										checkRearYardUptoToSixteenMts(setback, block.getBuilding(), pl, block,
-//												setback.getLevel(), plot, REAR_YARD_DESC, min, mean,
-//												occupancy.getTypeHelper(), rearYardResult, errors);
-//
-//									} else if (buildingHeight.compareTo(BigDecimal.valueOf(16)) > 0) {
-//										checkRearYardAboveSixteenMts(setback, block.getBuilding(), pl, block,
-//												setback.getLevel(), plot, REAR_YARD_DESC, min, mean,
-//												occupancy.getTypeHelper(), rearYardResult, buildingHeight);
-//
-//									}
-//								} else if (G.equalsIgnoreCase(occupancy.getTypeHelper().getType().getCode())) {
-//									checkRearYardForIndustrial(setback, block.getBuilding(), pl, block,
-//											setback.getLevel(), plot, REAR_YARD_DESC, min, mean,
-//											occupancy.getTypeHelper(), rearYardResult);
-//								} else {
-//									checkRearYardOtherOccupancies(setback, block.getBuilding(), pl, block,
-//											setback.getLevel(), plot, REAR_YARD_DESC, min, mean,
-//											occupancy.getTypeHelper(), rearYardResult, buildingHeight);
-//								}
 
+							scrutinyDetail.setKey("Block_" + block.getName() + "_" + "Rear Setback");
+
+							OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
+									? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+									: null;
+							
+							String plotAreaType=pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE);
+							String sector=pl.getPlanInfoProperties().get(DxfFileConstants.SECTOR_NUMBER);
+							String plotNo=pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_NO);
+							
+							Map<String, String> input=new HashMap<String, String>();
+							input.put(CDGAdditionalService.OCCUPENCY_CODE,mostRestrictiveOccupancyType.getSubtype().getCode());
+							input.put(CDGAdditionalService.SECTOR, sector);
+							input.put(CDGAdditionalService.PLOT_NO, plotNo);
+							input.put(CDGAdditionalService.PLOT_TYPE, plotAreaType);
+							
+						
+							
+							if(pl.isRural()) {
+								BigDecimal rearSeatBackExcepted=pl.getPlanInformation().getDepthOfPlot().multiply(new BigDecimal("0.10"));
+								
+								if(rearSeatBackExcepted.compareTo(new BigDecimal("1.52"))<0)
+									rearSeatBackExcepted=new BigDecimal("1.52");
+								
+								rearSeatBackExcepted=CDGAdditionalService.roundBigDecimal(rearSeatBackExcepted);
+									
+								
+								exceptedValue=rearSeatBackExcepted.toString();
 							}
+							else {
+								Map<String, String> result=cdgAdditionalService.getFeatureValue(CDGAConstant.SETBACKS, input);
+							exceptedValue=result.get(CDGAdditionalService.SETBACK_REAR);
+							//exceptedValue="4.96";
+							}
+							if(DxfFileConstants.DATA_NOT_FOUND.equals(exceptedValue)) {
+								pl.addError(OBJECTNOTDEFINED+CDGAdditionalService.SETBACK_REAR, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_REAR");
+								return;
+							}
+							
+							// end
+							
+							if(pl.getDrawingPreference().getInFeets()) {
+								min=CDGAdditionalService.inchToFeet(min);
+								exceptedValue=CDGAdditionalService.meterToFoot(exceptedValue).toString();
+							}
+							
+							checkRearYardUptoTenMtSkelton(pl, block.getBuilding(), block, setback.getLevel(),
+									plot, REAR_YARD_DESC, min, mean, mostRestrictiveOccupancyType,
+									rearYardResult, buildingHeight);
+							
+							
 							Map<String, String> details = new HashMap<>();
 							details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.SETBACKS));
 							details.put(LEVEL, rearYardResult.level != null ? rearYardResult.level.toString() : "");
@@ -396,13 +354,13 @@ public class RearYardService extends GeneralRule {
 							if (rearYardResult.expectedmeanDistance != null
 									&& rearYardResult.expectedmeanDistance.compareTo(BigDecimal.valueOf(0)) == 0) {
 								details.put(FIELDVERIFIED, MINIMUMLABEL);
-								details.put(PERMISSIBLE, rearYardResult.expectedminimumDistance.toString());
-								details.put(PROVIDED, rearYardResult.actualMinDistance.toString());
+								details.put(PERMISSIBLE, CDGAdditionalService.viewLenght(pl, rearYardResult.expectedminimumDistance));
+								details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, rearYardResult.actualMinDistance));
 
 							} else {
 								details.put(FIELDVERIFIED, MINIMUMLABEL);
-								details.put(PERMISSIBLE, rearYardResult.expectedminimumDistance.toString());
-								details.put(PROVIDED, rearYardResult.actualMinDistance.toString());
+								details.put(PERMISSIBLE, CDGAdditionalService.viewLenght(pl, rearYardResult.expectedminimumDistance));
+								details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, rearYardResult.actualMinDistance));
 							}
 							if (rearYardResult.status) {
 								details.put(STATUS, Result.Accepted.getResultVal());

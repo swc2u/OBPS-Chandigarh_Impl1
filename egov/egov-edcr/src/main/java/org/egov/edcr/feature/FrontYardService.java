@@ -277,7 +277,7 @@ public class FrontYardService extends GeneralRule {
 			for (Block block : pl.getBlocks()) { // for each block
 
 				ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
-				scrutinyDetail.addColumnHeading(1, RULE_NO);
+ 				scrutinyDetail.addColumnHeading(1, RULE_NO);
 				scrutinyDetail.addColumnHeading(2, LEVEL);
 				scrutinyDetail.addColumnHeading(3, OCCUPANCY);
 				scrutinyDetail.addColumnHeading(4, FIELDVERIFIED);
@@ -309,87 +309,40 @@ public class FrontYardService extends GeneralRule {
 										: block.getBuilding().getBuildingHeight();
 
 						if (buildingHeight != null && (min.doubleValue() > 0 || mean.doubleValue() > 0)) {
-							for (final Occupancy occupancy : block.getBuilding().getTotalArea()) {
-								scrutinyDetail.setKey("Block_" + block.getName() + "_" + FRONT_YARD_DESC);
+						//	for (final Occupancy occupancy : block.getBuilding().getTotalArea()) {}
+							
 
-								// basement setback check
-								/*
-								if (setback.getLevel() < 0) {
-									scrutinyDetail.setKey("Block_" + block.getName() + "_" + "Basement Front Yard");
-									checkFrontYardBasement(pl, block.getBuilding(), block.getName(), setback.getLevel(),
-											plot, BSMT_FRONT_YARD_DESC, min, mean, occupancy.getTypeHelper(),
-											frontYardResult);
+							scrutinyDetail.setKey("Block_" + block.getName() + "_" + FRONT_YARD_DESC);
 
-								}
-								*/
-								//
+														
+							if(pl.isRural()) {
+								BigDecimal rearSeatBackExcepted=pl.getPlanInformation().getDepthOfPlot().multiply(new BigDecimal("0.10"));
 								
-								// get excepted minimum front setback start
+								if(rearSeatBackExcepted.compareTo(new BigDecimal("3.04"))<0)
+									rearSeatBackExcepted=new BigDecimal("3.04");
 								
-								if(pl.isRural()) {
-									BigDecimal rearSeatBackExcepted=pl.getPlanInformation().getDepthOfPlot().multiply(new BigDecimal("0.10"));
+								rearSeatBackExcepted=CDGAdditionalService.roundBigDecimal(rearSeatBackExcepted);
 									
-									if(rearSeatBackExcepted.compareTo(new BigDecimal("3.04"))<0)
-										rearSeatBackExcepted=new BigDecimal("3.04");
-									
-									rearSeatBackExcepted=CDGAdditionalService.roundBigDecimal(rearSeatBackExcepted);
-										
-									
-									exceptedValue=rearSeatBackExcepted.toString();
-								}else {
-									exceptedValue=getSetBack(pl, mostRestrictiveOccupancyType).get(CDGAdditionalService.SETBACK_FRONT);
-								}
 								
-								
-								//exceptedValue="3.44";
-								// end
-								
-								if(DxfFileConstants.DATA_NOT_FOUND.equals(exceptedValue)) {
-									//pl.addError(OBJECTNOTDEFINED, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_FRONT");
-									return;
-								}
-								
-								checkFrontYardUptoTenMtSkelton(pl, block.getBuilding(), block.getName(),
-										setback.getLevel(), plot, FRONT_YARD_DESC, min, mean,
-										occupancy.getTypeHelper(), frontYardResult, errors);
-
-//								if ((occupancy.getTypeHelper().getSubtype() != null
-//										&& (A_R.equalsIgnoreCase(occupancy.getTypeHelper().getSubtype().getCode())
-//										|| A_AF.equalsIgnoreCase(occupancy.getTypeHelper().getSubtype().getCode()))
-//										|| F.equalsIgnoreCase(occupancy.getTypeHelper().getType().getCode()))) {
-//
-//									if (buildingHeight.compareTo(BigDecimal.valueOf(10)) <= 0 && block.getBuilding()
-//											.getFloorsAboveGround().compareTo(BigDecimal.valueOf(3)) <= 0) {
-//										checkFrontYardUptoTenMts(pl, block.getBuilding(), block.getName(),
-//												setback.getLevel(), plot, FRONT_YARD_DESC, min, mean,
-//												occupancy.getTypeHelper(), frontYardResult, errors);
-//									} else if (buildingHeight.compareTo(BigDecimal.valueOf(12)) <= 0
-//											&& block.getBuilding().getFloorsAboveGround()
-//													.compareTo(BigDecimal.valueOf(4)) <= 0) {
-//										checkFrontYardUptoTwelveMts(setback, block.getBuilding(), pl,
-//												setback.getLevel(), block.getName(), plot, FRONT_YARD_DESC, min, mean,
-//												occupancy.getTypeHelper(), frontYardResult, errors);
-//									} else if (buildingHeight.compareTo(BigDecimal.valueOf(16)) <= 0) {
-//										checkFrontYardUptoSixteenMts(setback, block.getBuilding(), buildingHeight, pl,
-//												setback.getLevel(), block, plot, FRONT_YARD_DESC, min, mean,
-//												occupancy.getTypeHelper(), frontYardResult, errors);
-//									} else if (buildingHeight.compareTo(BigDecimal.valueOf(16)) > 0) {
-//										checkFrontYardAboveSixteenMts(setback, block.getBuilding(), buildingHeight, pl,
-//												setback.getLevel(), block.getName(), plot, FRONT_YARD_DESC, min, mean,
-//												occupancy.getTypeHelper(), frontYardResult);
-//									}
-//							} 
-								/*
-									 * else if (G.equalsIgnoreCase(occupancy.getTypeHelper().getType().getCode())) {
-									 * checkFrontYardForIndustrial(pl, block.getBuilding(), block.getName(),
-									 * setback.getLevel(), plot, FRONT_YARD_DESC, min, mean,
-									 * occupancy.getTypeHelper(), frontYardResult); } else {
-									 * checkFrontYardOtherOccupancies(pl, block.getBuilding(), block.getName(),
-									 * setback.getLevel(), plot, FRONT_YARD_DESC, min, mean,
-									 * occupancy.getTypeHelper(), frontYardResult); }
-									 */
-
+								exceptedValue=rearSeatBackExcepted.toString();
+							}else {
+								exceptedValue=getSetBack(pl, mostRestrictiveOccupancyType).get(CDGAdditionalService.SETBACK_FRONT);
 							}
+							
+							if(DxfFileConstants.DATA_NOT_FOUND.equals(exceptedValue)) {
+								//pl.addError(OBJECTNOTDEFINED, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_FRONT");
+								return;
+							}
+							
+							if(pl.getDrawingPreference().getInFeets()) {
+								min=CDGAdditionalService.inchToFeet(min);
+								exceptedValue=CDGAdditionalService.meterToFoot(exceptedValue).toString();
+							}
+							
+							checkFrontYardUptoTenMtSkelton(pl, block.getBuilding(), block.getName(),
+									setback.getLevel(), plot, FRONT_YARD_DESC, min, mean,
+									mostRestrictiveOccupancyType, frontYardResult, errors);
+						
 
 							if (errors.isEmpty()) {
 								Map<String, String> details = new HashMap<>();
@@ -399,8 +352,8 @@ public class FrontYardService extends GeneralRule {
 										frontYardResult.level != null ? frontYardResult.level.toString() : "");
 								details.put(OCCUPANCY, frontYardResult.occupancy);
 								details.put(FIELDVERIFIED, MINIMUMLABEL);
-								details.put(PERMISSIBLE, frontYardResult.expectedminimumDistance.toString());
-								details.put(PROVIDED, frontYardResult.actualMinDistance.toString());
+								details.put(PERMISSIBLE, CDGAdditionalService.viewLenght(pl, frontYardResult.expectedminimumDistance));
+								details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, frontYardResult.actualMinDistance));
 
 								if (frontYardResult.status) {
 									details.put(STATUS, Result.Accepted.getResultVal());
