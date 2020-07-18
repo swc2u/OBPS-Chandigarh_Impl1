@@ -525,4 +525,7 @@ public class DxfFileConstants {
 	
 	public static final String BLT_UP_AREA_ERROR_MSG="Please cross verify *_BLT_UP_AREA layer";
 	public static final String RURAL_ULB_NAME="Chandigarh Municipal Corporation";
+	
+	public static final String DECLARATION_METER="All dimensions are in metre or square metre.";
+	public static final String DECLARATION_FEET="All dimensions are in feet or square feet.";
 }

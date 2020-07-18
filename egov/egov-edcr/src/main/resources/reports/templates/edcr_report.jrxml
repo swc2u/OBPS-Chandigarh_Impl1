@@ -39,6 +39,7 @@
 	<parameter name="qrCode" class="java.io.File"/>
 	<parameter name="errors" class="java.util.Map"/>
 	<parameter name="cityLogo" class="java.lang.String"/>
+	<parameter name="UNIT_DECLARATION" class="java.lang.String"/>
 	<parameter name="currentYear" class="java.lang.Integer"/>
 	<parameter name="egovLogo" class="java.lang.String"/>
 	<parameter name="buildingDetailList" class="java.util.List"/>
@@ -1437,6 +1438,21 @@
 					<paragraph leftIndent="3"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{planInformation}.getZone()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="report status style" x="283" y="70" width="265" height="19" uuid="03a15d3c-4372-43d0-bb3e-0e12963ccd23"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{UNIT_DECLARATION}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

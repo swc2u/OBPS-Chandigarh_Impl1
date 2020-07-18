@@ -213,7 +213,7 @@ public class AdditionalFeature2 extends FeatureProcess {
 		}
 		
 		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
-		scrutinyDetail.setKey("Common_checkPost");
+		scrutinyDetail.setKey("Common_CheckPost");
 		scrutinyDetail.addColumnHeading(1, RULE_NO);
 		scrutinyDetail.addColumnHeading(2, DESCRIPTION);
 		scrutinyDetail.addColumnHeading(3, REQUIRED);
@@ -405,10 +405,9 @@ public class AdditionalFeature2 extends FeatureProcess {
 				scrutinyDetail = new ScrutinyDetail();
 				scrutinyDetail.addColumnHeading(1, RULE_NO);
 				scrutinyDetail.addColumnHeading(2, DESCRIPTION);
-				scrutinyDetail.addColumnHeading(3, FLOOR);
-				scrutinyDetail.addColumnHeading(4, REQUIRED);
-				scrutinyDetail.addColumnHeading(5, PROVIDED);
-				scrutinyDetail.addColumnHeading(6, STATUS);
+				scrutinyDetail.addColumnHeading(3, REQUIRED);
+				scrutinyDetail.addColumnHeading(4, PROVIDED);
+				scrutinyDetail.addColumnHeading(5, STATUS);
 				scrutinyDetail.setKey("Common_Community Facilities");
 				
 				List<Occupancy> communityFacilities=new ArrayList<Occupancy>();
@@ -455,15 +454,15 @@ public class AdditionalFeature2 extends FeatureProcess {
 		
 		
 		if (isValid)
-			setReportOutputDetails(pl,CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,
+			setReportOutputDetailsWithoutFloor(pl,CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,
 							CDGAConstant.COMMERCAIL_OR_COMMUNLTY_FACLTITIES),
-					"Community Facilities ","",
+					"Community Facilities ",
 					CDGAdditionalService.viewArea(pl, expectedArea), CDGAdditionalService.viewArea(pl, totalArea),
 					Result.Accepted.getResultVal());
 		else
-			setReportOutputDetails(pl,CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,
+			setReportOutputDetailsWithoutFloor(pl,CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,
 					CDGAConstant.COMMERCAIL_OR_COMMUNLTY_FACLTITIES),
-			"Community Facilities ","",
+			"Community Facilities ",
 			CDGAdditionalService.viewArea(pl, expectedArea), CDGAdditionalService.viewArea(pl, totalArea),
 			Result.Not_Accepted.getResultVal());
 	
@@ -595,6 +594,18 @@ public class AdditionalFeature2 extends FeatureProcess {
 		details.put(RULE_NO, ruleNo);
 		details.put(DESCRIPTION, ruleDesc);
 		details.put(FLOOR, floor);
+		details.put(REQUIRED, expected);
+		details.put(PROVIDED, actual);
+		details.put(STATUS, status);
+		scrutinyDetail.getDetail().add(details);
+		pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+	}
+	
+	private void setReportOutputDetailsWithoutFloor(Plan pl, String ruleNo, String ruleDesc, String expected,
+			String actual, String status) {
+		Map<String, String> details = new HashMap<>();
+		details.put(RULE_NO, ruleNo);
+		details.put(DESCRIPTION, ruleDesc);
 		details.put(REQUIRED, expected);
 		details.put(PROVIDED, actual);
 		details.put(STATUS, status);

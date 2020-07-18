@@ -116,7 +116,7 @@ public class GateService  extends FeatureProcess {
 						details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,CDGAConstant.GATE));
 						details.put(DESCRIPTION, "MainGate"+ i);
 						details.put(REQUIRED, "height <="+CDGAdditionalService.viewLenght(pl, expectedHeighMainGate)+" and width <="+CDGAdditionalService.viewLenght(pl, expectedWidthMainGate));
-						details.put(PROVIDED, "height <="+CDGAdditionalService.viewLenght(pl, providedHeightMainGate)+" and width <="+CDGAdditionalService.viewLenght(pl, providedWidthMainGate));
+						details.put(PROVIDED, "height = "+CDGAdditionalService.viewLenght(pl, providedHeightMainGate)+" and width = "+CDGAdditionalService.viewLenght(pl, providedWidthMainGate));
 						
 						if(providedHeightMainGate.compareTo(expectedHeighMainGate)<=0 && providedWidthMainGate.compareTo(expectedWidthMainGate)<=0)
 							details.put(STATUS, Result.Accepted.getResultVal());
@@ -145,7 +145,7 @@ public class GateService  extends FeatureProcess {
 						details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,CDGAConstant.GATE));
 						details.put(DESCRIPTION, "Wicket gate"+ i);
 						details.put(REQUIRED, "height <="+CDGAdditionalService.viewLenght(pl, expectedHeightWicketGate)+" and width <="+CDGAdditionalService.viewLenght(pl, expectedWidthMainGate));
-						details.put(PROVIDED, "height "+CDGAdditionalService.viewLenght(pl, providedHeightWicketGate)+" and width "+CDGAdditionalService.viewLenght(pl, providedWidthWicketGate));
+						details.put(PROVIDED, "height = "+CDGAdditionalService.viewLenght(pl, providedHeightWicketGate)+" and width = "+CDGAdditionalService.viewLenght(pl, providedWidthWicketGate));
 						
 						if(providedHeightWicketGate.compareTo(expectedHeightWicketGate)<=0 && providedWidthWicketGate.compareTo(expectedWidthWicketGate)<=0)
 							details.put(STATUS, Result.Accepted.getResultVal());

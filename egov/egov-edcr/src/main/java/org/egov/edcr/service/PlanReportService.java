@@ -653,7 +653,11 @@ public class PlanReportService {
       //  String imageURL = ReportUtil.getImageURL("/egi/resources/global/images/digit-logo-black.png");// for removing logo from pdf
      //   valuesMap.put("egovLogo", imageURL);
         valuesMap.put("cityLogo", cityService.getCityLogoURLByCurrentTenant());
-
+        if(plan.getDrawingPreference().getInMeters())
+        	valuesMap.put("UNIT_DECLARATION", DxfFileConstants.DECLARATION_METER);
+        else if(plan.getDrawingPreference().getInFeets())
+        	valuesMap.put("UNIT_DECLARATION", DxfFileConstants.DECLARATION_FEET);
+        
         if (clientSpecificSubReport) {
 
             List<DcrReportBlockDetail> blockDetails = new ArrayList<>();
