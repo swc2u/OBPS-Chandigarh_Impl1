@@ -66,6 +66,8 @@ public class PlanService {
 	private ExtractService extractService;
 	@Autowired
 	private EdcrApplicationService edcrApplicationService;
+	private boolean isMeterEnabled=true;
+	private boolean isFeetEnabled=true;
 
 	public Plan process(EdcrApplication dcrApplication, String applicationType) {
 		Map<String, String> cityDetails = specificRuleService.getCityDetails();
@@ -96,7 +98,7 @@ public class PlanService {
 //			setEDCRmandatoryNOC(plan);
 //		}
 		
-		if(plan!=null) {
+		if(plan!=null && checkUnits(plan)) {
 			plan.setServiceType(dcrApplication.getServiceType());
 			plan = applyRules(plan, amd, cityDetails);
 			setEDCRmandatoryNOC(plan);
@@ -105,6 +107,24 @@ public class PlanService {
 		InputStream reportStream = generateReport(plan, amd, dcrApplication);
 		saveOutputReport(dcrApplication, reportStream, plan);
 		return plan;
+	}
+	
+	public boolean checkUnits(Plan plan) {
+		boolean flage=false;
+		if(plan.getDrawingPreference().getInMeters()) {
+			if(isMeterEnabled)
+				flage=true;
+			else
+				plan.addError("UNIT_error", "Meter is not allowed");
+		}
+
+		if(plan.getDrawingPreference().getInFeets()) {
+			if(isFeetEnabled)
+				flage=true;
+			else
+				plan.addError("UNIT_error", "Feet is not allowed");
+		}
+		return flage;
 	}
 	
 	public void removeError(Plan plan) {
