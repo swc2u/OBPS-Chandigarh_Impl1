@@ -66,7 +66,7 @@ public class PlanService {
 	private ExtractService extractService;
 	@Autowired
 	private EdcrApplicationService edcrApplicationService;
-	private boolean isMeterEnabled=true;
+	private boolean isMeterEnabled=false;
 	private boolean isFeetEnabled=true;
 
 	public Plan process(EdcrApplication dcrApplication, String applicationType) {
