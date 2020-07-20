@@ -157,6 +157,8 @@ public class SolarWaterHeating extends FeatureProcess {
 					|| DxfFileConstants.T1.equals(mostRestrictiveFarHelper.getSubtype().getCode()) 
 					) {
 				isCompulsory=false;
+					valid=true;
+			}else {
 				if(actualTankCapacity.longValue()>0)
 					valid=true;
 			}
