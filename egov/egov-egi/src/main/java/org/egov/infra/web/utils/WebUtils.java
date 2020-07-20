@@ -102,9 +102,9 @@ public final class WebUtils {
         StringBuilder url = new StringBuilder(httpRequest.getRequestURL());
         String uri = httpRequest.getRequestURI(); 
         String url1 = url.toString();		
-	    if(!httpRequest.isSecure()) { 
-	    	url1 = url1.replaceFirst("http://","https://"); 
-	    }
+//	    if(!httpRequest.isSecure()) { 
+//	    	url1 = url1.replaceFirst("http://","https://"); 
+//	    }
         return withContext ? url1.substring(0, url1.length() - uri.length() + httpRequest.getContextPath().length()) + FORWARD_SLASH
                 : url1.substring(0, url1.length() - uri.length());
     }

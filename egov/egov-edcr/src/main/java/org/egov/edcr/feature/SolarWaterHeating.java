@@ -140,14 +140,16 @@ public class SolarWaterHeating extends FeatureProcess {
 					valid=true;
 				}else if(DxfFileConstants.ONE_KANAL.equals(areaType)) {
 					isCompulsory=true;
-					expectedTankCapacity = BigDecimal.valueOf(100)
-							.multiply(roundOffPlotArea.setScale(0, BigDecimal.ROUND_HALF_UP));
+					expectedTankCapacity=new BigDecimal("100");
+//					expectedTankCapacity = BigDecimal.valueOf(100)
+//							.multiply(roundOffPlotArea.setScale(0, BigDecimal.ROUND_HALF_UP));
 					if (actualTankCapacity.compareTo(expectedTankCapacity) >= 0)
 						valid = true;
 				}else {
 					isCompulsory=true;
-					expectedTankCapacity = BigDecimal.valueOf(200)
-							.multiply(roundOffPlotArea.setScale(0, BigDecimal.ROUND_HALF_UP));
+					expectedTankCapacity=new BigDecimal("200");
+//					expectedTankCapacity = BigDecimal.valueOf(200)
+//							.multiply(roundOffPlotArea.setScale(0, BigDecimal.ROUND_HALF_UP));
 					if (actualTankCapacity.compareTo(expectedTankCapacity) >= 0)
 						valid = true;
 				}
@@ -168,7 +170,7 @@ public class SolarWaterHeating extends FeatureProcess {
 			String statusString=valid?Result.Verify.getResultVal():Result.Not_Accepted.getResultVal();
 			
 			if(expectedTankCapacity.longValue()>0)
-				expectedTankCapacityString=expectedTankCapacityString+"( "+ expectedTankCapacity.toString()+DxfFileConstants.LITTERS+" )";
+				expectedTankCapacityString=expectedTankCapacityString+"( "+ expectedTankCapacity.toString()+" "+DxfFileConstants.LITTERS+" )";
 			
 			setReportOutputDetails(pl, subRule, subRuleDesc,
 					expectedTankCapacityString,providedTankCapacityString,statusString);
