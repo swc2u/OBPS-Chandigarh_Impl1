@@ -22,13 +22,12 @@ public class VocherService {
 
 	private String getAccessToken() {
 		String accessToken = null;
+		FinanceAuthResponce result=null;
 		try {
-			FinanceAuthResponce result;
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED);
 			headers.add("Authorization", collectionApplicationProperties.getValue(VocherConstant.KEY_AUTHORIZATION));
 			MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
-			
 			params.add("grant_type", collectionApplicationProperties.getValue(VocherConstant.KEY_GRANT_TYPE));
 			params.add("scope", collectionApplicationProperties.getValue(VocherConstant.KEY_SCOPE));
 			params.add("username", collectionApplicationProperties.getValue(VocherConstant.KEY_USERNAME));
@@ -36,9 +35,8 @@ public class VocherService {
 			params.add("tenantId", collectionApplicationProperties.getValue(VocherConstant.KEY_TENANTID));
 			params.add("userType", collectionApplicationProperties.getValue(VocherConstant.KEY_USERTYPE));
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
-			
 			result=restTemplate.exchange(collectionApplicationProperties.getValue(VocherConstant.KEY_URL), HttpMethod.POST, entity, FinanceAuthResponce.class).getBody();
-
+			accessToken=result.getAccess_token();
 		} catch (Exception e) {
 			LOGGER.error("getAccessToken : " + e.getMessage());
 		}
