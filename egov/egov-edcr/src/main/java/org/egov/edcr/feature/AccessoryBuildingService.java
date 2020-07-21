@@ -221,7 +221,7 @@ public class AccessoryBuildingService extends FeatureProcess {
 		scrutinyDetail2.addColumnHeading(3, REQUIRED);
 		scrutinyDetail2.addColumnHeading(4, PROVIDED);
 		scrutinyDetail2.addColumnHeading(5, STATUS);
-		scrutinyDetail2.setKey("Common_Construction in back courtyard - Mximum distance from plot boundary");
+		scrutinyDetail2.setKey("Common_Construction in back courtyard - Maximum distance from plot boundary");
 		
 		ScrutinyDetail scrutinyDetail3 = new ScrutinyDetail();
 		scrutinyDetail3.addColumnHeading(1, RULE_NO);
