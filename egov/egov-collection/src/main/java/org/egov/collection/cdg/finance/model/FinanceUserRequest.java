@@ -1,9 +1,10 @@
 package org.egov.collection.cdg.finance.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FinanceUserRequest {
-	private float id;
+	private Long id;
 	private String uuid;
 	private String userName;
 	private String name;
@@ -11,91 +12,75 @@ public class FinanceUserRequest {
 	private String emailId;
 	private String locale = null;
 	private String type;
-	ArrayList<Object> roles = new ArrayList<Object>();
+	List<FinanceUserRole> roles = new ArrayList<FinanceUserRole>();
 	private boolean active;
 	private String tenantId;
-
-	// Getter Methods
-
-	public float getId() {
+	public Long getId() {
 		return id;
 	}
-
+	public void setId(Long id) {
+		this.id = id;
+	}
 	public String getUuid() {
 		return uuid;
 	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getMobileNumber() {
-		return mobileNumber;
-	}
-
-	public String getEmailId() {
-		return emailId;
-	}
-
-	public String getLocale() {
-		return locale;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public boolean getActive() {
-		return active;
-	}
-
-	public String getTenantId() {
-		return tenantId;
-	}
-
-	// Setter Methods
-
-	public void setId(float id) {
-		this.id = id;
-	}
-
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
-
+	public String getUserName() {
+		return userName;
+	}
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-
+	public String getName() {
+		return name;
+	}
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}
-
+	public String getEmailId() {
+		return emailId;
+	}
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
 	}
-
+	public String getLocale() {
+		return locale;
+	}
 	public void setLocale(String locale) {
 		this.locale = locale;
 	}
-
+	public String getType() {
+		return type;
+	}
 	public void setType(String type) {
 		this.type = type;
 	}
-
+	public List<FinanceUserRole> getRoles() {
+		return roles;
+	}
+	public void setRoles(List<FinanceUserRole> roles) {
+		this.roles = roles;
+	}
+	public boolean isActive() {
+		return active;
+	}
 	public void setActive(boolean active) {
 		this.active = active;
 	}
-
+	public String getTenantId() {
+		return tenantId;
+	}
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
+
+	
 }

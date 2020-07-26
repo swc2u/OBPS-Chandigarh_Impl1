@@ -11,4 +11,11 @@ public class VocherConstant {
 	public static String KEY_USERTYPE="finace.vocher.auth.userType";
 	public static String KEY_URL="finace.vocher.auth.url";
 	
+	public static String VOUCHER_NAME="Revenue Grants";
+	public static String VOUCHER_TYPE="Receipt";
+	public static String VOUCHER_DESCRIPTION="Revenue Grants Receipt";
+	public static Long VOUCHER_MODEL_ID=10L;
+	public static String VOUCHER_DEPT="390";
+	public static String VOUCHER_SERVICE_NAME="REV_GRANTS";
+	
 }

@@ -8,9 +8,6 @@ public class FinanceResponseInfo {
 	 private String msg_id;
 	 private String status;
 
-
-	 // Getter Methods 
-
 	 public String getApi_id() {
 	  return api_id;
 	 }
