@@ -113,6 +113,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	private static final BigDecimal EIGHTEEN = BigDecimal.valueOf(18);
 	private static final BigDecimal SQMT_SQFT_MULTIPLIER = BigDecimal.valueOf(10.764);
 	private static final BigDecimal HALF_ACRE_IN_SQMT = BigDecimal.valueOf(2023.43);
+	private static final BigDecimal SQINCH_SQFT_DIVIDER = new BigDecimal("144");
 
 	@Autowired
 	private PermitFeeService permitFeeService;
@@ -305,7 +306,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										multiplier = ONE_TWO_FIVE;
 									}
 
-									BigDecimal totalAmount = getTotalScruitnyFee(application.getBuildingDetail(),
+									BigDecimal totalAmount = getTotalScruitnyFee(plan,application.getBuildingDetail(),
 											multiplier);
 
 									if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
@@ -866,12 +867,21 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		return demandDetail;
 	}
 
-	public BigDecimal getTotalScruitnyFee(List<BuildingDetail> buildingDetails, BigDecimal multiplier) {
+	public BigDecimal getTotalScruitnyFee(Plan plan,List<BuildingDetail> buildingDetails, BigDecimal multiplier) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
-		for (BuildingDetail building : buildingDetails) {
-			for (ApplicationFloorDetail floor : building.getApplicationFloorDetails()) {
-				totalAmount = totalAmount.add(floor.getFloorArea().multiply(SQMT_SQFT_MULTIPLIER).multiply(multiplier)
-						.setScale(2, BigDecimal.ROUND_UP));
+		if(!plan.isRural()) {
+			for (BuildingDetail building : buildingDetails) {
+				for (ApplicationFloorDetail floor : building.getApplicationFloorDetails()) {
+					totalAmount = totalAmount.add(floor.getFloorArea().multiply(SQMT_SQFT_MULTIPLIER).multiply(multiplier)
+							.setScale(2, BigDecimal.ROUND_UP));
+				}
+			}
+		}else {
+			for (BuildingDetail building : buildingDetails) {
+				for (ApplicationFloorDetail floor : building.getApplicationFloorDetails()) {
+					totalAmount = totalAmount.add(floor.getFloorArea().divide(SQINCH_SQFT_DIVIDER).multiply(multiplier)
+							.setScale(2, BigDecimal.ROUND_UP));
+				}
 			}
 		}
 		return totalAmount;
@@ -965,24 +975,51 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 		if (multiplier.compareTo(BigDecimal.ZERO) > 0) {
 			BigDecimal estimatedAmount = BigDecimal.ZERO;
-			for (BuildingDetail building : buildingDetails) {
-				for (ApplicationFloorDetail floor : building.getApplicationFloorDetails()) {
-					estimatedAmount = estimatedAmount.add(floor.getFloorArea().multiply(SQMT_SQFT_MULTIPLIER)
-							.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+			if(!plan.isRural()) {
+				for (BuildingDetail building : buildingDetails) {
+					for (ApplicationFloorDetail floor : building.getApplicationFloorDetails()) {
+						estimatedAmount = estimatedAmount.add(floor.getFloorArea().multiply(SQMT_SQFT_MULTIPLIER)
+								.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+					}
+				}
+			}else if(plan.isRural()) {
+				for (BuildingDetail building : buildingDetails) {
+					for (ApplicationFloorDetail floor : building.getApplicationFloorDetails()) {
+						estimatedAmount = estimatedAmount.add(floor.getFloorArea().divide(SQINCH_SQFT_DIVIDER)
+								.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+					}
 				}
 			}
 
-			for (Block b : plan.getBlocks()) {
-				Building building = b.getBuilding();
-				if (building != null) {
-					for (Floor floor : building.getFloors()) {
-						if (floor.getOverHangs() != null && !floor.getOverHangs().isEmpty()) {
-							List<BigDecimal> areas = floor.getOverHangs().stream().map(overhang -> overhang.getArea())
-									.collect(Collectors.toList());
-							BigDecimal totalCajjaArea = areas.stream().filter(Objects::nonNull).reduce(BigDecimal.ZERO,
-									BigDecimal::add);
-							estimatedAmount = estimatedAmount.add(totalCajjaArea.multiply(SQMT_SQFT_MULTIPLIER)
-									.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+			if(!plan.isRural()) {
+				for (Block b : plan.getBlocks()) {
+					Building building = b.getBuilding();
+					if (building != null) {
+						for (Floor floor : building.getFloors()) {
+							if (floor.getOverHangs() != null && !floor.getOverHangs().isEmpty()) {
+								List<BigDecimal> areas = floor.getOverHangs().stream().map(overhang -> overhang.getArea())
+										.collect(Collectors.toList());
+								BigDecimal totalCajjaArea = areas.stream().filter(Objects::nonNull).reduce(BigDecimal.ZERO,
+										BigDecimal::add);
+								estimatedAmount = estimatedAmount.add(totalCajjaArea.multiply(SQMT_SQFT_MULTIPLIER)
+										.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+							}
+						}
+					}
+				}
+			}else if(plan.isRural()) {
+				for (Block b : plan.getBlocks()) {
+					Building building = b.getBuilding();
+					if (building != null) {
+						for (Floor floor : building.getFloors()) {
+							if (floor.getOverHangs() != null && !floor.getOverHangs().isEmpty()) {
+								List<BigDecimal> areas = floor.getOverHangs().stream().map(overhang -> overhang.getArea())
+										.collect(Collectors.toList());
+								BigDecimal totalCajjaArea = areas.stream().filter(Objects::nonNull).reduce(BigDecimal.ZERO,
+										BigDecimal::add);
+								estimatedAmount = estimatedAmount.add(totalCajjaArea.divide(SQINCH_SQFT_DIVIDER)
+										.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+							}
 						}
 					}
 				}
@@ -1118,9 +1155,16 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 				|| BpaConstants.IP_C.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())) {
 			multiplier = TWENTY;
 		}
-		if (totalArea.compareTo(BigDecimal.ZERO) > 0 && multiplier.compareTo(BigDecimal.ZERO) > 0) {
-			totalAmount = totalAmount.add(totalArea.multiply(SQMT_SQFT_MULTIPLIER).multiply(multiplier).setScale(2,
-					BigDecimal.ROUND_HALF_UP));
+		if(!plan.isRural()) {
+			if (totalArea.compareTo(BigDecimal.ZERO) > 0 && multiplier.compareTo(BigDecimal.ZERO) > 0) {
+				totalAmount = totalAmount.add(totalArea.divide(SQINCH_SQFT_DIVIDER).multiply(multiplier).setScale(2,
+						BigDecimal.ROUND_HALF_UP));
+			}
+		}else if(plan.isRural()) {
+			if (totalArea.compareTo(BigDecimal.ZERO) > 0 && multiplier.compareTo(BigDecimal.ZERO) > 0) {
+				totalAmount = totalAmount.add(totalArea.multiply(SQMT_SQFT_MULTIPLIER).multiply(multiplier).setScale(2,
+						BigDecimal.ROUND_HALF_UP));
+			}
 		}
 		return totalAmount;
 	}
