@@ -77,6 +77,7 @@ public abstract class FeatureProcess {
 	public static final String ROAD_WIDTH = "Road Width";
 	public static final String FLOOR = "Floor";
 	public static final String ROOM ="Room";
+	public static final String BLOCK="block";
 
 	public abstract Map<String, Date> getAmendments();
 

@@ -2641,7 +2641,6 @@ INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,
 
 
 
-
 INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,createdby,createddate,lastmodifieddate,lastmodifiedby,"version",description,maxcoverage,minfar,maxfar,occupancy,colorcode) VALUES 
 (306,'A-OCP','Out Checkpost',5,true,1,'2020-07-13 11:46:51.420','2020-07-13 11:46:51.420',1,0,'Out Checkpost',65,3,4,29,172)
 ,(302,'A-ICP','In Checkpost',5,true,1,'2020-07-13 11:46:51.420','2020-07-13 11:46:51.420',1,0,'In Checkpost',65,3,4,29,171)
@@ -2658,3 +2657,7 @@ INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,
 INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,createdby,createddate,lastmodifieddate,lastmodifiedby,"version",description,maxcoverage,minfar,maxfar,occupancy,colorcode) VALUES 
 (309,'A-CC','Community Facilities',5,true,1,'2020-07-13 11:46:51.420','2020-07-13 11:46:51.420',1,0,'Community Facilities',65,3,4,(select id from chandigarh.egbpa_occupancy eo where code ='A'),120)
 ;
+
+
+INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,createdby,createddate,lastmodifieddate,lastmodifiedby,"version",description,maxcoverage,minfar,maxfar,occupancy,colorcode) VALUES 
+(310,'A-AF','Additional Fee',5,true,1,now(),now(),1,0,'Additional Fee',65,3,4,29,1);

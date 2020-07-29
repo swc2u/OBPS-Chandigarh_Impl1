@@ -161,11 +161,50 @@ public class AdditionalFeature2 extends FeatureProcess {
 			validateGalleryFloor(pl);
 			validateGateAndCheckpost(pl);
 			validateResidentialUse(pl);
+			addAddtionalFee(pl);
 		}
 		
 		return pl;
 	}
 	
+	private void addAddtionalFee(Plan plan) {
+		OccupancyTypeHelper mostRestrictiveOccupancyType = plan.getVirtualBuilding() != null
+				? plan.getVirtualBuilding().getMostRestrictiveFarHelper()
+				: null;
+		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
+		scrutinyDetail.setKey("Common_Addtional Fee");
+		scrutinyDetail.addColumnHeading(1, BLOCK);
+		scrutinyDetail.addColumnHeading(2, FLOOR);
+		scrutinyDetail.addColumnHeading(3, PROVIDED);
+		scrutinyDetail.addColumnHeading(4, STATUS);
+		boolean isParsent=false;
+		for(Block block:plan.getBlocks()) {
+			for(Floor floor:block.getBuilding().getFloors()) {
+				for(Occupancy occupancy:floor.getOccupancies()) {
+					if(DxfFileConstants.A_AF.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+						if(floor.getNumber()>=0) {
+							isParsent=true;
+							Map<String, String> details = new HashMap<>();
+							details.put(BLOCK, "block-"+block.getNumber());
+							details.put(FLOOR, "floor-"+floor.getNumber());
+							details.put(PROVIDED, CDGAdditionalService.viewArea(plan, occupancy.getBuiltUpArea()));
+							details.put(STATUS, Result.Accepted.getResultVal());
+							scrutinyDetail.getDetail().add(details);
+						}else {
+							plan.addError("Addtional Fee", "Addtional Fee layer is not allowed in block "+block.getNumber()+" floor "+floor.getNumber());
+						}
+					}
+				}
+				
+			}
+		}
+		if(isParsent && DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode()))
+			plan.setIsAdditionalFeeApplicable(true);// is required at time of fee calculation
+		else if(isParsent)
+			plan.addError("Addtional Fee", "Addtional fee layer is not allowed.");
+		plan.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+		
+	}
 
 	private void validateGateAndCheckpost(Plan pl) {
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null

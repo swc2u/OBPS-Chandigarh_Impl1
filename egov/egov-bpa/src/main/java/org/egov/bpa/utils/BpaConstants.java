@@ -92,6 +92,7 @@ public class BpaConstants {
 	public static final String A_P = "A-P";// Plotted
 	public static final String A_G = "A-G";// Grouped
 	public static final String A_CIR="A-CIR";// commercial in rural
+	public static final String A_AF="A-AF";//Additional Fee
 	
 	public static final String B_EC = "B_EC";// Education city (Sarangpur)
 	public static final String B_HEI = "B-HEI";// Higher Educational Institute //Educational/ Academic

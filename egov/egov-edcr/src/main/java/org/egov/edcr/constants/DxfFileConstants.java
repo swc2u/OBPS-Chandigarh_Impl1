@@ -119,6 +119,7 @@ public class DxfFileConstants {
 	public static final String A_GF="A-GF";//Gallery floor;
 	public static final String A_RU="A-RU";//Residential use ;
 	public static final String A_CC="A-CC";//Community Facilities In Group Housing Building 
+	public static final String A_AF="A-AF";//Additional Fee
 	
 	public static final String F_SCO = "F-SCO";// SCO'S/ SCF'S / BAYSHOP'S/ SEMI INDUSTRIAL -- 272
 	public static final String F_B ="F-B"; // BOOTHS ETC. 
@@ -175,7 +176,7 @@ public class DxfFileConstants {
 	
 	public static final String A2 = "A2";// Old Age Home
 	public static final String A_R = "A-R"; // Single family Residential
-	public static final String A_AF = "A-AF"; // Apartment/Flat
+	//public static final String A_AF = "A-AF"; // Apartment/Flat
 	public static final String A_FH = "A-FH"; // Farm House
 	public static final String A_SR = "A-SR";// Special Residential
 	public static final String A_HE = "A-HE";// Hostel Educational
