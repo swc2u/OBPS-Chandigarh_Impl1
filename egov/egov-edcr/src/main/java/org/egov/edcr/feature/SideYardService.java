@@ -1233,6 +1233,22 @@ if(pl.getDrawingPreference().getInFeets()) {
 
 	}
 
+	private void checkRowHousing(Plan plan,OccupancyTypeHelper mostRestrictiveOccupancyType,Map<String, String> map) {
+		
+		try {
+			Double left=Double.parseDouble(map.get(CDGAdditionalService.LEFT));
+			Double right=Double.parseDouble(map.get(CDGAdditionalService.RIGHT));
+			
+			if(left==0 && right==0) {
+				plan.setIsRowHouse(true);
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 	private void validateSideYardRule(final Plan pl) {
 		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
@@ -1252,6 +1268,8 @@ if(pl.getDrawingPreference().getInFeets()) {
 					//pl.addError(OBJECTNOTDEFINED, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_FRONT");
 					return;
 				}
+				
+				checkRowHousing(pl,mostRestrictiveOccupancyType,map);//it's for Terrace Utility
 				
 				Double frontSetback = Double.valueOf(map.get(CDGAdditionalService.SETBACK_FRONT) != null
 						? map.get(CDGAdditionalService.SETBACK_FRONT)

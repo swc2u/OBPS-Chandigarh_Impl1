@@ -199,6 +199,7 @@ public class Plan implements Serializable {
 	private Gate gate;
 	
 	private Boolean isAdditionalFeeApplicable=false;
+	private Boolean isRowHouse=false;
 
 	// Used to show drawing mistakes, General errors, mistakes in following
 	// layer/color coding standard etc
@@ -698,6 +699,14 @@ public class Plan implements Serializable {
 
 	public void setIsAdditionalFeeApplicable(Boolean isAdditionalFeeApplicable) {
 		this.isAdditionalFeeApplicable = isAdditionalFeeApplicable;
+	}
+
+	public Boolean getIsRowHouse() {
+		return isRowHouse;
+	}
+
+	public void setIsRowHouse(Boolean isRowHouse) {
+		this.isRowHouse = isRowHouse;
 	}
 
 	

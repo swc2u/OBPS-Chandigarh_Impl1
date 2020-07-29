@@ -49,12 +49,16 @@
 package org.egov.edcr.feature;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.egov.common.entity.edcr.Block;
+import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
@@ -65,70 +69,109 @@ import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.Util;
 import org.springframework.stereotype.Service;
 
+import com.sun.el.stream.Stream;
+
 @Service
 public class TerraceUtilityService extends FeatureProcess {
 
-    private static final Logger LOG = Logger.getLogger(TerraceUtility.class);
-    private static final String RULE_34 = "43-1";
-    public static final String TERRACEUTILITIESDISTANCE = "TerraceUtilitiesDistance";
-    public static final BigDecimal THREE = BigDecimal.valueOf(3);
-    public static final String ERROR_MSG = "Minimum_distance";
+	private static final Logger LOG = Logger.getLogger(TerraceUtility.class);
+	private static final String RULE_34 = "43-1";
+	public static final String TERRACEUTILITIESDISTANCE = "TerraceUtilitiesDistance";
+	public static final BigDecimal THREE = BigDecimal.valueOf(3);
+	public static final String ERROR_MSG = "Minimum_distance";
+	private static final int FRONT_AND_REAR_COLOR_CODE = 37;
+	private static final int SIDE_COLOR_CODE = 39;
 
-    @Override
-    public Map<String, Date> getAmendments() {
-        return null;
-    }
+	@Override
+	public Map<String, Date> getAmendments() {
+		return null;
+	}
 
-    @Override
-    public Plan validate(Plan pl) {
-        return pl;
-    }
+	@Override
+	public Plan validate(Plan pl) {
+		return pl;
+	}
 
-    @Override
-    public Plan process(Plan pl) {
+	@Override
+	public Plan process(Plan pl) {
 
-        if (pl.getBlocks() != null) {
-            for (Block block : pl.getBlocks()) {
-                ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
-                scrutinyDetail.setKey("Block_" + block.getNumber() + "_" + "Terrace Utility");
-                scrutinyDetail.addColumnHeading(1, RULE_NO);
-                scrutinyDetail.addColumnHeading(2, DESCRIPTION);
-                scrutinyDetail.addColumnHeading(3, PERMITTED);
-                scrutinyDetail.addColumnHeading(4, PROVIDED);
-                scrutinyDetail.addColumnHeading(5, STATUS);
+		BigDecimal expectedFrontAndRearDistance = new BigDecimal("3.0");
+		BigDecimal expectedSideDistance = new BigDecimal("3.0");
 
-                for (TerraceUtility terraceUtility : block.getTerraceUtilities()) {
-                    Map<String, String> details = new HashMap<>();
-                    details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.SERVICE_ZONE_ON_TERRACE));
-                    BigDecimal minDistance = terraceUtility.getDistances().stream().reduce(BigDecimal::min).get();
-                    details.put(DESCRIPTION, terraceUtility.getName());
-                    
-                    BigDecimal providedMinDistance=minDistance;
-                    BigDecimal expectedMinDistance=THREE;
-                    if(pl.getDrawingPreference().getInFeets()) {
-                    	providedMinDistance=CDGAdditionalService.inchToFeet(providedMinDistance);
-                    	expectedMinDistance=CDGAdditionalService.meterToFoot(expectedMinDistance);
-                    }
-                    
-                    if (providedMinDistance.compareTo(expectedMinDistance) >= 0) {
-                        details.put(PERMITTED, CDGAdditionalService.viewLenght(pl, expectedMinDistance));
-                        details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, providedMinDistance));
-                        details.put(STATUS, Result.Accepted.getResultVal());
-                        scrutinyDetail.getDetail().add(details);
-                        pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
-                    } else {
-                    	details.put(PERMITTED, CDGAdditionalService.viewLenght(pl, expectedMinDistance));
-                        details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, providedMinDistance));
-                        details.put(STATUS, Result.Not_Accepted.getResultVal());
-                        scrutinyDetail.getDetail().add(details);
-                        pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
-                    }
+		if (pl.getIsRowHouse()) {
+			expectedSideDistance = new BigDecimal("1.2");
+		}
 
-                }
+		if (pl.getDrawingPreference().getInFeets()) {
+			expectedFrontAndRearDistance = CDGAdditionalService.meterToFoot(expectedFrontAndRearDistance);
+			expectedSideDistance = CDGAdditionalService.meterToFoot(expectedSideDistance);
+		}
 
-            }
+		if (pl.getBlocks() != null) {
+			for (Block block : pl.getBlocks()) {
+				ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
+				scrutinyDetail.setKey("Block_" + block.getNumber() + "_" + "Terrace Utility");
+				scrutinyDetail.addColumnHeading(1, RULE_NO);
+				scrutinyDetail.addColumnHeading(2, DESCRIPTION);
+				scrutinyDetail.addColumnHeading(3, PERMITTED);
+				scrutinyDetail.addColumnHeading(4, PROVIDED);
+				scrutinyDetail.addColumnHeading(5, STATUS);
 
-        }
-        return pl;
-    }
+				List<BigDecimal> frontAndRear = new ArrayList<BigDecimal>();
+				List<BigDecimal> side = new ArrayList<BigDecimal>();
+
+				for (TerraceUtility terraceUtility : block.getTerraceUtilities()) {
+					if (terraceUtility.getColorCode() == FRONT_AND_REAR_COLOR_CODE) {
+						frontAndRear.addAll(terraceUtility.getDistances());
+					} else if (terraceUtility.getColorCode() == SIDE_COLOR_CODE) {
+						side.addAll(terraceUtility.getDistances());
+					}
+				}
+				BigDecimal providedMinFront = BigDecimal.ZERO;
+				BigDecimal providedMinSide = BigDecimal.ZERO;
+				try {
+					providedMinFront = frontAndRear.stream().reduce(BigDecimal::min).get();
+					providedMinSide = side.stream().reduce(BigDecimal::min).get();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				if (pl.getDrawingPreference().getInFeets()) {
+					providedMinFront = CDGAdditionalService.inchToFeet(providedMinFront);
+					providedMinSide = CDGAdditionalService.inchToFeet(providedMinSide);
+				}
+
+				boolean frontAccepted = false;
+				boolean sideAccepted = false;
+				if (providedMinFront.compareTo(expectedFrontAndRearDistance) >= 0) {
+					frontAccepted = true;
+				}
+				if (providedMinSide.compareTo(expectedSideDistance) >= 0) {
+					sideAccepted = true;
+				}
+				Map<String, String> details = new HashMap<>();
+				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.SERVICE_ZONE_ON_TERRACE));
+				details.put(DESCRIPTION, "Front & Rear Distance");
+				details.put(PERMITTED, CDGAdditionalService.viewLenght(pl, expectedFrontAndRearDistance));
+				details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, providedMinFront));
+				details.put(STATUS,
+						frontAccepted ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
+				scrutinyDetail.getDetail().add(details);
+
+				Map<String, String> details1 = new HashMap<>();
+				details1.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.SERVICE_ZONE_ON_TERRACE));
+				details1.put(DESCRIPTION, "Side Distance");
+				details1.put(PERMITTED, CDGAdditionalService.viewLenght(pl, expectedFrontAndRearDistance));
+				details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, providedMinSide));
+				details1.put(STATUS,
+						sideAccepted ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
+				scrutinyDetail.getDetail().add(details1);
+
+				pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+
+			}
+
+		}
+		return pl;
+	}
 }

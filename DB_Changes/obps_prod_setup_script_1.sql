@@ -2661,3 +2661,12 @@ INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,
 
 INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,createdby,createddate,lastmodifieddate,lastmodifiedby,"version",description,maxcoverage,minfar,maxfar,occupancy,colorcode) VALUES 
 (310,'A-AF','Additional Fee',5,true,1,now(),now(),1,0,'Additional Fee',65,3,4,29,1);
+
+
+INSERT INTO chandigarh.egdcr_sub_feature_colorcode (id,feature,subfeature,colorcode,ordernumber) VALUES 
+(101,'TerraceUtilitiesDistance','Front & Rear Distance',37,10)
+;
+
+INSERT INTO chandigarh.egdcr_sub_feature_colorcode (id,feature,subfeature,colorcode,ordernumber) VALUES 
+(102,'TerraceUtilitiesDistance','Side Distance',39,10)
+;
