@@ -162,7 +162,7 @@ public class TerraceUtilityService extends FeatureProcess {
 				details1.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.SERVICE_ZONE_ON_TERRACE));
 				details1.put(DESCRIPTION, "Side Distance");
 				details1.put(PERMITTED, CDGAdditionalService.viewLenght(pl, expectedFrontAndRearDistance));
-				details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, providedMinSide));
+				details1.put(PROVIDED, CDGAdditionalService.viewLenght(pl, providedMinSide));
 				details1.put(STATUS,
 						sideAccepted ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
 				scrutinyDetail.getDetail().add(details1);
