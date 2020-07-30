@@ -74,6 +74,7 @@ import org.egov.bpa.master.entity.ServiceType;
 import org.egov.bpa.master.entity.StakeHolder;
 import org.egov.bpa.transaction.entity.BuildingSubUsage;
 import org.egov.bpa.transaction.entity.BuildingSubUsageDetails;
+import org.egov.bpa.transaction.entity.PermitCoApplicant;
 import org.egov.bpa.transaction.entity.Response;
 import org.egov.bpa.transaction.entity.common.NoticeCommon;
 import org.egov.bpa.transaction.entity.dto.PermitFeeHelper;
@@ -191,6 +192,7 @@ public class OCNoticeUtil {
         reportParams.put("logoPath", cityService.getCityLogoAsStream());
         reportParams.put("stateLogo", ReportUtil.getImageURL(BpaConstants.STATE_LOGO_PATH));
         reportParams.put("ulbName", ApplicationThreadLocals.getMunicipalityName());
+        reportParams.put("formRule", "FORM F (RULE 18)");
         reportParams.put("permitNumber",
                 oc.getParent().getPlanPermissionNumber() == null ? EMPTY : oc.getParent().getPlanPermissionNumber());
         reportParams.put("ocNumber", oc.getOccupancyCertificateNumber() == null ? EMPTY : oc.getOccupancyCertificateNumber());
@@ -215,7 +217,25 @@ public class OCNoticeUtil {
         reportParams.put("amenities", StringUtils.isBlank(amenities) ? "N/A" : amenities);
         reportParams.put("occupancy", oc.getParent().getOccupanciesName());
         reportParams.put("applicantAddress",
-                oc.getParent().getOwner() == null ? "Not Mentioned" : oc.getParent().getOwner().getAddress());
+                oc.getParent().getOwner() == null ? "Not Mentioned" : oc.getParent().getOwner().getAddress());        
+        
+        String coApplicantNames = "";        
+        if(null != oc.getParent().getCoApplicants()) {
+        	for(PermitCoApplicant coApplicant:oc.getParent().getCoApplicants()) {
+        		coApplicantNames = coApplicantNames + coApplicant.getCoApplicant().getName() + ",";
+        	}
+        }
+        reportParams.put("coApplicantName", coApplicantNames);
+        reportParams.put("mobileNo", oc.getParent().getOwner().getUser().getMobileNumber());
+        
+        if (!oc.getParent().getSiteDetail().isEmpty()) {
+        	reportParams.put("plotNo", oc.getParent().getSiteDetail().get(0).getMspPlotNumber() == null? EMPTY :  oc.getParent().getSiteDetail().get(0).getMspPlotNumber());
+        	reportParams.put("sectorNo", oc.getParent().getSiteDetail().get(0).getAdminBoundary() == null? EMPTY :  oc.getParent().getSiteDetail().get(0).getAdminBoundary().getName());
+        }else {
+        	reportParams.put("plotNo", EMPTY);
+        	reportParams.put("sectorNo", EMPTY);
+        }
+        
         if (APPLICATION_STATUS_CANCELLED.equalsIgnoreCase(oc.getStatus().getCode())) {
             reportParams.put("rejectionReasons", buildRejectionReasons(oc));
         }
@@ -295,8 +315,27 @@ public class OCNoticeUtil {
         }
         if (!oc.getOccupancyFee().isEmpty())
             reportParams.put("ocFeeDetails", getPermitFeeDetails(oc));
+        
+        String maxFloorCount = ""; 
+        if (!oc.getBuildings().isEmpty()) {
+        	maxFloorCount = ordinal(oc.getBuildings().get(0).getFloorCount());
+        }
+        reportParams.put("maxFloorNumber", maxFloorCount);
 
         return reportParams;
+    }
+    
+    public static String ordinal(int i) {
+        String[] sufixes = new String[] { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
+        switch (i % 100) {
+        case 11:
+        case 12:
+        case 13:
+            return i + "th";
+        default:
+            return i + sufixes[i % 10];
+
+        }
     }
 
     private List<PermitFeeHelper> getPermitFeeDetails(final OccupancyCertificate oc) {

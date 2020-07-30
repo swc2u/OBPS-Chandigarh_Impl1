@@ -541,7 +541,7 @@ $(document).ready(
 	                $('#ocDocumentsBody')
 	                    .append(
 	                        '<div class="form-group">'
-	                        + '<div class="col-sm-3 add-margin check-text"> <input type="hidden" class="checklistDetail'
+	                        + '<div class="col-sm-6 add-margin check-text"> <input type="hidden" class="checklistDetail'
 	                        + index
 	                        + '" name="documents['
 	                        + index
@@ -565,7 +565,7 @@ $(document).ready(
 	                        + '<div class="col-sm-3 add-margin "><textarea class="form-control patternvalidation" data-pattern="alphanumericspecialcharacters" maxlength="256" name="documents['
 	                        + index
 	                        + '].document.remarks" /></div>'
-	                        + '<div class="col-sm-6 add-margin "><div class="files-upload-container" data-allowed-extenstion="doc,docx,xls,xlsx,rtf,pdf,txt,zip,jpeg,jpg,png,gif,tiff" '
+	                        + '<div class="col-sm-3 add-margin "><div class="files-upload-container" data-allowed-extenstion="doc,docx,xls,xlsx,rtf,pdf,txt,zip,jpeg,jpg,png,gif,tiff" '
 	                        + (serviceChecklist.mandatory ? "required"
 	                        : '')
 	                        + '> <div class="files-viewer"> <a href="javascript:void(0);" class="file-add" data-unlimited-files="true" data-toggle="tooltip" data-placement="top" tittle="Test Tooltip" data-file-input-name="documents['
@@ -588,14 +588,14 @@ $(document).ready(
 	            	var splittedChklistDesc = serviceChecklist.checklistDesc.split(" ");
 	            	var checklistName = splittedChklistDesc.join("_");
 	            	
-	            	var whenAuto = '<div class="col-sm-6 add-margin autoPopulateDcrDocs"><div class="files-viewer '
+	            	var whenAuto = '<div class="col-sm-3 add-margin autoPopulateDcrDocs"><div class="files-viewer '
 	            		+checklistName
 	            		+'"><input type="hidden" name="dcrDocuments['
 	            		+ index
 	            		+'].dcrDocument.fileStoreIds" id="fileStoreIds" class="'
 	            		+checklistName
 	            		+'_fileStoreIds" > </div> </div>';
-	            	var whenManualOrOverride = '<div class="col-sm-6 add-margin "><div class="files-upload-container" data-allowed-extenstion="pdf" '
+	            	var whenManualOrOverride = '<div class="col-sm-3 add-margin "><div class="files-upload-container" data-allowed-extenstion="pdf" '
                         + (serviceChecklist.mandatory ? "required"
     	                        : '')
     	                        + '> <div class="files-viewer '
@@ -617,7 +617,7 @@ $(document).ready(
 	                $('#ocDCRDocumentsBody')
 	                    .append(
 	                        '<div class="form-group">'
-	                        + '<div class="col-sm-3 add-margin check-text"> <input type="hidden" name="dcrDocuments['
+	                        + '<div class="col-sm-6 add-margin check-text"> <input type="hidden" name="dcrDocuments['
 	                        + index
 	                        + '].dcrDocument.serviceChecklist" value="'
 	                        + serviceChecklist.id
@@ -750,9 +750,10 @@ $(document).ready(
 	                $('#bpaApplicationId').val(response.id);
 	                $('#applicationNumber').val(response.applicationNumber);
 	                $('#planPermissionNumber').val(response.planPermissionNumber);
-	                $('#zone').val(response.zone);
+	                $('#areaCategory').val(response.areaCategory);
 	                $('#electionWard').val(response.electionWard);
-	                $('#revenueWard').val(response.revenueWard);
+	                $('#zoneOrLocation').val(response.zoneOrLication);
+	                $('#sectorsOrVillages').val(response.sectorOrVillage);
 	                $('#resurveyNumber').val(response.reSurveyNumber);
 	                $('#khataNumber').val(response.khataNumber);
 	                $('#holdingNumber').val(response.holdingNumber);

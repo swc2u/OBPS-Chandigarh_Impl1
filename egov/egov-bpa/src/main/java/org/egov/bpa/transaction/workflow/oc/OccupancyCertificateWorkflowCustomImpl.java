@@ -85,9 +85,9 @@ import java.util.List;
 import static org.egov.bpa.utils.BpaConstants.DESIGNATION_AE;
 import static org.egov.bpa.utils.BpaConstants.DESIGNATION_OVERSEER;
 import static org.egov.bpa.utils.BpaConstants.FWD_TO_AE_AFTER_TS_INSP;
-import static org.egov.bpa.utils.BpaConstants.FWD_TO_CLERK_PENDING;
 import static org.egov.bpa.utils.BpaConstants.FWD_TO_OVERSEER_AFTER_TS_INSPN;
 import static org.egov.bpa.utils.BpaConstants.NATURE_OF_WORK_OC;
+import static org.egov.bpa.utils.BpaConstants.OC_CREATION_PENDING;
 
 /**
  * The Class ApplicationCommonWorkflow.
@@ -150,7 +150,7 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
         if (oc.getCurrentState() == null) {
             String pendingAction = null;
             if (!occupancyCertificateUtils.isDocScrutinyIntegrationRequiredForOc())
-                pendingAction = FWD_TO_CLERK_PENDING;
+                pendingAction = OC_CREATION_PENDING;
             if (bpaUtils.applicationInitiatedByNonEmployee(oc.getCreatedBy()))
                 wfMatrix = bpaApplicationWorkflowService.getWfMatrix(oc.getStateType(), null,
                         null, wfBean.getAdditionalRule(), BpaConstants.WF_NEW_STATE, pendingAction);

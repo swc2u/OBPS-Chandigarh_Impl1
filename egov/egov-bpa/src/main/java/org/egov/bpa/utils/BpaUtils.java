@@ -588,14 +588,16 @@ public class BpaUtils {
 	}
 
 	private void buildWorkFlowForOccupancyCertificate(final OccupancyCertificate oc, final WorkflowBean wfBean) {
-		final WorkFlowMatrix wfMatrix = getWfMatrixByCurrentState(oc.getStateType(), wfBean.getCurrentState(),
-				CREATE_ADDITIONAL_RULE_CREATE_OC);
+		//final WorkFlowMatrix wfMatrix = getWfMatrixByCurrentState(oc.getStateType(), wfBean.getCurrentState(), CREATE_ADDITIONAL_RULE_CREATE_OC);
+		
+		final WorkFlowMatrix wfMatrix = getWfMatrixByCurrentState(oc.getStateType(), wfBean.getCurrentState(), oc.getOccupancyCertificateType());
+		
 		final OccupancyCertificateWorkflowCustomDefaultImpl ocWorkflowCustomDefaultImpl = getInitialisedWorkFlowBeanForOC();
 		Long approvalPositionId = wfBean.getApproverPositionId();
 		if (wfBean.getApproverPositionId() == null)
 			approvalPositionId = getUserPositionIdByZone(wfMatrix.getNextDesignation(),
 					getBoundaryForWorkflow(oc.getParent().getSiteDetail().get(0)).getId());
-		wfBean.setAdditionalRule(CREATE_ADDITIONAL_RULE_CREATE_OC);
+		wfBean.setAdditionalRule(oc.getOccupancyCertificateType());
 		wfBean.setApproverPositionId(approvalPositionId);
 		if (ocWorkflowCustomDefaultImpl != null)
 			if (LETTERTOPARTYINITIATE.equals(wfBean.getCurrentState())) {

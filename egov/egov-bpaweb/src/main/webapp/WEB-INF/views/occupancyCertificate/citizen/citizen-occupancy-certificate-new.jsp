@@ -79,6 +79,9 @@
 			<input type="hidden" name="occupancyCertificate"
 				id="occupancyCertificate" value="${occupancyCertificate.id}" />
 			<form:hidden path="" id="workFlowAction" name="workFlowAction" />
+			
+			<form:hidden path="occupancyCertificateType" id="occupancyCertificateType" name="occupancyCertificateType" />
+			
 			<input type="hidden" id="mode" name="mode" value="${mode}" />
 			<input type="hidden" id="isEDCRIntegrationRequire"
 				value="${isEDCRIntegrationRequire}" />
@@ -129,10 +132,10 @@
 			</div>
 
 			<div align="center">
-				<form:button type="submit" id="ocSave" class="btn btn-primary"
+				<%-- <form:button type="submit" id="ocSave" class="btn btn-primary"
 					value="Save">
 					<spring:message code="lbl.save" />
-				</form:button>
+				</form:button> --%>
 				<form:button type="submit" id="ocSubmit" class="btn btn-primary"
 					value="Submit">
 					<spring:message code="lbl.submit" />
@@ -161,8 +164,9 @@
 		<input type="hidden" id="forBuildScrutinyNumber" value="<spring:message code='msg.validate.forbuilding.scrutiny.number' />"/>
 		<input type="hidden" id="floorDetailsNotExtracted" value="<spring:message code='msg.validate.floordetsil.not.extracted' />"/>
 		<input type="hidden" id="existingBuildDetailsNotPresent" value="<spring:message code='msg.validate.existing.building.details.notpresent' />"/>
-	   	<input type="hidden" id="zone"/>
-	   	<input type="hidden" id="revenueWard" />
+	   	<input type="hidden" id="areaCategory"/>
+	   	<input type="hidden" id="zoneOrLocation" />
+	   	<input type="hidden" id="sectorsOrVillages" />
        <!-- End --- For javascript messages localization purpose following hidden input tags used -->
 	</div>
 </div>

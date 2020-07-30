@@ -246,6 +246,8 @@ public class BpaConstants {
     public static final String WF_OWNERSHIP_FEE_PENDING = "Ownership transfer fee payment pending";
     public static final String OWNERSHIP_FEE_COLLECTED = "Ownership transfer fee payment done";
     
+    public static final String OC_CREATION_PENDING = "Occupancy certificate application creation pending";
+    
     public static final String WF_BA_VARIFICATION_INITIATED = "Forwarded to property documents verification";
     public static final String WF_BA_CHECK_NOC_UPDATION="Forwarded to check NOC updation";
     public static final String WF_BA_AE_APPROVAL="Forwarded to E- Assistant Estate Officer for Approval";
@@ -256,6 +258,8 @@ public class BpaConstants {
     public static final String WF_BA_FINAL_APPROVAL_PROCESS_INITIATED="Final Approval Process initiated";
     public static final String WF_BA_AEE_APPLICATION_APPROVAL_PENDING="AEE Application Approval Pending";
     public static final String WF_BA_FORWARD_TO_SDO_BUILDING="Forward to SDO Building";
+    
+    public static final String WF_BA_APPROVED_WITH_FEE_COLLECTION_PENDING="Approved with fee collection pending";
 
     // application status constants
     public static final String APPROVED = "Approved";
@@ -263,6 +267,8 @@ public class BpaConstants {
     public static final String PAYMENT_PENDING = "PAYMENT_PENDING";
     public static final String APPLICATION_STATUS_PENDNING = PAYMENT_PENDING;
     public static final String APPLICATION_STATUS_DOC_VERIFY_COMPLETED = "Document Verification Completed";
+    public static final String APPLICATION_STATUS_DOC_REVIEWED = "Document Reviewed";
+    public static final String APPLICATION_STATUS_AEE_APPROVAL_COMPLETED = "AEE Approval Completed";
     public static final String APPLICATION_STATUS_APPROVAL_PROCESS_INITIATED = "Approval Process Initiated";
     public static final String APPLICATION_STATUS_ORDER_ISSUED = "Order Issued to Applicant";
     public static final String APPLICATION_STATUS_DIGI_SIGNED = "Digitally signed";
@@ -389,7 +395,8 @@ public class BpaConstants {
     public static final String PACNOCTYPE = "PAC NOC";
     public static final String STRCNOCTYPE = "STRUCTURE NOC";
     public static final String ELECNOCTYPE = "ELECTRICAL NOC";
-    public static final String POLNOCTYPE = "POL CONTROL NOC";    
+    public static final String POLNOCTYPE = "POL CONTROL NOC";
+    public static final String ACTAXNOCTYPE = "AC TAX NOC";
     
     public static final String NOC_INITIATED = "Initiated";
     public static final String NOC_APPROVED = "Approved";
@@ -398,12 +405,6 @@ public class BpaConstants {
     public static final String NOC_APPL_REJECTED= "Permit Application Rejected";
     public static final String PERMIT = "Permit";
     public static final String OC = "OC";
-    
-    public static final String FIREOCNOCTYPE = "FIRE OCNOC";
-    public static final String AIRPORTOCNOCTYPE = "AAI OCNOC";
-    public static final String NMAOCNOCTYPE = "NMA OCNOC";
-    public static final String ENVOCNOCTYPE = "MOEF OCNOC";
-    public static final String IRROCNOCTYPE = "IDA OCNOC";
     
     //NOC approver roles
     public static final String FIRENOCROLE = "BPA_FIRE_NOC_ROLE";
@@ -416,6 +417,7 @@ public class BpaConstants {
     public static final String ELECNOCROLE = "BPA_ELECTRICAL_NOC_ROLE";
     public static final String POLNOCROLE = "BPA_POL_CONTROL_NOC_ROLE";
     public static final String MANINOCROLE = "BPA_MANIMAJARA_NOC_ROLE";
+    public static final String ACTAXNOCROLE = "BPA_AC_TAX_NOC_ROLE";
 
 
     // designation constants
@@ -750,14 +752,15 @@ public class BpaConstants {
     	NOCTYPE.put(STRCNOCTYPE, STRCNOCROLE); 
     	NOCTYPE.put(ELECNOCTYPE, ELECNOCROLE); 
     	NOCTYPE.put(POLNOCTYPE, POLNOCROLE);
+    	NOCTYPE.put(ACTAXNOCTYPE, ACTAXNOCROLE);
     }
     
     private static final Map<String, String> OCNOCTYPE = new ConcurrentHashMap<>();
     static {
-    	NOCTYPE.put(FIREOCNOCTYPE, FIRENOCROLE);
-    	//NOCTYPE.put(AIRPORTOCNOCTYPE, AIRPORTNOCROLE);
-    	//NOCTYPE.put(NMAOCNOCTYPE, NMANOCROLE);
-    	//NOCTYPE.put(ENVOCNOCTYPE, ENVNOCROLE);
+    	NOCTYPE.put(FIRENOCTYPE, FIRENOCROLE);
+    	NOCTYPE.put(PACNOCTYPE, PACNOCROLE);
+    	NOCTYPE.put(POLNOCTYPE, POLNOCROLE);
+    	NOCTYPE.put(ACTAXNOCTYPE, ACTAXNOCROLE);
     }
 
     // Update and use this code if DCR integration require to particular service type and occupancy

@@ -540,17 +540,15 @@ public class BpaAjaxController {
             jsonObj.addProperty("id", application.getId());
             jsonObj.addProperty("stakeholderId", application.getStakeHolder().get(0).getId());
             jsonObj.addProperty("occupancy", application.getOccupanciesName());
-            jsonObj.addProperty("zone", application.getSiteDetail().get(0).getAdminBoundary().getParent().getName());
-            jsonObj.addProperty("revenueWard", application.getSiteDetail().get(0).getAdminBoundary().getName());
-            jsonObj.addProperty("electionWard", application.getSiteDetail().get(0).getElectionBoundary() != null
-                    ? application.getSiteDetail().get(0).getElectionBoundary().getName()
-                    : "");
+            jsonObj.addProperty("areaCategory", application.getSiteDetail().get(0).getAdminBoundary().getParent().getParent().getName());
+            jsonObj.addProperty("zoneOrLication", application.getSiteDetail().get(0).getAdminBoundary().getParent().getName());
+            jsonObj.addProperty("sectorOrVillage", application.getSiteDetail().get(0).getAdminBoundary().getName());
+            jsonObj.addProperty("electionWard", application.getSiteDetail().get(0).getElectionBoundary() != null? application.getSiteDetail().get(0).getElectionBoundary().getName() : "");
             jsonObj.addProperty("reSurveyNumber", application.getSiteDetail().get(0).getReSurveyNumber());
             jsonObj.addProperty("khataNumber", application.getSiteDetail().get(0).getKhataNumber());
             jsonObj.addProperty("holdingNumber", application.getSiteDetail().get(0).getHoldingNumber());
             jsonObj.addProperty("mspPlotNumber", application.getSiteDetail().get(0).getMspPlotNumber());
-            jsonObj.addProperty("village", application.getSiteDetail().get(0).getLocationBoundary() == null ? ""
-                    : application.getSiteDetail().get(0).getLocationBoundary().getName());
+            jsonObj.addProperty("village", application.getSiteDetail().get(0).getLocationBoundary() == null ? "" : application.getSiteDetail().get(0).getLocationBoundary().getName());
             jsonObj.addProperty("plotArea", application.getSiteDetail().get(0).getExtentinsqmts());
             jsonObj.addProperty("serviceTypeId", application.getServiceType().getId());
             jsonObj.addProperty("serviceTypeDesc", application.getServiceType().getDescription());
@@ -563,8 +561,7 @@ public class BpaAjaxController {
             jsonObj.addProperty("applicationNumber", application.getApplicationNumber());
             jsonObj.addProperty("planPermissionNumber", application.getPlanPermissionNumber());
             jsonObj.addProperty("planPermissionDate", DateUtils.toDefaultDateFormat(application.getPlanPermissionDate()));
-            jsonObj.addProperty("permitExpiryDate", bpaNoticeUtil.calculateCertExpryDate(
-                    new DateTime(application.getPlanPermissionDate()), application.getServiceType().getValidity()));
+            jsonObj.addProperty("permitExpiryDate", bpaNoticeUtil.calculateCertExpryDate(new DateTime(application.getPlanPermissionDate()), application.getServiceType().getValidity()));
             jsonObj.addProperty("applicationWF", application.getState().isEnded());
             jsonObj.addProperty("applicationRevoke",
                     (application.getStatus().getCode().equalsIgnoreCase(BpaConstants.APPLICATION_STATUS_REVOKED)
@@ -739,16 +736,10 @@ public class BpaAjaxController {
         EdcrApplicationInfo odcrPlanInfo = drcRestService.getDcrPlanInfo(ocEdcrNumber,
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         Map<String, Boolean> nocTypeMap = new HashMap<>();
-        nocTypeMap.put(BpaConstants.FIREOCNOCTYPE,
-                odcrPlanInfo.getPlan().getPlanInformation().getNocFireDept().equals("YES"));
-        nocTypeMap.put(BpaConstants.AIRPORTOCNOCTYPE,
-                odcrPlanInfo.getPlan().getPlanInformation().getNocNearAirport().equals("YES"));
-        nocTypeMap.put(BpaConstants.NMAOCNOCTYPE,
-                odcrPlanInfo.getPlan().getPlanInformation().getNocStateEnvImpact().equals("YES"));
-        nocTypeMap.put(BpaConstants.ENVOCNOCTYPE,
-                odcrPlanInfo.getPlan().getPlanInformation().getNocStateEnvImpact().equals("YES"));
-        nocTypeMap.put(BpaConstants.IRROCNOCTYPE,
-                odcrPlanInfo.getPlan().getPlanInformation().getNocIrrigationDept().equals("YES"));
+        nocTypeMap.put(BpaConstants.FIRENOCTYPE, odcrPlanInfo.getPlan().getPlanInformation().getNocFireDept().equals("YES"));
+        nocTypeMap.put(BpaConstants.PACNOCTYPE, odcrPlanInfo.getPlan().getPlanInformation().getNocNearAirport().equals("YES"));
+        nocTypeMap.put(BpaConstants.POLNOCTYPE, odcrPlanInfo.getPlan().getPlanInformation().getNocStateEnvImpact().equals("YES"));
+        nocTypeMap.put(BpaConstants.ACTAXNOCTYPE, odcrPlanInfo.getPlan().getPlanInformation().getNocStateEnvImpact().equals("YES"));
 
         checklistServicetypeMappingService.findByActiveByServiceTypeAndChecklist(serviceType, checklistType).stream()
                 .forEach(servicecklst -> {

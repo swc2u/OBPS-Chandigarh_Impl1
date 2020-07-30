@@ -59,7 +59,7 @@
 </div>
 <div class="panel-body">
 	<div class="row view-content header-color hidden-xs">
-		<label class="col-sm-3 ">
+		<label class="col-sm-6 ">
 			<spring:message code="lbl.documentname"/>
 		</label>
 		<%--<label class="col-sm-2 ">
@@ -68,7 +68,7 @@
 		<label class="col-sm-3 ">
 			<spring:message code="lbl.remarks"/>
 		</label>
-		<label class="col-sm-6 ">
+		<label class="col-sm-3 ">
 			<spring:message code="lbl.attachdocument"/><small class="text-info view-content"> (<spring:message code="lbl.supp.doc.types"/>)</small>
 			<br>
 			<small class="text-info view-content"><spring:message
@@ -80,7 +80,7 @@
 		<c:forEach var="docs" items="${occupancyCertificate.getDocuments()}"
 			varStatus="status">
 			<div class="row">
-				<div class="col-sm-3 add-margin">
+				<div class="col-sm-6 add-margin">
 					<c:out value="${docs.document.serviceChecklist.checklist.description}"></c:out>
 					<span ></span>
 					<c:if test="${docs.document.serviceChecklist.mandatory}">
@@ -107,7 +107,7 @@
 						cssClass="add-margin error-msg" />
 				</div>
 
-				<div class="col-sm-6 add-margin">
+				<div class="col-sm-3 add-margin">
 					<div class="files-upload-container <c:if test="${docs.document.serviceChecklist.checklist.description eq 'Land Tax Receipt' || docs.document.serviceChecklist.checklist.description eq 'One day permit agreement'}">documentRequire</c:if>"
 					    data-file-max-size="5"
 					    <c:if test="${docs.document.serviceChecklist.mandatory eq true && fn:length(docs.document.getOrderedSupportDocs()) eq 0}">required</c:if>

@@ -359,7 +359,7 @@ $(document).ready(
                     var occupancy = floorObj.occupancies[j];
                     // Will auto populate floor details in proposed building
                     if(occupancy.builtUpArea && occupancy.builtUpArea > 0) {
-                        addFloorDetailsIntoTable(blkIdx, floorIdx, $(tableId+" tbody tr").length, floorObj.name, floorObj.number, subOccupancyResponseByName[occupancy.type],occupancyResponseByName[occupancy.type], occupancy.builtUpArea, occupancy.floorArea, occupancy.carpetArea);
+                        addFloorDetailsIntoTable(blkIdx, floorIdx, $(tableId+" tbody tr").length, floorObj.name, floorObj.number, subOccupancyResponseByName[occupancy.typeHelper.subtype.name],occupancyResponseByName[occupancy.typeHelper.type.name], occupancy.builtUpArea, occupancy.floorArea, occupancy.carpetArea);
                         floorIdx++;
                     }
                 }
@@ -375,7 +375,7 @@ $(document).ready(
                     var occupancy = floorObj.occupancies[j];
                     // Will auto populate floor details in existing building
                     if(occupancy.existingBuiltUpArea && occupancy.existingBuiltUpArea > 0) {
-                        addExistBldgFloorDetailsIntoTable(blkIdx, floorIdx, $('.existingBuildingAreaDetails'+blkIdx+' tbody tr').length, floorObj.name, floorObj.number, subOccupancyResponseByName[occupancy.type], occupancyResponseByName[occupancy.type],occupancy.existingBuiltUpArea, occupancy.existingFloorArea, occupancy.existingCarpetArea);
+                        addExistBldgFloorDetailsIntoTable(blkIdx, floorIdx, $('.existingBuildingAreaDetails'+blkIdx+' tbody tr').length, floorObj.name, floorObj.number, subOccupancyResponseByName[occupancy.typeHelper.subtype.name], occupancyResponseByName[occupancy.typeHelper.type.name],occupancy.existingBuiltUpArea, occupancy.existingFloorArea, occupancy.existingCarpetArea);
                         floorIdx++;
                     }
                 }
@@ -498,10 +498,17 @@ $(document).ready(
                     		var ocdcrNo = $('#ocEDcrNumber').val();
                     		getApplicationByPermitNo(response.planPermitNumber);
                     	    getOwnershipByPermitNo(response.planPermitNumber, ocdcrNo);
-                    		var zone= $('#zone').val();
-                    		var wrd = $('#revenueWard').val();
-                    		$('#circle').html(zone);
-                    		$('#revenueward').html(wrd);
+                    		var areaCategory = $('#areaCategory').val();
+                    		var zoneOrLocation = $('#zoneOrLocation').val();
+                    		var sectorsOrVillages = $('#sectorsOrVillages').val();
+                    		$('#dvAreaCategory').html(areaCategory);
+                    		$('#dvZoneOrLocation').html(zoneOrLocation);
+                    		$('#dvSectorsOrVillages').html(sectorsOrVillages);
+                    		
+                    		//Get application type and set to application
+                            var boundaryType = response.plan.planInfoProperties.ROOT_BOUNDARY_TYPE;
+                            var plotType = response.plan.planInfoProperties.PLOT_TYPE;
+                            getApplicationType(plotType, boundaryType);                            
                     	}
                     	// Citizen only can submit for single family plans
                     	var isSingleFamily = false;
@@ -607,6 +614,23 @@ $(document).ready(
                         console.log("Error occurred, when getting approved building plan scrutiny details!!!!!!!");
                     }
                 });
+            }
+            
+            function getApplicationType(plotType, boundaryType) {   
+            	$.ajax({
+    				url : '/bpa/ajax/getApplicationType?plotType='+plotType+'&rootBoundaryType='+boundaryType,
+    				type: "GET",
+    				 contentType: 'application/json; charset=utf-8',
+    				success: function (response) {
+    					if(response){
+    		                $('#occupancyCertificateType').val(response.name);
+    		                $('#additionalRule').val(response.name);
+    					}else{
+    						console.log('No applications available');
+    					}
+    				}, 
+    				error: function (response) {}
+    			});
             }
            
     

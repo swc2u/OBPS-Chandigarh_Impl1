@@ -313,7 +313,7 @@ public class CitizenUpdateOccupancyCertificateController extends BpaGenericAppli
         model.addAttribute("isEDCRIntegrationRequire", true);
         model.addAttribute("loadingFloorDetailsFromEdcrRequire", true);
         model.addAttribute("stateType", oc.getClass().getSimpleName());
-        model.addAttribute(ADDITIONALRULE, CREATE_ADDITIONAL_RULE_CREATE_OC);
+        model.addAttribute(ADDITIONALRULE, oc.getOccupancyCertificateType());
         getDcrDocumentsUploadMode(model);
         model.addAttribute("currentState", oc.getCurrentState() == null ? "" : oc.getCurrentState().getValue());
     }
@@ -339,7 +339,7 @@ public class CitizenUpdateOccupancyCertificateController extends BpaGenericAppli
         Boolean onlinePaymentEnable = request.getParameter(ONLINE_PAYMENT_ENABLE) != null
                 && request.getParameter(ONLINE_PAYMENT_ENABLE)
                         .equalsIgnoreCase(TRUE) ? Boolean.TRUE : Boolean.FALSE;
-        final WorkFlowMatrix wfMatrix = bpaUtils.getWfMatrixByCurrentState(occupancyCertificate.getStateType(), WF_NEW_STATE, CREATE_ADDITIONAL_RULE_CREATE_OC);
+        final WorkFlowMatrix wfMatrix = bpaUtils.getWfMatrixByCurrentState(occupancyCertificate.getStateType(), WF_NEW_STATE, occupancyCertificate.getOccupancyCertificateType());
         if (wfMatrix != null)
 			userPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
 					bpaUtils.getBoundaryForWorkflow(occupancyCertificate.getParent().getSiteDetail().get(0)).getId());

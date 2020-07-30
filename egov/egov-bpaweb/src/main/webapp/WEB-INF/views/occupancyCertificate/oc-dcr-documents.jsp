@@ -81,10 +81,10 @@
 		</div>
 	</c:if>
 	<div class="row view-content header-color hidden-xs">
-		<label class="col-sm-3 "> <spring:message
+		<label class="col-sm-6 "> <spring:message
 				code="lbl.documentname" />
 		</label> <label class="col-sm-3 "> <spring:message code="lbl.remarks" />
-		</label> <label class="col-sm-6 "> <spring:message
+		</label> <label class="col-sm-3 "> <spring:message
 				code="lbl.attachdocument" /> <c:if
 				test="${dcrDocsManuallyUpload eq true || dcrDocsAutoPopulateAndManuallyUpload eq true}">
 				<small class="text-info view-content"> (Only Pdf files allowed)</small>
@@ -99,7 +99,7 @@
 			<c:forEach items="${occupancyCertificate.getDcrDocuments()}"
 				var="dcrDoc" varStatus="dcrDocStatus">
 				<div class="row">
-					<div class="col-sm-3 add-margin">
+					<div class="col-sm-6 add-margin">
 						<c:out value="${dcrDoc.dcrDocument.serviceChecklist.checklist.description}"></c:out>
 						<c:if test="${dcrDoc.dcrDocument.serviceChecklist.mandatory}">
 							<span class="mandatory"></span>
@@ -123,7 +123,7 @@
 					<c:set var="checklistName" value="${fn:join(splittedString, '_')}" />
 					<c:if
 						test="${dcrDocsAutoPopulate eq true && dcrDocsManuallyUpload ne true && dcrDocsAutoPopulateAndManuallyUpload ne true}">
-						<div class="col-sm-6 add-margin autoPopulateDcrDocs">
+						<div class="col-sm-3 add-margin autoPopulateDcrDocs">
 							<c:choose>
 								<c:when
 									test="${fn:length(dcrDoc.dcrDocument.getOrderedDcrAttachments()) gt 0}">
@@ -154,7 +154,7 @@
 
 					<c:if
 						test="${dcrDocsManuallyUpload eq true || dcrDocsAutoPopulateAndManuallyUpload eq true || (dcrDocsAutoPopulate eq false && dcrDocsManuallyUpload eq false && dcrDocsAutoPopulateAndManuallyUpload eq false)}">
-						<div class="col-sm-6 add-margin">
+						<div class="col-sm-3 add-margin">
 							<div
 								class="files-upload-container <c:if test="${dcrDoc.dcrDocument.serviceChecklist.mandatory eq true && fn:length(dcrDoc.dcrDocument.getOrderedDcrAttachments()) eq 0}">mandatory-dcr-doc</c:if>"
 								data-file-max-size="20"

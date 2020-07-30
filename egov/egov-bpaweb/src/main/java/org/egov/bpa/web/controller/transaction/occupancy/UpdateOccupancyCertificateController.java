@@ -52,29 +52,28 @@ import static org.egov.bpa.utils.BpaConstants.APPLICATION_HISTORY;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_APPROVED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFIED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFY_COMPLETED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_REVIEWED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_AEE_APPROVAL_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_NOCUPDATED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REJECTED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_RESCHEDULED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SCHEDULED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_TS_INS;
-import static org.egov.bpa.utils.BpaConstants.CREATE_ADDITIONAL_RULE_CREATE_OC;
-import static org.egov.bpa.utils.BpaConstants.DESIGNATION_AE;
+import static org.egov.bpa.utils.BpaConstants.APPROVED;
 import static org.egov.bpa.utils.BpaConstants.DESIGNATION_OVERSEER;
 import static org.egov.bpa.utils.BpaConstants.DISCLIMER_MESSAGE_ONSAVE;
 import static org.egov.bpa.utils.BpaConstants.FIELD_INSPECTION_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.FORWARDED_TO_CLERK;
 import static org.egov.bpa.utils.BpaConstants.FORWARDED_TO_NOC_UPDATE;
 import static org.egov.bpa.utils.BpaConstants.FWDINGTOLPINITIATORPENDING;
-import static org.egov.bpa.utils.BpaConstants.FWD_TO_AE_AFTER_TS_INSP;
 import static org.egov.bpa.utils.BpaConstants.FWD_TO_AE_FOR_APPROVAL;
-import static org.egov.bpa.utils.BpaConstants.FWD_TO_AE_FOR_FIELD_ISPECTION;
-import static org.egov.bpa.utils.BpaConstants.FWD_TO_OVERSEER_AFTER_TS_INSPN;
 import static org.egov.bpa.utils.BpaConstants.FWD_TO_OVRSR_FOR_FIELD_INS;
 import static org.egov.bpa.utils.BpaConstants.GENERATEREJECTNOTICE;
 import static org.egov.bpa.utils.BpaConstants.GENERATE_OCCUPANCY_CERTIFICATE;
 import static org.egov.bpa.utils.BpaConstants.OCREJECTIONFILENAME;
 import static org.egov.bpa.utils.BpaConstants.WF_APPROVE_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.WF_BA_AEE_APPLICATION_APPROVAL_PENDING;
+import static org.egov.bpa.utils.BpaConstants.WF_BA_CHECK_NOC_UPDATION;
+import static org.egov.bpa.utils.BpaConstants.WF_BA_FINAL_APPROVAL_PROCESS_INITIATED;
 import static org.egov.bpa.utils.BpaConstants.WF_DOC_SCRUTINY_SCHEDLE_PEND;
 import static org.egov.bpa.utils.BpaConstants.WF_DOC_VERIFY_PEND;
 import static org.egov.bpa.utils.BpaConstants.WF_INITIATE_REJECTION_BUTTON;
@@ -83,14 +82,13 @@ import static org.egov.bpa.utils.BpaConstants.WF_REJECT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_REVERT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_SAVE_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_TS_INSPECTION_INITIATED;
+import static org.egov.bpa.utils.BpaConstants.WF_BA_APPROVED_WITH_FEE_COLLECTION_PENDING;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -98,7 +96,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.bpa.master.entity.NocConfiguration;
 import org.egov.bpa.master.entity.enums.CalculationType;
 import org.egov.bpa.master.service.NocConfigurationService;
 import org.egov.bpa.transaction.entity.ApplicationFeeDetail;
@@ -107,8 +104,6 @@ import org.egov.bpa.transaction.entity.WorkflowBean;
 import org.egov.bpa.transaction.entity.enums.AppointmentSchedulePurpose;
 import org.egov.bpa.transaction.entity.enums.ChecklistValues;
 import org.egov.bpa.transaction.entity.enums.ConditionType;
-import org.egov.bpa.transaction.entity.enums.NocIntegrationInitiationEnum;
-import org.egov.bpa.transaction.entity.enums.NocIntegrationTypeEnum;
 import org.egov.bpa.transaction.entity.oc.OCAppointmentSchedule;
 import org.egov.bpa.transaction.entity.oc.OCInspection;
 import org.egov.bpa.transaction.entity.oc.OCLetterToParty;
@@ -299,12 +294,12 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
         } else if ((hasInspectionPendingAction && hasInspectionStatus)
                 || isAfterTSInspection && !oc.getInspections().isEmpty())
             mode = "captureAdditionalInspection";
-        else if (FORWARDED_TO_NOC_UPDATE.equalsIgnoreCase(pendingAction)
-                && APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(currentStatus)) {
+        else if (WF_BA_CHECK_NOC_UPDATION.equalsIgnoreCase(pendingAction)
+                && (APPLICATION_STATUS_DOC_REVIEWED.equalsIgnoreCase(currentStatus)
+                		|| APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(currentStatus))) {
             model.addAttribute("showUpdateNoc", true);
             nocStatusService.updateOCNocStatus(oc);
-        } else if (FWD_TO_AE_FOR_APPROVAL.equalsIgnoreCase(pendingAction)
-                && !oc.getInspections().isEmpty()) {
+        } else if (WF_BA_APPROVED_WITH_FEE_COLLECTION_PENDING.equalsIgnoreCase(pendingAction)) {
             String ocFeeCalMode = bpaUtils.getOCFeeCalculationMode();
             boolean isFeeModifiableIndividual = false;
             for (OccupancyFee fee : oc.getOccupancyFee()) {
@@ -362,45 +357,42 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
     	 
         model.addAttribute("inspectionList", inspectionList);
         model.addAttribute("letterToPartyList", ocLetterToPartyService.findAllByOC(oc));
-        if ((FWD_TO_AE_FOR_FIELD_ISPECTION.equals(oc.getState().getNextAction())
-                || APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equals(oc.getStatus().getCode())
-                || APPLICATION_STATUS_NOCUPDATED.equalsIgnoreCase(oc.getStatus().getCode()))) {
-            model.addAttribute("createlettertoparty", true);
-        }
+        
         model.addAttribute("citizenOrBusinessUser", bpaUtils.logedInuseCitizenOrBusinessUser());
 
         final WorkflowContainer workflowContainer = new WorkflowContainer();
-        if (APPLICATION_STATUS_NOCUPDATED.equals(oc.getStatus().getCode())
-                || APPLICATION_STATUS_APPROVED.equals(oc.getStatus().getCode())) {
-            workflowContainer.setAmountRule(bpaWorkFlowService.getAmountRuleByServiceTypeForOc(oc));
-        }
-        model.addAttribute(ADDITIONALRULE, CREATE_ADDITIONAL_RULE_CREATE_OC);
-        workflowContainer.setAdditionalRule(CREATE_ADDITIONAL_RULE_CREATE_OC);
+		//        if (APPLICATION_STATUS_NOCUPDATED.equals(oc.getStatus().getCode())
+		//                || APPLICATION_STATUS_APPROVED.equals(oc.getStatus().getCode())) {
+		//            workflowContainer.setAmountRule(bpaWorkFlowService.getAmountRuleByServiceTypeForOc(oc));
+		//        }
+        workflowContainer.setAmountRule(null);
+        model.addAttribute(ADDITIONALRULE, oc.getOccupancyCertificateType());
+        workflowContainer.setAdditionalRule(oc.getOccupancyCertificateType());
         workflowContainer.setPendingActions(oc.getState().getNextAction());
 
         // Town surveyor workflow
-        if (WF_TS_INSPECTION_INITIATED.equalsIgnoreCase(oc.getStatus().getCode())) {
-            model.addAttribute("captureTSRemarks", true);
-        } else if (APPLICATION_STATUS_TS_INS.equalsIgnoreCase(oc.getStatus().getCode())) {
-            State<Position> currentState = oc.getCurrentState();
-            Assignment approverAssignment = bpaWorkFlowService.getApproverAssignment(currentState.getOwnerPosition());
-            if (oc.getCurrentState().getOwnerUser() != null) {
-                List<Assignment> assignments = bpaWorkFlowService.getAssignmentByPositionAndUserAsOnDate(
-                        currentState.getOwnerPosition().getId(), currentState.getOwnerUser().getId(),
-                        currentState.getLastModifiedDate());
-                if (!assignments.isEmpty())
-                    approverAssignment = assignments.get(0);
-            }
-            if (approverAssignment == null)
-                approverAssignment = bpaWorkFlowService
-                        .getAssignmentsByPositionAndDate(currentState.getOwnerPosition().getId(), new Date()).get(0);
-            if (DESIGNATION_AE.equals(approverAssignment.getDesignation().getName())) {
-                workflowContainer.setPendingActions(FWD_TO_AE_AFTER_TS_INSP);
-            } else if (DESIGNATION_OVERSEER.equals(approverAssignment.getDesignation().getName())) {
-                workflowContainer.setPendingActions(FWD_TO_OVERSEER_AFTER_TS_INSPN);
-            }
-            model.addAttribute("captureTSRemarks", false);
-        }
+		//        if (WF_TS_INSPECTION_INITIATED.equalsIgnoreCase(oc.getStatus().getCode())) {
+		//            model.addAttribute("captureTSRemarks", true);
+		//        } else if (APPLICATION_STATUS_TS_INS.equalsIgnoreCase(oc.getStatus().getCode())) {
+		//            State<Position> currentState = oc.getCurrentState();
+		//            Assignment approverAssignment = bpaWorkFlowService.getApproverAssignment(currentState.getOwnerPosition());
+		//            if (oc.getCurrentState().getOwnerUser() != null) {
+		//                List<Assignment> assignments = bpaWorkFlowService.getAssignmentByPositionAndUserAsOnDate(
+		//                        currentState.getOwnerPosition().getId(), currentState.getOwnerUser().getId(),
+		//                        currentState.getLastModifiedDate());
+		//                if (!assignments.isEmpty())
+		//                    approverAssignment = assignments.get(0);
+		//            }
+		//            if (approverAssignment == null)
+		//                approverAssignment = bpaWorkFlowService
+		//                        .getAssignmentsByPositionAndDate(currentState.getOwnerPosition().getId(), new Date()).get(0);
+		//            if (DESIGNATION_AE.equals(approverAssignment.getDesignation().getName())) {
+		//                workflowContainer.setPendingActions(FWD_TO_AE_AFTER_TS_INSP);
+		//            } else if (DESIGNATION_OVERSEER.equals(approverAssignment.getDesignation().getName())) {
+		//                workflowContainer.setPendingActions(FWD_TO_OVERSEER_AFTER_TS_INSPN);
+		//            }
+		//            model.addAttribute("captureTSRemarks", false);
+		//        }
 
         prepareWorkflow(model, oc, workflowContainer);
         model.addAttribute("pendingActions", workflowContainer.getPendingActions());
@@ -428,37 +420,38 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
         List<OccupancyNocApplication> ocNoc = ocNocService.findByOCApplicationNumber(oc.getApplicationNumber());
         model.addAttribute("nocApplication", ocNoc);
 
-        Map<String, String> edcrNocMandatory = ocNocService.getEdcrNocMandatory(oc.geteDcrNumber());
-        Map nocAutoMap = new HashMap<String, String>();
-        Map<String, String> nocConfigMap = new HashMap<String, String>();
-        Map<String, String> nocTypeApplMap = new HashMap<String, String>();
-        for (OCNocDocuments nocDocument : oc.getNocDocuments()) {
-            String code = nocDocument.getNocDocument().getServiceChecklist().getChecklist().getCode();
-            NocConfiguration nocConfig = nocConfigurationService
-                    .findByDepartmentAndType(code, BpaConstants.OC);
-            if (ocNocService.findByApplicationNumberAndType(oc.getApplicationNumber(), code) != null)
-                nocTypeApplMap.put(code, "initiated");
-            if (nocConfig != null && nocConfig.getApplicationType().trim().equalsIgnoreCase(BpaConstants.OC)
-                    && nocConfig.getIntegrationType().equalsIgnoreCase(NocIntegrationTypeEnum.INTERNAL.toString())
-                    && nocConfig.getIntegrationInitiation().equalsIgnoreCase(NocIntegrationInitiationEnum.MANUAL.toString()) &&
-                    edcrNocMandatory.get(nocConfig.getDepartment()).equalsIgnoreCase("YES"))
-                nocConfigMap.put(nocConfig.getDepartment(), "initiate");
-            if (nocConfig != null && nocConfig.getApplicationType().trim().equalsIgnoreCase(BpaConstants.OC)
-                    && nocConfig.getIntegrationType().equalsIgnoreCase(NocIntegrationTypeEnum.INTERNAL.toString())
-                    && nocConfig.getIntegrationInitiation().equalsIgnoreCase(NocIntegrationInitiationEnum.AUTO.toString()) &&
-                    edcrNocMandatory.get(nocConfig.getDepartment()).equalsIgnoreCase("YES"))
-                nocAutoMap.put(nocConfig.getDepartment(), "autoinitiate");
-            for (OccupancyNocApplication ona : ocNoc) {
-                if (nocDocument.getNocDocument().getServiceChecklist().getChecklist().getCode()
-                        .equalsIgnoreCase(ona.getBpaNocApplication().getNocType())) {
-                    nocDocument.setOcNoc(ona);
-                }
-            }
-
-        }
-        model.addAttribute("nocTypeApplMap", nocTypeApplMap);
-        model.addAttribute("nocConfigMap", nocConfigMap);
-        model.addAttribute("nocAutoMap", nocAutoMap);
+		//        Map<String, String> edcrNocMandatory = ocNocService.getEdcrNocMandatory(oc.geteDcrNumber());
+		//        Map nocAutoMap = new HashMap<String, String>();
+		//        Map<String, String> nocConfigMap = new HashMap<String, String>();
+		//        Map<String, String> nocTypeApplMap = new HashMap<String, String>();
+		//        for (OCNocDocuments nocDocument : oc.getNocDocuments()) {
+		//            String code = nocDocument.getNocDocument().getServiceChecklist().getChecklist().getCode();
+		//            NocConfiguration nocConfig = nocConfigurationService
+		//                    .findByDepartmentAndType(code, BpaConstants.OC);
+		//            if (ocNocService.findByApplicationNumberAndType(oc.getApplicationNumber(), code) != null)
+		//                nocTypeApplMap.put(code, "initiated");
+		//            if (nocConfig != null && nocConfig.getApplicationType().trim().equalsIgnoreCase(BpaConstants.OC)
+		//                    && nocConfig.getIntegrationType().equalsIgnoreCase(NocIntegrationTypeEnum.INTERNAL.toString())
+		//                    && nocConfig.getIntegrationInitiation().equalsIgnoreCase(NocIntegrationInitiationEnum.MANUAL.toString()) &&
+		//                    edcrNocMandatory.get(nocConfig.getDepartment()).equalsIgnoreCase("YES"))
+		//                nocConfigMap.put(nocConfig.getDepartment(), "initiate");
+		//            if (nocConfig != null && nocConfig.getApplicationType().trim().equalsIgnoreCase(BpaConstants.OC)
+		//                    && nocConfig.getIntegrationType().equalsIgnoreCase(NocIntegrationTypeEnum.INTERNAL.toString())
+		//                    && nocConfig.getIntegrationInitiation().equalsIgnoreCase(NocIntegrationInitiationEnum.AUTO.toString()) &&
+		//                    edcrNocMandatory.get(nocConfig.getDepartment()).equalsIgnoreCase("YES"))
+		//                nocAutoMap.put(nocConfig.getDepartment(), "autoinitiate");
+		//            for (OccupancyNocApplication ona : ocNoc) {
+		//                if (nocDocument.getNocDocument().getServiceChecklist().getChecklist().getCode()
+		//                        .equalsIgnoreCase(ona.getBpaNocApplication().getNocType())) {
+		//                    nocDocument.setOcNoc(ona);
+		//                }
+		//            }
+		//
+		//        }
+		//        model.addAttribute("nocTypeApplMap", nocTypeApplMap);
+		//        model.addAttribute("nocConfigMap", nocConfigMap);
+		//        model.addAttribute("nocAutoMap", nocAutoMap);
+        
         model.addAttribute("isOcApplFeeReq", "NO");
         model.addAttribute("ocApplFeeCollected", "NO");
         if (occupancyCertificateUtils.isApplicationFeeCollectionRequired()) {
@@ -471,12 +464,50 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
                 .filter(pdc -> pdc.getNocDocument().getNocStatus() != null).collect(Collectors.toList());
 
         model.addAttribute("nocStatusUpdated", oc.getNocDocuments().size() == nocDocStatus.size());
-
+        
+        model.addAttribute("nocInitiated", false);
+        
+        boolean isAllNOCApproved = false;
+        String nextAction="";
+        if (WF_BA_CHECK_NOC_UPDATION.equalsIgnoreCase(oc.getState().getNextAction())) {
+        	nextAction=WF_BA_CHECK_NOC_UPDATION;
+            if (!ocNoc.isEmpty()) {
+            	int nocApplicationCount = ocNoc.size();
+            	int nocApprovedCount = 0;
+    	    	for(OccupancyNocApplication nocApplication:ocNoc) {
+    	    		if(APPROVED.equalsIgnoreCase(nocApplication.getBpaNocApplication().getStatus().getCode())) {
+    	    			nocApprovedCount++;
+    	    		}
+    	    	}    	    	
+    	    	if(nocApprovedCount==nocApplicationCount) {
+    	    		isAllNOCApproved=true;    	    		
+    	    	}
+            }else {
+            	isAllNOCApproved = true;
+            }
+        }else {
+        	isAllNOCApproved = true;
+        }
+        model.addAttribute("isAllNOCApproved", isAllNOCApproved);
+        model.addAttribute("nextAction", nextAction);
+        
+		//        if ((FWD_TO_AE_FOR_FIELD_ISPECTION.equals(oc.getState().getNextAction())
+		//                || APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equals(oc.getStatus().getCode())
+		//                || APPLICATION_STATUS_NOCUPDATED.equalsIgnoreCase(oc.getStatus().getCode()))) {
+		//            model.addAttribute("createlettertoparty", true);
+		//        }
+        
+        if (WF_BA_CHECK_NOC_UPDATION.equalsIgnoreCase(oc.getState().getNextAction())
+                	|| WF_BA_FINAL_APPROVAL_PROCESS_INITIATED.equalsIgnoreCase(oc.getState().getNextAction())
+                	|| WF_BA_AEE_APPLICATION_APPROVAL_PENDING.equalsIgnoreCase(oc.getState().getNextAction())
+           ) {
+            model.addAttribute("createlettertoparty", true);
+        }
     }
 
     private void prepareFormData(final OccupancyCertificate oc, final Model model) {
         model.addAttribute("stateType", oc.getClass().getSimpleName());
-        model.addAttribute(ADDITIONALRULE, CREATE_ADDITIONAL_RULE_CREATE_OC);
+        model.addAttribute(ADDITIONALRULE, oc.getOccupancyCertificateType());
         model.addAttribute("currentState", oc.getCurrentState() == null ? "" : oc.getCurrentState().getValue());
         model.addAttribute("feeCalculationMode", bpaUtils.getOCFeeCalculationMode());
 
@@ -559,7 +590,8 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
 
         WorkflowBean wfBean = new WorkflowBean();
         wfBean.setWorkFlowAction(request.getParameter(WORK_FLOW_ACTION));
-        wfBean.setAmountRule(amountRule);
+        //wfBean.setAmountRule(amountRule);
+        wfBean.setAmountRule(null);
         Position pos = null;
         Long approvalPosition = null;
         String feeCalculationMode = bpaUtils.getOCFeeCalculationMode();
@@ -707,11 +739,9 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
 
     private void buildRejectionReasons(Model model, OccupancyCertificate oc) {
         if (APPLICATION_STATUS_NOCUPDATED.equals(oc.getStatus().getCode())
-                || APPLICATION_STATUS_REJECTED.equalsIgnoreCase(oc.getStatus().getCode())
-                || APPLICATION_STATUS_SCHEDULED.equalsIgnoreCase(oc.getStatus().getCode())
-                || APPLICATION_STATUS_RESCHEDULED.equalsIgnoreCase(oc.getStatus().getCode())
-                || (APPLICATION_STATUS_REGISTERED.equalsIgnoreCase(oc.getStatus().getCode())
-                        && FORWARDED_TO_CLERK.equalsIgnoreCase(oc.getCurrentState().getNextAction()))) {
+                || APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(oc.getStatus().getCode())
+                || APPLICATION_STATUS_DOC_REVIEWED.equalsIgnoreCase(oc.getStatus().getCode())
+                || APPLICATION_STATUS_AEE_APPROVAL_COMPLETED.equalsIgnoreCase(oc.getStatus().getCode())) {
             model.addAttribute("showRejectionReasons", true);
             model.addAttribute("additionalRejectionReasons",
                     checklistServiceTypeService.findByActiveChecklistAndServiceType(

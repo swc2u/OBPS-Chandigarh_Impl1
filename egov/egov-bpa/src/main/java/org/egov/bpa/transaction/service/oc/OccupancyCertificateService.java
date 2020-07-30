@@ -244,7 +244,7 @@ public class OccupancyCertificateService {
             if (oc.getAdmissionfeeAmount() != null
                     && oc.getAdmissionfeeAmount().compareTo(BigDecimal.ZERO) == 0) {
                 wfMatrix = bpaUtils.getWfMatrixByCurrentState(
-                        oc.getStateType(), WF_NEW_STATE, CREATE_ADDITIONAL_RULE_CREATE_OC);
+                        oc.getStateType(), WF_NEW_STATE, oc.getOccupancyCertificateType());
                 currentState = WF_NEW_STATE;
             }
             if (wfMatrix != null)

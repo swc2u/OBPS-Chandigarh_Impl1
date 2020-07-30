@@ -64,9 +64,7 @@
     <h3 class="error-msg showViolationMessage" id="showViolationMessageDcr"></h3>
     <input type="hidden" id="violationMessage" value="${violationMessage}">
     <c:if test="${mode ne 'new' && not empty occupancyCertificate.buildings}">
-        <c:forEach
-                items="${occupancyCertificate.buildings}"
-                var="bldg" varStatus="bldgCounter">
+        <c:forEach items="${occupancyCertificate.buildings}" var="bldg" varStatus="bldgCounter">
             <div class="panel-heading custom_form_panel_heading toggle-bldg-header toggle-head${bldgCounter.index}"
                  data-bldg-idx="${bldgCounter.index}">
                 <div class="panel-title">
@@ -247,57 +245,6 @@
                                 path="buildingDetailFromEdcr[${bldgCounter.index}].heightFromGroundWithOutStairRoom"
                                 cssClass="add-margin error-msg"/>
                     </div>
-                  <%--   <label
-                            class="col-sm-2 control-label text-right heightFromGroundWithStairRoom"><spring:message
-                            code="lbl.grnd.with.stair"/></label>
-                    <div class="col-sm-3 add-margin">
-                        <input type="hidden" id="setHeightFromGroundWithStairRoom"
-                               name="buildings[${bldgCounter.index}].heightFromGroundWithStairRoom"
-                               value="${bldg.heightFromGroundWithStairRoom}">
-                        <form:input
-                                class="form-control patternvalidation dcr-reset-values decimalfixed heightFromGroundWithStairRoom"
-                                maxlength="6" data-pattern="decimalvalue"
-                                id="heightFromGroundWithStairRoomFromEdcr"
-                                path="buildingDetailFromEdcr[${bldgCounter.index}].heightFromGroundWithStairRoom"
-                                value="${bldg.heightFromGroundWithStairRoom}"/>
-                        <form:errors path="buildingDetailFromEdcr[${bldgCounter.index}].heightFromGroundWithStairRoom"
-                                     cssClass="add-margin error-msg"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label
-                            class="col-sm-3 control-label text-right fromStreetLevelWithOutStairRoom"><spring:message
-                            code="lbl.street.wo.stair"/></label>
-                    <div class="col-sm-3 add-margin">
-                        <input type="hidden" id="setFromStreetLevelWithOutStairRoom"
-                               name="buildings[${bldgCounter.index}].fromStreetLevelWithOutStairRoom"
-                               value="${bldg.fromStreetLevelWithOutStairRoom}">
-                        <form:input
-                                class="form-control patternvalidation dcr-reset-values decimalfixed fromStreetLevelWithOutStairRoom"
-                                maxlength="6" data-pattern="decimalvalue"
-                                id="fromStreetLevelWithOutStairRoomFromEdcr"
-                                path="buildingDetailFromEdcr[${bldgCounter.index}].fromStreetLevelWithOutStairRoom"
-                                value="${bldg.fromStreetLevelWithOutStairRoom}"/>
-                        <form:errors path="buildingDetailFromEdcr[${bldgCounter.index}].fromStreetLevelWithOutStairRoom"
-                                     cssClass="add-margin error-msg"/>
-                    </div>
-                    <label
-                            class="col-sm-2 control-label text-right fromStreetLevelWithStairRoom"><spring:message
-                            code="lbl.street.with.stair"/></label>
-                    <div class="col-sm-3 add-margin">
-                        <input type="hidden" id="setFromStreetLevelWithStairRoom"
-                               name="buildings[${bldgCounter.index}].fromStreetLevelWithStairRoom"
-                               value="${bldg.fromStreetLevelWithStairRoom}">
-                        <form:input
-                                class="form-control patternvalidation dcr-reset-values decimalfixed fromStreetLevelWithStairRoom"
-                                maxlength="6" data-pattern="decimalvalue"
-                                id="fromStreetLevelWithStairRoomFromEdcr"
-                                path="buildingDetailFromEdcr[${bldgCounter.index}].fromStreetLevelWithStairRoom"
-                                value="${bldg.fromStreetLevelWithStairRoom}"/>
-                        <form:errors path="buildingDetailFromEdcr[${bldgCounter.index}].fromStreetLevelWithStairRoom"
-                                     cssClass="add-margin error-msg"/>
-                    </div>
-                </div> --%>
             </div>
         </c:forEach>
 

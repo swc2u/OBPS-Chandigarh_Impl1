@@ -64,6 +64,7 @@ import org.egov.bpa.transaction.service.DcrRestService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.utils.BpaUtils;
 import org.egov.common.entity.dcr.helper.EdcrApplicationInfo;
+import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.admin.master.service.UserService;
 import org.egov.infra.config.core.ApplicationThreadLocals;
@@ -144,7 +145,8 @@ public class OccupancyCertificateNocService {
 		List<User> userList = new ArrayList<>();
 		NocConfiguration nocConfig = nocConfigurationService
 				.findByDepartmentAndType(nocDocument.getNocDocument().getServiceChecklist().getChecklist().getCode(), BpaConstants.OC);
-		if (nocConfig != null && nocConfig.getApplicationType().trim().equalsIgnoreCase(BpaConstants.OC) && nocConfig.getIntegrationType().equalsIgnoreCase(NocIntegrationTypeEnum.INTERNAL.toString())
+		if (nocConfig != null && nocConfig.getApplicationType().trim().equalsIgnoreCase(BpaConstants.OC) 
+				&& nocConfig.getIntegrationType().equalsIgnoreCase(NocIntegrationTypeEnum.INTERNAL.toString())
 				&& nocConfig.getIntegrationInitiation().equalsIgnoreCase(NocIntegrationInitiationEnum.AUTO.toString())
 				&& edcrNocMandatory.get(nocConfig.getDepartment()).equalsIgnoreCase("YES")) {
 			List<User> nocUsers = new ArrayList<User>(userService.getUsersByTypeAndTenantId(UserType.BUSINESS, ApplicationThreadLocals.getTenantID()));
@@ -177,7 +179,8 @@ public class OccupancyCertificateNocService {
 		List<User> userList = new ArrayList<>();
 		NocConfiguration nocConfig = nocConfigurationService
 				.findByDepartmentAndType(nocType, BpaConstants.OC);
-		if (nocConfig.getApplicationType().trim().equalsIgnoreCase(BpaConstants.OC) && nocConfig.getIntegrationType().equalsIgnoreCase(NocIntegrationTypeEnum.INTERNAL.toString())
+		if (nocConfig.getApplicationType().trim().equalsIgnoreCase(BpaConstants.OC) 
+				&& nocConfig.getIntegrationType().equalsIgnoreCase(NocIntegrationTypeEnum.INTERNAL.toString())
 				&& nocConfig.getIntegrationInitiation().equalsIgnoreCase(NocIntegrationInitiationEnum.MANUAL.toString())) {
 			List<User> nocUsers = new ArrayList<User>(userService.getUsersByTypeAndTenantId(UserType.BUSINESS, ApplicationThreadLocals.getTenantID()));
 			userList = nocUsers.stream()
@@ -220,12 +223,41 @@ public class OccupancyCertificateNocService {
 	public Map<String, String> getEdcrNocMandatory(final String edcrNumber){	
 		
 		EdcrApplicationInfo edcrPlanInfo = drcRestService.getDcrPlanInfo(edcrNumber, ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-	    Map<String, String> nocTypeMap = new HashMap<>();
-	        nocTypeMap.put(BpaConstants.FIREOCNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocFireDept());
-	        nocTypeMap.put(BpaConstants.AIRPORTOCNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocNearAirport());
-	        nocTypeMap.put(BpaConstants.NMAOCNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocNearMonument());
-	        nocTypeMap.put(BpaConstants.ENVOCNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocStateEnvImpact());
-	        nocTypeMap.put(BpaConstants.IRROCNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocIrrigationDept());
+	    Map<String, String> nocTypeMap = new HashMap<>();     
+        nocTypeMap.put(BpaConstants.FIRENOCTYPE, "NO");
+		nocTypeMap.put(BpaConstants.PACNOCTYPE, "NO");
+		nocTypeMap.put(BpaConstants.POLNOCTYPE, "NO");
+		nocTypeMap.put(BpaConstants.ACTAXNOCTYPE, "NO");
+		if(edcrPlanInfo.getPlan()!=null){ 
+			edcrPlanInfo.getPlan().getPlanInformation().setNocPACDept("NO");
+			edcrPlanInfo.getPlan().getPlanInformation().setNocFireDept("NO");
+			edcrPlanInfo.getPlan().getPlanInformation().setNocPollutionDept("NO");
+			edcrPlanInfo.getPlan().getPlanInformation().setNocAcTaxDept("NO");
+			if(null!=edcrPlanInfo.getPlan()) {
+				String boundaryType = "";
+				String plotType = "";
+				if(null != edcrPlanInfo.getPlan().getPlanInfoProperties().get(BpaConstants.ROOT_BOUNDARY_TYPE)) {
+					boundaryType = edcrPlanInfo.getPlan().getPlanInfoProperties().get(BpaConstants.ROOT_BOUNDARY_TYPE);
+				}
+				if(null != edcrPlanInfo.getPlan().getPlanInfoProperties().get(BpaConstants.PLOT_TYPE)) {
+					plotType = edcrPlanInfo.getPlan().getPlanInfoProperties().get(BpaConstants.PLOT_TYPE);
+				}
+				if(boundaryType.equalsIgnoreCase(BpaConstants.URBAN)) {
+					if(plotType.equalsIgnoreCase(BpaConstants.ABOVE_TWO_KANAL)) {
+						edcrPlanInfo.getPlan().getPlanInformation().setNocPACDept("YES");
+						edcrPlanInfo.getPlan().getPlanInformation().setNocFireDept("YES");
+						edcrPlanInfo.getPlan().getPlanInformation().setNocPollutionDept("YES");
+					}
+				}else if(boundaryType.equalsIgnoreCase(BpaConstants.RURAL)){
+					edcrPlanInfo.getPlan().getPlanInformation().setNocFireDept("YES");
+					edcrPlanInfo.getPlan().getPlanInformation().setNocAcTaxDept("YES");
+				}
+			}			
+			nocTypeMap.put(BpaConstants.FIRENOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocFireDept());
+			nocTypeMap.put(BpaConstants.PACNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPACDept());
+			nocTypeMap.put(BpaConstants.POLNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPollutionDept());
+			nocTypeMap.put(BpaConstants.ACTAXNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPollutionDept());
+	   }
 	   return nocTypeMap;
 	}
 }

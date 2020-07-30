@@ -391,7 +391,7 @@ public class BpaWorkFlowService {
 
 	public Position getApproverPositionOfElectionWardByCurrentStateForOC(final OccupancyCertificate oc,
 			final String currentState) {
-		WorkFlowMatrix wfMatrix = bpaUtils.getWfMatrixByCurrentState(oc.getStateType(), currentState, CREATE_ADDITIONAL_RULE_CREATE_OC);
+		WorkFlowMatrix wfMatrix = bpaUtils.getWfMatrixByCurrentState(oc.getStateType(), currentState, oc.getOccupancyCertificateType());
 		return bpaUtils.getUserPositionByZone(wfMatrix.getNextDesignation(),
 				bpaUtils.getBoundaryForWorkflow(oc.getParent().getSiteDetail().get(0)).getId());
 	}

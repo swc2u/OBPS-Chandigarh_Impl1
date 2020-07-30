@@ -184,7 +184,7 @@ public class CitizenNewOccupancyCertificateController extends BpaGenericApplicat
         Boolean onlinePaymentEnable = request.getParameter(ONLINE_PAYMENT_ENABLE) != null
                 && request.getParameter(ONLINE_PAYMENT_ENABLE)
                         .equalsIgnoreCase(TRUE) ? Boolean.TRUE : Boolean.FALSE;
-        final WorkFlowMatrix wfMatrix = bpaUtils.getWfMatrixByCurrentState(occupancyCertificate.getStateType(), WF_NEW_STATE, CREATE_ADDITIONAL_RULE_CREATE_OC);
+        final WorkFlowMatrix wfMatrix = bpaUtils.getWfMatrixByCurrentState(occupancyCertificate.getStateType(), WF_NEW_STATE, occupancyCertificate.getOccupancyCertificateType());
         if (wfMatrix != null)
             userPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
                     bpaUtils.getBoundaryForWorkflow(occupancyCertificate.getParent().getSiteDetail().get(0)).getId());

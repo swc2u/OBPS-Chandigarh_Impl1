@@ -51,6 +51,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.commons.cdg.CDGAdditionalService;
+
 public class Occupancy extends Measurement {
 
     private static final long serialVersionUID = 22L;
@@ -75,19 +77,19 @@ public class Occupancy extends Measurement {
     private Boolean isMezzanine = false;
 
     public void setExistingBuiltUpArea(BigDecimal existingBuiltUpArea) {
-        this.existingBuiltUpArea = existingBuiltUpArea;
+        this.existingBuiltUpArea = CDGAdditionalService.roundBigDecimal(existingBuiltUpArea);
     }
 
     public void setExistingFloorArea(BigDecimal existingFloorArea) {
-        this.existingFloorArea = existingFloorArea;
+        this.existingFloorArea = CDGAdditionalService.roundBigDecimal(existingFloorArea);
     }
 
     public void setExistingCarpetArea(BigDecimal existingCarpetArea) {
-        this.existingCarpetArea = existingCarpetArea;
+        this.existingCarpetArea = CDGAdditionalService.roundBigDecimal(existingCarpetArea);
     }
 
     public void setExistingDeduction(BigDecimal existingDeduction) {
-        this.existingDeduction = existingDeduction;
+        this.existingDeduction = CDGAdditionalService.roundBigDecimal(existingDeduction);
     }
 
     public BigDecimal getExistingBuiltUpArea() {
@@ -152,19 +154,19 @@ public class Occupancy extends Measurement {
     }
 
     public void setDeduction(BigDecimal deduction) {
-        this.deduction = deduction;
+        this.deduction = CDGAdditionalService.roundBigDecimal(deduction);
     }
 
     public void setBuiltUpArea(BigDecimal builtUpArea) {
-        this.builtUpArea = builtUpArea;
+        this.builtUpArea = CDGAdditionalService.roundBigDecimal(builtUpArea);
     }
 
     public void setFloorArea(BigDecimal floorArea) {
-        this.floorArea = floorArea;
+        this.floorArea = CDGAdditionalService.roundBigDecimal(floorArea);
     }
 
     public void setCarpetArea(BigDecimal carpetArea) {
-        this.carpetArea = carpetArea;
+        this.carpetArea = CDGAdditionalService.roundBigDecimal(carpetArea);
     }
 
     public BigDecimal getBuiltUpArea() {
@@ -183,7 +185,7 @@ public class Occupancy extends Measurement {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((typeHelper == null) ? 0 : typeHelper.hashCode());
+        result = prime * result + ((type == null) ? 0 : type.hashCode());
         return result;
     }
 
@@ -196,7 +198,7 @@ public class Occupancy extends Measurement {
         if (getClass() != obj.getClass())
             return false;
         Occupancy other = (Occupancy) obj;
-        if (!typeHelper.equals(other.typeHelper))
+        if (type != other.type)
             return false;
         return true;
     }

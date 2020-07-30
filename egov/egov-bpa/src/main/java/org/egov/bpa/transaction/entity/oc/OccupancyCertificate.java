@@ -134,6 +134,10 @@ public class OccupancyCertificate extends StateAware<Position> {
     @SafeHtml
     @Length(min = 1, max = 128)
     private String applicationType;
+    
+    @SafeHtml
+    @Length(min = 1, max = 128)
+    private String occupancyCertificateType;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "status")
@@ -686,4 +690,11 @@ public class OccupancyCertificate extends StateAware<Position> {
         this.additionalRejectReasonsTemp = additionalRejectReasonsTemp;
     }
 
+	public String getOccupancyCertificateType() {
+		return occupancyCertificateType;
+	}
+
+	public void setOccupancyCertificateType(String occupancyCertificateType) {
+		this.occupancyCertificateType = occupancyCertificateType;
+	}
 }

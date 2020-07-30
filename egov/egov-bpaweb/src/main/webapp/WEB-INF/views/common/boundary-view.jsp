@@ -57,16 +57,24 @@
 <div class="panel-body">
     <div class="form-group">
         <label class="col-sm-3 control-label text-right">
-            <spring:message code="lbl.circle"/>
+            <spring:message code="lbl.area.category"/>
         </label>
         <div class="col-sm-3 add-margin view-content">
-            <div class="text-center" id="circle"></div>
+            <div class="text-center" id="dvAreaCategory"></div>
         </div>
         <label class="col-sm-3 control-label text-right">
-            <spring:message code="lbl.reven.ward"/>
+            <spring:message code="lbl.zone.location"/>
         </label>
         <div class="col-sm-3 add-margin view-content">
-            <div class="text-center" id="revenueward"></div>
+            <div class="text-center" id="dvZoneOrLocation"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label text-right">
+            <spring:message code="lbl.sectors.villages"/>
+        </label>
+        <div class="col-sm-3 add-margin view-content">
+            <div class="text-center" id="dvSectorsOrVillages"></div>
         </div>
     </div>
 </div>
