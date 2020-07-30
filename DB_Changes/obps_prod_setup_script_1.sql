@@ -2948,3 +2948,6 @@ INSERT INTO chandigarh.egbpa_status (id,code,description,moduletype,isactive,"ve
 
 ALTER TABLE chandigarh.egbpa_occupancy_certificate ADD COLUMN occupancycertificatetype VARCHAR(128);
 
+update chandigarh.egp_portalservice set url='/edcr/occupancy-certificate/plan/submit' where code='New Occupancy Certificate Plan Scrutiny';
+update chandigarh.egp_portalservice set url='/edcr/occupancy-certificate/plan/resubmit' where code='Resubmit Occupancy Certificate Plan Scrutiny';
+update chandigarh.egp_portalservice set url='/bpa/application/citizen/occupancy-certificate/apply' where code='Apply For Occupancy Certificate';
