@@ -79,9 +79,9 @@ $(document).ready(
             '<th class="text-center dcr-floor-toggle-mandatory">Floor Description</th>'+
             '<th class="text-center dcr-floor-toggle-mandatory">Level</th>'+
             '<th class="text-center dcr-floor-toggle-mandatory">Occupancy/Sub Occupancy</th>'+
-            '<th class="text-center dcr-floor-toggle-mandatory">Builtup Area (m²)</th>'+
-            '<th class="text-center dcr-floor-toggle-mandatory">Floor Area (m²)</th>'+
-            '<th class="text-center dcr-floor-toggle-mandatory">Carpet Area (m²)</th>'+
+            '<th class="text-center dcr-floor-toggle-mandatory">Builtup Area</th>'+
+            '<th class="text-center dcr-floor-toggle-mandatory">Floor Area</th>'+
+            '<th class="text-center dcr-floor-toggle-mandatory">Carpet Area</th>'+
         '</tr></thead>';
 
         var tbody = '<tbody></tbody>';
@@ -109,17 +109,17 @@ $(document).ready(
         var otherBldgDetails = '<div class="edcrBuildingAreaDetails{{bldgIdx}}"><div class="form-group">' +
             '        <label' +
             '                class="col-sm-3 control-label text-right show-hide totalPlintArea">' +
-            '                Total Builtup Area (m²)<span class="mandatory"></span> </label> <label' +
+            '                Total Builtup Area<span class="mandatory"></span> </label> <label' +
             '            class="col-sm-3 control-label text-right show-hide demolition">' +
-            '            Demolition Area (m²)<span class="mandatory"></span> </label><label' +
+            '            Demolition Area<span class="mandatory"></span> </label><label' +
             '            class="col-sm-3 control-label text-right show-hide noofhutorshed">' +
-            '            Area of the Hut/Shed (m²) <span class="mandatory"></span> </label> <label' +
+            '            Area of the Hut/Shed <span class="mandatory"></span> </label> <label' +
             '            class="col-sm-3 control-label text-right show-hide alterationInArea">' +
-            '            Alteration/Change in Area (m²) <span class="mandatory"></span> </label> <label' +
+            '            Alteration/Change in Area <span class="mandatory"></span> </label> <label' +
             '            class="col-sm-3 control-label text-right show-hide additionInArea">' +
-            '            Addition or Extension in Area (m²) <span class="mandatory"></span> </label> <label' +
+            '            Addition or Extension in Area <span class="mandatory"></span> </label> <label' +
             '            class="col-sm-3 control-label text-right show-hide changeInOccupancyArea">' +
-            '            Change in Occupancy Area (m²) <span class="mandatory"></span>' +
+            '            Change in Occupancy Area <span class="mandatory"></span>' +
             '    </label>' +
             '        <div class="col-sm-3 add-margin">' +
             '            <input type="hidden" id="name" name="buildingDetail[{{bldgIdx}}].name"' +
@@ -154,7 +154,7 @@ $(document).ready(
             '    <div class="form-group">' +
             '        <label' +
             '                class="col-sm-3 control-label text-right heightFromGroundWithOutStairRoom{{bldgIdx}}">' +
-            '                Height From Ground Level without mumty (In Mtrs)<span class="mandatory"></span></label>' +
+            '                Height From Ground Level without mumty <span class="mandatory"></span></label>' +
             '        <div class="col-sm-3 add-margin">' +
             '            <input type="hidden" id="setHeightFromGroundWithOutStairRoom{{bldgIdx}}"' +
             '                   name="buildingDetail[{{bldgIdx}}].heightFromGroundWithOutStairRoom"' +
@@ -166,51 +166,6 @@ $(document).ready(
             '                    name="buildingDetailFromEdcr[{{bldgIdx}}].heightFromGroundWithOutStairRoom"' +
             '                    value="{{height}}" disabled="true"/>' +
             '        </div>' +
-      /*      '        <label' +
-            '                class="col-sm-2 control-label text-right heightFromGroundWithStairRoom{{bldgIdx}}">' +
-            '                Height From Ground Level with stair Room (In Mtrs)</label>' +
-            '        <div class="col-sm-3 add-margin">' +
-            '            <input type="hidden" id="setHeightFromGroundWithStairRoom{{bldgIdx}}"' +
-            '                   name="buildingDetail[{{bldgIdx}}].heightFromGroundWithStairRoom"' +
-            '                   value="{{height}}">' +
-            '            <input' +
-            '                    class="form-control patternvalidation dcr-reset-values decimalfixed heightFromGroundWithStairRoom{{bldgIdx}}"' +
-            '                    maxlength="6" data-pattern="decimalvalue"' +
-            '                    id="heightFromGroundWithStairRoomFromEdcr{{bldgIdx}}"' +
-            '                    name="buildingDetailFromEdcr[{{bldgIdx}}].heightFromGroundWithStairRoom"' +
-            '                    value="{{height}}"/>' +
-            '        </div>' +
-            '    </div>' +
-            '    <div class="form-group">' +
-            '        <label' +
-            '                class="col-sm-3 control-label text-right fromStreetLevelWithOutStairRoom{{bldgIdx}}">' +
-            '                Height From Street Level without stair Room (In Mtrs)</label>' +
-            '        <div class="col-sm-3 add-margin">' +
-            '            <input type="hidden" id="setFromStreetLevelWithOutStairRoom{{bldgIdx}}"' +
-            '                   name="buildingDetail[{{bldgIdx}}].fromStreetLevelWithOutStairRoom"' +
-            '                   value="{{height}}">' +
-            '            <input' +
-            '                    class="form-control patternvalidation dcr-reset-values decimalfixed fromStreetLevelWithOutStairRoom{{bldgIdx}}"' +
-            '                    maxlength="6" data-pattern="decimalvalue"' +
-            '                    id="fromStreetLevelWithOutStairRoomFromEdcr{{bldgIdx}}"' +
-            '                    name="buildingDetailFromEdcr[{{bldgIdx}}].fromStreetLevelWithOutStairRoom"' +
-            '                    value="{{height}}"/>' +
-            '        </div>' +
-            '        <label' +
-            '                class="col-sm-2 control-label text-right fromStreetLevelWithStairRoom">' +
-            '                Height From Street Level with stair Room (In Mtrs)</label>' +
-            '        <div class="col-sm-3 add-margin">' +
-            '            <input type="hidden" id="setFromStreetLevelWithStairRoom{{bldgIdx}}"' +
-            '                   name="buildingDetail[{{bldgIdx}}].fromStreetLevelWithStairRoom"' +
-            '                   value="{{height}}">' +
-            '            <input' +
-            '                    class="form-control patternvalidation dcr-reset-values decimalfixed fromStreetLevelWithStairRoom{{bldgIdx}}"' +
-            '                    maxlength="6" data-pattern="decimalvalue"' +
-            '                    id="fromStreetLevelWithStairRoomFromEdcr{{bldgIdx}}"' +
-            '                    name="buildingDetailFromEdcr[{{bldgIdx}}].fromStreetLevelWithStairRoom"' +
-            '                    value="{{height}}"/>' +
-            '        </div>' +
-            '    </div>' +    */
             '    </div>';
 
 
@@ -257,9 +212,9 @@ $(document).ready(
                 'floorNo': floorNo,
                 'occupancyId': occupancyId,
                 'occupancyDesc': occupancyDesc,
-                'plinthArea': builtupArea.toFixed(2),
-                'floorArea': floorArea.toFixed(2),
-                'carpetArea': carpetArea.toFixed(2)
+                'plinthArea': convertSqInchToSqFt(builtupArea.toFixed(2)),
+                'floorArea': convertSqInchToSqFt(floorArea.toFixed(2)),
+                'carpetArea': convertSqInchToSqFt(carpetArea.toFixed(2))
             };
             addNewRowFromObject(rowJsonObj);
             setDCRFloorCount();
@@ -289,8 +244,8 @@ $(document).ready(
                         'bldgIdx': blockIdx,
                         'name': block.name,
                         'number': block.number,
-                        'height': block.building.buildingHeight,
-                        'totalPlinthArea':block.building.totalBuitUpArea,
+                        'height': convertInchToFt(block.building.buildingHeight),
+                        'totalPlinthArea':convertSqInchToSqFt(block.building.totalBuitUpArea),
                         'floorCount':block.building.floorsAboveGround
                     };
                     addOtherProposedBldgDtls(otherProposedBldgDtls, blockIdx, planDetail.blocks.length);
@@ -321,20 +276,6 @@ $(document).ready(
 
         }
         
-        /*$( "#applicationType" ).change(function() {
-            $( "#applicationType option:selected" ).each(function() {
-               var str = $(this).text();
-               if(str == "Below two Kanal"){
-            	   $('#noc-document-tab-link').hide();
-               	   $('#noc-document-info').hide();
-               }else{
-            	   $('#noc-document-tab-link').removeAttr("style");
-               	   $('#noc-document-info').removeAttr("style");
-               }
-            });
-        });*/
-
-
         // Will Auto Populate existing building details
         function setExistingBuildingDetailFromEdcrs(planDetail) {
             var blockIdx = 0;
@@ -348,7 +289,7 @@ $(document).ready(
                         'bldgIdx': blockIdx,
                         'name': block.name,
                         'number': block.number,
-                        'totalPlinthArea':block.building.totalExistingBuiltUpArea
+                        'totalPlinthArea':convertSqInchToSqFt(block.building.totalExistingBuiltUpArea)
                     };
                     addOtherExistBldgDtls(otherExistBldgDtls, blockIdx, planDetail.blocks.length);
                     blockIdx++;
@@ -501,9 +442,9 @@ $(document).ready(
                 'floorNo': floorNo,
                 'occupancyId': occupancyId,
                 'occupancyDesc': occupancyDesc,
-                'plinthArea': builtupArea,
-                'floorArea': floorArea,
-                'carpetArea': carpetArea
+                'plinthArea': convertSqInchToSqFt(builtupArea),
+                'floorArea': convertSqInchToSqFt(floorArea),
+                'carpetArea': convertSqInchToSqFt(carpetArea)
             };
             addNewRowFromObject1(rowJsonObj);
             setDCRFloorCount();
@@ -656,6 +597,18 @@ $(document).ready(
                             $('#eDcrNumber').val('');
                             resetDCRPopulatedValues();
                         } else {
+                        	
+                        	var uom = "meter";
+                        	if(response.plan.drawingPreference.uom == "feet"){
+                        		uom = "feet";
+                        		$('#drawPref').html("All dimensions are in feet or square feet.");
+                        	}else{
+                        		$('#drawPref').html("All dimensions are in metre or square metre.");
+                        	}
+                        	
+                        	$('#drawPreference').val(uom);
+                        	$('#drawingPreference').val(uom);
+                        	
                             if ($('#loadingFloorDetailsFromEdcrRequire').val() === 'true' && $('#mode').val() && $('#mode').val() === 'new')
                                 resetDCRPopulatedValues();
                             $('#edcrApplicationNumber').html(response.applicationNumber);
@@ -1081,4 +1034,26 @@ function checkEdcrExpiry() {
         }
     });
     return isExpired;
+}
+
+function convertSqInchToSqFt(val){
+	var uom = $('#drawPreference').val();
+	if(val>0){
+		if(uom=="feet"){
+			return (val / 144).toFixed(2);
+		}		 
+	}
+	
+	return val;
+}
+
+function convertInchToFt(val){
+	var uom = $('#drawPreference').val();
+	if(val>0){
+		if(uom=="feet"){
+			return (val / 12).toFixed(2);
+		}		 
+	}
+	
+	return val;
 }

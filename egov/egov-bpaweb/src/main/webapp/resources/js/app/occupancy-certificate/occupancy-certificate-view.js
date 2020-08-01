@@ -66,6 +66,13 @@ jQuery(document)
 						$('#myModal').modal('show');
 					}
 					
+					var uom = $('#drawingPreference').val();
+					if(uom == "feet"){
+                		$('#drawPref').html("All dimensions are in feet or square feet.");
+                	}else{
+                		$('#drawPref').html("All dimensions are in metre or square metre.");
+                	}
+					
 					$("#occupancyCertificateUpdateForm").validate({
 						highlight : function(element, errorClass) {
 							$(element).fadeOut(function() {

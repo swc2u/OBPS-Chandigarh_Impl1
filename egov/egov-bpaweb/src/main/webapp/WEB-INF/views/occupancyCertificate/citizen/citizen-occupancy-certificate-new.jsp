@@ -87,6 +87,10 @@
 				value="${isEDCRIntegrationRequire}" />
 			<input type="hidden" id="loadingFloorDetailsFromEdcrRequire"
 				value="${loadingFloorDetailsFromEdcrRequire}" />
+			<form:hidden path="drawingPreference" id="drawingPreference" name="drawingPreference" />
+			<div class="text-right text-info view-content col-sm-12" style="font-size: 14px;color: #e4841b;">
+			    <span id="drawPref"></span>
+			</div>
 			<ul class="nav nav-tabs" id="settingstab">
 				<li class="active"><a data-toggle="tab"
 					href="#application-info" data-tabidx=0><spring:message

@@ -69,6 +69,7 @@
 			modelAttribute="bpaApplication" id="newCitizenApplicationform"
 			cssClass="form-horizontal form-groups-bordered"
 			enctype="multipart/form-data">
+			<input type="hidden" id="drawPreference" name="drawPreference" value="meter" />
 			<input type="hidden" id="bpaApplication" name="bpaApplication"
 				value="${bpaApplication.id}" />
 			<input type="hidden" id="noJAORSAMessage" name="noJAORSAMessage"
@@ -102,8 +103,10 @@
 			<input type="hidden" id="stakeHolderType" value="${stakeHolderType}" />
 			<input type="hidden" id="permitApplnFeeRequired"
 				value="${permitApplnFeeRequired}" />
-
-
+			<form:hidden path="drawingPreference" id="drawingPreference" name="drawingPreference" />
+			<div class="text-right text-info view-content col-sm-12" style="font-size: 14px;color: #e4841b;">
+			    <span id="drawPref"></span>
+			</div>
 			<ul class="nav nav-tabs" id="settingstab">
 				<li class="active"><a data-toggle="tab"
 					href="#appliccation-info" data-tabidx=0><spring:message
@@ -328,7 +331,7 @@
 	<input type="hidden" id="sendToCtzAccept"
 		value="<spring:message code='msg.confirm.send.ctzn.accept' />" />
 	<c:set var="currentuser" value="${currentuser}" />
-
+	
 </div>
 
 <link rel="stylesheet" href="<c:url value='/resources/global/css/bts/bts-tagsinput.css?rnd=${app_release_no}' context='/egi'/>">

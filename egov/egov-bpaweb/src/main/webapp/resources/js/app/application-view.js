@@ -65,7 +65,14 @@ jQuery(document)
                         	$('#appmntInspnRemarksModal').html($('#appmntInspnRemarks').val());
 						$('#myModal').modal('show');
 					}
-
+					
+					var uom = $('#drawingPreference').val();
+					if(uom == "feet"){
+                		$('#drawPref').html("All dimensions are in feet or square feet.");
+                	}else{
+                		$('#drawPref').html("All dimensions are in metre or square metre.");
+                	}
+					
                     // start -- update checked true for saved permit conditions
 					var savedPermitCondn = $("#persistedPermitConditions")
 							.val();

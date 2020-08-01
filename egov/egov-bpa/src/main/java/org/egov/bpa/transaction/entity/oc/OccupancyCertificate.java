@@ -180,6 +180,8 @@ public class OccupancyCertificate extends StateAware<Position> {
     private Boolean isTownSurveyorInspectionRequire = false;
 
     private Boolean isLPRequestInitiated;
+    
+    private String drawingPreference;
 
     @NotNull
     private BigDecimal extentInSqmts = BigDecimal.ZERO;
@@ -696,5 +698,13 @@ public class OccupancyCertificate extends StateAware<Position> {
 
 	public void setOccupancyCertificateType(String occupancyCertificateType) {
 		this.occupancyCertificateType = occupancyCertificateType;
+	}
+	
+	public String getDrawingPreference() {
+		return drawingPreference;
+	}
+
+	public void setDrawingPreference(String drawingPreference) {
+		this.drawingPreference = drawingPreference;
 	}
 }

@@ -2949,3 +2949,6 @@ ALTER TABLE chandigarh.egbpa_occupancy_certificate ADD COLUMN occupancycertifica
 update chandigarh.egp_portalservice set url='/edcr/occupancy-certificate/plan/submit' where code='New Occupancy Certificate Plan Scrutiny';
 update chandigarh.egp_portalservice set url='/edcr/occupancy-certificate/plan/resubmit' where code='Resubmit Occupancy Certificate Plan Scrutiny';
 update chandigarh.egp_portalservice set url='/bpa/application/citizen/occupancy-certificate/apply' where code='Apply For Occupancy Certificate';
+
+ALTER TABLE chandigarh.egbpa_application ADD COLUMN drawingpreference VARCHAR(10);
+ALTER TABLE chandigarh.egbpa_occupancy_certificate ADD COLUMN drawingpreference VARCHAR(10);

@@ -256,7 +256,7 @@ public class OccupancyCertificateNocService {
 			nocTypeMap.put(BpaConstants.FIRENOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocFireDept());
 			nocTypeMap.put(BpaConstants.PACNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPACDept());
 			nocTypeMap.put(BpaConstants.POLNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPollutionDept());
-			nocTypeMap.put(BpaConstants.ACTAXNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPollutionDept());
+			nocTypeMap.put(BpaConstants.ACTAXNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocAcTaxDept());
 	   }
 	   return nocTypeMap;
 	}

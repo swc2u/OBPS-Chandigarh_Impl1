@@ -71,7 +71,10 @@
 				value="${occupancyCertificate.status.code}">
 			<input type="hidden" id="serviceTypeCode"
 				value="${occupancyCertificate.parent.serviceType.code}" />
-
+			<input type="hidden" id="drawingPreference" value="${occupancyCertificate.drawingPreference}">
+			<div class="text-right text-info view-content col-sm-12" style="font-size: 14px;color: #e4841b;">
+			    <span id="drawPref"></span>
+			</div>
 			<ul class="nav nav-tabs" id="settingstab">
 				<li class="active"><a data-toggle="tab"
 					href="#application-info" data-tabidx=0><spring:message

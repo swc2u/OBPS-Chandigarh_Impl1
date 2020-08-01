@@ -109,9 +109,8 @@ public class NocStatusService {
         List<OccupancyNocApplication> ocNoc = ocNocService.findByOCApplicationNumber(oc.getApplicationNumber());
         for (OCNocDocuments nocDocument : oc.getNocDocuments()) {
         	String code = nocDocument.getNocDocument().getServiceChecklist().getChecklist().getCode();
-        	if (WF_BA_CHECK_NOC_UPDATION.equalsIgnoreCase(pendingAction)
-	                && (APPLICATION_STATUS_DOC_REVIEWED.equalsIgnoreCase(currentStatus)
-	                		|| APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(currentStatus))) {
+        	if (FORWARDED_TO_NOC_UPDATE.equalsIgnoreCase(pendingAction)
+	                && APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(currentStatus)) {
 				for (OccupancyNocApplication ocNocApp : ocNoc) {
 		        	if(ocNocApp.getBpaNocApplication().getNocType().equals(code)) {
 		        		if(ocNocApp.getBpaNocApplication().getStatus().getCode().equals(BpaConstants.NOC_APPROVED) || ocNocApp.getBpaNocApplication().getStatus().getCode().equals(BpaConstants.NOC_DEEMED_APPROVED))

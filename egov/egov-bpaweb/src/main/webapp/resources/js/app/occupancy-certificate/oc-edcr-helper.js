@@ -73,9 +73,9 @@ $(document).ready(
             '<th class="text-center dcr-floor-toggle-mandatory">Floor Description</th>'+
             '<th class="text-center dcr-floor-toggle-mandatory">Level</th>'+
             '<th class="text-center dcr-floor-toggle-mandatory">Occupancy</th>'+
-            '<th class="text-center dcr-floor-toggle-mandatory">Builtup Area (m²)</th>'+
-            '<th class="text-center dcr-floor-toggle-mandatory">Floor Area (m²)</th>'+
-            '<th class="text-center dcr-floor-toggle-mandatory">Carpet Area (m²)</th>'+
+            '<th class="text-center dcr-floor-toggle-mandatory">Builtup Area</th>'+
+            '<th class="text-center dcr-floor-toggle-mandatory">Floor Area</th>'+
+            '<th class="text-center dcr-floor-toggle-mandatory">Carpet Area</th>'+
         '</tr></thead>';
 
         var tbody = '<tbody></tbody>';
@@ -103,17 +103,17 @@ $(document).ready(
         var otherBldgDetails = '<div class="edcrBuildingAreaDetails{{bldgIdx}}"><div class="form-group">' +
             '        <label' +
             '                class="col-sm-3 control-label text-right show-hide totalPlintArea">' +
-            '                Total Builtup Area (m²)<span class="mandatory"></span> </label> <label' +
+            '                Total Builtup Area<span class="mandatory"></span> </label> <label' +
             '            class="col-sm-3 control-label text-right show-hide demolition">' +
-            '            Demolition Area (m²)<span class="mandatory"></span> </label><label' +
+            '            Demolition Area<span class="mandatory"></span> </label><label' +
             '            class="col-sm-3 control-label text-right show-hide noofhutorshed">' +
-            '            Area of the Hut/Shed (m²) <span class="mandatory"></span> </label> <label' +
+            '            Area of the Hut/Shed <span class="mandatory"></span> </label> <label' +
             '            class="col-sm-3 control-label text-right show-hide alterationInArea">' +
-            '            Alteration/Change in Area (m²) <span class="mandatory"></span> </label> <label' +
+            '            Alteration/Change in Area <span class="mandatory"></span> </label> <label' +
             '            class="col-sm-3 control-label text-right show-hide additionInArea">' +
-            '            Addition or Extension in Area (m²) <span class="mandatory"></span> </label> <label' +
+            '            Addition or Extension in Area <span class="mandatory"></span> </label> <label' +
             '            class="col-sm-3 control-label text-right show-hide changeInOccupancyArea">' +
-            '            Change in Occupancy Area (m²) <span class="mandatory"></span>' +
+            '            Change in Occupancy Area <span class="mandatory"></span>' +
             '    </label>' +
             '        <div class="col-sm-3 add-margin">' +
             '            <input type="hidden" id="name" name="buildingDetail[{{bldgIdx}}].name"' +
@@ -160,50 +160,7 @@ $(document).ready(
             '                    name="buildingDetailFromEdcr[{{bldgIdx}}].heightFromGroundWithOutStairRoom"' +
             '                    value="{{height}}" disabled="true"/>' +
             '        </div>' +
-            /*'        <label' +
-            '                class="col-sm-2 control-label text-right heightFromGroundWithStairRoom{{bldgIdx}}">' +
-            '                Height From Ground Level with stair Room (In Mtrs)</label>' +
-            '        <div class="col-sm-3 add-margin">' +
-            '            <input type="hidden" id="setHeightFromGroundWithStairRoom{{bldgIdx}}"' +
-            '                   name="buildingDetail[{{bldgIdx}}].heightFromGroundWithStairRoom"' +
-            '                   value="{{height}}">' +
-            '            <input' +
-            '                    class="form-control patternvalidation dcr-reset-values decimalfixed heightFromGroundWithStairRoom{{bldgIdx}}"' +
-            '                    maxlength="6" data-pattern="decimalvalue"' +
-            '                    id="heightFromGroundWithStairRoomFromEdcr{{bldgIdx}}"' +
-            '                    name="buildingDetailFromEdcr[{{bldgIdx}}].heightFromGroundWithStairRoom"' +
-            '                    value="{{height}}"/>' +
-            '        </div>' +*/
             '    </div>' +
-           /* '    <div class="form-group">' +
-            '        <label' +
-            '                class="col-sm-3 control-label text-right fromStreetLevelWithOutStairRoom{{bldgIdx}}">' +
-            '                Height From Street Level without stair Room (In Mtrs)</label>' +
-            '        <div class="col-sm-3 add-margin">' +
-            '            <input type="hidden" id="setFromStreetLevelWithOutStairRoom{{bldgIdx}}"' +
-            '                   name="buildingDetail[{{bldgIdx}}].fromStreetLevelWithOutStairRoom"' +
-            '                   value="{{height}}">' +
-            '            <input' +
-            '                    class="form-control patternvalidation dcr-reset-values decimalfixed fromStreetLevelWithOutStairRoom{{bldgIdx}}"' +
-            '                    maxlength="6" data-pattern="decimalvalue"' +
-            '                    id="fromStreetLevelWithOutStairRoomFromEdcr{{bldgIdx}}"' +
-            '                    name="buildingDetailFromEdcr[{{bldgIdx}}].fromStreetLevelWithOutStairRoom"' +
-            '                    value="{{height}}"/>' +
-            '        </div>' +
-            '        <label' +
-            '                class="col-sm-2 control-label text-right fromStreetLevelWithStairRoom">' +
-            '                Height From Street Level with stair Room (In Mtrs)</label>' +
-            '        <div class="col-sm-3 add-margin">' +
-            '            <input type="hidden" id="setFromStreetLevelWithStairRoom{{bldgIdx}}"' +
-            '                   name="buildingDetail[{{bldgIdx}}].fromStreetLevelWithStairRoom"' +
-            '                   value="{{height}}">' +
-            '            <input' +
-            '                    class="form-control patternvalidation dcr-reset-values decimalfixed fromStreetLevelWithStairRoom{{bldgIdx}}"' +
-            '                    maxlength="6" data-pattern="decimalvalue"' +
-            '                    id="fromStreetLevelWithStairRoomFromEdcr{{bldgIdx}}"' +
-            '                    name="buildingDetailFromEdcr[{{bldgIdx}}].fromStreetLevelWithStairRoom"' +
-            '                    value="{{height}}"/>' +
-            '        </div>' +*/
             '    </div>' +
             '    </div>';
 
@@ -251,9 +208,9 @@ $(document).ready(
                 'floorNo': floorNo,
                 'occupancyId': occupancyId,
                 'occupancyDesc': occupancyDesc,
-                'plinthArea': builtupArea.toFixed(2),
-                'floorArea': floorArea.toFixed(2),
-                'carpetArea': carpetArea.toFixed(2)
+                'plinthArea': convertSqInchToSqFt(builtupArea.toFixed(2)),
+                'floorArea': convertSqInchToSqFt(floorArea.toFixed(2)),
+                'carpetArea': convertSqInchToSqFt(carpetArea.toFixed(2))
             };
             addNewRowFromObject(rowJsonObj);
             setDCRFloorCount();
@@ -279,8 +236,8 @@ $(document).ready(
                         'bldgIdx': blockIdx,
                         'name': block.name,
                         'number': block.number,
-                        'height': block.building.buildingHeight,
-                        'totalPlinthArea':block.building.totalBuitUpArea.toFixed(2),
+                        'height': convertInchToFt(block.building.buildingHeight),
+                        'totalPlinthArea':convertSqInchToSqFt(block.building.totalBuitUpArea.toFixed(2)),
                         'floorCount':block.building.floorsAboveGround
                     };
                     addOtherProposedBldgDtls(otherProposedBldgDtls, blockIdx, planDetail.blocks.length);
@@ -303,7 +260,7 @@ $(document).ready(
                         'bldgIdx': blockIdx,
                         'name': block.name,
                         'number': block.number,
-                        'totalPlinthArea':block.building.totalExistingBuiltUpArea
+                        'totalPlinthArea':convertSqInchToSqFt(block.building.totalExistingBuiltUpArea)
                     };
                     addOtherExistBldgDtls(otherExistBldgDtls, blockIdx, planDetail.blocks.length);
                     blockIdx++;
@@ -456,9 +413,9 @@ $(document).ready(
                 'floorNo': floorNo,
                 'occupancyId': occupancyId,
                 'occupancyDesc': occupancyDesc,
-                'plinthArea': builtupArea,
-                'floorArea': floorArea,
-                'carpetArea': carpetArea
+                'plinthArea': convertSqInchToSqFt(builtupArea),
+                'floorArea': convertSqInchToSqFt(floorArea),
+                'carpetArea': convertSqInchToSqFt(carpetArea)
             };
             addNewRowFromObject1(rowJsonObj);
             setDCRFloorCount();
@@ -508,8 +465,17 @@ $(document).ready(
                     		//Get application type and set to application
                             var boundaryType = response.plan.planInfoProperties.ROOT_BOUNDARY_TYPE;
                             var plotType = response.plan.planInfoProperties.PLOT_TYPE;
-                            getApplicationType(plotType, boundaryType);                            
+                            getApplicationType(plotType, boundaryType);
                     	}
+                    	var uom = "meter";
+                    	if(response.plan.drawingPreference.uom == "feet"){
+                    		uom = "feet";
+                    		$('#drawPref').html("All dimensions are in feet or square feet.");
+                    	}else{
+                    		$('#drawPref').html("All dimensions are in metre or square metre.");
+                    	}
+                    	$('#drawingPreference').val(uom);
+                    	
                     	// Citizen only can submit for single family plans
                     	var isSingleFamily = false;
                     	if(response.plan.blocks.length > 0 && response.occupancy === 'Residential' 
@@ -636,143 +602,16 @@ $(document).ready(
     
           //to update noc document is required
             function updateNocRequired(planInformation){
-            	if(planInformation.nocIrrigationDept === 'YES'){
-            		$('#APPROVED_IDA_OCNOC').attr('disabled',true);
-                	$('#REJECTED_IDA_OCNOC').attr('disabled',true);
-                    $('span.mandatory._IDA_OCNOC').show();
-                    if($('button.btn_IDA_OCNOC').length==1){
-                    	if($('#nocStatusUpdated').val() == "false" && $('#citizenOrBusinessUser').val() == "false" && (($('#isOcApplFeeReq').val() =="NO" && $('#applicationNo').val()!="")||
-                    			($('#isOcApplFeeReq').val() =="YES" && $('#ocApplFeeCollected').val()=="YES"))){ 
-                    		$('th.thbtn').show();
-    	                    $('td.tdbtn').show();
-                    	}else{
-                    		$('th.thbtn').hide();
-    	                    $('td.tdbtn').hide();
-                    	}
-                    }else if($('input.hidden_IDA_OCNOC').val() != 'initiated'){
-                    	$('div._IDA_OCNOC').attr('required','required');
-                    	$('div.divfv_IDA_OCNOC').show();
-                    }
-                    if($('#nocAppl').length > 0)
-                    {
-                    	$('th.thstatus').show();
-                        $('td.tdstatus').show();    
-                        $('th.thsla').show();
-                        $('td.tdsla').show(); 
-                        $('th.thda').show();
-                        $('td.tdda').show(); 
-                    }
-            	}
-            	if(planInformation.nocNearMonument === 'YES'){
-            		$('#APPROVED_NMA_OCNOC').attr('disabled',true);
-                	$('#REJECTED_NMA_OCNOC').attr('disabled',true);
-                    $('span.mandatory._NMA_OCNOC').show();
-                    if($('button.btn_NMA_OCNOC').length==1){
-                    	if($('#nocStatusUpdated').val() == "false" &&  $('#citizenOrBusinessUser').val() == "false" && (($('#isOcApplFeeReq').val() =="NO" && $('#applicationNo').val()!="")||
-                    			($('#isOcApplFeeReq').val() =="YES" && $('#ocApplFeeCollected').val()=="YES"))){
-                    		$('th.thbtn').show();
-    	                    $('td.tdbtn').show();
-                    	}else{
-                    		$('th.thbtn').hide();
-    	                    $('td.tdbtn').hide();
-                    	}
-                    }else if($('input.hidden_NMA_OCNOC').val() != 'initiated'){
-                    	$('div._NMA_OCNOC').attr('required','required');
-                    	$('div.divfv_NMA_OCNOC').show();
-                    }
-                    if($('#nocAppl').length > 0)
-                    {
-                    	$('th.thstatus').show();
-                        $('td.tdstatus').show(); 
-                        $('th.thsla').show();
-                        $('td.tdsla').show(); 
-                        $('th.thda').show();
-                        $('td.tdda').show(); 
-                    }
-            	}
-                if(planInformation.nocNearAirport === 'YES'){
-                	$('#APPROVED_AAI_OCNOC').attr('disabled',true);
-                	$('#REJECTED_AAI_OCNOC').attr('disabled',true);
-                    $('span.mandatory._AAI_OCNOC').show();
-                    if($('button.btn_AAI_OCNOC').length==1){
-                    	if($('#nocStatusUpdated').val() == "false" && $('#citizenOrBusinessUser').val() == "false" && (($('#isOcApplFeeReq').val() =="NO" && $('#applicationNo').val()!="")||
-                    			($('#isOcApplFeeReq').val() =="YES" && $('#ocApplFeeCollected').val()=="YES"))){
-                    		$('th.thbtn').show();
-    	                    $('td.tdbtn').show();
-                    	}else{
-                    		$('th.thbtn').hide();
-    	                    $('td.tdbtn').hide();
-                    	}
-                    }else if($('input.hidden_AAI_OCNOC').val() != 'initiated'){
-                    	$('div._AAI_OCNOC').attr('required','required');
-                    	$('div.divfv_AAI_OCNOC').show();
-                    }
-                    if($('#nocAppl').length > 0)
-                    {
-                    	$('th.thstatus').show();
-                        $('td.tdstatus').show();
-                        $('th.thsla').show();
-                        $('td.tdsla').show(); 
-                        $('th.thda').show();
-                        $('td.tdda').show(); 
-                    }
+            	if($('#nocAppl').length > 0)
+                {
+                	$('th.thstatus').show();
+                    $('td.tdstatus').show();  
+                    $('th.thsla').show();
+                    $('td.tdsla').show(); 
+                    $('th.thda').show();
+                    $('td.tdda').show(); 
                 }
-                if(planInformation.nocFireDept === 'YES'){
-                	$('#APPROVED_FIRE_OCNOC').attr('disabled',true);
-                	$('#REJECTED_FIRE_OCNOC').attr('disabled',true);
-
-                    $('span.mandatory._FIRE_OCNOC').show();
-                    if($('button.btn_FIRE_OCNOC').length==1){
-                    	if($('#nocStatusUpdated').val() == "false" && $('#citizenOrBusinessUser').val() == "false" && (($('#isOcApplFeeReq').val() =="NO" && $('#applicationNo').val()!="")||
-                    			($('#isOcApplFeeReq').val() =="YES" && $('#ocApplFeeCollected').val()=="YES"))){
-                    		$('th.thbtn').show();
-    	                    $('td.tdbtn').show();
-                    	}else{
-                    		$('th.thbtn').hide();
-    	                    $('td.tdbtn').hide();
-                    	}
-                    }else if($('input.hidden_FIRE_OCNOC').val() != 'initiated'){
-                    	$('div._FIRE_OCNOC').attr('required','required');
-                    	$('div.divfv_FIRE_OCNOC').show();
-                    }
-                    
-                    if($('#nocAppl').length > 0)
-                    {
-                    	$('th.thstatus').show();
-                        $('td.tdstatus').show();  
-                        $('th.thsla').show();
-                        $('td.tdsla').show(); 
-                        $('th.thda').show();
-                        $('td.tdda').show(); 
-                    }
-                }
-                if(planInformation.nocStateEnvImpact === 'YES'){
-                	$('#APPROVED_MOEF_OCNOC').attr('disabled',true);
-                	$('#REJECTED_MOEF_OCNOC').attr('disabled',true);
-                	$('span.mandatory._MOEF_OCNOC').show();
-                	if($('button.btn_MOEF_OCNOC').length==1){
-                    	if($('#nocStatusUpdated').val() == "false" && $('#citizenOrBusinessUser').val() == "false" && (($('#isOcApplFeeReq').val() =="NO" && $('#applicationNo').val()!="")||
-                    			($('#isOcApplFeeReq').val() =="YES" && $('#ocApplFeeCollected').val()=="YES"))){
-                    		$('th.thbtn').show();
-    	                    $('td.tdbtn').show();
-                    	}else{
-                    		$('th.thbtn').hide();
-    	                    $('td.tdbtn').hide();
-                    	}
-                    }else if($('input.hidden_MOEF_OCNOC').val() != 'initiated'){
-                    	$('div._MOEF_OCNOC').attr('required','required');
-                    	$('div.divfv_MOEF_OCNOC').show();
-                    }
-                	if($('#nocAppl').length > 0)
-                    {
-                    	$('th.thstatus').show();
-                        $('td.tdstatus').show(); 
-                        $('th.thsla').show();
-                        $('td.tdsla').show();
-                        $('th.thda').show();
-                        $('td.tdda').show(); 
-                    }
-                }
+            	return;
             }
 
         // Auto populate system generated plan scrutiny checklist documents
@@ -1075,3 +914,24 @@ function checkDCRIsUsedWithAnyOccupancyCertificateAppln() {
 }
 
 
+function convertSqInchToSqFt(val){
+	var uom = $('#drawingPreference').val();
+	if(val>0){
+		if(uom=="feet"){
+			return (val / 144).toFixed(2);
+		}		 
+	}
+	
+	return val;
+}
+
+function convertInchToFt(val){
+	var uom = $('#drawingPreference').val();
+	if(val>0){
+		if(uom=="feet"){
+			return (val / 12).toFixed(2);
+		}		 
+	}
+	
+	return val;
+}

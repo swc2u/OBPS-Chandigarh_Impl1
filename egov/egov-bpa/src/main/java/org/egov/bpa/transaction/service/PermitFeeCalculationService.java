@@ -898,8 +898,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		} else if (plan.getDrawingPreference().getInFeets()) {
 			for (BuildingDetail building : buildingDetails) {
 				for (ApplicationFloorDetail floor : building.getApplicationFloorDetails()) {
-					totalAmount = totalAmount.add(floor.getFloorArea().divide(SQINCH_SQFT_DIVIDER).multiply(multiplier)
-							.setScale(2, BigDecimal.ROUND_UP));
+					totalAmount = totalAmount.add(floor.getFloorArea().multiply(multiplier).setScale(2, BigDecimal.ROUND_UP));
 				}
 			}
 		}
@@ -1004,8 +1003,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			} else if (plan.getDrawingPreference().getInFeets()) {
 				for (BuildingDetail building : buildingDetails) {
 					for (ApplicationFloorDetail floor : building.getApplicationFloorDetails()) {
-						estimatedAmount = estimatedAmount.add(floor.getFloorArea().divide(SQINCH_SQFT_DIVIDER)
-								.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+						estimatedAmount = estimatedAmount.add(floor.getFloorArea().multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
 					}
 				}
 			}
@@ -1036,7 +1034,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										.map(overhang -> overhang.getArea()).collect(Collectors.toList());
 								BigDecimal totalCajjaArea = areas.stream().filter(Objects::nonNull)
 										.reduce(BigDecimal.ZERO, BigDecimal::add);
-								estimatedAmount = estimatedAmount.add(totalCajjaArea.divide(SQINCH_SQFT_DIVIDER)
+								estimatedAmount = estimatedAmount.add(totalCajjaArea.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP)
 										.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
 							}
 						}
@@ -1097,9 +1095,9 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 		BigDecimal plotSizeInSQF = plan.getPlot().getArea();
 		if (plan.getDrawingPreference().getInFeets()) {
-			plotSizeInSQF = plotSizeInSQF.divide(new BigDecimal("144"));
+			plotSizeInSQF = plotSizeInSQF.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
 		} else if (plan.getDrawingPreference().getInMeters()) {
-			plotSizeInSQF = plotSizeInSQF.multiply(new BigDecimal("10.764"));
+			plotSizeInSQF = plotSizeInSQF.multiply(SQMT_SQFT_MULTIPLIER);
 		}
 
 		if (plotSizeInSQF.compareTo(new BigDecimal("500")) < 0) {
@@ -1223,7 +1221,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		}
 		if (plan.getDrawingPreference().getInFeets()) {
 			if (totalArea.compareTo(BigDecimal.ZERO) > 0 && multiplier.compareTo(BigDecimal.ZERO) > 0) {
-				totalAmount = totalAmount.add(totalArea.divide(SQINCH_SQFT_DIVIDER).multiply(multiplier).setScale(2,
+				totalAmount = totalAmount.add(totalArea.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP).multiply(multiplier).setScale(2,
 						BigDecimal.ROUND_HALF_UP));
 			}
 		} else if (plan.getDrawingPreference().getInMeters()) {

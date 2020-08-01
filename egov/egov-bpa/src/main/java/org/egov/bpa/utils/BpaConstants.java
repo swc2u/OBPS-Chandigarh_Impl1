@@ -260,6 +260,7 @@ public class BpaConstants {
     public static final String WF_BA_FORWARD_TO_SDO_BUILDING="Forward to SDO Building";
     
     public static final String WF_BA_APPROVED_WITH_FEE_COLLECTION_PENDING="Approved with fee collection pending";
+    public static final String WF_BA_FORWARDED_TO_GENERATE_OCCUPANCY_CERTIFICATE="Forwarded to generate Occupancy Certificate";
 
     // application status constants
     public static final String APPROVED = "Approved";

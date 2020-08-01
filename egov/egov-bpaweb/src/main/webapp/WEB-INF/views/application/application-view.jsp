@@ -103,6 +103,10 @@
 			<input type="hidden" id="isOneDayPermitApplication" value="${bpaApplication.isOneDayPermitApplication}" />
 			<input type="hidden" id="approveComments" value="${bpaApplication.state.comments}" />
 			<input type="hidden" id="captureTSRemarks" value="${captureTSRemarks}">
+			<input type="hidden" id="drawingPreference" value="${bpaApplication.drawingPreference}">
+			<div class="text-right text-info view-content col-sm-12" style="font-size: 14px;color: #e4841b;">
+			    <span id="drawPref"></span>
+			</div>
 			<ul class="nav nav-tabs" id="settingstab">
 				<li class="active"><a data-toggle="tab" href="#applicant-info"
 									  data-tabidx=0><spring:message code='lbl.appln.details' /></a></li>

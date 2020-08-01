@@ -225,6 +225,7 @@ public class BpaApplication extends StateAware<Position> {
 	@SafeHtml
     private String eDcrNumber;
     private BigDecimal totalBuiltUpArea;
+    private String drawingPreference;
 
     @OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OrderBy(ORDER_BY_ID_ASC)
@@ -1213,7 +1214,6 @@ public class BpaApplication extends StateAware<Position> {
     public void setPermitRenewals(List<PermitRenewal> permitRenewals) {
         this.permitRenewals = permitRenewals;
     }
- 
 
 	public void setNocList(NocList nocList) {
 		this.nocList = nocList;
@@ -1223,4 +1223,11 @@ public class BpaApplication extends StateAware<Position> {
 		return nocList;
 	}
 
+	public String getDrawingPreference() {
+		return drawingPreference;
+	}
+
+	public void setDrawingPreference(String drawingPreference) {
+		this.drawingPreference = drawingPreference;
+	}
 }

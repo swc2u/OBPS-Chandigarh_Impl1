@@ -63,7 +63,7 @@
 				<th><spring:message code="lbl.remarks" /></th>
 				<th><spring:message code="lbl.files" /></th>
 				<c:if test="${not empty nocConfigMap}">
-				<th class="thbtn" style="display: none"><spring:message code="lbl.action.noc" /></th>
+					<th class="thbtn" style="display: none"><spring:message code="lbl.action.noc" /></th>
 				</c:if>
 				<c:if test="${not empty nocApplication}">								
 					<th class="thstatus" style="display: none"><spring:message code="lbl.noc.dept.status" /></th>		
@@ -74,8 +74,7 @@
 		</thead>
 		<tbody>
 
-			<c:forEach var="nocDoc"
-				items="${occupancyCertificate.getNocDocuments()}" varStatus="status">
+			<c:forEach var="nocDoc" items="${occupancyCertificate.getNocDocuments()}" varStatus="status">
 				<tr>
 					<td class="view-content text-center" style="font-size: 97%;"><c:out value="${status.index+1}"></c:out></td>
 					<td class="view-content" style="font-size: 97%;"><c:out value="${nocDoc.nocDocument.serviceChecklist.checklist.description}" default="N/A"></c:out></td>
@@ -131,24 +130,25 @@
 					</c:choose>
 					<td class="view-content" style="font-size: 97%;"><c:out value="${nocDoc.nocDocument.nocStatus.nocStatusVal}" default="N/A"></c:out></td>
 					<td class="view-content" style="font-size: 97%;"><c:out value="${nocDoc.nocDocument.remarks}" default="N/A"></c:out></td>
-					<td class="view-content" style="font-size: 97%;"><c:set value="false" var="isDocFound"></c:set> <c:forEach
-							var="ocNoc" items="${nocDoc.nocDocument.nocSupportDocs}" varStatus="loop">
-						<c:if test="${ocNoc.fileStoreId ne null}">
-							<c:set value="true" var="isDocFound"></c:set>
-							<a target="_blank" href="/bpa/application/downloadfile/${ocNoc.fileStoreId}"
-							   data-gallery>${loop.index +1} - ${ocNoc.fileName} </a>
-							<c:if test="${!loop.last}">,</c:if>&nbsp;
+					<td class="view-content" style="font-size: 97%;">
+						<c:set value="false" var="isDocFound"></c:set> 
+						<c:forEach var="ocNoc" items="${nocDoc.nocDocument.nocSupportDocs}" varStatus="loop">
+							<c:if test="${ocNoc.fileStoreId ne null}">
+								<c:set value="true" var="isDocFound"></c:set>
+								<a target="_blank" href="/bpa/application/downloadfile/${ocNoc.fileStoreId}"
+								   data-gallery>${loop.index +1} - ${ocNoc.fileName} </a>
+								<c:if test="${!loop.last}">,</c:if>&nbsp;
+							</c:if>
+						</c:forEach> 
+						<c:if test="${!isDocFound}">
+							N/A
 						</c:if>
-					</c:forEach> <c:if test="${!isDocFound}">
-						N/A
-					</c:if></td>
-					<c:forTokens var="splittedString"
-							items="${nocDoc.nocDocument.serviceChecklist.checklist.code}"
-							delims="\ ()" varStatus="stat">
-							<c:set var="checklistName"
-								value="${stat.first ? '' : checklistName}_${splittedString}" />
-						</c:forTokens>
-						<c:if test="${not empty nocConfigMap}">
+					</td>
+					<c:forTokens var="splittedString" items="${nocDoc.nocDocument.serviceChecklist.checklist.code}"
+								 delims="\ ()" varStatus="stat">
+							<c:set var="checklistName" value="${stat.first ? '' : checklistName}_${splittedString}" />
+					</c:forTokens>
+					<c:if test="${not empty nocConfigMap}">
 						<td class="tdbtn" style="display:none" >
 							<div class="text-right">
 								<c:set var="noccode"
@@ -186,7 +186,8 @@
 							  <fmt:formatDate value="${nocDoc.ocNoc.bpaNocApplication.deemedApprovedDate}"
 								pattern="dd/MM/yyyy" var="dadate" />
 								<span style="font-weight:bold">${dadate}<br /> </span>		
-						</td></c:if>
+						</td>
+					</c:if>
 				</tr>
 			</c:forEach>
 		</tbody>
