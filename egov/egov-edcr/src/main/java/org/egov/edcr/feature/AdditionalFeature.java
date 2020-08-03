@@ -1320,7 +1320,7 @@ public class AdditionalFeature extends FeatureProcess {
 					if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 							&& DxfFileConstants.MARLA
 									.equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
-						if (minPlinthHeight.compareTo(expectedMinPlinthHeight) >= 0) {
+						if (minPlinthHeight.compareTo(expectedMinPlinthHeight) == 0) {
 							isAccepted = true;
 						}
 					} else if (!isOccupancyTypePlinthNotApplicable(mostRestrictiveOccupancyType)) {
@@ -1349,7 +1349,7 @@ public class AdditionalFeature extends FeatureProcess {
 
 				if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 						&& DxfFileConstants.MARLA.equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE)))
-					details.put(PERMISSIBLE, " >= "+CDGAdditionalService.viewLenght(pl, expectedMinPlinthHeight));
+					details.put(PERMISSIBLE, " = "+CDGAdditionalService.viewLenght(pl, expectedMinPlinthHeight));
 				else
 					details.put(PERMISSIBLE, " >= "+CDGAdditionalService.viewLenght(pl, expectedMinPlinthHeight)+" and <= "+CDGAdditionalService.viewLenght(pl, expectedMaxPlinthHeight));
 

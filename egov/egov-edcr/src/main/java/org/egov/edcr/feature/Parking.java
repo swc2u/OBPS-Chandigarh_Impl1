@@ -302,14 +302,19 @@ public class Parking extends FeatureProcess {
 
             if (mostRestrictiveOccupancy != null && A_P.equals(mostRestrictiveOccupancy.getSubtype().getCode())) {
             	
-                if (pl.getPlot().getArea().doubleValue()<252.9) {
+            	BigDecimal plotAreaInMeter=pl.getPlot().getArea();
+            	if(pl.getDrawingPreference().getInFeets()) {
+            		plotAreaInMeter=CDGAdditionalService.inchToMeterArea(plotAreaInMeter);
+            	}
+            	
+                if (plotAreaInMeter.doubleValue()<252.9) {
                     requiredCarParkArea += 12.5d * 1;
-                } else if (pl.getPlot().getArea().doubleValue()>=252.9 && pl.getPlot().getArea().doubleValue()<505.85) {
+                } else if (plotAreaInMeter.doubleValue()>=252.9 && plotAreaInMeter.doubleValue()<505.85) {
                     requiredCarParkArea += 12.5d * 2;
-                }else if (pl.getPlot().getArea().doubleValue()>=505.85 && pl.getPlot().getArea().doubleValue()<1011.7) {
+                }else if (plotAreaInMeter.doubleValue()>=505.85 && plotAreaInMeter.doubleValue()<1011.7) {
                     requiredCarParkArea += OPEN_ECS * 3;
                 }
-                else if ( pl.getPlot().getArea().doubleValue()>=1011.7) {
+                else if (plotAreaInMeter.doubleValue()>=1011.7) {
                     requiredCarParkArea += OPEN_ECS * 6;
                 }
                 
@@ -322,18 +327,28 @@ public class Parking extends FeatureProcess {
             	requiredVisitorParkArea +=OPEN_ECS * vec;
             }else if(mostRestrictiveOccupancy != null && DxfFileConstants.F_H.equals(mostRestrictiveOccupancy.getSubtype().getCode())) {
             	BigDecimal buildUpArea=pl.getVirtualBuilding().getTotalBuitUpArea();
+            	if(pl.getDrawingPreference().getInFeets()) {
+            		buildUpArea=CDGAdditionalService.inchToMeterArea(buildUpArea);
+            	}
             	BigDecimal ecs=buildUpArea.multiply(new BigDecimal("0.02"));
             	
             	//requiredCarParkArea
             	
             }else if(mostRestrictiveOccupancy != null && DxfFileConstants.P_R.equals(mostRestrictiveOccupancy.getSubtype().getCode())) {
             	BigDecimal buildUpArea=pl.getVirtualBuilding().getTotalBuitUpArea();
-            	 requiredCarParkArea=pl.getPlot().getArea().multiply(new BigDecimal("0.2")).doubleValue();
+            	BigDecimal plotArea=pl.getPlot().getArea();
+            	if(pl.getDrawingPreference().getInFeets()) {
+            		plotArea=CDGAdditionalService.inchToMeterArea(plotArea);
+            	}
+            	 requiredCarParkArea=plotArea.multiply(new BigDecimal("0.2")).doubleValue();
             	
             	//requiredCarParkArea
             	
             }else if(mostRestrictiveOccupancy!=null && DxfFileConstants.IT.equals(mostRestrictiveOccupancy.getType().getCode())) {
             	BigDecimal totalCoveredArea=pl.getVirtualBuilding().getTotalCoverageArea();
+            	if(pl.getDrawingPreference().getInFeets()) {
+            		totalCoveredArea=CDGAdditionalService.inchToMeterArea(totalCoveredArea);
+            	}
             	BigDecimal totalEC=totalCoveredArea.multiply(new BigDecimal("0.02"));
             	requiredCarParkArea=totalEC.multiply(new BigDecimal(OPEN_ECS)).doubleValue();
             	
@@ -343,7 +358,11 @@ public class Parking extends FeatureProcess {
             	
             }
             else {
-                BigDecimal builtupArea = totalBuiltupArea.subtract(totalBuiltupArea.multiply(BigDecimal.valueOf(0.15)));
+            	BigDecimal totalBuiltupAreaInMeter=totalBuiltupArea;
+            	if(pl.getDrawingPreference().getInFeets()) {
+            		totalBuiltupAreaInMeter=CDGAdditionalService.inchToMeterArea(totalBuiltupAreaInMeter);
+            	}
+                BigDecimal builtupArea = totalBuiltupAreaInMeter.subtract(totalBuiltupAreaInMeter.multiply(BigDecimal.valueOf(0.15)));
                 double requiredEcs = builtupArea.divide(BigDecimal.valueOf(100)).multiply(BigDecimal.valueOf(2))
                         .setScale(0, RoundingMode.UP).doubleValue();
                 if (openParkingArea.doubleValue() > 0 && coverParkingArea.doubleValue() > 0)
@@ -433,11 +452,15 @@ public class Parking extends FeatureProcess {
     		 for (Floor floor : block.getBuilding().getFloors()) {
     			 System.out.println("blook "+ block.getNumber() + " floor "+ floor.getNumber()+"  du"+ floor.getUnits().size());
     			for(FloorUnit floorUnit:floor.getUnits()) {
-    				if(floorUnit.getArea().compareTo(new BigDecimal("111.48"))<=0) {
+    				BigDecimal floorUnitAreaInMeter=floorUnit.getArea();
+    				if(pl.getDrawingPreference().getInFeets()) {
+    					floorUnitAreaInMeter=CDGAdditionalService.inchToMeterArea(floorUnitAreaInMeter);
+    				}
+    				if(floorUnitAreaInMeter.compareTo(new BigDecimal("111.48"))<=0) {
     					ecs=ecs+1.5d;
-    				}else if(floorUnit.getArea().compareTo(new BigDecimal("278.70"))<=0) {
+    				}else if(floorUnitAreaInMeter.compareTo(new BigDecimal("278.70"))<=0) {
     					ecs=ecs+2d;
-    				}else if(floorUnit.getArea().compareTo(new BigDecimal("278.70"))>0) {
+    				}else if(floorUnitAreaInMeter.compareTo(new BigDecimal("278.70"))>0) {
     					ecs=ecs+3d;
     				} 
     			}

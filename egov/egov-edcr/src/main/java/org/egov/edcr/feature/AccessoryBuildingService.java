@@ -299,9 +299,14 @@ public class AccessoryBuildingService extends FeatureProcess {
 							&& accessoryBlock.getAccessoryBuilding().getHeight() != null
 							&& accessoryBlock.getAccessoryBuilding().getHeight().compareTo(BigDecimal.valueOf(0)) > 0) {
 						BigDecimal expectedArea=BigDecimal.ZERO;
+						BigDecimal providedArea=BigDecimal.ZERO;
 						expectedArea=plan.getPlot().getArea().multiply(new BigDecimal("0.05"));
+						providedArea=accessoryBlock.getAccessoryBuilding().getArea();
+						if(plan.getDrawingPreference().getInFeets()) {
+							providedArea=CDGAdditionalService.inchtoFeetArea(providedArea);
+						}
 						boolean validArea=false;
-						if(expectedArea.compareTo(accessoryBlock.getAccessoryBuilding().getArea())>=0) {
+						if(expectedArea.compareTo(providedArea)>=0) {
 							validArea=true;
 						}
 						if (validArea) {
@@ -310,8 +315,8 @@ public class AccessoryBuildingService extends FeatureProcess {
 									CDGAdditionalService.getByLaws(occupancyTypeHelper,
 											CDGAConstant.CONSTRUCTION_IN_BACK_COURTYARD),
 									String.format(SUBRULE_88_1_DESC, accessoryBlock.getNumber()),
-									expectedArea + DxfFileConstants.METER_SQM,
-									accessoryBlock.getAccessoryBuilding().getArea()+ DxfFileConstants.METER_SQM,
+									CDGAdditionalService.viewArea(plan, expectedArea),
+									CDGAdditionalService.viewArea(plan, providedArea),
 									Result.Accepted.getResultVal(), scrutinyDetail3);
 						} else {
 
@@ -319,8 +324,8 @@ public class AccessoryBuildingService extends FeatureProcess {
 									CDGAdditionalService.getByLaws(occupancyTypeHelper,
 											CDGAConstant.CONSTRUCTION_IN_BACK_COURTYARD),
 									String.format(SUBRULE_88_1_DESC, accessoryBlock.getNumber()),
-									expectedArea + DxfFileConstants.METER_SQM,
-									accessoryBlock.getAccessoryBuilding().getArea() + DxfFileConstants.METER_SQM,
+									CDGAdditionalService.viewArea(plan, expectedArea),
+									CDGAdditionalService.viewArea(plan, providedArea),
 									Result.Not_Accepted.getResultVal(), scrutinyDetail3);
 
 						}

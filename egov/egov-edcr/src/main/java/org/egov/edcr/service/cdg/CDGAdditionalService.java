@@ -377,7 +377,7 @@ public class CDGAdditionalService {
 		BigDecimal meter=BigDecimal.ZERO;
 		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
 			return meter;
-		meter=value.divide(new BigDecimal("39.37"));
+		meter=value.divide(new BigDecimal("39.37"),MathContext.DECIMAL32);
 		return meter;
 	}
 
@@ -385,7 +385,22 @@ public class CDGAdditionalService {
 		if(value.length()<=0)
 			return BigDecimal.ZERO;
 		BigDecimal inch=new BigDecimal(value);
-		return inchToFeet(inch);
+		return inchToMeter(inch);
+	}
+	
+	public static BigDecimal inchToMeterArea(BigDecimal value) {
+		BigDecimal meter=BigDecimal.ZERO;
+		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
+			return meter;
+		meter=value.divide(new BigDecimal("1550"),MathContext.DECIMAL32);
+		return meter;
+	}
+	
+	public static BigDecimal inchToMeterArea(String value) {
+		if(value.length()<=0)
+			return BigDecimal.ZERO;
+		BigDecimal inch=new BigDecimal(value);
+		return inchToMeterArea(inch);
 	}
 	
 	public static String viewLenght(Plan pl,BigDecimal value) {

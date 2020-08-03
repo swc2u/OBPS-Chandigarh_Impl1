@@ -533,7 +533,7 @@ public class FrontYardService extends GeneralRule {
 	}
 	
 	
-	private Boolean commercialUptoSixteenMtSkelton(Integer level, String blockName, BigDecimal min, BigDecimal mean,
+	private Boolean commercialUptoSixteenMtSkelton(Plan pl,Integer level, String blockName, BigDecimal min, BigDecimal mean,
 			OccupancyTypeHelper mostRestrictiveOccupancy, FrontYardResult frontYardResult, Boolean valid,
 			String subRule, String rule, BigDecimal minVal, BigDecimal meanVal, BigDecimal depthOfPlot) {
 		
@@ -567,9 +567,10 @@ public class FrontYardService extends GeneralRule {
 		 * if (-1 == level) { rule = BSMT_FRONT_YARD_DESC; subRuleDesc =
 		 * SUB_RULE_24_12_DESCRIPTION; subRule = SUB_RULE_24_12; }
 		 */
-
-		valid = validateMinimumAndMeanValue(min, mean, minVal, meanVal);
-
+		if(!pl.isRural() &&DxfFileConstants.A_P.equals(mostRestrictiveOccupancy.getSubtype().getCode()) && DxfFileConstants.MARLA.equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE)))
+			valid = validateMinimumAndMeanValueEqual(min, mean, minVal, meanVal);
+		else
+			valid = validateMinimumAndMeanValue(min, mean, minVal, meanVal);
 		compareFrontYardResult(blockName, min, mean, mostRestrictiveOccupancy, frontYardResult, valid, subRule, rule,
 				minVal, meanVal, level);
 		return valid;
@@ -682,7 +683,7 @@ public class FrontYardService extends GeneralRule {
 		BigDecimal minVal = BigDecimal.ZERO;
 		BigDecimal meanVal = BigDecimal.ZERO;
 		BigDecimal depthOfPlot = pl.getPlanInformation().getDepthOfPlot();
-		valid = commercialUptoSixteenMtSkelton(level, blockName, min, mean, mostRestrictiveOccupancy, frontYardResult,
+		valid = commercialUptoSixteenMtSkelton(pl,level, blockName, min, mean, mostRestrictiveOccupancy, frontYardResult,
 				valid, DxfFileConstants.RULE_28, rule, minVal, meanVal, depthOfPlot);
 		
 		return valid;
@@ -1003,6 +1004,19 @@ public class FrontYardService extends GeneralRule {
 //			valid = true;
 //		}
 		if (min.compareTo(minval) >= 0) {
+			valid = true;
+		}
+		
+		return valid;
+	}
+	
+	private Boolean validateMinimumAndMeanValueEqual(BigDecimal min, BigDecimal mean, BigDecimal minval,
+			BigDecimal meanval) {
+		Boolean valid = false;
+//		if (min.compareTo(minval) >= 0 && mean.compareTo(meanval) >= 0) {
+//			valid = true;
+//		}
+		if (min.compareTo(minval) == 0) {
 			valid = true;
 		}
 		

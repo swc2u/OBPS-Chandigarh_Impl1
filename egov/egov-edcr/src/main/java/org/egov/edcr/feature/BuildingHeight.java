@@ -354,11 +354,22 @@ public class BuildingHeight extends FeatureProcess {
 				if (exptectedHeight.compareTo(BigDecimal.ZERO) > 0) {
 //					String actualResult = getLocaleMessage(RULE_ACTUAL_KEY, buildingHeight.toString());
 //					String expectedResult = getLocaleMessage(RULE_EXPECTED_KEY, exptectedHeight.toString());
-
+					
 					String actualResult = CDGAdditionalService.viewLenght(Plan, buildingHeight);
 					String expectedResult = "Upto " + CDGAdditionalService.viewLenght(Plan, exptectedHeight);
+					
+					boolean isAccepted=false;
+					
+					if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode()) && DxfFileConstants.MARLA.equals(Plan.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
+						expectedResult = CDGAdditionalService.viewLenght(Plan, exptectedHeight);;
+						if (buildingHeight.compareTo(exptectedHeight) == 0)
+							isAccepted=true;
+					}else {
+						if (buildingHeight.compareTo(exptectedHeight) >= 0)
+							isAccepted=true;
+					}
 
-					if (buildingHeight.compareTo(exptectedHeight) > 0) {
+					if (isAccepted) {
 						Map<String, String> details = new HashMap<>();
 						// details.put(RULE_NO, subRule);
 						details.put(RULE_NO, CDGAdditionalService.getByLaws(occupancyTypeHelper,
@@ -366,7 +377,7 @@ public class BuildingHeight extends FeatureProcess {
 						details.put(DESCRIPTION, HEIGHT_OF_BUILDING + " for Block " + block.getNumber());
 						details.put(UPTO, expectedResult);
 						details.put(PROVIDED, actualResult);
-						details.put(STATUS, Result.Not_Accepted.getResultVal());
+						details.put(STATUS, Result.Accepted.getResultVal());
 						scrutinyDetail.getDetail().add(details);
 						Plan.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
@@ -378,7 +389,7 @@ public class BuildingHeight extends FeatureProcess {
 						details.put(DESCRIPTION, HEIGHT_OF_BUILDING + " for Block " + block.getNumber());
 						details.put(UPTO, expectedResult);
 						details.put(PROVIDED, actualResult);
-						details.put(STATUS, Result.Accepted.getResultVal());
+						details.put(STATUS, Result.Not_Accepted.getResultVal());
 						scrutinyDetail.getDetail().add(details);
 						Plan.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 					}

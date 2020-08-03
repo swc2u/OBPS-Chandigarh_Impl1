@@ -392,7 +392,7 @@ public class RearYardService extends GeneralRule {
 			BigDecimal meanVal = BigDecimal.valueOf(0);
 			BigDecimal depthOfPlot = pl.getPlanInformation().getDepthOfPlot();
 
-			valid = commercialUptoSixteenMtSkelton(block, level, min, mean, mostRestrictiveOccupancy, rearYardResult,
+			valid = commercialUptoSixteenMtSkelton(pl,block, level, min, mean, mostRestrictiveOccupancy, rearYardResult,
 					DxfFileConstants.RULE_28, rule, minVal, meanVal, depthOfPlot, valid);
 			
 //			if (mostRestrictiveOccupancy.getSubtype() != null && (A_R.equalsIgnoreCase(mostRestrictiveOccupancy.getSubtype().getCode())
@@ -722,7 +722,7 @@ public class RearYardService extends GeneralRule {
 	}
 
 	
-	private Boolean commercialUptoSixteenMtSkelton(Block block, Integer level, final BigDecimal min, final BigDecimal mean,
+	private Boolean commercialUptoSixteenMtSkelton(Plan pl,Block block, Integer level, final BigDecimal min, final BigDecimal mean,
 			final OccupancyTypeHelper mostRestrictiveOccupancy, RearYardResult rearYardResult, String subRule,
 			String rule, BigDecimal minVal, BigDecimal meanVal, BigDecimal depthOfPlot, Boolean valid) {
 		
@@ -752,7 +752,10 @@ public class RearYardService extends GeneralRule {
 //			minVal = REARYARDMINIMUM_DISTANCE_4_5;
 //		}
 
-		valid = validateMinimumAndMeanValue(min, mean, minVal, meanVal);
+		if(!pl.isRural() &&DxfFileConstants.A_P.equals(mostRestrictiveOccupancy.getSubtype().getCode()) && DxfFileConstants.MARLA.equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE)))
+			valid = validateMinimumAndMeanValueEqual(min, mean, minVal, meanVal);
+		else
+			valid = validateMinimumAndMeanValue(min, mean, minVal, meanVal);
 		/*
 		 * if (-1 == level) { subRule = SUB_RULE_24_12; rule = BSMT_REAR_YARD_DESC;
 		 * subRuleDesc = SUB_RULE_24_12_DESCRIPTION; }
@@ -916,6 +919,16 @@ public class RearYardService extends GeneralRule {
 //		if (min.compareTo(minval) >= 0 && mean.compareTo(meanval) >= 0)
 //			valid = true;
 		if (min.compareTo(minval) >= 0)
+			valid = true;
+		return valid;
+	}
+	
+	private Boolean validateMinimumAndMeanValueEqual(final BigDecimal min, final BigDecimal mean, final BigDecimal minval,
+			final BigDecimal meanval) {
+		Boolean valid = false;
+//		if (min.compareTo(minval) >= 0 && mean.compareTo(meanval) >= 0)
+//			valid = true;
+		if (min.compareTo(minval) == 0)
 			valid = true;
 		return valid;
 	}
