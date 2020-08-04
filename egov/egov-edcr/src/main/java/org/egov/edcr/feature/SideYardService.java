@@ -1236,8 +1236,8 @@ if(pl.getDrawingPreference().getInFeets()) {
 	private void checkRowHousing(Plan plan,OccupancyTypeHelper mostRestrictiveOccupancyType,Map<String, String> map) {
 		
 		try {
-			Double left=Double.parseDouble(map.get(CDGAdditionalService.LEFT));
-			Double right=Double.parseDouble(map.get(CDGAdditionalService.RIGHT));
+			Double left=Double.parseDouble(map.get(CDGAdditionalService.LEFT)!=null && !DxfFileConstants.DATA_NOT_FOUND.equals(map.get(CDGAdditionalService.LEFT))?map.get(CDGAdditionalService.LEFT):"0");
+			Double right=Double.parseDouble(map.get(CDGAdditionalService.RIGHT)!=null && !DxfFileConstants.DATA_NOT_FOUND.equals(map.get(CDGAdditionalService.RIGHT))?map.get(CDGAdditionalService.RIGHT):"0");
 			
 			if(left==0 && right==0) {
 				plan.setIsRowHouse(true);

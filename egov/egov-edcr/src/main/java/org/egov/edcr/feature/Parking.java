@@ -304,7 +304,7 @@ public class Parking extends FeatureProcess {
             	
             	BigDecimal plotAreaInMeter=pl.getPlot().getArea();
             	if(pl.getDrawingPreference().getInFeets()) {
-            		plotAreaInMeter=CDGAdditionalService.inchToMeterArea(plotAreaInMeter);
+            		plotAreaInMeter=CDGAdditionalService.feetToMeterArea(plotAreaInMeter);
             	}
             	
                 if (plotAreaInMeter.doubleValue()<252.9) {
@@ -338,7 +338,7 @@ public class Parking extends FeatureProcess {
             	BigDecimal buildUpArea=pl.getVirtualBuilding().getTotalBuitUpArea();
             	BigDecimal plotArea=pl.getPlot().getArea();
             	if(pl.getDrawingPreference().getInFeets()) {
-            		plotArea=CDGAdditionalService.inchToMeterArea(plotArea);
+            		plotArea=CDGAdditionalService.feetToMeterArea(plotArea);
             	}
             	 requiredCarParkArea=plotArea.multiply(new BigDecimal("0.2")).doubleValue();
             	

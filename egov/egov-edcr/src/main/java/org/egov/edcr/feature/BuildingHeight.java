@@ -365,7 +365,7 @@ public class BuildingHeight extends FeatureProcess {
 						if (buildingHeight.compareTo(exptectedHeight) == 0)
 							isAccepted=true;
 					}else {
-						if (buildingHeight.compareTo(exptectedHeight) >= 0)
+						if (buildingHeight.compareTo(exptectedHeight) <= 0)
 							isAccepted=true;
 					}
 

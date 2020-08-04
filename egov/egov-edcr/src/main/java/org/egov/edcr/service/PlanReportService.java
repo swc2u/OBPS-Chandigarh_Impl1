@@ -783,13 +783,18 @@ public class PlanReportService {
                         if (blkFeature.equals(REAR_YARD_DESC)) {
                             rear = allMap.get(blkName + blkFeature);
                             rear.getDetail().get(0).put(SIDENUMBER_NAME, "Rear");
-                            continue;
+                            if(!plan.getIsRowHouse())
+                            	continue;
                         }
 
                         side = allMap.get(blkName + blkFeature);
                         // List<Map<String, String>> detail = allMap.get(blkName +
                         // blkFeature).getDetail();
+                        
                         List<Map<String, String>> detail = side.getDetail();
+//                        if(plan.getIsRowHouse()) {
+//                        	detail=new ArrayList<Map<String,String>>();
+//                        }
 
                         if (front != null)
                             detail.add(0, front.getDetail().get(0));

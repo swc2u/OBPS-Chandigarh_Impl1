@@ -403,6 +403,37 @@ public class CDGAdditionalService {
 		return inchToMeterArea(inch);
 	}
 	
+	public static BigDecimal feetToMeterArea(BigDecimal value) {
+		BigDecimal meter=BigDecimal.ZERO;
+		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
+			return meter;
+		meter=value.divide(new BigDecimal("10.764"),MathContext.DECIMAL32);
+		return meter;
+	}
+	
+	public static BigDecimal feetToMeterArea(String value) {
+		if(value.length()<=0)
+			return BigDecimal.ZERO;
+		BigDecimal inch=new BigDecimal(value);
+		return feetToMeterArea(inch);
+	}
+	
+	public static BigDecimal feetToMeter(BigDecimal value) {
+		BigDecimal meter=BigDecimal.ZERO;
+		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
+			return meter;
+		meter=value.divide(new BigDecimal("30.48"),MathContext.DECIMAL32);
+		return meter;
+	}
+	
+	public static BigDecimal feetToMeter(String value) {
+		if(value.length()<=0)
+			return BigDecimal.ZERO;
+		BigDecimal inch=new BigDecimal(value);
+		return feetToMeter(inch);
+	}
+	
+	
 	public static String viewLenght(Plan pl,BigDecimal value) {
 		String result=null;
 		if(pl.getDrawingPreference().getInMeters()) {
