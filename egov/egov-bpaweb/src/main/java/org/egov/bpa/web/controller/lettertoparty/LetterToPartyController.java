@@ -42,6 +42,7 @@ package org.egov.bpa.web.controller.lettertoparty;
 import static org.egov.infra.utils.StringUtils.append;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -197,13 +198,13 @@ public class LetterToPartyController extends BpaGenericApplicationController {
                 ltp.setPendingAction(existingLpParty.getPendingAction());
             }
         }
-        Position pos = bpaWorkFlowService.getApproverPositionOfElectionWardByCurrentState(permitLTP.getApplication(),
-                "LP Initiated");
-        lettertoPartyService.save(permitLTP, pos.getId());
-        User user = workflowHistoryService.getUserPositionByPassingPosition(pos.getId());
+        //Position pos = bpaWorkFlowService.getApproverPositionOfElectionWardByCurrentState(permitLTP.getApplication(), "LP Initiated");
+        permitLTP.getLetterToParty().setSentDate(new Date());
+        lettertoPartyService.save(permitLTP, ownerPosition.getId());
+        User user = workflowHistoryService.getUserPositionByPassingPosition(ownerPosition.getId());
         String message = messageSource.getMessage(MSG_LP_FORWARD_CREATE, new String[] {
                 user != null ? user.getUsername().concat("~")
-                        .concat(getApproverDesigName(pos))
+                        .concat(getApproverDesigName(ownerPosition))
                         : "",
                 ltp.getLpNumber(), permitLTP.getApplication().getApplicationNumber() },
                 LocaleContextHolder.getLocale());

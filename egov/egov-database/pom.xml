@@ -217,7 +217,7 @@
                             </dependency>
                         </dependencies>
                         <configuration>
-                            <skip>false</skip>
+                            <skip>true</skip>
                             <cleanDisabled>false</cleanDisabled>
                         </configuration>
                         <executions>
@@ -259,7 +259,7 @@
                        		<schemas>
 					            <schema>state</schema>
 					        </schemas>
-                            <skip>false</skip>
+                            <skip>true</skip>
                             <cleanDisabled>true</cleanDisabled>
                             <validateOnMigrate>${validateOnMigrate}</validateOnMigrate>
                         </configuration>
@@ -299,7 +299,7 @@
                             </dependency>
                         </dependencies>
                         <configuration>
-                            <skip>false</skip>
+                            <skip>true</skip>
                             <cleanDisabled>true</cleanDisabled>
                             <validateOnMigrate>${validateOnMigrate}</validateOnMigrate>
                         </configuration>

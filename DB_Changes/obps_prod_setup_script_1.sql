@@ -2952,3 +2952,7 @@ update chandigarh.egp_portalservice set url='/bpa/application/citizen/occupancy-
 
 ALTER TABLE chandigarh.egbpa_application ADD COLUMN drawingpreference VARCHAR(10);
 ALTER TABLE chandigarh.egbpa_occupancy_certificate ADD COLUMN drawingpreference VARCHAR(10);
+
+INSERT INTO chandigarh.EGCL_SERVICE_INSTRUMENTACCOUNTS (id,instrumenttype,servicedetails,chartofaccounts,createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
+(2,(select id from chandigarh.egf_instrumenttype where "type"='online'),(select id from chandigarh.egcl_servicedetails where "name"='PayUmoney Payment Gateway'),(SELECT id FROM chandigarh.chartofaccounts where "name"='Receivables control accounts-Property Taxes'),1,now(),1,now());
+

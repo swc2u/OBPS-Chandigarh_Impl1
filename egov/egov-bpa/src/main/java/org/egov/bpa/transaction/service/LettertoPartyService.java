@@ -87,12 +87,23 @@ public class LettertoPartyService {
         }
 
         if (permitLTP.getLetterToParty().getReplyDate() != null) {
+//            permitLTP.getLetterToParty().setAcknowledgementNumber(generateLettertpPartyReplyAck());
+//            bpaUtils.redirectToBpaWorkFlow(permitLTP.getApplication().getState().getOwnerPosition().getId(),
+//                    permitLTP.getApplication(), BpaConstants.LPCREATED,
+//                    BpaConstants.LPREPLYRECEIVED, BpaConstants.LPCREATED, null);
+//            permitLTP.getApplication().setStatus(bpaStatusService
+//                    .findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE, BpaConstants.LETTERTOPARTY_REPLY_RECEIVED));
+//            
+//            permitLTP.getApplication().setSentToPreviousOwner(false);
+//            permitLTP.getApplication().setLPRequestInitiated(true);	
+//            bpaUtils.redirectToBpaWorkFlow(permitLTP.getApplication().getState().getOwnerPosition().getId(), permitLTP.getApplication(), BpaConstants.LPREPLIED,
+//                    null, "", null);
+            
             permitLTP.getLetterToParty().setAcknowledgementNumber(generateLettertpPartyReplyAck());
-            bpaUtils.redirectToBpaWorkFlow(permitLTP.getApplication().getState().getOwnerPosition().getId(),
-                    permitLTP.getApplication(), BpaConstants.LPCREATED,
-                    BpaConstants.LPREPLYRECEIVED, BpaConstants.LPCREATED, null);
-            permitLTP.getApplication().setStatus(bpaStatusService
-                    .findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE, BpaConstants.LETTERTOPARTY_REPLY_RECEIVED));
+            permitLTP.getApplication().setSentToPreviousOwner(false);
+            permitLTP.getApplication().setLPRequestInitiated(true);
+            bpaUtils.redirectToBpaWorkFlow(permitLTP.getApplication().getState().getOwnerPosition().getId(), permitLTP.getApplication(), BpaConstants.LPREPLIED,
+            		BpaConstants.LPREPLYRECEIVED, "", null);
         }
         return lettertoPartyRepository.save(permitLTP);
     }

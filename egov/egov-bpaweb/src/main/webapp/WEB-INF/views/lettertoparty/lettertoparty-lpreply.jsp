@@ -144,7 +144,7 @@
 
 				<div class="panel-body">
 						<div class="form-group">
-							<div class="col-sm-2 view-content">
+							<div class="col-sm-4 view-content">
 								<spring:message code="lbl.documentname" />
 							</div>
 							<div class="col-sm-2 view-content">
@@ -153,10 +153,10 @@
 							<%--<div class="col-sm-2 text-center view-content">
 								<spring:message code="lbl.issubmitted" />
 							</div>--%>
-							<div class="col-sm-4 view-content">
+							<div class="col-sm-3 view-content">
 								<spring:message code="lbl.remarks" />
 							</div>
-							<div class="col-sm-4 view-content">
+							<div class="col-sm-3 view-content">
 								<spring:message code="lbl.attachdocument" />
 								<div class="add-margin">
 									<small class="text-info view-content"> <spring:message code="lbl.mesg.document" />
@@ -175,7 +175,7 @@
 								path="letterToParty.letterToPartyDocuments[${status.index}].serviceChecklist"
 								id="checklist" value="${doc.serviceChecklist.id}" />
 									<div class="form-group">
-										<div class="col-sm-2 add-margin check-text">
+										<div class="col-sm-4 add-margin check-text">
 											<c:out value="${lpdoc.serviceChecklist.checklist.description}" />
 											<form:hidden
 												id="letterToPartyDocuments${status.index}serviceChecklist"
@@ -199,7 +199,7 @@
 												value="letterToPartyDocuments${status.index}issubmitted" />
 										</div>--%>
 
-										<div class="col-sm-4 add-margin">
+										<div class="col-sm-3 add-margin">
 											<form:textarea class="form-control patternvalidation"
 												data-pattern="alphanumericspecialcharacters" maxlength="248"
 												id="letterToPartyDocuments${status.index}remarks" rows="3"
@@ -209,7 +209,7 @@
 												cssClass="add-margin error-msg" />
 										</div>
 
-										<div class="col-sm-4 add-margin">
+										<div class="col-sm-3 add-margin">
 												<div class="files-upload-container"
 													 data-file-max-size="5"
 													 <c:if test="${lpdoc.isRequested eq true && fn:length(lpdoc.getSupportDocs()) eq 0}">required</c:if>

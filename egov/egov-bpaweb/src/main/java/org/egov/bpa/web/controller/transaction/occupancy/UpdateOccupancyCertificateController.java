@@ -49,14 +49,12 @@ package org.egov.bpa.web.controller.transaction.occupancy;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_HISTORY;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_APPROVED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFIED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFY_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_REVIEWED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_AEE_APPROVAL_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_NOCUPDATED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_RESCHEDULED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_TS_INS;
 import static org.egov.bpa.utils.BpaConstants.APPROVED;
 import static org.egov.bpa.utils.BpaConstants.DESIGNATION_OVERSEER;
@@ -65,15 +63,12 @@ import static org.egov.bpa.utils.BpaConstants.FIELD_INSPECTION_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.FORWARDED_TO_CLERK;
 import static org.egov.bpa.utils.BpaConstants.FORWARDED_TO_NOC_UPDATE;
 import static org.egov.bpa.utils.BpaConstants.FWDINGTOLPINITIATORPENDING;
-import static org.egov.bpa.utils.BpaConstants.FWD_TO_AE_FOR_APPROVAL;
 import static org.egov.bpa.utils.BpaConstants.FWD_TO_OVRSR_FOR_FIELD_INS;
 import static org.egov.bpa.utils.BpaConstants.GENERATEREJECTNOTICE;
 import static org.egov.bpa.utils.BpaConstants.GENERATE_OCCUPANCY_CERTIFICATE;
 import static org.egov.bpa.utils.BpaConstants.OCREJECTIONFILENAME;
 import static org.egov.bpa.utils.BpaConstants.WF_APPROVE_BUTTON;
-import static org.egov.bpa.utils.BpaConstants.WF_BA_AEE_APPLICATION_APPROVAL_PENDING;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_CHECK_NOC_UPDATION;
-import static org.egov.bpa.utils.BpaConstants.WF_BA_FINAL_APPROVAL_PROCESS_INITIATED;
 import static org.egov.bpa.utils.BpaConstants.WF_DOC_SCRUTINY_SCHEDLE_PEND;
 import static org.egov.bpa.utils.BpaConstants.WF_DOC_VERIFY_PEND;
 import static org.egov.bpa.utils.BpaConstants.WF_INITIATE_REJECTION_BUTTON;
@@ -90,9 +85,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -100,7 +93,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.bpa.master.entity.NocConfiguration;
 import org.egov.bpa.master.entity.enums.CalculationType;
 import org.egov.bpa.master.service.NocConfigurationService;
 import org.egov.bpa.transaction.entity.ApplicationFeeDetail;
@@ -109,8 +101,6 @@ import org.egov.bpa.transaction.entity.WorkflowBean;
 import org.egov.bpa.transaction.entity.enums.AppointmentSchedulePurpose;
 import org.egov.bpa.transaction.entity.enums.ChecklistValues;
 import org.egov.bpa.transaction.entity.enums.ConditionType;
-import org.egov.bpa.transaction.entity.enums.NocIntegrationInitiationEnum;
-import org.egov.bpa.transaction.entity.enums.NocIntegrationTypeEnum;
 import org.egov.bpa.transaction.entity.oc.OCAppointmentSchedule;
 import org.egov.bpa.transaction.entity.oc.OCInspection;
 import org.egov.bpa.transaction.entity.oc.OCLetterToParty;
@@ -506,13 +496,8 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
         model.addAttribute("isAllNOCApproved", isAllNOCApproved);
         model.addAttribute("nextAction", nextAction);
         
-		//        if ((FWD_TO_AE_FOR_FIELD_ISPECTION.equals(oc.getState().getNextAction())
-		//                || APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equals(oc.getStatus().getCode())
-		//                || APPLICATION_STATUS_NOCUPDATED.equalsIgnoreCase(oc.getStatus().getCode()))) {
-		//            model.addAttribute("createlettertoparty", true);
-		//        }
-        
-        if (WF_BA_AE_APPROVAL.equalsIgnoreCase(oc.getState().getNextAction())
+        if (WF_BA_CHECK_NOC_UPDATION.equalsIgnoreCase(oc.getState().getNextAction())
+        		|| WF_BA_AE_APPROVAL.equalsIgnoreCase(oc.getState().getNextAction())
                 	|| WF_BA_APPROVED_WITH_FEE_COLLECTION_PENDING.equalsIgnoreCase(oc.getState().getNextAction())
                 	|| WF_BA_FORWARDED_TO_GENERATE_OCCUPANCY_CERTIFICATE.equalsIgnoreCase(oc.getState().getNextAction())
            ) {

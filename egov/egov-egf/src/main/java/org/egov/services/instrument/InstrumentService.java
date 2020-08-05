@@ -414,9 +414,9 @@ public class InstrumentService {
 //            throw new IllegalArgumentException(TRANSACTION_NUMBER + IS_NULL);
         if (instrMap.get(TRANSACTION_DATE) == null)
             throw new IllegalArgumentException(TRANSACTION_DATE + IS_NULL);
-        else if (new Date().compareTo((Date) instrMap.get(TRANSACTION_DATE)) == -1)
-            throw new IllegalArgumentException(TRANSACTION_DATE
-                    + "cannot be future Date");
+//        else if (new Date().compareTo((Date) instrMap.get(TRANSACTION_DATE)) == -1)
+//            throw new IllegalArgumentException(TRANSACTION_DATE
+//                    + "cannot be future Date");
         else
             instrHeader.setTransactionDate((Date) instrMap
                     .get(TRANSACTION_DATE));

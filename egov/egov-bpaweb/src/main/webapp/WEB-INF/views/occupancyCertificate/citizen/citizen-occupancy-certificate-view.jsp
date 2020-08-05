@@ -209,12 +209,12 @@
 								onclick="window.open('/bpa/application/occupancy-certificate/scrutiny/view/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;">
 									View Scheduled Appointment Details </a>&nbsp;</td>
 						</c:if>
-						<c:if
+						<%-- <c:if
 							test="${occupancyCertificate.status.code eq  'Letter To Party Created' && mode eq 'showLPDetails' }">
 							<td><a
 								href="/bpa/occupancy-certificate/letter-to-party/reply/${occupancyCertificate.applicationNumber}/${letterToPartyList.get(0).letterToParty.lpNumber}"
 								class="btn btn-primary"> Reply Letter To Party </a>&nbsp;</td>
-						</c:if>
+						</c:if> --%>
 						<input type="hidden" id="onlinePaymentEnable"
 							value="${onlinePaymentEnable}">
 						<c:if

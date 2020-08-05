@@ -127,12 +127,19 @@ public class OCLetterToPartyService {
         }
 
         if (ocLetterToParty.getLetterToParty().getReplyDate() != null) {
-            ocLetterToParty.getLetterToParty().setAcknowledgementNumber(generateLetterToPartyReplyAck());
+//            ocLetterToParty.getLetterToParty().setAcknowledgementNumber(generateLetterToPartyReplyAck());
+//            bpaUtils.redirectToBpaWorkFlowForOC(ocLetterToParty.getOc(),
+//                    getWorkflowBean(ocLetterToParty.getOc().getState().getOwnerPosition().getId(), BpaConstants.LPCREATED,
+//                            BpaConstants.LPREPLYRECEIVED));
+//            ocLetterToParty.getOc().setStatus(bpaStatusService
+//                    .findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE, BpaConstants.LETTERTOPARTY_REPLY_RECEIVED));
+        	
+        	ocLetterToParty.getLetterToParty().setAcknowledgementNumber(generateLetterToPartyReplyAck());
+        	ocLetterToParty.getOc().setSentToPreviousOwner(false);
+        	ocLetterToParty.getOc().setLPRequestInitiated(true);            
             bpaUtils.redirectToBpaWorkFlowForOC(ocLetterToParty.getOc(),
-                    getWorkflowBean(ocLetterToParty.getOc().getState().getOwnerPosition().getId(), BpaConstants.LPCREATED,
+                    getWorkflowBean(ocLetterToParty.getOc().getState().getOwnerPosition().getId(), BpaConstants.LPREPLIED,
                             BpaConstants.LPREPLYRECEIVED));
-            ocLetterToParty.getOc().setStatus(bpaStatusService
-                    .findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE, BpaConstants.LETTERTOPARTY_REPLY_RECEIVED));
         }
         return letterToPartyRepository.save(ocLetterToParty);
     }

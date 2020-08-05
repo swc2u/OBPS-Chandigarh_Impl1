@@ -44,6 +44,7 @@ import static org.egov.bpa.utils.OcConstants.OCCUPANCY_CERTIFICATE;
 import static org.egov.bpa.utils.OcConstants.OC_LTP_CHECKLIST;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -201,13 +202,14 @@ public class OccupancyCertificateLetterToPartyController {
                 ocLetterToParty.getLetterToParty().setPendingAction(existingLpParty.getLetterToParty().getPendingAction());
             }
         }
-        Position pos = bpaWorkFlowService.getApproverPositionOfElectionWardByCurrentStateForOC(ocLetterToParty.getOc(),
-                "LP Initiated");
-        OCLetterToParty ocLtpRes = ocLetterToPartyService.save(ocLetterToParty, pos.getId());
-        User user = workflowHistoryService.getUserPositionByPassingPosition(pos.getId());
+        //Position pos = bpaWorkFlowService.getApproverPositionOfElectionWardByCurrentStateForOC(ocLetterToParty.getOc(), "LP Initiated");
+        Position ownerPosition = ocLetterToParty.getOc().getCurrentState().getOwnerPosition();
+        ocLetterToParty.getLetterToParty().setSentDate(new Date());
+        OCLetterToParty ocLtpRes = ocLetterToPartyService.save(ocLetterToParty, ownerPosition.getId());
+        User user = workflowHistoryService.getUserPositionByPassingPosition(ownerPosition.getId());
         String message = messageSource.getMessage(MSG_LP_FORWARD_CREATE, new String[] {
                 user != null ? user.getUsername().concat("~")
-                        .concat(getApproverDesigName(pos))
+                        .concat(getApproverDesigName(ownerPosition))
                         : "",
                 ocLtpRes.getLetterToParty().getLpNumber(), ocLtpRes.getOc().getApplicationNumber() },
                 LocaleContextHolder.getLocale());
