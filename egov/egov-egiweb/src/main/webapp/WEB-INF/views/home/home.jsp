@@ -132,7 +132,8 @@
 					<!-- logo -->
 					<div class="navbar-brand">
 						<a href="javascript:void(0);">
-							<img src="/egi/downloadfile/logo" class="rounded" style="height: 60px;">
+							<!-- <img src="/egi/downloadfile/logo" class="rounded" style="height: 60px;"> -->
+							<img src="<c:url value='/resources/global/images/logo.png' context='/egi'/>" class="rounded" style="height: 60px;">
 						</a>
 					</div>   
 					

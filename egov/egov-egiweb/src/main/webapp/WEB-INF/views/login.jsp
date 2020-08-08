@@ -96,7 +96,7 @@
 					<div class = "login-content-wrapper col-md-12" style="padding-left: 0!important;padding-right: 0!important;">
 						<div class = "new-login-header-wrapper page-common-padding col-md-12">
 							<div class = "new-login-header padding0 col-md-12">
-								<span><img src="/egi/downloadfile/logo" height="67" class="rounded"></span>
+								<span><img src="<c:url value='/resources/global/images/logo.png' context='/egi'/>" height="67" class="rounded"></span>
 							</div>
 						</div>
 						<c:set var="tenantId" value="<%=tenantId%>" />

@@ -59,9 +59,7 @@
 	<header class="citizen-header">
 		<nav class="navbar center-align-flex bpa-navbar-new">
 			<div class="col-md-6 col-sm-7 col-xs-12 left-section">
-				<span> <img
-					src="<c:url value='/downloadfile/logo' context="/egi"/>"
-					height="60" class="homepage_logo">
+				<span> <img src="<c:url value='/resources/global/images/logo.png' context='/egi'/>" height="60"  class="homepage_logo">
 				</span> <span class="corporation-name"><spring:message
 						code="lbl.portalservices" /></span>
 			</div>
