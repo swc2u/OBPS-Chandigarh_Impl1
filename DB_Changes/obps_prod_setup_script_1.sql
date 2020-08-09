@@ -2956,3 +2956,25 @@ ALTER TABLE chandigarh.egbpa_occupancy_certificate ADD COLUMN drawingpreference 
 INSERT INTO chandigarh.EGCL_SERVICE_INSTRUMENTACCOUNTS (id,instrumenttype,servicedetails,chartofaccounts,createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
 (2,(select id from chandigarh.egf_instrumenttype where "type"='online'),(select id from chandigarh.egcl_servicedetails where "name"='PayUmoney Payment Gateway'),(SELECT id FROM chandigarh.chartofaccounts where "name"='Receivables control accounts-Property Taxes'),1,now(),1,now());
 
+INSERT INTO chandigarh.egdcr_sub_feature_colorcode(id, feature, subfeature, colorcode,ordernumber)
+VALUES (nextval('seq_egdcr_sub_feature_colorcode'), 'Passage', 'PassageHeight', 1, 1);
+
+INSERT INTO chandigarh.egdcr_sub_feature_colorcode(id, feature, subfeature, colorcode,ordernumber)
+VALUES (nextval('seq_egdcr_sub_feature_colorcode'), 'Passage', 'PassageDimension', 2, 2);
+
+INSERT INTO chandigarh.egdcr_sub_feature_colorcode(id, feature, subfeature, colorcode,ordernumber)
+VALUES (nextval('seq_egdcr_sub_feature_colorcode'), 'PassageStair', 'StairHeight', 1, 1);
+
+INSERT INTO chandigarh.egdcr_sub_feature_colorcode(id, feature, subfeature, colorcode,ordernumber)
+VALUES (nextval('seq_egdcr_sub_feature_colorcode'), 'PassageStair', 'StairDimension', 2, 2);
+
+
+delete  from state.egdcr_layername where key='LAYER_NAME_MAIN_GATE';
+
+insert into state.egdcr_layername(id,key,value,createdby,createddate,lastmodifiedby,lastmodifieddate,version) 
+values (nextval('state.seq_egdcr_layername'),'LAYER_NAME_MAIN_GATE','MAIN_GATE',1,now(),1,now(),0);
+
+insert into state.egdcr_layername(id,key,value,createdby,createddate,lastmodifiedby,lastmodifieddate,version) 
+values( nextval('state.seq_egdcr_layername'),'LAYER_NAME_WICKET_GATE','WICKET_GATE',1,now(),1,now(),0 );
+
+update chandigarh.eg_appconfig_values set value = '1' where key_id = (select id from chandigarh.eg_appconfig where key_name ='SLA_BPA_APPLICATION');

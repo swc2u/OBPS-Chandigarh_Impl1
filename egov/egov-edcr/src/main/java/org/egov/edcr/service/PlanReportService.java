@@ -1122,7 +1122,7 @@ public class PlanReportService {
                                     if (occupancy.getTypeHelper() != null)
                                         if (occupancy.getTypeHelper().getSubtype() != null)
                                             occupancyName = occupancy.getTypeHelper().getSubtype().getName();
-                                        else
+                                        else if (occupancy.getTypeHelper().getType() != null)
                                             occupancyName = occupancy.getTypeHelper().getType().getName();
                                     if (occupancy != null
                                             && occupancy.getExistingBuiltUpArea().compareTo(BigDecimal.ZERO) > 0) {
