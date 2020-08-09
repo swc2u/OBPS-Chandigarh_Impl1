@@ -526,12 +526,17 @@ public class AdditionalFeature2 extends FeatureProcess {
 				for (Floor floor : block.getBuilding().getFloors()) {
 					for (Occupancy occupancy : floor.getOccupancies()) {
 						if (DxfFileConstants.A_GF.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
-							BigDecimal providedHeight = occupancy.getHeight();
+							BigDecimal providedHeight =BigDecimal.ZERO;
+							try{
+								providedHeight = floor.getFloorHeights().stream().reduce(BigDecimal::min).get();
+							}catch (Exception e) {
+							e.printStackTrace();
+							}							
 							boolean isValid = false;
 							BigDecimal expectedHeight=new BigDecimal("2.4");
 							
 							if(pl.getDrawingPreference().getInFeets()) {
-								expectedHeight=CDGAdditionalService.meterToFoot(expectedHeight);
+								expectedHeight=new BigDecimal("8.0");//in feet 
 								providedHeight=CDGAdditionalService.inchToFeet(providedHeight);
 							}
 
