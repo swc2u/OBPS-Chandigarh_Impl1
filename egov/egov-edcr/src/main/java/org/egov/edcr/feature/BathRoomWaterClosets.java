@@ -180,6 +180,12 @@ public class BathRoomWaterClosets extends FeatureProcess {
 						pl.addError("ToiltNotFound", getLocaleMessage(OBJECTNOTDEFINED, "Toilet"));
 					}
 				}
+				
+				if (!pl.isRural() && (DxfFileConstants.NEW_CONSTRUCTION.equals(pl.getServiceType()) || DxfFileConstants.RECONSTRUCTION.equals(pl.getServiceType()))) {
+					if (countInBlock == 0) {
+						pl.addError("ToiltNotFound", getLocaleMessage(OBJECTNOTDEFINED, "Toilet"));
+					}
+				}
 
 			}
 

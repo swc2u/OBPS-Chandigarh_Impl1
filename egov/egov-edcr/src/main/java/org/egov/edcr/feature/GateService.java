@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 public class GateService  extends FeatureProcess {
 	public static int COLOR_CODE_MAINGATE=1;
 	public static int COLOR_CODE_WICKET_GATE=2;
+	public static String MAINGATE_LAYER_NAME="MAIN_GATE";
+	public static String WICKET_GATE_LAYER_NAME="WICKET_GATE";
 	@Override
 	    public Plan validate(Plan plan) {
 	        return plan;
@@ -91,9 +93,9 @@ public class GateService  extends FeatureProcess {
 				if(pl.getGate()!=null) {
 					
 					for(Measurement measurement:pl.getGate().getGates()) {
-						if(measurement.getColorCode()==COLOR_CODE_MAINGATE)
+						if(MAINGATE_LAYER_NAME.equals(measurement.getName()))
 							mainGate.add(measurement);
-						if(measurement.getColorCode()==COLOR_CODE_WICKET_GATE)
+						if(WICKET_GATE_LAYER_NAME.equals(measurement.getName()))
 							wicketGate.add(measurement);
 					}
 				}
