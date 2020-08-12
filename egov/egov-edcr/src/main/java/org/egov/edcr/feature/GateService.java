@@ -146,7 +146,7 @@ public class GateService  extends FeatureProcess {
 						
 						details.put(RULE_NO, CDGAdditionalService.getByLaws(mostRestrictiveOccupancyType,CDGAConstant.GATE));
 						details.put(DESCRIPTION, "Wicket gate"+ i);
-						details.put(REQUIRED, "height <="+CDGAdditionalService.viewLenght(pl, expectedHeightWicketGate)+" and width <="+CDGAdditionalService.viewLenght(pl, expectedWidthMainGate));
+						details.put(REQUIRED, "height <="+CDGAdditionalService.viewLenght(pl, expectedHeightWicketGate)+" and width <="+CDGAdditionalService.viewLenght(pl, expectedWidthWicketGate));
 						details.put(PROVIDED, "height = "+CDGAdditionalService.viewLenght(pl, providedHeightWicketGate)+" and width = "+CDGAdditionalService.viewLenght(pl, providedWidthWicketGate));
 						
 						if(providedHeightWicketGate.compareTo(expectedHeightWicketGate)<=0 && providedWidthWicketGate.compareTo(expectedWidthWicketGate)<=0)

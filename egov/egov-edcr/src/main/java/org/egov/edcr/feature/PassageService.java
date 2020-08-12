@@ -71,6 +71,7 @@ public class PassageService extends FeatureProcess {
 		private static final String PASSAGE_STAIR_MINIMUM_WIDTH = "1.2";
 		private static final String RULE39_6_DESCRIPTION = "The minimum passage giving access to stair";
 		private static final String RULE_41_DESCRIPTION = "The minimum width of corridors/ verandhas";
+		private static final String RULE_42_DESCRIPTION = "The minimum height of corridors/ verandhas";
 		
 	@Override
 	public Plan validate(Plan plan) {
@@ -97,6 +98,14 @@ public class PassageService extends FeatureProcess {
 				scrutinyDetail1.addColumnHeading(3, PROVIDED);
 				scrutinyDetail1.addColumnHeading(4, STATUS);
 				scrutinyDetail1.setKey("Block_" + block.getNumber() + "_" + "Passage Stair");
+				
+				
+				ScrutinyDetail scrutinyDetail2 = new ScrutinyDetail();
+				scrutinyDetail2.addColumnHeading(1, RULE_NO);
+				scrutinyDetail2.addColumnHeading(2, REQUIRED);
+				scrutinyDetail2.addColumnHeading(3, PROVIDED);
+				scrutinyDetail2.addColumnHeading(4, STATUS);
+				scrutinyDetail2.setKey("Block_" + block.getNumber() + "_" + "Minimum Passage Height");
 
 				org.egov.common.entity.edcr.Passage passage = block.getBuilding().getPassage();
 
@@ -104,6 +113,7 @@ public class PassageService extends FeatureProcess {
 
 					List<BigDecimal> passagePolylines = passage.getPassageDimensions();
 					List<BigDecimal> passageStairPolylines = passage.getPassageStairDimensions();
+					List<BigDecimal> passageHeightPolylines = passage.getPassageHeight();
 
 					if (passagePolylines != null && passagePolylines.size() > 0) {
 
@@ -134,7 +144,7 @@ public class PassageService extends FeatureProcess {
 						BigDecimal minPassageStairPolyLine = passageStairPolylines.stream().reduce(BigDecimal::min).get();
 
 						BigDecimal minWidth =minPassageStairPolyLine;
-						BigDecimal expectedMinWidth=new BigDecimal(1.2);
+						BigDecimal expectedMinWidth=new BigDecimal("1.2");
 						
 						if(plan.getDrawingPreference().getInFeets()) {
 							expectedMinWidth=CDGAdditionalService.meterToFoot(expectedMinWidth);
@@ -142,7 +152,7 @@ public class PassageService extends FeatureProcess {
 						}else
 							minWidth= Util.roundOffTwoDecimal(minPassageStairPolyLine);;
 						
-						if (minWidth.compareTo(Util.roundOffTwoDecimal(BigDecimal.valueOf(1.2))) >= 0) {
+						if (minWidth.compareTo(expectedMinWidth) >= 0) {
 							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.MINIMUN_PASSAGE), RULE39_6_DESCRIPTION,
 									CDGAdditionalService.viewLenght(plan, expectedMinWidth), CDGAdditionalService.viewLenght(plan, minWidth), Result.Accepted.getResultVal(),
 									scrutinyDetail1);
@@ -150,6 +160,32 @@ public class PassageService extends FeatureProcess {
 							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.MINIMUN_PASSAGE), RULE39_6_DESCRIPTION,
 									CDGAdditionalService.viewLenght(plan, expectedMinWidth), CDGAdditionalService.viewLenght(plan, minWidth), Result.Not_Accepted.getResultVal(),
 									scrutinyDetail1);
+						}
+					}
+					
+					
+					if (passageHeightPolylines != null && passageHeightPolylines.size() > 0) {
+
+						BigDecimal minPassageHegightPolyLine = passageHeightPolylines.stream().reduce(BigDecimal::min).get();
+
+						BigDecimal minHeight =minPassageHegightPolyLine;
+						BigDecimal expectedMinHeight=new BigDecimal("2.4");
+						
+						
+						if(plan.getDrawingPreference().getInFeets()) {
+							expectedMinHeight=CDGAdditionalService.meterToFoot(expectedMinHeight);
+							minHeight=CDGAdditionalService.inchToFeet(minHeight);
+						}else
+							minHeight= Util.roundOffTwoDecimal(minPassageHegightPolyLine);;
+						
+						if (minHeight.compareTo(expectedMinHeight) >= 0) {
+							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.MINIMUN_PASSAGE), RULE_42_DESCRIPTION,
+									CDGAdditionalService.viewLenght(plan, expectedMinHeight), CDGAdditionalService.viewLenght(plan, minHeight), Result.Accepted.getResultVal(),
+									scrutinyDetail2);
+						} else {
+							setReportOutputDetails(plan, CDGAdditionalService.getByLaws(plan, CDGAConstant.MINIMUN_PASSAGE), RULE_42_DESCRIPTION,
+									CDGAdditionalService.viewLenght(plan, expectedMinHeight), CDGAdditionalService.viewLenght(plan, minHeight), Result.Not_Accepted.getResultVal(),
+									scrutinyDetail2);
 						}
 					}
 
