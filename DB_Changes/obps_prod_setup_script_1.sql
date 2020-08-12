@@ -2978,3 +2978,6 @@ insert into state.egdcr_layername(id,key,value,createdby,createddate,lastmodifie
 values( nextval('state.seq_egdcr_layername'),'LAYER_NAME_WICKET_GATE','WICKET_GATE',1,now(),1,now(),0 );
 
 update chandigarh.eg_appconfig_values set value = '1' where key_id = (select id from chandigarh.eg_appconfig where key_name ='SLA_BPA_APPLICATION');
+
+INSERT INTO chandigarh.eg_roleaction (roleid,actionid) VALUES 
+((select id from state.eg_role er  where name= 'BPA Approver'),(select id from chandigarh.eg_action ea where url = '/downloadfile'));
