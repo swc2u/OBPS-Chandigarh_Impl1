@@ -516,10 +516,9 @@ public class AdditionalFeature2 extends FeatureProcess {
 			scrutinyDetail = new ScrutinyDetail();
 			scrutinyDetail.addColumnHeading(1, RULE_NO);
 			scrutinyDetail.addColumnHeading(2, DESCRIPTION);
-			scrutinyDetail.addColumnHeading(3, FLOOR);
-			scrutinyDetail.addColumnHeading(4, REQUIRED);
-			scrutinyDetail.addColumnHeading(5, PROVIDED);
-			scrutinyDetail.addColumnHeading(6, STATUS);
+			scrutinyDetail.addColumnHeading(3, REQUIRED);
+			scrutinyDetail.addColumnHeading(4, PROVIDED);
+			scrutinyDetail.addColumnHeading(5, STATUS);
 			scrutinyDetail.setKey("Block_" + block.getNumber() + "_" + "Gallery Floor");
 
 			if (block.getBuilding() != null && !block.getBuilding().getFloors().isEmpty()) {
