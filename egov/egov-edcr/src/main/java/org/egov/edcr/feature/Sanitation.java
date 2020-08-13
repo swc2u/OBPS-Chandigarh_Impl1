@@ -347,7 +347,7 @@ public class Sanitation extends FeatureProcess {
 	}
 
 	private Plan verifyDimesions(Plan pl) {
-		validate(pl);
+		//validate(pl);
 
 		/*
 		 * for (Block b : pl.getBlocks()) { If block is small plot and floors above
