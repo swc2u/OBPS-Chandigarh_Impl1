@@ -20,6 +20,7 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.PlanFeature;
 import org.egov.common.entity.edcr.PlanInformation;
 import org.egov.common.entity.edcr.ScrutinyDetail;
+import org.egov.edcr.config.properties.EdcrApplicationSettings;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.contract.EdcrRequest;
 import org.egov.edcr.entity.Amendment;
@@ -42,6 +43,7 @@ import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.egov.infra.filestore.service.FileStoreService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -66,8 +68,16 @@ public class PlanService {
 	private ExtractService extractService;
 	@Autowired
 	private EdcrApplicationService edcrApplicationService;
-	private boolean isMeterEnabled=true;
-	private boolean isFeetEnabled=true;
+	
+	private boolean isMeterEnabled=false;
+	private boolean isFeetEnabled=false;
+	
+	
+
+	public PlanService(EdcrApplicationSettings  settings) {
+		this.isMeterEnabled=Boolean.parseBoolean(settings.getValue(DxfFileConstants.KEY_METER_ENABLE));
+		this.isFeetEnabled=Boolean.parseBoolean(settings.getValue(DxfFileConstants.KEY_FEET_ENABLE));
+	}
 
 	public Plan process(EdcrApplication dcrApplication, String applicationType) {
 		Map<String, String> cityDetails = specificRuleService.getCityDetails();

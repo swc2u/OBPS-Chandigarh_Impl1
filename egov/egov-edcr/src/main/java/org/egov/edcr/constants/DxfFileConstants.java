@@ -529,4 +529,8 @@ public class DxfFileConstants {
 	
 	public static final String DECLARATION_METER="All dimensions are in metre or square metre.";
 	public static final String DECLARATION_FEET="All dimensions are in feet or square feet.";
+	
+	public static final String KEY_METER_ENABLE="dcr.meter.enabled";
+	public static final String KEY_FEET_ENABLE="dcr.feet.enabled";
+	
 }
