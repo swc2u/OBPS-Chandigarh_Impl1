@@ -320,7 +320,7 @@ public abstract class BpaGenericApplicationController extends GenericWorkFlowCon
                 (enableOrDisablePayOnline.equalsIgnoreCase("YES") ? Boolean.TRUE : Boolean.FALSE));
         model.addAttribute("citizenOrBusinessUser", bpaUtils.logedInuseCitizenOrBusinessUser());
     }
-
+    
     protected void prepareWorkflowDataForInspection(final Model model, final BpaApplication application) {
         model.addAttribute("stateType", application.getClass().getSimpleName());
         final WorkflowContainer workflowContainer = new WorkflowContainer();

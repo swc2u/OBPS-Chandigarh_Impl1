@@ -65,6 +65,12 @@
 		<constructor-arg index="0"
 			ref="OccupancyCertificatePersistenceService" />
 	</bean>
+	
+	<bean id="PlinthLevelCertificateInboxRenderService"
+		class="org.egov.infra.workflow.inbox.DefaultInboxRenderServiceImpl">
+		<constructor-arg index="0"
+			ref="PlinthLevelCertificatePersistenceService" />
+	</bean>
 
 	<bean id="BpaApplicationPersistenceService"
 		parent="abstractPersistenceService">
@@ -90,6 +96,12 @@
 			value="org.egov.bpa.transaction.entity.oc.OccupancyCertificate" />
 	</bean>
 
+	<bean id="PlinthLevelCertificatePersistenceService"
+		parent="abstractPersistenceService">
+		<constructor-arg name="type"
+			value="org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate" />
+	</bean>
+
 	<bean id="BPACollectionsInterface"
 		class="org.egov.bpa.transaction.service.collection.BpaTaxCollection" />
 
@@ -110,6 +122,9 @@
 
 	<bean id="occupancyCertificateWorkflowCustomDefaultImpl"
 		class="org.egov.bpa.transaction.workflow.oc.OccupancyCertificateWorkflowCustomDefaultImpl" />
+		
+	<bean id="plinthLevelCertificateWorkflowCustomDefaultImpl"
+		class="org.egov.bpa.transaction.workflow.pl.PlinthLevelCertificateWorkflowCustomDefaultImpl" />
 
 	<bean id="inspectionWorkflowCustomDefaultImpl"
 		class="org.egov.bpa.transaction.workflow.inspection.InspectionWorkflowCustomDefaultImpl" />

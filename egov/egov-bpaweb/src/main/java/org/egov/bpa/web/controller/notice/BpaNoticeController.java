@@ -61,6 +61,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.egov.bpa.transaction.notice.OccupancyCertificateNoticesFormat;
 import org.egov.bpa.transaction.notice.PermitApplicationNoticesFormat;
+import org.egov.bpa.transaction.notice.PlinthLevelCertificateNoticesFormat;
 import org.egov.bpa.transaction.notice.impl.DemandDetailsFormatImpl;
 import org.egov.bpa.transaction.notice.impl.OccupancyCertificateDemandFormatImpl;
 import org.egov.bpa.transaction.notice.impl.OccupancyCertificateFormatImpl;
@@ -69,10 +70,12 @@ import org.egov.bpa.transaction.notice.impl.OwnershipTransferNoticeService;
 import org.egov.bpa.transaction.notice.impl.PermitOrderFormatImpl;
 import org.egov.bpa.transaction.notice.impl.PermitRejectionFormatImpl;
 import org.egov.bpa.transaction.notice.impl.PermitRenewalRejectionNoticeService;
+import org.egov.bpa.transaction.notice.impl.PlinthLevelCertificateFormatImpl;
 import org.egov.bpa.transaction.service.ApplicationBpaService;
 import org.egov.bpa.transaction.service.OwnershipTransferService;
 import org.egov.bpa.transaction.service.PermitRenewalService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
+import org.egov.bpa.transaction.service.pl.PlinthLevelCertificateService;
 import org.egov.infra.custom.CustomImplProvider;
 import org.egov.infra.reporting.engine.ReportOutput;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +106,8 @@ public class BpaNoticeController {
     private PermitRenewalService permitRenewalService;
     @Autowired
     private OwnershipTransferService ownershipTransferService;
+    @Autowired
+    private PlinthLevelCertificateService plinthLevelCertificateService;  
 
     @GetMapping(value = "/application/demandnotice/{applicationNumber}", produces = APPLICATION_PDF_VALUE)
     @ResponseBody
@@ -145,6 +150,16 @@ public class BpaNoticeController {
                 .find(OccupancyCertificateFormatImpl.class, specificNoticeService.getCityDetails());
         ReportOutput reportOutput = ocNoticeFeature
                 .generateNotice(occupancyCertificateService.findByApplicationNumber(applicationNumber));
+        return getFileAsResponseEntity(applicationNumber, reportOutput, REPORT_FILE_NAME);
+    }
+    
+    @GetMapping(value = "/application/plinth-level-certificate/generate-plinth-level-certificate/{applicationNumber}", produces = APPLICATION_PDF_VALUE)
+    @ResponseBody
+    public ResponseEntity<InputStreamResource> generatePLCertificate(@PathVariable final String applicationNumber) {
+        PlinthLevelCertificateNoticesFormat plNoticeFeature = (PlinthLevelCertificateNoticesFormat) specificNoticeService
+                .find(PlinthLevelCertificateFormatImpl.class, specificNoticeService.getCityDetails());
+        ReportOutput reportOutput = plNoticeFeature.generateNotice(plinthLevelCertificateService.findByApplicationNumber(applicationNumber));
+        
         return getFileAsResponseEntity(applicationNumber, reportOutput, REPORT_FILE_NAME);
     }
 

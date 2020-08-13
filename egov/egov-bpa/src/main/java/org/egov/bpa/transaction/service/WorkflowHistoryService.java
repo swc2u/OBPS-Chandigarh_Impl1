@@ -192,6 +192,32 @@ public class WorkflowHistoryService {
         historyTable.sort(Comparator.comparing(history -> String.valueOf(history.get(DATE))));
         return historyTable;
     }
+    
+    public List<HashMap<String, Object>> getHistoryForPL(State<Position> state, List<StateHistory<Position>> stateHistories) {
+        final List<HashMap<String, Object>> historyTable = new ArrayList<>();
+        final State<Position> workflowState = state;
+        final HashMap<String, Object> workFlowHistory = new HashMap<>(0);
+        if (null != workflowState) {
+            if (!stateHistories.isEmpty())
+                Collections.reverse(stateHistories);
+
+            buildStateHistory(stateHistories, historyTable, state);
+            workFlowHistory.put(DATE, workflowState.getDateInfo());
+            workFlowHistory.put(COMMENTS, workflowState.getComments() == null ? "" : workflowState.getComments());
+            workFlowHistory.put(UPDATED_BY,
+                    workflowState.getLastModifiedBy().getUsername() + "::" + workflowState.getLastModifiedBy().getName());
+
+            String revertedBy = bpaWorkFlowService.getRevertedBy(workflowState.getExtraInfo());
+            workFlowHistory.put(STATUS, !isBlank(revertedBy) ? revertedBy : workflowState.getValue());
+
+            buildEmployeeInformation(state, stateHistories, workFlowHistory, state != null, state.getValue(),
+                    workflowState.getOwnerPosition(), workflowState.getLastModifiedDate(), workflowState.getOwnerUser());
+
+            historyTable.add(workFlowHistory);
+        }
+        historyTable.sort(Comparator.comparing(history -> String.valueOf(history.get(DATE))));
+        return historyTable;
+    }
 
     private void setEmployeeDetailsByDate(User userObject, HashMap<String, Object> historyMap, Position owner, Date date) {
         Assignment assignment = null;

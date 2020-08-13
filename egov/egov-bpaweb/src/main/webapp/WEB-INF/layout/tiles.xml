@@ -1307,5 +1307,52 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/application/viewappln-details-bydcrno.jsp" />
 	</definition>
-
+	
+	<definition name="citizen-pl-apply-new"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.pl.certificate" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/plCertificate/citizen/citizen-pl-apply-new.jsp" />
+	</definition>
+	
+	<definition name="citizen-pl-certificate-new"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.pl.certificate" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/plCertificate/citizen/citizen-pl-certificate-new.jsp" />
+	</definition>	
+	
+	<definition name="citizen-pl-certificate-view"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.pl.certificate" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/plCertificate/citizen/citizen-pl-certificate-view.jsp" />
+	</definition>
+	
+	<definition name="citizen-pl-certificate-update"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.pl.certificate" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/plCertificate/citizen/citizen-pl-certificate-update.jsp" />
+	</definition>
+	
+	<definition name="pl-certificate-view"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.pl.certificate" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/plCertificate/pl-certificate-view.jsp" />
+	</definition>
+	
+	<definition name="pl-certificate-result"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.pl.certificate" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/plCertificate/pl-certificate-result.jsp" />
+	</definition>
 </tiles-definitions>

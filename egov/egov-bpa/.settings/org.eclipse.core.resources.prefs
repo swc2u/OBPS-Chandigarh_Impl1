@@ -4,5 +4,6 @@ encoding//src/main/resources=UTF-8
 encoding//src/main/resources/reports/templates/BPA_collection_receipt.jrxml=UTF-8
 encoding//src/main/resources/reports/templates/BPA_collection_receipt_accounts.jrxml=UTF-8
 encoding//src/main/resources/reports/templates/BPA_collection_receipt_instruments.jrxml=UTF-8
+encoding//src/main/resources/reports/templates/plinthLevelcertificate.jrxml=UTF-8
 encoding//src/test/java=UTF-8
 encoding/<project>=UTF-8

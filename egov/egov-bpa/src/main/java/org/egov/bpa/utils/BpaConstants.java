@@ -214,6 +214,7 @@ public class BpaConstants {
     public static final String COLON_CONCATE = "::";
     public static final String NATURE_OF_WORK = "Building Plan Approval";
     public static final String NATURE_OF_WORK_OC = "Building Plan Approval::Occupancy Certificate";
+    public static final String NATURE_OF_WORK_PL = "Building Plan Approval::Plinth Level Certificate";
     public static final String NATURE_OF_WORK_INSPECTION = "Inspection Application";
     public static final String WF_NEW_STATE = "NEW";
     public static final String WF_CREATED_STATE = "Created";
@@ -247,6 +248,7 @@ public class BpaConstants {
     public static final String OWNERSHIP_FEE_COLLECTED = "Ownership transfer fee payment done";
     
     public static final String OC_CREATION_PENDING = "Occupancy certificate application creation pending";
+    public static final String PL_CREATION_PENDING = "Plinth Level Certificate application creation pending";
     
     public static final String WF_BA_VARIFICATION_INITIATED = "Forwarded to property documents verification";
     public static final String WF_BA_CHECK_NOC_UPDATION="Forwarded to check NOC updation";
@@ -498,6 +500,7 @@ public class BpaConstants {
     public static final String WF_INITIATE_REVOCATION_BUTTON = "Initiate Revocation";
     public static final String WF_AUTO_RESCHDLE_APPMNT_BUTTON = "Auto ReSchedule";
     public static final String GENERATE_OCCUPANCY_CERTIFICATE = "Generate Occupancy Certificate";
+    public static final String GENERATE_PL_CERTIFICATE = "Generate Plinth Level Certificate";
     public static final String WF_GENERATE_RENEWAL_ORDER = "Generate Permit Renewal Order";
     public static final String WF_GENERATE_OWNERSHIP_ORDER = "Generate Ownership Transfer Order";
     public static final String WF_FORWARD_BUTTON = "Forward";
@@ -560,6 +563,7 @@ public class BpaConstants {
 
     // Occupancy certificate notice types
     public static final String OCCUPANCY_CERTIFICATE_NOTICE_TYPE = "Occupancy Certificate";
+    public static final String PL_CERTIFICATE_NOTICE_TYPE = "Plinth Level Certificate";
     public static final String NATURE_OF_WORK_STAKEHOLDER = "Stake Holder Registration";
     public static final String PERMIT_APPLICATION_NOTICE_TYPE = "Permit Application";
 
@@ -588,6 +592,8 @@ public class BpaConstants {
     public static final String OWNERSHIP_TRANSFER_WFTYPE = "OwnershipTransfer";
     public static final String OWNERSHIPSTATUS_MODULETYPE = "OWNERSHIP";
     public static final String NATURE_OF_WORK_OWNERSHIP = "Ownership Transfer";
+    
+    public static final String PLINTH_LEVEL_CERTIFICATE = "Plinth Level Certificate";
 
     
     private static final List<String> BUILDPERMIT = new ArrayList<>();

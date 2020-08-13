@@ -69,6 +69,7 @@ import org.egov.bpa.transaction.entity.PermitInspectionApplication;
 import org.egov.bpa.transaction.entity.PermitRenewal;
 import org.egov.bpa.transaction.entity.dto.BpaStateInfo;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
+import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.utils.BpaUtils;
 import org.egov.common.entity.bpa.SubOccupancy;
@@ -394,6 +395,13 @@ public class BpaWorkFlowService {
 		WorkFlowMatrix wfMatrix = bpaUtils.getWfMatrixByCurrentState(oc.getStateType(), currentState, oc.getOccupancyCertificateType());
 		return bpaUtils.getUserPositionByZone(wfMatrix.getNextDesignation(),
 				bpaUtils.getBoundaryForWorkflow(oc.getParent().getSiteDetail().get(0)).getId());
+	}
+	
+	public Position getApproverPositionOfElectionWardByCurrentStateForPL(final PlinthLevelCertificate pl,
+			final String currentState) {
+		WorkFlowMatrix wfMatrix = bpaUtils.getWfMatrixByCurrentState(pl.getStateType(), currentState, pl.getPlinthLevelCertificateType());
+		return bpaUtils.getUserPositionByZone(wfMatrix.getNextDesignation(),
+				bpaUtils.getBoundaryForWorkflow(pl.getParent().getSiteDetail().get(0)).getId());
 	}
 
     public BigDecimal getAmountRuleByServiceType(final BpaApplication application) {
