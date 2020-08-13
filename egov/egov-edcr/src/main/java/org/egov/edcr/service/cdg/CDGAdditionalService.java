@@ -538,7 +538,7 @@ public class CDGAdditionalService {
 		return flage;
 	}
 	
-	public boolean isOccupancyExcludedFromFar(OccupancyTypeHelper helper) {
+	public static boolean isOccupancyExcludedFromFar(OccupancyTypeHelper helper) {
 		boolean flage=false;
 		
 		if(DxfFileConstants.A_SQ.equals(helper.getSubtype().getCode())

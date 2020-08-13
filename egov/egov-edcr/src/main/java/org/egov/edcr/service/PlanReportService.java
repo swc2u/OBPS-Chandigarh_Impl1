@@ -1024,6 +1024,8 @@ public class PlanReportService {
                             if (!occupancies.isEmpty()) {
 
                                 for (Occupancy occupancy : occupancies) {
+                                	if(occupancy!=null && occupancy.getTypeHelper()!=null && CDGAdditionalService.isOccupancyExcludedFromFar(occupancy.getTypeHelper()))
+                                		continue;
                                     String occupancyName = "";
                                     if (occupancy.getTypeHelper() != null)
                                         if (occupancy.getTypeHelper().getSubtype() != null)
@@ -1118,6 +1120,8 @@ public class PlanReportService {
                             if (!occupancies.isEmpty()) {
 
                                 for (Occupancy occupancy : occupancies) {
+                                	if(occupancy!=null && occupancy.getTypeHelper()!=null && CDGAdditionalService.isOccupancyExcludedFromFar(occupancy.getTypeHelper()))
+                                		continue;
                                     String occupancyName = "";
                                     if (occupancy.getTypeHelper() != null)
                                         if (occupancy.getTypeHelper().getSubtype() != null)

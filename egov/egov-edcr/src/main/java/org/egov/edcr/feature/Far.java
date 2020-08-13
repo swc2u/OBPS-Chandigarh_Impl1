@@ -1108,23 +1108,25 @@ public class Far extends FeatureProcess {
 			for (Floor flr : building.getFloors()) {
 				if(flr.getNumber()>=0) {// for removing basment in  
 					for (Occupancy occupancy : flr.getOccupancies()) {
-						validate2(pl, blk, flr, occupancy);
-						/*
-						 * occupancy.setCarpetArea(occupancy.getFloorArea().multiply
-						 * (BigDecimal.valueOf(0.80))); occupancy
-						 * .setExistingCarpetArea(occupancy.getExistingFloorArea().
-						 * multiply(BigDecimal.valueOf(0.80)));
-						 */
+						if(occupancy!=null && occupancy.getTypeHelper()!=null && !CDGAdditionalService.isOccupancyExcludedFromFar(occupancy.getTypeHelper())){
+							validate2(pl, blk, flr, occupancy);
+							/*
+							 * occupancy.setCarpetArea(occupancy.getFloorArea().multiply
+							 * (BigDecimal.valueOf(0.80))); occupancy
+							 * .setExistingCarpetArea(occupancy.getExistingFloorArea().
+							 * multiply(BigDecimal.valueOf(0.80)));
+							 */
 
-						bltUpArea = bltUpArea.add(
-								occupancy.getBuiltUpArea() == null ? BigDecimal.valueOf(0) : occupancy.getBuiltUpArea());
-						existingBltUpArea = existingBltUpArea
-								.add(occupancy.getExistingBuiltUpArea() == null ? BigDecimal.valueOf(0)
-										: occupancy.getExistingBuiltUpArea());
-						flrArea = flrArea.add(occupancy.getFloorArea());
-						existingFlrArea = existingFlrArea.add(occupancy.getExistingFloorArea());
-						carpetArea = carpetArea.add(occupancy.getCarpetArea());
-						existingCarpetArea = existingCarpetArea.add(occupancy.getExistingCarpetArea());
+							bltUpArea = bltUpArea.add(
+									occupancy.getBuiltUpArea() == null ? BigDecimal.valueOf(0) : occupancy.getBuiltUpArea());
+							existingBltUpArea = existingBltUpArea
+									.add(occupancy.getExistingBuiltUpArea() == null ? BigDecimal.valueOf(0)
+											: occupancy.getExistingBuiltUpArea());
+							flrArea = flrArea.add(occupancy.getFloorArea());
+							existingFlrArea = existingFlrArea.add(occupancy.getExistingFloorArea());
+							carpetArea = carpetArea.add(occupancy.getCarpetArea());
+							existingCarpetArea = existingCarpetArea.add(occupancy.getExistingCarpetArea());
+						}
 					}
 				
 				}
