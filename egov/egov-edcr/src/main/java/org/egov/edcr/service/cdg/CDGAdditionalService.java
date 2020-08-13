@@ -541,14 +541,18 @@ public class CDGAdditionalService {
 	public static boolean isOccupancyExcludedFromFar(OccupancyTypeHelper helper) {
 		boolean flage=false;
 		
-		if(DxfFileConstants.A_SQ.equals(helper.getSubtype().getCode())
-				|| DxfFileConstants.A_PO.equals(helper.getSubtype().getCode())
-				|| DxfFileConstants.A_S.equals(helper.getSubtype().getCode())
-				|| DxfFileConstants.A_PG.equals(helper.getSubtype().getCode())
-				|| DxfFileConstants.A_ICP.equals(helper.getSubtype().getCode())
-				|| DxfFileConstants.A_OCP.equals(helper.getSubtype().getCode())
-												)
-			flage=true;
+		if(helper!=null && helper.getSubtype()!=null && helper.getSubtype().getCode()!=null) {
+			if(DxfFileConstants.A_SQ.equals(helper.getSubtype().getCode())
+					|| DxfFileConstants.A_PO.equals(helper.getSubtype().getCode())
+					|| DxfFileConstants.A_S.equals(helper.getSubtype().getCode())
+					|| DxfFileConstants.A_PG.equals(helper.getSubtype().getCode())
+					|| DxfFileConstants.A_ICP.equals(helper.getSubtype().getCode())
+					|| DxfFileConstants.A_OCP.equals(helper.getSubtype().getCode())
+					|| DxfFileConstants.A_AF.equals(helper.getSubtype().getCode())
+					|| DxfFileConstants.A_GF.equals(helper.getSubtype().getCode())
+													)
+				flage=true;
+		}
 		
 		return flage;
 	}
