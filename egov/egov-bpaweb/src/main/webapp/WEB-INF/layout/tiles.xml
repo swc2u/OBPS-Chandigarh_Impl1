@@ -1355,4 +1355,59 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/plCertificate/pl-certificate-result.jsp" />
 	</definition>
+	
+	<definition name="pl-reschedule-appointment"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.pl.certificate" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/plCertificate/pl-reschedule-appointment.jsp" />
+	</definition>
+	
+	<definition name="pl-schedule-appointment-new"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.pl.certificate" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/plCertificate/pl-schedule-appointment-new.jsp" />
+	</definition>
+	
+	<definition name="pl-scheduled-appointment-result"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.pl.certificate" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/plCertificate/pl-scheduled-appointment-result.jsp" />
+	</definition>
+	
+	<definition name="pl-create-inspection"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.pl.certificate" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/plCertificate/pl-create-inspection.jsp" />
+	</definition>
+	
+	<definition name="pl-show-inspection"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.pl.certificate" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/plCertificate/pl-inspection-view-form.jsp" />
+	</definition>
+	
+	<definition name="pl-inspection-success"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.pl.certificate" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/plCertificate/pl-inspection-details-result.jsp" />
+	</definition>
+	
+	<definition name="pl-inspection-edit" extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.inspection.modify" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/plCertificate/pl-inspection-detail-update.jsp" />
+	</definition>
 </tiles-definitions>

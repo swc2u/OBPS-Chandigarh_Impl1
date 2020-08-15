@@ -1,26 +1,43 @@
 package org.egov.bpa.web.controller.transaction.pl;
 
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_HISTORY;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFY_COMPLETED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SITE_INSPECTED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SITE_INS;
+import static org.egov.bpa.utils.BpaConstants.DESIGNATION_OVERSEER;
+import static org.egov.bpa.utils.BpaConstants.FWD_TO_JE_FOR_SITE_INS;
 import static org.egov.bpa.utils.BpaConstants.GENERATEREJECTNOTICE;
 import static org.egov.bpa.utils.BpaConstants.WF_APPROVE_BUTTON;
-import static org.egov.bpa.utils.BpaConstants.WF_DOC_SCRUTINY_SCHEDLE_PEND;
-import static org.egov.bpa.utils.BpaConstants.WF_DOC_VERIFY_PEND;
-import static org.egov.bpa.utils.BpaConstants.WF_INIT_AUTO_RESCHDLE;
 import static org.egov.bpa.utils.BpaConstants.WF_REJECT_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.SITE_INSPECTION_COMPLETED;
+import static org.egov.bpa.utils.BpaConstants.WF_JE_INSPECTION_INITIATED;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.bpa.transaction.entity.WorkflowBean;
+import org.egov.bpa.transaction.entity.enums.AppointmentSchedulePurpose;
+import org.egov.bpa.transaction.entity.pl.PLAppointmentSchedule;
+import org.egov.bpa.transaction.entity.pl.PLInspection;
 import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
 import org.egov.bpa.transaction.notice.PlinthLevelCertificateNoticesFormat;
 import org.egov.bpa.transaction.notice.impl.PlinthLevelCertificateFormatImpl;
 import org.egov.bpa.transaction.service.OwnershipTransferService;
+import org.egov.bpa.transaction.service.pl.PLAppointmentScheduleService;
+import org.egov.bpa.transaction.service.pl.PlInspectionService;
 import org.egov.bpa.transaction.service.pl.PlinthLevelCertificateService;
 import org.egov.bpa.utils.BpaConstants;
+import org.egov.bpa.utils.PLCertificateUtils;
 import org.egov.bpa.web.controller.transaction.BpaGenericApplicationController;
 import org.egov.infra.reporting.engine.ReportOutput;
+import org.egov.infra.workflow.entity.State;
+import org.egov.eis.entity.Assignment;
 import org.egov.eis.service.PositionMasterService;
 import org.egov.eis.web.contract.WorkflowContainer;
 import org.egov.infra.admin.master.entity.User;
@@ -61,6 +78,7 @@ public class UpdatePLCertificateController extends BpaGenericApplicationControll
     private static final String PDFEXTN = ".pdf";
     private static final String MSG_APPROVE_FORWARD_REGISTRATION = "msg.approve.success";
     public static final String GENERATE_PL_CERTIFICATE = "Generate Plinth Level Certificate";
+    private static final String APPOINTMENT_SCHEDULED_LIST = "appointmentScheduledList";
     
     @Autowired
     private PositionMasterService positionMasterService;
@@ -69,7 +87,9 @@ public class UpdatePLCertificateController extends BpaGenericApplicationControll
     @Autowired
     private CustomImplProvider specificNoticeService;
     @Autowired
-    private OwnershipTransferService ownershipTransferService;
+    private PLAppointmentScheduleService plAppointmentScheduleService;
+    @Autowired
+    private PLCertificateUtils plCertificateUtils;
     
     @GetMapping("/update/{applicationNumber}")
     public String editPLCertificateApplication(@PathVariable final String applicationNumber, final Model model,
@@ -80,14 +100,13 @@ public class UpdatePLCertificateController extends BpaGenericApplicationControll
         loadData(pl, model);
         bpaUtils.loadBoundary(pl.getParent());
         getActionsForPLApplication(model, pl);
-        
-        if (pl.getState() != null
-                && pl.getState().getNextAction().equalsIgnoreCase(WF_DOC_SCRUTINY_SCHEDLE_PEND)
-                || pl.getState().getNextAction().equalsIgnoreCase(WF_DOC_VERIFY_PEND)
-                || pl.getState().getNextAction().equalsIgnoreCase(WF_INIT_AUTO_RESCHDLE))
-            return "pl-document-scrutiny-form";
-
+        buildAppointmentDetailsOfScrutinyAndInspection(model, pl);
         return PL_CERTIFICATE_VIEW;
+    }
+    
+    private void buildAppointmentDetailsOfScrutinyAndInspection(Model model, PlinthLevelCertificate pl) {
+    	List<PLAppointmentSchedule> appointmentScheduledList = plAppointmentScheduleService.findByApplication(pl, AppointmentSchedulePurpose.INSPECTION);
+    	model.addAttribute(APPOINTMENT_SCHEDULED_LIST, appointmentScheduledList);
     }
     
     private void setCityName(final Model model, final HttpServletRequest request) {
@@ -101,7 +120,21 @@ public class UpdatePLCertificateController extends BpaGenericApplicationControll
         model.addAttribute("currentState", pl.getCurrentState() == null ? "" : pl.getCurrentState().getValue());
     }
     
-    private void loadData(PlinthLevelCertificate pl, Model model) {        
+    private void loadData(PlinthLevelCertificate pl, Model model) {   
+    	final PlInspectionService plInspectionService = (PlInspectionService) specificNoticeService
+                .find(PlInspectionService.class, specificNoticeService.getCityDetails());
+        List<PLInspection> inspectionList = plInspectionService.findByPlOrderByIdAsc(pl);
+        int i = 0;
+        for (PLInspection plInspection : inspectionList) {
+            if (plInspection.getInspection().getInspectedBy().equals(securityUtils.getCurrentUser())) {
+                model.addAttribute("showEditInspection", true);
+                model.addAttribute("showEditInspectionIndex", String.valueOf(i));
+                break;
+            }
+            i++;
+        }
+    	
+        model.addAttribute("inspectionList", inspectionList);        
         model.addAttribute("citizenOrBusinessUser", bpaUtils.logedInuseCitizenOrBusinessUser());
 
         final WorkflowContainer workflowContainer = new WorkflowContainer();		
@@ -109,7 +142,12 @@ public class UpdatePLCertificateController extends BpaGenericApplicationControll
         model.addAttribute(ADDITIONALRULE, pl.getPlinthLevelCertificateType());
         workflowContainer.setAdditionalRule(pl.getPlinthLevelCertificateType());
         workflowContainer.setPendingActions(pl.getState().getNextAction());
-
+	    // JE workflow
+		//        if (WF_JE_INSPECTION_INITIATED.equalsIgnoreCase(pl.getStatus().getCode())) {
+		//            model.addAttribute("captureJERemarks", true);
+		//        } else if (APPLICATION_STATUS_SITE_INSPECTED.equalsIgnoreCase(pl.getStatus().getCode())) {
+		//            model.addAttribute("captureJERemarks", false);
+		//        }
         prepareWorkflow(model, pl, workflowContainer);
         model.addAttribute("pendingActions", workflowContainer.getPendingActions());
         model.addAttribute("currentState", pl.getCurrentState().getValue());
@@ -126,17 +164,56 @@ public class UpdatePLCertificateController extends BpaGenericApplicationControll
                 : "");
         model.addAttribute("bpaPrimaryDept", bpaUtils.getAppconfigValueByKeyNameForDefaultDept());
         model.addAttribute("loginUser", securityUtils.getCurrentUser());
-        model.addAttribute(APPLICATION_HISTORY, workflowHistoryService.getHistoryForPL(pl.getCurrentState(), pl.getStateHistory()));
+        model.addAttribute(APPLICATION_HISTORY, workflowHistoryService.getHistoryForPL(pl.getAppointmentSchedules(), pl.getCurrentState(), pl.getStateHistory()));
         model.addAttribute(BPA_APPLICATION, pl.getParent());
         model.addAttribute(PL_CERTIFICATE, pl);
     }
     
     private void getActionsForPLApplication(Model model, PlinthLevelCertificate pl) {
+    	State<Position> currentState = pl.getCurrentState();
+        String currentStatus = pl.getStatus().getCode();
+        String pendingAction = currentState.getNextAction();
         String mode = StringUtils.EMPTY;
+        AppointmentSchedulePurpose scheduleType = null;
+        List<String> purposeInsList = new ArrayList<>();
+        for (PLAppointmentSchedule plSchedule : pl.getAppointmentSchedules()) {
+            if (AppointmentSchedulePurpose.INSPECTION.equals(plSchedule.getAppointmentScheduleCommon().getPurpose())) {
+                purposeInsList.add(plSchedule.getAppointmentScheduleCommon().getPurpose().name());
+            }
+        }
+        Assignment appvrAssignment = bpaWorkFlowService.getApproverAssignment(currentState.getOwnerPosition());
+        if (currentState.getOwnerUser() != null) {
+            List<Assignment> assignments = bpaWorkFlowService.getAssignmentByPositionAndUserAsOnDate(
+                    currentState.getOwnerPosition().getId(), currentState.getOwnerUser().getId(),
+                    currentState.getLastModifiedDate());
+            if (!assignments.isEmpty())
+                appvrAssignment = assignments.get(0);
+        }
+        if (appvrAssignment == null)
+            appvrAssignment = bpaWorkFlowService
+                    .getAssignmentsByPositionAndDate(currentState.getOwnerPosition().getId(), new Date()).get(0);
+        boolean hasInspectionStatus = hasInspectionStatus(currentStatus);
+        
+        boolean hasInspectionPendingAction = FWD_TO_JE_FOR_SITE_INS.equalsIgnoreCase(pendingAction);
+        
+        if (hasInspectionStatus && hasInspectionPendingAction && purposeInsList.isEmpty())
+            mode = "newappointment";
+        else if (hasInspectionPendingAction && hasInspectionStatus && pl.getInspections().isEmpty()) {
+            mode = "captureInspection";
+            model.addAttribute("isInspnRescheduleEnabled", plCertificateUtils.isPLInspectionSchedulingIntegrationRequired());
+            scheduleType = AppointmentSchedulePurpose.INSPECTION;
+        }
+        
         if (mode == null)
             mode = "edit";
         
         model.addAttribute("mode", mode);
+        model.addAttribute("scheduleType", scheduleType);
+    }
+    
+    private boolean hasInspectionStatus(final String status) {
+        return APPLICATION_STATUS_SITE_INSPECTED.equalsIgnoreCase(status)
+                || APPLICATION_STATUS_REGISTERED.equalsIgnoreCase(status);
     }
     
     @PostMapping("/update-submit")
@@ -224,7 +301,7 @@ public class UpdatePLCertificateController extends BpaGenericApplicationControll
     public String success(@PathVariable final String applicationNumber, final Model model, final HttpServletRequest request) {
         PlinthLevelCertificate pl = plinthLevelCertificateService.findByApplicationNumber(applicationNumber);
         model.addAttribute(APPLICATION_HISTORY,
-                workflowHistoryService.getHistoryForPL(pl.getCurrentState(), pl.getStateHistory()));
+                workflowHistoryService.getHistoryForPL(pl.getAppointmentSchedules(), pl.getCurrentState(), pl.getStateHistory()));
         model.addAttribute(BPA_APPLICATION, pl.getParent());
         model.addAttribute(PL_CERTIFICATE, pl);
         return PL_CERTIFICATE_RESULT;

@@ -77,6 +77,17 @@
 						<spring:message code='title.documentdetail' />
 					</a>
 				</li>
+				<c:if test="${not empty appointmentScheduledList}">
+					<li>
+						<a data-toggle="tab" href="#view-appointments" data-tabidx=2>
+							<spring:message code='lbl.scheduled.appmnt' />
+						</a>
+					</li>
+				</c:if>
+				<c:if test="${not empty plinthLevelCertificate.inspections}">
+					<li><a data-toggle="tab" href="#view-inspection" data-tabidx=2><spring:message
+								code='lbl.inspection.appln' /></a></li>
+				</c:if>
 			</ul>
 			<div class="tab-content">
 				<div id="application-info" class="tab-pane fade in active">
@@ -129,8 +140,56 @@
 						<jsp:include page="view-bpaDocumentdetails.jsp"></jsp:include>
 					</div>
 				</div>
+				<c:if test="${not empty appointmentScheduledList}">
+					<div id="view-appointments" class="tab-pane fade">
+						<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="view-pl-scheduled-appiontments.jsp"></jsp:include>
+						</div>
+					</div>
+				</c:if>
+				<c:if test="${not empty plinthLevelCertificate.inspections}">
+					<div id="view-inspection" class="tab-pane fade">
+						<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include
+								page="pl-view-inspection-details.jsp"></jsp:include>
+						</div>
+					</div>
+				</c:if>
 			</div>
 			
+			<div class="text-center">
+				<c:if test="${mode eq 'newappointment'}">
+					<a
+						href="/bpa/application/plinth-level-certificate/schedule-appointment/${plinthLevelCertificate.applicationNumber}"
+						class="btn btn-primary"> <spring:message
+							code='lbl.btn.new.appointment' />
+					</a>
+				</c:if>
+				<c:if test="${mode eq 'captureInspection'}">
+					<a target="popup" class="btn btn-primary"
+						onclick="window.open('/bpa/application/plinth-level-certificate/create-inspection/${plinthLevelCertificate.applicationNumber}','popup','width=1100,height=700'); return false;"
+						class="btn btn-primary"> <spring:message
+							code='lbl.btn.inspection.details' />
+					</a>
+					<c:if test="${isInspnRescheduleEnabled eq true}">
+						<a
+							href="/bpa/application/plinth-level-certificate/reschedule-appointment/${scheduleType}/${plinthLevelCertificate.applicationNumber}"
+							class="btn btn-primary"> 
+							<spring:message code='lbl.btn.reschedule.appointment' />
+						</a>
+					</c:if>
+				</c:if>
+
+				<c:if test="${mode eq 'captureAdditionalInspection'}">
+					<a target="popup" class="btn btn-primary"
+						onclick="window.open('/bpa/application/plinth-level-certificate/create-inspection/${plinthLevelCertificate.applicationNumber}','popup','width=1100,height=700'); return false;"
+						class="btn btn-primary"> <spring:message
+							code='lbl.btn.inspection.details' />
+					</a>
+				</c:if>
+			</div>
+			<br/>
+			<br/>
 			<c:choose>
 				<c:when test="${plinthLevelCertificate.status.code eq 'Order Issued to Applicant'}">
 					<div class="buttonbottom" align="center">
@@ -187,9 +246,6 @@
 	<input type="hidden" id="forwardAppln" value="<spring:message code='msg.confirm.forward.application' />" />
 	<input type="hidden" id="generatePLC" value="<spring:message code='msg.confirm.generate.plinth-level-certificate' />" />
 	<input type="hidden" id="generateRejectNotice" value="<spring:message code='msg.confirm.generate.rejection.notice' />" />
-	<input type="hidden" id="townsurvFieldInspeRequest" value="<spring:message code='msg.validate.townsurveyor.filedinspec.request' />" />
-	<input type="hidden" id="townsurvFieldInspeRequired" value="<spring:message code='msg.validate.townsurveyor.fieldinspec.required' />" />
-	<input type="hidden" id="townsurvCommentsRequired" value="<spring:message code='msg.validate.comments.reqfor.townsurveyor' />" />
 	<input type="hidden" id="rejectionReasonMandatory" value="<spring:message code='msg.validate.onerejection.reason.mandatory' />" />
 	<input type="hidden" id="rejectionCommentsRequired" value="<spring:message code='msg.validate.enter.rejection.comments' />" />
 	<input type="hidden" id="applnSendbackCommentsRequired" value="<spring:message code='msg.validate.comments.required.toappln.sentback' />" />

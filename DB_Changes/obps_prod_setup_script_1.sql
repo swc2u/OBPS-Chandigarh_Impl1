@@ -2983,6 +2983,5 @@ update chandigarh.eg_appconfig_values set value = '1' where key_id = (select id 
 INSERT INTO chandigarh.eg_roleaction (roleid,actionid) VALUES 
 ((select id from state.eg_role er  where name= 'BPA Approver'),(select id from chandigarh.eg_action ea where url = '/downloadfile'));
 
---------------- Plinth Level Certificate ---------------------------------------------------------------------------
-
 -- all query is moved to script 2 plz check that and add new query there only 
+

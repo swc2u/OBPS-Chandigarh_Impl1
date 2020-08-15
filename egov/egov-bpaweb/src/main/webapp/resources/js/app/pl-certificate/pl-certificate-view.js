@@ -52,12 +52,10 @@ jQuery(document).ready(function() {
 	var tabfocus;
 	if ($('#wfstateDesc').val() == 'Document Verified') {
         tabfocus = '#view-inspection';
-    } else if ($('#captureTSRemarks').val() === 'true') {
-        tabfocus = '#ts-remarks';
-    } else if ($('#captureTSRemarks').val() === 'false') {
+    } else if ($('#wfstateDesc').val() == 'Site Inspected') {
         tabfocus = '#view-inspection';
-    } else if($('#wfstateDesc').val() == 'Scheduled For Document Scrutiny'
-        || $('#wfstateDesc').val() == 'Rescheduled For Document Scrutiny') {
+    } else if($('#wfstateDesc').val() == 'Scheduled For Site Inspection'
+        || $('#wfstateDesc').val() == 'Rescheduled For Site Inspection') {
         tabfocus = '#doc-scrutiny-info';
     } else {
 		tabfocus = '#applicant-info';
