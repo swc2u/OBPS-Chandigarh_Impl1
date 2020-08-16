@@ -311,3 +311,110 @@ INSERT INTO chandigarh.eg_appconfig_values (id,key_id,effective_from,value,creat
 (nextval('seq_eg_appconfig_values'),(select id from chandigarh.eg_appconfig where key_name = 'PL_INSPECTION_SCHEDULE_INTEGRATION_REQUIRED'),now(),'YES',NULL,NULL,NULL,NULL,0)
 ;
 
+INSERT INTO chandigarh.egbpa_status (id,code,description,moduletype,isactive,"version",createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
+(nextval('seq_egbpa_status'),'Site Inspection completed','Site Inspection completed','REGISTRATION',true,0,1,now(),NULL,now());
+
+
+create sequence seq_egbpa_pl_notice_conditions;
+CREATE TABLE chandigarh.egbpa_pl_notice_conditions
+(
+  id bigint NOT NULL,
+  plinthlevelcertificate bigint NOT NULL,
+  noticecondition bigint NOT NULL,
+  type character varying(30),
+  conditionddate timestamp without time zone,
+  conditionnumber character varying(30),
+  ordernumber bigint,
+  isrequired boolean DEFAULT true,
+  additionalcondition character varying(600),
+  createdby bigint NOT NULL,
+  createddate timestamp without time zone NOT NULL,
+  lastmodifiedby bigint,
+  lastmodifieddate timestamp without time zone,
+  version numeric DEFAULT 0,
+  CONSTRAINT pk_egbpa_pl_notice_conditions_id PRIMARY KEY (id),
+  CONSTRAINT fk_egbpa_pl_notice_conditions_pl FOREIGN KEY (plinthlevelcertificate) REFERENCES chandigarh.egbpa_plinth_level_certificate (id),
+  CONSTRAINT fk_egbpa_pl_notice_conditions_cndn FOREIGN KEY (noticecondition) REFERENCES chandigarh.egbpa_mstr_permit_conditions (id),
+  CONSTRAINT fk_egbpa_pl_notice_conditions_crtby FOREIGN KEY (createdby) REFERENCES state.eg_user (id),
+  CONSTRAINT fk_egbpa_pl_notice_conditions_mdfdby FOREIGN KEY (lastmodifiedby) REFERENCES state.eg_user (id)
+);
+
+delete from chandigarh.egbpa_pl_notice_conditions;
+alter table chandigarh.egbpa_pl_notice_conditions drop constraint fk_egbpa_pl_notice_conditions_cndn;
+alter table chandigarh.egbpa_pl_notice_conditions add constraint fk_egbpa_pl_notice_conditions_cndn FOREIGN KEY (noticecondition) REFERENCES chandigarh.egbpa_notice_conditions (id);
+alter table chandigarh.egbpa_pl_notice_conditions drop column type;
+alter table chandigarh.egbpa_pl_notice_conditions drop column conditionddate;
+alter table chandigarh.egbpa_pl_notice_conditions drop column conditionnumber;
+alter table chandigarh.egbpa_pl_notice_conditions drop column ordernumber;
+alter table chandigarh.egbpa_pl_notice_conditions drop column isrequired;
+alter table chandigarh.egbpa_pl_notice_conditions drop column additionalcondition;
+
+INSERT INTO chandigarh.eg_checklist_type (id,code,description,"version",createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
+(nextval('seq_eg_checklist_type'),'PLREJECTIONREASONS','Plinth level certificate rejection reasons',0,1,now(),1,now())
+;
+
+SELECT setval('seq_eg_checklist', (SELECT max(id) FROM chandigarh.eg_checklist));
+INSERT INTO chandigarh.eg_checklist (id,checklisttypeid,code,description,"version",createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
+(nextval('seq_eg_checklist'),(select id from eg_checklist_type where code = 'PLREJECTIONREASONS'),'PLREJECTIONREASON-01','The constructed building is in contradiction to any of the provisions of any of the law or order, rule, declaration or bye laws applicable.',0,1,now(),1,now())
+,(nextval('seq_eg_checklist'),(select id from eg_checklist_type where code = 'PLREJECTIONREASONS'),'PLREJECTIONREASON-02','The application for plinth level certificate does not contain the particulars or is not prepared in the manner required by these rules or bye law made under the acts concerned.',0,1,now(),1,now())
+,(nextval('seq_eg_checklist'),(select id from eg_checklist_type where code = 'PLREJECTIONREASONS'),'PLREJECTIONREASON-03','Any of the documents submitted do not conforms to the qualification requirements of the Architect, Engineer, Town Planner or supervisor or the owner/ applicant as required by the rule or byelaws concerned.',0,1,now(),1,now())
+,(nextval('seq_eg_checklist'),(select id from eg_checklist_type where code = 'PLREJECTIONREASONS'),'PLREJECTIONREASON-04','Any information or document or certificate as required by the permit approval system/ rule/ byelaws related has not been submitted properly or incorporated in an incorrect manner.',0,1,now(),1,now())
+,(nextval('seq_eg_checklist'),(select id from eg_checklist_type where code = 'PLREJECTIONREASONS'),'PLREJECTIONREASON-05','The owner of the land has not laid down and made street or streets or road or roads giving access to the site or sitesconnecting with an existing public or private streets while utilising , selling or leasing out or otherwise disposing of the land orany portion of the land or any portion or portions of the same site for construction of building.#The constructed building has made an encroachment upon a land belonging to the Government and / or the Corporationand/ or properties belonging to others than the applicant.',0,1,now(),1,now())
+;
+
+INSERT INTO chandigarh.egbpa_checklist_servicetype_mapping (id,checklist,servicetype,isrequired,ismandatory,"version",createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
+(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-01' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='01'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-02' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='01'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-03' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='01'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-04' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='01'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-05' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='01'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-01' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='03'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-02' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='03'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-03' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='03'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-04' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='03'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-05' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='03'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-01' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='04'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-02' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='04'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-03' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='04'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-04' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='04'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-05' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='04'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-01' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='06'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-02' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='06'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-03' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='06'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-04' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='06'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLREJECTIONREASON-05' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLREJECTIONREASONS')),(select id from chandigarh.egbpa_mstr_servicetype where code='06'),true,true,0,1,now(),1,now())
+;
+
+INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,application) VALUES 
+(nextval('seq_eg_action'),'Rejection For Plinth Level Certificate','/application/plinth-level-certificate/rejectionnotice',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Rejection For Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
+;
+
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'Rejection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'Rejection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'Rejection For Plinth Level Certificate'));
+
+INSERT INTO chandigarh.eg_appconfig (id,key_name,description,"version",createdby,lastmodifiedby,createddate,lastmodifieddate,"module") VALUES 
+(nextval('seq_eg_appconfig'),'SLA_PL_APPLICATION','Sla PL Application',0,NULL,NULL,NULL,NULL,444)
+;
+
+INSERT INTO chandigarh.eg_appconfig_values (id,key_id,effective_from,value,createddate,lastmodifieddate,createdby,lastmodifiedby,"version") VALUES 
+(nextval('seq_eg_appconfig_values'),(select id from chandigarh.eg_appconfig where key_name = 'SLA_PL_APPLICATION'),now(),'15',NULL,NULL,NULL,NULL,0)
+;
+
+delete from eg_wf_matrix where objecttype = 'PlinthLevelCertificate';
+
+INSERT INTO eg_wf_matrix (id,department,objecttype,currentstate,currentstatus,pendingactions,currentdesignation,additionalrule,nextstate,nextaction,nextdesignation,nextstatus,validactions,fromqty,toqty,fromdate,todate,"version",enablefields,forwardenabled,smsemailenabled,nextref,rejectenabled) VALUES 
+(nextval('seq_eg_wf_matrix'),'ANY','PlinthLevelCertificate','NEW','','Plinth Level Certificate application creation pending','','High Risk','Registered','Forwarded to JE for site inspection','Junior Engineer Urban','Registered','Forward',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
+,(nextval('seq_eg_wf_matrix'),'ANY','PlinthLevelCertificate','Registered','Registered','Forwarded to JE for site inspection','','High Risk','Final approval process initiated','Forwarded to approve the application','SDO Building Urban','Site Inspection completed','Forward,Reject',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
+,(nextval('seq_eg_wf_matrix'),'ANY','PlinthLevelCertificate','Final approval process initiated','Site Inspection completed','Forwarded to approve the application','','High Risk','Record Approved','Forwarded to generate Plinth Level Certificate','SDO Building Urban','Approved','Approve,Reject',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
+,(nextval('seq_eg_wf_matrix'),'ANY','PlinthLevelCertificate','Record Approved',NULL,'Forwarded to generate Plinth Level Certificate','','High Risk','END','END','SDO Building Urban','Order Issued to Applicant','Generate Plinth Level Certificate',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
+,(nextval('seq_eg_wf_matrix'),'ANY','PlinthLevelCertificate','Rejected','','Application is rejected by approver','','High Risk','generate rejection notice','Application is rejected by approver','SDO Building Urban','Rejected','Generate Rejection Notice',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
+;
+
+INSERT INTO eg_wf_matrix (id,department,objecttype,currentstate,currentstatus,pendingactions,currentdesignation,additionalrule,nextstate,nextaction,nextdesignation,nextstatus,validactions,fromqty,toqty,fromdate,todate,"version",enablefields,forwardenabled,smsemailenabled,nextref,rejectenabled) VALUES 
+(nextval('seq_eg_wf_matrix'),'ANY','PlinthLevelCertificate','NEW','','Plinth Level Certificate application creation pending','','Low Risk','Registered','Forwarded to JE for site inspection','Junior Engineer Urban','Registered','Forward',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
+,(nextval('seq_eg_wf_matrix'),'ANY','PlinthLevelCertificate','Registered','Registered','Forwarded to JE for site inspection','','Low Risk','Final approval process initiated','Forwarded to approve the application','SDO Building Urban','Site Inspection completed','Forward,Reject',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
+,(nextval('seq_eg_wf_matrix'),'ANY','PlinthLevelCertificate','Final approval process initiated','Site Inspection completed','Forwarded to approve the application','','Low Risk','Record Approved','Forwarded to generate Plinth Level Certificate','SDO Building Urban','Approved','Approve,Reject',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
+,(nextval('seq_eg_wf_matrix'),'ANY','PlinthLevelCertificate','Record Approved',NULL,'Forwarded to generate Plinth Level Certificate','','Low Risk','END','END','SDO Building Urban','Order Issued to Applicant','Generate Plinth Level Certificate',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
+,(nextval('seq_eg_wf_matrix'),'ANY','PlinthLevelCertificate','Rejected','','Application is rejected by approver','','Low Risk','generate rejection notice','Application is rejected by approver','SDO Building Urban','Rejected','Generate Rejection Notice',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
+;

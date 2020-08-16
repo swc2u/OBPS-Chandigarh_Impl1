@@ -1,4 +1,46 @@
 jQuery(document).ready(function () {
+	
+	var row = '<tr>' +
+	    '<td class="text-center"><span class="serialNo text-center" id="slNoInsp">{{sno}}</span><input type="hidden" name="additionalRejectReasonsTemp[{{idx}}].oc" value="{{applicationId}}" />'
+	    +'<input type="hidden" class="additionalPermitCondition" name="additionalRejectReasonsTemp[{{idx}}].noticeCondition.type" value="ADDITIONALREJECTIONREASONS"/>'
+	    +'<input type="hidden" class="additionalPermitCondition" name="additionalRejectReasonsTemp[{{idx}}].noticeCondition.checklistServicetype" value="{{permitConditionId}}"/>'
+	    +'<input type="hidden" class="serialNo" data-sno name="additionalRejectReasonsTemp[{{idx}}].noticeCondition.orderNumber"/></td>' +
+	    '<td><textarea class="form-control patternvalidation additionalPermitCondition" data-pattern="alphanumericspecialcharacters" rows="2" maxlength="500" name="additionalRejectReasonsTemp[{{idx}}].noticeCondition.additionalCondition"/></td>';
+	
+	var tbody = $('#bpaAdditionalRejectionReasons').children('tbody');
+	var table = tbody.length ? tbody : $('#bpaAdditionalRejectionReasons');
+	$('#addAddnlRejectRow').click(function () {
+	    var idx = $(tbody).find('tr').length;
+	    if(validateAdditionalConditionsOrReasonsOnAdd('bpaAdditionalRejectionReasons')) {
+	    	//Add row
+	        var row = {
+	            'sno': idx + 1,
+	            'idx': idx,
+	            'permitConditionId': $('#additionalPermitCondition').val(),
+	            'applicationId': $('#scrutinyapplicationid').val()
+	        };
+	        addRowFromObject(row);
+	        patternvalidation();
+	    }
+	});
+	
+	function validateAdditionalConditionsOrReasonsOnAdd(tableId){
+		var isValid=true;
+	    $('#'+tableId+' tbody tr').each(function(index){
+	    	var additionalPermitCondition  = $(this).find('*[name$="additionalCondition"]').val();
+		    if(!additionalPermitCondition) { 
+		    	bootbox.alert($('#valuesCannotEmpty').val());
+		    	isValid=false;
+		    	return false;
+		    } 
+	    });
+	    return isValid;
+	}
+	
+	function addRowFromObject(rowJsonObj) {
+	    table.append(row.compose(rowJsonObj));
+	}
+	
 	String.prototype.compose = (function () {
         var re = /\{{(.+?)\}}/g;
         return function (o) {
@@ -25,6 +67,19 @@ jQuery(document).ready(function () {
                     'show');
         }
     });
+    
+    $(".rejectionReasons").change(function () {
+        setCheckBoxValue($(this));
+    });
+
+    function setCheckBoxValue(currentVal) {
+        var $hiddenName = currentVal.data('change-to');
+        if (currentVal.is(':checked')) {
+            $('input[name="' + $hiddenName + '"]').val(true);
+        } else {
+            $('input[name="' + $hiddenName + '"]').val(false);
+        }
+    }
 
     var validator = $("#plinthLevelCertificateUpdateForm").validate({
         highlight: function (element, errorClass) {
@@ -201,7 +256,7 @@ jQuery(document).ready(function () {
             }
             return false;
         } else if (action === 'Generate Rejection Notice') {
-            if (validateOnApproveAndForward(validator, action) && validateOnReject(false)) {
+            if (validateOnApproveAndForward(validator, action)) {
                 bootbox
                     .dialog({
                         message: $('#generateRejectNotice').val(),

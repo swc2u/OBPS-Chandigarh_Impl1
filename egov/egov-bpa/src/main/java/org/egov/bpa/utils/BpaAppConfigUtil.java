@@ -67,6 +67,7 @@ public class BpaAppConfigUtil {
     private static final String SLA_BPA_APPLICATION = "SLA_BPA_APPLICATION";
     private static final String SLA_PERMIT_RENEWAL_APPLICATION = "SLA_PERMIT_RENEWAL_APPLICATION";
     private static final String SLA_OC_APPLICATION = "SLA_OC_APPLICATION";
+    private static final String SLA_PL_APPLICATION = "SLA_PL_APPLICATION";
     private static final String SLA_OWNERSHIP_TRANSFER = "SLA_OWNERSHIP_TRANSFER";
     public static final String AUTOGENERATE_OWNERSHIP_NUMBER = "AUTOGENERATE_OWNERSHIP_NUMBER";
     public static final String OWNERSHIP_APPLN_FEE_REQUIRED = "OWNERSHIPAPPLNFEECOLLECTIONREQUIRED";
@@ -118,5 +119,9 @@ public class BpaAppConfigUtil {
     }    
     public Boolean ownershipFeeCollectionRequired() {
         return getAppconfigValueByKeyName(OWNERSHIP_FEE_REQUIRED).equalsIgnoreCase(YES);
-    }   
+    } 
+    
+    public Integer getSlaPlApplication(){
+        return Integer.valueOf(getAppconfigValueByKeyName(SLA_PL_APPLICATION));
+    }
 }

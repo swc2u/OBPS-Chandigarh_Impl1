@@ -3,13 +3,15 @@ package org.egov.bpa.transaction.service.pl;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_CANCELLED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_CREATED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SUBMITTED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_TS_INS_INITIATED;
 import static org.egov.bpa.utils.BpaConstants.WF_APPROVE_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_CANCELAPPLICATION_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_LBE_SUBMIT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_NEW_STATE;
 import static org.egov.bpa.utils.BpaConstants.WF_SAVE_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.WF_REJECT_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REJECTED;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +19,7 @@ import org.egov.bpa.autonumber.PLCertificateNumberGenerator;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BpaStatus;
 import org.egov.bpa.transaction.entity.WorkflowBean;
+import org.egov.bpa.transaction.entity.pl.PLNoticeConditions;
 import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
 import org.egov.bpa.transaction.repository.ApplicationBpaRepository;
 import org.egov.bpa.transaction.repository.pl.PlinthLevelCertificateRepository;
@@ -45,6 +48,8 @@ public class PlinthLevelCertificateService {
 	private ApplicationBpaRepository applicationBpaRepository;
 	@Autowired
 	private ApplicationBpaService applicationBpaService;
+	@Autowired
+    private PLNoticeConditionsService plNoticeConditionsService;
 	
 	public List<PlinthLevelCertificate> findByPermitNumber(String permitNumber) {
         return plinthLevelCertificateRepository.findByPermitNumber(permitNumber);
@@ -130,19 +135,28 @@ public class PlinthLevelCertificateService {
             pl.setApproverUser(pl.getState().getOwnerUser());
             pl.setPlinthLevelCertificateNumber(generatePLCertificateNumber());
         }
-//        if (WF_REJECT_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())
-//                || WF_INITIATE_REJECTION_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())
-//                || APPLICATION_STATUS_REJECTED.equalsIgnoreCase(oc.getStatus().getCode())
-//                || APPLICATION_STATUS_NOCUPDATED.equals(oc.getStatus().getCode())) {
-//            buildRejectionReasons(oc);
-//        }
-        
-        if (APPLICATION_STATUS_TS_INS_INITIATED.equals(pl.getStatus().getCode())) {
-            pl.setIsSurveyorInspectionRequire(false);
+        if (WF_REJECT_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
+            buildRejectionReasons(pl);
         }
+        
         if (!WF_SAVE_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction()))
             bpaUtils.redirectToBpaWorkFlowForPL(pl, wfBean);
         plinthLevelCertificateRepository.saveAndFlush(pl);
         return pl;
+    }
+    
+    private void buildRejectionReasons(final PlinthLevelCertificate pl) {
+        plNoticeConditionsService.delete(pl.getRejectionReasons());
+        plNoticeConditionsService.delete(pl.getAdditionalNoticeConditions());
+        pl.getAdditionalNoticeConditions().clear();
+        pl.getRejectionReasons().clear();
+        List<PLNoticeConditions> additionalRejectReasons = new ArrayList<>();
+        for (PLNoticeConditions addnlReason : pl.getAdditionalRejectReasonsTemp()) {
+            addnlReason.setPl(pl);
+            if (addnlReason != null && addnlReason.getNoticeCondition().getAdditionalCondition() != null)
+                additionalRejectReasons.add(addnlReason);
+        }
+        pl.setRejectionReasons(pl.getRejectionReasonsTemp());
+        pl.setAdditionalNoticeConditions(additionalRejectReasons);
     }
 }

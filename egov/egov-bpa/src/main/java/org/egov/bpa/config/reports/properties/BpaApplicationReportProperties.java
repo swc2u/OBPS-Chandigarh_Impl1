@@ -85,4 +85,8 @@ public class BpaApplicationReportProperties {
 	public String getOwnershipRefusalFormat() {
 		return environment.getProperty("report.ownership.rejectionpermit");
 	}
+	
+	public String getPLCRefusalFormat() {
+		return environment.getProperty("report.rejectionplc");
+	}
 }

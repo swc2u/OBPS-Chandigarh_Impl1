@@ -483,8 +483,9 @@ public class BpaConstants {
     public static final String BPA_DEMAND_NOTICE_TYPE = "DemandNotice";
     public static final String BPA_REJECTION_NOTICE_TYPE = "RejectionNotice";
     public static final String BPA_REVOCATION_NOTICE_TYPE = "RevocationNotice";
-    public static final String OCREJECTIONFILENAME = "ocrejectionnotice";
+    public static final String OCREJECTIONFILENAME = "ocrejectionnotice";    
     public static final String OCDEMANDFILENAME = "ocdemandnotice";
+    public static final String PLREJECTIONFILENAME = "plrejectionnotice";
     public static final String REGULARIZATIONFIILENAME = "regularization_permit";
     public static final String REGULARIZATIONOTHERSFIILENAME = "regularization_others_permit";
     public static final String REGULARIZATIONBUILDINGDEVELOPMENTFIILENAME = "regularization_buildingdevelopment_permit";

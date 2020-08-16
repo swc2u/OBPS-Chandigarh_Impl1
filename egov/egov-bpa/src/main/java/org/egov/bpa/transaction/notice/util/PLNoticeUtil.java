@@ -2,7 +2,9 @@ package org.egov.bpa.transaction.notice.util;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_MODULE_TYPE;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_CANCELLED;
 import static org.egov.infra.security.utils.SecureCodeUtils.generatePDF417Code;
 import static org.egov.infra.utils.DateUtils.currentDateToDefaultDateFormat;
 
@@ -12,19 +14,25 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.bpa.config.reports.properties.BpaApplicationReportProperties;
 import org.egov.bpa.master.entity.ServiceType;
 import org.egov.bpa.transaction.entity.PermitCoApplicant;
 import org.egov.bpa.transaction.entity.common.NoticeCommon;
+import org.egov.bpa.transaction.entity.enums.ConditionType;
 import org.egov.bpa.transaction.entity.pl.PLNotice;
+import org.egov.bpa.transaction.entity.pl.PLNoticeConditions;
 import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
 import org.egov.bpa.transaction.repository.pl.PLNoticeRepository;
+import org.egov.bpa.transaction.service.pl.PLNoticeConditionsService;
 import org.egov.bpa.transaction.service.pl.PlinthLevelCertificateService;
 import org.egov.bpa.transaction.workflow.BpaWorkFlowService;
 import org.egov.bpa.utils.BpaConstants;
+import org.egov.bpa.utils.BpaUtils;
 import org.egov.infra.admin.master.service.CityService;
 import org.egov.infra.config.core.ApplicationThreadLocals;
 import org.egov.infra.filestore.entity.FileStoreMapper;
@@ -37,6 +45,8 @@ import org.egov.infra.utils.DateUtils;
 import org.egov.infra.workflow.entity.StateHistory;
 import org.egov.pims.commons.Position;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +57,8 @@ public class PLNoticeUtil {
     private static final String N_A = "N/A";
     private static final String APPLICATION_PDF = "application/pdf";
     public static final String TWO_NEW_LINE = "\n\n";
+    private static final String APPLICATION_REJECTION_REASON = "applctn.reject.reason";
+    private static final String APPLICATION_AUTO_REJECTION_REASON = "applctn.auto.reject.reason";
     
     @Autowired
     private BpaNoticeUtil bpaNoticeUtil;
@@ -62,6 +74,15 @@ public class PLNoticeUtil {
     private PlinthLevelCertificateService plinthLevelCertificateService;
     @Autowired
     private ReportService reportService;
+    @Autowired
+    private BpaApplicationReportProperties bpaApplicationReportProperties;
+    @Autowired
+    private PLNoticeConditionsService plNoticeConditionsService;
+    @Autowired
+    private BpaUtils bpaUtils;
+    @Autowired
+    @Qualifier("parentMessageSource")
+    private MessageSource plMessageSource;
     
     public PLNotice findByPlAndNoticeType(PlinthLevelCertificate pl, String noticeType) {
         return plNoticeRepository.findByPlAndNoticeType(pl, noticeType);
@@ -119,7 +140,8 @@ public class PLNoticeUtil {
         String amenities = pl.getParent().getApplicationAmenity().stream().map(ServiceType::getDescription).collect(Collectors.joining(", "));
         reportParams.put("amenities", StringUtils.isBlank(amenities) ? "N/A" : amenities);
         reportParams.put("occupancy", pl.getParent().getOccupanciesName());
-        reportParams.put("applicantAddress", pl.getParent().getOwner() == null ? "Not Mentioned" : pl.getParent().getOwner().getAddress());        
+        reportParams.put("applicantAddress", pl.getParent().getOwner() == null ? "Not Mentioned" : pl.getParent().getOwner().getAddress()); 
+        reportParams.put("refusalFormat", bpaApplicationReportProperties.getPLCRefusalFormat());
         
         String coApplicantNames = "";        
         if(null != pl.getParent().getCoApplicants()) {
@@ -137,8 +159,68 @@ public class PLNoticeUtil {
         	reportParams.put("plotNo", EMPTY);
         	reportParams.put("sectorNo", EMPTY);
         }       
-        
+        if (APPLICATION_STATUS_CANCELLED.equalsIgnoreCase(pl.getStatus().getCode())) {
+            reportParams.put("rejectionReasons", buildRejectionReasons(pl, false));
+        }
         return reportParams;
+    }
+    
+    public String buildRejectionReasons(final PlinthLevelCertificate pl, final boolean isForRevocation) {
+    	StringBuilder rejectReasons = new StringBuilder();
+        if (!pl.getRejectionReasons().isEmpty()) {
+            List<PLNoticeConditions> additionalPermitConditions = plNoticeConditionsService.findAllPlConditionsByPlAndType(pl, ConditionType.ADDITIONALREJECTIONREASONS);
+            int order = buildPredefinedRejectReasons(pl, rejectReasons);
+            int additionalOrder = buildAdditionalNoticeConditions(rejectReasons, additionalPermitConditions,
+                    order);
+            StateHistory<Position> stateHistory = bpaUtils.getRejectionComments(pl.getStateHistory());
+            rejectReasons.append(additionalOrder + ") "
+                    + (stateHistory != null && isNotBlank(stateHistory.getComments()) ? stateHistory.getComments() : EMPTY)
+                    + TWO_NEW_LINE);
+        } else {
+            rejectReasons.append(pl.getState().getComments() != null
+                    && pl.getState().getComments().equalsIgnoreCase("Application cancelled by citizen")
+                            ? getMessageFromPropertyFile(APPLICATION_REJECTION_REASON)
+                            : getMessageFromPropertyFile(APPLICATION_AUTO_REJECTION_REASON));
+        }
+        return rejectReasons.toString();
+    }
+    
+    private int buildPredefinedRejectReasons(final PlinthLevelCertificate pl,
+            StringBuilder permitConditions) {
+        int order = 1;
+        for (PLNoticeConditions rejectReason : pl.getRejectionReasons()) {
+            if (rejectReason.getNoticeCondition().isRequired()
+                    && ConditionType.PLREJECTIONREASONS.equals(rejectReason.getNoticeCondition().getType())) {
+                permitConditions
+                        .append(order + ") "
+                                + rejectReason.getNoticeCondition().getChecklistServicetype().getChecklist().getDescription()
+                                + TWO_NEW_LINE);
+                order++;
+            }
+        }
+        return order;
+    }
+    
+    private int buildAdditionalNoticeConditions(StringBuilder permitConditions,
+            List<PLNoticeConditions> additionalConditions, int order) {
+        int additionalOrder = order;
+        if (!additionalConditions.isEmpty()
+                && isNotBlank(additionalConditions.get(0).getNoticeCondition().getAdditionalCondition())) {
+            for (PLNoticeConditions addnlNoticeCondition : additionalConditions) {
+                if (isNotBlank(addnlNoticeCondition.getNoticeCondition().getAdditionalCondition())) {
+                    permitConditions.append(
+                            String.valueOf(additionalOrder) + ") "
+                                    + addnlNoticeCondition.getNoticeCondition().getAdditionalCondition()
+                                    + TWO_NEW_LINE);
+                    additionalOrder++;
+                }
+            }
+        }
+        return additionalOrder;
+    }
+    
+    public String getMessageFromPropertyFile(String key) {
+        return plMessageSource.getMessage(key, null, null);
     }
     
     public String getApproverName(final PlinthLevelCertificate plinthLevelCertificate) {

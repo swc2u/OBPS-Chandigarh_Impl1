@@ -3,6 +3,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="bpa_occupancy_certificate" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="923d3ab1-1460-4218-a5fa-27826c902134">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<import value="org.egov.infra.reporting.util.ReportUtil"/>
+	<parameter name="cityName" class="java.lang.String"/>
 	<parameter name="ulbName" class="java.lang.String"/>
 	<parameter name="applicationNumber" class="java.lang.String"/>
 	<parameter name="applicationDate" class="java.lang.String"/>
@@ -19,6 +20,8 @@
 	<parameter name="formRule" class="java.lang.String"/>
 	<parameter name="noticeGenerationDate" class="java.lang.String"/>
 	<parameter name="aplnCreatedBy" class="java.lang.String"/>
+	<parameter name="refusalFormat" class="java.lang.String"/>
+	<parameter name="rejectionReasons" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -40,65 +43,49 @@
 				<textElement textAlignment="Center">
 					<font size="11" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{formRule}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{refusalFormat}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="119" y="62" width="339" height="22" uuid="98dfcec8-9176-4fd4-b8b5-48d691f0e679"/>
-				<textElement textAlignment="Center">
-					<font size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[PLINTH LEVEL CERTIFICATE]]></text>
-			</staticText>
 		</band>
 	</title>
 	<detail>
-		<band height="152">
+		<band height="112">
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToBandHeight" x="1" y="68" width="554" height="19" uuid="26d07d46-c11c-4848-b2c1-1bf260f20dc1"/>
+				<reportElement stretchType="RelativeToBandHeight" x="1" y="20" width="554" height="19" uuid="26d07d46-c11c-4848-b2c1-1bf260f20dc1"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Sh. "+$P{applicantName} + " , "+$P{coApplicantName}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToBandHeight" x="1" y="88" width="554" height="19" uuid="d7f228a9-a18b-44a9-9f6b-164d999799a4"/>
+				<reportElement stretchType="RelativeToBandHeight" x="1" y="40" width="554" height="19" uuid="d7f228a9-a18b-44a9-9f6b-164d999799a4"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{applicantAddress} + " , " + "\n" + "Mobile number : " + $P{mobileNo}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToBandHeight" x="1" y="128" width="336" height="19" uuid="1377960a-a9d2-4a8b-a1d0-167e68a8f9a1"/>
+				<reportElement stretchType="RelativeToBandHeight" x="1" y="89" width="336" height="19" uuid="1377960a-a9d2-4a8b-a1d0-167e68a8f9a1"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Memo No- SDO (B)/"+ $P{applicationNumber}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToBandHeight" x="350" y="128" width="205" height="19" uuid="4cb622a8-fbbc-481e-b6ed-5e2e5f3d7078"/>
+				<reportElement stretchType="RelativeToBandHeight" x="350" y="89" width="205" height="19" uuid="4cb622a8-fbbc-481e-b6ed-5e2e5f3d7078"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" Dated " + $P{noticeGenerationDate}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="49" width="339" height="18" uuid="77cdedcf-a1fd-483f-ab4c-aa660232b09f"/>
+				<reportElement x="1" y="1" width="339" height="18" uuid="77cdedcf-a1fd-483f-ab4c-aa660232b09f"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[To,]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="1" y="2" width="339" height="43" uuid="dce3c2d0-3865-4c46-bc3e-dbe30c295a24"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[From,
-The Chief Administrator, 
-UT, Chandigarh.]]></text>
-			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToBandHeight" x="0" y="108" width="555" height="19" uuid="1bd0eb0b-3b4d-4573-9e48-155a4e823af6"/>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="60" width="555" height="19" uuid="1bd0eb0b-3b4d-4573-9e48-155a4e823af6"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
@@ -107,39 +94,28 @@ UT, Chandigarh.]]></text>
 		</band>
 		<band height="60">
 			<textField>
-				<reportElement x="1" y="4" width="554" height="56" uuid="b6d4471d-09fe-4edc-bd99-8be325ab642e"/>
+				<reportElement x="1" y="20" width="554" height="40" uuid="b6d4471d-09fe-4edc-bd99-8be325ab642e"/>
 				<textElement>
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Reference your application to erect/ re-erect/ add to/ alter building on "+$P{plotNo}+", Sector No- "+$P{sectorNo}+", Chandigarh, " + "Chandigarh accordance in with the plans construction under rule 5 of the Punjab capital (Dev. and Reg.) Building rules, 1952. Your attention is also invited to rule 16, rule 17, rule 119 (amended) of building rules for following: -"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["       Your application, dated "+($P{applicationDate})+" for plinth level certificate in "+$P{ulbName}+" falling in "+ $P{plotNo}+", Sector No- "+$P{sectorNo} + ",is rejected due the following reason(s),"]]></textFieldExpression>
 			</textField>
-		</band>
-		<band height="185">
 			<staticText>
-				<reportElement x="1" y="3" width="554" height="180" uuid="fc381974-a5bf-40e3-baad-826a76a3ce2e"/>
-				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font size="11" isBold="false"/>
+				<reportElement x="1" y="1" width="554" height="18" uuid="f0bdbe72-b6d4-4684-9a9d-3f0338582d57"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
 				</textElement>
-				<text><![CDATA[1. A notice in writing of the date and time at which erection/ re-election of the building shall be given.
-2. Plan sanctioned are valid for only five years from the date of issue on plan of valid last date of construction.
-3. For demarcation, plinth level, water connection etc. you may contact concerned departments as per Endst. Below.
-4. On completion of construction upto plinth level, you are further advised also to furnish a certificate from the architect that the construction of building is accordance with sanctioned plan.
-5. You are requested to obtain permission from the Municipal Corporation, Chandigarh, for stacking building materials on road berms, back lanes etc., against the payment of prescribed fee/payment, before starting the construction/ renovation work as per M.C norms. 
-6. You will have to get O\C for proposal sanctioned in this plan.
-You are also requested to intimate regarding construction of building upto DPC level and further construction shall not be taken in hand till the same is verified/ certified by the junior engineer and obtained DPC certificate from office.]]></text>
+				<text><![CDATA[Sir/Madam,]]></text>
 			</staticText>
 		</band>
-		<band height="105">
-			<staticText>
-				<reportElement x="1" y="2" width="554" height="100" uuid="20d9879f-c721-4b2c-97ee-4ef6ad718aa8"/>
-				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font size="11" isBold="false"/>
-				</textElement>
-				<text><![CDATA[1. You will bound by decision of Chandigarh Administration regarding imposing of composition fee for taking the additional FAR as per notification dated 16.10.08 in which regard you have already given indemnity bond dated 14. 2.2011 That you will pay the amount immediately.
-2. You will provide rain water harvesting system at site as per administration order.
-3. You will provide solar water heating system at site as per administration order.
-4. You will provide NOC from Asstt. Labour Commissioner Chandigarh, Sector 30, Chandigarh before sewerage connection and occupation certificate.]]></text>
-			</staticText>
+		<band height="55">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="555" height="50" uuid="3e0c23bb-d7d2-4688-a007-7a5822afd723">
+					<printWhenExpression><![CDATA[$P{rejectionReasons} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Justified"/>
+				<textFieldExpression><![CDATA[$P{rejectionReasons}]]></textFieldExpression>
+			</textField>
 		</band>
 		<band height="100">
 			<staticText>
@@ -152,6 +128,34 @@ For Estate office
 exercising the power of
 Chief Administrator, UT- Chandigarh]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="1" y="56" width="64" height="20" uuid="a67a2453-2fd4-4699-b371-830ec9b959f5"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Place        : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="65" y="57" width="133" height="20" uuid="fd8f3367-5fd2-4e66-ba25-18fcb45543ae"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{cityName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="76" width="65" height="20" uuid="25ffccfd-1497-4897-8398-d0eb13f656a7"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date        : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="65" y="77" width="133" height="19" uuid="536309bb-2cf4-492c-ac72-53896e5782e1"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{noticeGenerationDate}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>

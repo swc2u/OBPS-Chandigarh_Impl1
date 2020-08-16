@@ -92,7 +92,7 @@ public abstract class PlinthLevelCertificateWorkflowCustomImpl implements Plinth
                 }
                 pl.setStatus(getStatusByCurrentMatrixStatus(wfMatrix));
                 pl.transition().start()
-                        .withSLA(bpaWorkFlowService.calculateDueDate(bpaAppConfigUtil.getSlaOcApplication()))
+                        .withSLA(bpaWorkFlowService.calculateDueDate(bpaAppConfigUtil.getSlaPlApplication()))
                         .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                         .withOwner(ownerUser)
                         .withComments(wfBean.getApproverComments())
@@ -128,7 +128,7 @@ public abstract class PlinthLevelCertificateWorkflowCustomImpl implements Plinth
             pl.transition().end()
                     .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                     .withComments(wfBean.getApproverComments()).withDateInfo(currentDate.toDate())
-                    .withNextAction(BpaConstants.WF_END_STATE).withNatureOfTask(BpaConstants.NATURE_OF_WORK_OC);
+                    .withNextAction(BpaConstants.WF_END_STATE).withNatureOfTask(BpaConstants.NATURE_OF_WORK_PL);
         } else {
             Assignment approverAssignment = bpaWorkFlowService.getApproverAssignment(pos);
             if (approverAssignment == null)

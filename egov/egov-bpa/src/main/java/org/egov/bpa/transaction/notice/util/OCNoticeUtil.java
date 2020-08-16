@@ -279,7 +279,6 @@ public class OCNoticeUtil {
                     exstArea.get(EXST_TOTAL_FLOOR_AREA) == null ? BigDecimal.ZERO : exstArea.get(EXST_TOTAL_FLOOR_AREA));
             reportParams.put(EXST_TOTAL_CARPET_AREA,
                     exstArea.get(EXST_TOTAL_CARPET_AREA) == null ? BigDecimal.ZERO : exstArea.get(EXST_TOTAL_CARPET_AREA));
-
         }
 
         Map<String, BigDecimal> proposedArea = BpaUtils.getProposedBuildingAreasOfOC(oc.getBuildings());

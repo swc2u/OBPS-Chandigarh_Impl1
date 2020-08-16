@@ -129,6 +129,11 @@
 					<div class="panel panel-primary" data-collapsed="0">
 						<jsp:include page="../application/applicationhistory-view.jsp"></jsp:include>
 					</div>
+					<c:if test="${showRejectionReasons}">
+						<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="pl-rejection-reasons.jsp"></jsp:include>
+						</div>
+					</c:if>
 				</div>
 				<div id="document-info" class="tab-pane fade">
 					<c:if test="${not empty plinthLevelCertificate.parent.permitDcrDocuments}">

@@ -1,7 +1,10 @@
 package org.egov.bpa.web.controller.transaction.pl;
 
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_HISTORY;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_AEE_APPROVAL_COMPLETED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_REVIEWED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFY_COMPLETED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_NOCUPDATED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SITE_INSPECTED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SITE_INS;
@@ -23,13 +26,15 @@ import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.bpa.transaction.entity.WorkflowBean;
 import org.egov.bpa.transaction.entity.enums.AppointmentSchedulePurpose;
+import org.egov.bpa.transaction.entity.enums.ConditionType;
 import org.egov.bpa.transaction.entity.pl.PLAppointmentSchedule;
 import org.egov.bpa.transaction.entity.pl.PLInspection;
 import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
 import org.egov.bpa.transaction.notice.PlinthLevelCertificateNoticesFormat;
+import org.egov.bpa.transaction.notice.impl.PlRejectionFormatImpl;
 import org.egov.bpa.transaction.notice.impl.PlinthLevelCertificateFormatImpl;
-import org.egov.bpa.transaction.service.OwnershipTransferService;
 import org.egov.bpa.transaction.service.pl.PLAppointmentScheduleService;
+import org.egov.bpa.transaction.service.pl.PLNoticeConditionsService;
 import org.egov.bpa.transaction.service.pl.PlInspectionService;
 import org.egov.bpa.transaction.service.pl.PlinthLevelCertificateService;
 import org.egov.bpa.utils.BpaConstants;
@@ -90,6 +95,8 @@ public class UpdatePLCertificateController extends BpaGenericApplicationControll
     private PLAppointmentScheduleService plAppointmentScheduleService;
     @Autowired
     private PLCertificateUtils plCertificateUtils;
+    @Autowired
+    private PLNoticeConditionsService plNoticeConditionsService;
     
     @GetMapping("/update/{applicationNumber}")
     public String editPLCertificateApplication(@PathVariable final String applicationNumber, final Model model,
@@ -142,12 +149,6 @@ public class UpdatePLCertificateController extends BpaGenericApplicationControll
         model.addAttribute(ADDITIONALRULE, pl.getPlinthLevelCertificateType());
         workflowContainer.setAdditionalRule(pl.getPlinthLevelCertificateType());
         workflowContainer.setPendingActions(pl.getState().getNextAction());
-	    // JE workflow
-		//        if (WF_JE_INSPECTION_INITIATED.equalsIgnoreCase(pl.getStatus().getCode())) {
-		//            model.addAttribute("captureJERemarks", true);
-		//        } else if (APPLICATION_STATUS_SITE_INSPECTED.equalsIgnoreCase(pl.getStatus().getCode())) {
-		//            model.addAttribute("captureJERemarks", false);
-		//        }
         prepareWorkflow(model, pl, workflowContainer);
         model.addAttribute("pendingActions", workflowContainer.getPendingActions());
         model.addAttribute("currentState", pl.getCurrentState().getValue());
@@ -167,6 +168,7 @@ public class UpdatePLCertificateController extends BpaGenericApplicationControll
         model.addAttribute(APPLICATION_HISTORY, workflowHistoryService.getHistoryForPL(pl.getAppointmentSchedules(), pl.getCurrentState(), pl.getStateHistory()));
         model.addAttribute(BPA_APPLICATION, pl.getParent());
         model.addAttribute(PL_CERTIFICATE, pl);
+        buildRejectionReasons(model, pl);
     }
     
     private void getActionsForPLApplication(Model model, PlinthLevelCertificate pl) {
@@ -239,7 +241,7 @@ public class UpdatePLCertificateController extends BpaGenericApplicationControll
                 && !GENERATEREJECTNOTICE.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
             approvalPosition = Long.valueOf(request.getParameter(APPRIVALPOSITION));
         } else if (WF_REJECT_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
-            pos = bpaWorkFlowService.getApproverPositionOfElectionWardByCurrentStateForPL(plinthLevelCertificate, BpaConstants.REJECTION_INITIATED);
+            pos = bpaWorkFlowService.getApproverPositionOfElectionWardByCurrentStateForPL(plinthLevelCertificate, BpaConstants.WF_REJECT_STATE);
             approvalPosition = pos.getId();
         }
 
@@ -284,15 +286,14 @@ public class UpdatePLCertificateController extends BpaGenericApplicationControll
 
             return "redirect:/application/plinth-level-certificate/generate-plinth-level-certificate/" + plinthLevelCertificate.getApplicationNumber();
         } 
-//        else if (StringUtils.isNotBlank(wfBean.getWorkFlowAction()) && GENERATEREJECTNOTICE.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
-//            OccupancyCertificateNoticesFormat ocNoticeFeature = (OccupancyCertificateNoticesFormat) specificNoticeService
-//                    .find(OccupancyRejectionFormatImpl.class, specificNoticeService.getCityDetails());
-//            ReportOutput reportOutput = ocNoticeFeature
-//                    .generateNotice(
-//                            occupancyCertificateService.findByApplicationNumber(occupancyCertificate.getApplicationNumber()));
-//            ocSmsAndEmailService.sendSMSAndEmail(occupancyCertificate, reportOutput, OCREJECTIONFILENAME + PDFEXTN);
-//            return "redirect:/application/occupancy-certificate/rejectionnotice/" + occupancyCertificate.getApplicationNumber();
-//        }
+        else if (StringUtils.isNotBlank(wfBean.getWorkFlowAction()) && GENERATEREJECTNOTICE.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
+        	PlinthLevelCertificateNoticesFormat plNoticeFeature = (PlinthLevelCertificateNoticesFormat) specificNoticeService
+                    .find(PlRejectionFormatImpl.class, specificNoticeService.getCityDetails());
+            ReportOutput reportOutput = plNoticeFeature
+                    .generateNotice(
+                            plinthLevelCertificateService.findByApplicationNumber(plinthLevelCertificate.getApplicationNumber()));
+            return "redirect:/application/plinth-level-certificate/rejectionnotice/" + plinthLevelCertificate.getApplicationNumber();
+        }
 
         return REDIRECT_APPLICATION_PL_SUCCESS + plResponse.getApplicationNumber();
     }
@@ -314,5 +315,22 @@ public class UpdatePLCertificateController extends BpaGenericApplicationControll
                         : userObj.getUsername().concat("~")
                                 .concat(getDesinationNameByPosition(ownerPosition)),
                 pl.getApplicationNumber(), approvalComent }, LocaleContextHolder.getLocale());
+    }
+    
+    private void buildRejectionReasons(Model model, PlinthLevelCertificate pl) {
+        if (APPLICATION_STATUS_REGISTERED.equals(pl.getStatus().getCode())
+                || SITE_INSPECTION_COMPLETED.equalsIgnoreCase(pl.getStatus().getCode())) {
+            model.addAttribute("showRejectionReasons", true);
+            model.addAttribute("additionalRejectionReasons",
+                    checklistServiceTypeService.findByActiveChecklistAndServiceType(
+                            pl.getParent().getServiceType().getDescription(), "ADDITIONALREJECTIONREASONS"));
+
+            model.addAttribute("rejectionReasons", checklistServiceTypeService.findByActiveChecklistAndServiceType(
+                    pl.getParent().getServiceType().getDescription(), "PLREJECTIONREASONS"));
+            pl.setRejectionReasonsTemp(plNoticeConditionsService
+                    .findAllPlConditionsByPlAndType(pl, ConditionType.PLREJECTIONREASONS));
+            pl.setAdditionalRejectReasonsTemp(plNoticeConditionsService
+                    .findAllPlConditionsByPlAndType(pl, ConditionType.ADDITIONALREJECTIONREASONS));
+        }
     }
 }

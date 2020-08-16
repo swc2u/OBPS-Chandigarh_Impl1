@@ -19,6 +19,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BpaStatus;
 import org.egov.bpa.transaction.entity.WorkflowBean;
@@ -113,6 +114,13 @@ public class PlinthLevelCertificate extends StateAware<Position> {
     @OneToMany(mappedBy = "pl", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OrderBy(ORDER_BY_ID_ASC)
     private List<PLAppointmentSchedule> appointmentSchedules = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "pl", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PLNoticeConditions> rejectionReasons = new ArrayList<>(0);
+
+    @OrderBy(ORDER_BY_ID_ASC)
+    @OneToMany(mappedBy = "pl", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PLNoticeConditions> additionalNoticeConditions = new ArrayList<>(0);
         
     private transient String planApplicationNumber;    
     private transient WorkflowBean workflowBean;
@@ -120,6 +128,8 @@ public class PlinthLevelCertificate extends StateAware<Position> {
     private transient Long zoneId;
     private transient Long wardId;
     private transient String approvalComent;
+    private transient List<PLNoticeConditions> rejectionReasonsTemp = new ArrayList<>(0);
+    private transient List<PLNoticeConditions> additionalRejectReasonsTemp = new ArrayList<>(0);
         
 	@Override
 	public String getStateDetails() {
@@ -372,5 +382,37 @@ public class PlinthLevelCertificate extends StateAware<Position> {
 
 	public void setAppointmentSchedules(List<PLAppointmentSchedule> appointmentSchedules) {
 		this.appointmentSchedules = appointmentSchedules;
+	}
+
+	public List<PLNoticeConditions> getRejectionReasons() {
+		return rejectionReasons;
+	}
+
+	public void setRejectionReasons(List<PLNoticeConditions> rejectionReasons) {
+		this.rejectionReasons = rejectionReasons;
+	}
+
+	public List<PLNoticeConditions> getAdditionalNoticeConditions() {
+		return additionalNoticeConditions;
+	}
+
+	public void setAdditionalNoticeConditions(List<PLNoticeConditions> additionalNoticeConditions) {
+		this.additionalNoticeConditions = additionalNoticeConditions;
+	}
+
+	public List<PLNoticeConditions> getRejectionReasonsTemp() {
+		return rejectionReasonsTemp;
+	}
+
+	public void setRejectionReasonsTemp(List<PLNoticeConditions> rejectionReasonsTemp) {
+		this.rejectionReasonsTemp = rejectionReasonsTemp;
+	}
+
+	public List<PLNoticeConditions> getAdditionalRejectReasonsTemp() {
+		return additionalRejectReasonsTemp;
+	}
+
+	public void setAdditionalRejectReasonsTemp(List<PLNoticeConditions> additionalRejectReasonsTemp) {
+		this.additionalRejectReasonsTemp = additionalRejectReasonsTemp;
 	}
 }

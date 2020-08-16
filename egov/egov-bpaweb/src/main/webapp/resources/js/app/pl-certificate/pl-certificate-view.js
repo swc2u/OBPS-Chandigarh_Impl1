@@ -63,10 +63,7 @@ jQuery(document).ready(function() {
 
 	var prefix = "tab_";
 	if (tabfocus) {
-		$(
-				'.nav-tabs a[href="'
-						+ tabfocus.replace(prefix, "") + '"]')
-				.tab('show');
+		$('.nav-tabs a[href="'+ tabfocus.replace(prefix, "") + '"]').tab('show');
 	}
 
 	// toggle between multiple tab

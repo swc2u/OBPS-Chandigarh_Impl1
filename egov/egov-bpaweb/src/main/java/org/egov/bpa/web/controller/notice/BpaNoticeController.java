@@ -52,6 +52,7 @@ import static org.egov.bpa.utils.BpaConstants.BUILDINGPERMITFILENAME;
 import static org.egov.bpa.utils.BpaConstants.DEMANDNOCFILENAME;
 import static org.egov.bpa.utils.BpaConstants.OCDEMANDFILENAME;
 import static org.egov.bpa.utils.BpaConstants.OCREJECTIONFILENAME;
+import static org.egov.bpa.utils.BpaConstants.PLREJECTIONFILENAME;
 import static org.egov.infra.utils.StringUtils.append;
 import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 
@@ -70,6 +71,7 @@ import org.egov.bpa.transaction.notice.impl.OwnershipTransferNoticeService;
 import org.egov.bpa.transaction.notice.impl.PermitOrderFormatImpl;
 import org.egov.bpa.transaction.notice.impl.PermitRejectionFormatImpl;
 import org.egov.bpa.transaction.notice.impl.PermitRenewalRejectionNoticeService;
+import org.egov.bpa.transaction.notice.impl.PlRejectionFormatImpl;
 import org.egov.bpa.transaction.notice.impl.PlinthLevelCertificateFormatImpl;
 import org.egov.bpa.transaction.service.ApplicationBpaService;
 import org.egov.bpa.transaction.service.OwnershipTransferService;
@@ -182,6 +184,17 @@ public class BpaNoticeController {
         ReportOutput reportOutput = ocNoticeFeature
                 .generateNotice(occupancyCertificateService.findByApplicationNumber(applicationNumber));
         return getFileAsResponseEntity(applicationNumber, reportOutput, OCREJECTIONFILENAME);
+    }
+    
+    @GetMapping(value = "/application/plinth-level-certificate/rejectionnotice/{applicationNumber}", produces = APPLICATION_PDF_VALUE)
+    @ResponseBody
+    public ResponseEntity<InputStreamResource> generatePlinthLevelCertificateRejectionNotice(@PathVariable final String applicationNumber) throws IOException {
+    	PlinthLevelCertificateNoticesFormat plNoticeFeature = (PlinthLevelCertificateNoticesFormat) specificNoticeService
+                .find(PlRejectionFormatImpl.class, specificNoticeService.getCityDetails());
+        ReportOutput reportOutput = plNoticeFeature
+                .generateNotice(
+                        plinthLevelCertificateService.findByApplicationNumber(applicationNumber));
+        return getFileAsResponseEntity(applicationNumber, reportOutput, PLREJECTIONFILENAME);
     }
     
     @GetMapping(value = "/application/occupancy-certificate/demandnotice/{applicationNumber}", produces = APPLICATION_PDF_VALUE)
