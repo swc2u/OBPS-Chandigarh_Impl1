@@ -117,6 +117,7 @@ import org.egov.bpa.utils.BpaUtils;
 import org.egov.common.entity.bpa.SubOccupancy;
 import org.egov.common.entity.bpa.Usage;
 import org.egov.common.entity.dcr.helper.EdcrApplicationInfo;
+import org.egov.common.entity.edcr.Plan;
 import org.egov.commons.Installment;
 import org.egov.dcb.bean.Receipt;
 import org.egov.demand.model.EgDemandDetails;
@@ -181,6 +182,7 @@ public class BpaNoticeUtil {
 	public static final String ROOT_BOUNDARY_TYPE = "ROOT_BOUNDARY_TYPE";
 	public static final String SECTOR_NUMBER = "SECTOR_NUMBER";
 	public static final String PLOT_TYPE = "PLOT_TYPE";
+	
 
     @Autowired
     @Qualifier("fileStoreService")
@@ -243,9 +245,10 @@ public class BpaNoticeUtil {
     public ReportOutput getReportOutput(BpaApplication bpaApplication, String fileName, BpaNotice bpaNotice,
             String bparejectionfilename, String bpaRejectionNoticeType, HttpServletRequest request) throws IOException {
         ReportOutput reportOutput = new ReportOutput();
+        Plan plan = applicationBpaService.getPlanInfo(bpaApplication.geteDcrNumber());
         if (bpaNotice == null || bpaNotice.getNoticeFileStore() == null) {
             final Map<String, Object> reportParams = buildParametersForReport(bpaApplication);
-            reportParams.putAll(getUlbDetails());
+            reportParams.putAll(getUlbDetails(plan));
             reportParams.putAll(buildParametersForDemandDetails(bpaApplication));
             ReportRequest reportInput = new ReportRequest(bparejectionfilename, bpaApplication, reportParams);
             reportOutput = reportService.createReport(reportInput);
@@ -318,12 +321,17 @@ public class BpaNoticeUtil {
         return bpaNotice;
     }
 
-    public Map<String, Object> getUlbDetails() {
+    public Map<String, Object> getUlbDetails(Plan pl) {
         final Map<String, Object> ulbDetailsReportParams = new HashMap<>();
        // ulbDetailsReportParams.put("cityName", ApplicationThreadLocals.getCityName());
         ulbDetailsReportParams.put("cityName", "Chandigarh Administration");
          ulbDetailsReportParams.put("logoPath", cityService.getCityLogoAsStream());
         ulbDetailsReportParams.put("ulbName", ApplicationThreadLocals.getMunicipalityName());
+        if(pl.isRural()) {
+        	 ulbDetailsReportParams.put("cityName", BpaConstants.RURAL_ULB_NAME);
+             ulbDetailsReportParams.put("logoPath", cityService.getCityRuralLogoAsStream());
+            ulbDetailsReportParams.put("ulbName", BpaConstants.RURAL_ULB_NAME);
+        }
         ulbDetailsReportParams.put("ulbGrade", cityService.getCityGrade());
         ulbDetailsReportParams.put("cityNameLocal", ApplicationThreadLocals.getCityNameLocal());
         return ulbDetailsReportParams;
@@ -348,6 +356,7 @@ public class BpaNoticeUtil {
     }
 
     public Map<String, Object> buildParametersForReport(final BpaApplication bpaApplication) {
+    	
         StringBuilder serviceTypeDesc = new StringBuilder();
         final Map<String, Object> reportParams = new HashMap<>();
         reportParams.put("bpademandtitle", WordUtils.capitalize(BPADEMANDNOTICETITLE));
@@ -499,8 +508,12 @@ public class BpaNoticeUtil {
             reportParams.put("permitFeeDetails", getPermitFeeDetails(bpaApplication));
 
      //   reportParams.put("cityName", ApplicationThreadLocals.getCityName());
+        Plan plan = applicationBpaService.getPlanInfo(bpaApplication.geteDcrNumber()); 
         reportParams.put("cityName", "Chandigarh Administration");
          String imageURL = ReportUtil.getImageURL(BpaConstants.STATE_LOGO_PATH);
+         if(plan.isRural()) {
+        	 reportParams.put("cityName",  BpaConstants.RURAL_ULB_NAME);
+         }
         reportParams.put("stateLogo", imageURL);
         if (bpaApplication.getExistingBuildingDetails() != null && !bpaApplication.getExistingBuildingDetails().isEmpty()) {
             Map<String, BigDecimal> exstArea = BpaUtils.getTotalExstArea(bpaApplication.getExistingBuildingDetails());
