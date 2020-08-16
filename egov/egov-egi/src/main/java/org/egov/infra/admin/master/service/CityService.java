@@ -222,6 +222,10 @@ public class CityService {
     public InputStream getCityLogoAsStream() {
         return new ByteArrayInputStream(getCityLogoAsBytes());
     }
+    
+    public InputStream getCityRuralLogoAsStream() {
+        return new ByteArrayInputStream(getCityRuralLogoAsBytes());
+    }
 
     public String getCityLogoFileStoreId() {
         return (String) cityDataForKey(CITY_LOGO_FS_UUID_KEY);

@@ -605,7 +605,7 @@ public class BpaConstants {
     public static final String NATURE_OF_WORK_OWNERSHIP = "Ownership Transfer";
     
     public static final String PLINTH_LEVEL_CERTIFICATE = "Plinth Level Certificate";
-
+    public static final String RURAL_ULB_NAME="Chandigarh Municipal Corporation";
     
     private static final List<String> BUILDPERMIT = new ArrayList<>();
     static {

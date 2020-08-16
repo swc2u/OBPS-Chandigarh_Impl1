@@ -69,6 +69,8 @@ import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BpaNotice;
 import org.egov.bpa.transaction.notice.PermitApplicationNoticesFormat;
 import org.egov.bpa.transaction.notice.util.BpaNoticeUtil;
+import org.egov.bpa.transaction.service.ApplicationBpaService;
+import org.egov.common.entity.edcr.Plan;
 import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.egov.infra.filestore.service.FileStoreService;
 import org.egov.infra.reporting.engine.ReportFormat;
@@ -101,6 +103,8 @@ public class PermitOrderFormatImpl implements PermitApplicationNoticesFormat {
     protected ReportService reportService;
     @Autowired
     protected BpaNoticeUtil bpaNoticeUtil;
+    @Autowired
+    private ApplicationBpaService applicationBpaService;
 
     @Override
     public ReportOutput generateNotice(final BpaApplication bpaApplication) throws IOException {
@@ -126,8 +130,9 @@ public class PermitOrderFormatImpl implements PermitApplicationNoticesFormat {
                 reportFileName = BUILDINGPERMITOTHERSFILENAME;
             }*/
             reportFileName = BUILDINGPERMITFILENAME;
+            Plan plan = applicationBpaService.getPlanInfo(bpaApplication.geteDcrNumber()); 
             final Map<String, Object> reportParams = bpaNoticeUtil.buildParametersForReport(bpaApplication);
-            reportParams.putAll(bpaNoticeUtil.getUlbDetails());
+            reportParams.putAll(bpaNoticeUtil.getUlbDetails(plan));
             reportInput = new ReportRequest(reportFileName, bpaApplication == null
                     ? new BpaApplication()
                     : bpaApplication, reportParams);
