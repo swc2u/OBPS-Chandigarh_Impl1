@@ -187,7 +187,7 @@ public class AdditionalFeature2 extends FeatureProcess {
 							Map<String, String> details = new HashMap<>();
 							details.put(BLOCK, "block-"+block.getNumber());
 							details.put(FLOOR, "floor-"+floor.getNumber());
-							details.put(PROVIDED, CDGAdditionalService.viewArea(plan, occupancy.getBuiltUpArea()));
+							details.put(PROVIDED, CDGAdditionalService.viewArea(plan, CDGAdditionalService.inchtoFeetArea(occupancy.getBuiltUpArea())));
 							details.put(STATUS, Result.Accepted.getResultVal());
 							scrutinyDetail.getDetail().add(details);
 						}else {
