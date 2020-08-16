@@ -2984,4 +2984,3 @@ INSERT INTO chandigarh.eg_roleaction (roleid,actionid) VALUES
 ((select id from state.eg_role er  where name= 'BPA Approver'),(select id from chandigarh.eg_action ea where url = '/downloadfile'));
 
 -- all query is moved to script 2 plz check that and add new query there only 
-
