@@ -4,15 +4,16 @@ import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.WorkflowBean;
 import org.egov.bpa.transaction.entity.enums.AppointmentSchedulePurpose;
 import org.egov.bpa.transaction.entity.pl.PLAppointmentSchedule;
-import org.egov.bpa.transaction.entity.pl.PLSlot;
 import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
 import org.egov.bpa.transaction.service.pl.PLAppointmentScheduleService;
+import org.egov.bpa.transaction.service.pl.PlInspectionService;
 import org.egov.bpa.transaction.service.pl.PlinthLevelCertificateService;
 import org.egov.bpa.utils.BpaUtils;
 import org.egov.bpa.web.controller.transaction.BpaGenericApplicationController;
 import org.egov.commons.entity.Source;
 import org.egov.eis.entity.Assignment;
 import org.egov.infra.admin.master.entity.User;
+import org.egov.infra.custom.CustomImplProvider;
 import org.egov.infra.utils.DateUtils;
 import org.egov.infra.workflow.matrix.entity.WorkFlowMatrix;
 import org.egov.pims.commons.Position;
@@ -30,9 +31,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_HISTORY;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_CREATED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFIED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_RESCHEDULED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SCHEDULED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SITE_INSPECTED;
+import static org.egov.bpa.utils.BpaConstants.WF_CANCELAPPLICATION_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SCHEDULED_FOR_SITE_INSP;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_RESCHEDULED_FOR_SITE_INSP;
 import static org.egov.bpa.utils.BpaConstants.WF_LBE_SUBMIT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_NEW_STATE;
 
@@ -59,6 +61,9 @@ public class CitizenPLCertificateController extends BpaGenericApplicationControl
     private static final String ADDITIONALRULE = "additionalRule";
     private static final String CITIZEN_pl_VIEW = "citizen-pl-certificate-view";
     private static final String CITIZEN_pl_UPDATE = "citizen-pl-certificate-update";
+    private static final String BPAAPPLICATION_CITIZEN = "citizen_suceess";
+    private static final String APPOINTMENT_LOCATIONS_LIST = "appointmentLocationsList";
+    private static final String APPOINTMENT_SCHEDULED_LIST = "appointmentScheduledList";
     
     @Autowired
     private PlinthLevelCertificateService plinthLevelCertificateService;    
@@ -66,6 +71,8 @@ public class CitizenPLCertificateController extends BpaGenericApplicationControl
     private BpaUtils bpaUtils;
     @Autowired
     private PLAppointmentScheduleService plAppointmentScheduleService;
+    @Autowired
+    private CustomImplProvider specificNoticeService;
     
     @GetMapping("/pl-certificate/apply")
     public String applyPLform(final Model model, final HttpServletRequest request) { 
@@ -200,6 +207,45 @@ public class CitizenPLCertificateController extends BpaGenericApplicationControl
         }
     }
     
+    @PostMapping("/plinth-level-certificate/update-submit")
+    public String updatePLDetails(@Valid @ModelAttribute("plinthLevelCertificate") final PlinthLevelCertificate plinthLevelCertificate,
+            final HttpServletRequest request, final Model model,
+            final BindingResult errors) {
+        if (errors.hasErrors())
+            return CITIZEN_pl_UPDATE;
+        WorkflowBean wfBean = new WorkflowBean();
+        Long userPosition = null;
+        String workFlowAction = request.getParameter(WORK_FLOW_ACTION);
+        Boolean citizenOrBusinessUser = request.getParameter(CITIZEN_OR_BUSINESS_USER) != null
+                && request.getParameter(CITIZEN_OR_BUSINESS_USER)
+                        .equalsIgnoreCase(TRUE) ? Boolean.TRUE : Boolean.FALSE;
+        final WorkFlowMatrix wfMatrix = bpaUtils.getWfMatrixByCurrentState(plinthLevelCertificate.getStateType(), 
+        		WF_NEW_STATE, plinthLevelCertificate.getPlinthLevelCertificateType());
+        if (wfMatrix != null)
+			userPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
+					bpaUtils.getBoundaryForWorkflow(plinthLevelCertificate.getParent().getSiteDetail().get(0)).getId());
+        if (citizenOrBusinessUser && workFlowAction != null
+                && workFlowAction.equals(WF_LBE_SUBMIT_BUTTON)
+                && (userPosition == 0 || userPosition == null)) {
+            model.addAttribute("noJAORSAMessage", OFFICIAL_NOT_EXISTS);
+            return CITIZEN_pl_UPDATE;
+        }
+
+        wfBean.setWorkFlowAction(request.getParameter(WORK_FLOW_ACTION));
+        PlinthLevelCertificate plResponse = plinthLevelCertificateService.saveOrUpdate(plinthLevelCertificate, wfBean);
+        bpaUtils.updatePortalUserinbox(plResponse, null);
+        if (workFlowAction != null && workFlowAction.equals(WF_CANCELAPPLICATION_BUTTON)) {
+            model.addAttribute(MESSAGE,
+                    "Plinth Level Certificate  Application is cancelled by applicant itself successfully with application number "
+                            + plResponse.getApplicationNumber());
+        } else {
+            model.addAttribute(MESSAGE,
+                    "Plinth Level Certificate Application is successfully saved with ApplicationNumber "
+                            + plResponse.getApplicationNumber());
+        }
+        return BPAAPPLICATION_CITIZEN;
+    }
+    
     private void prepareFormData(final PlinthLevelCertificate pl, final Model model) {
         model.addAttribute("stateType", pl.getClass().getSimpleName());
         model.addAttribute(ADDITIONALRULE, pl.getPlinthLevelCertificateType());
@@ -207,34 +253,22 @@ public class CitizenPLCertificateController extends BpaGenericApplicationControl
     }
     
     private void loadData(PlinthLevelCertificate pl, Model model) {
-    	model.addAttribute(APPLICATION_HISTORY, workflowHistoryService.getHistoryForPL(pl.getCurrentState(), pl.getStateHistory()));
-    	model.addAttribute("plinthLevelCertificate", pl);
+    	if (APPLICATION_STATUS_SCHEDULED_FOR_SITE_INSP.equals(pl.getStatus().getCode())
+                || APPLICATION_STATUS_RESCHEDULED_FOR_SITE_INSP.equals(pl.getStatus().getCode())
+                        && !pl.getIsRescheduledByCitizen()) {
+            model.addAttribute("mode", "showRescheduleToCitizen");
+        }
+    	final PlInspectionService plInspectionService = (PlInspectionService) specificNoticeService
+                .find(PlInspectionService.class, specificNoticeService.getCityDetails());
+        model.addAttribute("inspectionList", plInspectionService.findByPlOrderByIdAsc(pl));
+        buildAppointmentDetailsOfScrutinyAndInspection(model, pl);
+        model.addAttribute(APPLICATION_HISTORY,
+                workflowHistoryService.getHistoryForPL(pl.getAppointmentSchedules(), pl.getCurrentState(), pl.getStateHistory()));
+        model.addAttribute("plinthLevelCertificate", pl);
     }
     
     private void buildAppointmentDetailsOfScrutinyAndInspection(Model model, PlinthLevelCertificate pl) {
-        if (APPLICATION_STATUS_SCHEDULED.equals(pl.getStatus().getCode())
-                || APPLICATION_STATUS_RESCHEDULED.equals(pl.getStatus().getCode())) {
-            Optional<PLSlot> activeSlotApplication = pl.getPlSlots().stream().reduce((slotAppln1, slotAppln2) -> slotAppln2);
-            if (activeSlotApplication.isPresent()) {
-                model.addAttribute("appointmentDateRes", DateUtils
-                        .toDefaultDateFormat(activeSlotApplication.get().getSlotDetail().getSlot().getAppointmentDate()));
-                model.addAttribute("appointmentTimeRes", activeSlotApplication.get().getSlotDetail().getAppointmentTime());
-                model.addAttribute("appointmentTitle", "Scheduled Appointment Details For Site Inspection");
-            }
-        } else if (APPLICATION_STATUS_DOC_VERIFIED.equals(pl.getStatus().getCode()) && pl.getInspections().isEmpty()) {
-            List<PLAppointmentSchedule> appointmentScheduledList = plAppointmentScheduleService.findByApplication(pl,
-                    AppointmentSchedulePurpose.INSPECTION);
-            if (!appointmentScheduledList.isEmpty()) {
-                model.addAttribute("appointmentDateRes", DateUtils.toDefaultDateFormat(
-                        appointmentScheduledList.get(0).getAppointmentScheduleCommon().getAppointmentDate()));
-                model.addAttribute("appointmentTimeRes",
-                        appointmentScheduledList.get(0).getAppointmentScheduleCommon().getAppointmentTime());
-                model.addAttribute("appmntInspnRemarks",
-                        appointmentScheduledList.get(0).getAppointmentScheduleCommon().isPostponed()
-                                ? appointmentScheduledList.get(0).getAppointmentScheduleCommon().getPostponementReason()
-                                : appointmentScheduledList.get(0).getAppointmentScheduleCommon().getRemarks());
-                model.addAttribute("appointmentTitle", "Scheduled Appointment Details For Site Inspection");
-            }
-        }
+    	List<PLAppointmentSchedule> appointmentScheduledList = plAppointmentScheduleService.findByApplication(pl, AppointmentSchedulePurpose.INSPECTION);
+    	model.addAttribute(APPOINTMENT_SCHEDULED_LIST, appointmentScheduledList);
     }
 }

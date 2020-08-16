@@ -107,8 +107,6 @@ INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from st
 INSERT INTO chandigarh.eg_wf_types (id,"module","type",link,createdby,createddate,lastmodifiedby,lastmodifieddate,enabled,grouped,typefqn,displayname,"version") VALUES 
 (nextval('seq_eg_wf_types'),444,'PlinthLevelCertificate','/bpa/application/plinth-level-certificate/update/:ID',1,now(),1,now(),true,false,'org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate','Plinth Level Certificate',0);
 
-
-
 create sequence seq_egbpa_pl_notice;
 create table chandigarh.egbpa_pl_notice(
 	id bigint NOT NULL,
@@ -210,4 +208,106 @@ CREATE TABLE egbpa_pl_inspection
   CONSTRAINT fk_egbpa_pl_inspection_crtby FOREIGN KEY (createdby) REFERENCES state.eg_user (id),
   CONSTRAINT fk_egbpa_pl_inspection_mdfdby FOREIGN KEY (lastmodifiedby) REFERENCES state.eg_user (id)
 );
+
+
+INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,application) VALUES 
+(nextval('seq_eg_action'),'Schedule Appointment Plinth Level Certificate','/application/plinth-level-certificate/schedule-appointment',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Schedule Appointment Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
+;
+
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'Schedule Appointment Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'Schedule Appointment Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'Schedule Appointment Plinth Level Certificate'));
+
+INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,application) VALUES 
+(nextval('seq_eg_action'),'Reschedule Appointment Plinth Level Certificate','/application/plinth-level-certificate/reschedule-appointment',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Reschedule Appointment Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
+;
+
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'Reschedule Appointment Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'Reschedule Appointment Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'Reschedule Appointment Plinth Level Certificate'));
+
+INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,application) VALUES 
+(nextval('seq_eg_action'),'View Appointment Plinth Level Certificate','/application/plinth-level-certificate/appointment/view-details',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'View Appointment Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
+;
+
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'View Appointment Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'View Appointment Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'View Appointment Plinth Level Certificate'));
+
+INSERT INTO chandigarh.eg_checklist_type (id,code,description,"version",createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
+(nextval('seq_eg_checklist_type'),'PLINSPNIMAGES','Plinth Level certificate application inspection images',0,1,now(),1,now())
+;
+
+SELECT setval('seq_eg_checklist', (SELECT max(id) FROM chandigarh.eg_checklist));
+INSERT INTO chandigarh.eg_checklist (id,checklisttypeid,code,description,"version",createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
+(nextval('seq_eg_checklist'),(select id from eg_checklist_type where code = 'PLINSPNIMAGES'),'PLINSPNIMAGES-01','Front Side',0,1,now(),1,now())
+,(nextval('seq_eg_checklist'),(select id from eg_checklist_type where code = 'PLINSPNIMAGES'),'PLINSPNIMAGES-02','Back Side',0,1,now(),1,now())
+,(nextval('seq_eg_checklist'),(select id from eg_checklist_type where code = 'PLINSPNIMAGES'),'PLINSPNIMAGES-03','Left Side',0,1,now(),1,now())
+,(nextval('seq_eg_checklist'),(select id from eg_checklist_type where code = 'PLINSPNIMAGES'),'PLINSPNIMAGES-04','Right Side',0,1,now(),1,now())
+,(nextval('seq_eg_checklist'),(select id from eg_checklist_type where code = 'PLINSPNIMAGES'),'PLINSPNIMAGES-05','Setbacks',0,1,now(),1,now())
+;
+
+INSERT INTO chandigarh.egbpa_checklist_servicetype_mapping (id,checklist,servicetype,isrequired,ismandatory,"version",createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
+(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-01' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='01'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-02' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='01'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-03' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='01'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-04' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='01'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-05' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='01'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-01' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='03'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-02' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='03'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-03' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='03'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-04' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='03'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-05' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='03'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-01' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='04'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-02' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='04'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-03' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='04'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-04' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='04'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-05' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='04'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-01' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='06'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-02' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='06'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-03' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='06'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-04' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='06'),true,true,0,1,now(),1,now())
+,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from chandigarh.eg_checklist where code = 'PLINSPNIMAGES-05' and checklisttypeid=(select id from chandigarh.eg_checklist_type where code='PLINSPNIMAGES')),(select id from chandigarh.egbpa_mstr_servicetype where code='06'),true,true,0,1,now(),1,now())
+;
+
+INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,application) VALUES 
+(nextval('seq_eg_action'),'Create Inspection For Plinth Level Certificate','/application/plinth-level-certificate/create-inspection',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Create Inspection For Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
+;
+
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'Create Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'Create Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'Create Inspection For Plinth Level Certificate'));
+
+INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,application) VALUES 
+(nextval('seq_eg_action'),'Result Inspection For Plinth Level Certificate','/application/plinth-level-certificate/success/view-inspection-details',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Result Inspection For Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
+;
+
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'Result Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'Result Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'Result Inspection For Plinth Level Certificate'));
+
+INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,application) VALUES 
+(nextval('seq_eg_action'),'Show Inspection For Plinth Level Certificate','/application/plinth-level-certificate/show-inspection-details',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Show Inspection For Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
+;
+
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'Show Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'Show Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'Show Inspection For Plinth Level Certificate'));
+
+INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,application) VALUES 
+(nextval('seq_eg_action'),'Update Inspection For Plinth Level Certificate','/application/plinth-level-certificate/update-inspection',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Update Inspection For Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
+;
+
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'Update Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'Update Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'Update Inspection For Plinth Level Certificate'));
+
+
+INSERT INTO chandigarh.eg_appconfig (id,key_name,description,"version",createdby,lastmodifiedby,createddate,lastmodifieddate,"module") VALUES 
+(nextval('seq_eg_appconfig'),'PL_INSPECTION_SCHEDULE_INTEGRATION_REQUIRED','To enable/disable site inspection scheduling plinth level certificate application integration',0,NULL,NULL,NULL,NULL,444)
+;
+
+INSERT INTO chandigarh.eg_appconfig_values (id,key_id,effective_from,value,createddate,lastmodifieddate,createdby,lastmodifiedby,"version") VALUES 
+(nextval('seq_eg_appconfig_values'),(select id from chandigarh.eg_appconfig where key_name = 'PL_INSPECTION_SCHEDULE_INTEGRATION_REQUIRED'),now(),'YES',NULL,NULL,NULL,NULL,0)
+;
 

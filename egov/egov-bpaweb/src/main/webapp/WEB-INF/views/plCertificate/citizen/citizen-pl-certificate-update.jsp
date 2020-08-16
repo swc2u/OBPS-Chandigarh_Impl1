@@ -46,7 +46,7 @@
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn"%>
 <div class="row">
 	<div class="col-md-12">
-		<form:form role="form" action="/bpa/application/citizen/pl-certificate/create" method="post" modelAttribute="plinthLevelCertificate"
+		<form:form role="form" action="/bpa/application/citizen/pl-certificate/update-submit" method="post" modelAttribute="plinthLevelCertificate"
 				   id="plinthLevelCertificateViewForm" cssClass="form-horizontal form-groups-bordered" enctype="multipart/form-data">
 			<form:hidden path="" id="workFlowAction" name="workFlowAction" />
 			<form:hidden path="" id="wfstateDesc" value="${plinthLevelCertificate.state.value}" />

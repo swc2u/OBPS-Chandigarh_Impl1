@@ -9,4 +9,5 @@ public class PLConstants {
 
     // inspection related constants
     public static final String PL_INSPECTION = "PLINSPECTION";
+    public static final String PL_INSPECTION_SCHEDULE_INTEGRATION_REQUIRED = "PL_INSPECTION_SCHEDULE_INTEGRATION_REQUIRED";
 }

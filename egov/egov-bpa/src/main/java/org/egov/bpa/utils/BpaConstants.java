@@ -247,6 +247,12 @@ public class BpaConstants {
     public static final String WF_OWNERSHIP_FEE_PENDING = "Ownership transfer fee payment pending";
     public static final String OWNERSHIP_FEE_COLLECTED = "Ownership transfer fee payment done";
     
+    public static final String FWD_TO_JE_FOR_SITE_INS = "Forwarded to JE for site inspection";
+    public static final String APPLICATION_STATUS_SITE_INS = "Site Inspected";
+    public static final String SITE_INSPECTION_COMPLETED = "Site Inspection completed";
+    public static final String WF_JE_INSPECTION_INITIATED = "JE Inspection Initiated";
+    public static final String WF_JE_APPROVAL_PENDING = "JE Approval Pending";
+    
     public static final String OC_CREATION_PENDING = "Occupancy certificate application creation pending";
     public static final String PL_CREATION_PENDING = "Plinth Level Certificate application creation pending";
     
@@ -292,6 +298,10 @@ public class BpaConstants {
     public static final String RENEWAL_MODULE_TYPE = "RENEWAL";
     public static final String WF_INIT_OWNERSHIP = "Initiated for ownership transfer";
     public static final String APPLICATION_ACTION_VERIFY_RR = "Verify Rejection Reasons";
+    
+    public static final String APPLICATION_STATUS_SCHEDULED_FOR_SITE_INSP = "Scheduled For Site Inspection";
+    public static final String APPLICATION_STATUS_RESCHEDULED_FOR_SITE_INSP = "Rescheduled For Site Inspection";
+    public static final String APPLICATION_STATUS_SITE_INSPECTED = "Site Inspected";
     
     // Checklist document type constants
     public static final String STAKE_HOLDER_CHECK_LIST_TYPE = "STAKEHOLDERDOCUMENT";

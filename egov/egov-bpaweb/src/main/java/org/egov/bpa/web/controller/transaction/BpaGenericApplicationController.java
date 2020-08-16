@@ -68,6 +68,7 @@ import static org.egov.bpa.utils.BpaConstants.YES;
 import static org.egov.bpa.utils.BpaConstants.ZONE;
 import static org.egov.bpa.utils.BpaConstants.getBuildingFloorsList;
 import static org.egov.bpa.utils.OcConstants.OCCUPANCY_CERTIFICATE;
+import static org.egov.bpa.utils.PLConstants.PLINTH_LEVEL_CERTIFICATE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -98,6 +99,7 @@ import org.egov.bpa.transaction.entity.enums.GovernmentType;
 import org.egov.bpa.transaction.entity.enums.NocStatus;
 import org.egov.bpa.transaction.entity.enums.OneDayPermitLandType;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
+import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
 import org.egov.bpa.transaction.service.ApplicationBpaService;
 import org.egov.bpa.transaction.service.BpaApplicationValidationService;
 import org.egov.bpa.transaction.service.BpaStatusService;
@@ -339,6 +341,16 @@ public abstract class BpaGenericApplicationController extends GenericWorkFlowCon
         prepareWorkflow(model, occupancyCertificate, workflowContainer);
         model.addAttribute("currentState", occupancyCertificate.getCurrentState().getValue());
         model.addAttribute(OCCUPANCY_CERTIFICATE, occupancyCertificate);
+    }
+    
+    protected void prepareWorkflowDataForInspection(final Model model, final PlinthLevelCertificate plinthLevelCertificate) {
+        model.addAttribute("stateType", plinthLevelCertificate.getClass().getSimpleName());
+        final WorkflowContainer workflowContainer = new WorkflowContainer();
+        model.addAttribute(BpaConstants.ADDITIONALRULE, BpaConstants.CREATE_ADDITIONAL_RULE_CREATE);
+        workflowContainer.setAdditionalRule(BpaConstants.CREATE_ADDITIONAL_RULE_CREATE);
+        prepareWorkflow(model, plinthLevelCertificate, workflowContainer);
+        model.addAttribute("currentState", plinthLevelCertificate.getCurrentState().getValue());
+        model.addAttribute(PLINTH_LEVEL_CERTIFICATE, plinthLevelCertificate);
     }
     
     protected void prepareWorkflowDataForInspection(final Model model, final InspectionApplication application) {

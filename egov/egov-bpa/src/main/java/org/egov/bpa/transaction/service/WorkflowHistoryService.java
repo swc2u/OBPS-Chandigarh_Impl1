@@ -57,6 +57,7 @@ import org.egov.bpa.transaction.entity.InspectionAppointmentSchedule;
 import org.egov.bpa.transaction.entity.common.AppointmentScheduleCommon;
 import org.egov.bpa.transaction.entity.enums.AppointmentSchedulePurpose;
 import org.egov.bpa.transaction.entity.oc.OCAppointmentSchedule;
+import org.egov.bpa.transaction.entity.pl.PLAppointmentSchedule;
 import org.egov.bpa.transaction.workflow.BpaWorkFlowService;
 import org.egov.eis.entity.Assignment;
 import org.egov.eis.service.PositionMasterService;
@@ -193,7 +194,7 @@ public class WorkflowHistoryService {
         return historyTable;
     }
     
-    public List<HashMap<String, Object>> getHistoryForPL(State<Position> state, List<StateHistory<Position>> stateHistories) {
+    public List<HashMap<String, Object>> getHistoryForPL(List<PLAppointmentSchedule> appointmentSchedules, State<Position> state, List<StateHistory<Position>> stateHistories) {
         final List<HashMap<String, Object>> historyTable = new ArrayList<>();
         final State<Position> workflowState = state;
         final HashMap<String, Object> workFlowHistory = new HashMap<>(0);
@@ -202,6 +203,7 @@ public class WorkflowHistoryService {
                 Collections.reverse(stateHistories);
 
             buildStateHistory(stateHistories, historyTable, state);
+            buildPLApplnHistoryForSchedulingAppointments(appointmentSchedules, historyTable);
             workFlowHistory.put(DATE, workflowState.getDateInfo());
             workFlowHistory.put(COMMENTS, workflowState.getComments() == null ? "" : workflowState.getComments());
             workFlowHistory.put(UPDATED_BY,
@@ -217,6 +219,19 @@ public class WorkflowHistoryService {
         }
         historyTable.sort(Comparator.comparing(history -> String.valueOf(history.get(DATE))));
         return historyTable;
+    }
+    
+    private void buildPLApplnHistoryForSchedulingAppointments(final List<PLAppointmentSchedule> appointmentSchedules,
+            final List<HashMap<String, Object>> historyTable) {
+        if (!appointmentSchedules.isEmpty()) {
+            for (PLAppointmentSchedule plAppointmentSchedule : appointmentSchedules) {
+                AppointmentScheduleCommon appmntScheduleCommon = plAppointmentSchedule.getAppointmentScheduleCommon();
+                buildSchedulingDetails(historyTable, appmntScheduleCommon.getPurpose(), plAppointmentSchedule.getCreatedDate(),
+                        appmntScheduleCommon.isPostponed(), appmntScheduleCommon.getPostponementReason(),
+                        plAppointmentSchedule.getLastModifiedBy(), plAppointmentSchedule.getCreatedBy(),
+                        plAppointmentSchedule.getLastModifiedDate());
+            }
+        }
     }
 
     private void setEmployeeDetailsByDate(User userObject, HashMap<String, Object> historyMap, Position owner, Date date) {

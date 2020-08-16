@@ -55,7 +55,6 @@ import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_RESCHEDULED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SCHEDULED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SUBMITTED;
 import static org.egov.bpa.utils.BpaConstants.AUTH_TO_SUBMIT_PLAN;
-import static org.egov.bpa.utils.BpaConstants.CREATE_ADDITIONAL_RULE_CREATE_OC;
 import static org.egov.bpa.utils.BpaConstants.DISCLIMER_MESSAGE_ONSAVE;
 import static org.egov.bpa.utils.BpaConstants.ENABLEONLINEPAYMENT;
 import static org.egov.bpa.utils.BpaConstants.WF_CANCELAPPLICATION_BUTTON;
