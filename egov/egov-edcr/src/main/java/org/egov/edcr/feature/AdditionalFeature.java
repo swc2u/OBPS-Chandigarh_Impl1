@@ -464,7 +464,7 @@ public class AdditionalFeature extends FeatureProcess {
 			for(Floor floor:block.getBuilding().getFloors()) {
 				for(Occupancy occupancy:floor.getOccupancies()) {
 					if(occupancy.getTypeHelper()!=null && occupancy.getTypeHelper().getSubtype()!=null) {
-						if(!(DxfFileConstants.A_P.equals(occupancy.getTypeHelper().getSubtype().getCode()) || DxfFileConstants.A_CIR.equals(occupancy.getTypeHelper().getSubtype().getCode())))
+						if(!(DxfFileConstants.A_P.equals(occupancy.getTypeHelper().getSubtype().getCode()) || DxfFileConstants.F_CIR.equals(occupancy.getTypeHelper().getSubtype().getCode())))
 							plan.addError("occupancy_blk"+block.getNumber()+"flr"+floor.getNumber(), occupancy.getTypeHelper().getSubtype().getName()+"Occupancy is not allowed in block "+block.getNumber()+" floor "+floor.getNumber());
 					}
 				}
@@ -498,7 +498,7 @@ public class AdditionalFeature extends FeatureProcess {
 			for (Floor floor : b.getBuilding().getFloors()) {
 				for (Occupancy occupancy : floor.getOccupancies()) {
 					if (occupancy.getTypeHelper() != null && occupancy.getTypeHelper().getSubtype() != null
-							&& DxfFileConstants.A_CIR.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+							&& DxfFileConstants.F_CIR.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
 						providedProfessionalsConsultantsSpace = providedProfessionalsConsultantsSpace
 								.add(occupancy.getBuiltUpArea());
 						isProfessionalsConsultantsSpaceProvided = true;

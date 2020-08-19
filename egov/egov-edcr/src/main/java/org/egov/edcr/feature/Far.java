@@ -1783,6 +1783,8 @@ public class Far extends FeatureProcess {
 			return codesMap.get(DxfFileConstants.F_PP);
 		else if (codes.contains(DxfFileConstants.F_CD))
 			return codesMap.get(DxfFileConstants.F_CD);
+		else if (codes.contains(DxfFileConstants.F_CIR))
+			return codesMap.get(DxfFileConstants.F_CIR);
 		else if (codes.contains(DxfFileConstants.G_GBAC))
 			return codesMap.get(DxfFileConstants.G_GBAC);
 		else if (codes.contains(DxfFileConstants.G_GBZP))

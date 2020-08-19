@@ -920,7 +920,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			OccupancyTypeHelper occupancyTypeHelper = occupancy.getTypeHelper();
 			if (occupancyTypeHelper != null && occupancyTypeHelper.getType() != null
 					&& occupancyTypeHelper.getSubtype() != null && occupancyTypeHelper.getSubtype().getCode() != null) {
-				if (BpaConstants.A_CIR.equals(occupancyTypeHelper.getSubtype().getCode()))
+				if (BpaConstants.F_CIR.equals(occupancyTypeHelper.getSubtype().getCode()))
 					isCommercialFeeApplicable = true;
 			}
 		}
@@ -1058,7 +1058,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 					if (occupancyTypeHelper != null && occupancyTypeHelper.getType() != null
 							&& occupancyTypeHelper.getSubtype() != null
 							&& occupancyTypeHelper.getSubtype().getCode() != null) {
-						if (BpaConstants.A_CIR.equals(occupancyTypeHelper.getSubtype().getCode()))
+						if (BpaConstants.F_CIR.equals(occupancyTypeHelper.getSubtype().getCode()))
 							totalAmount = totalAmount.add(occupancy.getFloorArea().multiply(BigDecimal.valueOf(50)));
 					}
 				}
@@ -1077,7 +1077,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 					if (occupancyTypeHelper != null && occupancyTypeHelper.getType() != null
 							&& occupancyTypeHelper.getSubtype() != null
 							&& occupancyTypeHelper.getSubtype().getCode() != null) {
-						if (BpaConstants.A_CIR.equals(occupancyTypeHelper.getSubtype().getCode()))
+						if (BpaConstants.F_CIR.equals(occupancyTypeHelper.getSubtype().getCode()))
 							totalAmount = BigDecimal.valueOf(1200);
 					}
 				}

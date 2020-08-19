@@ -432,3 +432,7 @@ update state.egdcr_layername set value='BLK_%s_FLR_%s_REGULAR_ROOM_%s' where key
 
 update state.egdcr_layername set value='BLK_%s_FLR_%s_AC_ROOM_%s' where key='LAYER_NAME_AC_ROOM';
 -----end----
+
+
+
+update chandigarh.egbpa_sub_occupancy set occupancy = (select id from chandigarh.egbpa_occupancy where code ='F'),code='F-CIR' where code='A-CIR';
