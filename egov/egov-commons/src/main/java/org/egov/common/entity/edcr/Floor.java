@@ -80,8 +80,8 @@ public class Floor extends Measurement {
     private List<SpiralStair> spiralStairs = new ArrayList<>();
     private ParkingDetails parking = new ParkingDetails();
     private List<BigDecimal> floorHeights;
-    private Room acRoom;
-    private Room regularRoom;
+    private List<Room> acRooms=new ArrayList<>();
+    private List<Room>regularRooms=new ArrayList<>();
     private Room kitchen;
     private Room bathRoom;
     private Room waterClosets;
@@ -98,8 +98,6 @@ public class Floor extends Measurement {
     private List<Measurement> overHangs;
     
     private List<Measurement> constructedAreas = new ArrayList<>();
-    
-    private BigDecimal totalHabitableRoomArea=BigDecimal.ZERO;
     
     public List<FireStair> getFireStairs() {
         return fireStairs;
@@ -420,24 +418,45 @@ public class Floor extends Measurement {
     public void setParking(ParkingDetails parking) {
         this.parking = parking;
     }
+    
 
-    public Room getAcRoom() {
-        return acRoom;
-    }
+    /**
+	 * @return the acRooms
+	 */
+	public List<Room> getAcRooms() {
+		return acRooms;
+	}
 
-    public void setAcRoom(Room acRoom) {
-        this.acRoom = acRoom;
-    }
+	public void addAcRoom(Room acRoom) {
+		this.acRooms.add(acRoom);
+	}
+	/**
+	 * @param acRooms the acRooms to set
+	 */
+	public void setAcRooms(List<Room> acRooms) {
+		this.acRooms = acRooms;
+	}
 
-    public Room getRegularRoom() {
-        return regularRoom;
-    }
+	/**
+	 * @return the regularRooms
+	 */
+	public List<Room> getRegularRooms() {
+		return regularRooms;
+	}
 
-    public void setRegularRoom(Room regularRoom) {
-        this.regularRoom = regularRoom;
-    }
+	public void addRegularRoom(Room regularRoom) {
+		this.regularRooms.add(regularRoom);
+	}
+	
 
-    public Room getKitchen() {
+	/**
+	 * @param regularRooms the regularRooms to set
+	 */
+	public void setRegularRooms(List<Room> regularRooms) {
+		this.regularRooms = regularRooms;
+	}
+
+	public Room getKitchen() {
         return kitchen;
     }
 
@@ -561,13 +580,4 @@ public class Floor extends Measurement {
         this.constructedAreas = constructedAreas;
     }
 
-	public BigDecimal getTotalHabitableRoomArea() {
-		return totalHabitableRoomArea;
-	}
-
-	public void setTotalHabitableRoomArea(BigDecimal totalHabitableRoomArea) {
-		this.totalHabitableRoomArea = totalHabitableRoomArea;
-	}
-
-    
 }

@@ -100,7 +100,7 @@ public class HeightOfRoom extends FeatureProcess {
     		int regularRoomCount=0;
     		for(Floor floor:block.getBuilding().getFloors()) {
     			//regularRoomCount=floor.getRegularRoom()!=null?regularRoomCount+floor.getRegularRoom().getRooms().size():regularRoomCount;
-    			List<Measurement> rooms=getRoom(floor.getRegularRoom(), heightOfRoomFeaturesColor.get(DxfFileConstants.COLOR_RESIDENTIAL_ROOM));
+    			List<Measurement> rooms=getRoom(floor.getRegularRooms(), heightOfRoomFeaturesColor.get(DxfFileConstants.COLOR_RESIDENTIAL_ROOM));
     			if(!rooms.isEmpty()) {
     				regularRoomCount=rooms.size()+regularRoomCount;
     			}
@@ -161,37 +161,18 @@ public class HeightOfRoom extends FeatureProcess {
 
                             color = DxfFileConstants.COLOR_RESIDENTIAL_ROOM;
 
-//                            if (floor.getAcRoom() != null) {
-//                                List<BigDecimal> residentialAcRoomHeights = new ArrayList<>();
-//                                List<RoomHeight> acHeights = floor.getAcRoom().getHeights();
-//                                List<Measurement> acRooms = floor.getAcRoom().getRooms();
-//
-//                                for (RoomHeight roomHeight : acHeights) {
-//                                    if (heightOfRoomFeaturesColor.get(color) == roomHeight.getColorCode()) {
-//                                        residentialAcRoomHeights.add(roomHeight.getHeight());
-//                                    }
-//                                }
-//
-//                                for (Measurement acRoom : acRooms) {
-//                                    if (heightOfRoomFeaturesColor.get(color) == acRoom.getColorCode()) {
-//                                        roomAreas.add(acRoom.getArea());
-//                                        roomWidths.add(acRoom.getWidth());
-//                                    }
-//                                }
-//
-//                            }
 
-                            if (floor.getRegularRoom() != null) {
+                            if (!floor.getRegularRooms().isEmpty()) {
                                 List<BigDecimal> residentialRoomHeights = new ArrayList<>();
-                                List<RoomHeight> heights = floor.getRegularRoom().getHeights();
-                                List<Measurement> rooms = floor.getRegularRoom().getRooms();
-
-                                for (RoomHeight roomHeight : heights) {
-                                    if (heightOfRoomFeaturesColor.get(color) == roomHeight.getColorCode()) {
-                                        residentialRoomHeights.add(roomHeight.getHeight());
+                               
+                                for(Room room:floor.getRegularRooms()) {
+                                	for (RoomHeight roomHeight : room.getHeights()) {
+                                        if (heightOfRoomFeaturesColor.get(color) == roomHeight.getColorCode()) {
+                                            residentialRoomHeights.add(roomHeight.getHeight());
+                                        }
                                     }
                                 }
-                                List<Measurement> habitableRooms=getRoom(floor.getRegularRoom(), heightOfRoomFeaturesColor.get(DxfFileConstants.COLOR_RESIDENTIAL_ROOM));
+                                List<Measurement> habitableRooms=getRoom(floor.getRegularRooms(), heightOfRoomFeaturesColor.get(DxfFileConstants.COLOR_RESIDENTIAL_ROOM));
                     			
 
                                 for (Measurement room : habitableRooms) {
@@ -228,11 +209,7 @@ public class HeightOfRoom extends FeatureProcess {
                                 
 
                             }
-                            if (!roomAreas.isEmpty()) {
-                                totalArea = roomAreas.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
-                                floor.setTotalHabitableRoomArea(totalArea);// is required for Light & Ventilations
-                                
-                            }
+                            
                         }
                     }
                 }
@@ -251,6 +228,20 @@ public class HeightOfRoom extends FeatureProcess {
         			spcRoom.add(r);
         		}
         	}
+    	}
+    	return spcRoom;
+    }
+    
+    private List<Measurement> getRoom(List<Room> rooms,int colorCode){
+    	List<Measurement> spcRoom=new ArrayList<Measurement>();
+    	if(rooms!=null) {
+    		for(Room room:rooms) {
+    			for(Measurement r:room.getRooms()) {
+            		if(colorCode==r.getColorCode()) {
+            			spcRoom.add(r);
+            		}
+            	}
+    		}
     	}
     	return spcRoom;
     }
@@ -345,14 +336,16 @@ public class HeightOfRoom extends FeatureProcess {
 //
 //                            }
 
-                            if (floor.getRegularRoom() != null) {
+                            if (!floor.getRegularRooms().isEmpty()) {
                                 List<BigDecimal> residentialRoomHeights = new ArrayList<>();
-                                List<RoomHeight> heights = floor.getRegularRoom().getHeights();
-                                List<Measurement> rooms = floor.getRegularRoom().getRooms();
+                                
+                                List<Measurement> rooms = getRoom(floor.getRegularRooms(),heightOfRoomFeaturesColor.get(DxfFileConstants.COLOR_RESIDENTIAL_ROOM) );
 
-                                for (RoomHeight roomHeight : heights) {
-                                    if (heightOfRoomFeaturesColor.get(color) == roomHeight.getColorCode()) {
-                                        residentialRoomHeights.add(roomHeight.getHeight());
+                                for(Room room:floor.getRegularRooms()) {
+                                	for (RoomHeight roomHeight : room.getHeights()) {
+                                        if (heightOfRoomFeaturesColor.get(color) == roomHeight.getColorCode()) {
+                                            residentialRoomHeights.add(roomHeight.getHeight());
+                                        }
                                     }
                                 }
 
@@ -386,12 +379,6 @@ public class HeightOfRoom extends FeatureProcess {
 
                             }
                             
-                            
-                            
-                            if (!roomAreas.isEmpty()) {
-                                totalArea = roomAreas.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
-                                floor.setTotalHabitableRoomArea(totalArea);// is required for Light & Ventilations
-                            }
                         }
                     }
                 }

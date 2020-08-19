@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=egov-dcr-1.0.0-SNAPSHOT.jar -DgroupId=org.egov -DartifactId=egov-dcr -Dversion=5.0.3 -Dpackaging=jar
