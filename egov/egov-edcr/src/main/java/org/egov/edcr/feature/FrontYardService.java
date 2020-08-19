@@ -317,14 +317,20 @@ public class FrontYardService extends GeneralRule {
 														
 							if(pl.isRural()) {
 								BigDecimal rearSeatBackExcepted=pl.getPlanInformation().getDepthOfPlot().multiply(new BigDecimal("0.10"));
-								
-								if(rearSeatBackExcepted.compareTo(new BigDecimal("3.04"))<0)
-									rearSeatBackExcepted=new BigDecimal("3.04");
+								BigDecimal refValue=new BigDecimal("3.04");
+								if(pl.getDrawingPreference().getInFeets()) {
+									refValue=CDGAdditionalService.meterToFoot(refValue);
+									min=CDGAdditionalService.inchToFeet(min);
+								}
+								if(rearSeatBackExcepted.compareTo(refValue)<0)
+									rearSeatBackExcepted=refValue;
 								
 								rearSeatBackExcepted=CDGAdditionalService.roundBigDecimal(rearSeatBackExcepted);
 									
 								
 								exceptedValue=rearSeatBackExcepted.toString();
+								
+								
 							}else {
 								exceptedValue=getSetBack(pl, mostRestrictiveOccupancyType).get(CDGAdditionalService.SETBACK_FRONT);
 							}
@@ -334,7 +340,7 @@ public class FrontYardService extends GeneralRule {
 								return;
 							}
 							
-							if(pl.getDrawingPreference().getInFeets()) {
+							if(pl.getDrawingPreference().getInFeets() && !pl.isRural()) {
 								min=CDGAdditionalService.inchToFeet(min);
 								exceptedValue=CDGAdditionalService.meterToFoot(exceptedValue).toString();
 							}

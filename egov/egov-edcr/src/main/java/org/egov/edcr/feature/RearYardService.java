@@ -316,9 +316,13 @@ public class RearYardService extends GeneralRule {
 							
 							if(pl.isRural()) {
 								BigDecimal rearSeatBackExcepted=pl.getPlanInformation().getDepthOfPlot().multiply(new BigDecimal("0.10"));
-								
-								if(rearSeatBackExcepted.compareTo(new BigDecimal("1.52"))<0)
-									rearSeatBackExcepted=new BigDecimal("1.52");
+								BigDecimal refValue=new BigDecimal("1.52");
+								if(pl.getDrawingPreference().getInFeets()) {
+									refValue=CDGAdditionalService.meterToFoot(refValue);
+									min=CDGAdditionalService.inchToFeet(min);
+								}
+								if(rearSeatBackExcepted.compareTo(refValue)<0)
+									rearSeatBackExcepted=refValue;
 								
 								rearSeatBackExcepted=CDGAdditionalService.roundBigDecimal(rearSeatBackExcepted);
 									
@@ -337,7 +341,7 @@ public class RearYardService extends GeneralRule {
 							
 							// end
 							
-							if(pl.getDrawingPreference().getInFeets()) {
+							if(pl.getDrawingPreference().getInFeets() && !pl.isRural()) {
 								min=CDGAdditionalService.inchToFeet(min);
 								exceptedValue=CDGAdditionalService.meterToFoot(exceptedValue).toString();
 							}
