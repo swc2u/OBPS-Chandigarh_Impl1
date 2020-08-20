@@ -18,8 +18,6 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 import org.egov.bpa.autonumber.InspectionNumberGenerator;
-import org.egov.bpa.transaction.entity.common.DocketCommon;
-import org.egov.bpa.transaction.entity.common.DocketDetailCommon;
 import org.egov.bpa.transaction.entity.common.InspectionCommon;
 import org.egov.bpa.transaction.entity.common.InspectionFilesCommon;
 import org.egov.bpa.transaction.entity.pl.PLInspection;
@@ -51,7 +49,7 @@ public class PlInspectionService {
 
 		}
 	};
-	
+
 	@Autowired
 	private AutonumberServiceBeanResolver beanResolver;
 	@PersistenceContext
@@ -64,11 +62,11 @@ public class PlInspectionService {
 	private SecurityUtils securityUtils;
 	@Autowired
 	private ApplicationBpaService applicationBpaService;
-	
+
 	public Session getCurrentSession() {
 		return entityManager.unwrap(Session.class);
 	}
-	
+
 	@Transactional
 	public PLInspection save(final PLInspection plInspection) {
 		InspectionCommon inspection = plInspection.getInspection();
@@ -78,11 +76,11 @@ public class PlInspectionService {
 		}
 		if (inspection.getInspectionDate() == null)
 			inspection.setInspectionDate(new Date());
-		
+
 		buildInspectionFiles(inspection);
 		return inspectionRepository.save(plInspection);
 	}
-	
+
 	public PLInspection findById(Long id) {
 		return inspectionRepository.findOne(id);
 	}
