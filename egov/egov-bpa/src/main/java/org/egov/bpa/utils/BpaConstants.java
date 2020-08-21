@@ -64,6 +64,12 @@ public class BpaConstants {
 	public static final String SECTOR_NUMBER = "SECTOR_NUMBER";
 	public static final String PLOT_TYPE = "PLOT_TYPE";
 	public static final String KHATA_NO = "KHATA_NO";
+	
+	// CGCL SERVIVE_TYPE
+	public static final String RECONSTRUCTION = "Reconstruction";
+	public static final String ALTERATION = "Alteration";
+	public static final String NEW_CONSTRUCTION = "New Construction";
+	public static final String ADDITION_OR_EXTENSION = "Addition or Extension";
 
 	// ROOT_BOUNDARY_TYPE values
 	public static final String URBAN = "URBAN";
@@ -93,6 +99,7 @@ public class BpaConstants {
 	public static final String A_G = "A-G";// Grouped
 	public static final String F_CIR="F-CIR";// commercial in rural
 	public static final String A_AF="A-AF";//Additional Fee
+	public static final String A_R5="A-R5";//Additional Fee
 	
 	public static final String B_EC = "B_EC";// Education city (Sarangpur)
 	public static final String B_HEI = "B-HEI";// Higher Educational Institute //Educational/ Academic
@@ -163,11 +170,11 @@ public class BpaConstants {
     public static final String REGULARIZATION = "Regularization";
     public static final String CHANGE_IN_OCCUPANCY = "Change in Occupancy";
     public static final String ADDING_OF_EXTENSION = "Addition or Extension";
-    public static final String ALTERATION = "Alteration";
+    //public static final String ALTERATION = "Alteration";
     public static final String DIVISION_OF_PLOT = "Sub-Division of plot/Land Development";
-    public static final String RECONSTRUCTION = "Reconstruction";
+   // public static final String RECONSTRUCTION = "Reconstruction";
     public static final String DEMOLITION = "Demolition";
-    public static final String NEW_CONSTRUCTION = "New Construction";
+   // public static final String NEW_CONSTRUCTION = "New Construction";
     public static final String TOWER_CONSTRUCTION = "Tower Construction";
     public static final String POLE_STRUCTURES = "Pole Structures";
     public static final String WELL = "Well";
