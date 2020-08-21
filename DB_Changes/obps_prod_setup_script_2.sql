@@ -439,3 +439,5 @@ update chandigarh.egbpa_sub_occupancy set occupancy = (select id from chandigarh
 
 ALTER TABLE chandigarh.egbpa_sub_occupancy ADD COLUMN isfeature BOOLEAN DEFAULT FALSE;
 update chandigarh.egbpa_sub_occupancy set isfeature = true where code in ('A-SQ','A-PO','A-S','A-PG','A-ICP','A-OCP','A-AF','A-GF');
+
+update chandigarh.egbpa_sub_occupancy set isfeature = true where code in ('A-R5');
