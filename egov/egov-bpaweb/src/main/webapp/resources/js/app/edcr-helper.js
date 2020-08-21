@@ -195,30 +195,34 @@ $(document).ready(
             //Add row
         	var occupancyId;
         	var occupancyDesc;
+        	var isFeature=false;
         	if(subOccupancy!=null && subOccupancy.length>0){
         		occupancyId = subOccupancy[0].id;
         		occupancyDesc = subOccupancy[0].description;
+        		isFeature=subOccupancy[0].isFeature;
         	} else {
         		occupancyId = occupancySuboccupancyMap[occupancy[0].id][0].id;
         		occupancyDesc = occupancySuboccupancyMap[occupancy[0].id][0].description;
+        		isFeature=occupancySuboccupancyMap[occupancy[0].id][0].isFeature;
         	}
-        		
-            var rowJsonObj={
-                'sno': sno+1,
-                'bldgIdx': bldgIdx,
-                'idx': floorIdx,
-                'orderOfFloor': floorIdx+1,
-                'floorDesc': floorDesc,
-                'floorNo': floorNo,
-                'occupancyId': occupancyId,
-                'occupancyDesc': occupancyDesc,
-                'plinthArea': convertSqInchToSqFt(builtupArea.toFixed(2)),
-                'floorArea': convertSqInchToSqFt(floorArea.toFixed(2)),
-                'carpetArea': convertSqInchToSqFt(carpetArea.toFixed(2))
-            };
-            addNewRowFromObject(rowJsonObj);
-            setDCRFloorCount();
-            patternvalidation();
+        	if(!isFeature){
+	            var rowJsonObj={
+	                'sno': sno+1,
+	                'bldgIdx': bldgIdx,
+	                'idx': floorIdx,
+	                'orderOfFloor': floorIdx+1,
+	                'floorDesc': floorDesc,
+	                'floorNo': floorNo,
+	                'occupancyId': occupancyId,
+	                'occupancyDesc': occupancyDesc,
+	                'plinthArea': convertSqInchToSqFt(builtupArea.toFixed(2)),
+	                'floorArea': convertSqInchToSqFt(floorArea.toFixed(2)),
+	                'carpetArea': convertSqInchToSqFt(carpetArea.toFixed(2))
+	            };
+	            addNewRowFromObject(rowJsonObj);
+	            setDCRFloorCount();
+	            patternvalidation();
+        	}
         }
 
         function addNewRowFromObject(rowJsonObj) {
@@ -426,29 +430,34 @@ $(document).ready(
             //Add row
         	var occupancyId;
         	var occupancyDesc;
+        	var isFeature=false;
         	if(subOccupancy!=null && subOccupancy.length>0){
         		occupancyId = subOccupancy[0].id;
         		occupancyDesc = subOccupancy[0].description;
+        		isFeature=subOccupancy[0].isFeature;
         	} else {
         		occupancyId = occupancySuboccupancyMap[occupancy[0].id][0].id;
         		occupancyDesc = occupancySuboccupancyMap[occupancy[0].id][0].description;
+        		isFeature=occupancySuboccupancyMap[occupancy[0].id][0].isFeature;
         	}
-            var rowJsonObj={
-                'sno': sno+1,
-                'bldgIdx': bldgIdx,
-                'idx': floorIdx,
-                'orderOfFloor': floorIdx+1,
-                'floorDesc': floorDesc,
-                'floorNo': floorNo,
-                'occupancyId': occupancyId,
-                'occupancyDesc': occupancyDesc,
-                'plinthArea': convertSqInchToSqFt(builtupArea),
-                'floorArea': convertSqInchToSqFt(floorArea),
-                'carpetArea': convertSqInchToSqFt(carpetArea)
-            };
-            addNewRowFromObject1(rowJsonObj);
-            setDCRFloorCount();
-            patternvalidation();
+        	if(!isFeature){
+	            var rowJsonObj={
+	                'sno': sno+1,
+	                'bldgIdx': bldgIdx,
+	                'idx': floorIdx,
+	                'orderOfFloor': floorIdx+1,
+	                'floorDesc': floorDesc,
+	                'floorNo': floorNo,
+	                'occupancyId': occupancyId,
+	                'occupancyDesc': occupancyDesc,
+	                'plinthArea': convertSqInchToSqFt(builtupArea),
+	                'floorArea': convertSqInchToSqFt(floorArea),
+	                'carpetArea': convertSqInchToSqFt(carpetArea)
+	            };
+	            addNewRowFromObject1(rowJsonObj);
+	            setDCRFloorCount();
+	            patternvalidation();
+        	}
         }
 
         function addNewRowFromObject1(rowJsonObj) {
@@ -489,7 +498,9 @@ $(document).ready(
                             },
                             contentType: 'application/json; charset=utf-8',
                             success: function (response) {
-                                addSubUsages(idx, occupancyIdx, response, block.name, block.number, response[0].subOccupancy.occupancy.description, response[0].subOccupancy.occupancy.id);
+                            	if (response && response.length > 0) {
+                            		addSubUsages(idx, occupancyIdx, response, block.name, block.number, response[0].subOccupancy.occupancy.description, response[0].subOccupancy.occupancy.id);
+                            	}
                             }
                         });
                         occupancyIdx++;

@@ -1116,7 +1116,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 					if (BpaConstants.A_AF.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
 						BigDecimal buildupArea = occupancy.getBuiltUpArea();
 						if (plan.getDrawingPreference().getInFeets())
-							buildupArea = buildupArea.divide(new BigDecimal("144"));
+							buildupArea = buildupArea.divide(new BigDecimal("144"), 2, RoundingMode.HALF_UP);
 						else if (plan.getDrawingPreference().getInMeters())
 							buildupArea = buildupArea.multiply(new BigDecimal("10.764"));
 						if (floor.getNumber() == 0) {

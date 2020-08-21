@@ -436,3 +436,6 @@ update state.egdcr_layername set value='BLK_%s_FLR_%s_AC_ROOM_%s' where key='LAY
 
 
 update chandigarh.egbpa_sub_occupancy set occupancy = (select id from chandigarh.egbpa_occupancy where code ='F'),code='F-CIR' where code='A-CIR';
+
+ALTER TABLE chandigarh.egbpa_sub_occupancy ADD COLUMN isfeature BOOLEAN DEFAULT FALSE;
+update chandigarh.egbpa_sub_occupancy set isfeature = true where code in ('A-SQ','A-PO','A-S','A-PG','A-ICP','A-OCP','A-AF','A-GF');

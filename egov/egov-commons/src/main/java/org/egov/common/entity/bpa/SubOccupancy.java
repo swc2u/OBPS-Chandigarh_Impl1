@@ -110,6 +110,8 @@ public class SubOccupancy extends AbstractAuditable {
 	private String description;
 
     private Boolean isActive;
+    
+    private Boolean isFeature;
 
     private BigDecimal maxCoverage;
 
@@ -219,4 +221,11 @@ public class SubOccupancy extends AbstractAuditable {
         this.colorCode = colorCode;
     }
 
+	public Boolean getIsFeature() {
+		return isFeature;
+	}
+
+	public void setIsFeature(Boolean isFeature) {
+		this.isFeature = isFeature;
+	}  
 }
