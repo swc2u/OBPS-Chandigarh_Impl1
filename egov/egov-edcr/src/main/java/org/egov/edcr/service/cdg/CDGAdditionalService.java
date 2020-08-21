@@ -550,6 +550,7 @@ public class CDGAdditionalService {
 					|| DxfFileConstants.A_OCP.equals(helper.getSubtype().getCode())
 					|| DxfFileConstants.A_AF.equals(helper.getSubtype().getCode())
 					|| DxfFileConstants.A_GF.equals(helper.getSubtype().getCode())
+					|| DxfFileConstants.A_R5.equals(helper.getSubtype().getCode())
 													)
 				flage=true;
 		}

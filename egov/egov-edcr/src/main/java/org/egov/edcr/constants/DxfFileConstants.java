@@ -120,6 +120,7 @@ public class DxfFileConstants {
 	public static final String A_RU="A-RU";//Residential use ;
 	public static final String A_CC="A-CC";//Community Facilities In Group Housing Building 
 	public static final String A_AF="A-AF";//Additional Fee
+	public static final String A_R5="A-R5";//Additional Fee
 	
 	public static final String F_SCO = "F-SCO";// SCO'S/ SCF'S / BAYSHOP'S/ SEMI INDUSTRIAL -- 272
 	public static final String F_B ="F-B"; // BOOTHS ETC. 
