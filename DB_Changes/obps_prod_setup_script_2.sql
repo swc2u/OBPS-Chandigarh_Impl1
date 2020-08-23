@@ -446,10 +446,5 @@ update chandigarh.egbpa_sub_occupancy set isfeature = true where code in ('A-R5'
 
 update chandigarh.egbpa_mstr_applicationsubtype set description='DPC / Plinth Level Certificate' where "name" = 'Plinth Level Certificate';
 update chandigarh.eg_module set displayname='DPC / Plinth Level Certificate' where "name" = 'Plinth Level Certificate';
-
 update chandigarh.egp_portalservice set "name"='Apply For DPC / Plinth Level Certificate' where code = 'Apply For Plinth Level Certificate';
-
-INSERT INTO chandigarh.egp_portalservice (id,"module",code,sla,"version",url,isactive,"name",userservice,businessuserservice,helpdoclink,createdby,createddate,lastmodifieddate,lastmodifiedby,moduleorder,serviceorder) VALUES 
-(nextval('seq_egp_portalservice'),444,'Apply For Plinth Level Certificate',NULL,0,'/bpa/application/citizen/pl-certificate/apply',true,'Apply For Plinth Level Certificate',false,true,'/bpa/application/citizen/pl-certificate/apply',1,now(),now(),1,16,NULL)
-;
 
