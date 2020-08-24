@@ -448,6 +448,6 @@ update chandigarh.egbpa_sub_occupancy set isfeature = true where code in ('A-R5'
 -------------------------------------------------------------------------------
 
 update chandigarh.egbpa_mstr_applicationsubtype set description='DPC / Plinth Level Certificate' where "name" = 'Plinth Level Certificate';
-update chandigarh.eg_module set displayname='DPC / Plinth Level Certificate' where "name" = 'Plinth Level Certificate';
+update chandigarh.eg_module set displayname='DPC / Plinth Level Certificate' where "name" = 'BPA Plinth Level Certificate';
 update chandigarh.egp_portalservice set "name"='Apply For DPC / Plinth Level Certificate' where code = 'Apply For Plinth Level Certificate';
 
