@@ -126,7 +126,7 @@ public class PLNoticeUtil {
         reportParams.put("logoPath", cityService.getCityLogoAsStream());
         reportParams.put("stateLogo", ReportUtil.getImageURL(BpaConstants.STATE_LOGO_PATH));
         reportParams.put("ulbName", ApplicationThreadLocals.getMunicipalityName());
-        reportParams.put("formRule", "FORM B");
+        reportParams.put("formRule", "FORM B DPC Certificate");
         reportParams.put("plNumber", pl.getPlinthLevelCertificateNumber() == null ? EMPTY : pl.getPlinthLevelCertificateNumber());
         reportParams.put("aplnCreatedBy", pl.getCreatedBy().getName());
         reportParams.put("approvalDate", DateUtils.getDefaultFormattedDate(pl.getApprovalDate()));

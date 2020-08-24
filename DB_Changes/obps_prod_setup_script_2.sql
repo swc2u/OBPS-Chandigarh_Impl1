@@ -61,15 +61,15 @@ INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernu
 (nextval('seq_eg_action'),'Apply For Plinth Level Certificate','/application/citizen/pl-certificate/apply',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Apply For Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
 ;
 
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'Apply For Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'Apply For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where code = 'Apply For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where code = 'Apply For Plinth Level Certificate'));
 
 INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,application) VALUES 
 (nextval('seq_eg_action'),'New Application For Plinth Level Certificate','/application/citizen/pl-certificate/new',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'New Application For Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
 ;
 
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'New Application For Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'New Application For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where code = 'New Application For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where code = 'New Application For Plinth Level Certificate'));
 
 INSERT INTO chandigarh.egbpa_status (id,code,description,moduletype,isactive,"version",createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
 (nextval('seq_egbpa_status'),'Field Inspection completed','Field Inspection completed','REGISTRATION',true,0,1,now(),NULL,now());
@@ -94,15 +94,15 @@ INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernu
 (nextval('seq_eg_action'),'Submit Application For Plinth Level Certificate','/application/citizen/pl-certificate/create',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Submit Application For Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
 ;
 
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'Submit Application For Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'Submit Application For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where code = 'Submit Application For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where code = 'Submit Application For Plinth Level Certificate'));
 
 INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,application) VALUES 
 (nextval('seq_eg_action'),'View Application For Plinth Level Certificate','/application/citizen/plinth-level-certificate/update',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'View Application For Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
 ;
 
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'View Application For Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'View Application For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where code = 'View Application For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where code = 'View Application For Plinth Level Certificate'));
 
 INSERT INTO chandigarh.eg_wf_types (id,"module","type",link,createdby,createddate,lastmodifiedby,lastmodifieddate,enabled,grouped,typefqn,displayname,"version") VALUES 
 (nextval('seq_eg_wf_types'),444,'PlinthLevelCertificate','/bpa/application/plinth-level-certificate/update/:ID',1,now(),1,now(),true,false,'org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate','Plinth Level Certificate',0);
@@ -128,30 +128,30 @@ INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernu
 (nextval('seq_eg_action'),'Success Application For Plinth Level Certificate','/application/plinth-level-certificate/success',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Success Application For Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
 ;
 
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'Success Application For Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'Success Application For Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'Success Application For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where code = 'Success Application For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where code = 'Success Application For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where code = 'Success Application For Plinth Level Certificate'));
 
 INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,application) VALUES 
 (nextval('seq_eg_action'),'Update Application For Plinth Level Certificate','/application/plinth-level-certificate/update',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Update Application For Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
 ;
 
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'Update Application For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where code = 'Update Application For Plinth Level Certificate'));
 
 
 INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,application) VALUES 
 (nextval('seq_eg_action'),'Update Submit Application For Plinth Level Certificate','/application/plinth-level-certificate/update-submit',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Update Submit Application For Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
 ;
 
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'Update Submit Application For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where code = 'Update Submit Application For Plinth Level Certificate'));
 
 INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,application) VALUES 
 (nextval('seq_eg_action'),'Generate Plinth Level Certificate','/application/plinth-level-certificate/generate-plinth-level-certificate',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Generate Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
 ;
 
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'Generate Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'Generate Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'Generate Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where code = 'Generate Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where code = 'Generate Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where code = 'Generate Plinth Level Certificate'));
 
 CREATE SEQUENCE seq_egbpa_pl_appointment_schedule;
 CREATE TABLE egbpa_pl_appointment_schedule
@@ -214,25 +214,25 @@ INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernu
 (nextval('seq_eg_action'),'Schedule Appointment Plinth Level Certificate','/application/plinth-level-certificate/schedule-appointment',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Schedule Appointment Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
 ;
 
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'Schedule Appointment Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'Schedule Appointment Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'Schedule Appointment Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where code = 'Schedule Appointment Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where code = 'Schedule Appointment Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where code = 'Schedule Appointment Plinth Level Certificate'));
 
 INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,application) VALUES 
 (nextval('seq_eg_action'),'Reschedule Appointment Plinth Level Certificate','/application/plinth-level-certificate/reschedule-appointment',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Reschedule Appointment Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
 ;
 
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'Reschedule Appointment Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'Reschedule Appointment Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'Reschedule Appointment Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where code = 'Reschedule Appointment Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where code = 'Reschedule Appointment Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where code = 'Reschedule Appointment Plinth Level Certificate'));
 
 INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,application) VALUES 
 (nextval('seq_eg_action'),'View Appointment Plinth Level Certificate','/application/plinth-level-certificate/appointment/view-details',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'View Appointment Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
 ;
 
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'View Appointment Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'View Appointment Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'View Appointment Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where code = 'View Appointment Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where code = 'View Appointment Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where code = 'View Appointment Plinth Level Certificate'));
 
 INSERT INTO chandigarh.eg_checklist_type (id,code,description,"version",createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
 (nextval('seq_eg_checklist_type'),'PLINSPNIMAGES','Plinth Level certificate application inspection images',0,1,now(),1,now())
@@ -274,33 +274,33 @@ INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernu
 (nextval('seq_eg_action'),'Create Inspection For Plinth Level Certificate','/application/plinth-level-certificate/create-inspection',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Create Inspection For Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
 ;
 
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'Create Inspection For Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'Create Inspection For Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'Create Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where code = 'Create Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where code = 'Create Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where code = 'Create Inspection For Plinth Level Certificate'));
 
 INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,application) VALUES 
 (nextval('seq_eg_action'),'Result Inspection For Plinth Level Certificate','/application/plinth-level-certificate/success/view-inspection-details',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Result Inspection For Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
 ;
 
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'Result Inspection For Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'Result Inspection For Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'Result Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where code = 'Result Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where code = 'Result Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where code = 'Result Inspection For Plinth Level Certificate'));
 
 INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,application) VALUES 
 (nextval('seq_eg_action'),'Show Inspection For Plinth Level Certificate','/application/plinth-level-certificate/show-inspection-details',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Show Inspection For Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
 ;
 
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'Show Inspection For Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'Show Inspection For Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'Show Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where code = 'Show Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where code = 'Show Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where code = 'Show Inspection For Plinth Level Certificate'));
 
 INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,application) VALUES 
 (nextval('seq_eg_action'),'Update Inspection For Plinth Level Certificate','/application/plinth-level-certificate/update-inspection',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Update Inspection For Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
 ;
 
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'Update Inspection For Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'Update Inspection For Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'Update Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where code = 'Update Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where code = 'Update Inspection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where code = 'Update Inspection For Plinth Level Certificate'));
 
 
 INSERT INTO chandigarh.eg_appconfig (id,key_name,description,"version",createdby,lastmodifiedby,createddate,lastmodifieddate,"module") VALUES 
@@ -389,9 +389,9 @@ INSERT INTO chandigarh.eg_action (id,"name",url,queryparams,parentmodule,ordernu
 (nextval('seq_eg_action'),'Rejection For Plinth Level Certificate','/application/plinth-level-certificate/rejectionnotice',NULL,(select id from chandigarh.eg_module where name = 'BPA Plinth Level Certificate'),46,'Rejection For Plinth Level Certificate',false,'bpa',0,1,now(),1,now(),444)
 ;
 
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where "name" = 'Rejection For Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where "name" = 'Rejection For Plinth Level Certificate'));
-INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where "name" = 'Rejection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'EMPLOYEE'),(select id from chandigarh.eg_action where code = 'Rejection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'BUSINESS'),(select id from chandigarh.eg_action where code = 'Rejection For Plinth Level Certificate'));
+INSERT INTO chandigarh.eg_roleaction(roleid,actionid) values ((select id from state.eg_role where "name" = 'CITIZEN'),(select id from chandigarh.eg_action where code = 'Rejection For Plinth Level Certificate'));
 
 INSERT INTO chandigarh.eg_appconfig (id,key_name,description,"version",createdby,lastmodifiedby,createddate,lastmodifieddate,"module") VALUES 
 (nextval('seq_eg_appconfig'),'SLA_PL_APPLICATION','Sla PL Application',0,NULL,NULL,NULL,NULL,444)
@@ -444,3 +444,10 @@ INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,
 (311,'A-R5','Rule 5',5,true,1,'2020-08-20 12:41:08.933','2020-08-20 12:41:08.933',1,0,'Rule 5',65,3,4,29,6,true)
 ;
 update chandigarh.egbpa_sub_occupancy set isfeature = true where code in ('A-R5');
+
+-------------------------------------------------------------------------------
+
+update chandigarh.egbpa_mstr_applicationsubtype set description='DPC / Plinth Level Certificate' where "name" = 'Plinth Level Certificate';
+update chandigarh.eg_module set displayname='DPC / Plinth Level Certificate' where "name" = 'Plinth Level Certificate';
+update chandigarh.egp_portalservice set "name"='Apply For DPC / Plinth Level Certificate' where code = 'Apply For Plinth Level Certificate';
+

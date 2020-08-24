@@ -42,13 +42,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{formRule}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="119" y="62" width="339" height="22" uuid="98dfcec8-9176-4fd4-b8b5-48d691f0e679"/>
-				<textElement textAlignment="Center">
-					<font size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[PLINTH LEVEL CERTIFICATE]]></text>
-			</staticText>
 		</band>
 	</title>
 	<detail>
