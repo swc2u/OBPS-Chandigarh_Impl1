@@ -440,4 +440,7 @@ update chandigarh.egbpa_sub_occupancy set occupancy = (select id from chandigarh
 ALTER TABLE chandigarh.egbpa_sub_occupancy ADD COLUMN isfeature BOOLEAN DEFAULT FALSE;
 update chandigarh.egbpa_sub_occupancy set isfeature = true where code in ('A-SQ','A-PO','A-S','A-PG','A-ICP','A-OCP','A-AF','A-GF');
 
+INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,createdby,createddate,lastmodifieddate,lastmodifiedby,"version",description,maxcoverage,minfar,maxfar,occupancy,colorcode,isfeature) VALUES 
+(311,'A-R5','Rule 5',5,true,1,'2020-08-20 12:41:08.933','2020-08-20 12:41:08.933',1,0,'Rule 5',65,3,4,29,6,true)
+;
 update chandigarh.egbpa_sub_occupancy set isfeature = true where code in ('A-R5');

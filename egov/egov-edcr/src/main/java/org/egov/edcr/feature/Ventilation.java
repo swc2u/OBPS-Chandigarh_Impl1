@@ -248,11 +248,11 @@ public class Ventilation extends FeatureProcess {
 								}
 							}
 						}
-//						else {
-//							Map<String, String> map=new HashMap<String, String>();
-//							map.put("Ventilation", "Light & Ventilation not defined in block "+b.getNumber()+" Floor "+f.getNumber());
-//							pl.setErrors(map);
-//						}
+						else {
+							Map<String, String> map=new HashMap<String, String>();
+							map.put("Ventilation", "Light & Ventilation not defined in block "+b.getNumber()+" floor "+f.getNumber()+" room "+roomNumber);
+							pl.setErrors(map);
+						}
 						roomNumber++;
 
 					}
