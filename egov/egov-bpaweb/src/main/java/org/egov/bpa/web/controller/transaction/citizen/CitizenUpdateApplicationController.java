@@ -363,8 +363,9 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
     private void buildBuildingSubUsages(final BpaApplication application) {
         for (BuildingSubUsage subUsage : application.getBuildingSubUsages())
             for (BuildingSubUsageDetails subUsageDetails : subUsage.getSubUsageDetails()) {
-                subUsageDetails.setSubUsagesTemp(
-                        occupancyService.findSubUsagesByOccupancy(subUsageDetails.getMainUsage().getName()));
+               if(subUsageDetails!=null && subUsageDetails.getMainUsage()!=null && subUsageDetails.getMainUsage().getName()!=null)
+            	   subUsageDetails.setSubUsagesTemp(
+                           occupancyService.findSubUsagesByOccupancy(subUsageDetails.getMainUsage().getName()));
             }
     }
 

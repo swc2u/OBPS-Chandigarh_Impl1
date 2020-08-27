@@ -128,7 +128,7 @@ public class BathRoomWaterClosets extends FeatureProcess {
 								&& !f.getBathRoomWaterClosets().getRooms().isEmpty()) {
 							minWidth = f.getBathRoomWaterClosets().getRooms().get(0).getWidth();
 							for (Measurement m : f.getBathRoomWaterClosets().getRooms()) {
-								totalArea = totalArea.add(CDGAdditionalService.roundBigDecimal(m.getArea()));
+								totalArea = CDGAdditionalService.roundBigDecimal(m.getArea());
 								if (m.getWidth().compareTo(minWidth) < 0) {
 									minWidth = CDGAdditionalService.roundBigDecimal(m.getWidth());
 								}
@@ -146,7 +146,9 @@ public class BathRoomWaterClosets extends FeatureProcess {
 							minWidth=CDGAdditionalService.inchToFeet(minWidth);
 							expectedMinWidth=CDGAdditionalService.meterToFoot(expectedMinWidth);
 						}
-
+						expectedArea=CDGAdditionalService.roundBigDecimal(expectedArea);
+						totalArea=CDGAdditionalService.roundBigDecimal(totalArea);
+						
 						if (minHeight.compareTo(expectedMinHeight) >= 0
 								&& totalArea.compareTo(expectedArea) >= 0
 								&& minWidth.compareTo(expectedMinWidth) >= 0) {

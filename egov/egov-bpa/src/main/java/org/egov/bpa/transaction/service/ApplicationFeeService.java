@@ -118,7 +118,8 @@ public class ApplicationFeeService {
         permitFee.setApplicationFee(applicationFee);
         permitFeeRepository.save(permitFee);
         for(ApplicationFeeDetail appFee : applicationFee.getApplicationFeeDetail()) {
-                feeDetails.put(appFee.getBpaFeeMapping().getBpaFeeCommon().getCode(),appFee.getAmount());            
+                if(appFee.getBpaFeeMapping()!=null)
+                	feeDetails.put(appFee.getBpaFeeMapping().getBpaFeeCommon().getCode(),appFee.getAmount());
         }
     }
 

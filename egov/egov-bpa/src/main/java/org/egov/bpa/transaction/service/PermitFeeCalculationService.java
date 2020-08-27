@@ -1246,7 +1246,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 							area = area.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
 						else if (plan.getDrawingPreference().getInMeters())
 							area = area.multiply(new BigDecimal("10.764")).setScale(2, BigDecimal.ROUND_HALF_UP);
-						totalArea.add(area);
+						totalArea=totalArea.add(area);
 					}
 
 				}
