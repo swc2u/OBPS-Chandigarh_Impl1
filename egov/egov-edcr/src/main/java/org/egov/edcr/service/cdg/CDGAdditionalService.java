@@ -462,6 +462,7 @@ public class CDGAdditionalService {
 	}
 	
 	public static BigDecimal inchtoFeetArea(BigDecimal value) {
+		if(value!=null && value.longValue()>0)
 		value=value.divide(new BigDecimal(144),MathContext.DECIMAL32);
 		//value=value.setScale(2, RoundingMode.HALF_UP);
 		return value;
