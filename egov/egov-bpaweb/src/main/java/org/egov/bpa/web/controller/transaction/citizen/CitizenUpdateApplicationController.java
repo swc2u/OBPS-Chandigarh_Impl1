@@ -208,7 +208,9 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
             model.addAttribute("mode", "showRescheduleToCitizen");
         }
         prepareFormData(model);
-        buildReceiptDetails(application.getDemand().getEgDemandDetails(), application.getReceipts());
+        if(null!=application.getDemand()) {
+        	buildReceiptDetails(application.getDemand().getEgDemandDetails(), application.getReceipts());
+        }
         application.setApplicationAmenityTemp(application.getApplicationAmenity());
         application.setPermitOccupanciesTemp(application.getPermitOccupancies());
         applicationBpaService.buildExistingAndProposedBuildingDetails(application);

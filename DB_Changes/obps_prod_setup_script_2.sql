@@ -451,3 +451,31 @@ update chandigarh.egbpa_mstr_applicationsubtype set description='DPC / Plinth Le
 update chandigarh.eg_module set displayname='DPC / Plinth Level Certificate' where "name" = 'BPA Plinth Level Certificate';
 update chandigarh.egp_portalservice set "name"='Apply For DPC / Plinth Level Certificate' where code = 'Apply For Plinth Level Certificate';
 
+-------------------------------------------------------------------------------
+
+INSERT INTO chandigarh.egbpa_mstr_bpafeemapping (id,applicationtype,feesubtype,servicetype,calculationtype,bpafeecommon,amount,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,applicationsubtype) VALUES 
+(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '01'),'AUTO',1,1000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Low Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '01'),'AUTO',1,5000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Medium Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '01'),'AUTO',1,10000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'High Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '03'),'AUTO',1,1000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Low Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '03'),'AUTO',1,5000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Medium Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '03'),'AUTO',1,10000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'High Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '04'),'AUTO',1,1000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Low Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '04'),'AUTO',1,5000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Medium Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '04'),'AUTO',1,10000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'High Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '06'),'AUTO',1,1000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Low Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '06'),'AUTO',1,5000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Medium Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '06'),'AUTO',1,10000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'High Risk'))
+;
+
+delete from eg_wf_matrix where objecttype = 'BpaApplication' and additionalrule = 'Low Risk';
+
+INSERT INTO eg_wf_matrix (id,department,objecttype,currentstate,currentstatus,pendingactions,currentdesignation,additionalrule,nextstate,nextaction,nextdesignation,nextstatus,validactions,fromqty,toqty,fromdate,todate,"version",enablefields,forwardenabled,smsemailenabled,nextref,rejectenabled) VALUES 
+(nextval('seq_eg_wf_matrix'),'ANY','BpaApplication','NEW','','Forward to section clerk is pending','','Low Risk','Property documents verification initiated','Forwarded to property documents verification','Building Assistant Urban','Registered','Forward',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
+,(nextval('seq_eg_wf_matrix'),'ANY','BpaApplication','Rejected','','','','Low Risk','generate rejection notice','Application is rejected by approver','SDO Building Urban','Rejected','Generate Rejection Notice',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
+,(nextval('seq_eg_wf_matrix'),'ANY','BpaApplication','Application Approval Pending','','Forwarded to SDO Building for Approval','','Low Risk','Record Approved','Permit fee collection pending','SDO Building Urban','Approved','Approve,Reject',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
+,(nextval('seq_eg_wf_matrix'),'ANY','BpaApplication','Record Approved','','Forwarded to generate permit order','','Low Risk','END','END','SDO Building Urban','Order Issued to Applicant','Generate Permit Order',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
+,(nextval('seq_eg_wf_matrix'),'ANY','BpaApplication','Record Approved','','Permit fee collection pending','','Low Risk','Record Approved','Forwarded to generate permit order','SDO Building Urban','Approved','Generate Permit Order',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
+,(nextval('seq_eg_wf_matrix'),'ANY','BpaApplication','Property documents verification initiated','Registered','Forwarded to property documents verification','','Low Risk','Application Approval Pending','Forwarded to SDO Building for Approval','SDO Building Urban','','Forward',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
+;
+

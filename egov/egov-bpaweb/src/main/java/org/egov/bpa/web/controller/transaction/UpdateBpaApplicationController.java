@@ -826,7 +826,9 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         model.addAttribute(APPLICATION_HISTORY,
                 workflowHistoryService.getHistory(application.getAppointmentSchedule(), application.getCurrentState(),
                         application.getStateHistory()));
-        buildReceiptDetails(application.getDemand().getEgDemandDetails(), application.getReceipts());
+        if(null!=application.getDemand()) {
+        	buildReceiptDetails(application.getDemand().getEgDemandDetails(), application.getReceipts());
+        }
         List<PermitNocApplication> permitNoc = permitNocService.findByPermitApplicationNumber(application.getApplicationNumber());
 
         Map<String, String> edcrNocMandatory = permitNocService.getEdcrNocMandatory(application.geteDcrNumber());

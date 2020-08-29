@@ -136,7 +136,7 @@ public class BpaDemandService {
                 : buildDemandObject(new HashSet<EgDemandDetails>(), BigDecimal.ZERO,
                         installment);
 
-        Set<EgDemandDetails> demandDetailsSet = demand.getEgDemandDetails();
+        Set<EgDemandDetails> demandDetailsSet = dmd.getEgDemandDetails();
         HashMap<String, BigDecimal> feecodeamountmap = new HashMap<>();
         HashMap<String, Long> feecodedemanddetailsIdmap = new HashMap<>();
 

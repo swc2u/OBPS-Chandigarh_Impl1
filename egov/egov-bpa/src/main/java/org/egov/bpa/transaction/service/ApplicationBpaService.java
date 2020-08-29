@@ -194,6 +194,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
     private static final Logger LOG = getLogger(BpaUtils.class);
     private static final String APPLICATION_STATUS = "application.status";
     private static final String NOC_UPDATION_IN_PROGRESS = "NOC updation in progress";
+    private static final String APPLICATION_APPROVAL_PENDING = "Application Approval Pending";
     public static final String UNCHECKED = "unchecked";
     public static final String ERROR_OCCURRED_WHILE_GETTING_INPUTSTREAM = "Error occurred while getting inputstream";
     private static final String MODULE_NAME = "BPA";
@@ -333,12 +334,13 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         BpaApplication bpaApplicationResponse = applicationBpaRepository.saveAndFlush(application);
         application.setPermitDcrDocuments(persistApplnDCRDocuments(permitDcrDocuments));
         applicationBpaRepository.save(bpaApplicationResponse);
-        ApplicationBpaFeeCalculation feeCalculation = (ApplicationBpaFeeCalculation) specificNoticeService
-                .find(PermitFeeCalculationService.class, specificNoticeService.getCityDetails());
-        if (bpaUtils.isApplicationFeeCollectionRequired())
-            application.setDemand(feeCalculation.createDemand(application));
-        else
-            application.setDemand(feeCalculation.createDemandWhenFeeCollectionNotRequire(application));
+        
+//        ApplicationBpaFeeCalculation feeCalculation = (ApplicationBpaFeeCalculation) specificNoticeService
+//                .find(PermitFeeCalculationService.class, specificNoticeService.getCityDetails());
+//        if (bpaUtils.isApplicationFeeCollectionRequired())
+//            application.setDemand(feeCalculation.createDemand(application));
+//        else
+//            application.setDemand(feeCalculation.createDemandWhenFeeCollectionNotRequire(application));
 
         bpaIndexService.updateIndexes(bpaApplicationResponse);
         return bpaApplicationResponse;
@@ -584,8 +586,8 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         }
         if (!WF_SAVE_BUTTON.equalsIgnoreCase(workFlowAction)
         		&& !WF_INITIATE_REJECTION_BUTTON.equalsIgnoreCase(workFlowAction)
-                && APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(application.getStatus().getCode())
-                && NOC_UPDATION_IN_PROGRESS.equalsIgnoreCase(application.getState().getValue())) {
+                && ((APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(application.getStatus().getCode()) && NOC_UPDATION_IN_PROGRESS.equalsIgnoreCase(application.getState().getValue()))
+                ||  APPLICATION_APPROVAL_PENDING.equalsIgnoreCase(application.getState().getValue()))) {
             String feeCalculationMode = bpaUtils.getBPAFeeCalculationMode();
             if (feeCalculationMode.equalsIgnoreCase(BpaConstants.AUTOFEECAL) ||
                     feeCalculationMode.equalsIgnoreCase(BpaConstants.AUTOFEECALEDIT)) {

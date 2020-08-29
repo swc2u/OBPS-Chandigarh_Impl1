@@ -124,10 +124,11 @@ public class BpaIndexService {
 			bpaIndex.setApplicationFee(applicationBpaService.setAdmissionFeeAmountForRegistrationWithAmenities(
 					bpaApplication.getServiceType().getId(), bpaApplication.getApplicationAmenity()));
 		}
-		bpaIndex.setTotalDemandAmount(bpaApplication.getDemand().getBaseDemand() == null ? BigDecimal.ZERO
-				: bpaApplication.getDemand().getBaseDemand());
-		bpaIndex.setTotalCollectedAmount(bpaApplication.getDemand().getAmtCollected() == null ? BigDecimal.ZERO
-				: bpaApplication.getDemand().getAmtCollected());
+		//bpaIndex.setTotalDemandAmount(bpaApplication.getDemand().getBaseDemand() == null ? BigDecimal.ZERO : bpaApplication.getDemand().getBaseDemand());
+		//bpaIndex.setTotalCollectedAmount(bpaApplication.getDemand().getAmtCollected() == null ? BigDecimal.ZERO : bpaApplication.getDemand().getAmtCollected());
+		
+		bpaIndex.setTotalDemandAmount(BigDecimal.ZERO);
+		bpaIndex.setTotalCollectedAmount(BigDecimal.ZERO);
 	}
 
 	private void buildGovernmentData(final BpaApplication bpaApplication, BpaIndex bpaIndex) {

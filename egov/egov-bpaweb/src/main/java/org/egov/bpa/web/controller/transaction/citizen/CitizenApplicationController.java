@@ -64,6 +64,7 @@ import static org.egov.bpa.utils.BpaConstants.WF_SAVE_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_SEND_BUTTON;
 import static org.egov.infra.persistence.entity.enums.UserType.BUSINESS;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -510,9 +511,11 @@ public class CitizenApplicationController extends BpaGenericApplicationControlle
             }
         } 
         
-        ApplicationBpaFeeCalculation feeCalculation = (ApplicationBpaFeeCalculation) specificNoticeService
-                .find(PermitFeeCalculationService.class, specificNoticeService.getCityDetails());
-        bpaApplication.setAdmissionfeeAmount(feeCalculation.setAdmissionFeeAmount(bpaApplication, new ArrayList<>()));
+//        ApplicationBpaFeeCalculation feeCalculation = (ApplicationBpaFeeCalculation) specificNoticeService
+//                .find(PermitFeeCalculationService.class, specificNoticeService.getCityDetails());
+//        bpaApplication.setAdmissionfeeAmount(feeCalculation.setAdmissionFeeAmount(bpaApplication, new ArrayList<>()));
+        
+        bpaApplication.setAdmissionfeeAmount(BigDecimal.ZERO);
         
         nocIntegrationService.pushNocRequest(bpaApplication);
 

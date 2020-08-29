@@ -191,38 +191,24 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			final PermitFee permitFee) {
 		if (application != null) {
 			Plan plan = applicationBpaService.getPlanInfo(application.geteDcrNumber());
-			if (null != plan) {
-
+			if (null != plan) {				
 				OccupancyTypeHelper mostRestrictiveFarHelper = plan.getVirtualBuilding() != null
 						? plan.getVirtualBuilding().getMostRestrictiveFarHelper()
-						: null;
-
+						: null;			
+						
 				if (plan.isRural()) {
-
 					for (Long serviceTypeId : serviceTypeList) {
-
-//			            	BpaFeeMapping bpaGST = null;
-//			            	for (BpaFeeMapping fee : bpaFeeMappingService.getPermitFeesByAppType(application, serviceTypeId)) {
-//			            		if (fee != null) {
-//			            			if (BpaConstants.GST_18.equals(fee.getBpaFeeCommon().getDescription())
-//											&& (fee.getServiceType().getDescription().equalsIgnoreCase(NEW_CONSTRUCTION)
-//													|| fee.getServiceType().getDescription().equalsIgnoreCase(RECONSTRUCTION)
-//													|| fee.getServiceType().getDescription().equalsIgnoreCase(ADDING_OF_EXTENSION)
-//													|| fee.getServiceType().getDescription().equalsIgnoreCase(ALTERATION))) {
-//			            				bpaGST = fee;
-//			            			}
-//			            		}
-//			            	}	 
-
 						for (BpaFeeMapping bpaFee : bpaFeeMappingService.getPermitFeesByAppType(application,
 								serviceTypeId)) {
 							if (bpaFee != null) {
-//								if (bpaFee.getServiceType().getDescription().equalsIgnoreCase(NEW_CONSTRUCTION)
-//										|| bpaFee.getServiceType().getDescription().equalsIgnoreCase(RECONSTRUCTION)
-//										|| bpaFee.getServiceType().getDescription()
-//												.equalsIgnoreCase(ADDING_OF_EXTENSION)
-//										|| bpaFee.getServiceType().getDescription().equalsIgnoreCase(ALTERATION)) {
 								if (true) {
+									if(BpaConstants.SECURITY_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
+										BigDecimal securityFeeAmount = getTotalSecurityFee(plan, mostRestrictiveFarHelper);
+										if (securityFeeAmount.compareTo(BigDecimal.ZERO) >= 0) {
+											permitFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(
+													bpaFee, permitFee.getApplicationFee(), securityFeeAmount));
+										}
+									}
 									if (BpaConstants.SCRUTINY_FEE
 											.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 
@@ -233,17 +219,9 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 											permitFee.getApplicationFee()
 													.addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee,
 															permitFee.getApplicationFee(), totalAmount));
-//			                            		if(totalAmount.compareTo(BigDecimal.ZERO)>0) {
-//			                            			BigDecimal gstAmount = getTotalAmountOfGST(totalAmount);
-//			                            			permitFee.getApplicationFee()
-//			                                        .addApplicationFeeDetail(
-//			                                                buildApplicationFeeDetail(bpaGST, permitFee.getApplicationFee(), gstAmount));
-//			                            		}
 										}
 									} else if (BpaConstants.DEVELOPMENT_CHARGES_OF_ROADS
 											.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
-//										BigDecimal totalAmount = getTotalAmountOfLabourCess(
-//												application.getBuildingDetail(), plan, mostRestrictiveFarHelper);
 										BigDecimal totalAmount = getTotalDevelopmentChargesOfRoads(plan,
 												application.getBuildingDetail());
 										if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
@@ -254,8 +232,6 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 									} else if (BpaConstants.CONVERSION_CHARGES
 											.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
-//										BigDecimal totalAmount = getTotalAmountOfLabourCess(
-//												application.getBuildingDetail(), plan, mostRestrictiveFarHelper);
 										BigDecimal totalAmount = getTotalConversionCharges(plan,
 												application.getBuildingDetail());
 										if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
@@ -263,15 +239,11 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 													.addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee,
 															permitFee.getApplicationFee(), totalAmount));
 										}
-
 									}
-
 								}
 							}
 						}
-
 					}
-
 					return;
 				}
 
@@ -296,6 +268,13 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 									|| bpaFee.getServiceType().getDescription().equalsIgnoreCase(RECONSTRUCTION)
 									|| bpaFee.getServiceType().getDescription().equalsIgnoreCase(ADDING_OF_EXTENSION)
 									|| bpaFee.getServiceType().getDescription().equalsIgnoreCase(ALTERATION)) {
+								if(BpaConstants.SECURITY_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
+									BigDecimal securityFeeAmount = getTotalSecurityFee(plan, mostRestrictiveFarHelper);
+									if (securityFeeAmount.compareTo(BigDecimal.ZERO) >= 0) {
+										permitFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(
+												bpaFee, permitFee.getApplicationFee(), securityFeeAmount));
+									}
+								}
 								if (BpaConstants.SCRUTINY_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal multiplier = BigDecimal.ZERO;
@@ -356,18 +335,6 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 									}
 								} else if (BpaConstants.ADDITIONAL_COVERAGE_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
-
-									/*
-									 * BigDecimal totalAmount = BigDecimal.ZERO; if
-									 * (!bpaFee.getServiceType().getDescription().equalsIgnoreCase(NEW_CONSTRUCTION)
-									 * ) { totalAmount = totalAmount.add(
-									 * getTotalAmountForAdditionalCoverage(application.getBuildingDetail())); } if
-									 * (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
-									 * permitFee.getApplicationFee().addApplicationFeeDetail(
-									 * buildApplicationFeeDetail( bpaFee, permitFee.getApplicationFee(),
-									 * totalAmount)); }
-									 */
-
 									if (plan.getIsAdditionalFeeApplicable()) {
 										BigDecimal totalAmount = BigDecimal.ZERO;
 
@@ -379,7 +346,6 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 													.addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee,
 															permitFee.getApplicationFee(), totalAmount));
 										}
-
 									}
 								}
 							}
@@ -810,9 +776,9 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	@Override
 	public EgDemand createDemand(final BpaApplication application) {
 		final Map<String, BigDecimal> feeDetails = new HashMap<>();
-		if (application.getApplicationType().getName().equals(LOWRISK)) {
-			applicationFeeService.setPermitFee(application, feeDetails);
-		}
+//		if (application.getApplicationType().getName().equals(LOWRISK)) {
+//			applicationFeeService.setPermitFee(application, feeDetails);
+//		}
 
 		EgDemand egDemand = null;
 		final Installment installment = installmentDao.getInsatllmentByModuleForGivenDateAndInstallmentType(
@@ -850,23 +816,24 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		final Installment installment = installmentDao.getInsatllmentByModuleForGivenDateAndInstallmentType(
 				moduleService.getModuleByName(BpaConstants.EGMODULE_NAME), new Date(), BpaConstants.YEARLY);
 		Map<String, BigDecimal> feeDetails = new HashMap<>();
-		if (application.getApplicationType().getName().equals(LOWRISK) && installment != null) {
-			applicationFeeService.setPermitFee(application, feeDetails);
-			for (final Entry<String, BigDecimal> demandReason : feeDetails.entrySet())
-				dmdDetailSet.add(
-						createDemandDetails(feeDetails.get(demandReason.getKey()), demandReason.getKey(), installment));
-		}
+//		if (application.getApplicationType().getName().equals(LOWRISK) && installment != null) {
+//			applicationFeeService.setPermitFee(application, feeDetails);
+//			for (final Entry<String, BigDecimal> demandReason : feeDetails.entrySet())
+//				dmdDetailSet.add(
+//						createDemandDetails(feeDetails.get(demandReason.getKey()), demandReason.getKey(), installment));
+//		}
 		egDemand.setEgInstallmentMaster(installment);
 		egDemand.setIsHistory("N");
 		egDemand.setCreateDate(new Date());
-		if (application.getApplicationType().getName().equals(LOWRISK)) {
-			egDemand.getEgDemandDetails().addAll(dmdDetailSet);
-			egDemand.setBaseDemand(feeDetails.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add));
-		} else {
-			egDemand.setEgDemandDetails(new HashSet<>());
-			egDemand.setBaseDemand(BigDecimal.ZERO);
-		}
-
+//		if (application.getApplicationType().getName().equals(LOWRISK)) {
+//			egDemand.getEgDemandDetails().addAll(dmdDetailSet);
+//			egDemand.setBaseDemand(feeDetails.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add));
+//		} else {
+//			egDemand.setEgDemandDetails(new HashSet<>());
+//			egDemand.setBaseDemand(BigDecimal.ZERO);
+//		}
+		egDemand.setEgDemandDetails(new HashSet<>());
+		egDemand.setBaseDemand(BigDecimal.ZERO);
 		egDemand.setModifiedDate(new Date());
 		return egDemand;
 	}
