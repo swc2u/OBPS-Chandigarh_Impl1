@@ -543,14 +543,16 @@ public class BpaNoticeUtil {
             String lastString = " and ";
             for (BuildingSubUsage buildingSubUsage : buildingSubUsages) {
                 for (BuildingSubUsageDetails buildingSubUsageDetail : buildingSubUsage.getSubUsageDetails()) {
-                    mainUsage = buildingSubUsageDetail.getMainUsage().getDescription();
-                    StringBuilder subUsage = new StringBuilder();
-                    for (Usage subOccupancy : buildingSubUsageDetail.getSubUsages()) {
-                        subUsage = subUsage.append(subOccupancy.getDescription()).append(", ");
+                    if(buildingSubUsageDetail!=null && buildingSubUsageDetail.getMainUsage()!=null) {
+                    	mainUsage = buildingSubUsageDetail.getMainUsage().getDescription();
+                        StringBuilder subUsage = new StringBuilder();
+                        for (Usage subOccupancy : buildingSubUsageDetail.getSubUsages()) {
+                            subUsage = subUsage.append(subOccupancy.getDescription()).append(", ");
+                        }
+                        subheader = subheader.append("Block ").append(buildingSubUsage.getBlockNumber())
+                                .append(" - ").append(subUsage.toString(), 0, subUsage.length() - 2)
+                                .append(" under ").append(mainUsage).append(" occupancy ").append(lastString);
                     }
-                    subheader = subheader.append("Block ").append(buildingSubUsage.getBlockNumber())
-                            .append(" - ").append(subUsage.toString(), 0, subUsage.length() - 2)
-                            .append(" under ").append(mainUsage).append(" occupancy ").append(lastString);
                 }
 
             }
