@@ -468,9 +468,9 @@ INSERT INTO chandigarh.egbpa_mstr_bpafeemapping (id,applicationtype,feesubtype,s
 ,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '06'),'AUTO',1,10000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'High Risk'))
 ;
 
-delete from eg_wf_matrix where objecttype = 'BpaApplication' and additionalrule = 'Low Risk';
+delete from chandigarh.eg_wf_matrix where objecttype = 'BpaApplication' and additionalrule = 'Low Risk';
 
-INSERT INTO eg_wf_matrix (id,department,objecttype,currentstate,currentstatus,pendingactions,currentdesignation,additionalrule,nextstate,nextaction,nextdesignation,nextstatus,validactions,fromqty,toqty,fromdate,todate,"version",enablefields,forwardenabled,smsemailenabled,nextref,rejectenabled) VALUES 
+INSERT INTO chandigarh.eg_wf_matrix (id,department,objecttype,currentstate,currentstatus,pendingactions,currentdesignation,additionalrule,nextstate,nextaction,nextdesignation,nextstatus,validactions,fromqty,toqty,fromdate,todate,"version",enablefields,forwardenabled,smsemailenabled,nextref,rejectenabled) VALUES 
 (nextval('seq_eg_wf_matrix'),'ANY','BpaApplication','NEW','','Forward to section clerk is pending','','Low Risk','Property documents verification initiated','Forwarded to property documents verification','Building Assistant Urban','Registered','Forward',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
 ,(nextval('seq_eg_wf_matrix'),'ANY','BpaApplication','Rejected','','','','Low Risk','generate rejection notice','Application is rejected by approver','SDO Building Urban','Rejected','Generate Rejection Notice',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
 ,(nextval('seq_eg_wf_matrix'),'ANY','BpaApplication','Application Approval Pending','','Forwarded to SDO Building for Approval','','Low Risk','Record Approved','Permit fee collection pending','SDO Building Urban','Approved','Approve,Reject',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
