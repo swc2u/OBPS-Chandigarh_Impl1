@@ -205,7 +205,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 								if (true) {
 									if(BpaConstants.SECURITY_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 										BigDecimal securityFeeAmount = getTotalSecurityFee(plan, mostRestrictiveFarHelper);
-										if (securityFeeAmount.compareTo(BigDecimal.ZERO) >= 0) {
+										if (securityFeeAmount.compareTo(BigDecimal.ZERO) > 0) {
 											permitFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(
 													bpaFee, permitFee.getApplicationFee(), securityFeeAmount));
 										}
@@ -216,7 +216,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										BigDecimal totalAmount = getTotalScruitnyFeeRural(plan,
 												application.getBuildingDetail());
 
-										if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
+										if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
 											permitFee.getApplicationFee()
 													.addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee,
 															permitFee.getApplicationFee(), totalAmount));
@@ -225,7 +225,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 											.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 										BigDecimal totalAmount = getTotalDevelopmentChargesOfRoads(plan,
 												application.getBuildingDetail());
-										if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
+										if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
 											permitFee.getApplicationFee()
 													.addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee,
 															permitFee.getApplicationFee(), totalAmount));
@@ -235,7 +235,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 											.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 										BigDecimal totalAmount = getTotalConversionCharges(plan,
 												application.getBuildingDetail());
-										if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
+										if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
 											permitFee.getApplicationFee()
 													.addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee,
 															permitFee.getApplicationFee(), totalAmount));
@@ -244,7 +244,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 											.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 										BigDecimal totalAmount = getTotalConstructionAndDemolisionFee(plan,
 												application.getBuildingDetail());
-										if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
+										if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
 											permitFee.getApplicationFee()
 													.addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee,
 															permitFee.getApplicationFee(), totalAmount));
@@ -1054,7 +1054,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal demolitionAreaInSqm=plan.getPlanInformation().getDemolitionArea();
 		if(plan.getDrawingPreference().getInFeets()) {
-			demolitionAreaInSqm=demolitionAreaInSqm.divide(new BigDecimal(3.281), 2, RoundingMode.HALF_UP);
+			demolitionAreaInSqm=demolitionAreaInSqm.divide(new BigDecimal(10.764), 2, RoundingMode.HALF_UP);
 		}
 		
 		BigDecimal totalProposedAreaInSqm=BigDecimal.ZERO;
