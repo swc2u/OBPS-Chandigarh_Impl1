@@ -1,10 +1,7 @@
 package org.egov.commons.cdg;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.HashMap;
-
-import org.springframework.stereotype.Service;
 
 public class CDGAdditionalService {
 	public static HashMap<String, String> planInfo=new HashMap<String, String>();
@@ -19,5 +16,7 @@ public class CDGAdditionalService {
 		BigDecimal b=number.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		return b;
 	}
+	
+	
 
 }

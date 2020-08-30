@@ -479,3 +479,32 @@ INSERT INTO eg_wf_matrix (id,department,objecttype,currentstate,currentstatus,pe
 ,(nextval('seq_eg_wf_matrix'),'ANY','BpaApplication','Property documents verification initiated','Registered','Forwarded to property documents verification','','Low Risk','Application Approval Pending','Forwarded to SDO Building for Approval','SDO Building Urban','','Forward',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
 ;
 
+update chandigarh.egbpa_mstr_bpafee_common set "name"='Construction & Demolision', description='Construction & Demolision' where code='DF';
+
+update chandigarh.eg_demand_reason_master set reasonmaster='Construction & Demolision' where code='DF';
+
+-- Development charges of roads
+INSERT INTO chandigarh.egbpa_mstr_bpafeemapping (id,applicationtype,feesubtype,servicetype,calculationtype,bpafeecommon,amount,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,applicationsubtype) VALUES 
+(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '01'),'AUTO',6,5000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Medium Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '03'),'AUTO',6,5000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Medium Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '04'),'AUTO',6,5000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Medium Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '06'),'AUTO',6,5000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Medium Risk'))
+;
+
+-- Conversion charges
+
+INSERT INTO chandigarh.egbpa_mstr_bpafeemapping (id,applicationtype,feesubtype,servicetype,calculationtype,bpafeecommon,amount,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,applicationsubtype) VALUES 
+(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '01'),'AUTO',7,5000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Medium Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '03'),'AUTO',7,5000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Medium Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '04'),'AUTO',7,5000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Medium Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '06'),'AUTO',7,5000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Medium Risk'))
+;
+
+-- Construction & Demolision
+
+INSERT INTO chandigarh.egbpa_mstr_bpafeemapping (id,applicationtype,feesubtype,servicetype,calculationtype,bpafeecommon,amount,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,applicationsubtype) VALUES 
+(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '01'),'AUTO',5,5000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Medium Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '03'),'AUTO',5,5000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Medium Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '04'),'AUTO',5,5000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Medium Risk'))
+,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(SELECT id FROM chandigarh.egbpa_mstr_servicetype where code = '06'),'AUTO',5,5000,0,1,now(),1,now(),(SELECT id FROM chandigarh.egbpa_mstr_applicationsubtype where "name" = 'Medium Risk'))
+;

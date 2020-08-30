@@ -266,6 +266,8 @@ public class PlanInformation implements Serializable {
     //COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE
     private transient String commercialAreaOccupancyAsPerRule=NA;
     
+    private transient Boolean isConversionChargesApplicable;
+    
 	public String getRootBoundaryType() {
 		return rootBoundaryType;
 	}
@@ -1012,4 +1014,14 @@ public class PlanInformation implements Serializable {
 	public void setNocAcTaxDept(String nocAcTaxDept) {
 		this.nocAcTaxDept = nocAcTaxDept;
 	}
+
+	public Boolean getIsConversionChargesApplicable() {
+		return isConversionChargesApplicable;
+	}
+
+	public void setIsConversionChargesApplicable(Boolean isConversionChargesApplicable) {
+		this.isConversionChargesApplicable = isConversionChargesApplicable;
+	}
+	
+	
 }

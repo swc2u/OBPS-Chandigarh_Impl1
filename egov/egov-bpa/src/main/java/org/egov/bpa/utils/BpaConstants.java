@@ -98,6 +98,18 @@ public class BpaConstants {
 	public static final String A_P = "A-P";// Plotted
 	public static final String A_G = "A-G";// Grouped
 	public static final String F_CIR="F-CIR";// commercial in rural
+	
+	public static final String A_SQ="A-SQ";//Servant quarter
+	public static final String A_PO = "A-PO";// Professional Office
+	public static final String A_S="A-S";//  STD/ PCO/ fax and photostat machine
+	public static final String A_PG="A-PG";//Creche and paying guest facility
+	public static final String A_EWS="A-EWS";//EWS
+	public static final String A_ICP="A-ICP"; // In Checkpost
+	public static final String A_OCP="A-OCP"; // Out Checkpost
+	public static final String IT_AF="IT-AF";//Ancillary Facilities
+	public static final String A_GF="A-GF";//Gallery floor;
+	public static final String A_RU="A-RU";//Residential use ;
+	public static final String A_CC="A-CC";//Community Facilities In Group Housing Building 
 	public static final String A_AF="A-AF";//Additional Fee
 	public static final String A_R5="A-R5";//Additional Fee
 	
@@ -400,6 +412,7 @@ public class BpaConstants {
     public static final String RULE_5_FEE = "Rule 5 fee";
     public static final String DEVELOPMENT_CHARGES_OF_ROADS = "Development charges of roads";
     public static final String CONVERSION_CHARGES="Conversion charges";
+    public static final String CONSTRUCTION_AND_DEMOLISION="Construction & Demolision";
     
     public static final String TP_DEPT = "TOWN PLANNING DEPARTMENT";
     public static final String DEV_PERMIT_FEE = "DPF";

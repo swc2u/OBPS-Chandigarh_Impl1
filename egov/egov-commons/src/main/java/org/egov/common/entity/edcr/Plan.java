@@ -589,8 +589,10 @@ public class Plan implements Serializable {
 
 	public void setPlanInfoProperties(Map<String, String> planInfoProperties) {
 		planInfoProperties.putAll(initPlanInfo());
-		if ("URBAN".equals(planInfoProperties.get("ROOT_BOUNDARY_TYPE")))
+		if ("URBAN".equals(planInfoProperties.get("ROOT_BOUNDARY_TYPE"))) {
 			planInfoProperties.put("AVG_PLOT_DEPTH", "N/A");
+			planInfoProperties.put("ROAD_WIDTH", "3");
+		}
 		else if ("RURAL".equals(planInfoProperties.get("ROOT_BOUNDARY_TYPE"))) {// as per OBPS-30 request
 			planInfoProperties.put("AVG_PLOT_DEPTH", planInfoProperties.get("PLOT_LENGTH"));
 		}
@@ -637,7 +639,6 @@ public class Plan implements Serializable {
 		// planInfo.put("AVG_PLOT_DEPTH", "N/A");
 		planInfo.put("AVG_PLOT_WIDTH", "N/A");
 		planInfo.put("AREA_TYPE", "OLD");
-		planInfo.put("ROAD_WIDTH", "3");
 		planInfo.put("BUILDING_NEAR_MONUMENT ", "NO");
 		planInfo.put("BUILDING_NEAR_GOVT_BLDG", "NO");
 		planInfo.put("BUILDING_NEAR_TO_RIVER", "NO");

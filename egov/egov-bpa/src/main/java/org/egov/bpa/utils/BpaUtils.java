@@ -71,6 +71,7 @@ import org.egov.bpa.transaction.workflow.pl.PlinthLevelCertificateWorkflowCustom
 import org.egov.collection.integration.models.BillReceiptInfo;
 import org.egov.collection.integration.services.CollectionIntegrationService;
 import org.egov.common.entity.bpa.SubOccupancy;
+import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.demand.model.EgDemand;
 import org.egov.demand.model.EgDemandDetails;
 import org.egov.eis.entity.Assignment;
@@ -1041,5 +1042,25 @@ public class BpaUtils {
 		List<Role> collectorRole = securityUtils.getCurrentUser().getRoles().stream()
 				.filter(str -> str.getName().contains(BpaConstants.ROLE_BILLCOLLECTOR)).collect(Collectors.toList());
 		return collectorRole.isEmpty() ? false : true;
+	}
+	
+	public static boolean isOccupancyExcludedFromFar(OccupancyTypeHelper helper) {
+		boolean flage=false;
+		
+		if(helper!=null && helper.getSubtype()!=null && helper.getSubtype().getCode()!=null) {
+			if(BpaConstants.A_SQ.equals(helper.getSubtype().getCode())
+					|| BpaConstants.A_PO.equals(helper.getSubtype().getCode())
+					|| BpaConstants.A_S.equals(helper.getSubtype().getCode())
+					|| BpaConstants.A_PG.equals(helper.getSubtype().getCode())
+					|| BpaConstants.A_ICP.equals(helper.getSubtype().getCode())
+					|| BpaConstants.A_OCP.equals(helper.getSubtype().getCode())
+					|| BpaConstants.A_AF.equals(helper.getSubtype().getCode())
+					|| BpaConstants.A_GF.equals(helper.getSubtype().getCode())
+					|| BpaConstants.A_R5.equals(helper.getSubtype().getCode())
+													)
+				flage=true;
+		}
+		
+		return flage;
 	}
 }

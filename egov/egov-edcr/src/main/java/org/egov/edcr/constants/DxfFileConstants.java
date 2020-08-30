@@ -502,7 +502,7 @@ public class DxfFileConstants {
 	public static final int YARD_DIMENSION_COLOR = 2;
 
 	public static final String AREA_TYPE = "Area Type";
-	public static final String ROAD_WIDTH = "Road Width";
+	//public static final String ROAD_WIDTH = "Road Width";
 	public static final String COMMERCIAL = "COMMERCIAL";
 	public static final String RULE_28 = "28";
 	public static final String SETBACK = "SetBack";
@@ -534,4 +534,8 @@ public class DxfFileConstants {
 	public static final String KEY_METER_ENABLE="dcr.meter.enabled";
 	public static final String KEY_FEET_ENABLE="dcr.feet.enabled";
 	
+	public static final String ROAD_WIDTH="ROAD_WIDTH";
+	public static final String ROAD_LENGTH="ROAD_LENGTH";
+	public static final String CONVERSION_CHARGES_APPLICABLE="CONVERSION_CHARGES_APPLICABLE";
+	public static final String DEMOLITION_AREA="DEMOLITION_AREA";
 }

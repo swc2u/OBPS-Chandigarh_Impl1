@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -177,10 +178,44 @@ public class PlanService {
 		pl.getPlanInformation().setPlotWidth(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_WIDTH)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_WIDTH):"NA");
 		pl.getPlanInformation().setCommercialAreaOccupancyAsPerRule(pl.getPlanInfoProperties().get(DxfFileConstants.COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE):"NA");
 		
+		try {
+			pl.getPlanInformation().setDemolitionArea(pl.getPlanInfoProperties().get(DxfFileConstants.DEMOLITION_AREA)!=null?new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.DEMOLITION_AREA)):BigDecimal.ZERO);
+		}catch (Exception e) {
+			pl.addError("DEMOLITION_AREA", "DEMOLITION_AREA is invalid in planinfo layer.");
+		}
 		if(DxfFileConstants.RURAL.equals(pl.getPlanInfoProperties().get(DxfFileConstants.ROOT_BOUNDARY_TYPE)))
 			pl.setRural(true);
 		else
 			pl.setRural(false);
+		
+		if(pl.isRural()) {
+			if(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_WIDTH)!=null) {
+				try {
+					pl.getPlanInformation().setRoadWidth(new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_WIDTH)));
+				}catch (Exception e) {
+					pl.addError("ROAD_WIDTH", "ROAD_WIDTH is invalid in planinfo layer.");
+				}
+			}else {
+				pl.addError("ROAD_WIDTH", "ROAD_WIDTH is not provided in planinfo layer.");
+			}
+			
+			if(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_LENGTH)!=null) {
+				try {
+					pl.getPlanInformation().setRoadLength(new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_LENGTH)));
+				}catch (Exception e) {
+					pl.addError("ROAD_LENGTH", "ROAD_LENGTH is invalid in planinfo layer.");
+				}
+			}else {
+				pl.addError("ROAD_LENGTH", "ROAD_LENGTH is not provided in planinfo layer.");
+			}
+			
+			if(!DxfFileConstants.YES.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.CONVERSION_CHARGES_APPLICABLE)) && !DxfFileConstants.NO.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.CONVERSION_CHARGES_APPLICABLE)))
+				pl.addError("CONVERSION_CHARGES_APPLICABLE", "CONVERSION_CHARGES_APPLICABLE response is invalid.");
+			
+			if(DxfFileConstants.YES.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.CONVERSION_CHARGES_APPLICABLE)))
+				pl.getPlanInformation().setIsConversionChargesApplicable(true);
+			
+		}
 		
 		if(pl.getDrawingPreference().getInFeets())
 			pl.getPlot().setPlotBndryArea(CDGAdditionalService.inchtoFeetArea(pl.getPlot().getPlotBndryArea()));
