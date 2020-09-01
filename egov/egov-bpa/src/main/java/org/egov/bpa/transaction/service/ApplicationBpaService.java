@@ -69,6 +69,7 @@ import static org.egov.bpa.utils.BpaConstants.WF_LBE_SUBMIT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_NEW_STATE;
 import static org.egov.bpa.utils.BpaConstants.WF_REJECT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_SAVE_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.ByteArrayInputStream;
@@ -195,6 +196,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
     private static final String APPLICATION_STATUS = "application.status";
     private static final String NOC_UPDATION_IN_PROGRESS = "NOC updation in progress";
     private static final String APPLICATION_APPROVAL_PENDING = "Application Approval Pending";
+    private static final String PROPERTY_DOCUMENTS_VERIFICATION_INITIATED = "Property documents verification initiated";
     public static final String UNCHECKED = "unchecked";
     public static final String ERROR_OCCURRED_WHILE_GETTING_INPUTSTREAM = "Error occurred while getting inputstream";
     private static final String MODULE_NAME = "BPA";
@@ -584,10 +586,14 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
                         permitFee.getApplication().getDemand()));
             }
         }
+//        if (!WF_SAVE_BUTTON.equalsIgnoreCase(workFlowAction)
+//        		&& !WF_INITIATE_REJECTION_BUTTON.equalsIgnoreCase(workFlowAction)
+//                && ((APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(application.getStatus().getCode()) && NOC_UPDATION_IN_PROGRESS.equalsIgnoreCase(application.getState().getValue()))
+//                ||  APPLICATION_APPROVAL_PENDING.equalsIgnoreCase(application.getState().getValue()))) {
         if (!WF_SAVE_BUTTON.equalsIgnoreCase(workFlowAction)
         		&& !WF_INITIATE_REJECTION_BUTTON.equalsIgnoreCase(workFlowAction)
-                && ((APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(application.getStatus().getCode()) && NOC_UPDATION_IN_PROGRESS.equalsIgnoreCase(application.getState().getValue()))
-                ||  APPLICATION_APPROVAL_PENDING.equalsIgnoreCase(application.getState().getValue()))) {
+                && PROPERTY_DOCUMENTS_VERIFICATION_INITIATED.equalsIgnoreCase(application.getState().getValue())
+                && APPLICATION_STATUS_REGISTERED.equalsIgnoreCase(application.getStatus().getCode())) {
             String feeCalculationMode = bpaUtils.getBPAFeeCalculationMode();
             if (feeCalculationMode.equalsIgnoreCase(BpaConstants.AUTOFEECAL) ||
                     feeCalculationMode.equalsIgnoreCase(BpaConstants.AUTOFEECALEDIT)) {
