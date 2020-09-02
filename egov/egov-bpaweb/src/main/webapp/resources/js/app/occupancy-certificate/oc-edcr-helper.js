@@ -320,8 +320,18 @@ $(document).ready(
                     var occupancy = floorObj.occupancies[j];
                     // Will auto populate floor details in proposed building
                     if(occupancy.builtUpArea && occupancy.builtUpArea > 0) {
-                        addFloorDetailsIntoTable(blkIdx, floorIdx, $(tableId+" tbody tr").length, floorObj.name, floorObj.number, subOccupancyResponseByName[occupancy.typeHelper.subtype.name],occupancyResponseByName[occupancy.typeHelper.type.name], occupancy.builtUpArea, occupancy.floorArea, occupancy.carpetArea);
-                        floorIdx++;
+                    	var subOccupancyModified = subOccupancyResponseByName[occupancy.typeHelper.subtype.name]; 
+                        var occupancyModified = occupancyResponseByName[occupancy.typeHelper.type.name];                   	
+                        var isFeature=false;
+						if(subOccupancyModified!=null && subOccupancyModified.length>0){
+							isFeature=subOccupancyModified[0].isFeature;
+						} else {
+							isFeature=occupancySuboccupancyMap[occupancyModified[0].id][0].isFeature;
+						}
+						if(!isFeature){
+	                        addFloorDetailsIntoTable(blkIdx, floorIdx, $(tableId+" tbody tr").length, floorObj.name, floorObj.number, subOccupancyResponseByName[occupancy.typeHelper.subtype.name],occupancyResponseByName[occupancy.typeHelper.type.name], occupancy.builtUpArea, occupancy.floorArea, occupancy.carpetArea);
+	                        floorIdx++;
+						}
                     }
                 }
             }
@@ -336,8 +346,18 @@ $(document).ready(
                     var occupancy = floorObj.occupancies[j];
                     // Will auto populate floor details in existing building
                     if(occupancy.existingBuiltUpArea && occupancy.existingBuiltUpArea > 0) {
-                        addExistBldgFloorDetailsIntoTable(blkIdx, floorIdx, $('.existingBuildingAreaDetails'+blkIdx+' tbody tr').length, floorObj.name, floorObj.number, subOccupancyResponseByName[occupancy.typeHelper.subtype.name], occupancyResponseByName[occupancy.typeHelper.type.name],occupancy.existingBuiltUpArea, occupancy.existingFloorArea, occupancy.existingCarpetArea);
-                        floorIdx++;
+                    	var subOccupancyModified = subOccupancyResponseByName[occupancy.typeHelper.subtype.name]; 
+                        var occupancyModified = occupancyResponseByName[occupancy.typeHelper.type.name];                   	
+                        var isFeature=false;
+						if(subOccupancyModified!=null && subOccupancyModified.length>0){
+							isFeature=subOccupancyModified[0].isFeature;
+						} else {
+							isFeature=occupancySuboccupancyMap[occupancyModified[0].id][0].isFeature;
+						}
+						if(!isFeature){
+	                        addExistBldgFloorDetailsIntoTable(blkIdx, floorIdx, $('.existingBuildingAreaDetails'+blkIdx+' tbody tr').length, floorObj.name, floorObj.number, subOccupancyResponseByName[occupancy.typeHelper.subtype.name], occupancyResponseByName[occupancy.typeHelper.type.name],occupancy.existingBuiltUpArea, occupancy.existingFloorArea, occupancy.existingCarpetArea);
+	                        floorIdx++;
+						}
                     }
                 }
             }

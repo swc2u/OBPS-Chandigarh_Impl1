@@ -97,8 +97,9 @@
 							code='lbl.appln.details' /></a></li>
 				<li><a data-toggle="tab" href="#document-info" data-tabidx=1><spring:message
 							code='title.documentdetail' /></a></li>
-				<li><a data-toggle="tab" href="#noc-document-info"
-					data-tabidx=2><spring:message code='lbl.noc.doc.details' /></a></li>
+				<li style="display: none;">
+					<a data-toggle="tab" href="#noc-document-info" data-tabidx=2><spring:message code='lbl.noc.doc.details' /></a>
+				</li>
 			</ul>
 			<div class="tab-content">
 				<div id="application-info" class="tab-pane fade in active">
@@ -128,7 +129,7 @@
 						<jsp:include page="../oc-general-documents.jsp"></jsp:include>
 					</div>
 				</div>
-				<div id="noc-document-info" class="tab-pane fade">
+				<div id="noc-document-info" class="tab-pane fade" style="display: none;">
 					<div class="panel panel-primary" data-collapsed="0">
 						<jsp:include page="../oc-noc-documents.jsp"></jsp:include>
 					</div>
