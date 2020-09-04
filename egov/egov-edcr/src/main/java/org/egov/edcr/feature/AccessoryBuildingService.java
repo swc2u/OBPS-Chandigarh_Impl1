@@ -343,6 +343,9 @@ public class AccessoryBuildingService extends FeatureProcess {
 							minimumAccBlkDisFromPlotBoundary = disOfAccBlkFromPlotBndry;
 						}
 					}
+					if(plan.getDrawingPreference().getInFeets()) {
+						minimumAccBlkDisFromPlotBoundary=CDGAdditionalService.inchToFeet(minimumAccBlkDisFromPlotBoundary);
+					}
 					if (minimumAccBlkDisFromPlotBoundary.compareTo(exptectedDistance) <= 0) {
 						valid = true;
 					}

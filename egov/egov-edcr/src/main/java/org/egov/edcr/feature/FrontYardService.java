@@ -73,6 +73,7 @@ import org.egov.common.entity.edcr.SetBack;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.cdg.CDGAConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
+import org.egov.edcr.service.cdg.CDGMathService;
 import org.egov.infra.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -1022,8 +1023,9 @@ public class FrontYardService extends GeneralRule {
 //		if (min.compareTo(minval) >= 0 && mean.compareTo(meanval) >= 0) {
 //			valid = true;
 //		}
-		if (min.compareTo(minval) == 0) {
-			valid = true;
+		//if (min.compareTo(minval) == 0) {
+			if (CDGMathService.compare(min, minval, CDGMathService.ZERO_POINT_FOUR_INCH_IN_FEET) == 0) {
+					valid = true;
 		}
 		
 		return valid;

@@ -73,6 +73,7 @@ import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.ProcessHelper;
 import org.egov.edcr.service.cdg.CDGAConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
+import org.egov.edcr.service.cdg.CDGMathService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -167,7 +168,9 @@ public class BuildingHeight extends FeatureProcess {
 
 				String actualResult = CDGAdditionalService.viewLenght(Plan, buildingHeight);
 				String expectedResult = "Upto " + CDGAdditionalService.viewLenght(Plan, exptectedHeight);
-
+				
+				
+				
 				if (buildingHeight.compareTo(exptectedHeight) > 0) {
 					Map<String, String> details = new HashMap<>();
 					// details.put(RULE_NO, subRule);
@@ -362,7 +365,8 @@ public class BuildingHeight extends FeatureProcess {
 					
 					if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode()) && DxfFileConstants.MARLA.equals(Plan.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
 						expectedResult = CDGAdditionalService.viewLenght(Plan, exptectedHeight);;
-						if (buildingHeight.compareTo(exptectedHeight) == 0)
+//						if (buildingHeight.compareTo(exptectedHeight) == 0)
+						if (CDGMathService.compare(buildingHeight, exptectedHeight, CDGMathService.ZERO_POINT_FOUR_INCH_IN_FEET) == 0)
 							isAccepted=true;
 					}else {
 						if (buildingHeight.compareTo(exptectedHeight) <= 0)

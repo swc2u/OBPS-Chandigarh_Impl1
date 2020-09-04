@@ -77,6 +77,7 @@ import org.egov.common.entity.edcr.Yard;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.cdg.CDGAConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
+import org.egov.edcr.service.cdg.CDGMathService;
 import org.egov.edcr.utility.DcrConstants;
 import org.egov.infra.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1320,8 +1321,9 @@ public class AdditionalFeature extends FeatureProcess {
 					if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 							&& DxfFileConstants.MARLA
 									.equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
-						if (minPlinthHeight.compareTo(expectedMinPlinthHeight) == 0) {
-							isAccepted = true;
+						//if (minPlinthHeight.compareTo(expectedMinPlinthHeight) == 0) {
+						if (CDGMathService.compare(minPlinthHeight, expectedMinPlinthHeight, CDGMathService.ZERO_POINT_FOUR_INCH_IN_FEET) == 0) {
+								isAccepted = true;
 						}
 					} else if (!isOccupancyTypePlinthNotApplicable(mostRestrictiveOccupancyType)) {
 						if (minPlinthHeight.compareTo(expectedMinPlinthHeight) >= 0
