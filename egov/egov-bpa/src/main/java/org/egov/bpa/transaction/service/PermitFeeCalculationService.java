@@ -192,22 +192,25 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			final PermitFee permitFee) {
 		if (application != null) {
 			Plan plan = applicationBpaService.getPlanInfo(application.geteDcrNumber());
-			if (null != plan) {				
+			if (null != plan) {
 				OccupancyTypeHelper mostRestrictiveFarHelper = plan.getVirtualBuilding() != null
 						? plan.getVirtualBuilding().getMostRestrictiveFarHelper()
-						: null;			
-						
+						: null;
+
 				if (plan.isRural()) {
 					for (Long serviceTypeId : serviceTypeList) {
 						for (BpaFeeMapping bpaFee : bpaFeeMappingService.getPermitFeesByAppType(application,
 								serviceTypeId)) {
 							if (bpaFee != null) {
 								if (true) {
-									if(BpaConstants.SECURITY_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
-										BigDecimal securityFeeAmount = getTotalSecurityFee(plan, mostRestrictiveFarHelper);
+									if (BpaConstants.SECURITY_FEE
+											.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
+										BigDecimal securityFeeAmount = getTotalSecurityFee(plan,
+												mostRestrictiveFarHelper);
 										if (securityFeeAmount.compareTo(BigDecimal.ZERO) > 0) {
-											permitFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(
-													bpaFee, permitFee.getApplicationFee(), securityFeeAmount));
+											permitFee.getApplicationFee()
+													.addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee,
+															permitFee.getApplicationFee(), securityFeeAmount));
 										}
 									}
 									if (BpaConstants.SCRUTINY_FEE
@@ -240,7 +243,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 													.addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee,
 															permitFee.getApplicationFee(), totalAmount));
 										}
-									}else if (BpaConstants.CONSTRUCTION_AND_DEMOLISION
+									} else if (BpaConstants.CONSTRUCTION_AND_DEMOLISION
 											.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 										BigDecimal totalAmount = getTotalConstructionAndDemolisionFee(plan,
 												application.getBuildingDetail());
@@ -278,7 +281,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 									|| bpaFee.getServiceType().getDescription().equalsIgnoreCase(RECONSTRUCTION)
 									|| bpaFee.getServiceType().getDescription().equalsIgnoreCase(ADDING_OF_EXTENSION)
 									|| bpaFee.getServiceType().getDescription().equalsIgnoreCase(ALTERATION)) {
-								if(BpaConstants.SECURITY_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
+								if (BpaConstants.SECURITY_FEE
+										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal securityFeeAmount = getTotalSecurityFee(plan, mostRestrictiveFarHelper);
 									if (securityFeeAmount.compareTo(BigDecimal.ZERO) >= 0) {
 										permitFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(
@@ -288,14 +292,14 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 								if (BpaConstants.SCRUTINY_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal multiplier = BigDecimal.ZERO;
-									if (bpaFee.getServiceType().getDescription().equalsIgnoreCase(NEW_CONSTRUCTION)
-											|| bpaFee.getServiceType().getDescription()
-													.equalsIgnoreCase(RECONSTRUCTION)) {
-										multiplier = TWO_FIVE;
+									if (bpaFee.getServiceType().getDescription().equalsIgnoreCase(NEW_CONSTRUCTION)) {
+										multiplier = TWO_FIVE;// 2.5
 									} else if (bpaFee.getServiceType().getDescription()
 											.equalsIgnoreCase(ADDING_OF_EXTENSION)
-											|| bpaFee.getServiceType().getDescription().equalsIgnoreCase(ALTERATION)) {
-										multiplier = ONE_TWO_FIVE;
+											|| bpaFee.getServiceType().getDescription().equalsIgnoreCase(ALTERATION)
+											|| bpaFee.getServiceType().getDescription()
+													.equalsIgnoreCase(RECONSTRUCTION)) {
+										multiplier = ONE_TWO_FIVE;// 1.25
 									}
 
 									BigDecimal totalAmount = getTotalScruitnyFee(plan, application.getBuildingDetail(),
@@ -331,11 +335,11 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 											BigDecimal totalConstArea = new BigDecimal(
 													application.getSiteDetail().get(0).getStateOfConstruction());
 											totalConstArea = totalConstArea.setScale(2, BigDecimal.ROUND_HALF_UP);
-											totalAmount = getTotalAmountOfRule5New(application.getBuildingDetail(), plan,
-													mostRestrictiveFarHelper, isWorkInProgress, totalConstArea);
+											totalAmount = getTotalAmountOfRule5New(application.getBuildingDetail(),
+													plan, mostRestrictiveFarHelper, isWorkInProgress, totalConstArea);
 										} else {
-											totalAmount = getTotalAmountOfRule5New(application.getBuildingDetail(), plan,
-													mostRestrictiveFarHelper, isWorkInProgress, BigDecimal.ZERO);
+											totalAmount = getTotalAmountOfRule5New(application.getBuildingDetail(),
+													plan, mostRestrictiveFarHelper, isWorkInProgress, BigDecimal.ZERO);
 										}
 										if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
 											permitFee.getApplicationFee()
@@ -864,21 +868,41 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	public BigDecimal getTotalScruitnyFee(Plan plan, List<BuildingDetail> buildingDetails, BigDecimal multiplier) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
-		if (plan.getDrawingPreference().getInMeters()) {
-			for (BuildingDetail building : buildingDetails) {
-				for (ApplicationFloorDetail floor : building.getApplicationFloorDetails()) {
-					totalAmount = totalAmount.add(floor.getFloorArea().multiply(SQMT_SQFT_MULTIPLIER)
-							.multiply(multiplier).setScale(2, BigDecimal.ROUND_UP));
-				}
-			}
-		} else if (plan.getDrawingPreference().getInFeets()) {
-			for (BuildingDetail building : buildingDetails) {
-				for (ApplicationFloorDetail floor : building.getApplicationFloorDetails()) {
-					totalAmount = totalAmount
-							.add(floor.getFloorArea().multiply(multiplier).setScale(2, BigDecimal.ROUND_UP));
+//		if (plan.getDrawingPreference().getInMeters()) {
+//			for (BuildingDetail building : buildingDetails) {
+//				for (ApplicationFloorDetail floor : building.getApplicationFloorDetails()) {
+//					totalAmount = totalAmount.add(floor.getFloorArea().multiply(SQMT_SQFT_MULTIPLIER)
+//							.multiply(multiplier).setScale(2, BigDecimal.ROUND_UP));
+//				}
+//			}
+//		} else if (plan.getDrawingPreference().getInFeets()) {
+//			for (BuildingDetail building : buildingDetails) {
+//				for (ApplicationFloorDetail floor : building.getApplicationFloorDetails()) {
+//					totalAmount = totalAmount
+//							.add(floor.getFloorArea().multiply(multiplier).setScale(2, BigDecimal.ROUND_UP));
+//				}
+//			}
+//		}
+		
+		BigDecimal totalProposedAreaInSqft=BigDecimal.ZERO;
+		for(Block block:plan.getBlocks()) {
+			for(Floor floor:block.getBuilding().getFloors()) {
+				for(Occupancy occupancy:floor.getOccupancies()) {
+					if(occupancy!=null && occupancy.getTypeHelper()!=null &&!BpaUtils.isOccupancyExcludedFromFar(occupancy.getTypeHelper())) {
+						BigDecimal floorArea=occupancy.getFloorArea();
+						if(plan.getDrawingPreference().getInMeters())
+							floorArea=floorArea.multiply(SQMT_SQFT_MULTIPLIER)
+							.multiply(multiplier).setScale(2, BigDecimal.ROUND_UP);
+						else if(plan.getDrawingPreference().getInFeets())
+								floorArea=floorArea.divide(new BigDecimal("144"), 2, RoundingMode.HALF_UP);
+						totalProposedAreaInSqft=totalProposedAreaInSqft.add(floorArea).setScale(2,BigDecimal.ROUND_UP);
+					}
 				}
 			}
 		}
+		
+		totalAmount=totalProposedAreaInSqft.multiply(multiplier).setScale(2, BigDecimal.ROUND_UP);
+		
 		return totalAmount;
 	}
 
@@ -1029,57 +1053,63 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	public BigDecimal getTotalDevelopmentChargesOfRoads(Plan plan, List<BuildingDetail> buildingDetails) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
-		BigDecimal totalRoadAreaInFeet=BigDecimal.ZERO;
-		if(plan.getDrawingPreference().getInFeets()) {
-			totalRoadAreaInFeet=plan.getPlanInformation().getRoadLength().multiply(plan.getPlanInformation().getRoadWidth()).setScale(2);
-		}else if(plan.getDrawingPreference().getInMeters()) {
-			BigDecimal roadWidth=plan.getPlanInformation().getRoadWidth().multiply(new BigDecimal("3.281")).setScale(2);
-			BigDecimal roadLength=plan.getPlanInformation().getRoadLength().multiply(new BigDecimal("3.281")).setScale(2);
-			totalRoadAreaInFeet=roadLength.multiply(roadWidth).setScale(2);
+		BigDecimal totalRoadAreaInFeet = BigDecimal.ZERO;
+		if (plan.getDrawingPreference().getInFeets()) {
+			totalRoadAreaInFeet = plan.getPlanInformation().getRoadLength()
+					.multiply(plan.getPlanInformation().getRoadWidth()).setScale(2);
+		} else if (plan.getDrawingPreference().getInMeters()) {
+			BigDecimal roadWidth = plan.getPlanInformation().getRoadWidth().multiply(new BigDecimal("3.281"))
+					.setScale(2);
+			BigDecimal roadLength = plan.getPlanInformation().getRoadLength().multiply(new BigDecimal("3.281"))
+					.setScale(2);
+			totalRoadAreaInFeet = roadLength.multiply(roadWidth).setScale(2);
 		}
-		//INR 100 per sq ft of road area
-		totalAmount=totalRoadAreaInFeet.multiply(new BigDecimal("100")).setScale(2);
-		
+		// INR 100 per sq ft of road area
+		totalAmount = totalRoadAreaInFeet.multiply(new BigDecimal("100")).setScale(2);
+
 		return totalAmount;
 	}
 
 	public BigDecimal getTotalConversionCharges(Plan plan, List<BuildingDetail> buildingDetails) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
-		if(plan.getPlanInformation().getIsConversionChargesApplicable())
+		if (plan.getPlanInformation().getIsConversionChargesApplicable())
 			totalAmount = BigDecimal.valueOf(2400);
 		return totalAmount;
 	}
-	
+
 	public BigDecimal getTotalConstructionAndDemolisionFee(Plan plan, List<BuildingDetail> buildingDetails) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
-		BigDecimal demolitionAreaInSqm=plan.getPlanInformation().getDemolitionArea();
-		if(plan.getDrawingPreference().getInFeets()) {
-			demolitionAreaInSqm=demolitionAreaInSqm.divide(new BigDecimal(10.764), 2, RoundingMode.HALF_UP);
+		BigDecimal demolitionAreaInSqm = plan.getPlanInformation().getDemolitionArea();
+		if (plan.getDrawingPreference().getInFeets()) {
+			demolitionAreaInSqm = demolitionAreaInSqm.divide(new BigDecimal(10.764), 2, RoundingMode.HALF_UP);
 		}
-		
-		BigDecimal totalProposedAreaInSqm=BigDecimal.ZERO;
-		for(Block block:plan.getBlocks()) {
-			for(Floor floor:block.getBuilding().getFloors()) {
-				for(Occupancy occupancy:floor.getOccupancies()) {
-					if(occupancy!=null && occupancy.getTypeHelper()!=null &&!BpaUtils.isOccupancyExcludedFromFar(occupancy.getTypeHelper())) {
-						BigDecimal floorArea=occupancy.getFloorArea();
-						if(plan.getDrawingPreference().getInFeets())
-							floorArea=floorArea.divide(new BigDecimal("1550"), 2, RoundingMode.HALF_UP);
-						totalProposedAreaInSqm=totalProposedAreaInSqm.add(floorArea).setScale(2);
+
+		BigDecimal totalProposedAreaInSqm = BigDecimal.ZERO;
+		for (Block block : plan.getBlocks()) {
+			for (Floor floor : block.getBuilding().getFloors()) {
+				for (Occupancy occupancy : floor.getOccupancies()) {
+					if (occupancy != null && occupancy.getTypeHelper() != null
+							&& !BpaUtils.isOccupancyExcludedFromFar(occupancy.getTypeHelper())) {
+						BigDecimal floorArea = occupancy.getFloorArea();
+						if (plan.getDrawingPreference().getInFeets())
+							floorArea = floorArea.divide(new BigDecimal("1550"), 2, RoundingMode.HALF_UP);
+						totalProposedAreaInSqm = totalProposedAreaInSqm.add(floorArea).setScale(2);
 					}
 				}
 			}
 		}
-		
-		if(BpaConstants.NEW_CONSTRUCTION.equals(plan.getServiceType())) {
-			totalAmount=totalProposedAreaInSqm.multiply(new BigDecimal("22")).setScale(2);
-		}else {
-			totalAmount=demolitionAreaInSqm.multiply(new BigDecimal("176")).setScale(2);
-			
-			BigDecimal leftProposedAreaInSqm=totalProposedAreaInSqm.subtract(demolitionAreaInSqm).setScale(2,BigDecimal.ROUND_HALF_UP);
-			totalAmount=totalAmount.add(leftProposedAreaInSqm.multiply(new BigDecimal("22"))).setScale(2,BigDecimal.ROUND_HALF_UP);
+
+		if (BpaConstants.NEW_CONSTRUCTION.equals(plan.getServiceType())) {
+			totalAmount = totalProposedAreaInSqm.multiply(new BigDecimal("22")).setScale(2);
+		} else {
+			totalAmount = demolitionAreaInSqm.multiply(new BigDecimal("176")).setScale(2);
+
+			BigDecimal leftProposedAreaInSqm = totalProposedAreaInSqm.subtract(demolitionAreaInSqm).setScale(2,
+					BigDecimal.ROUND_HALF_UP);
+			totalAmount = totalAmount.add(leftProposedAreaInSqm.multiply(new BigDecimal("22"))).setScale(2,
+					BigDecimal.ROUND_HALF_UP);
 		}
-		
+
 		return totalAmount;
 	}
 
@@ -1241,7 +1271,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 							area = area.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
 						else if (plan.getDrawingPreference().getInMeters())
 							area = area.multiply(new BigDecimal("10.764")).setScale(2, BigDecimal.ROUND_HALF_UP);
-						totalArea=totalArea.add(area);
+						totalArea = totalArea.add(area);
 					}
 
 				}

@@ -118,7 +118,7 @@ public class AccessoryBuildingService extends FeatureProcess {
 
 	@Override
 	public Plan validate(Plan plan) {
-		if(!CDGAdditionalService.isFeatureValidationRequired(plan, AccessoryBuildingService.class))
+		if (!CDGAdditionalService.isFeatureValidationRequired(plan, AccessoryBuildingService.class))
 			return plan;
 		HashMap<String, String> errors = new HashMap<>();
 		if (plan != null && !plan.getAccessoryBlocks().isEmpty()) {
@@ -188,7 +188,7 @@ public class AccessoryBuildingService extends FeatureProcess {
 
 	@Override
 	public Plan process(Plan plan) {
-		if(!CDGAdditionalService.isFeatureValidationRequired(plan, AccessoryBuildingService.class))
+		if (!CDGAdditionalService.isFeatureValidationRequired(plan, AccessoryBuildingService.class))
 			return plan;
 		validate(plan);
 		// CSCL comment start
@@ -200,7 +200,7 @@ public class AccessoryBuildingService extends FeatureProcess {
 		// CSCL comment end
 
 		// CSCL add start
-		if(CDGAdditionalService.isFeatureValidationRequired(plan, AccessoryBuildingService.class))
+		if (CDGAdditionalService.isFeatureValidationRequired(plan, AccessoryBuildingService.class))
 			processHeightAndDistanceOfAccessoryBlock(plan);
 		// CSCL add end
 		return plan;
@@ -222,7 +222,7 @@ public class AccessoryBuildingService extends FeatureProcess {
 		scrutinyDetail2.addColumnHeading(4, PROVIDED);
 		scrutinyDetail2.addColumnHeading(5, STATUS);
 		scrutinyDetail2.setKey("Common_Construction in back courtyard - Maximum distance from plot boundary");
-		
+
 		ScrutinyDetail scrutinyDetail3 = new ScrutinyDetail();
 		scrutinyDetail3.addColumnHeading(1, RULE_NO);
 		scrutinyDetail3.addColumnHeading(2, DESCRIPTION);
@@ -230,12 +230,12 @@ public class AccessoryBuildingService extends FeatureProcess {
 		scrutinyDetail3.addColumnHeading(4, PROVIDED);
 		scrutinyDetail3.addColumnHeading(5, STATUS);
 		scrutinyDetail3.setKey("Common_Construction in back courtyard - Area");
-		if (plan != null && !plan.getAccessoryBlocks().isEmpty()) {
+		if (plan != null && plan.getAccessoryBlocks()!=null) {
 			OccupancyTypeHelper occupancyTypeHelper = plan.getVirtualBuilding() != null
 					? plan.getVirtualBuilding().getMostRestrictiveFarHelper()
 					: null;
-					if(occupancyTypeHelper==null || occupancyTypeHelper.getSubtype() ==null)
-						return;
+			if (occupancyTypeHelper == null || occupancyTypeHelper.getSubtype() == null)
+				return;
 			String suboccTypeCode = occupancyTypeHelper.getSubtype().getCode();
 			Map<String, String> keyArrgument = new HashMap<String, String>();
 			keyArrgument.put(CDGAdditionalService.OCCUPENCY_CODE, suboccTypeCode);
@@ -248,17 +248,35 @@ public class AccessoryBuildingService extends FeatureProcess {
 			BigDecimal exptectedDistance = BigDecimal.ZERO;
 			Map<String, String> featureValues = cDGAdditionalService
 					.getFeatureValue(CDGAConstant.BACK_YARD_CONSTRUCTION, keyArrgument);
-			// exptectedDistance = new
-			// BigDecimal(featureValues.get(CDGAdditionalService.BACK_COURTYARD_CONSTRUCTION_WIDTH));
-			// exptectedHeight = new
-			// BigDecimal(featureValues.get(CDGAdditionalService.BACK_COURTYARD_CONSTRUCTION_HEIGHT));
+			String distanceStr = featureValues.get(CDGAdditionalService.BACK_COURTYARD_CONSTRUCTION_WIDTH);
+			String heightStr = featureValues.get(CDGAdditionalService.BACK_COURTYARD_CONSTRUCTION_HEIGHT);
 			
-			exptectedDistance = new BigDecimal("2.92");
-			exptectedHeight = new BigDecimal("3.35");
+			boolean notPermittedFlage=false;
+			if(DxfFileConstants.DATA_NOT_FOUND.equals(distanceStr) || DxfFileConstants.DATA_NOT_FOUND.equals(heightStr)) {
+				plan.addError("BACK_COURTYARD_CONSTRUCTION_WIDTH", DxfFileConstants.DATA_NOT_FOUND +": BACK_COURTYARD_CONSTRUCTION");
+				return;
+			}
 			
-			if(plan.getDrawingPreference().getInFeets()) {
+			if(DxfFileConstants.NOT_PERMITTED.equals(distanceStr) || DxfFileConstants.NOT_PERMITTED.equals(heightStr)) 
+				notPermittedFlage=true;
+			
+			try {
+				exptectedDistance = new BigDecimal(distanceStr);
+				exptectedHeight = new BigDecimal(heightStr);
+			}catch (Exception e) {
+				
+			}
+
+//			exptectedDistance = new BigDecimal("2.92");
+//			exptectedHeight = new BigDecimal("3.35");
+
+			if (plan.getDrawingPreference().getInFeets()) {
 				exptectedDistance = CDGAdditionalService.meterToFoot(exptectedDistance);
 				exptectedHeight = CDGAdditionalService.meterToFoot(exptectedHeight);
+			}
+			
+			if(plan.getAccessoryBlocks().isEmpty() && !notPermittedFlage && (DxfFileConstants.NEW_CONSTRUCTION.equals(plan.getServiceType()) || DxfFileConstants.RECONSTRUCTION.equals(plan.getServiceType()))) {
+				plan.addError("Construction in back courtyard", " Construction in back courtyard  not defined in the plan.");
 			}
 
 			for (AccessoryBlock accessoryBlock : plan.getAccessoryBlocks()) {
@@ -268,6 +286,12 @@ public class AccessoryBuildingService extends FeatureProcess {
 						&& accessoryBlock.getAccessoryBuilding() != null
 						&& accessoryBlock.getAccessoryBuilding().getHeight() != null
 						&& accessoryBlock.getAccessoryBuilding().getHeight().compareTo(BigDecimal.valueOf(0)) > 0) {
+					
+					 if(notPermittedFlage) {
+						 plan.addError("Construction in back courtyard - Maximum Height", "Construction in back courtyard - Maximum Height is not permitted");
+						 return;
+					 }
+					
 					if (accessoryBlock.getAccessoryBuilding().getHeight().compareTo(exptectedHeight) <= 0) {
 						valid = true;
 					}
@@ -278,7 +302,8 @@ public class AccessoryBuildingService extends FeatureProcess {
 										CDGAConstant.CONSTRUCTION_IN_BACK_COURTYARD),
 								String.format(SUBRULE_88_3_DESC, accessoryBlock.getNumber()),
 								CDGAdditionalService.viewLenght(plan, exptectedHeight),
-								CDGAdditionalService.viewLenght(plan, accessoryBlock.getAccessoryBuilding().getHeight()),
+								CDGAdditionalService.viewLenght(plan,
+										accessoryBlock.getAccessoryBuilding().getHeight()),
 								Result.Accepted.getResultVal(), scrutinyDetail1);
 					} else {
 
@@ -287,27 +312,38 @@ public class AccessoryBuildingService extends FeatureProcess {
 										CDGAConstant.CONSTRUCTION_IN_BACK_COURTYARD),
 								String.format(SUBRULE_88_3_DESC, accessoryBlock.getNumber()),
 								CDGAdditionalService.viewLenght(plan, exptectedHeight),
-								CDGAdditionalService.viewLenght(plan, accessoryBlock.getAccessoryBuilding().getHeight()),
+								CDGAdditionalService.viewLenght(plan,
+										accessoryBlock.getAccessoryBuilding().getHeight()),
 								Result.Not_Accepted.getResultVal(), scrutinyDetail1);
 
 					}
+				}else if(!notPermittedFlage && (DxfFileConstants.NEW_CONSTRUCTION.equals(plan.getServiceType()) || DxfFileConstants.RECONSTRUCTION.equals(plan.getServiceType()))){
+					plan.addError("Construction in back courtyard - Maximum Height", "Construction in back courtyard - Maximum Height not defined");
 				}
-				//validate Area for marala 5% of all A-P 
-				if(DxfFileConstants.A_P.equalsIgnoreCase(occupancyTypeHelper.getSubtype().getCode()) && DxfFileConstants.MARLA.equals(plan.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
-					if(exptectedHeight != null && exptectedHeight.compareTo(BigDecimal.valueOf(0)) > 0
+				// validate Area for marala 5% of all A-P
+				if (DxfFileConstants.A_P.equalsIgnoreCase(occupancyTypeHelper.getSubtype().getCode())
+						&& DxfFileConstants.MARLA
+								.equals(plan.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
+					if (exptectedHeight != null && exptectedHeight.compareTo(BigDecimal.valueOf(0)) > 0
 							&& accessoryBlock.getAccessoryBuilding() != null
-							&& accessoryBlock.getAccessoryBuilding().getHeight() != null
-							&& accessoryBlock.getAccessoryBuilding().getHeight().compareTo(BigDecimal.valueOf(0)) > 0) {
-						BigDecimal expectedArea=BigDecimal.ZERO;
-						BigDecimal providedArea=BigDecimal.ZERO;
-						expectedArea=plan.getPlot().getArea().multiply(new BigDecimal("0.05"));
-						providedArea=accessoryBlock.getAccessoryBuilding().getArea();
-						if(plan.getDrawingPreference().getInFeets()) {
-							providedArea=CDGAdditionalService.inchtoFeetArea(providedArea);
+							&& accessoryBlock.getAccessoryBuilding().getArea() != null
+							&& accessoryBlock.getAccessoryBuilding().getArea().compareTo(BigDecimal.valueOf(0)) > 0) {
+						BigDecimal expectedArea = BigDecimal.ZERO;
+						BigDecimal providedArea = BigDecimal.ZERO;
+						expectedArea = plan.getPlot().getArea().multiply(new BigDecimal("0.05"));
+						providedArea = accessoryBlock.getAccessoryBuilding().getArea();
+						
+						if(notPermittedFlage) {
+							 plan.addError("Construction in back courtyard - Area", "Construction in back courtyard - Area is not permitted");
+							 return;
 						}
-						boolean validArea=false;
-						if(expectedArea.compareTo(providedArea)>=0) {
-							validArea=true;
+						
+						if (plan.getDrawingPreference().getInFeets()) {
+							providedArea = CDGAdditionalService.inchtoFeetArea(providedArea);
+						}
+						boolean validArea = false;
+						if (expectedArea.compareTo(providedArea) >= 0) {
+							validArea = true;
 						}
 						if (validArea) {
 
@@ -316,9 +352,9 @@ public class AccessoryBuildingService extends FeatureProcess {
 											CDGAConstant.CONSTRUCTION_IN_BACK_COURTYARD),
 									String.format(SUBRULE_88_1_DESC, accessoryBlock.getNumber()),
 									CDGAdditionalService.viewArea(plan, expectedArea),
-									CDGAdditionalService.viewArea(plan, providedArea),
-									Result.Accepted.getResultVal(), scrutinyDetail3);
-						} else {
+									CDGAdditionalService.viewArea(plan, providedArea), Result.Accepted.getResultVal(),
+									scrutinyDetail3);
+						} else if(!notPermittedFlage){
 
 							setReportOutputDetails(plan,
 									CDGAdditionalService.getByLaws(occupancyTypeHelper,
@@ -329,12 +365,21 @@ public class AccessoryBuildingService extends FeatureProcess {
 									Result.Not_Accepted.getResultVal(), scrutinyDetail3);
 
 						}
+					}else if((DxfFileConstants.NEW_CONSTRUCTION.equals(plan.getServiceType()) || DxfFileConstants.RECONSTRUCTION.equals(plan.getServiceType()))){
+						plan.addError("Construction in back courtyard - Area", "Construction in back courtyard - Area not defined");
+
 					}
 				}
 
 				if (exptectedDistance != null && exptectedDistance.compareTo(BigDecimal.valueOf(0)) > 0
 						&& accessoryBlock.getAccessoryBuilding() != null
 						&& !accessoryBlock.getAccessoryBuilding().getDistanceFromPlotBoundary().isEmpty()) {
+					
+					if(notPermittedFlage) {
+						 plan.addError("Construction in back courtyard - Maximum distance from plot boundary", "Construction in back courtyard - Maximum distance from plot boundary is not permitted");
+						 return;
+					}
+					
 					BigDecimal minimumAccBlkDisFromPlotBoundary = accessoryBlock.getAccessoryBuilding()
 							.getDistanceFromPlotBoundary().get(0);
 					for (BigDecimal disOfAccBlkFromPlotBndry : accessoryBlock.getAccessoryBuilding()
@@ -343,8 +388,9 @@ public class AccessoryBuildingService extends FeatureProcess {
 							minimumAccBlkDisFromPlotBoundary = disOfAccBlkFromPlotBndry;
 						}
 					}
-					if(plan.getDrawingPreference().getInFeets()) {
-						minimumAccBlkDisFromPlotBoundary=CDGAdditionalService.inchToFeet(minimumAccBlkDisFromPlotBoundary);
+					if (plan.getDrawingPreference().getInFeets()) {
+						minimumAccBlkDisFromPlotBoundary = CDGAdditionalService
+								.inchToFeet(minimumAccBlkDisFromPlotBoundary);
 					}
 					if (minimumAccBlkDisFromPlotBoundary.compareTo(exptectedDistance) <= 0) {
 						valid = true;
@@ -366,11 +412,14 @@ public class AccessoryBuildingService extends FeatureProcess {
 								CDGAdditionalService.viewLenght(plan, minimumAccBlkDisFromPlotBoundary),
 								Result.Not_Accepted.getResultVal(), scrutinyDetail2);
 					}
+				}else if(!notPermittedFlage && (DxfFileConstants.NEW_CONSTRUCTION.equals(plan.getServiceType()) || DxfFileConstants.RECONSTRUCTION.equals(plan.getServiceType()))){
+					plan.addError("Construction in back courtyard -  Maximum distance from plot boundary", "Construction in back courtyard -  Maximum distance from plot boundary not defined");
+
 				}
 			}
 		}
 	}
-	
+
 	private void processShortestDistanceOfAccBlkFromPlotBoundary(Plan plan) {
 		String subRule = SUBRULE_88_5;
 		ScrutinyDetail scrutinyDetail3 = new ScrutinyDetail();

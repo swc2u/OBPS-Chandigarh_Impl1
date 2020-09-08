@@ -363,15 +363,18 @@ public class BuildingHeight extends FeatureProcess {
 					
 					boolean isAccepted=false;
 					
-					if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode()) && DxfFileConstants.MARLA.equals(Plan.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
-						expectedResult = CDGAdditionalService.viewLenght(Plan, exptectedHeight);;
-//						if (buildingHeight.compareTo(exptectedHeight) == 0)
-						if (CDGMathService.compare(buildingHeight, exptectedHeight, CDGMathService.ZERO_POINT_FOUR_INCH_IN_FEET) == 0)
-							isAccepted=true;
-					}else {
-						if (buildingHeight.compareTo(exptectedHeight) <= 0)
-							isAccepted=true;
-					}
+//					if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode()) && DxfFileConstants.MARLA.equals(Plan.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
+//						expectedResult = CDGAdditionalService.viewLenght(Plan, exptectedHeight);;
+////						if (buildingHeight.compareTo(exptectedHeight) == 0)
+//						if (CDGMathService.compare(buildingHeight, exptectedHeight, CDGMathService.ZERO_POINT_FOUR_INCH_IN_FEET) == 0)
+//							isAccepted=true;
+//					}else {
+//						if (buildingHeight.compareTo(exptectedHeight) <= 0)
+//							isAccepted=true;
+//					}
+					
+					if (buildingHeight.compareTo(exptectedHeight) <= 0)
+						isAccepted=true;
 
 					if (isAccepted) {
 						Map<String, String> details = new HashMap<>();
