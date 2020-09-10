@@ -77,15 +77,15 @@
 	</div>
 <c:choose>
 	<c:when test="${bpaApplication.serviceType ne null}">
-		<c:forEach var="docs" items="${applicationDocumentList}"
-			varStatus="status">
-			<div class="row">
-				<div class="col-sm-6 add-margin <c:if test="${docs.document.serviceChecklist.checklist.description eq 'One day permit agreement'}">document-desc</c:if>">
+		<c:forEach var="docs" items="${applicationDocumentList}" varStatus="status">
+			<input id="mandat-${docs.document.serviceChecklist.checklist.code}" type="hidden" value="${docs.document.serviceChecklist.mandatory}">
+			<div class="row gen-docs" data-doc-id="${docs.document.serviceChecklist.checklist.code}" style="display: none;">
+				<div class="col-sm-6 add-margin ${docs.document.serviceChecklist.checklist.code} <c:if test="${docs.document.serviceChecklist.checklist.description eq 'One day permit agreement'}">document-desc</c:if>">
 					<c:out value="${docs.document.serviceChecklist.checklist.description}"></c:out>
 					<span ></span>
 					<c:if test="${docs.document.serviceChecklist.mandatory}">
 						<span class="mandatory"></span>
-					</c:if>
+					</c:if>					
 					<form:hidden id="permitDocuments${status.index}id"
 						path="permitDocuments[${status.index}].id" value="${docs.id}" />
 					<form:hidden id="permitDocuments${status.index}serviceChecklist"
@@ -93,14 +93,7 @@
 						value="${docs.document.serviceChecklist.id}" />
 				</div>
 
-				<%--<div class="col-sm-2 add-margin">
-					<form:checkbox id="permitDocuments${status.index}issubmitted"
-						path="permitDocuments[${status.index}].issubmitted"
-						value="${docs.issubmitted}" />
-				</div>--%>
-
 				<div class="col-sm-3 add-margin">
-
 					<form:textarea class="form-control patternvalidation"
 						data-pattern="alphanumericspecialcharacters" maxlength="255"
 						id="permitDocuments${status.index}remarks"
@@ -111,7 +104,7 @@
 				</div>
 
 				<div class="col-sm-3 add-margin">
-					<div class="files-upload-container <c:if test="${docs.document.serviceChecklist.checklist.description eq 'One day permit agreement'}">documentRequire</c:if>"
+					<div class="files-upload-container dvf-${docs.document.serviceChecklist.checklist.code} <c:if test="${docs.document.serviceChecklist.checklist.description eq 'One day permit agreement'}">documentRequire</c:if>"
 					    data-file-max-size="5"
 					    <c:if test="${docs.document.serviceChecklist.mandatory eq true && fn:length(docs.document.getOrderedSupportDocs()) eq 0}">required</c:if>
 						data-allowed-extenstion="doc,docx,xls,xlsx,rtf,pdf,txt,zip,jpeg,jpg,png,gif,tiff">

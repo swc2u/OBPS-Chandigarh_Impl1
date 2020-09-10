@@ -49,6 +49,7 @@
 	</div>
 </div>
 <div class="panel-body">
+	<input type="hidden" id="appType" value="${plinthLevelCertificate.parent.applicationType.name}">
 	<table class="table table-bordered  multiheadertbl">
 		<thead>
 			<tr>
@@ -63,7 +64,7 @@
 				<c:when test="${not empty  plinthLevelCertificate.parent.permitDocuments}">
 					<c:forEach items="${plinthLevelCertificate.parent.permitDocuments}" var="docs"
 						varStatus="status">
-						<tr>
+						<tr id="${docs.document.serviceChecklist.checklist.code}" class="genDocs">
 							<td class="view-content text-center" style="font-size: 97%;"><c:out value="${status.index+1}" /></td>
 							<td class="view-content text-justify" style="font-size: 97%;"><c:out value="${docs.document.serviceChecklist.checklist.description}"
 									default="N/A" /></td>
