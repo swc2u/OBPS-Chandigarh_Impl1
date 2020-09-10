@@ -37,6 +37,24 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+
+var atkGenDocs1 = [
+	"DOCUMENTATION-01","DOCUMENTATION-02","DOCUMENTATION-03","DOCUMENTATION-10","DOCUMENTATION-11","DOCUMENTATION-12","DOCUMENTATION-13",
+	"DOCUMENTATION-14","DOCUMENTATION-15","DOCUMENTATION-16","DOCUMENTATION-18","DOCUMENTATION-19","DOCUMENTATION-06","DOCUMENTATION-07",
+	"DOCUMENTATION-08","DOCUMENTATION-09","DOCUMENTATION-17","DOCUMENTATION-22","DOCUMENTATION-34","DOCUMENTATION-23","DOCUMENTATION-24",
+	"DOCUMENTATION-25","DOCUMENTATION-26","DOCUMENTATION-27"
+];
+
+var btkGenDocs1 = [
+	"DOCUMENTATION-04","DOCUMENTATION-05","DOCUMENTATION-10","DOCUMENTATION-11","DOCUMENTATION-12","DOCUMENTATION-13","DOCUMENTATION-14",
+	"DOCUMENTATION-15","DOCUMENTATION-16","DOCUMENTATION-21","DOCUMENTATION-06","DOCUMENTATION-07","DOCUMENTATION-08","DOCUMENTATION-09",
+	"DOCUMENTATION-17","DOCUMENTATION-22","DOCUMENTATION-26","DOCUMENTATION-27"
+];
+
+var ruralDocs1 = [
+	"DOCUMENTATION-01","DOCUMENTATION-28","DOCUMENTATION-29","DOCUMENTATION-30","DOCUMENTATION-31","DOCUMENTATION-32","DOCUMENTATION-33"
+];
+
 jQuery(document)
 		.ready(
 				function() {
@@ -72,6 +90,28 @@ jQuery(document)
                 	}else{
                 		$('#drawPref').html("All dimensions are in metre or square metre.");
                 	}
+					
+					$(".genDocs").each(function() {
+						var docId = $(this).attr('id');
+						var appType=$('#appType').val();
+						var docArr=[];
+			        	if(appType=="High Risk"){
+			        		docArr=atkGenDocs1;
+			        	}else if(appType=="Low Risk"){
+			        		docArr=btkGenDocs1;
+			        	}else if(appType=="Medium Risk"){
+			        		docArr=ruralDocs1;
+			        	}
+			        	var isExist=false;
+			        	$.each(docArr, function( index, value ) {	   				
+		    				if(docId == value){ 
+		    				    isExist=true; 				    				    
+		    				}        				       				
+		    			});
+			        	if(!isExist){
+			        		$(this).hide();
+			        	}
+		    		}); 
 					
                     // start -- update checked true for saved permit conditions
 					var savedPermitCondn = $("#persistedPermitConditions")

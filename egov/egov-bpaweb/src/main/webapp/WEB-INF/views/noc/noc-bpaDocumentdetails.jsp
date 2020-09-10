@@ -49,12 +49,12 @@
 	</div>
 </div>
 <div class="panel-body">
+	<input type="hidden" id="appType" value="${bpaApplication.applicationType.name}">
 	<table class="table table-bordered  multiheadertbl">
 		<thead>
 			<tr>
 				<th><spring:message code="lbl.srl.no" /></th>
 				<th><spring:message code="lbl.documentname" /></th>
-				<%--<th><spring:message code="lbl.issubmitted" /></th>--%>
 				<th><spring:message code="lbl.remarks" /></th>
 				<th><spring:message code="lbl.files" /></th>
 			</tr>
@@ -64,12 +64,10 @@
 				<c:when test="${not empty  bpaApp.permitDocuments}">
 					<c:forEach items="${bpaApp.permitDocuments}" var="docs"
 						varStatus="status">
-						<tr>
+						<tr id="${docs.document.serviceChecklist.checklist.code}" class="genDocs">
 							<td class="view-content text-center" style="font-size: 97%;"><c:out value="${status.index+1}" /></td>
 							<td class="view-content text-justify" style="font-size: 97%;"><c:out value="${docs.document.serviceChecklist.checklist.description}"
 									default="N/A" /></td>
-							<%--<td><c:out value="${docs.issubmitted ? 'Yes' : 'No'}"
-									default="N/A"></c:out></td>--%>
 							<td class="view-content text-justify" style="font-size: 97%;"><c:out value="${docs.document.remarks}" default="N/A" /></td>
 							<td class="view-content" style="font-size: 97%;"><c:set value="false" var="isDocFound"></c:set> <c:forEach
 									var="bpadoc" items="${docs.document.getOrderedSupportDocs()}" varStatus="loop">
