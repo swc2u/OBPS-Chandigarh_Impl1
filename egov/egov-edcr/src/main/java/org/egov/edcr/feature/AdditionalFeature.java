@@ -217,7 +217,7 @@ public class AdditionalFeature extends FeatureProcess {
 			
 			return pl;
 		}
-		additionalFeature2.process(pl);
+		
 		validateAr(pl);
 		validateNumberOfFloorsSkelton(pl);
 		validatePlinthHeight(pl, errors);

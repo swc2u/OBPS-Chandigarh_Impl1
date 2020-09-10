@@ -319,9 +319,6 @@ public class CDGAdditionalService {
 
 	}
 
-	public BigDecimal calculatorFarWithOutAdditionalFeature() {
-		return null;
-	}
 	
 	public static BigDecimal meterToFoot(String value) {
 		return meterToFoot(new BigDecimal(value));
