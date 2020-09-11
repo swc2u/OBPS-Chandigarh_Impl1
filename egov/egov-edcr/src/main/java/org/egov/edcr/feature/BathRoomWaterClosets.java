@@ -65,6 +65,7 @@ import org.egov.common.entity.edcr.RoomHeight;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGADeviationConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
 
@@ -140,11 +141,11 @@ public class BathRoomWaterClosets extends FeatureProcess {
 						
 						if(pl.getDrawingPreference().getInFeets()) {
 							minHeight=CDGAdditionalService.inchToFeet(minHeight);
-							expectedMinHeight=CDGAdditionalService.meterToFoot(expectedMinHeight);
+							expectedMinHeight=CDGAdditionalService.meterToFoot(CDGADeviationConstant.addDeviation(expectedMinHeight, CDGADeviationConstant.TOILET_DEVIATION_HEIGHT));
 							totalArea=CDGAdditionalService.inchtoFeetArea(totalArea);
-							expectedArea=CDGAdditionalService.meterToFootArea(expectedArea);
+							expectedArea=CDGAdditionalService.meterToFootArea(CDGADeviationConstant.addDeviation(expectedArea, CDGADeviationConstant.TOILET_DEVIATION_AREA));
 							minWidth=CDGAdditionalService.inchToFeet(minWidth);
-							expectedMinWidth=CDGAdditionalService.meterToFoot(expectedMinWidth);
+							expectedMinWidth=CDGAdditionalService.meterToFoot(CDGADeviationConstant.addDeviation(expectedMinWidth,CDGADeviationConstant.TOILET_DEVIATION_WIDTH));
 						}
 						expectedArea=CDGAdditionalService.roundBigDecimal(expectedArea);
 						totalArea=CDGAdditionalService.roundBigDecimal(totalArea);
@@ -154,7 +155,7 @@ public class BathRoomWaterClosets extends FeatureProcess {
 								&& minWidth.compareTo(expectedMinWidth) >= 0) {
 
 							details.put(REQUIRED, "Height >=" + CDGAdditionalService.viewLenght(pl, expectedMinHeight) + ", Total Area >= "
-									+ CDGAdditionalService.viewArea(pl, expectedArea)+ ", Width >= " + CDGAdditionalService.viewLenght(pl, expectedArea));
+									+ CDGAdditionalService.viewArea(pl, expectedArea)+ ", Width >= " + CDGAdditionalService.viewLenght(pl, expectedMinWidth));
 							details.put(PROVIDED,
 									"Height = " + CDGAdditionalService.viewLenght(pl, minHeight) + ", Total Area = " + CDGAdditionalService.viewArea(pl, totalArea)
 											+", Width = " + CDGAdditionalService.viewLenght(pl, minWidth));

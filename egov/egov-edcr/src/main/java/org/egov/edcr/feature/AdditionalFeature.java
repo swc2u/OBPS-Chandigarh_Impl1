@@ -76,6 +76,7 @@ import org.egov.common.entity.edcr.SetBack;
 import org.egov.common.entity.edcr.Yard;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGADeviationConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.service.cdg.CDGMathService;
 import org.egov.edcr.utility.DcrConstants;
@@ -1313,9 +1314,10 @@ public class AdditionalFeature extends FeatureProcess {
 					
 					if(pl.getDrawingPreference().getInFeets()) {
 						expectedMinPlinthHeight=CDGAdditionalService.meterToFoot(expectedMinPlinthHeight);
-						expectedMaxPlinthHeight=CDGAdditionalService.meterToFoot(expectedMaxPlinthHeight);
+						expectedMaxPlinthHeight=CDGAdditionalService.meterToFoot(CDGADeviationConstant.addDeviation(expectedMaxPlinthHeight, CDGADeviationConstant.PLINTH_DEVIATION_MAX));
 						minPlinthHeight=CDGAdditionalService.inchToFeet(minPlinthHeight);
 						maxPlinthHeight=CDGAdditionalService.inchToFeet(maxPlinthHeight);
+						
 					}
 
 					if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
