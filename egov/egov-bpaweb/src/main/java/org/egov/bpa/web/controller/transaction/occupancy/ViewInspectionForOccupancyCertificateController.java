@@ -69,7 +69,7 @@ public class ViewInspectionForOccupancyCertificateController {
                 .find(OcInspectionService.class, specificNoticeService.getCityDetails());
         OCInspection ocInspection = ocInspectionService.findByOcApplicationNoAndInspectionNo(applicationNumber,
                 inspectionNumber);
-        model.addAttribute("docketDetail", ocInspection.getInspection().getDocket().get(0).getDocketDetail());
+        //model.addAttribute("docketDetail", ocInspection.getInspection().getDocket().get(0).getDocketDetail());
         model.addAttribute("message", messageSource.getMessage("msg.inspection.saved.success", null, null));
         //ocInspectionService.buildDocketDetailForModifyAndViewList(ocInspection.getInspection(), model);
         ocInspectionService.prepareImagesForView(ocInspection);
@@ -85,7 +85,7 @@ public class ViewInspectionForOccupancyCertificateController {
                 .find(OcInspectionService.class, specificNoticeService.getCityDetails());
         OCInspection ocInspection = ocInspectionService.findByOcApplicationNoAndInspectionNo(applicationNumber,
                 inspectionNumber);
-        model.addAttribute("docketDetail", ocInspection.getInspection().getDocket().get(0).getDocketDetail());
+        //model.addAttribute("docketDetail", ocInspection.getInspection().getDocket().get(0).getDocketDetail());
         model.addAttribute("inspection", ocInspection);
        // ocInspectionService.buildDocketDetailForModifyAndViewList(ocInspection.getInspection(), model);
         ocInspectionService.prepareImagesForView(ocInspection);

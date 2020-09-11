@@ -137,7 +137,7 @@
 								value="${occupancyCertificate.receipts}"></c:set>
 							<c:set var="applicationNumber" scope="request"
 								value="${occupancyCertificate.applicationNumber}"></c:set>
-							<jsp:include page="../common/view-bpa-receipt-details.jsp"></jsp:include>
+							<jsp:include page="../../common/view-bpa-receipt-details.jsp"></jsp:include>
 						</div>
 					</c:if>
 					<div class="panel panel-primary" data-collapsed="0">

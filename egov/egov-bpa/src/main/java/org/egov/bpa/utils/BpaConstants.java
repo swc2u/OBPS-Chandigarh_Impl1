@@ -265,6 +265,7 @@ public class BpaConstants {
     public static final String WF_ASST_ENG_APPROVED = "Assistant Engineer approved";
     public static final String WF_OWNERSHIP_FEE_PENDING = "Ownership transfer fee payment pending";
     public static final String OWNERSHIP_FEE_COLLECTED = "Ownership transfer fee payment done";
+    public static final String FORWARDED_TO_REVIEW_APPLICATION_DOCUMENTS = "Forwarded to review application documents";
     
     public static final String FWD_TO_JE_FOR_SITE_INS = "Forwarded to JE for site inspection";
     public static final String APPLICATION_STATUS_SITE_INS = "Site Inspected";

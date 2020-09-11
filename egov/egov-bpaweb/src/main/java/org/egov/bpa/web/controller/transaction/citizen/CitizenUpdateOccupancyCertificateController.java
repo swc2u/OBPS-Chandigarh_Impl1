@@ -50,7 +50,7 @@ package org.egov.bpa.web.controller.transaction.citizen;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_HISTORY;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_APPROVED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_CREATED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFIED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFY_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_RESCHEDULED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SCHEDULED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SUBMITTED;
@@ -398,7 +398,7 @@ public class CitizenUpdateOccupancyCertificateController extends BpaGenericAppli
                 model.addAttribute("appointmentTimeRes", activeSlotApplication.get().getSlotDetail().getAppointmentTime());
                 model.addAttribute("appointmentTitle", "Scheduled Appointment Details For Document Scrutiny");
             }
-        } else if (APPLICATION_STATUS_DOC_VERIFIED.equals(oc.getStatus().getCode()) && oc.getInspections().isEmpty()) {
+        } else if (APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equals(oc.getStatus().getCode()) && oc.getInspections().isEmpty()) {
             List<OCAppointmentSchedule> appointmentScheduledList = ocAppointmentScheduleService.findByApplication(oc,
                     AppointmentSchedulePurpose.INSPECTION);
             if (!appointmentScheduledList.isEmpty()) {
