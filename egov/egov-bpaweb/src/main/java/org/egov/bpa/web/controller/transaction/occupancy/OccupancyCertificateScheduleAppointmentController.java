@@ -83,7 +83,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFIED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFY_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SCHEDULED;
 
 @Controller
@@ -141,9 +141,9 @@ public class OccupancyCertificateScheduleAppointmentController extends BpaGeneri
             && !BpaConstants.FWD_TO_OVRSR_FOR_FIELD_INS.equalsIgnoreCase(oc.getCurrentState().getNextAction())) {
             appointmentSchedule.setPurpose(AppointmentSchedulePurpose.DOCUMENTSCRUTINY);
         } else*/
-        if ((APPLICATION_STATUS_DOC_VERIFIED.equalsIgnoreCase(oc.getStatus().getCode())
+        if ((APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(oc.getStatus().getCode())
                     || BpaConstants.APPLICATION_STATUS_REGISTERED.equalsIgnoreCase(oc.getStatus().getCode()))
-                   && BpaConstants.FWD_TO_OVRSR_FOR_FIELD_INS.equalsIgnoreCase(oc.getCurrentState().getNextAction())) {
+                   && BpaConstants.FORWARDED_TO_REVIEW_APPLICATION_DOCUMENTS.equalsIgnoreCase(oc.getCurrentState().getNextAction())) {
             appointmentSchedule.setPurpose(AppointmentSchedulePurpose.INSPECTION);
         }
         ocAppointmentSchedule.setAppointmentScheduleCommon(appointmentSchedule);

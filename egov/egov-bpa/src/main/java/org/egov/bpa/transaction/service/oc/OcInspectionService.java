@@ -139,7 +139,9 @@ public class OcInspectionService {
 		}
 		buildInspectionFiles(inspection);
 		buildPlanScrutinyChecklistItems(ocInspection);
-		inspection.getDocket().get(0).setInspection(inspection);
+		if(null!=inspection.getDocket() && !inspection.getDocket().isEmpty()) {
+			inspection.getDocket().get(0).setInspection(inspection);
+		}
 		buildDocketDetails(ocInspection.getInspection().getDocket());
 		return inspectionRepository.save(ocInspection);
 	}

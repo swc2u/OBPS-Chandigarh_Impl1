@@ -50,8 +50,8 @@
 			<li class="active"><a data-toggle="tab"
 				href="#oc-inspection-details" data-tabidx=0><spring:message
 						code='lbl.inspn.details' /></a></li>
-			<li><a data-toggle="tab" href="#oc-plan-scrutiny" data-tabidx=1><spring:message
-						code='lbl.plan.scrutiny' /></a></li>
+			<%-- <li><a data-toggle="tab" href="#oc-plan-scrutiny" data-tabidx=1><spring:message
+						code='lbl.plan.scrutiny' /></a></li> --%>
 			<c:if
 				test="${not empty ocInspection.inspection.getInspectionSupportDocs()}">
 				<li><a data-toggle="tab" href="#site-images" data-tabidx=2><spring:message
@@ -113,7 +113,7 @@
 							</div>
 						</div>
 					</div>
-					<c:choose>
+					<%-- <c:choose>
 						<c:when test="${!ocInspection.inspection.docket.isEmpty()}">
 							<c:forEach var="doc" items="${ocInspection.inspection.docket}" varStatus="status">
 								<div class="panel-heading custom_form_panel_heading">
@@ -140,20 +140,20 @@
 								</div>
 							</c:forEach>
 						</c:when>
-					</c:choose>
+					</c:choose> --%>
 				</div>
 			</div>
 			<div id="oc-plan-scrutiny" class="tab-pane fade">
-			<c:if test="${not empty ocInspection.inspection.planScrutinyChecklistForRule}">
+			<%-- <c:if test="${not empty ocInspection.inspection.planScrutinyChecklistForRule}">
 				<div class="panel panel-primary" data-collapsed="0">
 					<jsp:include page="oc-view-plan-scrutiny-checklist-rule.jsp"></jsp:include>
 				</div>
-			</c:if>
-			<c:if test="${not empty ocInspection.inspection.planScrutinyChecklistForDrawing}">
+			</c:if> --%>
+			<%-- <c:if test="${not empty ocInspection.inspection.planScrutinyChecklistForDrawing}">
 				<div class="panel panel-primary" data-collapsed="0">
 					<jsp:include page="oc-view-plan-scrutiny-checklist-drawing.jsp"></jsp:include>
 				</div>
-			</c:if>
+			</c:if> --%>
 			</div>
 			<c:if
 				test="${not empty ocInspection.inspection.getInspectionSupportDocs()}">

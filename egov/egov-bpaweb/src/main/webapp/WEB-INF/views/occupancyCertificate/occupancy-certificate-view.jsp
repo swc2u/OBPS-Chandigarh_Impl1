@@ -266,25 +266,22 @@
 
 			<div class="text-center">
 
-				<c:if test="${mode eq 'newappointment'}">
-					<a
-						href="/bpa/application/occupancy-certificate/schedule-appointment/${occupancyCertificate.applicationNumber}"
-						class="btn btn-primary"> <spring:message
-							code='lbl.btn.new.appointment' />
+				<c:if test="${mode eq 'newappointment'}">					
+					<a href="/bpa/application/occupancy-certificate/schedule-appointment/${occupancyCertificate.applicationNumber}" class="btn btn-primary"> 
+						<spring:message code='lbl.btn.new.appointment' />
 					</a>
 				</c:if>
 
 				<c:if test="${mode eq 'captureInspection'}">
-					<a target="popup" class="btn btn-primary"
-						onclick="window.open('/bpa/application/occupancy-certificate/create-inspection/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;"
-						class="btn btn-primary"> <spring:message
-							code='lbl.btn.inspection.details' />
+					<a target="popup" class="btn btn-primary" 
+					   onclick="window.open('/bpa/application/occupancy-certificate/create-inspection/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;"
+					   class="btn btn-primary"> 
+						<spring:message code='lbl.btn.inspection.details' />
 					</a>
 					<c:if test="${isInspnRescheduleEnabled eq true}">
-						<a
-							href="/bpa/application/occupancy-certificate/reschedule-appointment/${scheduleType}/${occupancyCertificate.applicationNumber}"
-							class="btn btn-primary"> <spring:message
-								code='lbl.btn.reschedule.appointment' />
+						<a href="/bpa/application/occupancy-certificate/reschedule-appointment/${scheduleType}/${occupancyCertificate.applicationNumber}" 
+						   class="btn btn-primary"> 
+							<spring:message code='lbl.btn.reschedule.appointment' />
 						</a>
 					</c:if>
 				</c:if>
@@ -305,11 +302,10 @@
 					</a>
 
 				</c:if>
-				<c:if
-					test="${occupancyCertificate.state.value ne 'Field Inspection completed' && occupancyCertificate.status.code eq 'Document Verification Completed'}">
+				<%-- <c:if test="${occupancyCertificate.state.value ne 'Field Inspection completed' && occupancyCertificate.status.code eq 'Document Verification Completed'}">
 					<input type="button" name="save" id="btnSave" value="Save"
 						class="btn btn-primary" />
-				</c:if>
+				</c:if> --%>
 
 				<c:if test="${createlettertoparty}">
 					<a
@@ -320,7 +316,7 @@
 				</c:if>
 			</div>
 			<br>
-			<c:if test="${isTSInspectionRequired eq true}">
+			<%-- <c:if test="${isTSInspectionRequired eq true}">
 
 				<div class="panel panel-primary" data-collapsed="0"
 					id="townSurveyorInspectionDiv">
@@ -335,7 +331,7 @@
 						</label>
 					</div>
 				</div>
-			</c:if>
+			</c:if> --%>
 
 			<c:choose>
 				<c:when test="${isFeeCollected && occupancyCertificate.status.code eq 'Approved'}">

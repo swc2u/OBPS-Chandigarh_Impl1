@@ -49,7 +49,7 @@
 	</div>
 </div>
 <div class="panel-body">
-	<c:choose>
+	<%-- <c:choose>
 		<c:when test="${!ocInspection.inspection.docket.isEmpty()}">
 			<c:forEach var="doc" items="${ocInspection.inspection.docket}" varStatus="status1">
 				<c:choose>
@@ -136,7 +136,7 @@
 				</c:choose>
 			</c:forEach>
 		</c:when>
-	</c:choose>
+	</c:choose> --%>
 	<label class="col-sm-3 control-label text-right"><spring:message
 			code="lbl.ins.remarks" /></label>
 	<div class="col-sm-6 add-margin text-left">

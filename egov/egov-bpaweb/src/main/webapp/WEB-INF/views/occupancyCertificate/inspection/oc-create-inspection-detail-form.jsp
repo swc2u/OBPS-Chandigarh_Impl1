@@ -64,11 +64,11 @@
 			<ul class="nav nav-tabs" id="settingstab">
 				<li class="active"><a data-toggle="tab" href="#ocinspn-details"
 					data-tabidx=0><spring:message code='lbl.inspn.details' /></a></li>
-				<c:if
+				<%-- <c:if
 					test="${not empty planScrutinyCheckList || not empty planScrutinyChecklistForDrawing}">
 					<li><a data-toggle="tab" href="#ocplan-scrutiny-chklist"
 						data-tabidx=1><spring:message code='lbl.plan.scrutiny' /></a></li>
-				</c:if>
+				</c:if> --%>
 				<c:if
 					test="${not empty ocInspection.inspection.getInspectionSupportDocs()}">
 					<li><a data-toggle="tab" href="#site-images" data-tabidx=2><spring:message
@@ -101,13 +101,13 @@
 							</div>
 						</div>
 					</c:if>
-					<c:if test="${not empty planScrutinyChecklistForDrawing}">
+					<%-- <c:if test="${not empty planScrutinyChecklistForDrawing}">
 						<div class="panel panel-primary" data-collapsed="0">
 							<div class="panel-body custom-form ">
 								<jsp:include page="oc-plan-scrutiny-checklist-drawing.jsp"></jsp:include>
 							</div>
 						</div>
-					</c:if>
+					</c:if> --%>
 				</div>
 				<c:if
 					test="${not empty ocInspection.inspection.getInspectionSupportDocs()}">
