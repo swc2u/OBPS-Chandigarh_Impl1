@@ -883,7 +883,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 //				}
 //			}
 //		}
-		
+		BigDecimal totalAreaINSqft=BigDecimal.ZERO;
 		BigDecimal totalProposedAreaInSqft=BigDecimal.ZERO;
 		for(Block block:plan.getBlocks()) {
 			for(Floor floor:block.getBuilding().getFloors()) {
@@ -900,12 +900,23 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 				}
 			}
 		}
+		//for alterration & Addition and exti we need to add exiting area
+		BigDecimal totalExitingFloorAreaInSqft=BigDecimal.ZERO;
+		if(BpaConstants.ALTERATION.equals(plan.getServiceType())
+		|| BpaConstants.ADDITION_OR_EXTENSION.equals(plan.getServiceType())		
+				) {
+			totalExitingFloorAreaInSqft=plan.getVirtualBuilding().getTotalExistingFloorArea();
+			if(plan.getDrawingPreference().getInFeets())
+				totalExitingFloorAreaInSqft=totalExitingFloorAreaInSqft.divide(new BigDecimal("144"), 2, RoundingMode.HALF_UP);
+		}
 		
-		totalAmount=totalProposedAreaInSqft.multiply(multiplier).setScale(2, BigDecimal.ROUND_UP);
+		totalAreaINSqft=totalProposedAreaInSqft.add(totalExitingFloorAreaInSqft);
+		
+		totalAmount=totalAreaINSqft.multiply(multiplier).setScale(2, BigDecimal.ROUND_UP);
 		
 		return totalAmount;
 	}
-
+	
 	public BigDecimal getTotalScruitnyFeeRural(Plan plan, List<BuildingDetail> buildingDetails) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		totalAmount = BigDecimal.valueOf(750);
