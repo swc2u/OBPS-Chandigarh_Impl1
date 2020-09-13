@@ -900,7 +900,6 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 				}
 			}
 		}
-		//for alterration & Addition and exti we need to add exiting area
 		BigDecimal totalExitingFloorAreaInSqft=BigDecimal.ZERO;
 		if(BpaConstants.ALTERATION.equals(plan.getServiceType())
 		|| BpaConstants.ADDITION_OR_EXTENSION.equals(plan.getServiceType())		

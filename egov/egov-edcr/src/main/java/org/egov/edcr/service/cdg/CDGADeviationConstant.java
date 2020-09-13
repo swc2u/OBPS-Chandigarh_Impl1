@@ -16,6 +16,7 @@ public class CDGADeviationConstant {
 	public static final BigDecimal TERRACE_DEVIATION_MAX=new BigDecimal("0.048");
 	public static final BigDecimal PARAPET_DEVIATION_MIN_FEET=new BigDecimal("-0.03");
 	public static final BigDecimal PARAPET_DEVIATION_MAX_FEET=new BigDecimal("0.063");
+	public static final BigDecimal VERANDAH_DEVIATION_MIN_WIDTH_FEET=new BigDecimal("0.1");
 	
 	public static BigDecimal addDeviation(BigDecimal value,BigDecimal deviation) {
 		return value.add(deviation);

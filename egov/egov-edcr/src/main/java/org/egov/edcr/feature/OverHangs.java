@@ -73,7 +73,7 @@ public class OverHangs extends FeatureProcess {
 
     private static final Logger LOG = Logger.getLogger(OverHangs.class);
     private static final String RULE_45 = "45";
-    public static final String OVERHANGS_DESCRIPTION = "Minimum width of chajja";
+    public static final String OVERHANGS_DESCRIPTION = "Maximum width of chajja";
     private static final String FLOOR = "Floor";
 
     @Override
@@ -135,16 +135,16 @@ public class OverHangs extends FeatureProcess {
                         	maxWidthExpected=CDGAdditionalService.meterToFoot(maxWidthExpected);
                         }
 
-                        if (minWidth.compareTo(maxWidthExpected) < 0) {
+                        if (minWidth.compareTo(maxWidthExpected) <= 0) {
                             details.put(FLOOR, floor.getNumber().toString());
-                            details.put(PERMISSIBLE, "<"+CDGAdditionalService.viewLenght(pl, maxWidthExpected));
+                            details.put(PERMISSIBLE, "<="+CDGAdditionalService.viewLenght(pl, maxWidthExpected));
                             details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minWidth));
                             details.put(STATUS, Result.Accepted.getResultVal());
                             scrutinyDetail.getDetail().add(details);
                            
                         } else {
                             details.put(FLOOR, floor.getNumber().toString());
-                            details.put(PERMISSIBLE, "<"+CDGAdditionalService.viewLenght(pl, maxWidthExpected));
+                            details.put(PERMISSIBLE, "<="+CDGAdditionalService.viewLenght(pl, maxWidthExpected));
                             details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minWidth));
                             details.put(STATUS, Result.Not_Accepted.getResultVal());
                             scrutinyDetail.getDetail().add(details);

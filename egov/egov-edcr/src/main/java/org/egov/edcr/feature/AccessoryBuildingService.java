@@ -275,9 +275,9 @@ public class AccessoryBuildingService extends FeatureProcess {
 				exptectedHeight = CDGAdditionalService.meterToFoot(exptectedHeight);
 			}
 			
-			if(plan.getAccessoryBlocks().isEmpty() && !notPermittedFlage && (DxfFileConstants.NEW_CONSTRUCTION.equals(plan.getServiceType()) || DxfFileConstants.RECONSTRUCTION.equals(plan.getServiceType()))) {
-				plan.addError("Construction in back courtyard", " Construction in back courtyard  not defined in the plan.");
-			}
+//			if(plan.getAccessoryBlocks().isEmpty() && !notPermittedFlage && (DxfFileConstants.NEW_CONSTRUCTION.equals(plan.getServiceType()) || DxfFileConstants.RECONSTRUCTION.equals(plan.getServiceType()))) {
+//				plan.addError("Construction in back courtyard", " Construction in back courtyard  not defined in the plan.");
+//			}
 
 			for (AccessoryBlock accessoryBlock : plan.getAccessoryBlocks()) {
 				BigDecimal accBlockHeight = accessoryBlock.getAccessoryBuilding().getHeight();
@@ -317,9 +317,10 @@ public class AccessoryBuildingService extends FeatureProcess {
 								Result.Not_Accepted.getResultVal(), scrutinyDetail1);
 
 					}
-				}else if(!notPermittedFlage && (DxfFileConstants.NEW_CONSTRUCTION.equals(plan.getServiceType()) || DxfFileConstants.RECONSTRUCTION.equals(plan.getServiceType()))){
-					plan.addError("Construction in back courtyard - Maximum Height", "Construction in back courtyard - Maximum Height not defined");
 				}
+//				}else if(!notPermittedFlage && (DxfFileConstants.NEW_CONSTRUCTION.equals(plan.getServiceType()) || DxfFileConstants.RECONSTRUCTION.equals(plan.getServiceType()))){
+//					plan.addError("Construction in back courtyard - Maximum Height", "Construction in back courtyard - Maximum Height not defined");
+//				}
 				// validate Area for marala 5% of all A-P
 				if (DxfFileConstants.A_P.equalsIgnoreCase(occupancyTypeHelper.getSubtype().getCode())
 						&& DxfFileConstants.MARLA
@@ -365,10 +366,11 @@ public class AccessoryBuildingService extends FeatureProcess {
 									Result.Not_Accepted.getResultVal(), scrutinyDetail3);
 
 						}
-					}else if((DxfFileConstants.NEW_CONSTRUCTION.equals(plan.getServiceType()) || DxfFileConstants.RECONSTRUCTION.equals(plan.getServiceType()))){
-						plan.addError("Construction in back courtyard - Area", "Construction in back courtyard - Area not defined");
-
 					}
+//					else if((DxfFileConstants.NEW_CONSTRUCTION.equals(plan.getServiceType()) || DxfFileConstants.RECONSTRUCTION.equals(plan.getServiceType()))){
+//						plan.addError("Construction in back courtyard - Area", "Construction in back courtyard - Area not defined");
+//
+//					}
 				}
 
 				if (exptectedDistance != null && exptectedDistance.compareTo(BigDecimal.valueOf(0)) > 0
@@ -412,10 +414,11 @@ public class AccessoryBuildingService extends FeatureProcess {
 								CDGAdditionalService.viewLenght(plan, minimumAccBlkDisFromPlotBoundary),
 								Result.Not_Accepted.getResultVal(), scrutinyDetail2);
 					}
-				}else if(!notPermittedFlage && (DxfFileConstants.NEW_CONSTRUCTION.equals(plan.getServiceType()) || DxfFileConstants.RECONSTRUCTION.equals(plan.getServiceType()))){
-					plan.addError("Construction in back courtyard -  Maximum distance from plot boundary", "Construction in back courtyard -  Maximum distance from plot boundary not defined");
-
 				}
+//				else if(!notPermittedFlage && (DxfFileConstants.NEW_CONSTRUCTION.equals(plan.getServiceType()) || DxfFileConstants.RECONSTRUCTION.equals(plan.getServiceType()))){
+//					plan.addError("Construction in back courtyard -  Maximum distance from plot boundary", "Construction in back courtyard -  Maximum distance from plot boundary not defined");
+//
+//				}
 			}
 		}
 	}

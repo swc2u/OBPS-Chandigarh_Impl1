@@ -414,9 +414,7 @@ public class HeightOfRoom extends FeatureProcess {
 			String subRuleDesc, BigDecimal actual, boolean valid, Map<String, Object> typicalFloorValues) {
 		if (!(Boolean) typicalFloorValues.get("isTypicalRepititiveFloor")
 				&& expected.compareTo(BigDecimal.valueOf(0)) > 0 && subRule != null && subRuleDesc != null) {
-			if (actual.compareTo(expected) >= 0) {
-				valid = true;
-			}
+			
 			String value = typicalFloorValues.get("typicalFloors") != null
 					? (String) typicalFloorValues.get("typicalFloors")
 					: " floor " + floor.getNumber();
@@ -425,7 +423,9 @@ public class HeightOfRoom extends FeatureProcess {
 				expected = CDGAdditionalService.meterToFoot(expected);
 				actual = CDGAdditionalService.inchToFeet(actual);
 			}
-
+			if (actual.compareTo(expected) >= 0) {
+				valid = true;
+			}
 			if (valid) {
 				setReportOutputDetails(pl, subRule, subRuleDesc, value, roomNumber,
 						CDGAdditionalService.viewLenght(pl, expected), CDGAdditionalService.viewLenght(pl, actual),
