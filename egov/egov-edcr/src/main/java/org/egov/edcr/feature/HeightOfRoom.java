@@ -153,6 +153,8 @@ public class HeightOfRoom extends FeatureProcess {
 						int roomCount = 0;
 
 						for (Floor floor : block.getBuilding().getFloors()) {
+							if(floor.getNumber()<0)
+								continue;
 							List<BigDecimal> roomAreas = new ArrayList<>();
 							List<BigDecimal> roomWidths = new ArrayList<>();
 							BigDecimal minimumHeight = BigDecimal.ZERO;

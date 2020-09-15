@@ -18,6 +18,7 @@ import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGADeviationConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
 
@@ -150,6 +151,13 @@ public class CompoundWallService extends FeatureProcess {
 			exceptedFrontMaxFrontHeight=ONE_POINT_ONETHREE;
 			exceptedFrontMaxRearHeight=ONE_POINT_EIGHT;
 			
+			if(pl.getDrawingPreference().getInFeets()) {
+				exceptedFrontMaxFrontHeight=CDGAdditionalService.meterToFoot(exceptedFrontMaxFrontHeight.toString());
+				exceptedFrontMaxFrontHeight=exceptedFrontMaxFrontHeight.add(CDGADeviationConstant.COMPOUND_WALL_DEVIATION_FEET_1_0_13);
+				exceptedFrontMaxRearHeight=CDGAdditionalService.meterToFoot(exceptedFrontMaxRearHeight.toString());
+				exceptedFrontMaxRearHeight=exceptedFrontMaxRearHeight.add(CDGADeviationConstant.COMPOUND_WALL_DEVIATION_FEET_1_0_8);
+			}
+			
 		}
 		
 		else if(DxfFileConstants.A_G.equals(mostRestrictiveFarHelper.getSubtype().getCode())
@@ -172,15 +180,27 @@ public class CompoundWallService extends FeatureProcess {
 				) {
 			exceptedFrontMaxFrontHeight=ONE_POINT_ONETHREE;
 			exceptedFrontMaxRearHeight=ONE_POINT_ONETHREE;
+			if(pl.getDrawingPreference().getInFeets()) {
+				exceptedFrontMaxFrontHeight=CDGAdditionalService.meterToFoot(exceptedFrontMaxFrontHeight.toString());
+				exceptedFrontMaxFrontHeight=exceptedFrontMaxFrontHeight.add(CDGADeviationConstant.COMPOUND_WALL_DEVIATION_FEET_1_0_13);
+				exceptedFrontMaxRearHeight=CDGAdditionalService.meterToFoot(exceptedFrontMaxRearHeight.toString());
+				exceptedFrontMaxRearHeight=exceptedFrontMaxRearHeight.add(CDGADeviationConstant.COMPOUND_WALL_DEVIATION_FEET_1_0_13);
+			}
 		}else {
 			exceptedFrontMaxFrontHeight=ONE_POINT_EIGHT;
 			exceptedFrontMaxRearHeight=ONE_POINT_EIGHT;
+			if(pl.getDrawingPreference().getInFeets()) {
+				exceptedFrontMaxFrontHeight=CDGAdditionalService.meterToFoot(exceptedFrontMaxFrontHeight.toString());
+				exceptedFrontMaxFrontHeight=exceptedFrontMaxFrontHeight.add(CDGADeviationConstant.COMPOUND_WALL_DEVIATION_FEET_1_0_8);
+				exceptedFrontMaxRearHeight=CDGAdditionalService.meterToFoot(exceptedFrontMaxRearHeight.toString());
+				exceptedFrontMaxRearHeight=exceptedFrontMaxRearHeight.add(CDGADeviationConstant.COMPOUND_WALL_DEVIATION_FEET_1_0_8);
+			}
 		}
 		
-		if(pl.getDrawingPreference().getInFeets()) {
-			exceptedFrontMaxFrontHeight=CDGAdditionalService.meterToFoot(exceptedFrontMaxFrontHeight.toString());
-			exceptedFrontMaxRearHeight=CDGAdditionalService.meterToFoot(exceptedFrontMaxRearHeight.toString());
-		}
+//		if(pl.getDrawingPreference().getInFeets()) {
+//			exceptedFrontMaxFrontHeight=CDGAdditionalService.meterToFoot(exceptedFrontMaxFrontHeight.toString());
+//			exceptedFrontMaxRearHeight=CDGAdditionalService.meterToFoot(exceptedFrontMaxRearHeight.toString());
+//		}
 
 		details.put(REQUIRED, "Maximum height " + CDGAdditionalService.viewLenght(pl, exceptedFrontMaxFrontHeight));
 		if (frontMaxFrontHeight.compareTo(exceptedFrontMaxFrontHeight) <= 0) {

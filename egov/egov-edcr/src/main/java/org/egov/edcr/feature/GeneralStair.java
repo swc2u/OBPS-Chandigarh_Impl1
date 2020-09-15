@@ -146,13 +146,12 @@ public class GeneralStair extends FeatureProcess {
 							generalStairCount = generalStairCount + size;
 
 							if (!generalStairs.isEmpty()) {
+								validateHeightOfRiser(plan, block, floor, scrutinyDetailHeightRise, mostRestrictiveOccupancyType, errors);
 								for (org.egov.common.entity.edcr.GeneralStair generalStair : generalStairs) {
 									{
 										validateFlight(plan, errors, block, scrutinyDetail2, scrutinyDetail3,
 												scrutinyDetailRise, mostRestrictiveOccupancyType, floor,
 												typicalFloorValues, generalStair);
-
-										validateHeightOfRiser(plan, block, floor, scrutinyDetailHeightRise, mostRestrictiveOccupancyType, errors);
 										
 										List<StairLanding> landings = generalStair.getLandings();
 										if (!landings.isEmpty()) {
@@ -285,8 +284,9 @@ public class GeneralStair extends FeatureProcess {
 		
 		
 		List<org.egov.common.entity.edcr.GeneralStair> generalStairs = floor.getGeneralStairs();
-		BigDecimal totalNoOfRaiser=BigDecimal.ZERO;
+		
 		for(org.egov.common.entity.edcr.GeneralStair generalStair:generalStairs) {
+			BigDecimal totalNoOfRaiser=BigDecimal.ZERO;
 			for(Flight flight:generalStair.getFlights()) {
 				totalNoOfRaiser=totalNoOfRaiser.add(flight.getNoOfRises());
 			}
@@ -304,21 +304,19 @@ public class GeneralStair extends FeatureProcess {
 			}
 			
 			if(generalStair.getFloorHeight().compareTo(BigDecimal.ZERO)>0)
-			raiserHeightProvided=generalStair.getFloorHeight().divide(totalNoOfRaiser,BigDecimal.ROUND_HALF_EVEN); 
+			raiserHeightProvided=generalStair.getFloorHeight().divide(totalNoOfRaiser,BigDecimal.ROUND_HALF_UP); 
 			else
 				pl.addError("STAIRCASE", " Floor Hight not defined Block "+block.getNumber()+" floor "+ floor.getNumber()+" stair "+generalStair.getNumber());
-			BigDecimal raiserHeightexpected=requiredRaiserHeight(occupancyTypeHelper);
+			BigDecimal raiserHeightexpected=requiredRaiserHeight(occupancyTypeHelper,pl.getDrawingPreference().getInFeets());
 			
-			if(pl.getDrawingPreference().getInFeets()) {
-				raiserHeightProvided=CDGAdditionalService.inchToFeet(raiserHeightProvided);
-				raiserHeightexpected=CDGAdditionalService.meterToFoot(raiserHeightexpected);
-			}
+//			if(pl.getDrawingPreference().getInFeets()) {
+//				raiserHeightProvided=CDGAdditionalService.inchToFeet(raiserHeightProvided);
+//				raiserHeightexpected=CDGAdditionalService.meterToFoot(raiserHeightexpected);
+//			}
 			
 			boolean valid=false;
 			if(raiserHeightProvided.compareTo(raiserHeightexpected)<=0)
 				valid=true;
-			
-			
 			
 			if(valid)
 				setReportOutputDetailsFloorStairWise(pl, CDGAdditionalService.getByLaws(occupancyTypeHelper, CDGAConstant.STAIRCASE), floor.getNumber().toString(),String.format(HEIGHT_OF_RISER_DESCRIPTION, generalStair.getNumber()) ,CDGAdditionalService.viewLenght(pl, raiserHeightexpected), CDGAdditionalService.viewLenght(pl, raiserHeightProvided), Result.Accepted.getResultVal(), scrutinyDetailHeightRise);
@@ -332,35 +330,65 @@ public class GeneralStair extends FeatureProcess {
 		
 	}
 	
-	private BigDecimal requiredRaiserHeight(OccupancyTypeHelper occupancyTypeHelper) {
+	private BigDecimal requiredRaiserHeight(OccupancyTypeHelper occupancyTypeHelper,Boolean isInFeet) {
 		
-		if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) 
-			return BigDecimal.valueOf(0.19);
-		else if(DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode())
-				|| DxfFileConstants.F_SCO.equals(occupancyTypeHelper.getSubtype().getCode())
-				|| DxfFileConstants.F_B.equals(occupancyTypeHelper.getSubtype().getCode())
-				|| DxfFileConstants.ITH_R.equals(occupancyTypeHelper.getSubtype().getCode())
-				) 
-			return BigDecimal.valueOf(0.175);
-		else if(DxfFileConstants.F_H.equals(occupancyTypeHelper.getSubtype().getCode())
-				|| DxfFileConstants.F_M.equals(occupancyTypeHelper.getSubtype().getCode())
-				|| DxfFileConstants.F_CFI.equals(occupancyTypeHelper.getSubtype().getCode())
-				|| DxfFileConstants.F_BH.equals(occupancyTypeHelper.getSubtype().getCode())
-				|| DxfFileConstants.F_BBM.equals(occupancyTypeHelper.getSubtype().getCode())
-				|| DxfFileConstants.F_TS.equals(occupancyTypeHelper.getSubtype().getCode())
-				|| DxfFileConstants.F_TCIM.equals(occupancyTypeHelper.getSubtype().getCode())
-				|| DxfFileConstants.G_GBZP.equals(occupancyTypeHelper.getSubtype().getCode())
-				|| DxfFileConstants.P_D.equals(occupancyTypeHelper.getSubtype().getCode())
-				|| DxfFileConstants.P_P.equals(occupancyTypeHelper.getSubtype().getCode())
-				|| DxfFileConstants.P_F.equals(occupancyTypeHelper.getSubtype().getCode())
-				|| DxfFileConstants.P_N.equals(occupancyTypeHelper.getSubtype().getCode())
-				|| DxfFileConstants.P_H.equals(occupancyTypeHelper.getSubtype().getCode())
-				|| DxfFileConstants.P_CNA.equals(occupancyTypeHelper.getSubtype().getCode())
-				|| DxfFileConstants.F_BH.equals(occupancyTypeHelper.getSubtype().getCode())
-				) 
-			return BigDecimal.valueOf(0.15);
-		else
-			return BigDecimal.valueOf(0.15);
+		if(isInFeet) {
+			if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) 
+				return new BigDecimal("0.63");
+			else if(DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_SCO.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_B.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.ITH_R.equals(occupancyTypeHelper.getSubtype().getCode())
+					) 
+				return new BigDecimal("0.58");
+			else if(DxfFileConstants.F_H.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_M.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_CFI.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_BH.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_BBM.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_TS.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_TCIM.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.G_GBZP.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.P_D.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.P_P.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.P_F.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.P_N.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.P_H.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.P_CNA.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_BH.equals(occupancyTypeHelper.getSubtype().getCode())
+					) 
+				return new BigDecimal("0.5");
+			else
+				return new BigDecimal("0.5");
+		}else {
+			if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) 
+				return BigDecimal.valueOf(0.19);
+			else if(DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_SCO.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_B.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.ITH_R.equals(occupancyTypeHelper.getSubtype().getCode())
+					) 
+				return BigDecimal.valueOf(0.175);
+			else if(DxfFileConstants.F_H.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_M.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_CFI.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_BH.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_BBM.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_TS.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_TCIM.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.G_GBZP.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.P_D.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.P_P.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.P_F.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.P_N.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.P_H.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.P_CNA.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.F_BH.equals(occupancyTypeHelper.getSubtype().getCode())
+					) 
+				return BigDecimal.valueOf(0.15);
+			else
+				return BigDecimal.valueOf(0.15);
+		}
 		
 	}
 	
