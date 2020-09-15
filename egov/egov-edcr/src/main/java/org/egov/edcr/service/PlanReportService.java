@@ -786,8 +786,10 @@ public class PlanReportService {
                             if(!plan.getIsRowHouse())
                             	continue;
                         }
-
-                        side = allMap.get(blkName + blkFeature);
+                        if(blkFeature.equals(SIDE_YARD_DESC))
+                        	side = allMap.get(blkName + blkFeature);
+                        else
+                        	side=rear;
                         // List<Map<String, String>> detail = allMap.get(blkName +
                         // blkFeature).getDetail();
                         
@@ -798,7 +800,7 @@ public class PlanReportService {
 
                         if (front != null)
                             detail.add(0, front.getDetail().get(0));
-                        if (rear != null)
+                        if (rear != null && blkFeature.equals(SIDE_YARD_DESC))
                             detail.add(1, rear.getDetail().get(0));
 
                         for (Map<String, String> d : detail) {
