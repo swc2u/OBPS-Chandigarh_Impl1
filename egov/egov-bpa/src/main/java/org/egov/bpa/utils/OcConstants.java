@@ -51,7 +51,7 @@ public class OcConstants {
     // workflow related
     public static final String WF_FWD_AE_APPROVAL_PENDING = "Forwarded to Assistant Engineer Approval";
     public static final String WF_TS_ADDNL_INSPN = "Forwarded to Town Surveyor Additional Inspection";
-    public static final String WF_APPROVED_AND_FEE_PENDING = "Approved with fee collection pending";
+    public static final String WF_APPROVED_AND_FEE_PENDING = "Occupancy certificate fee collection pending";
     public static final String WF_FEE_COLL_PENDING = "Approval Fee Collection Pending";
     public static final String OC_FEE_COLLECTED = "Occupancy certificate permit fees collected";
 

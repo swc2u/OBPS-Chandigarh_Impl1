@@ -54,9 +54,7 @@ import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_REVIEWED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_AEE_APPROVAL_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_NOCUPDATED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_TS_INS;
 import static org.egov.bpa.utils.BpaConstants.APPROVED;
-import static org.egov.bpa.utils.BpaConstants.DESIGNATION_OVERSEER;
 import static org.egov.bpa.utils.BpaConstants.DISCLIMER_MESSAGE_ONSAVE;
 import static org.egov.bpa.utils.BpaConstants.FIELD_INSPECTION_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.FORWARDED_TO_CLERK;
@@ -66,7 +64,7 @@ import static org.egov.bpa.utils.BpaConstants.GENERATEREJECTNOTICE;
 import static org.egov.bpa.utils.BpaConstants.GENERATE_OCCUPANCY_CERTIFICATE;
 import static org.egov.bpa.utils.BpaConstants.OCREJECTIONFILENAME;
 import static org.egov.bpa.utils.BpaConstants.WF_APPROVE_BUTTON;
-import static org.egov.bpa.utils.BpaConstants.WF_BA_CHECK_NOC_UPDATION;
+import static org.egov.bpa.utils.BpaConstants.WF_BA_NOC_UPDATION_IN_PROGRESS;
 import static org.egov.bpa.utils.BpaConstants.WF_DOC_SCRUTINY_SCHEDLE_PEND;
 import static org.egov.bpa.utils.BpaConstants.WF_DOC_VERIFY_PEND;
 import static org.egov.bpa.utils.BpaConstants.WF_INITIATE_REJECTION_BUTTON;
@@ -75,10 +73,11 @@ import static org.egov.bpa.utils.BpaConstants.WF_REJECT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_REVERT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_SAVE_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_TS_INSPECTION_INITIATED;
-import static org.egov.bpa.utils.BpaConstants.WF_BA_APPROVED_WITH_FEE_COLLECTION_PENDING;
-import static org.egov.bpa.utils.BpaConstants.WF_BA_AE_APPROVAL;
-import static org.egov.bpa.utils.BpaConstants.WF_BA_FORWARDED_TO_GENERATE_OCCUPANCY_CERTIFICATE;
 import static org.egov.bpa.utils.BpaConstants.FORWARDED_TO_REVIEW_APPLICATION_DOCUMENTS;
+import static org.egov.bpa.utils.BpaConstants.WF_BA_CHECK_NOC_UPDATION;
+import static org.egov.bpa.utils.BpaConstants.WF_BA_FORWARD_TO_SDO_BUILDING;
+import static org.egov.bpa.utils.BpaConstants.WF_BA_AEE_APPLICATION_APPROVAL_PENDING;
+import static org.egov.bpa.utils.BpaConstants.WF_BA_FINAL_APPROVAL_PROCESS_INITIATED;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -92,9 +91,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.bpa.master.entity.enums.CalculationType;
-import org.egov.bpa.master.service.NocConfigurationService;
-import org.egov.bpa.transaction.entity.ApplicationFeeDetail;
 import org.egov.bpa.transaction.entity.OwnershipTransfer;
 import org.egov.bpa.transaction.entity.WorkflowBean;
 import org.egov.bpa.transaction.entity.enums.AppointmentSchedulePurpose;
@@ -188,8 +184,6 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
     @Autowired
     private OccupancyCertificateNocService ocNocService;
     @Autowired
-    private NocConfigurationService nocConfigurationService;
-    @Autowired
     private NocStatusService nocStatusService;
     @Autowired
     private OwnershipTransferService ownershipTransferService;
@@ -276,8 +270,6 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
 
         boolean hasInspectionStatus = hasInspectionStatus(currentStatus);
         boolean hasInspectionPendingAction = FORWARDED_TO_REVIEW_APPLICATION_DOCUMENTS.equalsIgnoreCase(pendingAction);
-        boolean isAfterTSInspection = DESIGNATION_OVERSEER.equals(appvrAssignment.getDesignation().getName())
-                && APPLICATION_STATUS_TS_INS.equalsIgnoreCase(currentStatus);
 
         if (occupancyCertificateUtils.isOCInspectionSchedulingIntegrationRequired()
                 && hasInspectionStatus && hasInspectionPendingAction && purposeInsList.isEmpty())
@@ -286,30 +278,10 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
             mode = "captureInspection";
             model.addAttribute("isInspnRescheduleEnabled", occupancyCertificateUtils.isOCInspectionSchedulingIntegrationRequired());
             scheduleType = AppointmentSchedulePurpose.INSPECTION;
-        } 
-        
-        //else if ((hasInspectionPendingAction && hasInspectionStatus) || isAfterTSInspection && !oc.getInspections().isEmpty())
-        //	mode = "captureAdditionalInspection";
-        
-        else if (FORWARDED_TO_NOC_UPDATE.equalsIgnoreCase(pendingAction)
+        } else if (FORWARDED_TO_NOC_UPDATE.equalsIgnoreCase(pendingAction)
                 && APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(currentStatus)) {
             model.addAttribute("showUpdateNoc", true);
             nocStatusService.updateOCNocStatus(oc);
-        } else if (WF_BA_APPROVED_WITH_FEE_COLLECTION_PENDING.equalsIgnoreCase(pendingAction)) {
-            String ocFeeCalMode = bpaUtils.getOCFeeCalculationMode();
-            boolean isFeeModifiableIndividual = false;
-            for (OccupancyFee fee : oc.getOccupancyFee()) {
-                for (ApplicationFeeDetail feeDtl : fee.getApplicationFee().getApplicationFeeDetail()) {
-                    if (CalculationType.OVERRIDE.equals(feeDtl.getBpaFeeMapping().getCalculationType())
-                            || CalculationType.MANUAL.equals(feeDtl.getBpaFeeMapping().getCalculationType())) {
-                        isFeeModifiableIndividual = true;
-                        break;
-                    }
-                }
-            }
-            if (isFeeModifiableIndividual && (ocFeeCalMode.equalsIgnoreCase(BpaConstants.MANUAL)
-                    || ocFeeCalMode.equalsIgnoreCase(BpaConstants.AUTOFEECALEDIT)))
-                mode = "initiatedForApproval";
         }
 
         // To show/hide TS inspection required checkbox
@@ -319,7 +291,7 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
                                 && APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(currentStatus))))
             model.addAttribute("isTSInspectionRequired", false);
 
-        if (mode == null)
+        if (mode==null)
             mode = "edit";
 
         model.addAttribute("scheduleType", scheduleType);
@@ -496,10 +468,10 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
         model.addAttribute("isAllNOCApproved", isAllNOCApproved);
         model.addAttribute("nextAction", nextAction);
         
-        if (WF_BA_CHECK_NOC_UPDATION.equalsIgnoreCase(oc.getState().getNextAction())
-        		|| WF_BA_AE_APPROVAL.equalsIgnoreCase(oc.getState().getNextAction())
-                	|| WF_BA_APPROVED_WITH_FEE_COLLECTION_PENDING.equalsIgnoreCase(oc.getState().getNextAction())
-                	|| WF_BA_FORWARDED_TO_GENERATE_OCCUPANCY_CERTIFICATE.equalsIgnoreCase(oc.getState().getNextAction())
+        if (WF_BA_NOC_UPDATION_IN_PROGRESS.equalsIgnoreCase(oc.getState().getValue())
+        		|| WF_BA_FORWARD_TO_SDO_BUILDING.equalsIgnoreCase(oc.getState().getValue())
+	        		|| WF_BA_AEE_APPLICATION_APPROVAL_PENDING.equalsIgnoreCase(oc.getState().getValue())
+	                	|| WF_BA_FINAL_APPROVAL_PROCESS_INITIATED.equalsIgnoreCase(oc.getState().getValue())
            ) {
             model.addAttribute("createlettertoparty", true);
         }

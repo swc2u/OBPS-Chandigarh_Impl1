@@ -196,7 +196,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
     private static final String APPLICATION_STATUS = "application.status";
     private static final String NOC_UPDATION_IN_PROGRESS = "NOC updation in progress";
     private static final String APPLICATION_APPROVAL_PENDING = "Application Approval Pending";
-    private static final String PROPERTY_DOCUMENTS_VERIFICATION_INITIATED = "Property documents verification initiated";
+    private static final String PROPERTY_DOCUMENTS_VERIFICATION_INITIATED = "Property documents verification initiated";    
     public static final String UNCHECKED = "unchecked";
     public static final String ERROR_OCCURRED_WHILE_GETTING_INPUTSTREAM = "Error occurred while getting inputstream";
     private static final String MODULE_NAME = "BPA";
@@ -586,10 +586,6 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
                         permitFee.getApplication().getDemand()));
             }
         }
-//        if (!WF_SAVE_BUTTON.equalsIgnoreCase(workFlowAction)
-//        		&& !WF_INITIATE_REJECTION_BUTTON.equalsIgnoreCase(workFlowAction)
-//                && ((APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(application.getStatus().getCode()) && NOC_UPDATION_IN_PROGRESS.equalsIgnoreCase(application.getState().getValue()))
-//                ||  APPLICATION_APPROVAL_PENDING.equalsIgnoreCase(application.getState().getValue()))) {
         if (!WF_SAVE_BUTTON.equalsIgnoreCase(workFlowAction)
         		&& !WF_INITIATE_REJECTION_BUTTON.equalsIgnoreCase(workFlowAction)
                 && PROPERTY_DOCUMENTS_VERIFICATION_INITIATED.equalsIgnoreCase(application.getState().getValue())

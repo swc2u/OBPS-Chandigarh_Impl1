@@ -415,6 +415,15 @@ public class BpaConstants {
     public static final String CONVERSION_CHARGES="Conversion charges";
     public static final String CONSTRUCTION_AND_DEMOLISION="Construction & Demolision";
     
+    public static final String INTERNAL_CHANGES_FEE="Fee for internal changes during construction";
+    public static final String EXCESS_COVERAGE_FEE="Fee for excess coverage area";
+    public static final String GLAZING_OF_VERANDAH_FEE="Fee for glazing of verandah";
+    public static final String ADDITIONAL_HEIGHT_FEE="Fee for additional height on second floor of SCFs converted into SCOs";
+    public static final String PARTITIONS_ON_GROUND_FLOOR_FEE="Fee for partitions on ground floor on multi-bays shops";
+    public static final String BARSATI_FLOOR_FEE="Fee for barsati floor height";
+    public static final String STAIR_HEADWAY_HEIGHT_FEE="Fee for stair headway height";
+    public static final String WATER_TANK_LOCATION_FEE="Fee for water tank location";
+    
     public static final String TP_DEPT = "TOWN PLANNING DEPARTMENT";
     public static final String DEV_PERMIT_FEE = "DPF";
     public static final String OWNERSHIP_FEE = "Ownership Transfer Fees";

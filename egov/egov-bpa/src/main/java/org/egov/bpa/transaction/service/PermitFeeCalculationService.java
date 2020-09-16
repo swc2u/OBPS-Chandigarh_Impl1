@@ -43,7 +43,6 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.egov.bpa.utils.BpaConstants.ADDING_OF_EXTENSION;
 import static org.egov.bpa.utils.BpaConstants.ALTERATION;
 import static org.egov.bpa.utils.BpaConstants.IN_PROGRESS;
-import static org.egov.bpa.utils.BpaConstants.LOWRISK;
 import static org.egov.bpa.utils.BpaConstants.NEW_CONSTRUCTION;
 import static org.egov.bpa.utils.BpaConstants.RECONSTRUCTION;
 

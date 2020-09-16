@@ -70,7 +70,10 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.egov.bpa.transaction.entity.BpaApplication;
+import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.service.ApplicationBpaService;
+import org.egov.bpa.transaction.service.impl.OccupancyCertificateFeeService;
+import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
 import org.egov.collection.constants.CollectionConstants;
 import org.egov.collection.entity.ReceiptDetail;
 import org.egov.collection.entity.ReceiptHeader;
@@ -193,15 +196,25 @@ public class OnlineReceiptAction extends BaseFormAction {
     }
     @Autowired
     private ApplicationBpaService applicationBpaService;
+    
+    @Autowired
+    private OccupancyCertificateService occupancyCertificateService;
 
     @Autowired
     private EdcrExternalService edcrExternalService;
-    private Map<String, String> getPlanInfo(String applicationNumber){
+    private Map<String, String> getPlanInfo(String applicationNumber, String serviceCode){
     	Map<String, String> map=new HashMap<String, String>();
     	try {
-    		BpaApplication bpaApplication=applicationBpaService.findByApplicationNumber(applicationNumber);
-    		EdcrApplicationInfo odcrPlanInfo = edcrExternalService.loadEdcrApplicationDetails(bpaApplication.geteDcrNumber());
-        	
+    		String dcrNumber="";
+    		if("OC".equalsIgnoreCase(serviceCode)) {
+    			OccupancyCertificate occupancyCertificate = occupancyCertificateService.findByApplicationNumber(applicationNumber);
+    			dcrNumber=occupancyCertificate.geteDcrNumber();
+    		}else {
+    			BpaApplication bpaApplication=applicationBpaService.findByApplicationNumber(applicationNumber);
+    			dcrNumber=bpaApplication.geteDcrNumber();
+    		}
+    		EdcrApplicationInfo odcrPlanInfo = edcrExternalService.loadEdcrApplicationDetails(dcrNumber);
+    		
         	if(odcrPlanInfo!=null && odcrPlanInfo.getPlan()!=null)
         		map= odcrPlanInfo.getPlan().getPlanInfoProperties();
     	}catch (Exception e) {
@@ -218,10 +231,13 @@ public class OnlineReceiptAction extends BaseFormAction {
          */
     	String rootBoundaryType=null;
     	//get rootBonndaryType start
-    	String dcr=receiptHeader.getConsumerCode();
+    	String dcr=receiptHeader.getConsumerCode();    	
+    	String serviceCode="";
+    	if(null!=receiptHeader.getService()) {
+    		serviceCode=receiptHeader.getService().getCode();
+    	}   	
     	
-    	
-    	Map<String, String> planInfo=getPlanInfo(dcr);
+    	Map<String, String> planInfo=getPlanInfo(dcr,serviceCode);
     	rootBoundaryType=planInfo.get(CollectionConstants.ROOT_BOUNDARY_TYPE);
     	
     	//end

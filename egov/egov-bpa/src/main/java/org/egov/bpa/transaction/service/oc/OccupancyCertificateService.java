@@ -42,13 +42,11 @@ package org.egov.bpa.transaction.service.oc;
 
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_CANCELLED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_CREATED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFY_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_NOCUPDATED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REJECTED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SUBMITTED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_TS_INS_INITIATED;
 import static org.egov.bpa.utils.BpaConstants.COMPOUND_WALL;
-import static org.egov.bpa.utils.BpaConstants.CREATE_ADDITIONAL_RULE_CREATE_OC;
 import static org.egov.bpa.utils.BpaConstants.FILESTORE_MODULECODE;
 import static org.egov.bpa.utils.BpaConstants.FORWARDED_TO_CLERK;
 import static org.egov.bpa.utils.BpaConstants.FWDINGTOLPINITIATORPENDING;
@@ -64,6 +62,8 @@ import static org.egov.bpa.utils.BpaConstants.WF_LBE_SUBMIT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_NEW_STATE;
 import static org.egov.bpa.utils.BpaConstants.WF_REJECT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_SAVE_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFY_COMPLETED;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -143,11 +143,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class OccupancyCertificateService {
 
-    private static final String NOC_UPDATION_IN_PROGRESS = "NOC updation in progress";
     private static final String APPLICATION_FEES_FOR_SHUTTER_OR_DOOR_CONVERSION = "Application Fees for Shutter or Door conversion";
     private static final String APPLICATION_FEES_FOR_ROOF_CONVERSION = "Application Fees for Roof conversion";
     private static final String APPLICATION_FEES_FOR_COMPOUND_WALL = "Application Fees for compound wall";
     private static final String APPLICATION_FEES_FOR_WELL_CONSTURCTION = "Application Fees for Well consturction";
+    private static final String APPLICATION_DOCUMENTS_VERIFICATION_IN_PROGRESS = "Application documents verification in progress";
 
     @Autowired
     private BpaUtils bpaUtils;
@@ -324,8 +324,9 @@ public class OccupancyCertificateService {
         oc.setDcrDocuments(persistApplnDCRDocuments(oc, oc.getDcrDocuments()));
         processAndStoreNocDocuments(oc);
         if (!WF_SAVE_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())
-                && APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(oc.getStatus().getCode())
-                && NOC_UPDATION_IN_PROGRESS.equalsIgnoreCase(oc.getState().getValue())) {
+                && (APPLICATION_STATUS_REGISTERED.equalsIgnoreCase(oc.getStatus().getCode())
+                		|| APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(oc.getStatus().getCode()))
+                && APPLICATION_DOCUMENTS_VERIFICATION_IN_PROGRESS.equalsIgnoreCase(oc.getState().getValue())) {
             String feeCalculationMode = bpaUtils.getOCFeeCalculationMode();
             if (feeCalculationMode.equalsIgnoreCase(BpaConstants.AUTOFEECAL) ||
                     feeCalculationMode.equalsIgnoreCase(BpaConstants.AUTOFEECALEDIT)) {
@@ -597,8 +598,7 @@ public class OccupancyCertificateService {
     private OccupancyFee getOCFee(final OccupancyCertificate oc) {
         OccupancyFee ocFee = null;
         if (oc != null) {
-            List<OccupancyFee> ocFeeList = ocFeeService
-                    .getOCFeeListByApplicationId(oc.getId());
+            List<OccupancyFee> ocFeeList = ocFeeService.getOCFeeListByApplicationId(oc.getId());
             if (ocFeeList.isEmpty()) {
                 ocFee = new OccupancyFee();
                 ocFee.setApplicationFee(new ApplicationFee());
@@ -612,15 +612,12 @@ public class OccupancyCertificateService {
     }
 
     public OccupancyFee calculateOCSanctionFees(final OccupancyCertificate oc) {
-
         OccupancyFee ocFee = getOCFee(oc);
-
         if (ocFee.getApplicationFee().getApplicationFeeDetail().isEmpty()) {
             OccupancyCertificateFeeService ocFeeCalculationService = (OccupancyCertificateFeeService) specificNoticeService
                     .find(OccupancyCertificateFeeService.class, specificNoticeService.getCityDetails());
             ocFeeCalculationService.calculateOCFees(oc, ocFee);
         }
-
         return ocFee;
     }
 }

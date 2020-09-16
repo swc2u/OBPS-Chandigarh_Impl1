@@ -177,8 +177,7 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
                         .withStateValue(wfMatrix.getNextState()).withDateInfo(new Date()).withOwner(pos)
                         .withNextAction(wfMatrix.getNextAction()).withNatureOfTask(NATURE_OF_WORK_OC);
             }
-        } else if (BpaConstants.WF_APPROVE_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())
-                || OcConstants.WF_FEE_COLL_PENDING.equals(wfBean.getCurrentState())) {
+        } else if (BpaConstants.WF_APPROVE_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
             if (bpaUtils.checkAnyTaxIsPendingToCollect(oc.getDemand()))
                 wfMatrix = bpaApplicationWorkflowService.getWfMatrix(oc.getStateType(), null, wfBean.getAmountRule(),
                         wfBean.getAdditionalRule(), "Final Approval Process initiated", OcConstants.WF_APPROVED_AND_FEE_PENDING);
