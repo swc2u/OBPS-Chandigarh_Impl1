@@ -47,12 +47,6 @@
 package org.egov.bpa.transaction.service.impl;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import org.egov.bpa.master.entity.BpaFee;
-import org.egov.bpa.master.entity.BpaFeeDetail;
 import org.egov.bpa.master.entity.BpaFeeMapping;
 import org.egov.bpa.master.service.BpaFeeCommonService;
 import org.egov.bpa.master.service.BpaFeeService;
@@ -60,22 +54,22 @@ import org.egov.bpa.transaction.entity.ApplicationFee;
 import org.egov.bpa.transaction.entity.ApplicationFeeDetail;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.entity.oc.OccupancyFee;
+import org.egov.bpa.transaction.service.ApplicationBpaService;
 import org.egov.bpa.transaction.service.oc.OccupancyFeeService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.utils.BpaUtils;
-import org.egov.common.entity.bpa.Occupancy;
+import org.egov.common.entity.edcr.Plan;
 import org.egov.commons.service.OccupancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Service
 @Transactional(readOnly = true)
 public class OccupancyCertificateFeeService  {
-    private static final String TOTAL_FLOOR_AREA = "totalFloorArea";
-    private static final String OTHERS = "Others";
-    private static final String RESIDENTIAL_DESC = "Residential";
+	//    private static final String TOTAL_FLOOR_AREA = "totalFloorArea";
+	//    private static final String OTHERS = "Others";
+	//    private static final String RESIDENTIAL_DESC = "Residential";
     
     @Autowired
     protected BpaUtils bpaUtils;
@@ -91,67 +85,105 @@ public class OccupancyCertificateFeeService  {
     
     @Autowired
     protected BpaFeeCommonService bpaFeeCommonService;
+    
+    @Autowired
+	protected ApplicationBpaService applicationBpaService;
 
     public void calculateOCFees(OccupancyCertificate oc, OccupancyFee ocFee) {
-        Map<String, BigDecimal> ocProposedArea = bpaUtils.getProposedBuildingAreasOfOC(oc.getBuildings());
-        Map<String, BigDecimal> totalProposedArea = bpaUtils.getTotalProposedArea(oc.getParent().getBuildingDetail());
-        BigDecimal ocFloorArea = ocProposedArea.get(TOTAL_FLOOR_AREA) != null ? ocProposedArea.get(TOTAL_FLOOR_AREA)
-                : BigDecimal.ZERO;
-        BigDecimal proposedFloorArea = totalProposedArea.get(TOTAL_FLOOR_AREA) != null ? totalProposedArea.get(TOTAL_FLOOR_AREA)
-                : BigDecimal.ZERO;
-        BigDecimal maxPermittedFloorArea = proposedFloorArea.multiply(BigDecimal.valueOf(5)).divide(BigDecimal.valueOf(100))
-                .add(proposedFloorArea);
-        if (ocFloorArea.compareTo(proposedFloorArea) > 0 && ocFloorArea.compareTo(maxPermittedFloorArea) < 0) {
-
-            BigDecimal deviatedArea = ocFloorArea.subtract(proposedFloorArea);
-            calculateFeeByServiceType(oc, deviatedArea, ocFee);
-        }
+    	Plan bpaPlan = applicationBpaService.getPlanInfo(oc.getParent().geteDcrNumber());
+    	Plan ocPlan = applicationBpaService.getPlanInfo(oc.geteDcrNumber());
+    	
+		//        Map<String, BigDecimal> ocProposedArea = bpaUtils.getProposedBuildingAreasOfOC(oc.getBuildings());
+		//        Map<String, BigDecimal> totalProposedArea = bpaUtils.getTotalProposedArea(oc.getParent().getBuildingDetail());
+		//        BigDecimal ocFloorArea = ocProposedArea.get(TOTAL_FLOOR_AREA) != null ? ocProposedArea.get(TOTAL_FLOOR_AREA) : BigDecimal.ZERO;
+		//        BigDecimal proposedFloorArea = totalProposedArea.get(TOTAL_FLOOR_AREA) != null ? totalProposedArea.get(TOTAL_FLOOR_AREA) : BigDecimal.ZERO;
+		//        BigDecimal maxPermittedFloorArea = proposedFloorArea.multiply(BigDecimal.valueOf(5)).divide(BigDecimal.valueOf(100)).add(proposedFloorArea);
+		//        
+		//        if (ocFloorArea.compareTo(proposedFloorArea) > 0 && ocFloorArea.compareTo(maxPermittedFloorArea) < 0) {
+		//            BigDecimal deviatedArea = ocFloorArea.subtract(proposedFloorArea);
+		//            calculateFeeByServiceType(oc, deviatedArea, ocFee);
+		//        }
+    	
+    	calculateFeeByServiceType(oc, bpaPlan, ocPlan, ocFee);
     }
-
-    public void calculateFeeByServiceType(OccupancyCertificate oc, BigDecimal deviatedArea, OccupancyFee ocFee) {
+    
+    public void calculateFeeByServiceType(OccupancyCertificate oc, Plan bpaPlan, Plan ocPlan, OccupancyFee ocFee) {
         for (BpaFeeMapping bpaFee : bpaFeeCommonService.getOCFeeForListOfServices(oc.getParent().getServiceType().getId())) {
-            List<Occupancy> selectdOccupancies = oc.getParent().getPermitOccupancies();
-            String occupancy;
-            if (selectdOccupancies.size() == 1
-                    && (BpaConstants.RESIDENTIAL.equalsIgnoreCase(selectdOccupancies.get(0).getCode())
-                            || BpaConstants.APARTMENT_FLAT
-                                    .equalsIgnoreCase(selectdOccupancies.get(0).getCode())))
-                occupancy = RESIDENTIAL_DESC;
-            else
-                occupancy = OTHERS;
-            // set occupancy type and get fee
-            // and calculate amount.
-			/*
-			 * feeAmount = getBpaFeeObjByOccupancyType(bpaFee.getCode(), occupancy, bpaFee);
-			 */
-            BigDecimal amount = deviatedArea.multiply(BigDecimal.valueOf(bpaFee.getAmount())).multiply(BigDecimal.valueOf(3));
-            ocFee.getApplicationFee()
-                    .addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee, ocFee.getApplicationFee(), amount));
+        	BigDecimal amount = BigDecimal.ZERO;
+        	if (BpaConstants.LABOURCESS.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+        		amount = amount.add(getTotalLabourCess(bpaPlan, ocPlan));
+        	} else if (BpaConstants.ADDITIONAL_COVERAGE_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+        		amount = amount.add(getTotalAdditionalFee(bpaPlan, ocPlan));
+        	} else if (BpaConstants.RULE_5_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+        		amount = amount.add(getTotalRuleFiveFee(bpaPlan, ocPlan));
+        	} else if (BpaConstants.INTERNAL_CHANGES_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+        		amount = amount.add(getTotalInternalChangesFee(bpaPlan, ocPlan));
+        	} else if (BpaConstants.EXCESS_COVERAGE_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+        		amount = amount.add(getTotalExcessCoverageFee(bpaPlan, ocPlan));
+        	} else if (BpaConstants.GLAZING_OF_VERANDAH_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+        		amount = amount.add(getTotalGlazingVerandahFee(bpaPlan, ocPlan));
+        	} else if (BpaConstants.ADDITIONAL_HEIGHT_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+        		amount = amount.add(getTotalAdditionalHeightFee(bpaPlan, ocPlan));
+        	} else if (BpaConstants.PARTITIONS_ON_GROUND_FLOOR_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+        		amount = amount.add(getTotalPartitionsOnGroundFee(bpaPlan, ocPlan));
+        	} else if (BpaConstants.BARSATI_FLOOR_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+        		amount = amount.add(getTotalBarsatiFloorFee(bpaPlan, ocPlan));
+        	} else if (BpaConstants.STAIR_HEADWAY_HEIGHT_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+        		amount = amount.add(getTotalStairHeadwayFee(bpaPlan, ocPlan));
+        	} else if (BpaConstants.WATER_TANK_LOCATION_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+        		amount = amount.add(getTotalWaterTankFee(bpaPlan, ocPlan));
+        	}        	
+        	
+        	if (amount.compareTo(BigDecimal.ZERO) > 0) {
+        		ocFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee, ocFee.getApplicationFee(), amount));
+        	}
         }
     }
     
-    private boolean isOccupancyContains(final List<Occupancy> occupancies, final String occupancy) {
-        Optional<Occupancy> occ = occupancies.stream().filter(o -> o.getCode().equalsIgnoreCase(occupancy)).findAny();
-        return occ.isPresent();
+    public BigDecimal getTotalStairHeadwayFee(Plan bpaPlan, Plan ocPlan) {
+    	return BigDecimal.valueOf(100);
     }
-
-    private BigDecimal getBpaFeeObjByOccupancyType(final String feeCode, String occupancyType, final BpaFee bpaFee) {
-        BigDecimal rate = BigDecimal.ZERO;
-        for (BpaFeeDetail feeDetail : bpaFee.getFeeDetail()) {
-            if (feeCode != null && feeCode.equalsIgnoreCase(bpaFee.getCode())) {
-                if (feeDetail.getAdditionalType() != null
-                        && occupancyType.equalsIgnoreCase(feeDetail.getAdditionalType())) {
-                    rate = BigDecimal.valueOf(feeDetail.getAmount());
-                    break;
-                } else {
-                    rate = BigDecimal.valueOf(feeDetail.getAmount());
-                    
-                }
-            }
-        }
-        return rate;
+    
+    public BigDecimal getTotalWaterTankFee(Plan bpaPlan, Plan ocPlan) {
+    	return BigDecimal.valueOf(100);
     }
-
+    
+    public BigDecimal getTotalAdditionalHeightFee(Plan bpaPlan, Plan ocPlan) {
+    	return BigDecimal.valueOf(100);
+    }
+    
+    public BigDecimal getTotalPartitionsOnGroundFee(Plan bpaPlan, Plan ocPlan) {
+    	return BigDecimal.valueOf(100);
+    }
+    
+    public BigDecimal getTotalBarsatiFloorFee(Plan bpaPlan, Plan ocPlan) {
+    	return BigDecimal.valueOf(100);
+    }
+    
+    public BigDecimal getTotalInternalChangesFee(Plan bpaPlan, Plan ocPlan) {
+    	return BigDecimal.valueOf(100);
+    }
+    
+    public BigDecimal getTotalExcessCoverageFee(Plan bpaPlan, Plan ocPlan) {
+    	return BigDecimal.valueOf(100);
+    }
+    
+    public BigDecimal getTotalGlazingVerandahFee(Plan bpaPlan, Plan ocPlan) {
+    	return BigDecimal.valueOf(100);
+    }
+    
+    public BigDecimal getTotalLabourCess(Plan bpaPlan, Plan ocPlan) {
+    	return BigDecimal.valueOf(100);
+    }
+    
+    public BigDecimal getTotalAdditionalFee(Plan bpaPlan, Plan ocPlan) {
+    	return BigDecimal.valueOf(100);
+    }
+    
+    public BigDecimal getTotalRuleFiveFee(Plan bpaPlan, Plan ocPlan) {
+    	return BigDecimal.valueOf(100);
+    }
+    
     protected ApplicationFeeDetail buildApplicationFeeDetail(final BpaFeeMapping bpaFee, final ApplicationFee applicationFee,
             BigDecimal amount) {
         ApplicationFeeDetail feeDetail = new ApplicationFeeDetail();
