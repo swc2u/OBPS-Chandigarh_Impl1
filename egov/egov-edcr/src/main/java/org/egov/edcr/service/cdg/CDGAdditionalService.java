@@ -66,6 +66,7 @@ public class CDGAdditionalService {
 	public static final String PERMISSIBLE_BUILDING_STORIES = "Permissible building stories";
 	public static final String BACK_COURTYARD_CONSTRUCTION_WIDTH = "backCourtyardConstructionWidth";
 	public static final String BACK_COURTYARD_CONSTRUCTION_HEIGHT = "backCourtyardConstructionHeight";
+	public static final int ROUND_UP_SCALE=1;
 
 	private String featurePropertiesLocation;
 
@@ -244,14 +245,13 @@ public class CDGAdditionalService {
 	}
 
 	public static BigDecimal roundBigDecimal(BigDecimal number, int mathContext) {
-		MathContext m = new MathContext(mathContext);
-		number=number.setScale(mathContext, RoundingMode.HALF_UP);
+		number=number.setScale(mathContext, BigDecimal.ROUND_HALF_UP);
 		return number;
 
 	}
 
 	public static BigDecimal roundBigDecimal(BigDecimal number) {
-		int mathContext = 2;
+		int mathContext = ROUND_UP_SCALE;
 		return roundBigDecimal(number, mathContext);
 	}
 
@@ -319,9 +319,6 @@ public class CDGAdditionalService {
 
 	}
 
-	public BigDecimal calculatorFarWithOutAdditionalFeature() {
-		return null;
-	}
 	
 	public static BigDecimal meterToFoot(String value) {
 		return meterToFoot(new BigDecimal(value));
@@ -329,12 +326,13 @@ public class CDGAdditionalService {
 	
 	public static BigDecimal meterToFoot(BigDecimal value) {
 		BigDecimal valueInFoot=value.multiply(new BigDecimal("3.281"));
-		valueInFoot=valueInFoot.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+		valueInFoot=valueInFoot.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
 		return valueInFoot;
 	}
 	
 	public static BigDecimal meterToFootArea(BigDecimal value) {
 		BigDecimal valueInFoot=value.multiply(new BigDecimal("10.764"),MathContext.DECIMAL32);
+		valueInFoot=valueInFoot.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
 		return valueInFoot;
 	}
 	
@@ -347,6 +345,7 @@ public class CDGAdditionalService {
 		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
 			return feet;
 		feet=value.divide(new BigDecimal("12"),MathContext.DECIMAL32);
+		feet=feet.setScale(ROUND_UP_SCALE,BigDecimal.ROUND_HALF_UP);
 		return feet;
 	}
 	
@@ -369,7 +368,7 @@ public class CDGAdditionalService {
 		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
 			return inch;
 		inch=value.multiply(new BigDecimal("12"),MathContext.DECIMAL32);
-		inch = inch.setScale(2, RoundingMode.CEILING);
+		inch = inch.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
 		return inch;
 	}
 	
@@ -378,6 +377,7 @@ public class CDGAdditionalService {
 		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
 			return meter;
 		meter=value.divide(new BigDecimal("39.37"),MathContext.DECIMAL32);
+		meter=meter.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
 		return meter;
 	}
 
@@ -393,6 +393,7 @@ public class CDGAdditionalService {
 		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
 			return meter;
 		meter=value.divide(new BigDecimal("1550"),MathContext.DECIMAL32);
+		meter=meter.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
 		return meter;
 	}
 	
@@ -400,6 +401,7 @@ public class CDGAdditionalService {
 		if(value.length()<=0)
 			return BigDecimal.ZERO;
 		BigDecimal inch=new BigDecimal(value);
+		inch=inch.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
 		return inchToMeterArea(inch);
 	}
 	
@@ -408,6 +410,7 @@ public class CDGAdditionalService {
 		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
 			return meter;
 		meter=value.divide(new BigDecimal("10.764"),MathContext.DECIMAL32);
+		meter=meter.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
 		return meter;
 	}
 	
@@ -423,6 +426,7 @@ public class CDGAdditionalService {
 		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
 			return meter;
 		meter=value.divide(new BigDecimal("30.48"),MathContext.DECIMAL32);
+		meter=meter.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
 		return meter;
 	}
 	
@@ -464,7 +468,7 @@ public class CDGAdditionalService {
 	public static BigDecimal inchtoFeetArea(BigDecimal value) {
 		if(value!=null && value.longValue()>0)
 		value=value.divide(new BigDecimal(144),MathContext.DECIMAL32);
-		//value=value.setScale(2, RoundingMode.HALF_UP);
+		value=value.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
 		return value;
 	}
 	

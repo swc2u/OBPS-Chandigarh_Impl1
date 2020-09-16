@@ -307,14 +307,14 @@ public class Parking extends FeatureProcess {
             		plotAreaInMeter=CDGAdditionalService.feetToMeterArea(plotAreaInMeter);
             	}
             	
-                if (plotAreaInMeter.doubleValue()<252.9) {
+                if (plotAreaInMeter.doubleValue()<209) {
                     requiredCarParkArea += 12.5d * 1;
-                } else if (plotAreaInMeter.doubleValue()>=252.9 && plotAreaInMeter.doubleValue()<505.85) {
+                } else if (plotAreaInMeter.doubleValue()>=209 && plotAreaInMeter.doubleValue()<418) {
                     requiredCarParkArea += 12.5d * 2;
-                }else if (plotAreaInMeter.doubleValue()>=505.85 && plotAreaInMeter.doubleValue()<1011.7) {
+                }else if (plotAreaInMeter.doubleValue()>=418 && plotAreaInMeter.doubleValue()<836) {
                     requiredCarParkArea += OPEN_ECS * 3;
                 }
-                else if (plotAreaInMeter.doubleValue()>=1011.7) {
+                else if (plotAreaInMeter.doubleValue()>=836) {
                     requiredCarParkArea += OPEN_ECS * 6;
                 }
                 

@@ -63,6 +63,7 @@ import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGADeviationConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
 
@@ -131,6 +132,7 @@ public class Verandah extends FeatureProcess {
 								minVerandaWidth=CDGAdditionalService.inchToFeet(minVerandaWidth);
 								minVerandDepth=CDGAdditionalService.inchToFeet(minVerandDepth);
 								expectedMinWidth=CDGAdditionalService.meterToFoot(expectedMinWidth);
+								expectedMinWidth=expectedMinWidth.add(CDGADeviationConstant.VERANDAH_DEVIATION_MIN_WIDTH_FEET);
 								expectedMindepth=CDGAdditionalService.meterToFoot(expectedMindepth);
 							}
 							

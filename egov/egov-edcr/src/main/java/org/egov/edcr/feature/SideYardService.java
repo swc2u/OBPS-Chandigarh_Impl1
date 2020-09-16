@@ -53,7 +53,6 @@ import static org.egov.edcr.constants.DxfFileConstants.A_R;
 import static org.egov.edcr.constants.DxfFileConstants.B;
 import static org.egov.edcr.constants.DxfFileConstants.D;
 import static org.egov.edcr.constants.DxfFileConstants.F;
-import static org.egov.edcr.constants.DxfFileConstants.G;
 import static org.egov.edcr.constants.DxfFileConstants.I;
 import static org.egov.edcr.utility.DcrConstants.FRONT_YARD_DESC;
 import static org.egov.edcr.utility.DcrConstants.OBJECTNOTDEFINED;
@@ -333,6 +332,9 @@ public class SideYardService extends GeneralRule {
 			return;
 
 		validateSideYardRule(pl);
+		
+		if(pl.getIsRowHouse() || pl.isRural())
+			return;
 
 		// Side yard 1 and side yard 2 both may not mandatory in same levels. Get
 		// previous level side yards in this case.

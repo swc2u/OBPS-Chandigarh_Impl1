@@ -272,8 +272,10 @@ public class Parapet extends FeatureProcess {
 					if (pl.getDrawingPreference().getInFeets()) {
 						minHeight = CDGAdditionalService.inchToFeet(minHeight);
 						maxHeight = CDGAdditionalService.inchToFeet(maxHeight);
-						expectedMinHeight = CDGAdditionalService.meterToFoot(expectedMinHeight);
-						expectedMaxheight = CDGAdditionalService.meterToFoot(expectedMaxheight);
+//						expectedMinHeight = CDGAdditionalService.meterToFoot(expectedMinHeight);
+//						expectedMaxheight = CDGAdditionalService.meterToFoot(expectedMaxheight);
+						expectedMinHeight = new BigDecimal("3.25");
+						expectedMaxheight = new BigDecimal("4.0");
 					}
 
 					Map<String, String> details = new HashMap<>();

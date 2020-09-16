@@ -80,7 +80,8 @@ public class GateService  extends FeatureProcess {
 			
 			
 			if(pl.getDrawingPreference().getInFeets()) {
-				expectedHeighMainGate=CDGAdditionalService.meterToFoot(expectedHeighMainGate);
+				//expectedHeighMainGate=CDGAdditionalService.meterToFoot(expectedHeighMainGate);
+				expectedHeighMainGate=new BigDecimal("5.96");
 				expectedHeightWicketGate=CDGAdditionalService.meterToFoot(expectedHeightWicketGate);
 				expectedWidthMainGate=CDGAdditionalService.meterToFoot(expectedWidthMainGate);
 				expectedWidthWicketGate=CDGAdditionalService.meterToFoot(expectedWidthWicketGate);
