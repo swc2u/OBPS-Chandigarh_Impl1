@@ -126,13 +126,13 @@ public class AddImageAbsolutePosition {
         try {
             putImageOnPdf(document1, page, mediaBox, contentStrm, pathToStampImage.toString(), 5, 85);
         } catch (Exception e) {
-            e.printStackTrace();
+           // e.printStackTrace();
         }
         String pathOfQrCode = "/home/mansi/bpaedcr/bpa/xkbnO8192883102616721608.png";
         try {
             putImageOnPdf(document1, page, mediaBox, contentStrm, pathOfQrCode, 30, 23);
         } catch (Exception e) {
-            e.printStackTrace();
+          //  e.printStackTrace();
         }
 /*
         Image img2 = Image.getInstance("/home/mansi/bpaedcr/bpa/xkbnO8192883102616721608.png");

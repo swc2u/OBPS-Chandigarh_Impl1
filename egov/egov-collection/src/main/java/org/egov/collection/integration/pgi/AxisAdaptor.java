@@ -200,16 +200,16 @@ public class AxisAdaptor implements PaymentGatewayAdaptor {
             hashValue = mac.doFinal(hashingMessageBytes);
         } catch (DecoderException e1) {
             // TODO Auto-generated catch block
-            e1.printStackTrace();
+        	LOGGER.error(e1.getMessage());
         } catch (NoSuchAlgorithmException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+        	LOGGER.error(e.getMessage());
         } catch (InvalidKeyException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+        	LOGGER.error(e.getMessage());
         } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+        	LOGGER.error(e.getMessage());
         }
         return DatatypeConverter.printHexBinary(hashValue);
     } // end hashAllFields()

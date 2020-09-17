@@ -505,7 +505,7 @@ public class HdfcAdaptor implements PaymentGatewayAdaptor {
         try {
             urlEncodedFormEntity = new UrlEncodedFormEntity(formData);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        	LOGGER.error(e.getMessage());
         }
         return urlEncodedFormEntity;
     }

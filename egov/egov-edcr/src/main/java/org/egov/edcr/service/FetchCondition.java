@@ -2,10 +2,14 @@ package org.egov.edcr.service;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ar.com.fdvs.dj.domain.CustomExpression;
 import ar.com.fdvs.dj.domain.entities.conditionalStyle.ConditionStyleExpression;
 
 public class FetchCondition extends ConditionStyleExpression implements CustomExpression {
+	private static final Logger LOGGER = LoggerFactory.getLogger(FetchCondition.class);
 
     private static final long serialVersionUID = 1L;
     private String fieldName;
@@ -29,7 +33,7 @@ public class FetchCondition extends ConditionStyleExpression implements CustomEx
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+        	LOGGER.error(e.getMessage());
         }
         return Boolean.valueOf(condition);
     }

@@ -221,7 +221,7 @@ public class BudgetProposalAction extends GenericWorkFlowAction {
         try {
             super.execute();
         } catch (final Exception e) {
-            e.printStackTrace();
+        	LOGGER.error(e.getMessage());
         }
         return update();
     }

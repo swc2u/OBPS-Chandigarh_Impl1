@@ -47,7 +47,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_RESCHEDULED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SCHEDULED;
-import static org.egov.bpa.utils.BpaConstants.CREATE_ADDITIONAL_RULE_CREATE_OC;
 import static org.egov.bpa.utils.BpaConstants.ST_CODE_02;
 import static org.egov.bpa.utils.BpaConstants.ST_CODE_05;
 import static org.egov.bpa.utils.BpaConstants.ST_CODE_08;
@@ -90,6 +89,8 @@ import org.egov.pims.commons.Position;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,6 +98,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class BpaWorkFlowService {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(BpaWorkFlowService.class);
 
     public static final String SCRUTINIZED_POS = "scrutinizedBy";
     public static final String SCRUTINIZED_USER = "scrutinizedUser";
@@ -302,7 +305,7 @@ public class BpaWorkFlowService {
                 json = (JSONObject) parser.parse(stateHistory.get().getExtraInfo());
     
         }catch (ParseException e) {
-            e.printStackTrace();
+        	LOGGER.error(e.getMessage());
         }
         return json!=null ? Long.valueOf(json.get("wfMatrixRef").toString()) : 0;
     }
@@ -321,7 +324,7 @@ public class BpaWorkFlowService {
             }
 
         } catch (ParseException e) {
-            e.printStackTrace();
+        	LOGGER.error(e.getMessage());
         }
         return json == null || json.get(TS_INITIATOR_POS) == null ? 0 : Long.valueOf(json.get(TS_INITIATOR_POS).toString());
     }
@@ -340,7 +343,7 @@ public class BpaWorkFlowService {
                 }
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+        	LOGGER.error(e.getMessage());
         }
         return json == null || json.get(SCRUTINIZED_POS) == null ? 0 : Long.valueOf(json.get(SCRUTINIZED_POS).toString());
     }
@@ -359,7 +362,7 @@ public class BpaWorkFlowService {
                 }
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+        	LOGGER.error(e.getMessage());
         }
         return json == null || json.get(SCRUTINIZED_USER) == null ? 0 : Long.valueOf(json.get(SCRUTINIZED_USER).toString());
     }
@@ -377,7 +380,7 @@ public class BpaWorkFlowService {
                 }
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+        	LOGGER.error(e.getMessage());
         }
         return json == null || json.get(REVERTED_BY) == null ? EMPTY : json.get(REVERTED_BY).toString();
     }

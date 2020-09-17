@@ -1131,7 +1131,7 @@ public class ChequeAssignmentAction extends BaseVoucherAction {
                 chequeAssignment.setChequeDate(formatter.parse(items[4]));
                 chequeAssignment.setVoucherDate(formatter.parse(items[6]));
             } catch (ParseException e) {
-                e.printStackTrace();
+            	LOGGER.error(e.getMessage());
             }
             chequeAssignment.setVoucherNumber(items[5]);
             String item = items[7];
@@ -1827,7 +1827,7 @@ public class ChequeAssignmentAction extends BaseVoucherAction {
                         instrumentsHeader.setInstrumentDate(formatter.parse(items[2]));
                     }
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                	LOGGER.error(e.getMessage());
                 }
                 if (items[3] != null && !items[3].isEmpty()) {
                     instrumentsHeader.setSerialNo(financialYearDAO.findById(Long.valueOf(items[3]), false));

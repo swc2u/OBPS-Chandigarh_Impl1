@@ -148,7 +148,7 @@ public class InspectionReportFormatImpl implements InspectionReportFormat {
                 try {
                     reportOutput.setReportOutputData(Files.readAllBytes(path));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                   LOGGER.error(e.getMessage());
                 }
             } else {
 
