@@ -196,7 +196,7 @@ public class HeightOfRoom extends FeatureProcess {
 											providedHeight = r.getHeights().stream().map(RoomHeight::getHeight)
 													.reduce(BigDecimal::min).get();
 										} catch (Exception e) {
-											e.printStackTrace();
+											
 										}
 
 										subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.HABITABLE_ROOM);

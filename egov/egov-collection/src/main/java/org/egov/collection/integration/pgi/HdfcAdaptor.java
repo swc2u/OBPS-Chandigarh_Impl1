@@ -431,7 +431,7 @@ public class HdfcAdaptor implements PaymentGatewayAdaptor {
                 hdfcResponse.setErrorDescription("Transaction not found");
             }
         } catch (Exception exp) {
-            exp.printStackTrace();
+        	LOGGER.error(exp.getMessage());
         }
         LOGGER.debug("end createOfflinePaymentRequest");
         return hdfcResponse;

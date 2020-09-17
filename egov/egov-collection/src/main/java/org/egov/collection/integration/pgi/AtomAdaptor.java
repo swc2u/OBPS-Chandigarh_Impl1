@@ -298,7 +298,7 @@ public class AtomAdaptor implements PaymentGatewayAdaptor {
 				atomResponse.setAdditionalInfo2(ApplicationThreadLocals.getCityCode());
 			}
 		} catch (Exception exp) {
-			exp.printStackTrace();
+			LOGGER.error(exp.getMessage());
 		}
 		return atomResponse;
 	}
@@ -321,9 +321,7 @@ public class AtomAdaptor implements PaymentGatewayAdaptor {
 			// resp = URLEncoder.encode(resp,"UTF-8");
 
 		} catch (Exception e) {
-			System.out.println("[getEncodedValueWithSha2]Unable to encocd value with key :" + hashKey + " and input :"
-					+ sb.toString());
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 
 		return resp;
@@ -397,7 +395,7 @@ public class AtomAdaptor implements PaymentGatewayAdaptor {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 
 		atomResponse.setAuthStatus(responseMap.get(CollectionConstants.ATOM_F_CODE).equalsIgnoreCase("Ok")
@@ -436,7 +434,7 @@ public class AtomAdaptor implements PaymentGatewayAdaptor {
 				throw new ApplicationException(".transactiondate.parse.error", e);
 			} catch (ApplicationException e1) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				LOGGER.error(e.getMessage());
 			}
 		}
 		return atomResponse;

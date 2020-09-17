@@ -218,7 +218,7 @@ public class OnlineReceiptAction extends BaseFormAction {
         	if(odcrPlanInfo!=null && odcrPlanInfo.getPlan()!=null)
         		map= odcrPlanInfo.getPlan().getPlanInfoProperties();
     	}catch (Exception e) {
-			e.printStackTrace();
+    		LOGGER.error(e.getMessage());
 		}
     	return map;
     }

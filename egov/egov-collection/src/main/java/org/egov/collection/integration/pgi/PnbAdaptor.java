@@ -75,7 +75,7 @@ public class PnbAdaptor implements PaymentGatewayAdaptor {
 			pnbReqMsgDTO = objAWLMEAPI.generateTrnReqMsg(pnbReqMsgDTO);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 		String merchantRequest = null;
 		if (pnbReqMsgDTO.getStatusDesc().equals(CollectionConstants.PNB_TRANSACTION_STATUS_DESC)) {
@@ -190,8 +190,8 @@ public class PnbAdaptor implements PaymentGatewayAdaptor {
 					"receiptid=" + pnbResponse.getReceiptId() + "consumercode=" + pnbResponse.getAdditionalInfo6());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-			LOGGER.error(e);
+			LOGGER.error(e.getMessage());
+			//LOGGER.error(e);
 		}
 		return pnbResponse;
 	}

@@ -1246,7 +1246,7 @@ if(pl.getDrawingPreference().getInFeets()) {
 			}
 			
 		}catch (Exception e) {
-			e.printStackTrace();
+			
 		}
 		
 	}

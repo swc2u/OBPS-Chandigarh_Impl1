@@ -141,7 +141,7 @@ public class TerraceUtilityService extends FeatureProcess {
 					providedMinFront = frontAndRear.stream().reduce(BigDecimal::min).get();
 					providedMinSide = side.stream().reduce(BigDecimal::min).get();
 				} catch (Exception e) {
-					e.printStackTrace();
+					
 				}
 
 				if (pl.getDrawingPreference().getInFeets()) {

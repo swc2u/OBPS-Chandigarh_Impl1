@@ -125,7 +125,7 @@ class SendResponseFilter extends ZuulFilter {
                 out.write(bytes, 0, bytesRead);
                 out.flush();
             } catch (IOException e) {
-                e.printStackTrace()
+                
             }
 
             // doubles buffer size if previous read filled it

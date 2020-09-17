@@ -142,7 +142,7 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 				minInteriorCourtYardWidth = f.getInteriorOpenSpace().getInnerCourtYard().getMeasurements().stream()
 						.map(Measurement::getWidth).reduce(BigDecimal::min).get();
 			} catch (Exception e) {
-				e.printStackTrace();
+				
 			}
 
 			OccupancyTypeHelper occupancyTypeHelper = pl.getVirtualBuilding().getMostRestrictiveFarHelper();
@@ -267,7 +267,7 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 				minVentilationShaftWidth = f.getInteriorOpenSpace().getVentilationShaft().getMeasurements().stream()
 						.map(Measurement::getWidth).reduce(BigDecimal::min).get();
 			} catch (Exception e) {
-				e.printStackTrace();
+				
 			}
 
 			if (minVentilationShaftArea != null) {

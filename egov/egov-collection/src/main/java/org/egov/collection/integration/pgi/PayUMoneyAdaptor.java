@@ -198,7 +198,7 @@ public class PayUMoneyAdaptor implements PaymentGatewayAdaptor {
 			try {
 				throw new ApplicationException(".transactiondate.parse.error", e);
 			} catch (ApplicationException e1) {
-				e1.printStackTrace();
+				LOGGER.error(e.getMessage());
 			}
 		}
 
@@ -286,7 +286,7 @@ public class PayUMoneyAdaptor implements PaymentGatewayAdaptor {
 			try {
 				throw new ApplicationException(".transactiondate.parse.error", e);
 			} catch (ApplicationException e1) {
-				e1.printStackTrace();
+				LOGGER.error(e.getMessage());
 			}
 		}
             

@@ -49,6 +49,8 @@
 package org.egov.infra.notification.service;
 
 import org.egov.infra.exception.ApplicationRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -72,7 +74,7 @@ import javax.mail.util.ByteArrayDataSource;
 
 @Service
 public class EmailService {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
     @Autowired
     private JavaMailSenderImpl mailSender;
 
@@ -86,7 +88,7 @@ public class EmailService {
         try {
         	mail(toEmail, subject, mailBody);
         }catch (Exception e) {
-        	e.printStackTrace();
+        	 LOGGER.error(e.getMessage());
 		}
     }
 
@@ -158,7 +160,7 @@ public class EmailService {
 	      System.out.println(response.getBody());
 	      System.out.println(response.getHeaders());
 	    } catch (IOException ex) {
-	      ex.printStackTrace();
+	    	 LOGGER.error(ex.getMessage());
 	    }
     	
     }

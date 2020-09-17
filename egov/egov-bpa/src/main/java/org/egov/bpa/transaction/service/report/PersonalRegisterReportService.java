@@ -82,6 +82,8 @@ import org.hibernate.Session;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,7 +91,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class PersonalRegisterReportService {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(PersonalRegisterReportService.class);
 	private static final String APPROVAL_INITIATED = "Final Approval Process initiated";
 	private static final String PERMIT_FEE_COLLECTED = "Permit Fee Collected";
 	public static final String CLOSED = "Closed";
@@ -537,7 +539,7 @@ public class PersonalRegisterReportService {
 				if (extraInfo != null && extraInfo.contains("scrutinizedBy"))
 					json = (JSONObject) parser.parse(extraInfo);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 		return json == null || json.get("scrutinizedBy") == null ? 0 : Long.valueOf(json.get("scrutinizedBy").toString());
 	}

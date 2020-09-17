@@ -570,7 +570,7 @@ public class AdditionalFeature2 extends FeatureProcess {
 							try {
 								providedHeight = floor.getFloorHeights().stream().reduce(BigDecimal::min).get();
 							} catch (Exception e) {
-								e.printStackTrace();
+								
 							}
 							boolean isValid = false;
 							BigDecimal expectedHeight = new BigDecimal("2.4");
