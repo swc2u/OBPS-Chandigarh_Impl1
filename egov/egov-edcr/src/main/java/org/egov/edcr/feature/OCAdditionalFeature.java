@@ -65,7 +65,7 @@ public class OCAdditionalFeature extends FeatureProcess{
 						Map<String, String> details = new HashMap<>();
 						details.put(BLOCK, "block-" + block.getNumber());
 						details.put(FLOOR, "floor-" + floor.getNumber());
-						details.put(PROVIDED, CDGAdditionalService.viewArea(plan,
+						details.put(PROVIDED, CDGAdditionalService.viewArea(pl,
 								CDGAdditionalService.inchtoFeetArea(occupancy.getBuiltUpArea())));
 						details.put(STATUS, Result.Accepted.getResultVal());
 						scrutinyDetail.getDetail().add(details);
