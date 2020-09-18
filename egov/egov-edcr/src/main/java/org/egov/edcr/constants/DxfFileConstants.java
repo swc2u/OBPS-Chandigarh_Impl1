@@ -166,7 +166,12 @@ public class DxfFileConstants {
 	public static final String IP_R = "IP-R";// Residential (25%)
 	public static final String IP_C = "IP-C";// Commercial (5%)
 
-	public static final String T1 = "T1";// Transit Oriented Development (TOD)	
+	public static final String T1 = "T1";// Transit Oriented Development (TOD)
+	
+	//OC buildup area
+	//public static final String 
+	
+	
 	// CGCL end
 
 	public static final String C = "C"; // Medical/Hospital
@@ -538,4 +543,8 @@ public class DxfFileConstants {
 	public static final String ROAD_LENGTH="ROAD_LENGTH";
 	public static final String CONVERSION_CHARGES_APPLICABLE="CONVERSION_CHARGES_APPLICABLE";
 	public static final String DEMOLITION_AREA="DEMOLITION_AREA";
+	
+	//ApplicationType
+	public static final String APPLICATION_TYPE_PERMIT="PERMIT";
+	public static final String APPLICATION_TYPE_OCCUPANCY_CERTIFICATE="OCCUPANCY_CERTIFICATE";
 }

@@ -86,6 +86,7 @@ import org.egov.edcr.feature.MeanOfAccess;
 import org.egov.edcr.feature.MezzanineFloorService;
 import org.egov.edcr.feature.MonumentDistance;
 import org.egov.edcr.feature.NorthDirection;
+import org.egov.edcr.feature.OCAdditionalFeature;
 import org.egov.edcr.feature.OpenStairService;
 import org.egov.edcr.feature.OverHangs;
 import org.egov.edcr.feature.OverheadElectricalLineService;
@@ -346,6 +347,9 @@ public class PlanFeatureRepository {
         features.add(pf);
         
         pf = new PlanFeature(PassageService.class);
+        features.add(pf);
+        
+        pf = new PlanFeature(OCAdditionalFeature.class);
         features.add(pf);
 
         return features;
