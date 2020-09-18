@@ -107,7 +107,7 @@ public class DrawingOfficerBuilder {
         try {
             final Field idField = drawingOfficer.getClass().getSuperclass()
                     .getDeclaredField("id");
-            idField.setAccessible(true);
+            //idField.setAccessible(true);
             idField.set(drawingOfficer, id);
         } catch (final Exception e) {
             throw new RuntimeException(e);

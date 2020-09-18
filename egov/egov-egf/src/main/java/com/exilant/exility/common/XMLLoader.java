@@ -393,7 +393,7 @@ public class XMLLoader extends DefaultHandler {
                                                                     // field
                                                                     // not
                                                                     // found
-                field.setAccessible(true);
+                //field.setAccessible(true);
                 fieldType = field.getType();
                 storageType = 2; // object class. If it is to be a single
                                  // child
@@ -431,7 +431,7 @@ public class XMLLoader extends DefaultHandler {
                     Object o = f.get(parentObject);
                     if (null == o) {
                         o = c.newInstance();
-                        f.setAccessible(true);
+                        //f.setAccessible(true);
                         f.set(parentObject, o);
                     }
                     try { // It could be ArrayList or HashMap. Instead of
@@ -541,7 +541,7 @@ public class XMLLoader extends DefaultHandler {
                     final Object o = Array.newInstance(fieldType, a);
                     for (int i = 0; i < len; i++)
                         Array.set(o, i, al.get(i));
-                    field.setAccessible(true);
+                    //field.setAccessible(true);
                     field.set(parentObject, o);
                 } catch (final Exception e) {
                     LOGGER.error("Exp in end Child=" + e.getMessage());

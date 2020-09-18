@@ -118,7 +118,7 @@ public class ValidationInterceptor extends AbstractInterceptor {
 
 	private void invokeActionMethod(final Method actionMethod, final Object action) throws IllegalAccessException, InvocationTargetException, RuntimeException {
 		if (actionMethod != null) {
-			actionMethod.setAccessible(true);
+			//actionMethod.setAccessible(true);
 			actionMethod.invoke(action);
 		}
 	}

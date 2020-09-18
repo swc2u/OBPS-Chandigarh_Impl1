@@ -84,7 +84,7 @@ public class BillingIntegrationServiceStubTest  {
 		Method method;
 		try {
 			method = BillingIntegrationServiceStub.class.getDeclaredMethod("getOutputFile",String.class);
-			method.setAccessible(true);
+			//method.setAccessible(true);
 			File deleteFile = (File) method.invoke(billingIntgrnServiceStub, "BillReceiptOutput.xml");
 			if (deleteFile.exists()){
 				if(!deleteFile.delete()) {

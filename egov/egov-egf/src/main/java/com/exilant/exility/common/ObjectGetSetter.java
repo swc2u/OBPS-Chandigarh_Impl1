@@ -80,7 +80,7 @@ public class ObjectGetSetter {
 
         try {
             final Field field = ObjectGetSetter.getField(object, fieldName);
-            field.setAccessible(true);
+            //field.setAccessible(true);
             return field.get(object).toString();
         } catch (final Exception e) {
             // logger.error("Problem in get()"+object+"for Fiels"+fieldName);
@@ -118,7 +118,7 @@ public class ObjectGetSetter {
                 if (primitivesonly && !field.getType().isPrimitive() && field.getType().getName().indexOf("java.lang.") != 0)
                     continue;
 
-                field.setAccessible(true); // ensures that the field is accessible
+                //field.setAccessible(true); // ensures that the field is accessible
                 try {
                     values.put(field.getName(), field.get(object));
                 } catch (final Exception e) {
@@ -167,7 +167,7 @@ public class ObjectGetSetter {
         Field field;
         try {
             field = ObjectGetSetter.getField(object, fieldName);
-            field.setAccessible(true);
+            //field.setAccessible(true);
             final Class cls = field.getType();
             if (cls.isPrimitive() || cls.equals(String.class))
                 if (cls.equals(int.class))
@@ -208,13 +208,13 @@ public class ObjectGetSetter {
             try { // to invoke put (fieldName, fieldValue) for
                 final Class[] objectClass = { Object.class, Object.class };
                 field = ObjectGetSetter.getField(object, "attributes");
-                field.setAccessible(true);
+                //field.setAccessible(true);
                 Object atts = field.get(object);
                 final Class fldclass = field.getType();
                 // instantiate and assign the instance if required
                 if (null == atts) {
                     atts = fldclass.newInstance();
-                    field.setAccessible(true);
+                    //field.setAccessible(true);
                     field.set(object, atts);
                 }
                 final Method met = fldclass.getMethod("put", objectClass);
