@@ -18,7 +18,7 @@ public class DxfConstent {
 	public static final String ONE_KANAL = "ONE_KANAL"; // 379.35sqm to less than 505.85 sqm
 	public static final String TWO_KANAL = "TWO_KANAL"; // 505.85sqm to less than 1011.7sqm
 	public static final String ABOVE_TWO_KANAL = "ABOVE_TWO_KANAL"; // Above 1011.7sqm
-
+	
 	public static String validateValue(String str) {
 		String result = "";
 		
@@ -38,24 +38,31 @@ public class DxfConstent {
 					result = r1 + "*" + r2;
 				}
 
-			} else if (str.contains("F")) {
+			} else if (str.contains("F") && isConvertableInNumber(str)) {
 				result = validateFeetInch(str);
 			} else {
 				result = str.toUpperCase();
 			}
 		}catch (Exception e) {
-			//System.out.println("str : "+str+"  || "+e.getMessage());
+			System.out.println("str : "+str+"  || "+e.getMessage());
 		}
 		return result;
 	}
-	
+	public static boolean isConvertableInNumber(String value) {
+		boolean flage=false;
+		
+		try {
+			validateFeetInch(value);
+			flage=true;
+		}catch (Exception e) {
+			flage=false;
+		}
+		return flage;
+	}
 	public static String getString(String str) {
 		return str.replaceAll("[^a-zA-Z0-9,.,*]", "_").toUpperCase();
 	}
-
-	public static void main(String[] args) {
-		System.out.println(validateValue("19F6*6F"));
-	}
+		
 	public static String validateFeetInch(String str) {
 		String result = "";
 		if (str.contains("F")) {
@@ -69,7 +76,7 @@ public class DxfConstent {
 				}
 			}
 			BigDecimal r = BigDecimal.valueOf((fm + fi));
-			r=r.setScale(2,BigDecimal.ROUND_HALF_EVEN);
+			r=r.setScale(2,BigDecimal.ROUND_HALF_UP);
 			result=r.toString();
 		} else {
 			result = str;
@@ -81,13 +88,13 @@ public class DxfConstent {
 	public static double feetToMeter(double feet) {
 		BigDecimal result = BigDecimal.ZERO;
 		result = BigDecimal.valueOf(feet * 0.3048);
-		return result.setScale(2, BigDecimal.ROUND_HALF_EVEN).doubleValue();
+		return result.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 	}
 
 	public static double inchToMeter(double inch) {
 		BigDecimal result = BigDecimal.ZERO;
 		result = BigDecimal.valueOf(inch * 0.0254);
-		return result.setScale(2,BigDecimal.ROUND_HALF_EVEN).doubleValue();
+		return result.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
 	}
 
 	public static void processSetBackLeft(String cellValue, SetBack setBack) {
@@ -102,7 +109,7 @@ public class DxfConstent {
 
 			setBack.setMinimumPermissibleSetback_left_Width(strLeftWidth);
 			setBack.setMinimumPermissibleSetback_left_Depth(strLeftDepth);
-			setBack.setMinimumPermissibleSetback_left_Area(leftArea.setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+			setBack.setMinimumPermissibleSetback_left_Area(leftArea.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
 
 		} catch (Exception e) {
 			System.out.println("processSetBackLeft :: number :- " + cellValue);
@@ -124,7 +131,7 @@ public class DxfConstent {
 
 			setBack.setMinimumPermissibleSetback_Right_Width(strRightWidth);
 			setBack.setMinimumPermissibleSetback_Right_Depth(strRightDepth);
-			setBack.setMinimumPermissibleSetback_Right_Area(rightArea.setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+			setBack.setMinimumPermissibleSetback_Right_Area(rightArea.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
 
 		} catch (Exception e) {
 			System.out.println("processSetBackLeft :: number :- " + cellValue);
