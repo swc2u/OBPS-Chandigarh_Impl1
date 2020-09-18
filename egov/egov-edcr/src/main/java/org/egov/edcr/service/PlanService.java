@@ -100,7 +100,7 @@ public class PlanService {
 					featureService.getFeatures());
 			setProperties(plan);
 		}catch (Exception e) {
-			e.printStackTrace();
+			LOG.error(e.getMessage());
 		}
 		
 //		removeError(plan);
@@ -111,6 +111,7 @@ public class PlanService {
 		
 		if(plan!=null && checkUnits(plan)) {
 			plan.setServiceType(dcrApplication.getServiceType());
+			plan.setApplicationType(dcrApplication.getApplicationType().toString());
 			plan = applyRules(plan, amd, cityDetails);
 			setEDCRmandatoryNOC(plan);
 		}

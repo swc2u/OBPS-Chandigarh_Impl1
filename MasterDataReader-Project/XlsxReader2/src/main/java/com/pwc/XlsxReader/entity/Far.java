@@ -22,6 +22,6 @@ public class Far {
 		this.key = key;
 	}
 
-	
+		
 	
 }

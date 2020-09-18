@@ -3,10 +3,12 @@ package com.pwc.XlsxReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.Properties;
+import java.util.HashMap;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -21,6 +23,7 @@ import com.pwc.XlsxReader.entity.BackYardConstruction;
 import com.pwc.XlsxReader.entity.DxfConstent;
 import com.pwc.XlsxReader.entity.Far;
 import com.pwc.XlsxReader.entity.Master;
+import com.pwc.XlsxReader.entity.MyShorting;
 import com.pwc.XlsxReader.entity.NoOfStory;
 import com.pwc.XlsxReader.entity.PermissibleBuildingHeight;
 import com.pwc.XlsxReader.entity.SetBack;
@@ -33,20 +36,20 @@ public class ExcelReader {
 	public static final String SHEET_NAME_BACK_YARD_COMSTRUCTIONS = "Back Yard construction";
 	public static final String SHEET_NAME_SETBACKS = "Setbacks";
 	public static final String SHEET_NAME_PERMISSIBLE_BUILDING_HEIGHT = "Height";
-	//public static final String SAMPLE_XLSX_FILE_PATH = "/home/root1/Desktop/doc/project ref doc/march/Master rule book v-18.xlsx";
+	// public static final String SAMPLE_XLSX_FILE_PATH =
+	// "/home/root1/Desktop/doc/project ref doc/march/Master rule book v-18.xlsx";
 //	public static final String SAMPLE_XLSX_FILE_PATH="/XlsxReader2/src/main/java/com/pwc/xlsx/Master rule book v-18.xlsx";
-	public static final String SAMPLE_XLSX_FILE_PATH="src/main/java/com/pwc/xlsx/44A&44C v3.xlsx";
-	
+//	public static final String SAMPLE_XLSX_FILE_PATH="src/main/java/com/pwc/xlsx/44A&44C v3.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH="src/main/java/com/pwc/xlsx/freedy-01Aug2020.xlsx";
+	public static final String SAMPLE_XLSX_FILE_PATH = "/home/root1/Desktop/workspaces/w1/XlsxReader2/src/main/java/com/pwc/xlsx/Master rule book 59 sectors v2.3.xlsx";
+
 	public static void main(String[] args) throws IOException, InvalidFormatException {
-
+		System.out.println("==================Start===================");
 		Workbook workbook = WorkbookFactory.create(new File(SAMPLE_XLSX_FILE_PATH));
-
 		Sheet sheet = workbook.getSheetAt(workbook.getSheetIndex(SHEET_NAME_MASTER));
 		processMaster(sheet);
-	//	System.out.println(sheet.getSheetName());
-
-		// Closing the workbook
 		workbook.close();
+		System.out.println("===================End===================");
 	}
 
 	private static void processMaster(Sheet sheet) {
@@ -54,21 +57,14 @@ public class ExcelReader {
 		DataFormatter dataFormatter = new DataFormatter();
 		List<Master> masters = new ArrayList<Master>();
 		for (Row row : sheet) {
-		//	System.out.println(row.getRowNum());
-//			if (row.getRowNum() == 0)
-//				continue;
-			if(row.getRowNum()==2613) {
-				//System.out.println("test");
-			}
+			if (row.getRowNum() == 0)
+				continue;
 			char key = 65;
 			Master master = new Master();
 			for (Cell cell : row) {
-
-				//String cellValue = DxfConstent.getString(dataFormatter.formatCellValue(cell));
 				String cellValue = dataFormatter.formatCellValue(cell);
 				cellValue = DxfConstent.validateValue(cellValue);
 				switch (key) {
-
 				case 'A':
 					break;
 				case 'D':
@@ -131,17 +127,21 @@ public class ExcelReader {
 			master.setKey(master.getCode() + "." + master.getSector() + "." + master.getPlotNo() + "."
 					+ master.getAreaType());
 			masters.add(master);
-			//System.out.println("Master : "+master);
-		}
 
+		}
 		processBackYardConstruction(masters);
+		System.out.println();
 		processFar(masters);
+		System.out.println();
 		processNoOfStory(masters);
+		System.out.println();
 		processPermissibleBuildingHight(masters);
+		System.out.println();
 		processSetBack(masters);
 	}
 
 	private static void processFar(List<Master> masters) {
+		System.out.println("----------------start processFar ------------------");
 		List<Far> fars = new ArrayList<Far>();
 
 		for (Master master : masters) {
@@ -151,14 +151,17 @@ public class ExcelReader {
 			fars.add(far);
 		}
 
-		Map<String, String> properties = new LinkedHashMap<String, String>();
+		HashMap<String, String> properties = new HashMap<String, String>();
 		for (Far far : fars) {
-			properties.put(far.getKey(), far.getMaxmimumPermissibleFAR());
+			String s = properties.put(far.getKey(), far.getMaxmimumPermissibleFAR());
 		}
+		System.out.println("Master "+masters.size()+" | properties "+properties.size());
 		Utill.writeToPropertiesFile(properties, "Far.properties");
+		System.out.println("----------------end processFar ------------------");
 	}
 
 	private static void processNoOfStory(List<Master> masters) {
+		System.out.println("----------------start processNoOfStory ------------------");
 		List<NoOfStory> noOfStories = new ArrayList<NoOfStory>();
 
 		for (Master master : masters) {
@@ -168,16 +171,17 @@ public class ExcelReader {
 			noOfStories.add(noOfStory);
 		}
 
-		Map<String, String> properties = new LinkedHashMap<String, String>();
+		HashMap<String, String> properties = new HashMap<String, String>();
 		for (NoOfStory far : noOfStories) {
 			properties.put(far.getKey(), far.getPermissibleBuildingStories());
 		}
-
+		System.out.println("Master "+masters.size()+" | properties "+properties.size());
 		Utill.writeToPropertiesFile(properties, "NoOfStory.properties");
-
+		System.out.println("----------------end processNoOfStory ------------------");
 	}
 
 	private static void processPermissibleBuildingHight(List<Master> masters) {
+		System.out.println("----------------start processPermissibleBuildingHight ------------------");
 		List<PermissibleBuildingHeight> permissibleBuildingHeights = new ArrayList<PermissibleBuildingHeight>();
 
 		for (Master master : masters) {
@@ -188,17 +192,17 @@ public class ExcelReader {
 			permissibleBuildingHeights.add(permissibleBuildingHeight);
 		}
 
-		Map<String, String> properties = new LinkedHashMap<String, String>();
+		HashMap<String, String> properties = new HashMap<String, String>();
 		for (PermissibleBuildingHeight buildingHeight : permissibleBuildingHeights) {
 			properties.put(buildingHeight.getKey(), buildingHeight.getPermissibleBuildingHeight());
 		}
-
+		System.out.println("Master "+masters.size()+" | properties "+properties.size());
 		Utill.writeToPropertiesFile(properties, "PermissibleBuildingHeight.properties");
-
+		System.out.println("----------------end processBackYardConstruction ------------------");
 	}
 
 	private static void processSetBack(List<Master> masters) {
-
+		System.out.println("----------------start processSetBack ------------------");
 		List<SetBack> setBacks = new ArrayList<SetBack>();
 
 		for (Master master : masters) {
@@ -241,9 +245,8 @@ public class ExcelReader {
 			setBacks.add(setBack);
 		}
 
-		Map<String, String> properties = new TreeMap<String, String>();
+		HashMap<String, String> properties = new HashMap<String, String>();
 		for (SetBack setBack : setBacks) {
-			System.out.println(setBack);
 			properties.put(setBack.getKeyFront(), setBack.getMinimumPermissibleSetback_Front());
 			properties.put(setBack.getKeyRear(), setBack.getMinimumPermissibleSetback_Rear());
 
@@ -269,12 +272,14 @@ public class ExcelReader {
 					properties.put(setBack.getKeyLeftWidth(), setBack.getMinimumPermissibleSetback_left_Width());
 			}
 		}
-
+		System.out.println("Master "+masters.size()+" | properties "+properties.size());
 		Utill.writeToPropertiesFile(properties, "Setback.properties");
-
+		System.out.println("----------------end processSetBack ------------------");
 	}
 
 	private static void processBackYardConstruction(List<Master> masters) {
+		
+		System.out.println("----------------start processBackYardConstruction ------------------");
 
 		List<BackYardConstruction> backYardConstructions = new ArrayList<BackYardConstruction>();
 
@@ -293,16 +298,16 @@ public class ExcelReader {
 			backYardConstructions.add(backYardConstruction);
 		}
 
-		Map<String, String> properties = new LinkedHashMap<String, String>();
+		HashMap<String, String> properties = new HashMap<String, String>();
 		for (BackYardConstruction backYardConstruction : backYardConstructions) {
 			properties.put(backYardConstruction.getKeyWidth(),
 					backYardConstruction.getBackCourtyardConstructionWidth());
 			properties.put(backYardConstruction.getKeyHight(),
 					backYardConstruction.getBackCourtyardConstructionHeight());
 		}
-
+		System.out.println("Master "+masters.size()+" | properties "+properties.size());
 		Utill.writeToPropertiesFile(properties, "BackYardConstruction.properties");
-
+		System.out.println("----------------end processBackYardConstruction ------------------");
 	}
 
 	private static void printCellValue(Cell cell) {

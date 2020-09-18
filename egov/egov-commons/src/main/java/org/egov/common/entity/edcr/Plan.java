@@ -200,6 +200,8 @@ public class Plan implements Serializable {
 	
 	private Boolean isAdditionalFeeApplicable=false;
 	private Boolean isRowHouse=false;
+	
+	private String applicationType;
 
 	// Used to show drawing mistakes, General errors, mistakes in following
 	// layer/color coding standard etc
@@ -710,5 +712,14 @@ public class Plan implements Serializable {
 		this.isRowHouse = isRowHouse;
 	}
 
+	public String getApplicationType() {
+		return applicationType;
+	}
+
+	public void setApplicationType(String applicationType) {
+		this.applicationType = applicationType;
+	}
+
+	
 	
 }
