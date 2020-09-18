@@ -8,8 +8,6 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class AtomAES {
-//	private String password = "8E41C78439831010F81F61C344B7BFC7";
-//	private String salt = "200000054575202";
 	private String password;
 	private String salt;
 	private static int pswdIterations = 65536;

@@ -92,9 +92,10 @@
 			<label class="col-sm-3 control-label text-right"><spring:message
 					code="lbl.applicantname" /> <span class="mandatory"></span></label>
 			<div class="col-sm-3 add-margin">
-				<form:input type="text" cssClass="form-control addremoverequired"
-					path="applicantName" maxlength="100" id="applicantName"
-					required="required" />
+				<form:input type="text" cssClass="form-control addremoverequired patternvalidation"
+							data-pattern="alphabetspecialcharacters" data-role="tagsinput"
+							path="applicantName" maxlength="100" id="applicantName"
+							required="required" />
 				<form:errors path="applicantName" cssClass="error-msg" />
 			</div>
 			<label class="col-sm-2 control-label text-right"><spring:message
