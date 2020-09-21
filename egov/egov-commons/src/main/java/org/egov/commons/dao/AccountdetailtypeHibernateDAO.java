@@ -111,7 +111,7 @@ public class AccountdetailtypeHibernateDAO  {
             throw new ApplicationException("The object supplied is null");
         try {
             final Field tableNameField = Class.forName(master.getClass().getName()).getDeclaredField("tablename");
-            tableNameField.setAccessible(true);
+            //tableNameField.setAccessible(true);
             final Query query = getCurrentSession().createQuery(
                     "select adt.id from Accountdetailtype adt where UPPER(tablename)=:tableName");
             query.setString("tableName", ((String) tableNameField.get(master)).toUpperCase());

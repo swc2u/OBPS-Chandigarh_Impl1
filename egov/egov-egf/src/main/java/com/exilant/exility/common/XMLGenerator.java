@@ -93,7 +93,7 @@ public class XMLGenerator {
         final Object[] objarr = { tag, tabs };
         try {
             final Method method = objclass.getMethod("toXML", clsarr);
-            method.setAccessible(true);
+            //method.setAccessible(true);
             return (String) method.invoke(object, objarr);
         } catch (final Exception e) {
             if (LOGGER.isInfoEnabled())
