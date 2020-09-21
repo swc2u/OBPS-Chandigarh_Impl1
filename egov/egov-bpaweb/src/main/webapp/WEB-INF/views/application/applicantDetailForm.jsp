@@ -118,7 +118,7 @@
 			<form:errors path="owner.gender" cssClass="error-msg" />
 		</div>
 
-		<label class="col-sm-2 control-label text-right"><spring:message
+		<%-- <label class="col-sm-2 control-label text-right"><spring:message
 				code="lbl.aadhar" /> </label>
 		<div class="col-sm-3 add-margin">
 			<form:input class="form-control patternvalidation"
@@ -127,7 +127,7 @@
 			<form:errors path="owner.aadhaarNumber"
 				data-server-error="owner.aadhaarNumber"
 				cssClass="add-margin error-msg" />
-		</div>
+		</div> --%>
 	</div>
 </div>
 <jsp:include page="co-applicant-detail.jsp"></jsp:include>
