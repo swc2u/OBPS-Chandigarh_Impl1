@@ -67,8 +67,6 @@ public class PayUMoneyAdaptor implements PaymentGatewayAdaptor {
 	private RestTemplate restTemplate;
 	@PersistenceContext
 	private EntityManager entityManager;
-	//@Autowired
-	private ObjectMapper objectMapper=new ObjectMapper();
 
 	@Override
 	public PaymentRequest createPaymentRequest(final ServiceDetails paymentServiceDetails,

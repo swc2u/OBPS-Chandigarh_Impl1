@@ -247,6 +247,38 @@ public class CollectionApplicationProperties {
 		return environment.getProperty("payu.cron.expression.delay.time", Integer.class);
 	}
 	
+	public String sbiMID(String prefix) {
+		return environment.getProperty(prefix+".sbi.mid");
+	}
+	
+	public String sbiCollaboratorId(String prefix) {
+		return environment.getProperty(prefix+".sbi.collaborator.id");
+	}
+	
+	public String sbiOperatingMode(String prefix) {
+		return environment.getProperty(prefix+".sbi.operating.mode");
+	}
+
+	public String sbiCountry(String prefix) {
+		return environment.getProperty(prefix+".sbi.country");
+	}
+
+	public String sbiCurrency(String prefix) {
+		return environment.getProperty(prefix+".sbi.currency");
+	}
+	
+	public String sbiMkey(String prefix) {
+		return environment.getProperty(prefix+".sbi.mkey");
+	}
+	
+	public String sbiUrl(String prefix) {
+		return environment.getProperty(prefix+".sbi.url");
+	}
+	
+	public String sbiPath(String prefix) {
+		return environment.getProperty(prefix+".sbi.path");
+	}
+	
 	public String pnbMid() {
 		return environment.getProperty("pnb.mid");
 	}

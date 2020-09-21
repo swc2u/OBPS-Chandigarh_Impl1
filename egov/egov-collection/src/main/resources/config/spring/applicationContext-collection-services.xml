@@ -167,6 +167,8 @@
 	<bean id="APGPaymentGatewayAdaptor" class="org.egov.collection.integration.pgi.AtomAdaptor" />
 	
 	<bean id="PUPGPaymentGatewayAdaptor" class="org.egov.collection.integration.pgi.PayUMoneyAdaptor" />
+	
+	<bean id="SBIPaymentGatewayAdaptor" class="org.egov.collection.integration.pgi.SbiepayAdaptor" />
 
 	<bean id="challanPersistenceService" class="org.egov.infstr.services.PersistenceService">
 		<constructor-arg index="0"

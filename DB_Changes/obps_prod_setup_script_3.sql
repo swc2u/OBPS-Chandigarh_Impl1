@@ -318,3 +318,14 @@ INSERT INTO chandigarh.eg_wf_matrix (id,department,objecttype,currentstate,curre
 ,(nextval('seq_eg_wf_matrix'),'ANY','OccupancyCertificate','LP Initiated','','','','Medium Risk','LP Created','Letter To Party Reply Pending','SDO Building MC','Letter To Party Created','Forward',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
 ,(nextval('seq_eg_wf_matrix'),'ANY','OccupancyCertificate','LP Created','','','','Medium Risk','LP Reply Received','Forward to LP Initiator pending','SDO Building MC','Letter To Party Reply Received','Forward',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
 ;
+
+-----------------------------SBI---------------------
+Insert into chandigarh.egcl_servicecategory (id, name, code, isactive, version, createdby, createddate, lastmodifiedby, lastmodifieddate) values
+(nextval('seq_egcl_servicecategory'), 'SBI Payment Gateway', 'SBI', true, 0,  (select id from state.eg_user where username='egovernments'), now(), (select id from state.eg_user where username='egovernments'), now());
+
+
+Insert into chandigarh.egcl_servicedetails (id, name, serviceurl, isenabled, callbackurl, servicetype, code, fund, fundsource, functionary, vouchercreation, scheme, subscheme, servicecategory, isvoucherapproved, vouchercutoffdate, created_by, created_date, modified_by, modified_date, ordernumber) values
+(nextval('seq_egcl_servicedetails'), 'SBI Payment Gateway', 'test.sbiepay.sbi/secure/AggregatorHostedListener', true, 'https://obps-test.chandigarhsmartcity.in/collection/citizen/onlineReceipt-acceptMessageFromPaymentGateway.action', 'P', 'SBI', (select id from chandigarh.fund where code='01'), null, null, false, null, null, (select id from chandigarh.egcl_servicecategory where code='SBI'), false, now(), 1, now(), 1, now(), null);
+
+INSERT INTO chandigarh.EGCL_SERVICE_INSTRUMENTACCOUNTS (id,instrumenttype,servicedetails,chartofaccounts,createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
+(3,(select id from chandigarh.egf_instrumenttype where "type"='online'),(select id from chandigarh.egcl_servicedetails where "name"='SBI Payment Gateway'),(SELECT id FROM chandigarh.chartofaccounts where "name"='Receivables control accounts-Property Taxes'),1,now(),1,now());
