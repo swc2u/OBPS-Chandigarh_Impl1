@@ -30,7 +30,7 @@ public class OCAdditionalFeature extends FeatureProcess{
 
 	@Override
 	public Plan validate(Plan pl) {
-		return null;
+		return pl;
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class OCAdditionalFeature extends FeatureProcess{
 		for (Block block : pl.getBlocks()) {
 			for (Floor floor : block.getBuilding().getFloors()) {
 				for (Occupancy occupancy : floor.getOccupancies()) {
-					if (DxfFileConstants.A_R5.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+					if (DxfFileConstants.OC_MIC.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
 
 						isParsent = true;
 						Map<String, String> details = new HashMap<>();
@@ -83,8 +83,34 @@ public class OCAdditionalFeature extends FeatureProcess{
 		
 	}
 	
-	public void glazingOfVerandah(Plan plan) {//Glazing of verandah color code 5
+	public void glazingOfVerandah(Plan pl) {//Glazing of verandah color code 5
+		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
+		scrutinyDetail.setKey("Common_OC Glazing of verandah");
+		scrutinyDetail.addColumnHeading(1, BLOCK);
+		scrutinyDetail.addColumnHeading(2, FLOOR);
+		scrutinyDetail.addColumnHeading(3, PROVIDED);
+		scrutinyDetail.addColumnHeading(4, STATUS);
 		
+		boolean isParsent = false;
+		for (Block block : pl.getBlocks()) {
+			for (Floor floor : block.getBuilding().getFloors()) {
+				for (Occupancy occupancy : floor.getOccupancies()) {
+					if (DxfFileConstants.OC_GOV.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+
+						isParsent = true;
+						Map<String, String> details = new HashMap<>();
+						details.put(BLOCK, "block-" + block.getNumber());
+						details.put(FLOOR, "floor-" + floor.getNumber());
+						details.put(PROVIDED, CDGAdditionalService.viewArea(pl,
+								CDGAdditionalService.inchtoFeetArea(occupancy.getBuiltUpArea())));
+						details.put(STATUS, Result.Accepted.getResultVal());
+						scrutinyDetail.getDetail().add(details);
+					}
+
+				}
+			}
+
+		}
 	}
 	
 	public void partitionsOnGroundFloorOnMulti_baysShops(Plan plan) {//Partitions on ground floor on multi-bays shops -> key MULTI_BAY_PARTITIONS_NUMBER= it's for both and optional

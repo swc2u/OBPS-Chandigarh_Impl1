@@ -169,8 +169,9 @@ public class DxfFileConstants {
 	public static final String T1 = "T1";// Transit Oriented Development (TOD)
 	
 	//OC buildup area
-	//public static final String 
-	
+	public static final String OC="OC";//Occupancy Certificate
+	public static final String OC_MIC="OC-MIC";//Minor Internal Changes
+	public static final String OC_GOV="OC-GOV";//Glazing Of Verandah
 	
 	// CGCL end
 

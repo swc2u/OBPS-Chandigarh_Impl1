@@ -329,3 +329,27 @@ Insert into chandigarh.egcl_servicedetails (id, name, serviceurl, isenabled, cal
 
 INSERT INTO chandigarh.EGCL_SERVICE_INSTRUMENTACCOUNTS (id,instrumenttype,servicedetails,chartofaccounts,createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
 (3,(select id from chandigarh.egf_instrumenttype where "type"='online'),(select id from chandigarh.egcl_servicedetails where "name"='SBI Payment Gateway'),(SELECT id FROM chandigarh.chartofaccounts where "name"='Receivables control accounts-Property Taxes'),1,now(),1,now());
+
+
+-----------------OC -----------------
+SELECT setval('seq_egbpa_occupancy', (SELECT max(id) FROM chandigarh.egbpa_occupancy));
+
+INSERT INTO chandigarh.egbpa_occupancy (id,code,"name",isactive,"version",createdby,createddate,lastmodifiedby,lastmodifieddate,maxcoverage,minfar,maxfar,ordernumber,description,colorcode) VALUES 
+(nextval('seq_egbpa_occupancy'),'OC','Occupancy Certificate',true,0,1,'2020-03-20 18:26:51.949',1,'2020-03-20 18:26:51.949',65,3,4,1,'occupancy certificate',NULL)
+;
+
+SELECT setval('seq_egbpa_sub_occupancy', (SELECT max(id) FROM chandigarh.egbpa_sub_occupancy));
+
+delete from chandigarh.egbpa_usage where suboccupancy = (select id from chandigarh.egbpa_sub_occupancy where colorcode = 3);
+delete from chandigarh.egbpa_sub_occupancy where colorcode =3;
+
+INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,createdby,createddate,lastmodifieddate,lastmodifiedby,"version",description,maxcoverage,minfar,maxfar,occupancy,colorcode,isfeature) VALUES 
+(nextval('seq_egbpa_sub_occupancy'),'OC-MIC','Minor Internal Changes',5,true,1,'2020-07-09 21:07:01.601','2020-07-09 21:07:01.601',1,0,'Minor Internal Changes',65,3,4,(select o.id from chandigarh.egbpa_occupancy o where o.code ='OC'),3,true)
+;
+
+delete from chandigarh.egbpa_usage where suboccupancy = (select id from chandigarh.egbpa_sub_occupancy where colorcode = 5);
+delete from chandigarh.egbpa_sub_occupancy where colorcode =5;
+
+INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,createdby,createddate,lastmodifieddate,lastmodifiedby,"version",description,maxcoverage,minfar,maxfar,occupancy,colorcode,isfeature) VALUES 
+(nextval('seq_egbpa_sub_occupancy'),'OC-GOV','Glazing Of Verandah',5,true,1,'2020-07-09 21:07:01.601','2020-07-09 21:07:01.601',1,0,'Glazing Of Verandah',65,3,4,(select o.id from chandigarh.egbpa_occupancy o where o.code ='OC'),5,true)
+;
