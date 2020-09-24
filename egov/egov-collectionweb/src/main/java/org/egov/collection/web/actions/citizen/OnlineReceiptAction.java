@@ -72,8 +72,8 @@ import org.apache.struts2.convention.annotation.Results;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.service.ApplicationBpaService;
-import org.egov.bpa.transaction.service.impl.OccupancyCertificateFeeService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
+import org.egov.collection.cdg.finance.service.VocherService;
 import org.egov.collection.constants.CollectionConstants;
 import org.egov.collection.entity.ReceiptDetail;
 import org.egov.collection.entity.ReceiptHeader;
@@ -83,7 +83,6 @@ import org.egov.collection.integration.pgi.PaymentRequest;
 import org.egov.collection.integration.pgi.PaymentResponse;
 import org.egov.collection.integration.services.DebitAccountHeadDetailsService;
 import org.egov.collection.service.CollectionService;
-import org.egov.collection.service.DcrBpaRestService;
 import org.egov.collection.service.ReceiptHeaderService;
 import org.egov.collection.utils.CollectionCommon;
 import org.egov.collection.utils.CollectionsUtil;
@@ -93,7 +92,6 @@ import org.egov.commons.EgwStatus;
 import org.egov.commons.Fund;
 import org.egov.commons.dao.ChartOfAccountsHibernateDAO;
 import org.egov.commons.dao.FundHibernateDAO;
-import org.egov.edcr.service.EdcrApplicationDetailService;
 import org.egov.edcr.service.EdcrExternalService;
 import org.egov.infra.admin.master.entity.AppConfigValues;
 import org.egov.infra.admin.master.entity.Department;
@@ -105,9 +103,6 @@ import org.egov.infra.web.struts.annotation.ValidationErrorPage;
 import org.egov.infstr.models.ServiceDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.egov.collection.constants.CollectionConstants;
 
 @ParentPackage("egov")
 @Results({ @Result(name = OnlineReceiptAction.NEW, location = "onlineReceipt-new.jsp"),
@@ -199,7 +194,9 @@ public class OnlineReceiptAction extends BaseFormAction {
     
     @Autowired
     private OccupancyCertificateService occupancyCertificateService;
-
+    
+    @Autowired
+    private VocherService vocherService;
     @Autowired
     private EdcrExternalService edcrExternalService;
     private Map<String, String> getPlanInfo(String applicationNumber, String serviceCode){
@@ -300,6 +297,11 @@ public class OnlineReceiptAction extends BaseFormAction {
                 onlinePaymentReceiptHeader.getOnlinePayment().setAuthorisationStatusCode(
                         paymentResponse.getAuthStatus());
                 onlinePaymentReceiptHeader.getOnlinePayment().setRemarks(paymentResponse.getErrorDescription());
+
+                //vocher call start
+                vocherService.processVocher(paymentService, onlinePaymentReceiptHeader, rbt);
+                //vocher call start
+                
             } else
                 processFailureMsg();
         } else {

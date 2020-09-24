@@ -1,5 +1,10 @@
 package org.egov.collection.cdg.finance.service;
 
+import static org.egov.collection.constants.CollectionConstants.KEY_RURAL;
+import static org.egov.collection.constants.CollectionConstants.KEY_URBAN;
+import static org.egov.collection.constants.CollectionConstants.RURAL;
+import static org.egov.collection.constants.CollectionConstants.URBAN;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,11 +28,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-
+@Service
 public class VocherService {
 	private static final Logger LOGGER = Logger.getLogger(VocherService.class);
 	@Autowired
@@ -36,7 +42,7 @@ public class VocherService {
 	private CollectionApplicationProperties collectionApplicationProperties;
 
 	private FinanceAuthResponce getAccessToken() {
-		FinanceAuthResponce result=null;
+		FinanceAuthResponce result = null;
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED);
@@ -49,13 +55,21 @@ public class VocherService {
 			params.add("tenantId", collectionApplicationProperties.getValue(VocherConstant.KEY_TENANTID));
 			params.add("userType", collectionApplicationProperties.getValue(VocherConstant.KEY_USERTYPE));
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
-			result=restTemplate.exchange(collectionApplicationProperties.getValue(VocherConstant.KEY_URL), HttpMethod.POST, entity, FinanceAuthResponce.class).getBody();
+			result = restTemplate.exchange(collectionApplicationProperties.getValue(VocherConstant.KEY_URL),
+					HttpMethod.POST, entity, FinanceAuthResponce.class).getBody();
 		} catch (Exception e) {
 			LOGGER.error("getAccessToken : " + e.getMessage());
 		}
 		return result;
 	}
-	
+
+	public boolean isVocherApplicable(final String rbt) {
+		boolean flage = false;
+		if (KEY_RURAL.equals(rbt))
+			flage = true;
+		return flage;
+	}
+
 	private void createVocher(final ServiceDetails paymentServiceDetails,
 			final ReceiptHeader receiptHeader) {
 		FinanceAuthResponce financeAuthResponce=getAccessToken();
@@ -73,17 +87,17 @@ public class VocherService {
 		voucher.setVoucherDate(new Date(System.currentTimeMillis()));
 		voucher.setModuleId(VocherConstant.VOUCHER_MODEL_ID);
 		voucher.setDepartment(VocherConstant.VOUCHER_DEPT);
-		voucher.setSource("/services/collection/receipts/receipt-viewReceipts.action?selectedReceipts=f3dbc270-061f-4576-b404-1a0f3654f3a9");
+		voucher.setSource("/services/collection/receipts/receipt-viewReceipts.action?selectedReceipts="+receiptHeader.getId());
 		voucher.setTenantId(collectionApplicationProperties.getValue(VocherConstant.KEY_TENANTID));
-		voucher.setReferenceDocument("f3dbc270-061f-4576-b404-1g98f869788a4");
+		voucher.setReferenceDocument(receiptHeader.getReceiptnumber());
 		voucher.setServiceName(VocherConstant.VOUCHER_SERVICE_NAME);
 		
 		Fund fund=new Fund();
-		fund.setCode("01");
+		fund.setCode(paymentServiceDetails.getFund().getCode());
 		voucher.setFund(fund);
 		
 		Function function=new Function();
-		function.setCode("000300");
+		function.setCode(paymentServiceDetails.getFunctionary().getCode().toString());
 		voucher.setFunction(function);
 		
 		Scheme scheme=new Scheme();
@@ -106,10 +120,10 @@ public class VocherService {
 		
 		//add other ledger for debit
 		Ledgers ledgers2=new Ledgers();
-		ledgers2.setGlcode("4501001");
-		ledgers2.setDebitAmount(10L);
+		
+		ledgers2.setDebitAmount(receiptHeader.getTotalAmount().longValue());
 		Function function3=new Function();
-		function3.setCode("000300");
+		
 		ledgers2.setFunction(function3);
 		
 		ledgers.add(ledgers2);
@@ -118,8 +132,14 @@ public class VocherService {
 		vouchers.add(voucher);
 		voucherCreateRequest.setVouchers(vouchers);
 		HttpEntity<VoucherCreateRequest> request = new HttpEntity<>(voucherCreateRequest);
-		VoucherCreateResponse result=restTemplate.exchange("https://chandigarh-dev.chandigarhsmartcity.in/services/EGF/rest/voucher/_create", HttpMethod.POST, request, VoucherCreateResponse.class).getBody();
+		VoucherCreateResponse result=restTemplate.exchange(collectionApplicationProperties.getValue(VocherConstant.VOUCHER_SERVICE_URL), HttpMethod.POST, request, VoucherCreateResponse.class).getBody();
 		
+	}
 	
+	public void processVocher(final ServiceDetails paymentServiceDetails,
+			final ReceiptHeader receiptHeader,final String rbt) {
+		if(isVocherApplicable(rbt))
+			createVocher(paymentServiceDetails, receiptHeader);
+			
 	}
 }

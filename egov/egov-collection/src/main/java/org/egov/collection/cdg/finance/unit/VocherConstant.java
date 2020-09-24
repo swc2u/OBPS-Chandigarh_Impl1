@@ -17,5 +17,6 @@ public class VocherConstant {
 	public static Long VOUCHER_MODEL_ID=10L;
 	public static String VOUCHER_DEPT="390";
 	public static String VOUCHER_SERVICE_NAME="REV_GRANTS";
+	public static String VOUCHER_SERVICE_URL="finance.vocher.url";
 	
 }
