@@ -348,9 +348,6 @@ public class PlanFeatureRepository {
         
         pf = new PlanFeature(PassageService.class);
         features.add(pf);
-        
-        pf = new PlanFeature(OCAdditionalFeature.class);
-        features.add(pf);
 
         return features;
     }

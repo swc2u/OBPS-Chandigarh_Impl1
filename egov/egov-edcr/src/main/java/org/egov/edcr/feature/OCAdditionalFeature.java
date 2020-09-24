@@ -1,5 +1,6 @@
 package org.egov.edcr.feature;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,9 +20,9 @@ import org.springframework.stereotype.Service;
  * This class contain only OC related feature validation 
  */
 @Service
-public class OCAdditionalFeature extends FeatureProcess{
+public class OCAdditionalFeature extends FeatureProcess {
 	private static final Logger LOG = Logger.getLogger(AdditionalFeature2.class);
-	
+
 	@Override
 	public Map<String, Date> getAmendments() {
 		// TODO Auto-generated method stub
@@ -35,26 +36,26 @@ public class OCAdditionalFeature extends FeatureProcess{
 
 	@Override
 	public Plan process(Plan pl) {
-		
-		if(!DxfFileConstants.APPLICATION_TYPE_OCCUPANCY_CERTIFICATE.equals(pl.getApplicationType())) {
+
+		if (DxfFileConstants.APPLICATION_TYPE_OCCUPANCY_CERTIFICATE.equals(pl.getApplicationType())) {
 			minorInternalChanges(pl);
 			excessCoverageBeyondZoning6Inch(pl);
 			glazingOfVerandah(pl);
 		}
-			
+
 		partitionsOnGroundFloorOnMulti_baysShops(pl);
-		
+
 		return pl;
 	}
-	
-	public void minorInternalChanges(Plan pl) {//no validation , show buildupArea colorcode 3
+
+	public void minorInternalChanges(Plan pl) {// no validation , show buildupArea colorcode 3
 		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
 		scrutinyDetail.setKey("Common_OC Minor Internal Changes");
 		scrutinyDetail.addColumnHeading(1, BLOCK);
 		scrutinyDetail.addColumnHeading(2, FLOOR);
 		scrutinyDetail.addColumnHeading(3, PROVIDED);
 		scrutinyDetail.addColumnHeading(4, STATUS);
-		
+
 		boolean isParsent = false;
 		for (Block block : pl.getBlocks()) {
 			for (Floor floor : block.getBuilding().getFloors()) {
@@ -63,8 +64,8 @@ public class OCAdditionalFeature extends FeatureProcess{
 
 						isParsent = true;
 						Map<String, String> details = new HashMap<>();
-						details.put(BLOCK, "block-" + block.getNumber());
-						details.put(FLOOR, "floor-" + floor.getNumber());
+						details.put(BLOCK, "block " + block.getNumber());
+						details.put(FLOOR, "floor " + floor.getNumber());
 						details.put(PROVIDED, CDGAdditionalService.viewArea(pl,
 								CDGAdditionalService.inchtoFeetArea(occupancy.getBuiltUpArea())));
 						details.put(STATUS, Result.Accepted.getResultVal());
@@ -75,22 +76,58 @@ public class OCAdditionalFeature extends FeatureProcess{
 			}
 
 		}
-		
-		
+		pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+
 	}
 
-	public void excessCoverageBeyondZoning6Inch(Plan plan) {//take from plan key // EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA= number
-		
+	public void excessCoverageBeyondZoning6Inch(Plan pl) {// take from plan key //
+															// EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA= number
+
+		BigDecimal excessCoverag = BigDecimal.ZERO;
+
+		try {
+			excessCoverag = new BigDecimal(
+					pl.getPlanInfoProperties().get(DxfFileConstants.EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA));
+		} catch (NullPointerException e) {
+			pl.addError("EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA",
+					"EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA is not defined in plan info.");
+			return;
+		} catch (NumberFormatException e) {
+			pl.addError("EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA",
+					"EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA value is not valid in plan info.");
+			return;
+		}
+
+		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
+		scrutinyDetail.setKey("Common_OC Excess coverage beyond zoning 6'");
+		scrutinyDetail.addColumnHeading(1, BLOCK);
+		scrutinyDetail.addColumnHeading(2, FLOOR);
+		scrutinyDetail.addColumnHeading(3, PROVIDED);
+		scrutinyDetail.addColumnHeading(4, STATUS);
+
+		boolean isParsent = false;
+		if (isParsent) {
+
+			Map<String, String> details = new HashMap<>();
+			details.put(BLOCK, "");
+			details.put(FLOOR, "floor");
+			details.put(PROVIDED, excessCoverag + "'");
+			details.put(STATUS, Result.Accepted.getResultVal());
+			scrutinyDetail.getDetail().add(details);
+
+			pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+		}
+
 	}
-	
-	public void glazingOfVerandah(Plan pl) {//Glazing of verandah color code 5
+
+	public void glazingOfVerandah(Plan pl) {// Glazing of verandah color code 5
 		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
 		scrutinyDetail.setKey("Common_OC Glazing of verandah");
 		scrutinyDetail.addColumnHeading(1, BLOCK);
 		scrutinyDetail.addColumnHeading(2, FLOOR);
 		scrutinyDetail.addColumnHeading(3, PROVIDED);
 		scrutinyDetail.addColumnHeading(4, STATUS);
-		
+
 		boolean isParsent = false;
 		for (Block block : pl.getBlocks()) {
 			for (Floor floor : block.getBuilding().getFloors()) {
@@ -99,8 +136,8 @@ public class OCAdditionalFeature extends FeatureProcess{
 
 						isParsent = true;
 						Map<String, String> details = new HashMap<>();
-						details.put(BLOCK, "block-" + block.getNumber());
-						details.put(FLOOR, "floor-" + floor.getNumber());
+						details.put(BLOCK, "block " + block.getNumber());
+						details.put(FLOOR, "floor " + floor.getNumber());
 						details.put(PROVIDED, CDGAdditionalService.viewArea(pl,
 								CDGAdditionalService.inchtoFeetArea(occupancy.getBuiltUpArea())));
 						details.put(STATUS, Result.Accepted.getResultVal());
@@ -111,9 +148,47 @@ public class OCAdditionalFeature extends FeatureProcess{
 			}
 
 		}
+		pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 	}
-	
-	public void partitionsOnGroundFloorOnMulti_baysShops(Plan plan) {//Partitions on ground floor on multi-bays shops -> key MULTI_BAY_PARTITIONS_NUMBER= it's for both and optional
+
+	public void partitionsOnGroundFloorOnMulti_baysShops(Plan pl) {// Partitions on ground floor on multi-bays shops
+																		// -> key MULTI_BAY_PARTITIONS_NUMBER= it's for
+																		// both and optional
 		
+		BigDecimal excessCoverag = BigDecimal.ZERO;
+
+		try {
+			excessCoverag = new BigDecimal(
+					pl.getPlanInfoProperties().get(DxfFileConstants.MULTI_BAY_PARTITIONS_NUMBER));
+		} catch (NullPointerException e) {
+//			pl.addError("MULTI_BAY_PARTITIONS_NUMBER",
+//					"MULTI_BAY_PARTITIONS_NUMBER is not defined in plan info.");
+			return;
+		} catch (NumberFormatException e) {
+			pl.addError("MULTI_BAY_PARTITIONS_NUMBER",
+					"MULTI_BAY_PARTITIONS_NUMBER value is not valid in plan info.");
+			return;
+		}
+
+		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
+		scrutinyDetail.setKey("Common_OC Partitions on ground floor on multi-bays shops");
+		scrutinyDetail.addColumnHeading(1, BLOCK);
+		scrutinyDetail.addColumnHeading(2, FLOOR);
+		scrutinyDetail.addColumnHeading(3, PROVIDED);
+		scrutinyDetail.addColumnHeading(4, STATUS);
+
+		boolean isParsent = false;
+		if (isParsent) {
+
+			Map<String, String> details = new HashMap<>();
+			details.put(BLOCK, "");
+			details.put(FLOOR, "floor");
+			details.put(PROVIDED, excessCoverag + "'");
+			details.put(STATUS, Result.Accepted.getResultVal());
+			scrutinyDetail.getDetail().add(details);
+
+			pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+		}
+
 	}
 }

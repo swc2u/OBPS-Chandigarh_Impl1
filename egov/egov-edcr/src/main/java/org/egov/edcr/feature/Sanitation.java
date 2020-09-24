@@ -415,7 +415,7 @@ public class Sanitation extends FeatureProcess {
 					double carpetArea = 0d;
 					if (type.getCarpetArea() != null && type.getCarpetArea().doubleValue() > 0) {
 						carpetArea = type.getCarpetArea().doubleValue();
-					} else {
+					} else if(!DxfFileConstants.APPLICATION_TYPE_OCCUPANCY_CERTIFICATE.equals(pl.getApplicationType())){
 						pl.addError("Invalid carpet area",
 								"Carpet area is not calculated . Some thing wrong with builtup area");
 						return;

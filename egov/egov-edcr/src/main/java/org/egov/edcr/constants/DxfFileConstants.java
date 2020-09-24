@@ -548,4 +548,6 @@ public class DxfFileConstants {
 	//ApplicationType
 	public static final String APPLICATION_TYPE_PERMIT="PERMIT";
 	public static final String APPLICATION_TYPE_OCCUPANCY_CERTIFICATE="OCCUPANCY_CERTIFICATE";
+	public static final String EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA="EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA";
+	public static final String MULTI_BAY_PARTITIONS_NUMBER="MULTI_BAY_PARTITIONS_NUMBER";
 }
