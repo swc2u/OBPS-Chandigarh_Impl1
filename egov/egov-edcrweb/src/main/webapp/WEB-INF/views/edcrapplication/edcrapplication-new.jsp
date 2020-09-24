@@ -73,12 +73,6 @@
 		</form:form>
 	</div>
 </div>
-<form  method="post"
-		action="https://test.sbiepay.sbi/secure/AggregatorHostedListener">
-		<input type="hidden" name="EncryptTrans" value="iDI814y0YVjTv2LR9xUGn5COLffuAr3RupNdyzissMupDIVZp+Dug8C/geeDDJGfM/BI9YRo7946z0rZgDMtKRRp2/6mrKlMndJYc4jJOI2vYygrR3q2GZwlj1aTGgLawUjMKgrd25uyAkr6bHBmeocLnFE5DrSv8IbOKv+PcCWGTZnURh9HpZkoTBhs1WHyal3kR7iuP1qk3mbjmIhutFideFIsBYeiadddyTy8Zbt673Er2jvSSDH/HR7uViUJ">
-		<input type="hidden" name="merchIdVal" value="1000112" /> <input
-			type="submit" name="submit" value="Submit">
-	</form>
 <script type="text/javascript"
 	src="<c:url value='/resources/app/js/edcr-upload-helper.js'/>"></script>
 <script type="text/javascript"
