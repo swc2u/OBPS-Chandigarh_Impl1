@@ -58,6 +58,7 @@ import org.egov.bpa.transaction.service.ApplicationBpaService;
 import org.egov.bpa.transaction.service.oc.OccupancyFeeService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.utils.BpaUtils;
+import org.egov.common.entity.edcr.Floor;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.commons.service.OccupancyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -177,11 +178,19 @@ public class OccupancyCertificateFeeService  {
     }
     
     public BigDecimal getTotalAdditionalFee(Plan bpaPlan, Plan ocPlan) {
+    	
     	return BigDecimal.valueOf(100);
     }
     
     public BigDecimal getTotalRuleFiveFee(Plan bpaPlan, Plan ocPlan) {
     	return BigDecimal.valueOf(100);
+    }
+    
+    
+    private BigDecimal getTotalAdditionalAreaInSQFFloorWise(Floor floor) {
+    	BigDecimal totalAreaInSQF=BigDecimal.ZERO;
+    	
+    	return totalAreaInSQF;
     }
     
     protected ApplicationFeeDetail buildApplicationFeeDetail(final BpaFeeMapping bpaFee, final ApplicationFee applicationFee,

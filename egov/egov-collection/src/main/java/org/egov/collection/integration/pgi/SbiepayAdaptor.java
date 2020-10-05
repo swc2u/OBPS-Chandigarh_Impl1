@@ -20,6 +20,7 @@ import javax.persistence.Query;
 import org.apache.log4j.Logger;
 import org.egov.collection.config.properties.CollectionApplicationProperties;
 import org.egov.collection.constants.CollectionConstants;
+import org.egov.collection.entity.OnlinePayment;
 import org.egov.collection.entity.ReceiptHeader;
 import org.egov.infra.config.core.ApplicationThreadLocals;
 import org.egov.infra.exception.ApplicationException;
@@ -53,11 +54,12 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 	private static final String trascationdate = "trascationdate";
 	private static final String Country = "Country";
 	private static final String CIN = "CIN";
-	private static final String SBI_SUCCESS="SUCCESS";
- 	private static final String SBI_FAIL="FAIL";
- 	private static final String encData="encData";
- 	public static final String orderReqId_PREFIX="SBBPA";
-
+	private static final String SBI_SUCCESS = "SUCCESS";
+	private static final String SBI_FAIL = "FAIL";
+	private static final String encData = "encData";
+	public static final String orderReqId_PREFIX = "SBBPA";
+	public static final String MerchantId = "MerchantId";
+	public static final String countrycode = "countrycode";
 
 	@Override
 	public PaymentRequest createPaymentRequest(final ServiceDetails paymentServiceDetails,
@@ -81,7 +83,7 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 
 		StringBuilder returnUrl = new StringBuilder();
 		String rbt = "&&rbt=" + (URBAN.equals(prefix) ? KEY_URBAN : KEY_RURAL);
-		//rbt = URLEncoder.encode(rbt);
+		// rbt = URLEncoder.encode(rbt);
 		returnUrl.append(paymentServiceDetails.getCallBackurl()).append("?paymentServiceId=")
 				.append(paymentServiceDetails.getId()).append(rbt);
 
@@ -123,33 +125,30 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 			prefix = RURAL;
 
 		String[] keyValueStr = response.replace("{", "").replace("}", "").split(",");
-		
+
 		Map<String, String> responseM = new HashMap<String, String>(0);
 		for (String pair : keyValueStr) {
 			String[] entry = pair.split("=");
 			responseM.put(entry[0].trim(), entry[1].trim());
 		}
-		
+
 		String mkey = collectionApplicationProperties.sbiMkey(prefix);
 		String decryptedParam = AES256Bit.decrypt(responseM.get(encData), AES256Bit.readKeyBytes(mkey));
 		Map<String, String> responseMap = parseSBIResponce(decryptedParam);
 
 		PaymentResponse sbiResponce = new DefaultPaymentResponse();
-		sbiResponce.setAuthStatus(
-				responseMap.get(transStatus).equalsIgnoreCase(SBI_SUCCESS)
-						? CollectionConstants.PGI_AUTHORISATION_CODE_SUCCESS
-						: responseMap.get(SBI_FAIL));
+		sbiResponce.setAuthStatus(responseMap.get(transStatus).equalsIgnoreCase(SBI_SUCCESS)
+				? CollectionConstants.PGI_AUTHORISATION_CODE_SUCCESS
+				: responseMap.get(SBI_FAIL));
 
-		final String receiptId=responseMap.get("orderReqId").replace(orderReqId_PREFIX, "");//SBBPA
-		
+		final String receiptId = responseMap.get("orderReqId").replace(orderReqId_PREFIX, "");// SBBPA
+
 		sbiResponce.setErrorDescription(responseMap.get(message));
 		sbiResponce.setReceiptId(receiptId);
 		sbiResponce.setTxnAmount(new BigDecimal(responseMap.get(amount)));
 		sbiResponce.setTxnReferenceNo(responseMap.get(atrn));
-		
-		
-		
-		//final String receiptId = responseMap.get("orderReqId");
+
+		// final String receiptId = responseMap.get("orderReqId");
 		final String ulbCode = ApplicationThreadLocals.getCityCode();
 		final ReceiptHeader receiptHeader;
 		final Query qry = entityManager.createNamedQuery(CollectionConstants.QUERY_RECEIPT_BY_ID_AND_CITYCODE);
@@ -172,7 +171,7 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 				LOGGER.error(e.getMessage());
 			}
 		}
-		
+
 		return sbiResponce;
 	}
 
@@ -198,5 +197,42 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 		LOGGER.info(map);
 		LOGGER.info("==========================");
 		return map;
+	}
+
+	public PaymentResponse createOfflinePaymentRequest(OnlinePayment onlinePayment) {
+		PaymentResponse payuResponce = new DefaultPaymentResponse();
+		String orderReqId = onlinePayment.getReceiptHeader().getId().toString();
+		String prefix = onlinePayment.getReceiptHeader().getRootBoundaryType();
+		String merchantKey=collectionApplicationProperties.payuMerchantkey(prefix);
+		String merchantSalt=collectionApplicationProperties.payuMerchantSalt(prefix);
+       
+		return null;
+	}
+
+	public static Map<String, String> parseSBIReconsilationResponce(String responce) {
+		LOGGER.info("==========================");
+		String[] strings = responce.split("\\|");
+		LOGGER.info(responce);
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(MerchantId, strings[0]);
+		map.put(atrn, strings[1]);
+		map.put(transStatus, strings[2]);
+		map.put(countrycode, strings[3]);
+		map.put(currency, strings[4]);
+		map.put(otherDetails, strings[5]);
+		map.put(orderReqId, strings[6]);
+		map.put(amount, strings[7]);
+		map.put(message, strings[8]);
+		map.put(bankCode, strings[9]);
+		map.put(bankRefNumber, strings[10]);
+		map.put(trascationdate, strings[11]);
+		map.put(paymode, strings[12]);
+		LOGGER.info(map);
+		LOGGER.info("==========================");
+		return map;
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(parseSBIReconsilationResponce("1000112|3107352858401|SUCCESS|IN|INR|Other|BPA00021601363046874|100|Payment InClearing|SBIN|116032276555810|2020-09-29 12:34:48|DC|0|1000112|0.00^0.00||||||||||"));
 	}
 }

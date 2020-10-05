@@ -47,23 +47,22 @@
  */
 package org.egov.collection.scheduler;
 
+import org.egov.collection.CDG.vocher.VocherService;
 import org.egov.collection.integration.services.SchedularService;
 import org.egov.infra.scheduler.quartz.AbstractQuartzJob;
 import org.quartz.DisallowConcurrentExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @DisallowConcurrentExecution
-public class AtomReconciliationJob extends AbstractQuartzJob {
+public class VocherJob extends AbstractQuartzJob {
 
     private static final long serialVersionUID = -8293830861860894611L;
 
     @Autowired
-    private transient SchedularService schedularService;
+    private transient VocherService vocherService;
 
     @Override
     public void executeJob() {
-        schedularService.reconcileATOM();
-       schedularService.reconcilePayUMoeny();
-       schedularService.reconcileSBI();
+        vocherService.createVocher();
     }
 }

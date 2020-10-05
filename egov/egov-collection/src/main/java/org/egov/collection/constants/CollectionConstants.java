@@ -375,6 +375,7 @@ public final class CollectionConstants {
     public static final String SERVICECODE_ATOM = "APG";
     public static final String SERVICECODE_PAYU="PUPG";
     public static final String SERVICECODE_LAMS = "LAMS";
+    public static final String SERVICECODE_SBI = "SBI";
     
     // Online Payment Statuses
     public static final String ONLINEPAYMENT_STATUS_CODE_PENDING = "ONLINE_STATUS_PENDING";

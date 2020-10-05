@@ -62,6 +62,7 @@ import org.egov.collection.scheduler.HDFCReconciliationJob;
 import org.egov.collection.scheduler.PayUMoneyReconciliationJob;
 import org.egov.collection.scheduler.PnbReconciliationJob;
 import org.egov.collection.scheduler.RemittanceInstrumentJob;
+import org.egov.collection.scheduler.SBIReconciliationJob;
 import org.egov.infra.config.scheduling.QuartzSchedulerConfiguration;
 import org.egov.infra.config.scheduling.SchedulerConfigCondition;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -404,6 +405,41 @@ public class CollectionSchedulerConfiguration extends QuartzSchedulerConfigurati
 		pauReconciliationCron.setCronExpression("0 */"+collectionApplicationProperties.payUCronExpressionDelayTime()+" * * * ?");
 		pauReconciliationCron.setMisfireInstruction(MISFIRE_INSTRUCTION_DO_NOTHING);
 		return pauReconciliationCron;
+	}
+
+
+	@Bean("sbiReconciliationJob")
+	public SBIReconciliationJob sbiReconciliationJob() {
+		return new SBIReconciliationJob();
+	}
+
+	@Bean
+	public JobDetailFactoryBean sbiReconciliationJobDetail() {
+		JobDetailFactoryBean sbiReconciliationJobDetail = new JobDetailFactoryBean();
+		sbiReconciliationJobDetail.setGroup("COLLECTION_JOB_GROUP");
+		sbiReconciliationJobDetail.setName("COLLECTION_SBI_RECON_JOB");
+		sbiReconciliationJobDetail.setDurability(true);
+		sbiReconciliationJobDetail.setJobClass(SBIReconciliationJob.class);
+		sbiReconciliationJobDetail.setRequestsRecovery(true);
+		Map<String, String> jobDetailMap = new HashMap<>();
+		jobDetailMap.put("jobBeanName", "sbiReconciliationJob");
+		jobDetailMap.put("userName", "system");
+		jobDetailMap.put("cityDataRequired", "true");
+		jobDetailMap.put("moduleName", "collection");
+		sbiReconciliationJobDetail.setJobDataAsMap(jobDetailMap);
+		return sbiReconciliationJobDetail;
+	}
+
+	@Bean
+	public CronTriggerFactoryBean sbiReconciliationCronTrigger() {
+		CronTriggerFactoryBean sbiReconciliationCron = new CronTriggerFactoryBean();
+		sbiReconciliationCron.setJobDetail(sbiReconciliationJobDetail().getObject());
+		sbiReconciliationCron.setGroup("COLLECTION_TRIGGER_GROUP");
+		sbiReconciliationCron.setName("COLLECTION_SBI_RECON_TRIGGER");
+		//sbiReconciliationCron.setCronExpression("0 */30 * * * ?");
+		sbiReconciliationCron.setCronExpression("0 */"+collectionApplicationProperties.sbiCronExpressionDelayTime()+" * * * ?");
+		sbiReconciliationCron.setMisfireInstruction(MISFIRE_INSTRUCTION_DO_NOTHING);
+		return sbiReconciliationCron;
 	}
 
 }

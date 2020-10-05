@@ -203,6 +203,8 @@ public class Plan implements Serializable {
 	
 	private String applicationType;
 
+	private String planPermissionNumber;
+	
 	// Used to show drawing mistakes, General errors, mistakes in following
 	// layer/color coding standard etc
 	private transient Map<String, String> errors = new LinkedHashMap<>();
@@ -218,7 +220,9 @@ public class Plan implements Serializable {
 	private HashMap<String, String> featureAmendments = new LinkedHashMap<>();
 	private transient Map<String, List<Object>> mdmsMasterData;
 	private transient Boolean mainDcrPassed = false;
-
+	
+	private OCDataComparison ocDataComparison=new OCDataComparison();
+	
 	public List<BigDecimal> getCanopyDistanceFromPlotBoundary() {
 		return canopyDistanceFromPlotBoundary;
 	}
@@ -720,6 +724,17 @@ public class Plan implements Serializable {
 		this.applicationType = applicationType;
 	}
 
-	
-	
+	public String getPlanPermissionNumber() {
+		return planPermissionNumber;
+	}
+
+	public void setPlanPermissionNumber(String planPermissionNumber) {
+		this.planPermissionNumber = planPermissionNumber;
+	}
+
+	public OCDataComparison getOcDataComparison() {
+		return ocDataComparison;
+	}
+
+		
 }
