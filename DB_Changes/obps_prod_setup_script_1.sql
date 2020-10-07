@@ -4,10 +4,10 @@ INSERT INTO chandigarh.eg_citypreferences (id,municipalitylogo,createdby,created
 (nextval('SEQ_EG_CITYPREFERENCES'),NULL,1,now(),1,now(),1,'Chandigarh Administration',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'AIzaSyA1otT5_xEGe0qMrh2lemKKYH7Vo-pGOlA','6LfidggTAAAAANDSoCgfkNdvYm3Ugnl9HC8_68o0','6LfidggTAAAAADwfl4uOq1CSLhCkH8OE7QFinbVs');
 
 INSERT INTO chandigarh.eg_city (domainurl,name,localname,id,active,"version",createdby,lastmodifiedby,createddate,lastmodifieddate,code,districtcode,districtname,longitude,latitude,preferences,regionname,grade) VALUES 
-('obps-test.chandigarhsmartcity.in','Chandigarh','ulb',nextval('SEQ_EG_CITY'),true,1,1,1,now(),now(),'0002','002','Chandigarh',NULL,NULL,(select id from chandigarh.eg_citypreferences where municipalityname='Chandigarh Administration'),NULL,'Corp');
+('ulb.chandigarh.local.org','Chandigarh','ulb',nextval('SEQ_EG_CITY'),true,1,1,1,now(),now(),'0002','002','Chandigarh',NULL,NULL,(select id from chandigarh.eg_citypreferences where municipalityname='Chandigarh Administration'),NULL,'Corp');
 
 INSERT INTO chandigarh.eg_city_aud (id,rev,name,localname,active,domainurl,recaptchapk,recaptchapub,code,districtcode,districtname,longitude,latitude,revtype,regionname,grade) VALUES 
-(1,72,'Chandigarh','ulb',true,'obps-test.chandigarhsmartcity.in',NULL,NULL,'0002','002','Chandigarh',NULL,NULL,1,NULL,'Corp');
+(1,72,'Chandigarh','ulb',true,'ulb.chandigarh.local.org',NULL,NULL,'0002','002','Chandigarh',NULL,NULL,1,NULL,'Corp');
 
 -------------------------------------------------------------------
 
@@ -805,7 +805,7 @@ update chandigarh.eg_demand_reason_master set reasonmaster='Rule 5 fee' where co
 Insert into chandigarh.egcl_servicecategory (id, name, code, isactive, version, createdby, createddate, lastmodifiedby, lastmodifieddate) values (nextval('seq_egcl_servicecategory'), 'Atom Payment Gateway', 'APG', true, 0,  (select id from state.eg_user where username='egovernments'), now(), (select id from state.eg_user where username='egovernments'), now());
 
 Insert into chandigarh.egcl_servicedetails (id, name, serviceurl, isenabled, callbackurl, servicetype, code, fund, fundsource, functionary, vouchercreation, scheme, subscheme, servicecategory, isvoucherapproved, vouchercutoffdate, created_by, created_date, modified_by, modified_date, ordernumber) values
-(nextval('seq_egcl_servicedetails'), 'Atom Payment Gateway', 'https://paynetzuat.atomtech.in/paynetz/epi/fts', true, 'https://obps-test.chandigarhsmartcity.in/collection/citizen/onlineReceipt-acceptMessageFromPaymentGateway.action', 'P', 'APG', (select id from chandigarh.fund where code='01'), null, null, false, null, null, (select id from chandigarh.egcl_servicecategory where code='APG'), false, now(), 1, now(), 1, now(), null);
+(nextval('seq_egcl_servicedetails'), 'Atom Payment Gateway', 'https://paynetzuat.atomtech.in/paynetz/epi/fts', true, 'https://ulb.chandigarh.local.org/collection/citizen/onlineReceipt-acceptMessageFromPaymentGateway.action', 'P', 'APG', (select id from chandigarh.fund where code='01'), null, null, false, null, null, (select id from chandigarh.egcl_servicecategory where code='APG'), false, now(), 1, now(), 1, now(), null);
 
 update chandigarh.egcl_servicecategory set isactive=false where "name"='Punjab National Bank Payment Gateway';
 update chandigarh.egcl_servicecategory set isactive=false where "name"='HDFC Bank Payment Gateway';
@@ -2598,7 +2598,7 @@ Insert into chandigarh.egcl_servicecategory (id, name, code, isactive, version, 
 (nextval('seq_egcl_servicecategory'), 'PayUmoney Payment Gateway', 'PUPG', true, 0,  (select id from state.eg_user where username='egovernments'), now(), (select id from state.eg_user where username='egovernments'), now());
 
 Insert into chandigarh.egcl_servicedetails (id, name, serviceurl, isenabled, callbackurl, servicetype, code, fund, fundsource, functionary, vouchercreation, scheme, subscheme, servicecategory, isvoucherapproved, vouchercutoffdate, created_by, created_date, modified_by, modified_date, ordernumber) values
-(nextval('seq_egcl_servicedetails'), 'PayUmoney Payment Gateway', 'test.payu.in', true, 'https://obps-test.chandigarhsmartcity.in/collection/citizen/onlineReceipt-acceptMessageFromPaymentGateway.action', 'P', 'PUPG', (select id from chandigarh.fund where code='01'), null, null, false, null, null, (select id from chandigarh.egcl_servicecategory where code='PUPG'), false, now(), 1, now(), 1, now(), null);
+(nextval('seq_egcl_servicedetails'), 'PayUmoney Payment Gateway', 'test.payu.in', true, 'https://ulb.chandigarh.local.org/collection/citizen/onlineReceipt-acceptMessageFromPaymentGateway.action', 'P', 'PUPG', (select id from chandigarh.fund where code='01'), null, null, false, null, null, (select id from chandigarh.egcl_servicecategory where code='PUPG'), false, now(), 1, now(), 1, now(), null);
 
 
 -------------------- disable the payUmoney --------------------

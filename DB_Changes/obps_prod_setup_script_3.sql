@@ -354,5 +354,5 @@ INSERT INTO chandigarh.egbpa_sub_occupancy (id,code,"name",ordernumber,isactive,
 (nextval('seq_egbpa_sub_occupancy'),'OC-GOV','Glazing Of Verandah',5,true,1,'2020-07-09 21:07:01.601','2020-07-09 21:07:01.601',1,0,'Glazing Of Verandah',65,3,4,(select o.id from chandigarh.egbpa_occupancy o where o.code ='OC'),5,true)
 ;
 
-== paymate gateway disable===
+-- paymate gateway disable---
 update chandigarh.egcl_servicecategory set isactive = false where code  in ('PUPG','SBI','APG');
