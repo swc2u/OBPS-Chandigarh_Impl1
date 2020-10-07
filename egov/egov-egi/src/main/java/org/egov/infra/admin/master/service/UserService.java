@@ -109,6 +109,13 @@ public class UserService {
         else
             return userRepository.findByUsernameAndTenantId(userName, ApplicationThreadLocals.getTenantID());
     }
+    
+    public User getUserByUsernameForForgetPassword(String userName) {
+        if (ApplicationConstant.ANONYMOUS_USERNAME.equals(userName))
+            return userRepository.findByUsernameAndTenantId(userName, ApplicationConstant.STATE_TENANTID);
+        else
+            return userRepository.findByUsernameAndTenantId(userName,  ApplicationConstant.STATE_TENANTID);
+    }
 
     public User getUserByUsernameAndTenantIdForLogin(String userName) {
         User user = null;
@@ -139,7 +146,7 @@ public class UserService {
     }
 
     public Optional<User> checkUserWithIdentity(String identity) {
-        return Optional.ofNullable(getUserByUsername(identity));
+        return Optional.ofNullable(getUserByUsernameForForgetPassword(identity));
     }
 
     public List<User> findAllByMatchingUserNameForType(String username, UserType type) {
