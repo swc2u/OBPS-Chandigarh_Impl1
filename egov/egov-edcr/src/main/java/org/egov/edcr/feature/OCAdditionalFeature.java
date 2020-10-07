@@ -240,8 +240,8 @@ public class OCAdditionalFeature extends FeatureProcess {
 	}
 
 	private void validateDrawingPreference(Plan ocPlan, Plan permitPlan) {
-		if (ocPlan.getDrawingPreference().getInFeets() != permitPlan.getDrawingPreference().getInFeets())
-			ocPlan.addError("DrawingPreference", "drawing Preference is not matching");
+//		if (ocPlan.getDrawingPreference().getInFeets() != permitPlan.getDrawingPreference().getInFeets())
+//			ocPlan.addError("DrawingPreference", "drawing Preference is not matching");
 	}
 
 	public void OCAddtionalComparation(Plan ocPlan) {
@@ -285,7 +285,7 @@ public class OCAdditionalFeature extends FeatureProcess {
 			}
 		} catch (Exception e) {} 
 		
-		ocPlan.getOcDataComparison().addData(OCDataComparison.Partitions_on_ground_floor_on_multi_bays_shops,
+		ocPlan.getOcdataComparison().addData(OCDataComparison.Partitions_on_ground_floor_on_multi_bays_shops,
 				new OCDataComparison.Data(ocValue,
 						BigDecimal.ZERO, ocValue));
 		
@@ -308,7 +308,7 @@ public class OCAdditionalFeature extends FeatureProcess {
 
 		deviationArea = ocAdditionalHeightOnSecondFloorOfSCFsConvertedIntoSCOs
 				.subtract(permitAdditionalHeightOnSecondFloorOfSCFsConvertedIntoSCOs);
-		ocPlan.getOcDataComparison().addData(OCDataComparison.Glazing_Of_Verandah,
+		ocPlan.getOcdataComparison().addData(OCDataComparison.Glazing_Of_Verandah,
 				new OCDataComparison.Data(ocAdditionalHeightOnSecondFloorOfSCFsConvertedIntoSCOs,
 						permitAdditionalHeightOnSecondFloorOfSCFsConvertedIntoSCOs, deviationArea));
 		if (ocPlan.getDrawingPreference().getInFeets()) {
@@ -342,7 +342,7 @@ public class OCAdditionalFeature extends FeatureProcess {
 			}
 		}
 		deviationArea=ocGlazingOfVerandahArea.subtract(permitGlazingOfVerandahArea);
-		ocPlan.getOcDataComparison().addData(OCDataComparison.Glazing_Of_Verandah,
+		ocPlan.getOcdataComparison().addData(OCDataComparison.Glazing_Of_Verandah,
 				new OCDataComparison.Data(ocGlazingOfVerandahArea, permitGlazingOfVerandahArea, deviationArea));
 		if (ocPlan.getDrawingPreference().getInFeets()) {
 			ocGlazingOfVerandahArea = CDGAdditionalService.inchtoFeetArea(ocGlazingOfVerandahArea);
@@ -390,7 +390,7 @@ public class OCAdditionalFeature extends FeatureProcess {
 				}
 			}
 		}
-		ocPlan.getOcDataComparison().addData(OCDataComparison.Minor_Internal_Changes_During_Construction,
+		ocPlan.getOcdataComparison().addData(OCDataComparison.Minor_Internal_Changes_During_Construction,
 				new OCDataComparison.Data(ocMinorInternalChangesArea, BigDecimal.ZERO, BigDecimal.ZERO));
 		if (ocPlan.getDrawingPreference().getInFeets()) {
 			ocMinorInternalChangesArea = CDGAdditionalService.inchtoFeetArea(ocMinorInternalChangesArea);
@@ -412,7 +412,7 @@ public class OCAdditionalFeature extends FeatureProcess {
 		ocRule5 = getRule5Area(ocPlan);
 		permitRule5 = getRule5Area(permitPlan);
 		deviationArea = ocRule5.subtract(permitRule5);
-		ocPlan.getOcDataComparison().addData(OCDataComparison.RULE5,
+		ocPlan.getOcdataComparison().addData(OCDataComparison.RULE5,
 				new OCDataComparison.Data(ocRule5, permitRule5, deviationArea));
 
 		if (ocPlan.getDrawingPreference().getInFeets()) {
@@ -455,7 +455,7 @@ public class OCAdditionalFeature extends FeatureProcess {
 			permitCoverageInRearCourtyardArea = CDGAdditionalService.inchtoFeetArea(permitCoverageInRearCourtyardArea);
 			deviationArea = ocCoverageInRearCourtyardArea.subtract(permitCoverageInRearCourtyardArea);
 		}
-		ocPlan.getOcDataComparison().addData(OCDataComparison.Additional_Coverage_In_RearCourtyard,
+		ocPlan.getOcdataComparison().addData(OCDataComparison.Additional_Coverage_In_RearCourtyard,
 				new OCDataComparison.Data(ocCoverageInRearCourtyardArea, permitCoverageInRearCourtyardArea,
 						deviationArea));
 		String description = OCDataComparison.Additional_Coverage_In_RearCourtyard;
@@ -482,7 +482,7 @@ public class OCAdditionalFeature extends FeatureProcess {
 		BigDecimal permitAdditionalFeeArea = additionalFeeResidentialPlotted(permitPlan);
 		BigDecimal deviationArea = ocAdditionalFeeArea.subtract(permitAdditionalFeeArea);
 		String description = OCDataComparison.Additional_fee_Residential_plotted;
-		ocPlan.getOcDataComparison().addData(OCDataComparison.Additional_fee_Residential_plotted,
+		ocPlan.getOcdataComparison().addData(OCDataComparison.Additional_fee_Residential_plotted,
 				new OCDataComparison.Data(ocAdditionalFeeArea, permitAdditionalFeeArea, deviationArea));
 		if (ocPlan.getDrawingPreference().getInFeets() && permitPlan.getDrawingPreference().getInFeets()) {
 			ocAdditionalFeeArea = CDGAdditionalService.inchtoFeetArea(ocAdditionalFeeArea);
@@ -502,7 +502,7 @@ public class OCAdditionalFeature extends FeatureProcess {
 		BigDecimal permitLabourcessArea = labourcess(permitPlan);
 		BigDecimal deviationArea = ocLabourcessArea.subtract(permitLabourcessArea);
 		String description = OCDataComparison.Labour_Cess;
-		ocPlan.getOcDataComparison().addData(OCDataComparison.Labour_Cess,
+		ocPlan.getOcdataComparison().addData(OCDataComparison.Labour_Cess,
 				new OCDataComparison.Data(ocLabourcessArea, permitLabourcessArea, deviationArea));
 		if (ocPlan.getDrawingPreference().getInFeets() && permitPlan.getDrawingPreference().getInFeets()) {
 			ocLabourcessArea = CDGAdditionalService.inchtoFeetArea(ocLabourcessArea);

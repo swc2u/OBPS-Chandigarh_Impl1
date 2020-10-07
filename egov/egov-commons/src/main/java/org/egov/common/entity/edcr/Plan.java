@@ -65,6 +65,7 @@ import org.egov.common.entity.bpa.Usage;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /*All the details extracted from the plan are referred in this object*/
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -221,7 +222,8 @@ public class Plan implements Serializable {
 	private transient Map<String, List<Object>> mdmsMasterData;
 	private transient Boolean mainDcrPassed = false;
 	
-	private OCDataComparison ocDataComparison=new OCDataComparison();
+
+	private OCDataComparison ocdataComparison=new OCDataComparison();
 	
 	public List<BigDecimal> getCanopyDistanceFromPlotBoundary() {
 		return canopyDistanceFromPlotBoundary;
@@ -728,12 +730,16 @@ public class Plan implements Serializable {
 		return planPermissionNumber;
 	}
 
-	public void setPlanPermissionNumber(String planPermissionNumber) {
-		this.planPermissionNumber = planPermissionNumber;
+	public OCDataComparison getOcdataComparison() {
+		return ocdataComparison;
 	}
 
-	public OCDataComparison getOcDataComparison() {
-		return ocDataComparison;
+	public void setOcdataComparison(OCDataComparison ocdataComparison) {
+		this.ocdataComparison = ocdataComparison;
+	}
+
+	public void setPlanPermissionNumber(String planPermissionNumber) {
+		this.planPermissionNumber = planPermissionNumber;
 	}
 
 		
