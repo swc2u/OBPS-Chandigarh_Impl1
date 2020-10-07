@@ -146,32 +146,24 @@
 			<div style = "opacity: 0.7;" class = "color-black bpa-common-text">Citizens, Officials, and other stakeholders can submit and track applications in real time and obtain approvals without having to physically visit an office.</div>
 		</div>
 		<div class = "color-black footer-list-content col-md-4">
-			<div style="margin-bottom: 16px;display: none;" class="color-black bpa-common-header2 bpa-common-header">Help Resources</div>
-			<ul class="tutorial-list color-black" style="display: none;">
+			<div style="margin-bottom: 16px;" class="color-black bpa-common-header2 bpa-common-header">Help Resources</div>
+			<ul class="tutorial-list color-black" >
+				
 				<li class="bpa-common-text tutorial-item">
-					<a href="javascript:void(0);" target="_blank">Registered building licensee user manual</a>
-				</li>
-				<li class="bpa-common-text tutorial-item">
-					<a href="javascript:void(0);" target="_blank">DIGIT DCR user manual</a>
+					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/User Manual for Architects.pdf" target="_blank">User Manual for Architects</a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
-					<a href="javascript:void(0);" target="_blank">Citizen Help Manual</a>
-				</li>
-				<li class=" bpa-common-text tutorial-item">
-					<a href="javascript:void(0);" target="_blank">Fee Details</a>
+					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/User Manual for Citizens.pdf" target="_blank">User Manual for Citizens</a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
-					<a href="javascript:void(0);" target="_blank">Single family residential building layers</a>
-				</li>
-				 <li class="bpa-common-text tutorial-item">
-					<a href="javascript:void(0);" target="_blank">Layer Matrix for multiple occupancies</a>
+					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/Drawing Manual for Architects.pdf" target="_blank">Drawing Manual for Architects</a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
-					<a href="javascript:void(0);" target="_blank">Layer Set (las format)</a>
+					<a href="/egi/resources/guide/bpaHelpDocument.jsp" target="_blank">Training Videos</a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
-					<a href="javascript:void(0);" target="_blank">Single family residential building - Drawing Guidelines</a>
-				</li> 
+					<a href="/egi/resources/guide/bpaHelpDocumentDXF.jsp" target="_blank">Training Drawing</a>
+				</li>
 			</ul>
 		</div>
 		
@@ -195,7 +187,7 @@ Chandigarh 160017</div>
 						<i class="fa fa-phone fa-1x"></i>
 					</div>
 					<div class = "footer-info">
-						<a href="javascript:void(0);">0172-504-3196</a>
+						<a href="javascript:void(0);">0172-2787200</a>
 					</div>
 				</div>
 				

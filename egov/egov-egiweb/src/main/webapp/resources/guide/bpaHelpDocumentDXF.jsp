@@ -87,8 +87,7 @@
 		<div class="card landingpage-card landingpage-card-video">
 			<div class="card-content collapsible-header landingpage-card-content">
 				<span class="card-title card-header card-subheader"
-					style="text-align: center; color: black; font-weight: 500;">Training
-					and Tutorials - Building plan drawing videos </span>
+					style="text-align: center; color: black; font-weight: 500;"> drawing videos </span>
 			</div>
 			<ul class="collapsible card-collapse video-documents-csrd">
 				<li style="padding-left: 40px; padding-right: 40px;">
