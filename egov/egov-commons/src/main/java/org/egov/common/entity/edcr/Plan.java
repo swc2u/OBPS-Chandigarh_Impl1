@@ -223,7 +223,7 @@ public class Plan implements Serializable {
 	private transient Boolean mainDcrPassed = false;
 	
 
-	private OCDataComparison ocdataComparison=new OCDataComparison();
+	//private OCDataComparison ocdataComparison=new OCDataComparison();
 	
 	public List<BigDecimal> getCanopyDistanceFromPlotBoundary() {
 		return canopyDistanceFromPlotBoundary;
@@ -730,13 +730,13 @@ public class Plan implements Serializable {
 		return planPermissionNumber;
 	}
 
-	public OCDataComparison getOcdataComparison() {
-		return ocdataComparison;
-	}
-
-	public void setOcdataComparison(OCDataComparison ocdataComparison) {
-		this.ocdataComparison = ocdataComparison;
-	}
+//	public OCDataComparison getOcdataComparison() {
+//		return ocdataComparison;
+//	}
+//
+//	public void setOcdataComparison(OCDataComparison ocdataComparison) {
+//		this.ocdataComparison = ocdataComparison;
+//	}
 
 	public void setPlanPermissionNumber(String planPermissionNumber) {
 		this.planPermissionNumber = planPermissionNumber;

@@ -86,7 +86,6 @@ import org.egov.edcr.feature.MeanOfAccess;
 import org.egov.edcr.feature.MezzanineFloorService;
 import org.egov.edcr.feature.MonumentDistance;
 import org.egov.edcr.feature.NorthDirection;
-import org.egov.edcr.feature.OCAdditionalFeature;
 import org.egov.edcr.feature.OpenStairService;
 import org.egov.edcr.feature.OverHangs;
 import org.egov.edcr.feature.OverheadElectricalLineService;
