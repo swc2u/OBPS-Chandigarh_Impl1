@@ -4,24 +4,15 @@
 <head>
 <!--Import Google Icon Font-->
 
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-	rel="stylesheet">
-<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/customloginNew.css?rnd=${app_release_no}'/>">
-<!--Import materialize.css-->
-<link type="text/css" rel="stylesheet"
-	href="/egi/resources/guide/css/materialize.min.css"
-	media="screen,projection" />
-<link type="text/css" rel="stylesheet"
-	href="/egi/resources/guide/css/landingpage.css" />
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-<link
-	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"
-	rel="stylesheet" id="bootstrap-css">
-<link
-	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-	rel="stylesheet">
-<!--     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
- -->
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts.css'/>">
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css'/>">
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/customloginNew.css?rnd=${app_release_no}'/>">
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}'/>">
+<link type="text/css" rel="stylesheet" href="/egi/resources/guide/css/bpa-features.css">
+<link type="text/css" rel="stylesheet" href="/egi/resources/guide/css/materialize.min.css" media="screen,projection">
+<link type="text/css" rel="stylesheet" href="/egi/resources/guide/css/landingpage.css">
 <!--Let browser know website is optimized for mobile-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <style>
@@ -63,27 +54,17 @@
 </script>
 </head>
 
-<body>
-	<!-- <div class="logo-container new-login-header-wrapper" >
-				
-				<img src="/egi/resources/global/images/logo.png"  height="90">
-				
-				<a href="#" style="padding-top:8px;padding-right:30px;" 
-						data-strwindname="egovsite" class="open-popup"> <img
-							src="/egi/resources/global/images/background-banner.jpg"height="45" alt=""> 
-					</a>
-	</div>	 -->
-<div class="login-content-wrapper col-md-12" style="padding-left: 0!important;padding-right: 0!important;">
-
-	<div class="new-login-header-wrapper page-common-padding col-md-12">
-		<div class="new-login-header padding0 col-md-12">
-			<span><img src="/egi/resources/global/images/logo.png"
-				height="67" class="rounded"></span>
+<body style="padding-top:0px">
+	<div class="login-content-wrapper col-md-12" style="padding-left: 0!important;padding-right: 0!important;">
+	
+		<div class="new-login-header-wrapper page-common-padding col-md-12">
+			<div class="new-login-header padding0 col-md-12">
+				<span><img src="/egi/resources/global/images/logo.png"
+					height="67" class="rounded"></span>
+			</div>
 		</div>
 	</div>
-</div>
-	<div class="main-content landingpage-font-style">
-
+	<div class="main-content landingpage-font-style" style="padding-top: 129px;">
 		<div class="card landingpage-card landingpage-card-video">
 			<div class="card-content collapsible-header landingpage-card-content">
 				<span class="card-title card-header card-subheader"
@@ -98,26 +79,24 @@
 							<div class="col s12 m4 video-play">
 								<video width="320" height="240" controls>
 									<source
-										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/001+-+Preliminaries+and+creation+of+pdf+sheets+from+dxf.mp4#t=0.5"
+										src="https://chstage.blob.core.windows.net/assets/OBPS/Architects/Videos/Drawing%20Scrutiny%20and%20Application%20Submission%20by%20Architect.mp4"
 										type="video/mp4">
 								</video>
-								<p class="landingpage-card-icon-description">1.Preliminaries
-									and creation of pdf sheets from dxf</p>
+								<p class="landingpage-card-icon-description">1.Drawing Scrutiny & Application Submission by Architect</p>
 							</div>
-							<div class="col s12 m4 video-play">
+							<!-- <div class="col s12 m4 video-play">
 								<video width="320" height="240" controls preload="metadata">
 									<source
 										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/002++bilt+up+area+of+proposed+portions.mp4#t=0.5"
 										type="video/mp4">
 								</video>
-								<!-- 	 <iframe src="https://s3.ap-south-1.amazonaws.com/suvega/videos/002++bilt+up+area+of+proposed+portions.mp4&autoplay=0"
-								 frameborder="0" allowfullscreen ></iframe> 	 -->
+									 <iframe src="https://s3.ap-south-1.amazonaws.com/suvega/videos/002++bilt+up+area+of+proposed+portions.mp4&autoplay=0"
+								 frameborder="0" allowfullscreen ></iframe> 	
 								<p class="landingpage-card-icon-description">2.Built up area
 									of proposed portions</p>
-								</p>
-							</div>
+							</div> -->
 
-							<div class="col s12 m4 video-play">
+							<!-- <div class="col s12 m4 video-play">
 								<video width="320" height="240" controls preload="metadata">
 									<source
 										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/003++Built+up+area+of+existing+buildings.mp4#t=0.5"
@@ -125,169 +104,10 @@
 								</video>
 								<p class="landingpage-card-icon-description">3.Built up area
 									of existing buildings</p>
-								</p>
-							</div>
+							</div> -->
 
 						</div>
-						<div class="videos-container-element">
-							<div class="col s12 m4 video-play">
-								<video width="320" height="240" controls>
-									<source
-										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/004++Deductions+for+calculating+floor+area.mp4#t=0.5"
-										type="video/mp4">
-								</video>
-								<p class="landingpage-card-icon-description">4.Deductions
-									for calculating floor area</p>
-							</div>
-
-							<div class="col s12 m4 video-play">
-								<video width="320" height="240" controls preload="metadata">
-									<source
-										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/006++PLOT+BOUNDARY.mp4#t=0.5"
-										type="video/mp4">
-								</video>
-								<p class="landingpage-card-icon-description">5.Plot Boundary</p>
-								</p>
-							</div>
-
-							<div class="col s12 m4 video-play">
-								<video width="320" height="240" controls preload="metadata">
-									<source
-										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/007++SHADES+AND+OVERHANGS.mp4#t=0.5"
-										type="video/mp4">
-								</video>
-								<p class="landingpage-card-icon-description">6.Shades and
-									overhanging</p>
-								</p>
-							</div>
-						</div>
-						<div class="videos-container-element">
-							<div class="col s12 m4 video-play">
-								<video width="320" height="240" controls>
-									<source
-										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/008++COVERED+AREA+FOR+COVERAGE.mp4#t=0.5"
-										type="video/mp4">
-								</video>
-								<p class="landingpage-card-icon-description">7.Covered Area
-									and Coverage</p>
-							</div>
-							<div class="col s12 m4 video-play">
-								<video width="320" height="240" controls preload="metadata">
-									<source
-										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/009++HEIGHT+OF+BUILDING.mp4#t=0.5"
-										type="video/mp4">
-								</video>
-								<p class="landingpage-card-icon-description">8.Height of
-									Building</p>
-								</p>
-							</div>
-
-							<div class="col s12 m4 video-play">
-								<video width="320" height="240" controls preload="metadata">
-									<source
-										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/010++OPEN+SPACES.mp4#t=0.5"
-										type="video/mp4">
-								</video>
-								<p class="landingpage-card-icon-description">9.Open Spaces</p>
-								</p>
-							</div>
-
-						</div>
-
-						<div class="videos-container-element">
-							<div class="col s12 m4 video-play">
-								<video width="320" height="240" controls>
-									<source
-										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/011++BUILDING+FOOT+PRINT.mp4#t=0.5"
-										type="video/mp4">
-								</video>
-								<p class="landingpage-card-icon-description">10.Building
-									footprint</p>
-							</div>
-							<div class="col s12 m4 video-play">
-								<video width="320" height="240" controls preload="metadata">
-									<source
-										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/013++RAIN+WATER+HARVESTING.mp4#t=0.5"
-										type="video/mp4">
-								</video>
-								<p class="landingpage-card-icon-description">11.Rain water
-									Harvesting</p>
-								</p>
-							</div>
-
-							<div class="col s12 m4 video-play">
-								<video width="320" height="240" controls preload="metadata">
-									<source
-										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/014++OHEL.mp4#t=0.5"
-										type="video/mp4">
-								</video>
-								<p class="landingpage-card-icon-description">12.OHEL</p>
-								</p>
-							</div>
-						</div>
-						<div class="videos-container-element">
-							<div class="col s12 m4 video-play">
-								<video width="320" height="240" controls>
-									<source
-										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/015++TYPES+OF+ROADS.mp4#t=0.5"
-										type="video/mp4">
-								</video>
-								<p class="landingpage-card-icon-description">13.Type of
-									roads</p>
-							</div>
-							<div class="col s12 m4 video-play">
-								<video width="320" height="240" controls preload="metadata">
-									<source
-										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/016++OPEN+WELL+AND+WASTE+DISPOSAL+FACILITIES.mp4#t=0.5"
-										type="video/mp4">
-								</video>
-								<p class="landingpage-card-icon-description">14.Open well
-									and waste disposalfacilities</p>
-								</p>
-							</div>
-
-							<div class="col s12 m4 video-play">
-								<video width="320" height="240" controls preload="metadata">
-									<source
-										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/017++PLAN+INFO.mp4#t=0.5"
-										type="video/mp4">
-								</video>
-								<p class="landingpage-card-icon-description">15.Plan Info</p>
-								</p>
-							</div>
-						</div>
-
-						<div class="videos-container-element">
-							<div class="col s12 m4 video-play">
-								<video width="320" height="240" controls>
-									<source
-										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/018++FILE+SAVING-+PREPARATION.mp4#t=0.5"
-										type="video/mp4">
-								</video>
-								<p class="landingpage-card-icon-description">16.File saving
-									and preparation</p>
-							</div>
-							<div class="col s12 m4 video-play">
-								<video width="320" height="240" controls preload="metadata">
-									<source
-										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/019++FILE+UPLOADING.mp4#t=0.5"
-										type="video/mp4">
-								</video>
-								<p class="landingpage-card-icon-description">17.File
-									uploading</p>
-								</p>
-							</div>
-
-							<div class="col s12 m4 video-play">
-								<video width="320" height="240" controls preload="metadata">
-									<source
-										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/20+RESULTS.mp4#t=0.5"
-										type="video/mp4">
-								</video>
-								<p class="landingpage-card-icon-description">18.Results</p>
-								</p>
-							</div>
-						</div>
+						
 					</div>
 				</li>
 			</ul>
@@ -295,77 +115,90 @@
 		</div>
 
 	</div>
-
-	</div>
-	<footer
-		class="page-footer font-small blue social-media-contact-container">
-		<div class=" logo">
-			<img src="/egi/resources/global/images/background-banner.jpg"
-				height="128" style="position: relative; right: 37px; bottom: -10px;">
+	
+	<footer class = "f-regular bpa-login-footer page-common-padding col-md-12 color-black" style="bottom:0; position: fixed;">
+		<div class = "footer-list-content col-md-4">
+			<div style = "margin-bottom: 16px;" class = "color-black bpa-common-header2 bpa-common-header">About OBPS</div>
+			<div style = "opacity: 0.7;" class = "color-black bpa-common-text">Citizens, Officials, and other stakeholders can submit and track applications in real time and obtain approvals without having to physically visit an office.</div>
 		</div>
-		<div class="item-list training-ttutorial">
-			<p class="subheader">Training & Tutorials</p>
-			<ul class="tutorial-list">
-				<li class="tutorial-item"><a href="javascript:void(0);"
-					target="_blank">Registered building licensee user manual</a></li>
-				<li class="tutorial-item"><a href="javascript:void(0);"
-					target="_blank">DIGIT DCR user manual</a></li>
-				<li class="tutorial-item"><a href="javascript:void(0);"
-					target="_blank">Citizen Help Manual</a></li>
-				<li class="tutorial-item"><a href="javascript:void(0);"
-					target="_blank">Fee Details</a></li>
-				<li class="tutorial-item"><a href="javascript:void(0);"
-					target="_blank">Single family residential building layers</a></li>
-				<li class="tutorial-item"><a href="javascript:void(0);"
-					target="_blank">Layer Matrix for multiple occupancies</a></li>
-
-				<li class="tutorial-item"><a href="javascript:void(0);"
-					target="_blank">Layer Set (las format)</a></li>
-				<li class="tutorial-item"><a href="javascript:void(0);"
-					target="_blank">Single family residential building - Drawing
-						Guidelines</a></li>
+		<div class = "footer-list-content col-md-1"></div>
+		<div class = "color-black footer-list-content col-md-3">
+			<div style="margin-bottom: 16px;" class="color-black bpa-common-header2 bpa-common-header">Help Resources</div>
+			<ul class="tutorial-list color-black" >
+				
+				<li class="bpa-common-text tutorial-item">
+					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/User Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">User Manual for Architects</span></a>
+				</li>
+				<li class="bpa-common-text tutorial-item">
+					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/User Manual for Citizens.pdf" target="_blank"><span class = "color-black bpa-common-text">User Manual for Citizens</span></a>
+				</li>
+				<li class="bpa-common-text tutorial-item">
+					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/Drawing Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">Drawing Manual for Architects</span></a>
+				</li>
+				<li class="bpa-common-text tutorial-item">
+					<a href="/egi/resources/guide/bpaHelpDocument.jsp" target="_blank"><span class = "color-black bpa-common-text">Training Videos</span></a>
+				</li>
+				<li class="bpa-common-text tutorial-item">
+					<a href="/egi/resources/guide/bpaHelpDocumentDXF.jsp" target="_blank"><span class = "color-black bpa-common-text">Training Drawing</span></a>
+				</li>
 			</ul>
 		</div>
-		<div class="item-list social-media">
-			<p class="subheader">Follow us on</p>
-			<a href="" target="_blank" class="media-link"><i
-				class="fa fa-twitter fa-2x"></i></a> <a href="" target="_blank"
-				class="media-link"><i class="fa fa-facebook fa-2x"></i></a>
+		
+		<div class = "footer-list-content col-md-4">
+			<div style = "margin-bottom: 16px;" class = "color-black bpa-common-header2 bpa-common-header">Get in Touch</div>
+			<div class = "footer-contact-info-cont">
+				<div class = "color-black bpa-common-text">Chandigarh Smart City Limited,
+3rd Floor, Building over the New Bridge (Above SCO 17,18,19) Sector 17-A
+Chandigarh 160017</div>
+				<div class = "footer-icon-info-cont" style="display:none;">
+					<div class = "footer-icon">
+						<i class="fa fa-map-marker fa-1x"></i>
+					</div>
+					<div class = "footer-info">
+					<a href="javascript:void(0);" target="_blank">Find us on map</a>
+					</div>
+				</div>
+				<div class = "footer-icon-info-cont">
+					<div class = "footer-icon">
+						<i class="fa fa-envelope-square fa-1x"></i>
+					</div>
+					<div class = "footer-info">
+						<a href="javascript:void(0);">obps.chd.helpdesk@gmail.com</a>
+					</div>
+				</div>
+				<div class = "footer-icon-info-cont">
+					<div class = "footer-icon">
+						<i class="fa fa-phone fa-1x"></i>
+					</div>
+					<div class = "footer-info">
+						<a href="javascript:void(0);">0172-2787200</a>
+					</div>
+				</div>
+				
+				<div class = "footer-icon-info-cont" style="display:none;">
+					<div class = "footer-icon">
+						<i class="fa fa-envelope fa-1x"></i>
+					</div>
+					<div class = "footer-info">
+						<a href="mailto:smartcity.chd@nic.in"><p style = "margin: 0">smartcity.chd@nic.in</p></a>
+					</div>
+				</div>
+				
+				<div class = "footer-icon-info-cont" style="display:none;">
+					<div class = "footer-icon">
+						<a href="javascript:void(0);" target="_blank" class="media-link"><i class="fa fa-facebook fa-1x"></i></a>
+					</div>
+					<div style = "margin-left: 5px;" class = "footer-info">
+						<a href="javascript:void(0);" target="_blank" class="media-link"><i class="fa fa-twitter fa-1x"></i></a>
+					</div>
+				</div>
+			</div>
 		</div>
-		<div class="item-list contact-us">
-			<p class="subheader">Contact Us</p>
-			<!--  <ul class="contact-mode-container">
-      <li class="contact-mode-item">
-        <i class="fa fa-envelope fa-1x"></i>
-        <a href="mailto:contact@egovernments.org">contact@egovernments.org</a>
-      </li> 
-      <li>
-        <i class="fa fa-phone fa-1x"></i>
-        <a href="tel:8041255708">8041255708</a>
-      </li>
-      <li>
-        <i class="fa fa-map-marker fa-1x"></i>
-        <a href="https://www.google.co.in/maps/@11.2547842,75.7710018,18.5z">Egovernment Foundation</a>
-      </li>
-    </ul> -->
-			<ul class="contact-mode-container" style="width: 245px;">
-				<li class="contact-mode-item"><i class="fa fa-envelope fa-1x"></i>
-					<!--   <a href="mailto:contact@egovernments.org">contact@egovernments.org</a> -->
-
-					<a href="mailto:${sessionScope.corpContactEmail}"><p>${sessionScope.corpContactEmail}</p></a>
-				</li>
-				<li><i class="fa fa-phone fa-1x"></i> <a
-					href="tel:${sessionScope.corpContactNo}">${sessionScope.corpContactNo}</a>
-				</li>
-				<li><i class="fa fa-map-marker fa-1x"></i> <a
-					href="${sessionScope.corpGisLink}" target="_blank"></a> <a
-					class="block-left-text" href="${sessionScope.corpGisLink}"
-					target="_blank">${sessionScope.corpAddress}</a>
-					</p> <!--         <a href="https://www.google.co.in/maps/@11.2547842,75.7710018,18.5z">Egovernment Foundation</a>
- --></li>
-			</ul>
-		</div>
+			
+		
 	</footer>
+	
+	
 </body>
 
 </html>

@@ -145,24 +145,25 @@
 			<div style = "margin-bottom: 16px;" class = "color-black bpa-common-header2 bpa-common-header">About OBPS</div>
 			<div style = "opacity: 0.7;" class = "color-black bpa-common-text">Citizens, Officials, and other stakeholders can submit and track applications in real time and obtain approvals without having to physically visit an office.</div>
 		</div>
-		<div class = "color-black footer-list-content col-md-4">
+		<div class = "footer-list-content col-md-1"></div>
+		<div class = "color-black footer-list-content col-md-3">
 			<div style="margin-bottom: 16px;" class="color-black bpa-common-header2 bpa-common-header">Help Resources</div>
 			<ul class="tutorial-list color-black" >
 				
 				<li class="bpa-common-text tutorial-item">
-					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/User Manual for Architects.pdf" target="_blank">User Manual for Architects</a>
+					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/User Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">User Manual for Architects</span></a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
-					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/User Manual for Citizens.pdf" target="_blank">User Manual for Citizens</a>
+					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/User Manual for Citizens.pdf" target="_blank"><span class = "color-black bpa-common-text">User Manual for Citizens</span></a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
-					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/Drawing Manual for Architects.pdf" target="_blank">Drawing Manual for Architects</a>
+					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/Drawing Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">Drawing Manual for Architects</span></a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
-					<a href="/egi/resources/guide/bpaHelpDocument.jsp" target="_blank">Training Videos</a>
+					<a href="/egi/resources/guide/bpaHelpDocument.jsp" target="_blank"><span class = "color-black bpa-common-text">Training Videos</span></a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
-					<a href="/egi/resources/guide/bpaHelpDocumentDXF.jsp" target="_blank">Training Drawing</a>
+					<a href="/egi/resources/guide/bpaHelpDocumentDXF.jsp" target="_blank"><span class = "color-black bpa-common-text">Training Drawing</span></a>
 				</li>
 			</ul>
 		</div>
@@ -181,7 +182,14 @@ Chandigarh 160017</div>
 					<a href="javascript:void(0);" target="_blank">Find us on map</a>
 					</div>
 				</div>
-				
+				<div class = "footer-icon-info-cont">
+					<div class = "footer-icon">
+						<i class="fa fa-envelope-square fa-1x"></i>
+					</div>
+					<div class = "footer-info">
+						<a href="javascript:void(0);">obps.chd.helpdesk@gmail.com</a>
+					</div>
+				</div>
 				<div class = "footer-icon-info-cont">
 					<div class = "footer-icon">
 						<i class="fa fa-phone fa-1x"></i>
