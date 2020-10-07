@@ -279,6 +279,11 @@ public class CollectionApplicationProperties {
 		return environment.getProperty(prefix+".sbi.path");
 	}
 	
+	public Integer sbiCronExpressionDelayTime() {
+		return environment.getProperty("sbi.cron.expression.delay.time", Integer.class);
+	}
+	
+	
 	public String pnbMid() {
 		return environment.getProperty("pnb.mid");
 	}

@@ -65,6 +65,7 @@ import org.egov.common.entity.bpa.Usage;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /*All the details extracted from the plan are referred in this object*/
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -203,6 +204,8 @@ public class Plan implements Serializable {
 	
 	private String applicationType;
 
+	private String planPermissionNumber;
+	
 	// Used to show drawing mistakes, General errors, mistakes in following
 	// layer/color coding standard etc
 	private transient Map<String, String> errors = new LinkedHashMap<>();
@@ -218,7 +221,10 @@ public class Plan implements Serializable {
 	private HashMap<String, String> featureAmendments = new LinkedHashMap<>();
 	private transient Map<String, List<Object>> mdmsMasterData;
 	private transient Boolean mainDcrPassed = false;
+	
 
+	private OCDataComparison ocdataComparison=new OCDataComparison();
+	
 	public List<BigDecimal> getCanopyDistanceFromPlotBoundary() {
 		return canopyDistanceFromPlotBoundary;
 	}
@@ -720,6 +726,21 @@ public class Plan implements Serializable {
 		this.applicationType = applicationType;
 	}
 
-	
-	
+	public String getPlanPermissionNumber() {
+		return planPermissionNumber;
+	}
+
+	public OCDataComparison getOcdataComparison() {
+		return ocdataComparison;
+	}
+
+	public void setOcdataComparison(OCDataComparison ocdataComparison) {
+		this.ocdataComparison = ocdataComparison;
+	}
+
+	public void setPlanPermissionNumber(String planPermissionNumber) {
+		this.planPermissionNumber = planPermissionNumber;
+	}
+
+		
 }

@@ -282,8 +282,12 @@ public class OnlineReceiptAction extends BaseFormAction {
                 paymentResponse.getAdditionalInfo6());
 
         if (onlinePaymentReceiptHeader != null) {
-            if (CollectionConstants.PGI_AUTHORISATION_CODE_SUCCESS.equals(paymentResponse.getAuthStatus()))
-                processSuccessMsg();
+            if (CollectionConstants.PGI_AUTHORISATION_CODE_SUCCESS.equals(paymentResponse.getAuthStatus())) {
+//              //vocher call start
+//              vocherService.processVocher(paymentService, onlinePaymentReceiptHeader, rbt);
+//              //vocher call start
+              processSuccessMsg();
+            }
             else if ((onlinePaymentReceiptHeader.getOnlinePayment().getService().getCode().equals(CollectionConstants.SERVICECODE_PGI_BILLDESK)
                     && CollectionConstants.PGI_AUTHORISATION_CODE_WAITINGFOR_PAY_GATEWAY_RESPONSE
                             .equals(paymentResponse.getAuthStatus()))
@@ -298,9 +302,7 @@ public class OnlineReceiptAction extends BaseFormAction {
                         paymentResponse.getAuthStatus());
                 onlinePaymentReceiptHeader.getOnlinePayment().setRemarks(paymentResponse.getErrorDescription());
 
-                //vocher call start
-                vocherService.processVocher(paymentService, onlinePaymentReceiptHeader, rbt);
-                //vocher call start
+                
                 
             } else
                 processFailureMsg();

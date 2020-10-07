@@ -65,6 +65,7 @@ import org.egov.collection.integration.pgi.HdfcAdaptor;
 import org.egov.collection.integration.pgi.PayUMoneyAdaptor;
 import org.egov.collection.integration.pgi.PaymentResponse;
 import org.egov.collection.integration.pgi.PnbAdaptor;
+import org.egov.collection.integration.pgi.SbiepayAdaptor;
 import org.egov.infra.config.core.ApplicationThreadLocals;
 import org.egov.infra.utils.DateUtils;
 import org.egov.infra.validation.exception.ValidationError;
@@ -102,6 +103,10 @@ public class SchedularService {
 
    // @Autowired
     private HdfcAdaptor hdfcAdaptor;
+    
+    @Autowired
+    private SbiepayAdaptor sbiepayAdaptor;
+
     
     @Autowired
 	private CollectionApplicationProperties collectionApplicationProperties;
@@ -400,5 +405,76 @@ public class SchedularService {
         }
     }
 
+    @Transactional
+    public void reconcileSBI() {
+    	LOGGER.debug("Inside SBI");
+   	 final Calendar fourDaysBackCalender = Calendar.getInstance();
+        fourDaysBackCalender.add(Calendar.DATE, -4);
+        final Calendar cal = Calendar.getInstance();
+      //  cal.add(Calendar.MINUTE, -30);
+        cal.add(Calendar.MINUTE, collectionApplicationProperties.sbiCronExpressionDelayTime()*-1);
+        final Query qry = persistenceService
+                .getSession()
+                .createQuery(
+                        "select receipt from org.egov.collection.entity.OnlinePayment as receipt where receipt.status.code=:onlinestatuscode"
+                                + " and receipt.service.code=:paymentservicecode and receipt.createdDate<:thirtyminslesssysdate order by receipt.id asc")
+                .setMaxResults(50);
+        qry.setString("onlinestatuscode", CollectionConstants.ONLINEPAYMENT_STATUS_CODE_PENDING);
+        qry.setString("paymentservicecode", CollectionConstants.SERVICECODE_SBI);
+        qry.setParameter("thirtyminslesssysdate", new Date(cal.getTimeInMillis()));
+        final List<OnlinePayment> reconcileList = qry.list();
+        LOGGER.info("Thread ID = " + Thread.currentThread().getId() + ": got " + reconcileList.size() + " results.");
+
+        if (!reconcileList.isEmpty()) {
+            for (final OnlinePayment onlinePaymentObj : reconcileList) {
+                final long startTimeInMilis = System.currentTimeMillis();
+                LOGGER.info("SBI Receiptid::::" + onlinePaymentObj.getReceiptHeader().getId());
+                PaymentResponse paymentResponse = sbiepayAdaptor.createOfflinePaymentRequest(onlinePaymentObj);
+                if (paymentResponse != null && isNotBlank(paymentResponse.getReceiptId())) {
+                    LOGGER.info("paymentResponse.getReceiptId():" + paymentResponse.getReceiptId());
+                    LOGGER.info("paymentResponse.getAdditionalInfo6():" + paymentResponse.getAdditionalInfo6());
+                    LOGGER.info("paymentResponse.getAuthStatus():" + paymentResponse.getAuthStatus());
+                    ReceiptHeader onlinePaymentReceiptHeader = null;
+                    if (paymentResponse.getAdditionalInfo2() != null && !paymentResponse.getAdditionalInfo2().isEmpty()) {
+                        if (paymentResponse.getAdditionalInfo2().equals(ApplicationThreadLocals.getCityCode()))
+                            onlinePaymentReceiptHeader = (ReceiptHeader) persistenceService.findByNamedQuery(
+                                    CollectionConstants.QUERY_RECEIPT_BY_ID_AND_CITYCODE,
+                                    Long.valueOf(paymentResponse.getReceiptId()),
+                                    paymentResponse.getAdditionalInfo2());
+                        else {
+                            LOGGER.error("City code is not match");
+                            throw new ValidationException(Arrays.asList(new ValidationError("City code is not match",
+                                    "City code is not match")));
+                        }
+                    } else
+                        onlinePaymentReceiptHeader = (ReceiptHeader) persistenceService.findByNamedQuery(
+                                CollectionConstants.QUERY_RECEIPT_BY_ID_AND_CITYCODE,
+                                Long.valueOf(paymentResponse.getReceiptId()),
+                                ApplicationThreadLocals.getCityCode());
+                    if (CollectionConstants.PGI_AUTHORISATION_CODE_SUCCESS.equals(paymentResponse.getAuthStatus()))
+                        reconciliationService.processSuccessMsg(onlinePaymentReceiptHeader, paymentResponse);
+                    else if ((DateUtils.compareDates(onlinePaymentReceiptHeader.getCreatedDate(), fourDaysBackCalender.getTime()))
+                            &&
+                            (onlinePaymentReceiptHeader.getOnlinePayment().getService().getCode().equals(CollectionConstants.SERVICECODE_ATOM) &&
+                                    CollectionConstants.ATOM_AUTHORISATION_CODES_WAITINGFOR_PAY_GATEWAY_RESPONSE
+                                            .contains(paymentResponse.getAuthStatus()))) {
+                        onlinePaymentReceiptHeader.getOnlinePayment().setAuthorisationStatusCode(
+                                paymentResponse.getAuthStatus());
+                        onlinePaymentReceiptHeader.getOnlinePayment().setRemarks(paymentResponse.getErrorDescription());
+                    } else
+                        reconciliationService.processFailureMsg(onlinePaymentReceiptHeader, paymentResponse);
+
+                    final long elapsedTimeInMillis = System.currentTimeMillis() - startTimeInMilis;
+                    LOGGER.info("$$$$$$ Online Receipt Persisted with Receipt Number: "
+                            + onlinePaymentReceiptHeader.getReceiptnumber()
+                            + (onlinePaymentReceiptHeader.getConsumerCode() != null ? " and consumer code: "
+                            + onlinePaymentReceiptHeader.getConsumerCode() : "")
+                            + "; Time taken(ms) = "
+                            + elapsedTimeInMillis);
+                }
+            }
+        }
+   
+   }
 
 }

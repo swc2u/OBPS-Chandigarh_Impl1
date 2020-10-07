@@ -20,6 +20,10 @@ public class VocherService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
+	public void createVocher() {
+		
+	}
+	
 	public void createVocher(final ServiceDetails paymentServiceDetails,
 			final ReceiptHeader receiptHeader) {
 		

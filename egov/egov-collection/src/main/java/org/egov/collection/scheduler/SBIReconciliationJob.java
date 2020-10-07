@@ -53,7 +53,7 @@ import org.quartz.DisallowConcurrentExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @DisallowConcurrentExecution
-public class AtomReconciliationJob extends AbstractQuartzJob {
+public class SBIReconciliationJob extends AbstractQuartzJob {
 
     private static final long serialVersionUID = -8293830861860894611L;
 
@@ -62,8 +62,6 @@ public class AtomReconciliationJob extends AbstractQuartzJob {
 
     @Override
     public void executeJob() {
-        schedularService.reconcileATOM();
-       schedularService.reconcilePayUMoeny();
-       schedularService.reconcileSBI();
+        schedularService.reconcileSBI();;
     }
 }

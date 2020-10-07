@@ -112,6 +112,7 @@ public class PlanService {
 		if(plan!=null && checkUnits(plan)) {
 			plan.setServiceType(dcrApplication.getServiceType());
 			plan.setApplicationType(dcrApplication.getApplicationType().toString());
+			plan.setPlanPermissionNumber(dcrApplication.getPlanPermitNumber());
 			plan = applyRules(plan, amd, cityDetails);
 			setEDCRmandatoryNOC(plan);
 		}

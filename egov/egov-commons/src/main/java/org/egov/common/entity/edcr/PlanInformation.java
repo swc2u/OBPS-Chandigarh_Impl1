@@ -266,7 +266,7 @@ public class PlanInformation implements Serializable {
     //COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE
     private transient String commercialAreaOccupancyAsPerRule=NA;
     
-    private transient Boolean isConversionChargesApplicable;
+    private transient Boolean isConversionChargesApplicable=false;
     
 	public String getRootBoundaryType() {
 		return rootBoundaryType;
