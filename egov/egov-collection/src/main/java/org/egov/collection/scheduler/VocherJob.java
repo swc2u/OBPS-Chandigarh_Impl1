@@ -47,8 +47,8 @@
  */
 package org.egov.collection.scheduler;
 
-import org.egov.collection.CDG.vocher.VocherService;
-import org.egov.collection.integration.services.SchedularService;
+
+import org.egov.collection.cdg.finance.service.VocherService;
 import org.egov.infra.scheduler.quartz.AbstractQuartzJob;
 import org.quartz.DisallowConcurrentExecution;
 import org.springframework.beans.factory.annotation.Autowired;

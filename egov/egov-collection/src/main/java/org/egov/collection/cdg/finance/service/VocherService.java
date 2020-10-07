@@ -1,9 +1,6 @@
 package org.egov.collection.cdg.finance.service;
 
 import static org.egov.collection.constants.CollectionConstants.KEY_RURAL;
-import static org.egov.collection.constants.CollectionConstants.KEY_URBAN;
-import static org.egov.collection.constants.CollectionConstants.RURAL;
-import static org.egov.collection.constants.CollectionConstants.URBAN;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -141,5 +138,9 @@ public class VocherService {
 		if(isVocherApplicable(rbt))
 			createVocher(paymentServiceDetails, receiptHeader);
 			
+	}
+	
+	public void createVocher() {
+		
 	}
 }
