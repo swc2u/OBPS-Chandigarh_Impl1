@@ -429,6 +429,7 @@ public class SchedularService {
             for (final OnlinePayment onlinePaymentObj : reconcileList) {
                 final long startTimeInMilis = System.currentTimeMillis();
                 LOGGER.info("SBI Receiptid::::" + onlinePaymentObj.getReceiptHeader().getId());
+                LOGGER.info("sbiepayAdaptor " + sbiepayAdaptor);
                 PaymentResponse paymentResponse = sbiepayAdaptor.createOfflinePaymentRequest(onlinePaymentObj);
                 if (paymentResponse != null && isNotBlank(paymentResponse.getReceiptId())) {
                     LOGGER.info("paymentResponse.getReceiptId():" + paymentResponse.getReceiptId());

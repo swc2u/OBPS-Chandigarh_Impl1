@@ -208,8 +208,10 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 	}
 
 	public PaymentResponse createOfflinePaymentRequest(OnlinePayment onlinePayment) {
+		LOGGER.info("inside createOfflinePaymentRequest "+onlinePayment.getReceiptHeader().getId());
 		PaymentResponse sbiResponce = new DefaultPaymentResponse();
-		String orderReqId = onlinePayment.getReceiptHeader().getId().toString();
+		String orderReqId =  orderReqId_PREFIX +onlinePayment.getReceiptHeader().getId().toString();
+		LOGGER.info("After adding prefix "+orderReqId);
 		String prefix = onlinePayment.getReceiptHeader().getRootBoundaryType();
 		String MID = collectionApplicationProperties.sbiMID(prefix);
 		String aggregatorId = collectionApplicationProperties.sbiCollaboratorId(prefix);// "SBIEPAY";
@@ -257,6 +259,7 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 
 	public Map<String, String> getOfflinePaymentRequest(String reconcileUrl, String aggregatorId, String MID,
 			String orderNo) {
+		LOGGER.info("getOfflinePaymentRequest call to sbi : for order number :"+orderNo+" reconcileUrl : "+reconcileUrl+" aggregatorId : "+aggregatorId+" MID :"+MID);
 		Map<String, String> map = new HashMap<String, String>();
 		String queryRequest = "|" + MID + "|" + orderNo;
 		try {
@@ -294,10 +297,16 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 			map = parseSBIReconsilationResponce(sb.toString());
 			LOGGER.info("responseCode: " + responseCode + " response " + map);
 		} catch (MalformedURLException e) {
+			LOGGER.error("Error while call sbi Api");
 			e.printStackTrace();
 		} catch (ProtocolException e) {
+			LOGGER.error("Error while call sbi Api");
 			e.printStackTrace();
 		} catch (IOException e) {
+			LOGGER.error("Error while call sbi Api");
+			e.printStackTrace();
+		} catch (Exception e) {
+			LOGGER.error("Error while call sbi Api");
 			e.printStackTrace();
 		}
 		return map;
