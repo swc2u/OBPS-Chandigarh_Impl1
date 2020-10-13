@@ -161,7 +161,7 @@
 		</div>
 	</div>
 	<footer
-		class="f-regular bpa-login-footer page-common-padding col-md-12 color-black" style="bottom:0; position: fixed;">
+		class="f-regular bpa-login-footer page-common-padding col-md-12 color-black" style="bottom:0;">
 		<div class="footer-list-content col-md-4">
 			<div style="margin-bottom: 16px;"
 				class="color-black bpa-common-header2 bpa-common-header">About

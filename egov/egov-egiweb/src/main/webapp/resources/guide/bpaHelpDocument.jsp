@@ -116,7 +116,7 @@
 
 	</div>
 	
-	<footer class = "f-regular bpa-login-footer page-common-padding col-md-12 color-black" style="bottom:0; position: fixed;">
+	<footer class = "f-regular bpa-login-footer page-common-padding col-md-12 color-black" style="bottom:0;">
 		<div class = "footer-list-content col-md-4">
 			<div style = "margin-bottom: 16px;" class = "color-black bpa-common-header2 bpa-common-header">About OBPS</div>
 			<div style = "opacity: 0.7;" class = "color-black bpa-common-text">Citizens, Officials, and other stakeholders can submit and track applications in real time and obtain approvals without having to physically visit an office.</div>
