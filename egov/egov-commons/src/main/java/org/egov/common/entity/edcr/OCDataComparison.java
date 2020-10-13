@@ -51,43 +51,4 @@ public class OCDataComparison implements Serializable {
 		this.ocdataComparison = ocdataComparison;
 	}
 
-
-	public static class Data {
-		private BigDecimal oc;
-		private BigDecimal permit;
-		private BigDecimal deviation;
-
-		public Data(BigDecimal oc, BigDecimal permit, BigDecimal deviation) {
-			super();
-			this.oc = oc;
-			this.permit = permit;
-			this.deviation = deviation;
-		}
-
-		public BigDecimal getOc() {
-			return oc;
-		}
-
-		public void setOc(BigDecimal oc) {
-			this.oc = oc;
-		}
-
-		public BigDecimal getPermit() {
-			return permit;
-		}
-
-		public void setPermit(BigDecimal permit) {
-			this.permit = permit;
-		}
-
-		public BigDecimal getDeviation() {
-			return deviation;
-		}
-
-		public void setDeviation(BigDecimal deviation) {
-			this.deviation = deviation;
-		}
-
-	}
-
 }
