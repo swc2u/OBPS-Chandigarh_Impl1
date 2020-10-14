@@ -414,6 +414,7 @@ public class BpaConstants {
     public static final String DEVELOPMENT_CHARGES_OF_ROADS = "Development charges of roads";
     public static final String CONVERSION_CHARGES="Conversion charges";
     public static final String CONSTRUCTION_AND_DEMOLISION="Construction & Demolision";
+    public static final String ALLOTMENT_OF_NEW_NUMBER="Fee for allotment of new number";
     
     public static final String INTERNAL_CHANGES_FEE="Fee for internal changes during construction";
     public static final String EXCESS_COVERAGE_FEE="Fee for excess coverage area";
@@ -427,6 +428,8 @@ public class BpaConstants {
     public static final String TP_DEPT = "TOWN PLANNING DEPARTMENT";
     public static final String DEV_PERMIT_FEE = "DPF";
     public static final String OWNERSHIP_FEE = "Ownership Transfer Fees";
+    
+    public static final String TRANSFER_FEE = "Transfer fee";
     
     //NOC integration related
     public static final String FIRENOCTYPE = "FIRE NOC"; 

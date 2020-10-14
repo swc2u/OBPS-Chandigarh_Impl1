@@ -191,16 +191,6 @@ public class PlanService {
 			pl.setRural(false);
 		
 		if(pl.isRural()) {
-			if(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_WIDTH)!=null) {
-				try {
-					pl.getPlanInformation().setRoadWidth(new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_WIDTH)));
-				}catch (Exception e) {
-					pl.addError("ROAD_WIDTH", "ROAD_WIDTH is invalid in planinfo layer.");
-				}
-			}else {
-				pl.addError("ROAD_WIDTH", "ROAD_WIDTH is not provided in planinfo layer.");
-			}
-			
 			if(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_LENGTH)!=null) {
 				try {
 					pl.getPlanInformation().setRoadLength(new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_LENGTH)));
@@ -211,12 +201,47 @@ public class PlanService {
 				pl.addError("ROAD_LENGTH", "ROAD_LENGTH is not provided in planinfo layer.");
 			}
 			
+			if(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_WIDTH)!=null) {
+				try {
+					pl.getPlanInformation().setRoadWidth(new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_WIDTH)));
+				}catch (Exception e) {
+					pl.addError("ROAD_WIDTH", "ROAD_WIDTH is invalid in planinfo layer.");
+				}
+			}else {
+				pl.addError("ROAD_WIDTH", "ROAD_WIDTH is not provided in planinfo layer.");
+			}
+						
+			if(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_2_LENGTH)!=null) {
+				try {
+					pl.getPlanInformation().setRoadTwoLength(new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_2_LENGTH)));
+				}catch (Exception e) {
+					pl.addError("ROAD_2_LENGTH", "ROAD_2_LENGTH is invalid in planinfo layer.");
+				}
+			}else {
+				pl.addError("ROAD_2_LENGTH", "ROAD_2_LENGTH is not provided in planinfo layer.");
+			}
+			
+			if(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_2_WIDTH)!=null) {
+				try {
+					pl.getPlanInformation().setRoadTwoWidth(new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_2_WIDTH)));
+				}catch (Exception e) {
+					pl.addError("ROAD_2_WIDTH", "ROAD_2_WIDTH is invalid in planinfo layer.");
+				}
+			}else {
+				pl.addError("ROAD_2_WIDTH", "ROAD_2_WIDTH is not provided in planinfo layer.");
+			}
+			
 			if(!DxfFileConstants.YES.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.CONVERSION_CHARGES_APPLICABLE)) && !DxfFileConstants.NO.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.CONVERSION_CHARGES_APPLICABLE)))
 				pl.addError("CONVERSION_CHARGES_APPLICABLE", "CONVERSION_CHARGES_APPLICABLE response is invalid.");
 			
 			if(DxfFileConstants.YES.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.CONVERSION_CHARGES_APPLICABLE)))
 				pl.getPlanInformation().setIsConversionChargesApplicable(true);
 			
+			if(DxfFileConstants.YES.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.IS_CASE_OF_DEATH)))
+				pl.getPlanInformation().setIsDeathCase(true);
+			
+			if(DxfFileConstants.YES.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.ALLOTMENT_OF_NEW_NUMBER)))
+				pl.getPlanInformation().setIsAllotmentOfNewNumber(true);
 		}
 		
 		if(pl.getDrawingPreference().getInFeets())

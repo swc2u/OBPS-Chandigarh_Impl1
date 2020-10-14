@@ -541,9 +541,16 @@ public class DxfFileConstants {
 	public static final String KEY_FEET_ENABLE="dcr.feet.enabled";
 	
 	public static final String ROAD_WIDTH="ROAD_WIDTH";
-	public static final String ROAD_LENGTH="ROAD_LENGTH";
+	public static final String ROAD_LENGTH="ROAD_LENGTH";	
+	public static final String ROAD_2_WIDTH="ROAD_2_WIDTH";
+	public static final String ROAD_2_LENGTH="ROAD_2_LENGTH";
+	
 	public static final String CONVERSION_CHARGES_APPLICABLE="CONVERSION_CHARGES_APPLICABLE";
 	public static final String DEMOLITION_AREA="DEMOLITION_AREA";
+	
+	public static final String ALLOTMENT_OF_NEW_NUMBER="ALLOTMENT_OF_NEW_NUMBER";
+	
+	public static final String IS_CASE_OF_DEATH="IS_CASE_OF_DEATH";
 	
 	//ApplicationType
 	public static final String APPLICATION_TYPE_PERMIT="PERMIT";
