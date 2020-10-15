@@ -241,8 +241,8 @@ public class OCAdditionalFeature extends FeatureProcess {
 	}
 
 	private void validateDrawingPreference(Plan ocPlan, Plan permitPlan) {
-//		if (ocPlan.getDrawingPreference().getInFeets() != permitPlan.getDrawingPreference().getInFeets())
-//			ocPlan.addError("DrawingPreference", "drawing Preference is not matching");
+		if (ocPlan.getDrawingPreference().getInFeets() != permitPlan.getDrawingPreference().getInFeets())
+			ocPlan.addError("DrawingPreference", "drawing Preference is not matching");
 	}
 
 	public void OCAddtionalComparation(Plan ocPlan) {
@@ -551,11 +551,11 @@ public class OCAdditionalFeature extends FeatureProcess {
 		return additionalArea;
 	}
 
-	public void setReport(ScrutinyDetail scrutinyDetail, String description, String OC, String permit, String deviation,
+	public void setReport(ScrutinyDetail scrutinyDetail, String description, String oc, String permit, String deviation,
 			String status) {
 		Map<String, String> details = new HashMap<>();
 		details.put(DESCRIPTION, description);
-		details.put(OC, OC);
+		details.put(OC, oc);
 		details.put(PERMIT, permit);
 		details.put(DEVIATION, deviation);
 		details.put(STATUS, status);
