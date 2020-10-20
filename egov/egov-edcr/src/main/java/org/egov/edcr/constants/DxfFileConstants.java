@@ -545,7 +545,7 @@ public class DxfFileConstants {
 	public static final String ROAD_2_WIDTH="ROAD_2_WIDTH";
 	public static final String ROAD_2_LENGTH="ROAD_2_LENGTH";
 	
-	public static final String CONVERSION_CHARGES_APPLICABLE="CONVERSION_CHARGES_APPLICABLE";
+	public static final String CONVERSION_CHARGES_AREA="CONVERSION_CHARGES_AREA";
 	public static final String DEMOLITION_AREA="DEMOLITION_AREA";
 	
 	public static final String ALLOTMENT_OF_NEW_NUMBER="ALLOTMENT_OF_NEW_NUMBER";

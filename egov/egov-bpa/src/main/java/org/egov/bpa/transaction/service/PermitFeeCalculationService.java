@@ -1068,8 +1068,11 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	public BigDecimal getTotalConversionCharges(Plan plan) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
-		if (plan.getPlanInformation().getIsConversionChargesApplicable())
-			totalAmount = BigDecimal.valueOf(2400);
+		BigDecimal conversionChagesArea = plan.getPlanInformation().getConversionChargesArea();
+		if (conversionChagesArea.compareTo(BigDecimal.ZERO) > 0) {
+			BigDecimal areaInYard = conversionChagesArea.divide(new BigDecimal(9), 2, RoundingMode.HALF_UP);
+			totalAmount = conversionChagesArea.multiply(BigDecimal.valueOf(2400));
+		}			
 		return totalAmount;
 	}
 	
@@ -1096,37 +1099,37 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	public BigDecimal getTotalConstructionAndDemolisionFee(Plan plan) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
-		BigDecimal demolitionAreaInSqm = plan.getPlanInformation().getDemolitionArea();
-		if (plan.getDrawingPreference().getInFeets()) {
-			demolitionAreaInSqm = demolitionAreaInSqm.divide(new BigDecimal(10.764), 2, RoundingMode.HALF_UP);
-		}
-
-		BigDecimal totalProposedAreaInSqm = BigDecimal.ZERO;
-		for (Block block : plan.getBlocks()) {
-			for (Floor floor : block.getBuilding().getFloors()) {
-				for (Occupancy occupancy : floor.getOccupancies()) {
-					if (occupancy != null && occupancy.getTypeHelper() != null
-							&& !BpaUtils.isOccupancyExcludedFromFar(occupancy.getTypeHelper())) {
-						BigDecimal floorArea = occupancy.getFloorArea();
-						if (plan.getDrawingPreference().getInFeets())
-							floorArea = floorArea.divide(new BigDecimal("1550"), 2, RoundingMode.HALF_UP);
-						totalProposedAreaInSqm = totalProposedAreaInSqm.add(floorArea).setScale(2);
+		if (BpaConstants.NEW_CONSTRUCTION.equals(plan.getServiceType())) {
+			BigDecimal plotAreaInSqm = plan.getPlot().getArea();
+			if (plan.getDrawingPreference().getInFeets()) {
+				plotAreaInSqm = plotAreaInSqm.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
+			}			
+			plotAreaInSqm = plotAreaInSqm.divide(SQMT_SQFT_MULTIPLIER, 2, RoundingMode.HALF_UP);
+			totalAmount = plotAreaInSqm.multiply(new BigDecimal("22")).setScale(2);
+		} else {
+			BigDecimal demolitionAreaInSqm = plan.getPlanInformation().getDemolitionArea();
+			demolitionAreaInSqm = demolitionAreaInSqm.divide(SQMT_SQFT_MULTIPLIER, 2, RoundingMode.HALF_UP);
+			BigDecimal totalProposedAreaInSqm = BigDecimal.ZERO;
+			for (Block block : plan.getBlocks()) {
+				for (Floor floor : block.getBuilding().getFloors()) {
+					for (Occupancy occupancy : floor.getOccupancies()) {
+						if (occupancy != null && occupancy.getTypeHelper() != null
+								&& !BpaUtils.isOccupancyExcludedFromFar(occupancy.getTypeHelper())) {
+							BigDecimal floorAreaInSqm = occupancy.getFloorArea();
+							if (plan.getDrawingPreference().getInFeets())
+								floorAreaInSqm = floorAreaInSqm.divide(SQMT_SQFT_MULTIPLIER, 2, RoundingMode.HALF_UP);
+							totalProposedAreaInSqm = totalProposedAreaInSqm.add(floorAreaInSqm).setScale(2);
+						}
 					}
 				}
 			}
-		}
-
-		if (BpaConstants.NEW_CONSTRUCTION.equals(plan.getServiceType())) {
-			totalAmount = totalProposedAreaInSqm.multiply(new BigDecimal("22")).setScale(2);
-		} else {
 			totalAmount = demolitionAreaInSqm.multiply(new BigDecimal("176")).setScale(2);
-
-			BigDecimal leftProposedAreaInSqm = totalProposedAreaInSqm.subtract(demolitionAreaInSqm).setScale(2,
-					BigDecimal.ROUND_HALF_UP);
-			totalAmount = totalAmount.add(leftProposedAreaInSqm.multiply(new BigDecimal("22"))).setScale(2,
-					BigDecimal.ROUND_HALF_UP);
+			BigDecimal leftProposedAreaInSqm = totalProposedAreaInSqm.subtract(demolitionAreaInSqm).setScale(2, BigDecimal.ROUND_HALF_UP);
+			if(leftProposedAreaInSqm.compareTo(BigDecimal.ZERO)<=0) {
+				leftProposedAreaInSqm = BigDecimal.ZERO;
+			}
+			totalAmount = totalAmount.add(leftProposedAreaInSqm.multiply(new BigDecimal("22"))).setScale(2, BigDecimal.ROUND_HALF_UP);
 		}
-
 		return totalAmount;
 	}
 	

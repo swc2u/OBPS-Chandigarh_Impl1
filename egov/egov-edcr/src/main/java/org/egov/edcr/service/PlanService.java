@@ -214,33 +214,27 @@ public class PlanService {
 			if(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_2_LENGTH)!=null) {
 				try {
 					pl.getPlanInformation().setRoadTwoLength(new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_2_LENGTH)));
-				}catch (Exception e) {
-					pl.addError("ROAD_2_LENGTH", "ROAD_2_LENGTH is invalid in planinfo layer.");
-				}
-			}else {
-				pl.addError("ROAD_2_LENGTH", "ROAD_2_LENGTH is not provided in planinfo layer.");
+				}catch (Exception e) {}
 			}
 			
 			if(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_2_WIDTH)!=null) {
 				try {
 					pl.getPlanInformation().setRoadTwoWidth(new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_2_WIDTH)));
-				}catch (Exception e) {
-					pl.addError("ROAD_2_WIDTH", "ROAD_2_WIDTH is invalid in planinfo layer.");
-				}
-			}else {
-				pl.addError("ROAD_2_WIDTH", "ROAD_2_WIDTH is not provided in planinfo layer.");
+				}catch (Exception e) {}
 			}
 			
-			if(!DxfFileConstants.YES.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.CONVERSION_CHARGES_APPLICABLE)) && !DxfFileConstants.NO.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.CONVERSION_CHARGES_APPLICABLE)))
-				pl.addError("CONVERSION_CHARGES_APPLICABLE", "CONVERSION_CHARGES_APPLICABLE response is invalid.");
+			if(null!=pl.getPlanInfoProperties().get(DxfFileConstants.CONVERSION_CHARGES_AREA)) {
+				try {
+					pl.getPlanInformation().setConversionChargesArea(new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.CONVERSION_CHARGES_AREA)));
+				}catch (Exception e) {}
+			}
 			
-			if(DxfFileConstants.YES.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.CONVERSION_CHARGES_APPLICABLE)))
-				pl.getPlanInformation().setIsConversionChargesApplicable(true);
-			
-			if(DxfFileConstants.YES.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.IS_CASE_OF_DEATH)))
+			if(null!=pl.getPlanInfoProperties().get(DxfFileConstants.IS_CASE_OF_DEATH)
+					&& DxfFileConstants.YES.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.IS_CASE_OF_DEATH)))
 				pl.getPlanInformation().setIsDeathCase(true);
 			
-			if(DxfFileConstants.YES.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.ALLOTMENT_OF_NEW_NUMBER)))
+			if(null!=pl.getPlanInfoProperties().get(DxfFileConstants.ALLOTMENT_OF_NEW_NUMBER)
+					&& DxfFileConstants.YES.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.ALLOTMENT_OF_NEW_NUMBER)))
 				pl.getPlanInformation().setIsAllotmentOfNewNumber(true);
 		}
 		

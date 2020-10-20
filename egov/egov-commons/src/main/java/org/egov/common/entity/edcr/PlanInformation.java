@@ -275,7 +275,7 @@ public class PlanInformation implements Serializable {
     //COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE
     private transient String commercialAreaOccupancyAsPerRule=NA;
     
-    private transient Boolean isConversionChargesApplicable=false;
+    private BigDecimal conversionChargesArea=BigDecimal.ZERO;;
     
 	public String getRootBoundaryType() {
 		return rootBoundaryType;
@@ -1024,12 +1024,12 @@ public class PlanInformation implements Serializable {
 		this.nocAcTaxDept = nocAcTaxDept;
 	}
 
-	public Boolean getIsConversionChargesApplicable() {
-		return isConversionChargesApplicable;
+	public BigDecimal getConversionChargesArea() {
+		return conversionChargesArea;
 	}
 
-	public void setIsConversionChargesApplicable(Boolean isConversionChargesApplicable) {
-		this.isConversionChargesApplicable = isConversionChargesApplicable;
+	public void setConversionChargesArea(BigDecimal conversionChargesArea) {
+		this.conversionChargesArea = conversionChargesArea;
 	}
 
 	public BigDecimal getRoadTwoWidth() {
