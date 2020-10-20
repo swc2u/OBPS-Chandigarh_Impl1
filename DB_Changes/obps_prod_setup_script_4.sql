@@ -39,3 +39,5 @@ INSERT INTO chandigarh.egbpa_mstr_bpafeemapping (id,applicationtype,feesubtype,s
 ,(nextval('seq_egbpa_mstr_bpafeemapping'),'PERMIT_APPLICATION','SANCTION_FEE',(select id from chandigarh.egbpa_mstr_servicetype where code='07'),'AUTO',(select id from chandigarh.egbpa_mstr_bpafee_common where code='AFCW'),0,0,1,now(),1,now(),NULL)
 ;
 
+
+ALTER TABLE chandigarh.egbpa_application ADD COLUMN sector VARCHAR(20), ADD COLUMN plotnumber VARCHAR(20), ADD COLUMN filenumber VARCHAR(20);
