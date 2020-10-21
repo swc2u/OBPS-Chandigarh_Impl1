@@ -117,7 +117,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	private static final BigDecimal SQMT_SQFT_MULTIPLIER = BigDecimal.valueOf(10.764);
 	private static final BigDecimal HALF_ACRE_IN_SQMT = BigDecimal.valueOf(2023.43);
 	private static final BigDecimal SQINCH_SQFT_DIVIDER = new BigDecimal("144");
-	private static final BigDecimal HALF_ACRE_FROM_SQINCH = new BigDecimal("0.000000797");	
+	private static final BigDecimal HALF_ACRE_FROM_SQFT = new BigDecimal("21780");	
 	private static final BigDecimal SEVEN_HUNDRED_FIFTY = BigDecimal.valueOf(750);
 
 	@Autowired
@@ -1068,10 +1068,13 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	public BigDecimal getTotalConversionCharges(Plan plan) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
-		BigDecimal conversionChagesArea = plan.getPlanInformation().getConversionChargesArea();
-		if (conversionChagesArea.compareTo(BigDecimal.ZERO) > 0) {
-			BigDecimal areaInYard = conversionChagesArea.divide(new BigDecimal(9), 2, RoundingMode.HALF_UP);
-			totalAmount = conversionChagesArea.multiply(BigDecimal.valueOf(2400));
+		BigDecimal conversionChagesAreaInSqF = plan.getPlanInformation().getConversionChargesArea();
+		if (plan.getDrawingPreference().getInMeters()) {
+			conversionChagesAreaInSqF = conversionChagesAreaInSqF.multiply(SQMT_SQFT_MULTIPLIER);
+		}
+		if (conversionChagesAreaInSqF.compareTo(BigDecimal.ZERO) > 0) {
+			BigDecimal areaInYard = conversionChagesAreaInSqF.divide(new BigDecimal(9), 2, RoundingMode.HALF_UP);
+			totalAmount = areaInYard.multiply(BigDecimal.valueOf(2400));
 		}			
 		return totalAmount;
 	}
@@ -1080,10 +1083,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		if (plan.getPlanInformation().getIsDeathCase()) {
 			return THOUSAND;
 		}else {
-			BigDecimal plotSizeInSQF = plan.getPlot().getArea();
-			if (plan.getDrawingPreference().getInFeets()) {
-				plotSizeInSQF = plotSizeInSQF.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
-			} else if (plan.getDrawingPreference().getInMeters()) {
+			BigDecimal plotSizeInSQF = plan.getPlanInformation().getPlotArea();
+			if (plan.getDrawingPreference().getInMeters()) {
 				plotSizeInSQF = plotSizeInSQF.multiply(SQMT_SQFT_MULTIPLIER);
 			}			
 			if(plotSizeInSQF.compareTo(new BigDecimal(900)) <= 0) {
@@ -1100,15 +1101,16 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	public BigDecimal getTotalConstructionAndDemolisionFee(Plan plan) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		if (BpaConstants.NEW_CONSTRUCTION.equals(plan.getServiceType())) {
-			BigDecimal plotAreaInSqm = plan.getPlot().getArea();
+			BigDecimal plotAreaInSqm = plan.getPlanInformation().getPlotArea();
 			if (plan.getDrawingPreference().getInFeets()) {
-				plotAreaInSqm = plotAreaInSqm.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
-			}			
-			plotAreaInSqm = plotAreaInSqm.divide(SQMT_SQFT_MULTIPLIER, 2, RoundingMode.HALF_UP);
+				plotAreaInSqm = plotAreaInSqm.divide(SQMT_SQFT_MULTIPLIER, 2, RoundingMode.HALF_UP);
+			}
 			totalAmount = plotAreaInSqm.multiply(new BigDecimal("22")).setScale(2);
 		} else {
-			BigDecimal demolitionAreaInSqm = plan.getPlanInformation().getDemolitionArea();
-			demolitionAreaInSqm = demolitionAreaInSqm.divide(SQMT_SQFT_MULTIPLIER, 2, RoundingMode.HALF_UP);
+			BigDecimal demolitionAreaInSqm = plan.getPlanInformation().getDemolitionArea();			
+			if (plan.getDrawingPreference().getInFeets()) {
+				demolitionAreaInSqm = demolitionAreaInSqm.divide(SQMT_SQFT_MULTIPLIER, 2, RoundingMode.HALF_UP);
+			}
 			BigDecimal totalProposedAreaInSqm = BigDecimal.ZERO;
 			for (Block block : plan.getBlocks()) {
 				for (Floor floor : block.getBuilding().getFloors()) {
@@ -1116,8 +1118,10 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 						if (occupancy != null && occupancy.getTypeHelper() != null
 								&& !BpaUtils.isOccupancyExcludedFromFar(occupancy.getTypeHelper())) {
 							BigDecimal floorAreaInSqm = occupancy.getFloorArea();
-							if (plan.getDrawingPreference().getInFeets())
+							if (plan.getDrawingPreference().getInFeets()) {								
+								floorAreaInSqm = floorAreaInSqm.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
 								floorAreaInSqm = floorAreaInSqm.divide(SQMT_SQFT_MULTIPLIER, 2, RoundingMode.HALF_UP);
+							}
 							totalProposedAreaInSqm = totalProposedAreaInSqm.add(floorAreaInSqm).setScale(2);
 						}
 					}
@@ -1160,10 +1164,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		BigDecimal FF_MULTIPLIER = BigDecimal.ZERO;
 		BigDecimal SF_MULTIPLIER = BigDecimal.ZERO;
 
-		BigDecimal plotSizeInSQF = plan.getPlot().getArea();
-		if (plan.getDrawingPreference().getInFeets()) {
-			plotSizeInSQF = plotSizeInSQF.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
-		} else if (plan.getDrawingPreference().getInMeters()) {
+		BigDecimal plotSizeInSQF = plan.getPlanInformation().getPlotArea();
+		if (plan.getDrawingPreference().getInMeters()) {
 			plotSizeInSQF = plotSizeInSQF.multiply(SQMT_SQFT_MULTIPLIER);
 		}
 
@@ -1381,14 +1383,14 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			isFeeDynamic = true;
 			multiplier = TEN_THOUSAND;
 		}
-		if (isFeeDynamic) {
-			BigDecimal totalAreaOfPlot = plan.getPlot().getArea();
+		if (isFeeDynamic) {			
+			BigDecimal totalAreaOfPlot = plan.getPlanInformation().getPlotArea();			
 			BigDecimal totalAreaInHalfAcre = BigDecimal.ZERO;
 			if (plan.getDrawingPreference().getInMeters())
 				totalAreaInHalfAcre = totalAreaOfPlot.divide(HALF_ACRE_IN_SQMT, 2, BigDecimal.ROUND_HALF_UP);
-			else if (plan.getDrawingPreference().getInMeters())
-				totalAreaInHalfAcre = totalAreaOfPlot.multiply(HALF_ACRE_FROM_SQINCH).setScale(2,
-						BigDecimal.ROUND_HALF_UP);
+			else if (plan.getDrawingPreference().getInFeets())
+				totalAreaInHalfAcre = totalAreaOfPlot.divide(HALF_ACRE_FROM_SQFT).setScale(2, BigDecimal.ROUND_HALF_UP);
+			
 			int halfAcreCount = totalAreaInHalfAcre.intValue();
 			halfAcreCount = (totalAreaInHalfAcre.compareTo(new BigDecimal(halfAcreCount)) >= 0) ? halfAcreCount + 1
 					: halfAcreCount;
