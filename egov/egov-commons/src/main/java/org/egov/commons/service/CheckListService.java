@@ -48,6 +48,8 @@
 
 package org.egov.commons.service;
 
+import org.egov.common.entity.bpa.Checklist;
+import org.egov.commons.repository.BpaChecklistRepository;
 import org.egov.commons.repository.CheckListRepository;
 import org.egov.infstr.models.EgChecklists;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +67,9 @@ public class CheckListService {
     private final CheckListRepository checkListRepository;
     @PersistenceContext
     private EntityManager entityManager;
+    
+    @Autowired
+    private BpaChecklistRepository bpaChecklistRepository; 
 
     @Autowired
     public CheckListService(final CheckListRepository checkListRepository) {
@@ -88,6 +93,10 @@ public class CheckListService {
     @Transactional
     public void delete(final EgChecklists checklists) {
         checkListRepository.delete(checklists);
+    }
+    
+    public List<Checklist> findChecklistByCheckListTypeCode(String code){
+    	return bpaChecklistRepository.findByChecklistTypeCode(code);
     }
 
 }

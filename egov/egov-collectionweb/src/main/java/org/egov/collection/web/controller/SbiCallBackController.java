@@ -26,9 +26,9 @@ public class SbiCallBackController {
 		}
 		LOGGER.info("Parameter info");
 		Enumeration<String> pe=request.getParameterNames();
-		while (ae.hasMoreElements()) {
+		while (pe.hasMoreElements()) {
 			String s=pe.nextElement();
-			LOGGER.info(s+" = "+request.getAttribute(s));
+			LOGGER.info(s+" = "+request.getParameter(s));
 		}
 		LOGGER.info("=========== end  SbiCallBackController processPushResponce ========");
 		return "successfully received";

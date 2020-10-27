@@ -49,6 +49,7 @@ package org.egov.bpa.transaction.entity;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -66,6 +67,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.egov.common.entity.bpa.NocEvaluation;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.egov.infra.persistence.entity.AbstractAuditable;
@@ -110,8 +112,10 @@ public class BpaNocApplication extends AbstractAuditable {
     private transient MultipartFile[] files;
     private transient Map<Long, String> encodedImages = new HashMap<>();
     private transient User ownerUser;
-
-	
+    
+    //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    //@JoinTable(name="eg_noc_evaluation",joinColumns =@JoinColumn(name= "nocapplication"))
+	//private List<NocEvaluation> nocEvaluations;
 	
     public Long getId() {
 		return id;
@@ -180,4 +184,12 @@ public class BpaNocApplication extends AbstractAuditable {
 	public void setOwnerUser(User ownerUser) {
 		this.ownerUser = ownerUser;
 	}
+//	public List<NocEvaluation> getNocEvaluations() {
+//		return nocEvaluations;
+//	}
+//	public void setNocEvaluations(List<NocEvaluation> nocEvaluations) {
+//		this.nocEvaluations = nocEvaluations;
+//	}
+	
+	
 }
