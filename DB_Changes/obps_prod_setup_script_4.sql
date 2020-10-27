@@ -14,7 +14,7 @@ update chandigarh.eg_demand_reason_master set reasonmaster='Transfer fee' where 
 update egbpa_mstr_bpafeemapping set applicationtype = 'PERMIT_APPLICATION' where bpafeecommon = (select id from chandigarh.egbpa_mstr_bpafee_common where code='OTF');
 
 update chandigarh.egbpa_mstr_bpafee_common set "name"='Construction & Demolision', description='Construction & Demolision' where code='DF';
-update chandigarh.eg_demand_reason_master set reasonmaster='Transfer fee' where code='DF';
+update chandigarh.eg_demand_reason_master set reasonmaster='Construction & Demolision' where code='DF';
 
 delete from chandigarh.egbpa_mstr_bpafeemapping where applicationtype='PERMIT_APPLICATION' and feesubtype='SANCTION_FEE' and bpafeecommon=(select id from chandigarh.egbpa_mstr_bpafee_common where code='DF');
 
