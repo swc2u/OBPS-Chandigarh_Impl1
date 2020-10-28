@@ -71,9 +71,9 @@ import static org.egov.bpa.utils.BpaConstants.FORWARDED_TO_CLERK;
 import static org.egov.bpa.utils.BpaConstants.FORWARDED_TO_NOC_UPDATE;
 import static org.egov.bpa.utils.BpaConstants.FWDINGTOLPINITIATORPENDING;
 import static org.egov.bpa.utils.BpaConstants.FWD_TO_AE_FOR_APPROVAL;
-import static org.egov.bpa.utils.BpaConstants.FWD_TO_AE_FOR_FIELD_ISPECTION;
 import static org.egov.bpa.utils.BpaConstants.FWD_TO_OVRSR_FOR_FIELD_INS;
 import static org.egov.bpa.utils.BpaConstants.GENERATEPERMITORDER;
+import static org.egov.bpa.utils.BpaConstants.ACCEPTASSCRUTINIZED;
 import static org.egov.bpa.utils.BpaConstants.GENERATEREJECTNOTICE;
 import static org.egov.bpa.utils.BpaConstants.GENERATEREVOCATIONNOTICE;
 import static org.egov.bpa.utils.BpaConstants.LOWRISK;
@@ -195,6 +195,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
     private static final String MSG_REJECT_FORWARD_REGISTRATION = "msg.reject.forward.registration";
     private static final String MSG_INITIATE_REJECTION = "msg.initiate.reject";
     private static final String MSG_UPDATE_FORWARD_REGISTRATION = "msg.update.forward.registration";
+    private static final String MSG_BPA_APPLICATION_ACCEPTED = "msg.bpa.application.accepted";
     private static final String MSG_APPROVE_FORWARD_REGISTRATION = "msg.approve.success";
     private static final String APPLICATION_VIEW = "application-view";
     private static final String CREATEDOCUMENTSCRUTINY_FORM = "createdocumentscrutiny-form";
@@ -537,7 +538,8 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
             }
             bpaSmsAndEmailService.sendSMSAndEmail(bpaAppln, reportOutput, BPAREJECTIONFILENAME + PDFEXTN);
         }
-        if (isNotBlank(workFlowAction) && GENERATEPERMITORDER.equalsIgnoreCase(workFlowAction)) {
+        if (isNotBlank(workFlowAction) 
+        		&& GENERATEPERMITORDER.equalsIgnoreCase(workFlowAction)) {
 
             PermitApplicationNoticesFormat bpaNoticeFeature = (PermitApplicationNoticesFormat) specificNoticeService
                     .find(PermitOrderFormatImpl.class, specificNoticeService.getCityDetails());
@@ -546,6 +548,16 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
             bpaSmsAndEmailService.sendSmsAndEmailOnPermitOrderGeneration(bpaApplication, reportOutput);
 
             return "redirect:/application/generatepermitorder/" + bpaAppln.getApplicationNumber();
+        } else if (isNotBlank(workFlowAction) 
+        				&& ACCEPTASSCRUTINIZED.equalsIgnoreCase(workFlowAction)) {
+
+            PermitApplicationNoticesFormat bpaNoticeFeature = (PermitApplicationNoticesFormat) specificNoticeService
+                    .find(PermitOrderFormatImpl.class, specificNoticeService.getCityDetails());
+            bpaNoticeFeature.generateNotice(applicationBpaService.findByApplicationNumber(applicationNumber));
+            //ReportOutput reportOutput = bpaNoticeFeature.generateNotice(applicationBpaService.findByApplicationNumber(applicationNumber));
+            //bpaSmsAndEmailService.sendSmsAndEmailOnPermitOrderGeneration(bpaApplication, reportOutput);
+            message = messageSource.getMessage(MSG_BPA_APPLICATION_ACCEPTED, null, LocaleContextHolder.getLocale());
+            redirectAttributes.addFlashAttribute(MESSAGE, message);
         } else if (isNotBlank(workFlowAction) && GENERATEREJECTNOTICE.equalsIgnoreCase(workFlowAction))
             return "redirect:/application/rejectionnotice/" + bpaAppln.getApplicationNumber();
 

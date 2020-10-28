@@ -325,6 +325,9 @@ public class BpaIndexService {
 		} else if (bpaApplication.getStatus().getCode().equals(BpaConstants.APPLICATION_STATUS_ORDER_ISSUED)) {
 			applicationIndex.setApproved(ApprovalStatus.APPROVED);
 			applicationIndex.setClosed(ClosureStatus.YES);
+		} else if (bpaApplication.getStatus().getCode().equals(BpaConstants.APPLICATION_STATUS_ACCEPTED_AS_SCRUTINIZED)) {
+			applicationIndex.setApproved(ApprovalStatus.APPROVED);
+			applicationIndex.setClosed(ClosureStatus.YES);
 		}
 
 		if (bpaApplication.getPlanPermissionNumber() != null)

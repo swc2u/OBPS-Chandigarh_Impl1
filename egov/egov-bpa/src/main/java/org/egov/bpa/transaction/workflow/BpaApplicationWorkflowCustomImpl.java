@@ -190,7 +190,7 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
             if(!bpaUtils.checkAnyTaxIsPendingToCollect(application.getDemand()))
             	if(application.getApplicationType().getName().equals(BpaConstants.LOWRISK))
                 wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null,
-                            additionalRule, "Application Approval Pending", "Forwarded to Assistant Engineer For Approval");
+                            additionalRule, "Application Approval Pending", "Forwarded to SDO Building for Approval");
             	else
                 wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null,
                         additionalRule, "Final Approval Process initiated", "Permit Fee Collection Pending");
@@ -200,11 +200,9 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 
             BpaStatus status;
             if(application.getApplicationType().getName().equals(BpaConstants.LOWRISK))
-            	status = bpaStatusService
-                .findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE, BpaConstants.APPLICATION_STATUS_ORDER_ISSUED);
+            	status = bpaStatusService.findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE, BpaConstants.APPLICATION_STATUS_ACCEPTED_AS_SCRUTINIZED);
             else
-             status = bpaStatusService
-                    .findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE, BpaConstants.APPLICATION_STATUS_APPROVED);
+             status = bpaStatusService.findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE, BpaConstants.APPLICATION_STATUS_APPROVED);
             if (status != null)
                 application.setStatus(status);
 
@@ -370,7 +368,9 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 				if (workFlowAction.equalsIgnoreCase(BpaConstants.GENERATEREVOCATIONNOTICE))
 					application.setStatus(getStatusByPassingCode("Revocated"));
                 
-                if (BpaConstants.GENERATEPERMITORDER.equalsIgnoreCase(workFlowAction) || wfmatrix.getNextAction().contains("END"))
+                if (BpaConstants.GENERATEPERMITORDER.equalsIgnoreCase(workFlowAction) 
+                		|| BpaConstants.ACCEPTASSCRUTINIZED.equalsIgnoreCase(workFlowAction) 
+                		|| wfmatrix.getNextAction().contains("END"))
                     application.transition().end()
                                .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                                .withComments(approvalComent).withDateInfo(currentDate.toDate())

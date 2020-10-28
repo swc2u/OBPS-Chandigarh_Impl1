@@ -302,6 +302,7 @@ public class BpaConstants {
     public static final String APPLICATION_STATUS_ORDER_ISSUED = "Order Issued to Applicant";
     public static final String APPLICATION_STATUS_DIGI_SIGNED = "Digitally signed";
     public static final String APPLICATION_STATUS_RECORD_APPROVED = "Record Approved";
+    public static final String APPLICATION_STATUS_ACCEPTED_AS_SCRUTINIZED = "Accepted as Scrutinized";
     public static final String APPLICATION_STATUS_NOCUPDATED = "NOC Updated";
     public static final String APPLICATION_STATUS_CANCELLED = "Cancelled";
     public static final String APPLICATION_STATUS_REGISTERED = "Registered";
@@ -528,10 +529,12 @@ public class BpaConstants {
 
     // button name constants
     public static final String WF_APPROVE_BUTTON = "Approve";
+    public static final String WF_ACCEPT_AS_SCRUTINIZED_BUTTON = "Accept as Scrutinized";
     public static final String WF_REJECT_BUTTON = "REJECT";
     public static final String WF_REVOCATE_BUTTON = "Revocate";
     public static final String WF_CANCELAPPLICATION_BUTTON = "Cancel Application";
     public static final String GENERATEPERMITORDER = "Generate Permit Order";
+    public static final String ACCEPTASSCRUTINIZED = "Accept as Scrutinized";
     public static final String GENERATEREJECTNOTICE = "Generate Rejection Notice";
     public static final String GENERATEREVOCATIONNOTICE = "Revoke Permit";
     public static final String WF_LBE_SUBMIT_BUTTON = "Submit";
