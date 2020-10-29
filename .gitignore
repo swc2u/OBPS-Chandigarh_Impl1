@@ -13,3 +13,5 @@ MasterDataReader-Project/XlsxReader2/.project
 *.MF
 
 egov/egov-ear/.settings/org.eclipse.wst.common.component
+
+egov/egov-config/.project
