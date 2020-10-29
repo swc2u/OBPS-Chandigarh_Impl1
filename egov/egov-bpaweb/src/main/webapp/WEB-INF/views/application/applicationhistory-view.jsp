@@ -37,68 +37,87 @@
 # 
 #   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
 #------------------------------------------------------------------------------- -->
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
-	<div class="panel-heading slide-history-menu">
-		<div class="panel-title">
-			<spring:message  code="lbl.apphistory"/>
-		</div>
-		<div class="history-icon">
-			<i class="fa fa-angle-up fa-2x" id="toggle-his-icon"></i>
-		</div>
+<div class="panel-heading slide-history-menu">
+	<div class="panel-title">
+		<spring:message code="lbl.apphistory" />
 	</div>
-	<div class="panel-body history-slide display-hide">
-		<div class="row add-margin hidden-xs visible-sm visible-md visible-lg header-color">
-			<div class="col-sm-2 col-xs-6 add-margin"><spring:message code="lbl.date"/></div>
-			<div class="col-sm-2 col-xs-6 add-margin"><spring:message code="lbl.updatedby"/></div>
-			<div class="col-sm-2 col-xs-6 add-margin"><spring:message code="lbl.status" /></div>
-			<div class="col-sm-2 col-xs-6 add-margin currentOwner"><spring:message code="lbl.currentowner"/></div>
-			<div class="col-sm-2 col-xs-6 add-margin"><spring:message code="lbl.department" /></div>
-			<div class="col-sm-2 col-xs-6 add-margin"><spring:message code="lbl.comments" /></div>
+	<div class="history-icon">
+		<i class="fa fa-angle-up fa-2x" id="toggle-his-icon"></i>
+	</div>
+</div>
+<div class="panel-body history-slide display-hide">
+	<div
+		class="row add-margin hidden-xs visible-sm visible-md visible-lg header-color">
+		<div class="col-sm-2 col-xs-6 add-margin">
+			<spring:message code="lbl.date" />
 		</div>
-		<c:choose>
-				<c:when test="${!applicationHistory.isEmpty()}">
-					<c:forEach items="${applicationHistory}" var="history">
-					<div class="row add-margin">
-						<div class="col-sm-2 col-xs-12 add-margin">
-							<fmt:formatDate value="${history.date}" var="historyDate"
-								pattern="dd/MM/yyyy HH:mm a E" />
-							<c:out value="${historyDate}" />
-						</div>
-						<div class="col-sm-2 col-xs-12 add-margin">
-							<c:out value="${history.updatedBy}" />
-						</div>
-						<div class="col-sm-2 col-xs-12 add-margin">
-							<c:out value="${history.status}" />
-						</div>
-						<div class="col-sm-2 col-xs-12 add-margin currentOwner">
-							<c:out value="${history.user}" />
-						</div>
-						<div class="col-sm-2 col-xs-12 add-margin">
-							<c:out value="${history.department}" />
-						</div>
-						<div class="col-sm-2 col-xs-12 add-margin text-justify">
-							<c:out value="${history.comments}" />&nbsp;
-						</div>
+		<div class="col-sm-2 col-xs-6 add-margin">
+			<spring:message code="lbl.updatedby" />
+		</div>
+		<div class="col-sm-2 col-xs-6 add-margin">
+			<spring:message code="lbl.status" />
+		</div>
+		<div class="col-sm-2 col-xs-6 add-margin currentOwner">
+			<spring:message code="lbl.currentowner" />
+		</div>
+		<div class="col-sm-2 col-xs-6 add-margin">
+			<spring:message code="lbl.department" />
+		</div>
+		<!--  <div class="col-sm-2 col-xs-6 add-margin">
+			<spring:message code="lbl.comments" />
+		</div>-->
+	</div>
+	<c:choose>
+		<c:when test="${!applicationHistory.isEmpty()}">
+			<c:forEach items="${applicationHistory}" var="history">
+				<div class="row add-margin">
+					<div class="col-sm-2 col-xs-12 add-margin">
+						<fmt:formatDate value="${history.date}" var="historyDate"
+							pattern="dd/MM/yyyy HH:mm a E" />
+						<c:out value="${historyDate}" />
 					</div>
-					</c:forEach>
-				</c:when>
-				<c:otherwise>
-					<div class="col-md-3 col-xs-6 add-margin">No history Present.</div>
-				</c:otherwise>
-			</c:choose>
-	</div>
-<script>$('.slide-history-menu').click(function(){ 
-		$('.history-slide').slideToggle();
-		if($('#toggle-his-icon').hasClass('fa fa-angle-down'))
-		{
-			$('#toggle-his-icon').removeClass('fa fa-angle-down').addClass('fa fa-angle-up');
-			//$('#see-more-link').hide();
-			}else{
-			$('#toggle-his-icon').removeClass('fa fa-angle-up').addClass('fa fa-angle-down');
-			//$('#see-more-link').show();
-		}
-});</script>
+					<div class="col-sm-2 col-xs-12 add-margin">
+						<c:out value="${history.updatedBy}" />
+					</div>
+					<div class="col-sm-2 col-xs-12 add-margin">
+						<c:out value="${history.status}" />
+					</div>
+					<div class="col-sm-2 col-xs-12 add-margin currentOwner">
+						<c:out value="${history.user}" />
+					</div>
+					<div class="col-sm-2 col-xs-12 add-margin">
+						<c:out value="${history.department}" />
+					</div>
+					<!-- applicationHisory <div class="col-sm-2 col-xs-12 add-margin text-justify">
+						<c:if test="${ history.comments.length < 71 }">
+							<c:out value="${history.comments}" />&nbsp;
+						</c:if>
+					</div> -->
+				</div>
+			</c:forEach>
+		</c:when>
+		<c:otherwise>
+			<div class="col-md-3 col-xs-6 add-margin">No history Present.</div>
+		</c:otherwise>
+	</c:choose>
+</div>
+<script>
+	$('.slide-history-menu').click(
+			function() {
+				$('.history-slide').slideToggle();
+				if ($('#toggle-his-icon').hasClass('fa fa-angle-down')) {
+					$('#toggle-his-icon').removeClass('fa fa-angle-down')
+							.addClass('fa fa-angle-up');
+					//$('#see-more-link').hide();
+				} else {
+					$('#toggle-his-icon').removeClass('fa fa-angle-up')
+							.addClass('fa fa-angle-down');
+					//$('#see-more-link').show();
+				}
+			});
+</script>

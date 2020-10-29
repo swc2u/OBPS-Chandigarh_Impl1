@@ -227,7 +227,13 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 
 		sbiResponce.setErrorDescription(responseMap.get(message));
 		sbiResponce.setReceiptId(receiptId);
-		sbiResponce.setTxnAmount(new BigDecimal(responseMap.get(amount)));
+		BigDecimal amunt=BigDecimal.ZERO;
+		try {
+			amunt=new BigDecimal(responseMap.get(amount));
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		sbiResponce.setTxnAmount(amunt);
 		sbiResponce.setTxnReferenceNo(responseMap.get(atrn));
 
 		// final String receiptId = responseMap.get("orderReqId");
