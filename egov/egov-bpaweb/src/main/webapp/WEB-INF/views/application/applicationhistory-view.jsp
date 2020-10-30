@@ -68,9 +68,9 @@
 		<div class="col-sm-2 col-xs-6 add-margin">
 			<spring:message code="lbl.department" />
 		</div>
-		<!--  <div class="col-sm-2 col-xs-6 add-margin">
+		 <div class="col-sm-2 col-xs-6 add-margin">
 			<spring:message code="lbl.comments" />
-		</div>-->
+		</div>
 	</div>
 	<c:choose>
 		<c:when test="${!applicationHistory.isEmpty()}">
@@ -93,11 +93,9 @@
 					<div class="col-sm-2 col-xs-12 add-margin">
 						<c:out value="${history.department}" />
 					</div>
-					<!-- applicationHisory <div class="col-sm-2 col-xs-12 add-margin text-justify">
-						<c:if test="${ history.comments.length < 71 }">
+					<div class="col-sm-2 col-xs-12 add-margin text-justify">
 							<c:out value="${history.comments}" />&nbsp;
-						</c:if>
-					</div> -->
+					</div>
 				</div>
 			</c:forEach>
 		</c:when>
