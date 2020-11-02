@@ -271,6 +271,10 @@ public class CollectionApplicationProperties {
 		return environment.getProperty(prefix+".sbi.mkey");
 	}
 	
+	public String sbiReconcileUrl(String prefix) {
+		return environment.getProperty(prefix+".sbi.reconcile.url");
+	}
+	
 	public String sbiUrl(String prefix) {
 		return environment.getProperty(prefix+".sbi.url");
 	}

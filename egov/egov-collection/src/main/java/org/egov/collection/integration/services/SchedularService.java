@@ -408,10 +408,10 @@ public class SchedularService {
     @Transactional
     public void reconcileSBI() {
     	LOGGER.debug("Inside SBI");
-   	 final Calendar fourDaysBackCalender = Calendar.getInstance();
+   	 	final Calendar fourDaysBackCalender = Calendar.getInstance();
         fourDaysBackCalender.add(Calendar.DATE, -4);
         final Calendar cal = Calendar.getInstance();
-      //  cal.add(Calendar.MINUTE, -30);
+        //cal.add(Calendar.MINUTE, -30);
         cal.add(Calendar.MINUTE, collectionApplicationProperties.sbiCronExpressionDelayTime()*-1);
         final Query qry = persistenceService
                 .getSession()
@@ -429,6 +429,7 @@ public class SchedularService {
             for (final OnlinePayment onlinePaymentObj : reconcileList) {
                 final long startTimeInMilis = System.currentTimeMillis();
                 LOGGER.info("SBI Receiptid::::" + onlinePaymentObj.getReceiptHeader().getId());
+                LOGGER.info("sbiepayAdaptor " + sbiepayAdaptor);
                 PaymentResponse paymentResponse = sbiepayAdaptor.createOfflinePaymentRequest(onlinePaymentObj);
                 if (paymentResponse != null && isNotBlank(paymentResponse.getReceiptId())) {
                     LOGGER.info("paymentResponse.getReceiptId():" + paymentResponse.getReceiptId());

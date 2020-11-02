@@ -5,8 +5,16 @@ import static org.egov.collection.constants.CollectionConstants.KEY_URBAN;
 import static org.egov.collection.constants.CollectionConstants.RURAL;
 import static org.egov.collection.constants.CollectionConstants.URBAN;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.net.URLEncoder;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -64,7 +72,7 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 	@Override
 	public PaymentRequest createPaymentRequest(final ServiceDetails paymentServiceDetails,
 			final ReceiptHeader receiptHeader) {
-		LOGGER.debug("inside  SbiepayAdaptor createPaymentRequest");
+		LOGGER.info("inside  SbiepayAdaptor createPaymentRequest");
 		final DefaultPaymentRequest paymentRequest = new DefaultPaymentRequest();
 
 		String prefix = null;
@@ -97,12 +105,12 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 				+ Other_Details + "|" + Success_URL + "|" + Failure_URL + "|" + Collaborator_Id + "|" + Order_Number
 				+ "|" + "2" + "|" + "NB" + "|" + "ONLINE" + "|" + "ONLINE";
 
-		System.out.println("SBI - hashSequence " + hashSequence);
+		//System.out.println("SBI - hashSequence " + hashSequence);
 
 		String hash = AES256Bit.encrypt(hashSequence,
 				AES256Bit.readKeyBytes(collectionApplicationProperties.sbiMkey(prefix)));
 
-		System.out.println("SBI hash " + hash);
+		LOGGER.info("SBI hash " + hash);
 
 		UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme("https")
 				.host(collectionApplicationProperties.sbiUrl(prefix))
@@ -194,19 +202,120 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 		map.put(trascationdate, strings[10]);
 		map.put(Country, strings[11]);
 		map.put(CIN, strings[12]);
-		LOGGER.info(map);
+		//LOGGER.info(map);
 		LOGGER.info("==========================");
 		return map;
 	}
 
 	public PaymentResponse createOfflinePaymentRequest(OnlinePayment onlinePayment) {
-		PaymentResponse payuResponce = new DefaultPaymentResponse();
-		String orderReqId = onlinePayment.getReceiptHeader().getId().toString();
+		LOGGER.info("inside createOfflinePaymentRequest "+onlinePayment.getReceiptHeader().getId());
+		PaymentResponse sbiResponce = new DefaultPaymentResponse();
+		String orderReqId =  orderReqId_PREFIX +onlinePayment.getReceiptHeader().getId().toString();
+		LOGGER.info("After adding prefix "+orderReqId);
 		String prefix = onlinePayment.getReceiptHeader().getRootBoundaryType();
-		String merchantKey=collectionApplicationProperties.payuMerchantkey(prefix);
-		String merchantSalt=collectionApplicationProperties.payuMerchantSalt(prefix);
-       
-		return null;
+		String MID = collectionApplicationProperties.sbiMID(prefix);
+		String aggregatorId = collectionApplicationProperties.sbiCollaboratorId(prefix);// "SBIEPAY";
+		String reconcileUrl = collectionApplicationProperties.sbiReconcileUrl(prefix);
+
+		Map<String, String> responseMap = getOfflinePaymentRequest(reconcileUrl, aggregatorId, MID, orderReqId);
+		
+		sbiResponce.setAuthStatus(responseMap.get(transStatus).equalsIgnoreCase(SBI_SUCCESS)
+				? CollectionConstants.PGI_AUTHORISATION_CODE_SUCCESS
+				: responseMap.get(SBI_FAIL));
+
+		final String receiptId = responseMap.get(SbiepayAdaptor.orderReqId).replace(orderReqId_PREFIX, "");// SBBPA
+
+		sbiResponce.setErrorDescription(responseMap.get(message));
+		sbiResponce.setReceiptId(receiptId);
+		BigDecimal amunt=BigDecimal.ZERO;
+		try {
+			amunt=new BigDecimal(responseMap.get(amount));
+		}catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		sbiResponce.setTxnAmount(amunt);
+		sbiResponce.setTxnReferenceNo(responseMap.get(atrn));
+
+		// final String receiptId = responseMap.get("orderReqId");
+		final String ulbCode = ApplicationThreadLocals.getCityCode();
+		final ReceiptHeader receiptHeader;
+		final Query qry = entityManager.createNamedQuery(CollectionConstants.QUERY_RECEIPT_BY_ID_AND_CITYCODE);
+		qry.setParameter(1, Long.valueOf(receiptId));
+		qry.setParameter(2, ulbCode);
+		receiptHeader = (ReceiptHeader) qry.getSingleResult();
+		sbiResponce.setAdditionalInfo6(receiptHeader.getConsumerCode().replace("-", "").replace("/", ""));
+		sbiResponce.setAdditionalInfo2(ulbCode);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+		Date transactionDate = null;
+		try {
+			transactionDate = sdf.parse(responseMap.get("trascationdate"));
+			sbiResponce.setTxnDate(transactionDate);
+		} catch (java.text.ParseException e) {
+			LOGGER.error("Error occured in parsing the transaction date [" + transactionDate + "]", e);
+			try {
+				throw new ApplicationException(".transactiondate.parse.error", e);
+			} catch (ApplicationException e1) {
+				LOGGER.error(e.getMessage());
+			}
+		}
+
+		return sbiResponce;
+	}
+
+	public Map<String, String> getOfflinePaymentRequest(String reconcileUrl, String aggregatorId, String MID,
+			String orderNo) {
+		//LOGGER.info("getOfflinePaymentRequest call to sbi : for order number :"+orderNo+" reconcileUrl : "+reconcileUrl+" aggregatorId : "+aggregatorId+" MID :"+MID);
+		Map<String, String> map = new HashMap<String, String>();
+		String queryRequest = "|" + MID + "|" + orderNo;
+		try {
+			URL url = new URL(reconcileUrl);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			StringBuffer requestParams = new StringBuffer();
+			requestParams.append("queryRequest=");
+			requestParams.append(queryRequest);
+			requestParams.append("&aggregatorId=");
+			requestParams.append(aggregatorId);
+			requestParams.append("&merchantId=");
+			requestParams.append(MID);
+			conn.setReadTimeout(100000);
+			conn.setConnectTimeout(150000);
+			conn.setRequestMethod("POST");
+			conn.setDoInput(true);
+			conn.setDoOutput(true);
+			conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			conn.setDoOutput(true);
+			DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+			wr.writeBytes(requestParams.toString());
+			wr.flush();
+			wr.close();
+			// Response Code
+			int responseCode = conn.getResponseCode();
+			// Reading Response
+			InputStream stream = conn.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line).append("\n");
+			}
+			stream.close();
+			map = parseSBIReconsilationResponce(sb.toString());
+			LOGGER.info("responseCode: " + responseCode + " response " + map);
+		} catch (MalformedURLException e) {
+			LOGGER.error("Error while call sbi Api");
+			e.printStackTrace();
+		} catch (ProtocolException e) {
+			LOGGER.error("Error while call sbi Api");
+			e.printStackTrace();
+		} catch (IOException e) {
+			LOGGER.error("Error while call sbi Api");
+			e.printStackTrace();
+		} catch (Exception e) {
+			LOGGER.error("Error while call sbi Api");
+			e.printStackTrace();
+		}
+		return map;
 	}
 
 	public static Map<String, String> parseSBIReconsilationResponce(String responce) {
@@ -227,12 +336,8 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 		map.put(bankRefNumber, strings[10]);
 		map.put(trascationdate, strings[11]);
 		map.put(paymode, strings[12]);
-		LOGGER.info(map);
+		//LOGGER.info(map);
 		LOGGER.info("==========================");
 		return map;
-	}
-	
-	public static void main(String[] args) {
-		System.out.println(parseSBIReconsilationResponce("1000112|3107352858401|SUCCESS|IN|INR|Other|BPA00021601363046874|100|Payment InClearing|SBIN|116032276555810|2020-09-29 12:34:48|DC|0|1000112|0.00^0.00||||||||||"));
 	}
 }
