@@ -68,7 +68,7 @@
 		<div class="col-sm-2 col-xs-6 add-margin">
 			<spring:message code="lbl.department" />
 		</div>
-		 <div class="col-sm-2 col-xs-6 add-margin">
+		<div class="col-sm-2 col-xs-6 add-margin">
 			<spring:message code="lbl.comments" />
 		</div>
 	</div>
@@ -94,7 +94,15 @@
 						<c:out value="${history.department}" />
 					</div>
 					<div class="col-sm-2 col-xs-12 add-margin text-justify">
-							<c:out value="${history.comments}" />&nbsp;
+						<c:choose>
+							<c:when test="${history.comments.length() < 70}">
+								<%-- <c:out value="${history.comments}" />&nbsp; --%>
+							<c:out value="${history.comments}"></c:out>&nbsp;
+						</c:when>
+							<c:otherwise>
+								<a href="#" onclick="showComent('${history.comments}')">click here</a>&nbsp;
+						</c:otherwise>
+						</c:choose>
 					</div>
 				</div>
 			</c:forEach>
@@ -103,6 +111,15 @@
 			<div class="col-md-3 col-xs-6 add-margin">No history Present.</div>
 		</c:otherwise>
 	</c:choose>
+</div>
+<button id="myBtn" class="display:none"></button>
+<!-- The Modal -->
+<div id="myModal" class="modal" style="top:195px;left:20px;right:20px;">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p id="content">...</p>
+  </div>
 </div>
 <script>
 	$('.slide-history-menu').click(
@@ -118,4 +135,39 @@
 					//$('#see-more-link').show();
 				}
 			});
+</script>
+
+<script>
+
+var modal = document.getElementById("myModal");
+function showComent(data){
+document.getElementById("content").innerHTML = data;
+modal.style.display = "block";
+}
+
+// Get the modal
+
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+btn.onclick = function() {
+  
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
 </script>
