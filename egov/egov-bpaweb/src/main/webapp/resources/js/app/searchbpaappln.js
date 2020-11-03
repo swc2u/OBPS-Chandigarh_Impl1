@@ -189,7 +189,7 @@ $(document)
 																data, type,
 																row, meta) {    
 															var commonOptions = '<option value="">---Select an Action----</option><option  value=' + viewurl + row.applicationNumber + '>View</option>';
-															if (row.status == 'Approved' && row.isFeeCollected) {
+															/*if (row.status == 'Approved' && row.isFeeCollected) {
 																return ('<select class="dropchange" style="width:160px;font-size: small">'+commonOptions+'<option  value='
 																		+ demandNoticeurl
 																		+ row.applicationNumber + '>Generate Demand Notice</option></select>');
@@ -207,7 +207,9 @@ $(document)
 																		+ row.applicationNumber + '>Generate Permit Order</option></select>');
 															} else {
 																return ('<select class="dropchange" style="width:160px;font-size: small">'+commonOptions+'></select>');
-															}
+															}*/
+															
+															return ('<select class="dropchange" style="width:160px;font-size: small">'+commonOptions+'></select>');
 														}
 													} ]
 										});

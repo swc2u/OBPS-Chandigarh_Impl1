@@ -88,3 +88,13 @@ INSERT INTO chandigarh.eg_wf_matrix (id,department,objecttype,currentstate,curre
 ,(nextval('seq_eg_wf_matrix'),'ANY','BpaApplication','Rejection Initiated','','Forwarded to SDO Building for Approval','','High Risk','AEE Application Approval Pending','Forwarded to E- Assistant Estate Officer for Approval','Assistant Estate Officer','Document Verification Completed','Forward,Reject',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
 ,(nextval('seq_eg_wf_matrix'),'ANY','BpaApplication','Rejected','','','','High Risk','generate rejection notice','Application is rejected by approver','SDO Building Urban','Rejected','Generate Rejection Notice',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
 ;
+
+---For Report----------------------------------------------------------------------------------------------------
+
+INSERT INTO state.eg_role (id,"name",description,createddate,createdby,lastmodifiedby,lastmodifieddate,"version",internal) VALUES 
+(nextval('state.seq_eg_role'),'IT_SUPPORT_ROLE','Role for employee who can view the reports',now(),1,1,now(),0,false);
+
+Insert into chandigarh.eg_roleaction values((select id from state.eg_role where name='IT_SUPPORT_ROLE'),(select id from chandigarh.eg_action where name='buildingplanscrutinysearchreport'));
+Insert into chandigarh.eg_roleaction values((select id from state.eg_role where name='IT_SUPPORT_ROLE'),(select id from chandigarh.eg_action where name='Search BPA Application'));
+
+
