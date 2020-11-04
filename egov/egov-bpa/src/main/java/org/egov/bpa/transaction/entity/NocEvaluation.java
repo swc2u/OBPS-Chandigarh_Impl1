@@ -1,4 +1,4 @@
-package org.egov.common.entity.bpa;
+package org.egov.bpa.transaction.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,12 +10,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.egov.common.entity.bpa.Checklist;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.SafeHtml;
 
-//@Entity
-//@Table(name = "eg_noc_evaluation")
-//@SequenceGenerator(name = NocEvaluation.SEQ_NOC_EVALUATION, sequenceName = NocEvaluation.SEQ_NOC_EVALUATION, allocationSize = 1)
+@Entity
+@Table(name = "eg_noc_evaluation")
+@SequenceGenerator(name = NocEvaluation.SEQ_NOC_EVALUATION, sequenceName = NocEvaluation.SEQ_NOC_EVALUATION, allocationSize = 1)
 public class NocEvaluation extends AbstractAuditable {
 	
 	private static final long serialVersionUID = 3078684328383202788L;

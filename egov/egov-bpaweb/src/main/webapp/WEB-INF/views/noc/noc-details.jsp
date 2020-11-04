@@ -81,7 +81,7 @@
 							code='lbl.appln.details' /></a></li>
 				<li><a data-toggle="tab" href="#document-info" data-tabidx=1><spring:message
 							code='title.documentdetail' /></a></li>
-				<!-- <li><a data-toggle="tab" href="#evaluation" data-tabidx=2>Evaluation</a></li> -->
+				<li><a data-toggle="tab" href="#evaluation" data-tabidx=2>Evaluation</a></li>
 			</ul>
 
 			<div class="tab-content">
@@ -95,14 +95,14 @@
 					</div>
 				</div>
 				
-				<%-- <div id="evaluation" class="tab-pane fade">
+				<div id="evaluation" class="tab-pane fade">
 					<div class="panel panel-primary dcrDocuments" data-collapsed="0">
 						<jsp:include page="noc-dcr-evaluation.jsp"></jsp:include>
 					</div>
-					<div class="panel panel-primary" data-collapsed="0">
+					<%-- <div class="panel panel-primary" data-collapsed="0">
 						<jsp:include page="noc-bpaEvaluation.jsp"></jsp:include>
-					</div>
-				</div> --%>
+					</div> --%>
+				</div>
 
 				<div id="application-info" class="tab-pane fade in active">
 					<div class="panel panel-primary docdetails" data-collapsed="0">
@@ -247,7 +247,7 @@
 					</div>
 				</div>
 
-			<%-- 	<div class="panel panel-primary docdetails" data-collapsed="0">
+				<div class="panel panel-primary docdetails" data-collapsed="0">
 					<div class="panel-heading custom_form_panel_heading">
 						<div class="panel-title">Evaluation</div>
 					</div>
@@ -264,7 +264,7 @@
 								cssClass="add-margin error-msg" />
 						</div>
 					</div>
-				</div>  --%>
+				</div> 
 
 
 				<div class="panel panel-primary docdetails" data-collapsed="0">

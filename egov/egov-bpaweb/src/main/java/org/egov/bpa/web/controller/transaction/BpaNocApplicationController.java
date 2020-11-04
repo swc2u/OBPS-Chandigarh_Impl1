@@ -59,6 +59,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BpaNocApplication;
 import org.egov.bpa.transaction.entity.BpaStatus;
+import org.egov.bpa.transaction.entity.NocEvaluation;
 import org.egov.bpa.transaction.entity.PermitNocApplication;
 import org.egov.bpa.transaction.entity.PermitNocDocument;
 import org.egov.bpa.transaction.repository.PermitNocApplicationRepository;
@@ -69,10 +70,7 @@ import org.egov.bpa.transaction.service.messaging.BPASmsAndEmailService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.utils.BpaUtils;
 import org.egov.common.entity.bpa.Checklist;
-import org.egov.common.entity.bpa.ChecklistType;
-import org.egov.common.entity.bpa.NocEvaluation;
 import org.egov.commons.service.CheckListService;
-import org.egov.commons.service.CheckListTypeService;
 import org.egov.commons.service.OccupancyService;
 import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,8 +82,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import ognl.Evaluation;
 
 @Controller
 @RequestMapping(value = "/nocapplication")
@@ -113,8 +109,8 @@ public class BpaNocApplicationController {
 	@Autowired
 	private BPASmsAndEmailService bpaSmsAndEmailService;
 
-//	@Autowired
-//	private CheckListService checkListService;
+	@Autowired
+	private CheckListService checkListService;
 
 	@RequestMapping(value = "/create/{applicationNumber}", method = RequestMethod.GET)
 	public String createNoc(@PathVariable final String applicationNumber, final Model model,
@@ -143,20 +139,24 @@ public class BpaNocApplicationController {
 		permitNoc.getBpaApplication().setPermitOccupanciesTemp(permitNoc.getBpaApplication().getPermitOccupancies());
 		model.addAttribute("occupancyList", occupancyService.findAllOrderByOrderNumber());
 		model.addAttribute("permitNocApplication", permitNoc);
-//		List<Checklist> checklists = getListOfEvaluation(permitNoc);
-//		model.addAttribute("checklists", checklists);
+		List<Checklist> checklists = getListOfEvaluation(permitNoc);
+		model.addAttribute("checklists", checklists);
 		if (!permitNoc.getBpaNocApplication().getStatus().getCode().equals(BpaConstants.NOC_INITIATED))
 			return "redirect:/nocapplication/view/" + permitNoc.getBpaNocApplication().getNocApplicationNumber();
 		else
 			return "noc-details";
 	}
 
-//	public List<Checklist> getListOfEvaluation(final PermitNocApplication permitNocApplication) {
-//		if (permitNocApplication == null || permitNocApplication.getBpaNocApplication()==null)
-//			return null;
-//		List<Checklist> checklists = checkListService.findChecklistByCheckListTypeCode(permitNocApplication.getBpaNocApplication().getNocType());
-//		return checklists;
-//	}
+	public List<Checklist> getListOfEvaluation(final PermitNocApplication permitNocApplication) {
+		if (permitNocApplication == null || permitNocApplication.getBpaNocApplication() == null)
+			return null;
+		List<Checklist> checklists = new ArrayList<Checklist>();
+
+		checklists = checkListService
+				.findChecklistByCheckListTypeCode(permitNocApplication.getBpaNocApplication().getNocType());
+
+		return checklists;
+	}
 
 	@RequestMapping(value = "/updateNoc/{applicationNumber}", method = RequestMethod.POST)
 	public String updateNoc(@ModelAttribute final PermitNocApplication permitNocApplication,
@@ -165,19 +165,19 @@ public class BpaNocApplicationController {
 
 		String workFlowAction = request.getParameter(WORK_FLOW_ACTION);
 
-		//evaluation 
-//		List<NocEvaluation> evaluations=new ArrayList<NocEvaluation>();
-//		for(Checklist checklist:getListOfEvaluation(permitNocApplication)) {
-//			NocEvaluation nocEvaluation=new NocEvaluation();
-//			nocEvaluation.setChecklist(checklist);
-//			nocEvaluation.setNocapplication(permitNocApplication.getBpaNocApplication().getId());
-//			nocEvaluation.setComment(request.getParameter(checklist.getCode()+".comment"));
-//			nocEvaluation.setRemarks(request.getParameter(checklist.getCode()+".remark"));
-//			evaluations.add(nocEvaluation);
-//		}
-//		
-//		permitNocApplication.getBpaNocApplication().setNocEvaluations(evaluations);
-		
+		// evaluation
+		List<NocEvaluation> evaluations = new ArrayList<NocEvaluation>();
+		for (Checklist checklist : getListOfEvaluation(permitNocApplication)) {
+			NocEvaluation nocEvaluation = new NocEvaluation();
+			nocEvaluation.setChecklist(checklist);
+			nocEvaluation.setNocapplication(permitNocApplication.getBpaNocApplication().getId());
+			nocEvaluation.setComment(request.getParameter(checklist.getCode() + ".comment"));
+			nocEvaluation.setRemarks(request.getParameter(checklist.getCode() + ".remark"));
+			evaluations.add(nocEvaluation);
+		}
+
+		permitNocApplication.getBpaNocApplication().setNocEvaluations(evaluations);
+
 		BpaStatus status = statusService.findByModuleTypeAndCode(BpaConstants.NOCMODULE, workFlowAction);
 		permitNocApplication.getBpaNocApplication().setStatus(status);
 		buildNocFiles(permitNocApplication.getBpaNocApplication());

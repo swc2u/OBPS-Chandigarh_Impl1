@@ -48,17 +48,19 @@
 
 package org.egov.commons.service;
 
-import org.egov.common.entity.bpa.Checklist;
-import org.egov.commons.repository.BpaChecklistRepository;
-import org.egov.commons.repository.CheckListRepository;
-import org.egov.infstr.models.EgChecklists;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.List;
+
+import org.egov.common.entity.bpa.Checklist;
+import org.egov.commons.repository.CheckListRepository;
+import org.egov.commons.repository.CommanChecklistRepository;
+import org.egov.infstr.models.EgChecklists;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
@@ -69,7 +71,8 @@ public class CheckListService {
     private EntityManager entityManager;
     
     @Autowired
-    private BpaChecklistRepository bpaChecklistRepository; 
+    @Qualifier("CommanChecklistRepository")
+    private CommanChecklistRepository bpaChecklistRepository; 
 
     @Autowired
     public CheckListService(final CheckListRepository checkListRepository) {

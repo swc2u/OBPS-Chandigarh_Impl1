@@ -88,3 +88,70 @@ INSERT INTO chandigarh.eg_wf_matrix (id,department,objecttype,currentstate,curre
 ,(nextval('seq_eg_wf_matrix'),'ANY','BpaApplication','Rejection Initiated','','Forwarded to SDO Building for Approval','','High Risk','AEE Application Approval Pending','Forwarded to E- Assistant Estate Officer for Approval','Assistant Estate Officer','Document Verification Completed','Forward,Reject',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
 ,(nextval('seq_eg_wf_matrix'),'ANY','BpaApplication','Rejected','','','','High Risk','generate rejection notice','Application is rejected by approver','SDO Building Urban','Rejected','Generate Rejection Notice',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
 ;
+
+
+SELECT setval('seq_eg_checklist_type', (SELECT max(id) FROM chandigarh.eg_checklist_type));
+INSERT INTO chandigarh.eg_checklist_type (id,code,description,"version",createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
+(nextval('seq_eg_checklist_type'),'PUB HEALTH NOC','Evaluation PUB HEALTH NOC',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist_type'),'ELECTRICAL NOC','Evaluation ELECTRICAL NOC',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist_type'),'FIRE NOC','Evaluation FIRE NOC',0,1,NOW(),1,NOW());
+
+
+INSERT INTO chandigarh.eg_checklist (id,checklisttypeid,code,description,"version",createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='PUB HEALTH NOC'),'PUBHEALTHNOC-01','The proposal of Rain Water Harvesting System on Plot of 1 Kanal or more',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='PUB HEALTH NOC'),'PUBHEALTHNOC-02','There is no water line/sewer line on the common wall of the adjoining properties',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='PUB HEALTH NOC'),'PUBHEALTHNOC-03','All inspection chamber and gully traps are within the plot area',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='PUB HEALTH NOC'),'PUBHEALTHNOC-04','The height of the terrace within the service zone and the distance of the tanks located',0,1,NOW(),1,NOW());
+
+INSERT INTO chandigarh.eg_checklist (id,checklisttypeid,code,description,"version",createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='FIRE NOC'),'FIRENOC-01','Means of Escape',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='FIRE NOC'),'FIRENOC-02','Fire Extinguishers ISI marked',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='FIRE NOC'),'FIRENOC-03','First aid hose reel',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='FIRE NOC'),'FIRENOC-04','Wet riser',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='FIRE NOC'),'FIRENOC-05','Down corner',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='FIRE NOC'),'FIRENOC-06','Yard hydrant',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='FIRE NOC'),'FIRENOC-07','Automatic sprinkler system',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='FIRE NOC'),'FIRENOC-08','Manually operated electronic fire alarm system',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='FIRE NOC'),'FIRENOC-09','Automatic detection and alarm system',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='FIRE NOC'),'FIRENOC-10','Underground static water storage tank combined capacity for wet riser, yard hydrant and sprinklers per set of pumps.',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='FIRE NOC'),'FIRENOC-11','Terrace tank over respective tower terrace',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='FIRE NOC'),'FIRENOC-12','Pump near underground static water storage tank (fire pump) with minimum pressure of 3.5kg/cm2 at remotest location as per NBC',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='FIRE NOC'),'FIRENOC-13','Water storage tank at the terrace level with minimum pressure of 3.4kg/cm2',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='FIRE NOC'),'FIRENOC-14','06 meter motorable road around the building if building is high rise',0,1,NOW(),1,NOW());
+
+
+INSERT INTO chandigarh.eg_checklist (id,checklisttypeid,code,description,"version",createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='ELECTRICAL NOC'),'ELECTRICALNOC-01','The Total connected load of the proposal mentioned on all plans. ',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='ELECTRICAL NOC'),'ELECTRICALNOC-02','If total connected load of the proposal is above 100 KW. The space should be earmarked on the plan for setting up of sub station .',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='ELECTRICAL NOC'),'ELECTRICALNOC-03','The space should be marked near main entrance for 11 KV metering unit is sub station is to be proposed. ',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='ELECTRICAL NOC'),'ELECTRICALNOC-04','The DG set if proposed the position of same should be marked on layout plans. ',0,1,NOW(),1,NOW()),
+(nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='ELECTRICAL NOC'),'ELECTRICALNOC-04','The pit depth and overload should be clearly marked for lifts. ',0,1,NOW(),1,NOW());
+
+
+CREATE SEQUENCE chandigarh.seq_eg_noc_evaluation
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+
+CREATE TABLE chandigarh.eg_noc_evaluation (
+	id int8 NOT NULL,
+	checklist int8 NOT NULL,
+	nocapplication int8 NULL,
+	remarks varchar(20) NULL,
+	comment varchar(1024) NULL,
+	"version" numeric NULL DEFAULT 0,
+	createdby int8 NOT NULL,
+	createddate timestamp NOT NULL,
+	lastmodifiedby int8 NULL,
+	lastmodifieddate timestamp NULL,
+	CONSTRAINT pk_eg_noc_evaluation PRIMARY KEY (id)
+);
+
+
+ALTER TABLE chandigarh.eg_noc_evaluation ADD CONSTRAINT fk_eg_noc_evaluation_checklist FOREIGN KEY (checklist) REFERENCES chandigarh.eg_checklist(id);
+ALTER TABLE chandigarh.eg_noc_evaluation ADD CONSTRAINT fk_eg_noc_evaluation_nocapplication FOREIGN KEY (nocapplication) REFERENCES chandigarh.egbpa_nocapplication(id);
+ALTER TABLE chandigarh.eg_noc_evaluation ADD CONSTRAINT fk_eg_noc_evaluation_crtby FOREIGN KEY (createdby) REFERENCES state.eg_user(id);
+ALTER TABLE chandigarh.eg_noc_evaluation ADD CONSTRAINT fk_eg_noc_evaluation_mdfdby FOREIGN KEY (lastmodifiedby) REFERENCES state.eg_user(id);
