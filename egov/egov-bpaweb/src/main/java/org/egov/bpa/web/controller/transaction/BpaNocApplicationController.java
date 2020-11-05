@@ -176,7 +176,7 @@ public class BpaNocApplicationController {
 			evaluations.add(nocEvaluation);
 		}
 
-		permitNocApplication.getBpaNocApplication().setNocEvaluations(evaluations);
+		//permitNocApplication.getBpaNocApplication().setNocEvaluations(evaluations);
 
 		BpaStatus status = statusService.findByModuleTypeAndCode(BpaConstants.NOCMODULE, workFlowAction);
 		permitNocApplication.getBpaNocApplication().setStatus(status);
