@@ -445,11 +445,12 @@ public class CitizenApplicationController extends BpaGenericApplicationControlle
     
         applicationBpaService.buildExistingAndProposedBuildingDetails(bpaApplication);
         bpaUtils.saveOrUpdateBoundary(bpaApplication);        
-
+        
+        Plan plan = applicationBpaService.getPlanInfo(bpaApplication.geteDcrNumber());
         if (!isEdcrIntegrationRequire && riskBasedAppTypes.contains(bpaApplication.getApplicationType())) {
         	String rootBoundaryType = BpaConstants.URBAN;
         	String plotType = BpaConstants.ABOVE_TWO_KANAL;
-        	Plan plan = applicationBpaService.getPlanInfo(bpaApplication.geteDcrNumber());	    		
+        		    		
     		if(null!=plan) {
     			if(null != plan.getPlanInfoProperties().get(BpaConstants.ROOT_BOUNDARY_TYPE)) {
     				rootBoundaryType = plan.getPlanInfoProperties().get(BpaConstants.ROOT_BOUNDARY_TYPE);
@@ -461,6 +462,11 @@ public class CitizenApplicationController extends BpaGenericApplicationControlle
             ApplicationSubType applicationType = bpaUtils.getApplicationType(plotType, rootBoundaryType);
             bpaApplication.setApplicationType(applicationType);
         }
+        //update sector, plotNumber & filenumber
+        bpaApplication.setPlotNumber(plan.getPlanInfoProperties().get(BpaConstants.PLOT_NO));
+        bpaApplication.setSector(plan.getPlanInfoProperties().get(BpaConstants.SECTOR_NUMBER));
+        bpaApplication.setFileNumber(bpaApplication.getSiteDetail().get(0).getKhataNumber());
+        
         Long approvalPosition = null;
         String workFlowAction = request.getParameter(WORK_FLOW_ACTION);
         Boolean isCitizen = request.getParameter(IS_CITIZEN) != null

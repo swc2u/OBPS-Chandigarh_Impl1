@@ -121,7 +121,16 @@ public class PlanInformation implements Serializable {
     //Extracted from Plan info. Road width declared in the plan.
     private BigDecimal roadWidth = BigDecimal.ZERO;
     //Extracted from Plan info. Road length declared in the plan.
-    private BigDecimal roadLength = BigDecimal.ZERO;
+    private BigDecimal roadLength = BigDecimal.ZERO;       
+    //Extracted from Plan info. Road 2 width declared in the plan.
+    private BigDecimal roadTwoWidth = BigDecimal.ZERO;
+    //Extracted from Plan info. Road 2 length declared in the plan.
+    private BigDecimal roadTwoLength = BigDecimal.ZERO;
+    
+    //YES/NO/NA.Extracted from Plan info. Is case of death.
+  	private Boolean isDeathCase = false;
+  	private Boolean isAllotmentOfNewNumber = false;
+    
     //Extracted from Plan info. Type of area. Whether old or new area.
     private String typeOfArea;
     //Extracted from Plan info. Average plot depth.
@@ -266,7 +275,7 @@ public class PlanInformation implements Serializable {
     //COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE
     private transient String commercialAreaOccupancyAsPerRule=NA;
     
-    private transient Boolean isConversionChargesApplicable=false;
+    private BigDecimal conversionChargesArea=BigDecimal.ZERO;;
     
 	public String getRootBoundaryType() {
 		return rootBoundaryType;
@@ -1015,13 +1024,43 @@ public class PlanInformation implements Serializable {
 		this.nocAcTaxDept = nocAcTaxDept;
 	}
 
-	public Boolean getIsConversionChargesApplicable() {
-		return isConversionChargesApplicable;
+	public BigDecimal getConversionChargesArea() {
+		return conversionChargesArea;
 	}
 
-	public void setIsConversionChargesApplicable(Boolean isConversionChargesApplicable) {
-		this.isConversionChargesApplicable = isConversionChargesApplicable;
+	public void setConversionChargesArea(BigDecimal conversionChargesArea) {
+		this.conversionChargesArea = conversionChargesArea;
 	}
-	
-	
+
+	public BigDecimal getRoadTwoWidth() {
+		return roadTwoWidth;
+	}
+
+	public void setRoadTwoWidth(BigDecimal roadTwoWidth) {
+		this.roadTwoWidth = roadTwoWidth;
+	}
+
+	public BigDecimal getRoadTwoLength() {
+		return roadTwoLength;
+	}
+
+	public void setRoadTwoLength(BigDecimal roadTwoLength) {
+		this.roadTwoLength = roadTwoLength;
+	}
+
+	public Boolean getIsDeathCase() {
+		return isDeathCase;
+	}
+
+	public void setIsDeathCase(Boolean isDeathCase) {
+		this.isDeathCase = isDeathCase;
+	}
+
+	public Boolean getIsAllotmentOfNewNumber() {
+		return isAllotmentOfNewNumber;
+	}
+
+	public void setIsAllotmentOfNewNumber(Boolean isAllotmentOfNewNumber) {
+		this.isAllotmentOfNewNumber = isAllotmentOfNewNumber;
+	}
 }

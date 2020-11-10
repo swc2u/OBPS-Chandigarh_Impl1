@@ -87,7 +87,7 @@ public class HeightOfRoom extends FeatureProcess {
 	public static final BigDecimal MINIMUM_HEIGHT_3 = BigDecimal.valueOf(3);
 	public static final BigDecimal MINIMUM_HEIGHT_2_75 = BigDecimal.valueOf(2.75);
 	public static final BigDecimal MINIMUM_HEIGHT_2_4 = BigDecimal.valueOf(2.4);
-	public static final BigDecimal MINIMUM_AREA_9_5 = BigDecimal.valueOf(9.5);//9.29
+	public static final BigDecimal MINIMUM_AREA_9_5 = BigDecimal.valueOf(9.5);// 9.29
 	public static final BigDecimal MINIMUM_WIDTH_2_4 = BigDecimal.valueOf(2.4);
 	public static final BigDecimal MINIMUM_WIDTH_2_1 = BigDecimal.valueOf(2.1);
 	private static final String FLOOR = "Floor";
@@ -153,7 +153,7 @@ public class HeightOfRoom extends FeatureProcess {
 						int roomCount = 0;
 
 						for (Floor floor : block.getBuilding().getFloors()) {
-							if(floor.getNumber()<0)
+							if (floor.getNumber() < 0)
 								continue;
 							List<BigDecimal> roomAreas = new ArrayList<>();
 							List<BigDecimal> roomWidths = new ArrayList<>();
@@ -187,7 +187,8 @@ public class HeightOfRoom extends FeatureProcess {
 //                                }
 								int roomNumber = 1;
 								for (Room r : habitableRooms) {
-									for (Measurement room : r.getRooms()) {
+									if (r.getRooms() != null && !r.getRooms().isEmpty() && r.getRooms().size() >= 1) {
+										Measurement room = r.getRooms().get(0);
 										minimumHeight = MINIMUM_HEIGHT_2_75;
 										BigDecimal minimumArea = MINIMUM_AREA_9_5;
 										minWidth = MINIMUM_WIDTH_2_4;
@@ -196,7 +197,7 @@ public class HeightOfRoom extends FeatureProcess {
 											providedHeight = r.getHeights().stream().map(RoomHeight::getHeight)
 													.reduce(BigDecimal::min).get();
 										} catch (Exception e) {
-											
+
 										}
 
 										subRule = CDGAdditionalService.getByLaws(pl, CDGAConstant.HABITABLE_ROOM);
@@ -211,8 +212,10 @@ public class HeightOfRoom extends FeatureProcess {
 												room.getArea(), valid, typicalFloorValues);
 
 										subRuleDesc = SUBRULE_41_II_B_TOTAL_WIDTH;
-										buildResult(pl, floor, roomNumber, CDGADeviationConstant.addDeviation(minWidth, CDGADeviationConstant.ROOM_DEVIATION_WIDTH), subRule, subRuleDesc,
-												room.getWidth(), valid, typicalFloorValues);
+										buildResult(pl, floor, roomNumber,
+												CDGADeviationConstant.addDeviation(minWidth,
+														CDGADeviationConstant.ROOM_DEVIATION_WIDTH),
+												subRule, subRuleDesc, room.getWidth(), valid, typicalFloorValues);
 
 										subRuleDesc = SUBRULE_41_II_A_REGULAR_DESC;
 										buildResult(pl, floor, roomNumber, minimumHeight, subRule, subRuleDesc,
@@ -250,7 +253,8 @@ public class HeightOfRoom extends FeatureProcess {
 		List<Room> spcRoom = new ArrayList<Room>();
 		if (rooms != null) {
 			for (Room room : rooms) {
-				for (Measurement r : room.getRooms()) {
+				if (room.getRooms() != null && !room.getRooms().isEmpty() && room.getRooms().size() >= 1) {
+					Measurement r = room.getRooms().get(0);
 					if (colorCode == r.getColorCode()) {
 						spcRoom.add(room);
 					}
@@ -416,7 +420,7 @@ public class HeightOfRoom extends FeatureProcess {
 			String subRuleDesc, BigDecimal actual, boolean valid, Map<String, Object> typicalFloorValues) {
 		if (!(Boolean) typicalFloorValues.get("isTypicalRepititiveFloor")
 				&& expected.compareTo(BigDecimal.valueOf(0)) > 0 && subRule != null && subRuleDesc != null) {
-			
+
 			String value = typicalFloorValues.get("typicalFloors") != null
 					? (String) typicalFloorValues.get("typicalFloors")
 					: " floor " + floor.getNumber();
@@ -446,7 +450,8 @@ public class HeightOfRoom extends FeatureProcess {
 				&& expected.compareTo(BigDecimal.valueOf(0)) > 0 && subRule != null && subRuleDesc != null) {
 
 			if (pl.getDrawingPreference().getInFeets()) {
-				expected = CDGAdditionalService.meterToFootArea(CDGADeviationConstant.addDeviation(expected, CDGADeviationConstant.ROOM_DEVIATION_AREA));
+				expected = CDGAdditionalService.meterToFootArea(
+						CDGADeviationConstant.addDeviation(expected, CDGADeviationConstant.ROOM_DEVIATION_AREA));
 				actual = CDGAdditionalService.inchtoFeetArea(actual);
 			}
 

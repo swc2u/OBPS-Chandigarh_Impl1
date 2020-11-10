@@ -798,6 +798,10 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
     public List<BpaApplication> findApplicationByEDCRNumber(final String eDcrNumber) {
         return applicationBpaRepository.findApplicationByEDcrNumberOrderByIdDesc(eDcrNumber);
     }
+    
+    public List<BpaApplication> findApplicationByPlotNumberAndSectorOrderByIdDesc(String plotNumber,String sector){
+    	 return applicationBpaRepository.findApplicationByPlotNumberAndSectorOrderByIdDesc(plotNumber,sector);
+    }
 
     public BpaApplication findByPermitNumber(final String permitNumber) {
         return applicationBpaRepository.findByPlanPermissionNumber(permitNumber);

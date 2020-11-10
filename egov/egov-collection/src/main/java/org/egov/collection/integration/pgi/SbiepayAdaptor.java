@@ -105,12 +105,8 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 				+ Other_Details + "|" + Success_URL + "|" + Failure_URL + "|" + Collaborator_Id + "|" + Order_Number
 				+ "|" + "2" + "|" + "NB" + "|" + "ONLINE" + "|" + "ONLINE";
 
-		//System.out.println("SBI - hashSequence " + hashSequence);
-
 		String hash = AES256Bit.encrypt(hashSequence,
 				AES256Bit.readKeyBytes(collectionApplicationProperties.sbiMkey(prefix)));
-
-		LOGGER.info("SBI hash " + hash);
 
 		UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme("https")
 				.host(collectionApplicationProperties.sbiUrl(prefix))
@@ -202,7 +198,6 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 		map.put(trascationdate, strings[10]);
 		map.put(Country, strings[11]);
 		map.put(CIN, strings[12]);
-		//LOGGER.info(map);
 		LOGGER.info("==========================");
 		return map;
 	}

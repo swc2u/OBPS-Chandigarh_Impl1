@@ -426,6 +426,7 @@
 		<input type="hidden" id="approveAppln" value="<spring:message code='msg.confirm.approve.appln' />" />
 		<input type="hidden" id="forwardAppln" value="<spring:message code='msg.confirm.forward.application' />" />
 		<input type="hidden" id="generatePermitOrder" value="<spring:message code='msg.confirm.generate.permitorder' />" />
+		<input type="hidden" id="acceptedasscrutinized" value="<spring:message code='msg.confirm.accepted.as.scrutinized' />" />
 		<input type="hidden" id="permitRequired" value="<spring:message code='msg.validate.permit.mandatory' />" />
 		<input type="hidden" id="generateRejectNotice" value="<spring:message code='msg.confirm.generate.rejection.notice' />" />
 		<input type="hidden" id="townsurvFieldInspeRequest" value="<spring:message code='msg.validate.townsurveyor.filedinspec.request' />" />

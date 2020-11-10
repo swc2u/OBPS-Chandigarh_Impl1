@@ -302,6 +302,7 @@ public class BpaConstants {
     public static final String APPLICATION_STATUS_ORDER_ISSUED = "Order Issued to Applicant";
     public static final String APPLICATION_STATUS_DIGI_SIGNED = "Digitally signed";
     public static final String APPLICATION_STATUS_RECORD_APPROVED = "Record Approved";
+    public static final String APPLICATION_STATUS_ACCEPTED_AS_SCRUTINIZED = "Accepted as Scrutinized";
     public static final String APPLICATION_STATUS_NOCUPDATED = "NOC Updated";
     public static final String APPLICATION_STATUS_CANCELLED = "Cancelled";
     public static final String APPLICATION_STATUS_REGISTERED = "Registered";
@@ -414,6 +415,7 @@ public class BpaConstants {
     public static final String DEVELOPMENT_CHARGES_OF_ROADS = "Development charges of roads";
     public static final String CONVERSION_CHARGES="Conversion charges";
     public static final String CONSTRUCTION_AND_DEMOLISION="Construction & Demolision";
+    public static final String ALLOTMENT_OF_NEW_NUMBER="Fee for allotment of new number";
     
     public static final String INTERNAL_CHANGES_FEE="Fee for internal changes during construction";
     public static final String EXCESS_COVERAGE_FEE="Fee for excess coverage area";
@@ -427,6 +429,8 @@ public class BpaConstants {
     public static final String TP_DEPT = "TOWN PLANNING DEPARTMENT";
     public static final String DEV_PERMIT_FEE = "DPF";
     public static final String OWNERSHIP_FEE = "Ownership Transfer Fees";
+    
+    public static final String TRANSFER_FEE = "Transfer fee";
     
     //NOC integration related
     public static final String FIRENOCTYPE = "FIRE NOC"; 
@@ -525,10 +529,12 @@ public class BpaConstants {
 
     // button name constants
     public static final String WF_APPROVE_BUTTON = "Approve";
+    public static final String WF_ACCEPT_AS_SCRUTINIZED_BUTTON = "Accept as Scrutinized";
     public static final String WF_REJECT_BUTTON = "REJECT";
     public static final String WF_REVOCATE_BUTTON = "Revocate";
     public static final String WF_CANCELAPPLICATION_BUTTON = "Cancel Application";
     public static final String GENERATEPERMITORDER = "Generate Permit Order";
+    public static final String ACCEPTASSCRUTINIZED = "Accept as Scrutinized";
     public static final String GENERATEREJECTNOTICE = "Generate Rejection Notice";
     public static final String GENERATEREVOCATIONNOTICE = "Revoke Permit";
     public static final String WF_LBE_SUBMIT_BUTTON = "Submit";

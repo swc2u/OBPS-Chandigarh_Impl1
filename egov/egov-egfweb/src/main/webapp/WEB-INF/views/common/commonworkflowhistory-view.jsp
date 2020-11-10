@@ -90,9 +90,9 @@
 					<div class="col-sm-2 col-xs-12 add-margin">
 						<c:out value="${history.department}" />
 					</div>
-					<div class="col-sm-2 col-xs-12 add-margin">
+					<!--  common <div class="col-sm-2 col-xs-12 add-margin">
 						<c:out value="${history.comments}" />&nbsp;
-					</div>
+					</div> -->
 				</div>
 				</c:forEach>
 			</c:when>

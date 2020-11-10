@@ -432,7 +432,7 @@
 					<font size="8"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA["FILE NO"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["ZONE"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="418" y="210" width="130" height="21" uuid="a3b7760f-a182-4336-91dc-39f9c990f235"/>
@@ -447,7 +447,7 @@
 					<font size="8"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{planInformation}.getKhataNo()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{planInformation}.getZone()]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="418" y="108" width="130" height="21" uuid="7776029d-8555-4904-8dbe-2a76cae77301"/>
@@ -1422,7 +1422,7 @@
 					<font size="8"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA["ZONE"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["PLOT LENGTH"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="142" y="294" width="146" height="21" uuid="5564ae87-fbb1-4bbb-821e-ec7f092fce5e"/>
@@ -1437,7 +1437,7 @@
 					<font size="8"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{planInformation}.getZone()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{planInformation}.getPlotLength()]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement style="report status style" x="283" y="70" width="265" height="19" uuid="03a15d3c-4372-43d0-bb3e-0e12963ccd23"/>
@@ -1453,6 +1453,51 @@
 					<paragraph leftIndent="3"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{UNIT_DECLARATION}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement x="288" y="294" width="16" height="21" uuid="5f7d1017-2436-47f7-a943-aac9cb295b43"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA["10"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement x="304" y="294" width="114" height="21" uuid="e00578b0-64f9-4151-b520-3188ba2825e0"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PLOT WIDTH"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="418" y="294" width="130" height="21" uuid="e8c6c3eb-6546-4552-958e-035c4322e8db"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{planInformation}.getPlotWidth()]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

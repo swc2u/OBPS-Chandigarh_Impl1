@@ -243,7 +243,7 @@
 		</band>
 		<band height="50">
 			<staticText>
-				<reportElement stretchType="RelativeToBandHeight" x="14" y="0" width="546" height="20" uuid="1e0f2bc1-2b7f-493b-b90f-87a31a9a06a5"/>
+				<reportElement stretchType="RelativeToBandHeight" x="14" y="1" width="546" height="20" uuid="1e0f2bc1-2b7f-493b-b90f-87a31a9a06a5"/>
 				<box leftPadding="1"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="11" isBold="true"/>

@@ -7,7 +7,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class AES128Bit {
-	private static final String encryptionKey           = "ABCDEFGHIJKLMNOP";
 	private static final String characterEncoding       = "UTF-8";
     private static final String cipherTransformation    = "AES/CBC/PKCS5PADDING";
     private static final String aesEncryptionAlgorithem = "AES";
@@ -54,15 +53,20 @@ public class AES128Bit {
     }
     
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter String : ");
-        //String plainString = sc.nextLine();
-        
-        //String encyptStr   = encrypt(plainString);
-        String decryptStr  = decrypt("LPqKad69VAj+zFzejHCGCurWTbGLvovAjUHQdCeHwnLWi+l/B3QsVr0OfyahWXSf", "A7C9F96EEE0602A61F184F4F1B92F0566B9E61D98059729EAD3229F882E81C3A");
-        
-        //System.out.println("Plain   String  : "+plainString);
-        //System.out.println("Encrypt String  : "+encyptStr);
-        System.out.println("Decrypt String  : "+decryptStr);        
+    	String secretKey = "Adfhj#$@56677745";
+		
+		String encryptedEmpCode = AES128Bit.encrypt("1975010001Z", secretKey);
+		System.out.println("encryptedEmpCode :: " + encryptedEmpCode);
+		String encryptedMonth = AES128Bit.encrypt("03", secretKey);
+		System.out.println("encryptedMonth :: " + encryptedMonth);
+		String encryptedYear = AES128Bit.encrypt("2018", secretKey);
+		System.out.println("encryptedYear :: " + encryptedYear);
+		
+		String dycriptedEmpCode = AES128Bit.decrypt(encryptedEmpCode, secretKey);
+		System.out.println("dycriptedEmpCode :: " + dycriptedEmpCode);
+		String dycriptedMonth = AES128Bit.decrypt(encryptedMonth, secretKey);
+		System.out.println("dycriptedMonth :: " + dycriptedMonth);
+		String dycriptedYear = AES128Bit.decrypt(encryptedYear, secretKey);
+		System.out.println("dycriptedYear :: " + dycriptedYear);       
     }
 }

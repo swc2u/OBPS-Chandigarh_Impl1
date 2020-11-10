@@ -504,6 +504,34 @@ jQuery(document)
                                 e.preventDefault();
                             }
                             return false;
+                        } else if (action == 'Accept as Scrutinized') {
+                            $('#Accept as Scrutinized').attr('formnovalidate', 'true');
+                            if (validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .dialog({
+                                        message: $('#acceptedasscrutinized').val(),
+                                        buttons: {
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary',
+                                                callback: function (result) {
+                                                    $('#viewBpaApplicationForm').trigger('submit');
+                                                }
+                                            },
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger',
+                                                callback: function (result) {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                }
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
                         } else if (action == 'Generate Rejection Notice') {
                             if (validateOnReject(false) && validateOnApproveAndForward(validator, action)) {
                                 bootbox

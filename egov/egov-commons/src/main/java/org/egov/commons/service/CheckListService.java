@@ -48,15 +48,19 @@
 
 package org.egov.commons.service;
 
-import org.egov.commons.repository.CheckListRepository;
-import org.egov.infstr.models.EgChecklists;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.List;
+
+import org.egov.common.entity.bpa.Checklist;
+import org.egov.commons.repository.CheckListRepository;
+import org.egov.commons.repository.CommanChecklistRepository;
+import org.egov.infstr.models.EgChecklists;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
@@ -65,6 +69,10 @@ public class CheckListService {
     private final CheckListRepository checkListRepository;
     @PersistenceContext
     private EntityManager entityManager;
+    
+    @Autowired
+    @Qualifier("CommanChecklistRepository")
+    private CommanChecklistRepository bpaChecklistRepository; 
 
     @Autowired
     public CheckListService(final CheckListRepository checkListRepository) {
@@ -88,6 +96,10 @@ public class CheckListService {
     @Transactional
     public void delete(final EgChecklists checklists) {
         checkListRepository.delete(checklists);
+    }
+    
+    public List<Checklist> findChecklistByCheckListTypeCode(String code){
+    	return bpaChecklistRepository.findByChecklistTypeCode(code);
     }
 
 }

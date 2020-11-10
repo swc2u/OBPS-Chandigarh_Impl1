@@ -162,8 +162,8 @@ public class AdditionalFeature extends FeatureProcess {
 	@Autowired
 	private AdditionalFeature2 additionalFeature2;
 	
-//	@Autowired
-//	private OCAdditionalFeature oCAdditionalFeature;
+	@Autowired
+	private OCAdditionalFeature oCAdditionalFeature;
 
 	@Override
 	public Plan validate(Plan pl) {
@@ -242,7 +242,7 @@ public class AdditionalFeature extends FeatureProcess {
 		// CSCL add end
 		additionalFeature2.process(pl);
 		
-		//oCAdditionalFeature.process(pl);// for disabling the code OC comparation 
+		oCAdditionalFeature.process(pl);// for disabling the code OC comparation 
 
 		return pl;
 	}
