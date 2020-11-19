@@ -53,10 +53,10 @@
 <div class="panel-body history-slide display-hide">
 	<div
 		class="row add-margin hidden-xs visible-sm visible-md visible-lg header-color">
-		<div class="col-sm-2 col-xs-6 add-margin">
+		<div class="col-sm-1 col-xs-6 add-margin">
 			<spring:message code="lbl.date" />
 		</div>
-		<div class="col-sm-2 col-xs-6 add-margin">
+		<div class="col-sm-1 col-xs-6 add-margin">
 			<spring:message code="lbl.updatedby" />
 		</div>
 		<div class="col-sm-2 col-xs-6 add-margin">
@@ -71,17 +71,20 @@
 		<div class="col-sm-2 col-xs-6 add-margin">
 			<spring:message code="lbl.comments" />
 		</div>
+		<div class="col-sm-2 col-xs-6 add-margin">
+			<spring:message code="lbl.attachdocument" text="Attachment"/>
+		</div>
 	</div>
 	<c:choose>
 		<c:when test="${!applicationHistory.isEmpty()}">
 			<c:forEach items="${applicationHistory}" var="history">
 				<div class="row add-margin">
-					<div class="col-sm-2 col-xs-12 add-margin">
+					<div class="col-sm-1 col-xs-12 add-margin">
 						<fmt:formatDate value="${history.date}" var="historyDate"
 							pattern="dd/MM/yyyy HH:mm a E" />
 						<c:out value="${historyDate}" />
 					</div>
-					<div class="col-sm-2 col-xs-12 add-margin">
+					<div class="col-sm-1 col-xs-12 add-margin">
 						<c:out value="${history.updatedBy}" />
 					</div>
 					<div class="col-sm-2 col-xs-12 add-margin">
@@ -101,7 +104,22 @@
 						</c:when>
 							<c:otherwise>
 								<a href="#" onclick="showComent('${history.comments}')">click here</a>&nbsp;
-						</c:otherwise>
+							</c:otherwise>
+						</c:choose>
+					</div>
+					<div class="col-sm-2 col-xs-12 add-margin">
+						<c:choose>
+							<c:when test="${not empty history.attachment}">
+								<c:forEach items="${history.attachment}" var="fileStoreMapper" varStatus="lstStatus">
+									<a class="download" target="_blank" href="/bpa/application/downloadfile/${fileStoreMapper.fileStoreId}">${fileStoreMapper.fileName}</a>
+									<c:if test="${(lstStatus.index+1) ne history.attachment.size()}">
+  										</br>
+									</c:if>
+								</c:forEach>
+							</c:when>
+							<c:otherwise>
+								NA
+							</c:otherwise>
 						</c:choose>
 					</div>
 				</div>

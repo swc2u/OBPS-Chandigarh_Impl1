@@ -38,17 +38,17 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-div.files-viewer{
+div.files-viewer, div.wf-files-viewer{
 	display:inline-block;
 }
 
-div.file-viewer, a.file-add{
+div.file-viewer, a.file-add, div.wf-file-viewer, a.wf-file-add{
   position:relative;	
   background-position: center !important;
   background-size: cover !important;
 }
 
-div.file-viewer > i{
+div.file-viewer > i, div.wf-file-viewer > i{
 	position:absolute;
 	font-size:30px;
 	color:#9e9e9e;
@@ -57,7 +57,7 @@ div.file-viewer > i{
     margin: 10px 13px;
 }
 
-div.file-viewer > a.download{
+div.file-viewer > a.download, div.wf-file-viewer > a.download{
    width: 54px;
     height: 54px;
     display: block;
@@ -65,7 +65,7 @@ div.file-viewer > a.download{
     z-index: 1;
 }
 
-a.file-add, div.file-viewer, img.file-viewer{
+a.file-add, div.file-viewer, img.file-viewer, a.wf-file-add, div.wf-file-viewer, img.wf-file-viewer{
 	margin:0 5px 10px 5px;
 	display:inline-block;	
 	width: 54px;
@@ -79,29 +79,29 @@ a.file-add, div.file-viewer, img.file-viewer{
     float:left;
 }
 
-a.file-add i{
+a.file-add i, a.wf-file-add i{
 	font-size: 28px;
     padding: 12px 15px;
     color: #949494;
 }
 
-a.file-add:hover{
+a.file-add:hover, a.wf-file-add:hover{
 	background: #efefef;
 }
 
-div.file-viewer:hover a.delete, div.file-viewer:hover a.deleteDcrDoc{
+div.file-viewer:hover a.delete, div.file-viewer:hover a.deleteDcrDoc, div.wf-file-viewer:hover a.delete{
 	margin-top:32px;
 	-webkit-transition: margin 1s;
   -moz-transition: margin 1s;
   transition: margin 0.5s;
 }
 
-div.file-viewer a.delete:before, div.file-viewer a.deleteDcrDoc:before{
+div.file-viewer a.delete:before, div.file-viewer a.deleteDcrDoc:before, div.wf-file-viewer a.delete:before{
    font-family: FontAwesome;
    content: "\f014";
 }
 
-div.file-viewer a.delete, div.file-viewer a.deleteDcrDoc {
+div.file-viewer a.delete, div.file-viewer a.deleteDcrDoc, div.wf-file-viewer a.delete {
     display: block;
     background: rgb(244, 67, 54);
     text-align: center;
@@ -114,7 +114,7 @@ div.file-viewer a.delete, div.file-viewer a.deleteDcrDoc {
 
 /* image popup start */
 /* Style the Image Used to Trigger the Modal */
-.file-viewer img {
+.file-viewer img, .wf-file-viewer img {
     transition: 0.3s;
 }
 

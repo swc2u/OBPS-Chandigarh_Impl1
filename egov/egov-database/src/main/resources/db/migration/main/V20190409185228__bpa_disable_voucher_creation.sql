@@ -1,1 +1,0 @@
-update egcl_servicedetails set vouchercreation =false, isvoucherapproved = false where name in ('BPA Building Licensee Charges','Occupancy Certificate Charges','Building Plan Charges');

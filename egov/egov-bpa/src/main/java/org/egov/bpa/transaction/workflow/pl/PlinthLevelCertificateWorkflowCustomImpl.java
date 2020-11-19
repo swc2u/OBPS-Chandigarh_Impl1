@@ -96,6 +96,7 @@ public abstract class PlinthLevelCertificateWorkflowCustomImpl implements Plinth
                         .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                         .withOwner(ownerUser)
                         .withComments(wfBean.getApproverComments())
+                        .withRefFileId(pl.getWfFileRefId())
                         .withInitiator(wfInitiator != null ? wfInitiator.getPosition() : null)
                         .withStateValue(wfMatrix.getNextState()).withDateInfo(new Date()).withOwner(pos)
                         .withNextAction(wfMatrix.getNextAction()).withNatureOfTask(NATURE_OF_WORK_PL);
@@ -108,6 +109,7 @@ public abstract class PlinthLevelCertificateWorkflowCustomImpl implements Plinth
                 pl.transition().progressWithStateCopy()
                         .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                         .withComments(wfBean.getApproverComments())
+                        .withRefFileId(pl.getWfFileRefId())
                         .withStateValue(wfMatrix.getNextState()).withDateInfo(currentDate.toDate())
                         .withOwner(pos).withOwner(ownerUser)
                         .withNextAction(wfMatrix.getNextAction()).withNatureOfTask(NATURE_OF_WORK_PL);
@@ -119,6 +121,7 @@ public abstract class PlinthLevelCertificateWorkflowCustomImpl implements Plinth
             pl.transition().progressWithStateCopy()
                     .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                     .withComments(wfBean.getApproverComments())
+                    .withRefFileId(pl.getWfFileRefId())
                     .withStateValue(BpaConstants.WF_REJECT_STATE).withDateInfo(currentDate.toDate())
                     .withOwner(pos).withOwner(ownerUser)
                     .withNextAction(wfMatrix.getNextAction())
@@ -127,7 +130,9 @@ public abstract class PlinthLevelCertificateWorkflowCustomImpl implements Plinth
             pl.setStatus(getStatusByPassingCode(BpaConstants.APPLICATION_STATUS_CANCELLED));
             pl.transition().end()
                     .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                    .withComments(wfBean.getApproverComments()).withDateInfo(currentDate.toDate())
+                    .withComments(wfBean.getApproverComments())
+                    .withRefFileId(pl.getWfFileRefId())
+                    .withDateInfo(currentDate.toDate())
                     .withNextAction(BpaConstants.WF_END_STATE).withNatureOfTask(BpaConstants.NATURE_OF_WORK_PL);
         } else {
             Assignment approverAssignment = bpaWorkFlowService.getApproverAssignment(pos);
@@ -156,12 +161,16 @@ public abstract class PlinthLevelCertificateWorkflowCustomImpl implements Plinth
                 if (BpaConstants.GENERATE_PL_CERTIFICATE.equalsIgnoreCase(wfBean.getWorkFlowAction()))
                     pl.transition().end()
                             .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                            .withComments(wfBean.getApproverComments()).withDateInfo(currentDate.toDate())
+                            .withComments(wfBean.getApproverComments())
+                            .withRefFileId(pl.getWfFileRefId())
+                            .withDateInfo(currentDate.toDate())
                             .withNextAction(wfMatrix.getNextAction()).withNatureOfTask(NATURE_OF_WORK_PL);
                 else
                     pl.transition().progressWithStateCopy()
                             .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                            .withComments(wfBean.getApproverComments()).withOwner(ownerUser)
+                            .withComments(wfBean.getApproverComments())
+                            .withRefFileId(pl.getWfFileRefId())
+                            .withOwner(ownerUser)
                             .withStateValue(wfMatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos)
                             .withNextAction(wfMatrix.getNextAction()).withNatureOfTask(NATURE_OF_WORK_PL)
                             .withExtraInfo(bpaStateInfo);

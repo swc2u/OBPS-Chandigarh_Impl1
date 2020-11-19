@@ -1,2 +1,0 @@
-alter table IF EXISTS state.EGBPA_MSTR_STAKEHOLDER alter licencenumber drop not null, alter buildinglicenceissuedate drop not null;
-alter table IF EXISTS state.EGBPA_MSTR_STAKEHOLDER_AUD alter licencenumber drop not null;

@@ -162,7 +162,7 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
                 application.transition().start()
                            .withSLA(bpaWorkFlowService.calculateDueDate(bpaAppConfigUtil.getSlaBpaApplication()))
                            .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                           .withComments(approvalComent).withInitiator(wfInitiator != null ? wfInitiator.getPosition() : null)
+                           .withComments(approvalComent).withRefFileId(application.getWfFileRefId()).withInitiator(wfInitiator != null ? wfInitiator.getPosition() : null)
                            .withStateValue(wfmatrix.getNextState()).withDateInfo(new Date()).withOwner(pos).withOwner(ownerUser)
                            .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK).withExtraInfo(bpaStateInfo);
             }
@@ -181,6 +181,7 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
             application.transition().progressWithStateCopy()
                        .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                        .withComments(approvalComent)
+                       .withRefFileId(application.getWfFileRefId())
                        .withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate())
                        .withOwner(pos).withOwner(ownerUser)
                        .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK);
@@ -211,6 +212,7 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
                 .withSLA(bpaWorkFlowService.calculateDueDate(bpaAppConfigUtil.getSlaBpaApplication()))
                 .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                 .withComments(approvalComent)
+                .withRefFileId(application.getWfFileRefId())
                 .withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate())
                 .withOwner(pos).withOwner(ownerUser)
                 .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK);
@@ -218,6 +220,7 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
                application.transition().progressWithStateCopy()
                        .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                        .withComments(approvalComent)
+                       .withRefFileId(application.getWfFileRefId())
                        .withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate())
                        .withOwner(pos).withOwner(ownerUser)
                        .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK);
@@ -228,6 +231,7 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
             application.transition().progressWithStateCopy()
                        .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                        .withComments(approvalComent)
+                       .withRefFileId(application.getWfFileRefId())
                        .withStateValue(BpaConstants.WF_REJECT_STATE).withDateInfo(currentDate.toDate())
                        .withOwner(pos).withOwner(ownerUser)
                        .withNextAction(wfmatrix.getNextAction())
@@ -246,6 +250,7 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
             application.transition().progressWithStateCopy()
                        .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                        .withComments(approvalComent)
+                       .withRefFileId(application.getWfFileRefId())
                        .withStateValue(BpaConstants.REJECTION_INITIATED).withDateInfo(currentDate.toDate())
                        .withOwner(pos).withOwner(ownerUser)
                        .withNextAction(wfmatrix.getNextAction())
@@ -255,7 +260,9 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
             application.setStatus(getStatusByPassingCode(BpaConstants.APPLICATION_STATUS_CANCELLED));
             application.transition().end()
                        .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                       .withComments(approvalComent).withDateInfo(currentDate.toDate())
+                       .withComments(approvalComent)
+                       .withRefFileId(application.getWfFileRefId())
+                       .withDateInfo(currentDate.toDate())
                        .withNextAction(BpaConstants.WF_END_STATE).withNatureOfTask(BpaConstants.NATURE_OF_WORK);
 
             if (additionalRule != null && additionalRule.equalsIgnoreCase(BpaConstants.CREATE_ADDITIONAL_RULE_CREATE))
@@ -270,6 +277,7 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
                 application.transition().progressWithStateCopy()
                            .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                            .withComments(approvalComent)
+                           .withRefFileId(application.getWfFileRefId())
                            .withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate())
                            .withOwner(pos).withOwner(ownerUser)
                            .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK);
@@ -280,7 +288,9 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
             application.setStatus(getStatusByCurrentMatrxiStatus(wfmatrix));
             application.transition().progressWithStateCopy()
                        .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                       .withComments(approvalComent).withStateValue(wfmatrix.getNextState())
+                       .withComments(approvalComent)
+                       .withRefFileId(application.getWfFileRefId())
+                       .withStateValue(wfmatrix.getNextState())
                        .withDateInfo(currentDate.toDate()).withOwner(application.getState().getOwnerPosition()).withOwner(application.getState().getOwnerUser())
                        .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK);
         } else if (BpaConstants.LPREPLYRECEIVED.equalsIgnoreCase(workFlowAction)) {
@@ -293,7 +303,9 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
             application.setStatus(letterToParties.get(0).getLetterToParty().getCurrentApplnStatus());
             application.transition().progressWithStateCopy()
                        .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                       .withComments(approvalComent).withStateValue(wfmatrix.getNextState())
+                       .withComments(approvalComent)
+                       .withRefFileId(application.getWfFileRefId())
+                       .withStateValue(wfmatrix.getNextState())
                        .withDateInfo(currentDate.toDate()).withOwner(stateHistory.getOwnerPosition()).withOwner(stateHistory.getOwnerUser())
                        .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK);
         } else {
@@ -373,12 +385,15 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
                 		|| wfmatrix.getNextAction().contains("END"))
                     application.transition().end()
                                .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                               .withComments(approvalComent).withDateInfo(currentDate.toDate())
+                               .withComments(approvalComent)
+                               .withRefFileId(application.getWfFileRefId())
+                               .withDateInfo(currentDate.toDate())
                                .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK);
                 else
                     application.transition().progressWithStateCopy()
                                .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                                .withComments(approvalComent)
+                               .withRefFileId(application.getWfFileRefId())
                                .withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos).withOwner(ownerUser)
                                .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK).withExtraInfo(bpaStateInfo);
             }

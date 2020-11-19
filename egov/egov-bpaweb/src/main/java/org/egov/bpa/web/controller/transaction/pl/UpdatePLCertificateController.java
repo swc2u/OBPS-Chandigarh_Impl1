@@ -249,6 +249,10 @@ public class UpdatePLCertificateController extends BpaGenericApplicationControll
         wfBean.setApproverComments(plinthLevelCertificate.getApprovalComent());
         if (plinthLevelCertificate.getState().getValue() != null)
             wfBean.setCurrentState(plinthLevelCertificate.getState().getValue());
+        
+        if (plinthLevelCertificate.getWorkflowFile().getFiles() != null && plinthLevelCertificate.getWorkflowFile().getFiles().length > 0)
+            applicationBpaService.persistWfDocuments(plinthLevelCertificate);
+        
         PlinthLevelCertificate plResponse = plinthLevelCertificateService.update(plinthLevelCertificate, wfBean);
         bpaUtils.updatePortalUserinbox(plResponse, null);
         if (null != approvalPosition) {

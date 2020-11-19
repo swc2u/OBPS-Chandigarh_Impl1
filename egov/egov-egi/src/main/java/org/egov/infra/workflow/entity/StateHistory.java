@@ -116,6 +116,7 @@ public class StateHistory<T extends OwnerGroup> implements Serializable {
     private String extraInfo;
     private Date dateInfo;
     private Date extraDateInfo;
+    private String refFileId;
 
     @ManyToOne(targetEntity = OwnerGroup.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "INITIATOR_POS")
@@ -125,8 +126,7 @@ public class StateHistory<T extends OwnerGroup> implements Serializable {
     @Column(updatable = false)
     private Date sla;
 
-    StateHistory() {
-    }
+    StateHistory() {}
 
     public StateHistory(State<T> state) {
         this.state = state;
@@ -145,6 +145,7 @@ public class StateHistory<T extends OwnerGroup> implements Serializable {
         extraDateInfo = state.getExtraDateInfo();
         natureOfTask = state.getNatureOfTask();
         initiatorPosition = state.getInitiatorPosition();
+        refFileId = state.getRefFileId();
     }
 
     public State getState() {
@@ -291,4 +292,11 @@ public class StateHistory<T extends OwnerGroup> implements Serializable {
         this.sla = sla;
     }
 
+	public String getRefFileId() {
+		return refFileId;
+	}
+
+	public void setRefFileId(String refFileId) {
+		this.refFileId = refFileId;
+	}
 }

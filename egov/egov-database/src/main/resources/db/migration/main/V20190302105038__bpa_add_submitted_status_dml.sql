@@ -1,2 +1,0 @@
-Insert into EGBPA_STATUS (ID,MODULETYPE,description,LASTMODIFIEDDATE,CODE,isactive,version,createdby,createddate)
- values (nextval('SEQ_EGBPA_STATUS'),'REGISTRATION','Submitted',now(),'Submitted',true,0,1,now());

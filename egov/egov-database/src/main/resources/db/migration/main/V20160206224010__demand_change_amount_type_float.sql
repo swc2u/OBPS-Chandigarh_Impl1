@@ -1,2 +1,0 @@
-alter table eg_demand_details alter column amount type double precision using (amount::double precision);
-alter table eg_demand alter column base_demand type double precision using (base_demand::double precision);
