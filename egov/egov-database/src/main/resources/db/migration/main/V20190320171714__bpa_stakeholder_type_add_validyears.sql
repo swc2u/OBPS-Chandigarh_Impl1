@@ -1,1 +1,0 @@
-alter table IF EXISTS state.EGBPA_MSTR_STAKEHOLDERTYPE  ADD COLUMN IF NOT EXISTS validYears bigint not null default 5;

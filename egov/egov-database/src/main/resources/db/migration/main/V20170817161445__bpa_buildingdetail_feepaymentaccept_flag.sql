@@ -1,1 +1,0 @@
-alter table EGBPA_BUILDINGDETAIL add column additionalFeePaymentAccepted boolean default false;

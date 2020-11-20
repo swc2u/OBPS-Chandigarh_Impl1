@@ -23,6 +23,7 @@ import javax.persistence.TemporalType;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BpaStatus;
 import org.egov.bpa.transaction.entity.WorkflowBean;
+import org.egov.bpa.transaction.entity.common.WorkflowFile;
 import org.egov.commons.entity.Source;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.utils.DateUtils;
@@ -130,6 +131,9 @@ public class PlinthLevelCertificate extends StateAware<Position> {
     private transient String approvalComent;
     private transient List<PLNoticeConditions> rejectionReasonsTemp = new ArrayList<>(0);
     private transient List<PLNoticeConditions> additionalRejectReasonsTemp = new ArrayList<>(0);
+    
+    private transient WorkflowFile workflowFile = new WorkflowFile();	
+    private transient String wfFileRefId;
         
 	@Override
 	public String getStateDetails() {
@@ -414,5 +418,21 @@ public class PlinthLevelCertificate extends StateAware<Position> {
 
 	public void setAdditionalRejectReasonsTemp(List<PLNoticeConditions> additionalRejectReasonsTemp) {
 		this.additionalRejectReasonsTemp = additionalRejectReasonsTemp;
+	}
+
+	public WorkflowFile getWorkflowFile() {
+		return workflowFile;
+	}
+
+	public void setWorkflowFile(WorkflowFile workflowFile) {
+		this.workflowFile = workflowFile;
+	}
+
+	public String getWfFileRefId() {
+		return wfFileRefId;
+	}
+
+	public void setWfFileRefId(String wfFileRefId) {
+		this.wfFileRefId = wfFileRefId;
 	}
 }

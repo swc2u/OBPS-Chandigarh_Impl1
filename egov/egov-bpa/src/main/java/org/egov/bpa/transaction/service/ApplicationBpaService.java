@@ -87,6 +87,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -128,7 +129,10 @@ import org.egov.bpa.transaction.entity.common.GeneralDocument;
 import org.egov.bpa.transaction.entity.common.NocDocument;
 import org.egov.bpa.transaction.entity.common.NoticeCondition;
 import org.egov.bpa.transaction.entity.common.StoreDcrFiles;
+import org.egov.bpa.transaction.entity.common.WorkflowFile;
 import org.egov.bpa.transaction.entity.enums.ConditionType;
+import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
+import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
 import org.egov.bpa.transaction.notice.PermitApplicationNoticesFormat;
 import org.egov.bpa.transaction.notice.impl.DemandDetailsFormatImpl;
 import org.egov.bpa.transaction.notice.impl.PermitOrderFormatImpl;
@@ -278,6 +282,9 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
 	private PermitFeeCalculationService permitFeeCalculationService;
     @Autowired
     private DcrRestService drcRestService;
+    
+    @Autowired
+    private WorkflowFileService workflowFileService;
 
     public Session getCurrentSession() {
         return entityManager.unwrap(Session.class);
@@ -679,6 +686,18 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
     public void persistOrUpdateApplicationDocument(final BpaApplication bpaApplication) {
         processAndStoreGeneralDocuments(bpaApplication);
     }
+    
+    public void persistWfDocuments(final BpaApplication bpaApplication) {
+        processAndStoreWfDocuments(bpaApplication);
+    }
+    
+    public void persistWfDocuments(final OccupancyCertificate occupancyCertificate) {
+        processAndStoreWfDocuments(occupancyCertificate);
+    }
+    
+    public void persistWfDocuments(final PlinthLevelCertificate plinthLevelCertificate) {
+        processAndStoreWfDocuments(plinthLevelCertificate);
+    }
 
     public BigDecimal setAdmissionFeeAmountForRegistrationWithAmenities(final Long serviceType, List<ServiceType> amenityList) {
         BigDecimal admissionfeeAmount;
@@ -850,7 +869,50 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
             for (final PermitDocument ocDocuments : application.getPermitDocuments())
                 buildGeneralFiles(ocDocuments.getDocument());
     }
-
+    
+    private void processAndStoreWfDocuments(final BpaApplication application) {
+    	if (application.getWorkflowFile().getFiles() != null && application.getWorkflowFile().getFiles().length > 0) {
+    		UUID uuid = UUID.randomUUID();
+    		String wfFileRefId = uuid.toString();
+    		for(MultipartFile doc:application.getWorkflowFile().getFiles()) {
+    			saveWfDocuments(doc, wfFileRefId);
+    		}
+    		application.setWfFileRefId(wfFileRefId);
+    	}
+    }
+    
+    private void processAndStoreWfDocuments(final OccupancyCertificate occupancyCertificate) {
+    	if (occupancyCertificate.getWorkflowFile().getFiles() != null && occupancyCertificate.getWorkflowFile().getFiles().length > 0) {
+    		UUID uuid = UUID.randomUUID();
+    		String wfFileRefId = uuid.toString();
+    		for(MultipartFile doc:occupancyCertificate.getWorkflowFile().getFiles()) {
+    			saveWfDocuments(doc, wfFileRefId);
+    		}
+    		occupancyCertificate.setWfFileRefId(wfFileRefId);
+    	}
+    }
+    
+    private void processAndStoreWfDocuments(final PlinthLevelCertificate plinthLevelCertificate) {
+    	if (plinthLevelCertificate.getWorkflowFile().getFiles() != null && plinthLevelCertificate.getWorkflowFile().getFiles().length > 0) {
+    		UUID uuid = UUID.randomUUID();
+    		String wfFileRefId = uuid.toString();
+    		for(MultipartFile doc:plinthLevelCertificate.getWorkflowFile().getFiles()) {
+    			saveWfDocuments(doc, wfFileRefId);
+    		}
+    		plinthLevelCertificate.setWfFileRefId(wfFileRefId);
+    	}
+    }
+    
+    private void saveWfDocuments(MultipartFile file, String stateRefId) {
+    	FileStoreMapper fileStoreMapper = addToFileStore(file);
+        WorkflowFile workflowFile = new WorkflowFile();
+        workflowFile.setStateRefId(stateRefId);
+        workflowFile.setFileStoreMapper(fileStoreMapper);
+        workflowFile.setCreatedBy(securityUtils.getCurrentUser());
+        workflowFile.setCreatedDate(new Date());
+        workflowFileService.save(workflowFile);
+    }
+    
     private void buildGeneralFiles(final GeneralDocument commonDoc) {
         if (commonDoc.getFiles() != null && commonDoc.getFiles().length > 0) {
             Set<FileStoreMapper> existingFiles = new HashSet<>();

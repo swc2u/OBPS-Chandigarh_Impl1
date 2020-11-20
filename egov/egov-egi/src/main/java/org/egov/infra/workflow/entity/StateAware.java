@@ -348,6 +348,12 @@ public abstract class StateAware<T extends OwnerGroup> extends AbstractAuditable
         public final Transition withSLAHours(int slaHours) {
             return withSLA(new LocalDateTime().plusHours(slaHours).toDate());
         }
+        
+        public final Transition withRefFileId(String refFileId) {
+            checkTransitionStatus();
+            state.setRefFileId(refFileId);
+            return this;
+        }
 
         private void resetState() {
             state.setComments(EMPTY);
@@ -362,6 +368,7 @@ public abstract class StateAware<T extends OwnerGroup> extends AbstractAuditable
             state.setOwnerPosition(null);
             state.setInitiatorPosition(null);
             state.setSla(null);
+            state.setRefFileId(null);
         }
 
     }

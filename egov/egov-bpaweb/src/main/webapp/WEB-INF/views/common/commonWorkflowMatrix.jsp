@@ -87,7 +87,7 @@
 			<form:hidden path="" name="nextAction" id="nextAction" value="${nextAction}"/>
             <form:hidden path="" name="stateType" id="stateType" value="${stateType}"/>
             <form:hidden path="" id="workFlowAction" name="workFlowAction"/>
-    	 <c:if test="${nextAction !='END'}">       
+    	 	<c:if test="${nextAction !='END'}">       
             <div class="row show-row" id="approverDetailHeading">
                 <div class="show-row form-group">
                     <label class="col-sm-3 control-label text-right"><spring:message
@@ -132,12 +132,28 @@
                     </div>
                 </div>
             </div>
-</c:if>
+			</c:if>
             <div class="row">
                 <label class="col-sm-3 control-label text-right"><spring:message code="lbl.comments"/></label>
                 <div class="col-sm-8 add-margin">
                     <form:textarea class="form-control" path="approvalComent" maxlength="3750" id="approvalComent"
                                    name="approvalComent"/>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-sm-3 text-right">
+					<spring:message code="lbl.attachdocument"/><span class="text-info view-content"> (<spring:message code="lbl.wf.supp.doc.types"/>)</span>
+					<br>
+					<small class="text-info view-content"><spring:message code="lbl.mesg.document"/></small>
+				</label>
+                <div class="col-sm-8 add-margin">
+                	<div class="wf-files-upload-container" data-file-max-size="5" data-allowed-extenstion="pdf,jpeg,jpg,png,gif,tiff,std">
+                		<div class="wf-files-viewer">
+		                    <a href="javascript:void(0);" class="wf-file-add" data-unlimited-files="true" data-file-input-name="workflowFile.files">
+								<i class="fa fa-plus"></i>
+							</a>
+						</div>
+					</div>
                 </div>
             </div>
    			<input type="hidden" id="approveDepReq" value="<spring:message code='msg.validate.approverdepart.req'/>"/>
@@ -146,3 +162,4 @@
     </div>
 
 <script src="<cdn:url value='/resources/js/app/commonworkflow.js?rnd=${app_release_no}'/>"></script>
+<script src="<cdn:url value='/resources/js/app/wf-document-upload-helper.js?rnd=${app_release_no}'/>"></script>

@@ -1,1 +1,0 @@
-ALTER TABLE egeis_desig_rolemapping DROP CONSTRAINT role_fk ;

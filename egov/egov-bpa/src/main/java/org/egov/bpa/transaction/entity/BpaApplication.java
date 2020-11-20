@@ -80,6 +80,7 @@ import javax.validation.constraints.NotNull;
 import org.egov.bpa.master.entity.ApplicationSubType;
 import org.egov.bpa.master.entity.PermitRevocation;
 import org.egov.bpa.master.entity.ServiceType;
+import org.egov.bpa.transaction.entity.common.WorkflowFile;
 import org.egov.bpa.transaction.entity.dto.BpaStateInfo;
 import org.egov.bpa.transaction.entity.enums.ApplicantMode;
 import org.egov.bpa.transaction.entity.enums.GovernmentType;
@@ -331,6 +332,10 @@ public class BpaApplication extends StateAware<Position> {
     private transient String locationBoundary;
 	@SafeHtml
     private transient String currentStatus;
+	
+	private transient WorkflowFile workflowFile = new WorkflowFile();
+	
+    private transient String wfFileRefId;
 	
 	@SafeHtml
 	@Column(name="plotnumber")
@@ -1263,5 +1268,21 @@ public class BpaApplication extends StateAware<Position> {
 
 	public void setSector(String sector) {
 		this.sector = sector;
+	}
+
+	public WorkflowFile getWorkflowFile() {
+		return workflowFile;
+	}
+
+	public void setWorkflowFile(WorkflowFile workflowFile) {
+		this.workflowFile = workflowFile;
+	}
+
+	public String getWfFileRefId() {
+		return wfFileRefId;
+	}
+
+	public void setWfFileRefId(String wfFileRefId) {
+		this.wfFileRefId = wfFileRefId;
 	}
 }

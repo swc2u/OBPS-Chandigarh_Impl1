@@ -85,6 +85,7 @@ public class WorkflowHistoryService {
     private static final String COMMENTS = "comments";
     private static final String INSPECTION = "INSPECTION";
     private static final String DEPARTMENT = "department";
+    private static final String ATTACHMENT = "attachment";
     @Autowired
     private PositionMasterService positionMasterService;
     @Autowired
@@ -94,6 +95,8 @@ public class WorkflowHistoryService {
     private BpaWorkFlowService bpaWorkFlowService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private WorkflowFileService workflowFileService;
 
     public List<HashMap<String, Object>> getHistory(List<BpaAppointmentSchedule> appointmentSchedules, State<Position> state,
             List<StateHistory<Position>> stateHistories) {
@@ -116,6 +119,8 @@ public class WorkflowHistoryService {
 
             buildEmployeeInformation(state, stateHistories, workFlowHistory, state != null, state.getValue(),
                     workflowState.getOwnerPosition(), workflowState.getLastModifiedDate(), workflowState.getOwnerUser());
+            
+            workFlowHistory.put(ATTACHMENT, !isBlank(workflowState.getRefFileId())?workflowFileService.getFileStoreMappers(workflowState.getRefFileId()):new ArrayList<>());
 
             historyTable.add(workFlowHistory);
         }
@@ -159,6 +164,8 @@ public class WorkflowHistoryService {
 
             String revertedBy = bpaWorkFlowService.getRevertedBy(stateHistory.getExtraInfo());
             historyMap.put(STATUS, !isBlank(revertedBy) ? revertedBy : stateHistory.getValue());
+            
+            historyMap.put(ATTACHMENT, !isBlank(stateHistory.getRefFileId())?workflowFileService.getFileStoreMappers(stateHistory.getRefFileId()):new ArrayList<>());
 
             buildEmployeeInformation(workflowState, stateHistories, historyMap, stateHistory != null, stateHistory.getValue(),
                     stateHistory.getOwnerPosition(), stateHistory.getLastModifiedDate(), stateHistory.getOwnerUser());
@@ -184,6 +191,8 @@ public class WorkflowHistoryService {
 
             String revertedBy = bpaWorkFlowService.getRevertedBy(workflowState.getExtraInfo());
             workFlowHistory.put(STATUS, !isBlank(revertedBy) ? revertedBy : workflowState.getValue());
+            
+            workFlowHistory.put(ATTACHMENT, !isBlank(workflowState.getRefFileId())?workflowFileService.getFileStoreMappers(workflowState.getRefFileId()):new ArrayList<>());
 
             buildEmployeeInformation(state, stateHistories, workFlowHistory, state != null, state.getValue(),
                     workflowState.getOwnerPosition(), workflowState.getLastModifiedDate(), workflowState.getOwnerUser());
@@ -215,6 +224,8 @@ public class WorkflowHistoryService {
             buildEmployeeInformation(state, stateHistories, workFlowHistory, state != null, state.getValue(),
                     workflowState.getOwnerPosition(), workflowState.getLastModifiedDate(), workflowState.getOwnerUser());
 
+            workFlowHistory.put(ATTACHMENT, !isBlank(workflowState.getRefFileId())?workflowFileService.getFileStoreMappers(workflowState.getRefFileId()):new ArrayList<>());
+            
             historyTable.add(workFlowHistory);
         }
         historyTable.sort(Comparator.comparing(history -> String.valueOf(history.get(DATE))));
@@ -361,6 +372,8 @@ public class WorkflowHistoryService {
 
             String revertedBy = bpaWorkFlowService.getRevertedBy(workflowState.getExtraInfo());
             workFlowHistory.put(STATUS, !isBlank(revertedBy) ? revertedBy : workflowState.getValue());
+            
+            workFlowHistory.put(ATTACHMENT, !isBlank(workflowState.getRefFileId())?workflowFileService.getFileStoreMappers(workflowState.getRefFileId()):new ArrayList<>());
 
             buildEmployeeInformation(state, stateHistories, workFlowHistory, state != null, state.getValue(),
                     workflowState.getOwnerPosition(), workflowState.getLastModifiedDate(), workflowState.getOwnerUser());

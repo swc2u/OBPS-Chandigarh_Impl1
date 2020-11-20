@@ -173,6 +173,7 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
                         .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                         .withOwner(ownerUser)
                         .withComments(wfBean.getApproverComments())
+                        .withRefFileId(oc.getWfFileRefId())
                         .withInitiator(wfInitiator != null ? wfInitiator.getPosition() : null)
                         .withStateValue(wfMatrix.getNextState()).withDateInfo(new Date()).withOwner(pos)
                         .withNextAction(wfMatrix.getNextAction()).withNatureOfTask(NATURE_OF_WORK_OC);
@@ -189,6 +190,7 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
                 oc.transition().progressWithStateCopy()
                         .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                         .withComments(wfBean.getApproverComments())
+                        .withRefFileId(oc.getWfFileRefId())
                         .withStateValue(wfMatrix.getNextState()).withDateInfo(currentDate.toDate())
                         .withOwner(pos).withOwner(ownerUser)
                         .withNextAction(wfMatrix.getNextAction()).withNatureOfTask(NATURE_OF_WORK_OC);
@@ -205,6 +207,7 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
             oc.transition().progressWithStateCopy()
                     .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                     .withComments(wfBean.getApproverComments())
+                    .withRefFileId(oc.getWfFileRefId())
                     .withStateValue(BpaConstants.REJECTION_INITIATED).withDateInfo(currentDate.toDate())
                     .withOwner(pos).withOwner(ownerUser)
                     .withNextAction(wfMatrix.getNextAction())
@@ -216,6 +219,7 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
             oc.transition().progressWithStateCopy()
                     .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                     .withComments(wfBean.getApproverComments())
+                    .withRefFileId(oc.getWfFileRefId())
                     .withStateValue(BpaConstants.WF_REJECT_STATE).withDateInfo(currentDate.toDate())
                     .withOwner(pos).withOwner(ownerUser)
                     .withNextAction(wfMatrix.getNextAction())
@@ -229,6 +233,7 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
                 oc.transition().progressWithStateCopy()
                         .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                         .withComments(wfBean.getApproverComments())
+                        .withRefFileId(oc.getWfFileRefId())
                         .withStateValue(wfMatrix.getNextState()).withDateInfo(currentDate.toDate())
                         .withOwner(pos).withOwner(ownerUser)
                         .withNextAction(wfMatrix.getNextAction()).withNatureOfTask(NATURE_OF_WORK_OC);
@@ -240,7 +245,9 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
             oc.setStatus(getStatusByCurrentMatrixStatus(wfMatrix));
             oc.transition().progressWithStateCopy()
                     .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                    .withComments(wfBean.getApproverComments()).withStateValue(wfMatrix.getNextState())
+                    .withComments(wfBean.getApproverComments())
+                    .withRefFileId(oc.getWfFileRefId())
+                    .withStateValue(wfMatrix.getNextState())
                     .withDateInfo(currentDate.toDate()).withOwner(oc.getState().getOwnerPosition()).withOwner(ownerUser)
                     .withNextAction(wfMatrix.getNextAction()).withNatureOfTask(NATURE_OF_WORK_OC);
         } else if (BpaConstants.GENERATEREJECTNOTICE.equalsIgnoreCase(wfBean.getWorkFlowAction())
@@ -248,7 +255,9 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
             oc.setStatus(getStatusByPassingCode(BpaConstants.APPLICATION_STATUS_CANCELLED));
             oc.transition().end()
                     .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                    .withComments(wfBean.getApproverComments()).withDateInfo(currentDate.toDate())
+                    .withComments(wfBean.getApproverComments())
+                    .withRefFileId(oc.getWfFileRefId())
+                    .withDateInfo(currentDate.toDate())
                     .withNextAction(BpaConstants.WF_END_STATE).withNatureOfTask(BpaConstants.NATURE_OF_WORK_OC);
         } else if (BpaConstants.LPREPLYRECEIVED.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
             List<OCLetterToParty> letterToParties = ocLetterToPartyService.findAllByOC(oc);
@@ -262,7 +271,9 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
             oc.setStatus(letterToParties.get(0).getLetterToParty().getCurrentApplnStatus());
             oc.transition().progressWithStateCopy()
                     .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                    .withComments(wfBean.getApproverComments()).withStateValue(wfMatrix.getNextState())
+                    .withComments(wfBean.getApproverComments())
+                    .withRefFileId(oc.getWfFileRefId())
+                    .withStateValue(wfMatrix.getNextState())
                     .withDateInfo(currentDate.toDate()).withOwner(stateHistory.getOwnerPosition()).withOwner(stateHistory.getOwnerUser())
                     .withNextAction(wfMatrix.getNextAction()).withNatureOfTask(NATURE_OF_WORK_OC);
         } else {
@@ -338,12 +349,16 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
                 if (BpaConstants.GENERATE_OCCUPANCY_CERTIFICATE.equalsIgnoreCase(wfBean.getWorkFlowAction()))
                     oc.transition().end()
                             .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                            .withComments(wfBean.getApproverComments()).withDateInfo(currentDate.toDate())
+                            .withComments(wfBean.getApproverComments())
+                            .withRefFileId(oc.getWfFileRefId())
+                            .withDateInfo(currentDate.toDate())
                             .withNextAction(wfMatrix.getNextAction()).withNatureOfTask(NATURE_OF_WORK_OC);
                 else
                     oc.transition().progressWithStateCopy()
                             .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                            .withComments(wfBean.getApproverComments()).withOwner(ownerUser)
+                            .withComments(wfBean.getApproverComments())
+                            .withRefFileId(oc.getWfFileRefId())
+                            .withOwner(ownerUser)
                             .withStateValue(wfMatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos)
                             .withNextAction(wfMatrix.getNextAction()).withNatureOfTask(NATURE_OF_WORK_OC)
                             .withExtraInfo(bpaStateInfo);

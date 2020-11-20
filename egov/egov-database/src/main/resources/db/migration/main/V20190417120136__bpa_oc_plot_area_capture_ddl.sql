@@ -1,1 +1,0 @@
-alter table egbpa_occupancy_certificate add column extentInSqmts double precision;

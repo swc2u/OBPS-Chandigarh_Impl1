@@ -1,2 +1,0 @@
-update eg_action set ordernumber = 2 where name='Modify Checklist Servicetype Mapping' and contextroot='bpa';
-update eg_action set ordernumber = 3 where name='Search Checklist ServiceType Mapping' and contextroot='bpa';

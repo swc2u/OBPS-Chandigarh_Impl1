@@ -1,1 +1,0 @@
-alter table egbpa_nocapplication add column nocApplicationNumber character varying(128);

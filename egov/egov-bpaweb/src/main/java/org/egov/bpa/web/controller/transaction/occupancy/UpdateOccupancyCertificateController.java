@@ -617,6 +617,10 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
         wfBean.setApproverComments(occupancyCertificate.getApprovalComent());
         if (occupancyCertificate.getState().getValue() != null)
             wfBean.setCurrentState(occupancyCertificate.getState().getValue());
+        
+        if (occupancyCertificate.getWorkflowFile().getFiles() != null && occupancyCertificate.getWorkflowFile().getFiles().length > 0)
+            applicationBpaService.persistWfDocuments(occupancyCertificate);
+        
         OccupancyCertificate ocResponse = occupancyCertificateService.update(occupancyCertificate, wfBean);
         bpaUtils.updatePortalUserinbox(ocResponse, null);
         if (null != approvalPosition) {

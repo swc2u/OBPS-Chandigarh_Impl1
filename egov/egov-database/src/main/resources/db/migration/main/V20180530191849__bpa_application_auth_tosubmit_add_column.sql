@@ -1,1 +1,0 @@
-alter table egbpa_application add column authorizedToSubmitPlan boolean default false;

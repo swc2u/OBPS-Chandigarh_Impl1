@@ -482,6 +482,9 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         }
         if (!bpaApplication.getPermitDocuments().isEmpty())
             applicationBpaService.persistOrUpdateApplicationDocument(bpaApplication);
+        
+        if (bpaApplication.getWorkflowFile().getFiles() != null && bpaApplication.getWorkflowFile().getFiles().length > 0)
+            applicationBpaService.persistWfDocuments(bpaApplication);
 
         if (bpaApplication.getCurrentState().getValue().equals(WF_NEW_STATE))
             return applicationBpaService.redirectToCollectionOnForward(bpaApplication, model);
