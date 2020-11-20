@@ -171,3 +171,5 @@ egov/egov-services/bin/
 egov/egov-services/.classpath
 
 egov/egov-services/.project
+
+egov/egov-egiweb/.tern-project
