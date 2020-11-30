@@ -613,7 +613,7 @@ public class AdditionalFeature extends FeatureProcess {
 		if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
 
 			ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
-			scrutinyDetail.setKey("Common_ServantQuarter");
+			scrutinyDetail.setKey("Common_Servant Quarter");
 			scrutinyDetail.addColumnHeading(1, RULE_NO);
 			scrutinyDetail.addColumnHeading(2, DESCRIPTION);
 			scrutinyDetail.addColumnHeading(3, REQUIRED);
@@ -644,18 +644,18 @@ public class AdditionalFeature extends FeatureProcess {
 			}
 
 			if (isOptional) {
-				details.put(DESCRIPTION, "SERVANT QUARTER");
+				details.put(DESCRIPTION, "Servant Quarter");
 				details.put(REQUIRED, optional);
 				details.put(PROVIDED, isServantQuarter == true ? "YES" : "NO");
 				details.put(STATUS, Result.Accepted.getResultVal());
 			} else {
 				if (isServantQuarter == true) {
-					details.put(DESCRIPTION, "SERVANT QUARTER");
+					details.put(DESCRIPTION, "Servant Quarter");
 					details.put(REQUIRED, "Mandatory");
 					details.put(PROVIDED, "YES");
 					details.put(STATUS, Result.Accepted.getResultVal());
 				} else {
-					details.put(DESCRIPTION, "SERVANT QUARTER");
+					details.put(DESCRIPTION, "Servant Quarter");
 					details.put(REQUIRED, "Mandatory");
 					details.put(PROVIDED, "NO");
 					details.put(STATUS, Result.Not_Accepted.getResultVal());

@@ -73,7 +73,11 @@
 						<ul style="list-style-type: none; padding-left: 10px">
 							<li></li> 
 							<li><spring:message code="lbl.accepted" /></li>
-							<li><spring:message code="lbl.accpeted1" /></li>   
+							<li><spring:message code="lbl.accpeted1" /></li> 
+							<li><spring:message code="lbl.accpeted2" /></li> 
+							<li><spring:message code="lbl.accpeted3" /></li> 
+							<li><spring:message code="lbl.accpeted4" /></li>
+							<li><spring:message code="lbl.accpeted5" /></li> 
 						</ul>
 					</div>
 				</div>

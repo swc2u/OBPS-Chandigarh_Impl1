@@ -165,7 +165,7 @@ public class BathRoomWaterClosets extends FeatureProcess {
 
 						} else {
 							details.put(REQUIRED, "Height >=" + CDGAdditionalService.viewLenght(pl, expectedMinHeight) + ", Total Area >= "
-									+ CDGAdditionalService.viewArea(pl, expectedArea)+ ", Width >= " + CDGAdditionalService.viewLenght(pl, expectedArea));
+									+ CDGAdditionalService.viewArea(pl, expectedArea)+ ", Width >= " + CDGAdditionalService.viewLenght(pl, expectedMinWidth));
 							details.put(PROVIDED,
 									"Height = " + CDGAdditionalService.viewLenght(pl, minHeight) + ", Total Area = " + CDGAdditionalService.viewArea(pl, totalArea)
 											+", Width = " + CDGAdditionalService.viewLenght(pl, minWidth));

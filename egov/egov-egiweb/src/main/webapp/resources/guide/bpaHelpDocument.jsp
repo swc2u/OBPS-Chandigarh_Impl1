@@ -117,12 +117,11 @@
 	</div>
 	
 	<footer class = "f-regular bpa-login-footer page-common-padding col-md-12 color-black" style="bottom:0; position: fixed;">
-		<div class = "footer-list-content col-md-4">
+		<!-- <div class = "footer-list-content col-md-4">
 			<div style = "margin-bottom: 16px;" class = "color-black bpa-common-header2 bpa-common-header">About OBPS</div>
 			<div style = "opacity: 0.7;" class = "color-black bpa-common-text">Citizens, Officials, and other stakeholders can submit and track applications in real time and obtain approvals without having to physically visit an office.</div>
-		</div>
-		<div class = "footer-list-content col-md-1"></div>
-		<div class = "color-black footer-list-content col-md-3">
+		</div> -->
+		<div class = "color-black footer-list-content col-md-2">
 			<div style="margin-bottom: 16px;" class="color-black bpa-common-header2 bpa-common-header">Help Resources</div>
 			<ul class="tutorial-list color-black" >
 				
@@ -143,7 +142,7 @@
 				</li>
 			</ul>
 		</div>
-		
+		<div class = "footer-list-content col-md-6"></div>
 		<div class = "footer-list-content col-md-4">
 			<div style = "margin-bottom: 16px;" class = "color-black bpa-common-header2 bpa-common-header">Get in Touch</div>
 			<div class = "footer-contact-info-cont">
@@ -194,8 +193,6 @@ Chandigarh 160017</div>
 				</div>
 			</div>
 		</div>
-			
-		
 	</footer>
 	
 	
