@@ -61,6 +61,7 @@ import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.utils.OccupancyCertificateUtils;
+import org.egov.common.entity.edcr.Plan;
 import org.egov.infra.admin.master.entity.AppConfigValues;
 import org.egov.infra.admin.master.service.AppConfigValueService;
 import org.egov.infra.security.utils.SecurityUtils;
@@ -100,13 +101,14 @@ public class BpaDcrService {
         Map<String, String> eDcrApplicationDetails = new HashMap<>();
 		if (eDcrNumber != null) {
 			List<BpaApplication> bpaApplications = applicationBpaService.findApplicationByEDCRNumber(eDcrNumber);
-			if (bpaApplications.isEmpty()) {
+			boolean plotUseFlage=checkIsPlotUsedInBpaApplication(eDcrNumber);
+			if (bpaApplications.isEmpty() && !plotUseFlage) {
 				eDcrApplicationDetails.put(IS_EXISTS, FALSE);
 				eDcrApplicationDetails.put(BpaConstants.MESSAGE, "Not used");
 			} else {
 				if (bpaApplications.get(0) != null && bpaApplications.get(0).getStatus() != null
 						&& BpaConstants.APPLICATION_STATUS_CANCELLED
-								.equals(bpaApplications.get(0).getStatus().getCode())) {
+								.equals(bpaApplications.get(0).getStatus().getCode()) && !plotUseFlage) {
 					eDcrApplicationDetails.put(IS_EXISTS, FALSE);
 					eDcrApplicationDetails.put(BpaConstants.MESSAGE, "Not used");
 				} else {
@@ -124,6 +126,32 @@ public class BpaDcrService {
         return eDcrApplicationDetails;
     }
 
+    private boolean checkIsPlotUsedInBpaApplication(final String eDcrNumber) {
+    	boolean flage=false;
+    	Plan plan = applicationBpaService.getPlanInfo(eDcrNumber);
+		String plotNumber=plan.getPlanInfoProperties().get(BpaConstants.PLOT_NO);
+		String sector=plan.getPlanInfoProperties().get(BpaConstants.SECTOR_NUMBER);
+		System.out.println("Start");
+		List<BpaApplication> bpaApplications = applicationBpaService.findApplicationByPlotNumberAndSectorOrderByIdDesc(plotNumber, sector);
+		
+		if(bpaApplications==null || bpaApplications.isEmpty()) {
+			flage=true;
+		}else {
+			if (bpaApplications.get(0) != null && bpaApplications.get(0).getStatus() != null
+					&& (BpaConstants.APPLICATION_STATUS_CANCELLED
+							.equals(bpaApplications.get(0).getStatus().getCode()) || BpaConstants.APPLICATION_STATUS_ACCEPTED_AS_SCRUTINIZED
+							.equals(bpaApplications.get(0).getStatus().getCode()) || BpaConstants.APPLICATION_STATUS_APPROVED
+							.equals(bpaApplications.get(0).getStatus().getCode()) || BpaConstants.APPLICATION_STATUS_REJECTED
+							.equals(bpaApplications.get(0).getStatus().getCode()))) {
+				flage=false;
+			} else {
+				flage=true;
+			}
+		}
+		System.out.println("end");
+    	return flage;
+    }
+    
     public boolean isDcrIntegrationRequiredWithApplication() {
         List<AppConfigValues> appConfigValueList = appConfigValueService
                 .getConfigValuesByModuleAndKey(EGMODULE_NAME, DCR_BPA_INTEGRATION_REQUIRE);
