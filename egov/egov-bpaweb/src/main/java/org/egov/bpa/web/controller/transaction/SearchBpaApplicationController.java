@@ -46,14 +46,22 @@
  */
 package org.egov.bpa.web.controller.transaction;
 
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_TYPE_ONEDAYPERMIT;
 import static org.egov.bpa.utils.BpaConstants.BOUNDARY_TYPE_CITY;
+import static org.egov.bpa.utils.BpaConstants.BPASTATUS_MODULETYPE;
 import static org.egov.bpa.utils.BpaConstants.FILESTORE_MODULECODE;
 import static org.egov.bpa.utils.BpaConstants.IS_AUTO_CANCEL_UNATTENDED_DOCUMENT_SCRUTINY_APPLICATION;
+import static org.egov.bpa.utils.BpaConstants.LOCALITY;
+import static org.egov.bpa.utils.BpaConstants.LOCATION_HIERARCHY_TYPE;
 import static org.egov.bpa.utils.BpaConstants.OCCUPANCY_CERTIFICATE_NOTICE_TYPE;
 import static org.egov.bpa.utils.BpaConstants.REVENUE_HIERARCHY_TYPE;
+import static org.egov.bpa.utils.BpaConstants.STREET;
 import static org.egov.bpa.utils.BpaConstants.WARD;
+import static org.egov.bpa.utils.BpaConstants.ZONE;
+import static org.egov.bpa.utils.BpaConstants.getBuildingFloorsList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -67,6 +75,10 @@ import org.egov.bpa.transaction.entity.PermitInspectionApplication;
 import org.egov.bpa.transaction.entity.PermitNocApplication;
 import org.egov.bpa.transaction.entity.PermitNocDocument;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
+import org.egov.bpa.transaction.entity.dto.SearchPendingItemsForm;
+import org.egov.bpa.transaction.entity.enums.BpaUom;
+import org.egov.bpa.transaction.entity.enums.GovernmentType;
+import org.egov.bpa.transaction.entity.enums.OneDayPermitLandType;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.service.BpaDcrService;
 import org.egov.bpa.transaction.service.InConstructionInspectionService;
@@ -76,7 +88,9 @@ import org.egov.bpa.transaction.service.LettertoPartyService;
 import org.egov.bpa.transaction.service.PermitNocApplicationService;
 import org.egov.bpa.transaction.service.SearchBpaApplicationService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
+import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.web.controller.adaptor.SearchBpaApplicationAdaptor;
+import org.egov.bpa.web.controller.adaptor.SearchBpaPendingTaskAdaptor;
 import org.egov.eis.entity.Employee;
 import org.egov.eis.entity.Jurisdiction;
 import org.egov.eis.service.EmployeeService;
@@ -84,6 +98,7 @@ import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.admin.master.entity.BoundaryType;
 import org.egov.infra.admin.master.service.BoundaryTypeService;
 import org.egov.infra.admin.master.service.CrossHierarchyService;
+import org.egov.infra.persistence.entity.enums.UserType;
 import org.egov.infra.web.support.ui.DataTable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -104,6 +119,7 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
 
     private static final String APPLICATION_HISTORY = "applicationHistory";
     private static final String SEARCH_BPA_APPLICATION_FORM = "searchBpaApplicationForm";
+    private static final String SEARCH_PENDING_ITEM_FORM = "searchPendingItemsForm";
 
     @Autowired
     private SearchBpaApplicationService searchBpaApplicationService;
@@ -131,6 +147,7 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
     @GetMapping("/search")
     public String showSearchApprovedforFee(final Model model) {
         prepareFormData(model);
+        model.addAttribute("appTypes", applicationTypeService.getBPAApplicationTypes());
         model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
         return "search-bpa-application";
     }
@@ -141,6 +158,27 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
         return new DataTable<>(searchBpaApplicationService.pagedSearch(searchBpaApplicationForm),
                 searchBpaApplicationForm.draw())
                         .toJson(SearchBpaApplicationAdaptor.class);
+    }
+    
+    @GetMapping("/searchPendingItems")
+    public String showSearchPendingItems(final Model model) {
+    	prepareFormDataForPendingItems(model);
+        model.addAttribute(SEARCH_PENDING_ITEM_FORM, new SearchPendingItemsForm());
+        return "search-bpa-pending-task";
+    }
+    
+    @PostMapping(value = "/searchPendingItems", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchPendingItemsRecords(@ModelAttribute final SearchPendingItemsForm searchPendingItemsForm) {
+        return new DataTable<>(searchBpaApplicationService.pagedSearchForPendingTask(searchPendingItemsForm),
+        		searchPendingItemsForm.draw())
+                        .toJson(SearchBpaPendingTaskAdaptor.class);
+    }
+    
+    protected void prepareFormDataForPendingItems(Model model) {
+    	model.addAttribute("appTypes", applicationTypeService.getBPAApplicationTypes());
+    	model.addAttribute("serviceTypeList", serviceTypeService.getAllActiveMainServiceTypes());
+    	model.addAttribute("designations", BpaConstants.getAvailableDesignations());
     }
 
     @GetMapping("/view/{applicationNumber}")
@@ -179,7 +217,9 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
         model.addAttribute("lettertopartylist", lettertoPartyService.findByBpaApplicationOrderByIdDesc(application));
         model.addAttribute("isEDCRIntegrationRequire",
                 bpaDcrService.isEdcrIntegrationRequireByService(application.getServiceType().getCode()));
-        buildReceiptDetails(application.getDemand().getEgDemandDetails(), application.getReceipts());
+        if(null!=application.getDemand()) {
+        	buildReceiptDetails(application.getDemand().getEgDemandDetails(), application.getReceipts());
+        }
         return "viewapplication-form";
     }
 

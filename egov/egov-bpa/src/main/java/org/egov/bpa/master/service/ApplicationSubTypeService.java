@@ -77,4 +77,8 @@ public class ApplicationSubTypeService {
     public List<ApplicationSubType> getRiskBasedApplicationTypes() {
         return applicationTypeRepository.findByEnabledTrueOrderByDescriptionAsc();
     }
+    
+    public List<ApplicationSubType> getBPAApplicationTypes() {
+        return applicationTypeRepository.findRiskBasedApplicationType();
+    }
 }

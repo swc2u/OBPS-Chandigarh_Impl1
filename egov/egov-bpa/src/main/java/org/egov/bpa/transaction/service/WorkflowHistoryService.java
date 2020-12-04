@@ -50,6 +50,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.egov.bpa.transaction.entity.BpaAppointmentSchedule;
@@ -347,6 +348,20 @@ public class WorkflowHistoryService {
     public User getUserPositionByPositionAndDate(Long ownerPosition, Date date) {
         try {
             return bpaWorkFlowService.getAssignmentsByPositionAndDate(ownerPosition, date).get(0).getEmployee();
+        } catch (final IndexOutOfBoundsException e) {
+            throw new ApplicationRuntimeException("Assignment Details Not Found For Given Position : " + ownerPosition);
+        } catch (final Exception e) {
+            throw new ApplicationRuntimeException(e.getMessage());
+        }
+    }
+    
+    public Map<String, String> getUserDesignationAndPositionByPositionAndDate(Long ownerPosition, Date date) {
+        try {
+        	Map<String, String> map = new HashMap<String, String>();
+        	Assignment assignment = bpaWorkFlowService.getAssignmentsByPositionAndDate(ownerPosition, date).get(0);
+        	map.put("designation", assignment.getDesignation().getDescription());
+        	map.put("name", assignment.getEmployee().getName());
+            return map;
         } catch (final IndexOutOfBoundsException e) {
             throw new ApplicationRuntimeException("Assignment Details Not Found For Given Position : " + ownerPosition);
         } catch (final Exception e) {

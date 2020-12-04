@@ -301,8 +301,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         }
 
         List<Designation> loginUserDesignations = Collections.emptyList();
-        List<Assignment> loginUserAssignments = bpaWorkFlowService
-                .getAllActiveAssignmentsForUser(securityUtils.getCurrentUser().getId());
+        List<Assignment> loginUserAssignments = bpaWorkFlowService.getAllActiveAssignmentsForUser(securityUtils.getCurrentUser().getId());
         if (!loginUserAssignments.isEmpty())
             loginUserDesignations = bpaWorkFlowService.getAllActiveAssignmentsForUser(securityUtils.getCurrentUser().getId())
                     .stream().map(Assignment::getDesignation).collect(Collectors.toList());
@@ -330,8 +329,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
                 approvalPosition = Long.valueOf(request.getParameter(APPRIVALPOSITION));
             List<Assignment> assignments;
             if (null == approvalPosition)
-                assignments = bpaWorkFlowService
-                        .getAssignmentsByPositionAndDate(bpaApplication.getCurrentState().getOwnerPosition().getId(), new Date());
+                assignments = bpaWorkFlowService.getAssignmentsByPositionAndDate(bpaApplication.getCurrentState().getOwnerPosition().getId(), new Date());
             else
                 assignments = bpaWorkFlowService.getAssignmentsByPositionAndDate(approvalPosition, new Date());
             Position pos = assignments.get(0).getPosition();
@@ -621,8 +619,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
                 appvrAssignment = assignments.get(0);
         }
         if (appvrAssignment == null)
-            appvrAssignment = bpaWorkFlowService
-                    .getAssignmentsByPositionAndDate(currentState.getOwnerPosition().getId(), new Date()).get(0);
+            appvrAssignment = bpaWorkFlowService.getAssignmentsByPositionAndDate(currentState.getOwnerPosition().getId(), new Date()).get(0);
 
         boolean hasInspectionStatus = hasInspectionStatus(currentStatus);
         boolean hasInspectionPendingAction = FWD_TO_OVRSR_FOR_FIELD_INS.equalsIgnoreCase(pendingAction);
@@ -814,15 +811,13 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         model.addAttribute("nextAction", nextAction);
         
         if (!application.getIsOneDayPermitApplication()
-        		&& !application.getApplicationType().getName().equals(BpaConstants.LOWRISK)
                 && (WF_BA_NOC_UPDATION_IN_PROGRESS.equalsIgnoreCase(application.getState().getNextAction())
                 	|| REJECTION_INITIATED.equalsIgnoreCase(application.getState().getNextAction())
                 	|| WF_BA_FINAL_APPROVAL_PROCESS_INITIATED.equalsIgnoreCase(application.getState().getNextAction())
                 	|| WF_BA_AEE_APPLICATION_APPROVAL_PENDING.equalsIgnoreCase(application.getState().getNextAction())
                 	|| WF_BA_FORWARD_TO_SDO_BUILDING.equalsIgnoreCase(application.getState().getNextAction())
                     || APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(application.getStatus().getCode())
-                    || APPLICATION_STATUS_APPROVAL_PROCESS_INITIATED.equalsIgnoreCase(application.getStatus().getCode()))
-           ) {
+                    || APPLICATION_STATUS_APPROVAL_PROCESS_INITIATED.equalsIgnoreCase(application.getStatus().getCode()))) {
             model.addAttribute("createlettertoparty", true);
         }
     }

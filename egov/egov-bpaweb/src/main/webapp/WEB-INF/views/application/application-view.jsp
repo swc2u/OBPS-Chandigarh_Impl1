@@ -309,13 +309,13 @@
 							class="btn btn-primary"> <spring:message code="lbl.btn.modify.fee"/> </a>
 
 				</c:if>
-				<c:if test="${bpaApplication.state.value ne 'Field Inspection completed' && bpaApplication.status.code eq 'Document Verification Completed'}">
+				<%-- <c:if test="${bpaApplication.state.value ne 'Field Inspection completed' && bpaApplication.status.code eq 'Document Verification Completed'}">
 					<input type="button" name="save" id="btnSave" value="Save" class="btn btn-primary"/>
-				</c:if>
+				</c:if> --%>
 				<c:if test="${createlettertoparty}">
-					<a
-							href="/bpa/lettertoparty/create/${bpaApplication.applicationNumber}"
-							target="_self" class="btn btn-primary"> <spring:message code="lbl.btn.letter.to.party"/> </a>
+					<a href="/bpa/lettertoparty/create/${bpaApplication.applicationNumber}" target="_self" class="btn btn-primary"> 
+						<spring:message code="lbl.btn.letter.to.party"/> 
+					</a>
 				</c:if>
 			</div>
 			<br>

@@ -73,6 +73,7 @@ import org.egov.bpa.transaction.entity.Slot;
 import org.egov.bpa.transaction.entity.SlotApplication;
 import org.egov.bpa.transaction.entity.SlotDetail;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
+import org.egov.bpa.transaction.entity.dto.SearchPendingItemsForm;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.demand.model.EgDemand;
 import org.egov.infra.admin.master.entity.Boundary;
@@ -98,6 +99,15 @@ public final class SearchBpaApplnFormSpec {
             final Predicate predicate = builder.conjunction();
             commonSpec(requestForm, root, builder, predicate);
             siteDetailSpec(requestForm, root, builder, predicate);
+            query.distinct(true);
+            return predicate;
+        };
+    }
+    
+    public static Specification<BpaApplication> searchSpecificationForPendingItems(final SearchPendingItemsForm requestForm) {
+        return (root, query, builder) -> {
+            final Predicate predicate = builder.conjunction();
+            commonSpecForPendingItems(requestForm, root, builder, predicate);
             query.distinct(true);
             return predicate;
         };
@@ -180,55 +190,54 @@ public final class SearchBpaApplnFormSpec {
         };
     }
 
-    private static void commonSpec(SearchBpaApplicationForm requestForm, Root<BpaApplication> root, CriteriaBuilder builder,
-            Predicate predicate) {
+    private static void commonSpec(SearchBpaApplicationForm requestForm, Root<BpaApplication> root, CriteriaBuilder builder, Predicate predicate) {
         if (requestForm.getApplicantName() != null)
-            predicate.getExpressions()
-                    .add(builder.equal(root.get("owner").get("name"), requestForm.getApplicantName()));
+            predicate.getExpressions().add(builder.equal(root.get("owner").get("name"), requestForm.getApplicantName()));
         if (requestForm.getApplicationNumber() != null)
-            predicate.getExpressions()
-                    .add(builder.equal(root.get("applicationNumber"), requestForm.getApplicationNumber()));
+            predicate.getExpressions().add(builder.equal(root.get("applicationNumber"), requestForm.getApplicationNumber()));
         if (requestForm.getServiceTypeId() != null)
-            predicate.getExpressions()
-                    .add(builder.equal(root.get("serviceType").get(ID), requestForm.getServiceTypeId()));
+            predicate.getExpressions().add(builder.equal(root.get("serviceType").get(ID), requestForm.getServiceTypeId()));
         if (requestForm.getApplicationTypeId() != null)
-            predicate.getExpressions()
-                    .add(builder.equal(root.get("applicationType").get(ID), requestForm.getApplicationTypeId()));
+            predicate.getExpressions().add(builder.equal(root.get("applicationType").get(ID), requestForm.getApplicationTypeId()));
         if (requestForm.getServiceType() != null)
-            predicate.getExpressions()
-                    .add(builder.equal(root.get("serviceType").get("description"), requestForm.getServiceTypeId()));
+            predicate.getExpressions().add(builder.equal(root.get("serviceType").get("description"), requestForm.getServiceTypeId()));
         if (requestForm.getStatusId() != null)
-            predicate.getExpressions()
-                    .add(builder.equal(root.get(STATUS).get(ID), requestForm.getStatusId()));
+            predicate.getExpressions().add(builder.equal(root.get(STATUS).get(ID), requestForm.getStatusId()));
         if (requestForm.getStatus() != null)
-            predicate.getExpressions()
-                    .add(builder.equal(root.get(STATUS).get("code"), requestForm.getStatus()));
+            predicate.getExpressions().add(builder.equal(root.get(STATUS).get("code"), requestForm.getStatus()));
         if (requestForm.getOccupancyId() != null)
-            predicate.getExpressions()
-                    .add(builder.equal(root.get("occupancy").get(ID), requestForm.getOccupancyId()));
+            predicate.getExpressions().add(builder.equal(root.get("occupancy").get(ID), requestForm.getOccupancyId()));
         if (requestForm.getFromDate() != null)
-            predicate.getExpressions()
-                    .add(builder.greaterThanOrEqualTo(root.get(APPLICATION_DATE), requestForm.getFromDate()));
+            predicate.getExpressions().add(builder.greaterThanOrEqualTo(root.get(APPLICATION_DATE), requestForm.getFromDate()));
         if (requestForm.getToDate() != null)
-            predicate.getExpressions()
-                    .add(builder.lessThanOrEqualTo(root.get(APPLICATION_DATE), requestForm.getToDate()));
-        if (requestForm.getServiceTypeEnum() != null
-                && requestForm.getServiceTypeEnum().equalsIgnoreCase(APPLICATION_TYPE_REGULAR))
-            predicate.getExpressions()
-                    .add(builder.equal(root.get(IS_ONE_DAY_PERMIT_APPLICATION), false));
-        else if (requestForm.getServiceTypeEnum() != null
-                && requestForm.getServiceTypeEnum().equalsIgnoreCase(APPLICATION_TYPE_ONEDAYPERMIT))
-            predicate.getExpressions()
-                    .add(builder.equal(root.get(IS_ONE_DAY_PERMIT_APPLICATION), true));
+            predicate.getExpressions().add(builder.lessThanOrEqualTo(root.get(APPLICATION_DATE), requestForm.getToDate()));
+        if (requestForm.getServiceTypeEnum() != null && requestForm.getServiceTypeEnum().equalsIgnoreCase(APPLICATION_TYPE_REGULAR))
+            predicate.getExpressions().add(builder.equal(root.get(IS_ONE_DAY_PERMIT_APPLICATION), false));
+        else if (requestForm.getServiceTypeEnum() != null && requestForm.getServiceTypeEnum().equalsIgnoreCase(APPLICATION_TYPE_ONEDAYPERMIT))
+            predicate.getExpressions().add(builder.equal(root.get(IS_ONE_DAY_PERMIT_APPLICATION), true));
         if (requestForm.getFromBuiltUpArea() != null)
-            predicate.getExpressions()
-                    .add(builder.greaterThanOrEqualTo(root.get("totalBuiltUpArea"), requestForm.getFromBuiltUpArea()));
+            predicate.getExpressions().add(builder.greaterThanOrEqualTo(root.get("totalBuiltUpArea"), requestForm.getFromBuiltUpArea()));
         if (requestForm.getToBuiltUpArea() != null)
-            predicate.getExpressions()
-                    .add(builder.lessThanOrEqualTo(root.get("totalBuiltUpArea"), requestForm.getToBuiltUpArea()));
+            predicate.getExpressions().add(builder.lessThanOrEqualTo(root.get("totalBuiltUpArea"), requestForm.getToBuiltUpArea()));
         if (requestForm.getRevocationNumber() != null)
-            predicate.getExpressions()
-                    .add(builder.equal(root.get("revocationNumber"), requestForm.getRevocationNumber()));
+            predicate.getExpressions().add(builder.equal(root.get("revocationNumber"), requestForm.getRevocationNumber()));
+    }
+    
+    private static void commonSpecForPendingItems(SearchPendingItemsForm requestForm, Root<BpaApplication> root, CriteriaBuilder builder, Predicate predicate) {
+        if (requestForm.getApplicantName() != null)
+            predicate.getExpressions().add(builder.equal(root.get("owner").get("name"), requestForm.getApplicantName()));
+        if (requestForm.getApplicationNumber() != null)
+            predicate.getExpressions().add(builder.equal(root.get("applicationNumber"), requestForm.getApplicationNumber()));
+        if (requestForm.getServiceTypeId() != null)
+            predicate.getExpressions().add(builder.equal(root.get("serviceType").get(ID), requestForm.getServiceTypeId()));
+        if (requestForm.getApplicationTypeId() != null)
+            predicate.getExpressions().add(builder.equal(root.get("applicationType").get(ID), requestForm.getApplicationTypeId()));
+        if (requestForm.getServiceType() != null)
+            predicate.getExpressions().add(builder.equal(root.get("serviceType").get("description"), requestForm.getServiceType()));        
+        if (requestForm.getFromDate() != null)
+            predicate.getExpressions().add(builder.greaterThanOrEqualTo(root.get(APPLICATION_DATE), requestForm.getFromDate()));
+        if (requestForm.getToDate() != null)
+            predicate.getExpressions().add(builder.lessThanOrEqualTo(root.get(APPLICATION_DATE), requestForm.getToDate()));        
     }
 
     private static void siteDetailSpec(SearchBpaApplicationForm requestForm, Root<BpaApplication> root, CriteriaBuilder builder,

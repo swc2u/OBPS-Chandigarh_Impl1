@@ -643,6 +643,21 @@ public class BpaConstants {
     public static final String PLINTH_LEVEL_CERTIFICATE = "Plinth Level Certificate";
     public static final String RURAL_ULB_NAME="Chandigarh Municipal Corporation";
     
+    private static final List<String> AVAILABLE_DESIGNATIONS = new ArrayList<>();
+    static {
+    	AVAILABLE_DESIGNATIONS.add("Additional Commissioner");
+    	AVAILABLE_DESIGNATIONS.add("Assistant Estate Officer");
+    	AVAILABLE_DESIGNATIONS.add("Building Assistant Urban");
+    	AVAILABLE_DESIGNATIONS.add("Draftsman");
+    	AVAILABLE_DESIGNATIONS.add("Estate Officer");
+    	AVAILABLE_DESIGNATIONS.add("Head Draftsman Urban");
+    	AVAILABLE_DESIGNATIONS.add("Junior Engineer Rural");
+    	AVAILABLE_DESIGNATIONS.add("Junior Engineer Urban");
+    	AVAILABLE_DESIGNATIONS.add("MC Architect");
+    	AVAILABLE_DESIGNATIONS.add("SDO Building MC");
+    	AVAILABLE_DESIGNATIONS.add("SDO Building Urban");
+    }
+    
     private static final List<String> BUILDPERMIT = new ArrayList<>();
     static {
         BUILDPERMIT.add(ST_CODE_01); // New Construction
@@ -904,5 +919,8 @@ public class BpaConstants {
     public static Map<String, String> getOCNocRole() {
         return Collections.unmodifiableMap(OCNOCTYPE);
     }
-
+    
+    public static List<String> getAvailableDesignations() {
+        return Collections.unmodifiableList(AVAILABLE_DESIGNATIONS);
+    }
 }

@@ -157,6 +157,7 @@ public class TerraceUtilityService extends FeatureProcess {
 				if (providedMinSide.compareTo(expectedSideDistance) >= 0) {
 					sideAccepted = true;
 				}
+				//sideAccepted = true;
 				Map<String, String> details = new HashMap<>();
 				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.SERVICE_ZONE_ON_TERRACE));
 				details.put(DESCRIPTION, "Front & Rear Distance");
