@@ -811,15 +811,13 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         model.addAttribute("nextAction", nextAction);
         
         if (!application.getIsOneDayPermitApplication()
-        		&& !application.getApplicationType().getName().equals(BpaConstants.LOWRISK)
                 && (WF_BA_NOC_UPDATION_IN_PROGRESS.equalsIgnoreCase(application.getState().getNextAction())
                 	|| REJECTION_INITIATED.equalsIgnoreCase(application.getState().getNextAction())
                 	|| WF_BA_FINAL_APPROVAL_PROCESS_INITIATED.equalsIgnoreCase(application.getState().getNextAction())
                 	|| WF_BA_AEE_APPLICATION_APPROVAL_PENDING.equalsIgnoreCase(application.getState().getNextAction())
                 	|| WF_BA_FORWARD_TO_SDO_BUILDING.equalsIgnoreCase(application.getState().getNextAction())
                     || APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(application.getStatus().getCode())
-                    || APPLICATION_STATUS_APPROVAL_PROCESS_INITIATED.equalsIgnoreCase(application.getStatus().getCode()))
-           ) {
+                    || APPLICATION_STATUS_APPROVAL_PROCESS_INITIATED.equalsIgnoreCase(application.getStatus().getCode()))) {
             model.addAttribute("createlettertoparty", true);
         }
     }

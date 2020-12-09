@@ -275,10 +275,10 @@
 			<spring:message code='lbl.reply' />
 		</button>
 
-		<button type="submit" class="btn btn-primary"
+		<%-- <button type="submit" class="btn btn-primary"
 			onclick="return getUrlToPring()">
 			<spring:message code="lbl.print.lettertoparty" />
-		</button>
+		</button> --%>
 		<a href='javascript:void(0)' class='btn btn-default'
 			onclick='self.close()'><spring:message code='lbl.close' /></a>
 	</div>

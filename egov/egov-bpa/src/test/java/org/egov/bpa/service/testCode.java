@@ -1,33 +1,67 @@
 package org.egov.bpa.service;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 
 public class testCode {
-	private static final BigDecimal TEN = BigDecimal.valueOf(10);
-    private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
-    private static final BigDecimal FORTY = BigDecimal.valueOf(40);
-    private static final BigDecimal FIFTEEN = BigDecimal.valueOf(15);
-    private static final BigDecimal TWO_FIVE = BigDecimal.valueOf(2.5);
-    private static final BigDecimal EIGHTEEN = BigDecimal.valueOf(18);
-    private static final BigDecimal SQMT_SQFT_MULTIPLIER = BigDecimal.valueOf(10.764);
-	public static void main(String []args){
-		/*
-		 * BigDecimal totalAmount = BigDecimal.ZERO; BigDecimal a = (new
-		 * BigDecimal(173.36)).multiply(SQMT_SQFT_MULTIPLIER).multiply(TWO_FIVE).
-		 * setScale(2, BigDecimal.ROUND_HALF_UP); totalAmount = totalAmount.add((new
-		 * BigDecimal(173.36)).multiply(SQMT_SQFT_MULTIPLIER).multiply(TWO_FIVE).
-		 * setScale(2, BigDecimal.ROUND_HALF_UP)); System.out.println("Hello World " +
-		 * totalAmount.toString() + " --- " + a.toString());
-		 */
-		BigDecimal totalAmount = BigDecimal.ZERO;
-		BigDecimal totalAreaInHalfAcre = new BigDecimal(464000.5234) .divide(new BigDecimal(2023.43),2,BigDecimal.ROUND_HALF_UP);
-		System.out.println(totalAreaInHalfAcre);
-		int halfAcreCount = totalAreaInHalfAcre.intValue();
-		System.out.println(halfAcreCount);
-		halfAcreCount = (totalAreaInHalfAcre.compareTo(new BigDecimal(halfAcreCount))>=0)?halfAcreCount+1:halfAcreCount;	    		
-		System.out.println(halfAcreCount);
-		totalAmount = totalAmount.add(BigDecimal.valueOf(10000).multiply(new BigDecimal(halfAcreCount)).setScale(2, BigDecimal.ROUND_HALF_UP));
-		System.out.println(totalAmount);
+	public static void main(String []args){		
+		String MID = "1000112";
+		String orderNo = "BPA00021601363046874";
+		String queryRequest = "|" + MID + "|" + orderNo;
+		String aggregatorId="SBIEPAY";
+
+		try {
+			URL url = new URL("https://test.sbiepay.sbi/payagg/orderStatusQuery/getOrderStatusQuery");
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			
+			StringBuffer requestParams = new StringBuffer();			
+			requestParams.append("queryRequest=");
+			requestParams.append(queryRequest);			
+			requestParams.append("&aggregatorId=");
+			requestParams.append(aggregatorId);			
+			requestParams.append("&merchantId=");
+			requestParams.append(MID);			
+			conn.setReadTimeout(10000);
+			conn.setConnectTimeout(15000);
+			conn.setRequestMethod("POST");
+			conn.setDoInput(true);
+			conn.setDoOutput(true);
+			conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			conn.setDoOutput(true);
+			DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+			wr.writeBytes(requestParams.toString());
+			wr.flush();
+			wr.close();
+			// Response Code
+			int responseCode = conn.getResponseCode();
+			// Reading Response
+			InputStream stream = conn.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line).append("\n");
+			}
+			stream.close();
+			System.out.println("responseCode:" + responseCode+" sb "+sb);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (ProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
+	
+//	public static void main(String []args){	
+//		System.out.println((((new BigDecimal(900.52)).compareTo(new BigDecimal(900))) <= 0));
+//	}
 }
