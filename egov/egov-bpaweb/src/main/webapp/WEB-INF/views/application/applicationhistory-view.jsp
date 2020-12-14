@@ -40,6 +40,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
 <div class="panel-heading slide-history-menu">
@@ -74,7 +75,7 @@
 	</div>
 	<c:choose>
 		<c:when test="${!applicationHistory.isEmpty()}">
-			<c:forEach items="${applicationHistory}" var="history">
+			<c:forEach items="${applicationHistory}" var="history" varStatus="appHisStatus">
 				<div class="row add-margin">
 					<div class="col-sm-2 col-xs-12 add-margin">
 						<fmt:formatDate value="${history.date}" var="historyDate"
@@ -94,14 +95,21 @@
 						<c:out value="${history.department}" />
 					</div>
 					<div class="col-sm-2 col-xs-12 add-margin text-justify">
+						<span id="apphComment-${appHisStatus.index}" style="display: none;">${history.comments}</span>
 						<c:choose>
-							<c:when test="${history.comments.length() < 70}">
-								<%-- <c:out value="${history.comments}" />&nbsp; --%>
-							<c:out value="${history.comments}"></c:out>&nbsp;
-						</c:when>
+							<c:when test="${not empty  history.comments}">
+								<c:choose>
+									<c:when test="${history.comments.length() < 70}">
+										<c:out value="${history.comments}"></c:out>&nbsp;
+									</c:when>
+									<c:otherwise>
+										<c:out value="${fn:substring(history.comments, 0, 65)}" />...</br><a href="javascript:void(0);" onclick="apphCommentDetails('apphComment-${appHisStatus.index}')">View Details</a>
+									</c:otherwise>
+								</c:choose>
+							</c:when>
 							<c:otherwise>
-								<a href="#" onclick="showComent('${history.comments}')">click here</a>&nbsp;
-						</c:otherwise>
+								NA								
+							</c:otherwise>
 						</c:choose>
 					</div>
 				</div>
@@ -111,15 +119,6 @@
 			<div class="col-md-3 col-xs-6 add-margin">No history Present.</div>
 		</c:otherwise>
 	</c:choose>
-</div>
-<button id="myBtn" class="display:none"></button>
-<!-- The Modal -->
-<div id="myModal" class="modal" style="top:195px;left:20px;right:20px;">
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <p id="content">...</p>
-  </div>
 </div>
 <script>
 	$('.slide-history-menu').click(
@@ -138,36 +137,7 @@
 </script>
 
 <script>
-
-var modal = document.getElementById("myModal");
-function showComent(data){
-document.getElementById("content").innerHTML = data;
-modal.style.display = "block";
-}
-
-// Get the modal
-
-
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks the button, open the modal 
-btn.onclick = function() {
-  
-}
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
+function apphCommentDetails(cmtId){
+	bootbox.alert($('#'+cmtId).html());
 }
 </script>
