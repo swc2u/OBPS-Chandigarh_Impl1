@@ -588,8 +588,11 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         }
         if (!WF_SAVE_BUTTON.equalsIgnoreCase(workFlowAction)
         		&& !WF_INITIATE_REJECTION_BUTTON.equalsIgnoreCase(workFlowAction)
-                && PROPERTY_DOCUMENTS_VERIFICATION_INITIATED.equalsIgnoreCase(application.getState().getValue())
-                && APPLICATION_STATUS_REGISTERED.equalsIgnoreCase(application.getStatus().getCode())) {
+        		 //&& PROPERTY_DOCUMENTS_VERIFICATION_INITIATED.equalsIgnoreCase(application.getState().getValue())
+                //&& APPLICATION_STATUS_REGISTERED.equalsIgnoreCase(application.getStatus().getCode())
+        		&& BpaConstants.APPLICATION_STATUS_RECORD_APPROVED.equalsIgnoreCase(application.getState().getValue())
+                && BpaConstants.APPROVED.equalsIgnoreCase(application.getStatus().getCode())
+        		) {
             String feeCalculationMode = bpaUtils.getBPAFeeCalculationMode();
             if (feeCalculationMode.equalsIgnoreCase(BpaConstants.AUTOFEECAL) ||
                     feeCalculationMode.equalsIgnoreCase(BpaConstants.AUTOFEECALEDIT)) {

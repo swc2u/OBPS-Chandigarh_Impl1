@@ -3,5 +3,6 @@ encoding//src/main/java=UTF-8
 encoding//src/main/resources=UTF-8
 encoding//src/main/resources/reports/templates/edcr_report.jrxml=UTF-8
 encoding//src/main/resources/reports/templates/edcr_report_rural.jrxml=UTF-8
+encoding//src/main/resources/reports/templates/rule23_4_subreport.jrxml=UTF-8
 encoding//src/test/java=UTF-8
 encoding/<project>=UTF-8

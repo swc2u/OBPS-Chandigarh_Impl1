@@ -309,13 +309,13 @@
 							class="btn btn-primary"> <spring:message code="lbl.btn.modify.fee"/> </a>
 
 				</c:if>
-				<c:if test="${bpaApplication.state.value ne 'Field Inspection completed' && bpaApplication.status.code eq 'Document Verification Completed'}">
+				<%-- <c:if test="${bpaApplication.state.value ne 'Field Inspection completed' && bpaApplication.status.code eq 'Document Verification Completed'}">
 					<input type="button" name="save" id="btnSave" value="Save" class="btn btn-primary"/>
-				</c:if>
+				</c:if> --%>
 				<c:if test="${createlettertoparty}">
-					<a
-							href="/bpa/lettertoparty/create/${bpaApplication.applicationNumber}"
-							target="_self" class="btn btn-primary"> <spring:message code="lbl.btn.letter.to.party"/> </a>
+					<a href="/bpa/lettertoparty/create/${bpaApplication.applicationNumber}" target="_self" class="btn btn-primary"> 
+						<spring:message code="lbl.btn.letter.to.party"/> 
+					</a>
 				</c:if>
 			</div>
 			<br>
@@ -445,13 +445,8 @@
 	</div>
 </div>
 
-<script
-		src="<cdn:url value='/resources/global/js/egov/inbox.js?rnd=${app_release_no}' context='/egi'/>"></script>
-<script
-		src="<cdn:url value='/resources/js/app/application-edit.js?rnd=${app_release_no}'/>"></script>
-<script
-		src="<cdn:url value='/resources/js/app/documentsuploadvalidation.js?rnd=${app_release_no}'/>"></script>
-<script
-		src="<cdn:url value='/resources/js/app/application-view.js?rnd=${app_release_no}'/>"></script>
-<script
-		src="<cdn:url value='/resources/js/app/edcr-helper.js?rnd=${app_release_no}'/>"></script>
+<script src="<cdn:url value='/resources/global/js/egov/inbox.js?rnd=${app_release_no}' context='/egi'/>"></script>
+<script src="<cdn:url value='/resources/js/app/application-edit.js?rnd=${app_release_no}'/>"></script>
+<script src="<cdn:url value='/resources/js/app/documentsuploadvalidation.js?rnd=${app_release_no}'/>"></script>
+<script src="<cdn:url value='/resources/js/app/application-view.js?rnd=${app_release_no}'/>"></script>
+<script src="<cdn:url value='/resources/js/app/edcr-helper.js?rnd=${app_release_no}'/>"></script>
