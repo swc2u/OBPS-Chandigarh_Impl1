@@ -107,7 +107,7 @@
 									Building Plan Approvals
 								</h1>
 								<div class="animated fadeInDownBig" style="max-width: 700px;">
-									Citizens, Officials, and other stakeholders can submit and track applications in real time and obtain approvals without having to physically visit an office.
+									Online building plan approval system (OBPAS) is a single window portal for online scrutiny and approval of building plan applications within the municipal limits of Chandigarh. Citizens, Officials, and other stakeholders can submit and track applications in real time and obtain approvals without having to physically visit an office.
 								</div>								
 							</div>
 							<div class = "f-regular login-right-cont padding0 col-md-6">
