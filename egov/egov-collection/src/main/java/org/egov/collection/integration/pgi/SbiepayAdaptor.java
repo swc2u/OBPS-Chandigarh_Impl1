@@ -72,7 +72,7 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 	@Override
 	public PaymentRequest createPaymentRequest(final ServiceDetails paymentServiceDetails,
 			final ReceiptHeader receiptHeader) {
-		LOGGER.debug("inside  SbiepayAdaptor createPaymentRequest");
+		LOGGER.info("inside  SbiepayAdaptor createPaymentRequest");
 		final DefaultPaymentRequest paymentRequest = new DefaultPaymentRequest();
 
 		String prefix = null;
@@ -105,12 +105,8 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 				+ Other_Details + "|" + Success_URL + "|" + Failure_URL + "|" + Collaborator_Id + "|" + Order_Number
 				+ "|" + "2" + "|" + "NB" + "|" + "ONLINE" + "|" + "ONLINE";
 
-		System.out.println("SBI - hashSequence " + hashSequence);
-
 		String hash = AES256Bit.encrypt(hashSequence,
 				AES256Bit.readKeyBytes(collectionApplicationProperties.sbiMkey(prefix)));
-
-		System.out.println("SBI hash " + hash);
 
 		UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme("https")
 				.host(collectionApplicationProperties.sbiUrl(prefix))
@@ -202,7 +198,6 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 		map.put(trascationdate, strings[10]);
 		map.put(Country, strings[11]);
 		map.put(CIN, strings[12]);
-		LOGGER.info(map);
 		LOGGER.info("==========================");
 		return map;
 	}
@@ -231,7 +226,7 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 		try {
 			amunt=new BigDecimal(responseMap.get(amount));
 		}catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 		sbiResponce.setTxnAmount(amunt);
 		sbiResponce.setTxnReferenceNo(responseMap.get(atrn));
@@ -265,7 +260,7 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 
 	public Map<String, String> getOfflinePaymentRequest(String reconcileUrl, String aggregatorId, String MID,
 			String orderNo) {
-		LOGGER.info("getOfflinePaymentRequest call to sbi : for order number :"+orderNo+" reconcileUrl : "+reconcileUrl+" aggregatorId : "+aggregatorId+" MID :"+MID);
+		//LOGGER.info("getOfflinePaymentRequest call to sbi : for order number :"+orderNo+" reconcileUrl : "+reconcileUrl+" aggregatorId : "+aggregatorId+" MID :"+MID);
 		Map<String, String> map = new HashMap<String, String>();
 		String queryRequest = "|" + MID + "|" + orderNo;
 		try {
@@ -336,13 +331,8 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 		map.put(bankRefNumber, strings[10]);
 		map.put(trascationdate, strings[11]);
 		map.put(paymode, strings[12]);
-		LOGGER.info(map);
+		//LOGGER.info(map);
 		LOGGER.info("==========================");
 		return map;
-	}
-
-	public static void main(String[] args) {
-		System.out.println(parseSBIReconsilationResponce(
-				"1000112|3107352858401|SUCCESS|IN|INR|Other|BPA00021601363046874|100|Payment InClearing|SBIN|116032276555810|2020-09-29 12:34:48|DC|0|1000112|0.00^0.00||||||||||"));
 	}
 }

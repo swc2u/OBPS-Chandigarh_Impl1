@@ -268,6 +268,57 @@
 				</c:choose>
 				</div>
 			</div>
+			
+			<div class="panel panel-primary" data-collapsed="0">
+				<div class="panel-body">
+					<c:choose>
+						<c:when test="${not empty letterToPartyFeeList}">
+							<div class="panel-heading custom_form_panel_heading">
+								<div class="panel-title">
+									<spring:message code="lbl.fee.areas"/>
+								</div>
+							</div>
+							<div class="form-group view-content header-color hidden-xs">
+								<div class="col-sm-4">
+									<spring:message code="lbl.fee.floor"/>
+								</div>
+								<div class="col-sm-3">
+									<spring:message code="lbl.isrequested"/>
+								</div>
+								<div class="col-sm-2">
+									<spring:message code="lbl.area"/>
+								</div>
+								<div class="col-sm-3">
+									<spring:message code="lbl.remarks"/>
+								</div>
+							</div>
+							<c:forEach var="fees" items="${letterToPartyFeeList}" varStatus="status">
+								<div class="col-sm-4">
+									<form:hidden id="letterToPartyFeeDetails${status.index}.id"
+												path="letterToPartyFeeDetails[${status.index}].id" value="${fees.id}"/>
+									${fees.letterToPartyFeeMaster.feeName} Floor ${fees.letterToPartyFeeMaster.floorNumber} 
+									<c:if test="${fees.isMandatory}">
+										<span class="mandatory"></span>
+									</c:if>									
+								</div>
+								<div class="col-sm-3">
+									<c:out value="${fees.isMandatory ? 'Yes' : 'No'}"/>
+								</div>
+								<div class="col-sm-2">
+									<form:input class="form-control patternvalidation" maxlength="20" data-pattern="number" 
+												id="letterToPartyFeeDetails[${status.index}].floorarea" 
+												path="letterToPartyFeeDetails[${status.index}].floorarea" />
+									<form:errors path="letterToPartyFees[${status.index}].floorarea" cssClass="add-margin error-msg" />
+								</div>
+								<div class="col-sm-3">
+									<c:out value="${fees.remarks}" default="N/A"/>
+								</div>
+							</c:forEach>
+						</c:when>
+					</c:choose>
+				</div>
+			</div>
+			
 		</div>
 		</div>
 	<div class="text-center">

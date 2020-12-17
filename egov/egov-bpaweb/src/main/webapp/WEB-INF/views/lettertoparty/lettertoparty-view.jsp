@@ -167,7 +167,45 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div>        
+        <div class="panel panel-primary" data-collapsed="0">
+			<div class="panel-body">
+				<table class="table table-bordered  multiheadertbl">
+                    <thead>
+                        <tr>
+                            <th><spring:message code="lbl.fee.floor"/></th>
+                            <th><spring:message code="lbl.isrequested"/></th>
+                            <th><spring:message code="lbl.area"/></th>
+                            <th><spring:message code="lbl.remarks"/></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:choose>
+                            <c:when test="${not empty letterToPartyFeeList}">
+                                <c:forEach items="${letterToPartyFeeList}" var="fees"
+                                           varStatus="status">
+                                    <tr>
+                                        <td class="view-content" style="font-size: 97%;">
+                                        	${fees.letterToPartyFeeMaster.feeName} Floor ${fees.letterToPartyFeeMaster.floorNumber}
+                                        </td>
+                                        <td class="view-content" style="font-size: 97%;"><c:out value="${fees.isMandatory ? 'Yes' : 'No'}"/></td>
+                                        <td class="view-content text-right" style="font-size: 97%;">
+                                        	<c:out value="${fees.floorarea}" default="0"/>
+                                        </td>
+                                        <td class="view-content" style="font-size: 97%;">
+                                        	<c:out value="${fees.remarks}" default="N/A"/>
+										</td>
+                                    </tr>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="col-md-12 col-xs-6  panel-title"><spring:message code='lbl.no.record.found'/></div>
+                            </c:otherwise>
+                        </c:choose>
+                    </tbody>
+                </table>
+			</div>
+		</div>        
     </div>
     <input type="hidden" id="lpReplyDateGreaterThanPartySentDate" value="<spring:message code='msg.validate.lpreplydate.greaterthan.party.sentdate'/>"/>
     <input type="hidden" id="updateLpSentDate" value="<spring:message code='msg.validate.update.lpsent.date'/>"/>

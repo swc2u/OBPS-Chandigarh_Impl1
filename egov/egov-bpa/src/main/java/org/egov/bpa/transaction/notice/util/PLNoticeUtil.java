@@ -155,9 +155,11 @@ public class PLNoticeUtil {
         if (!pl.getParent().getSiteDetail().isEmpty()) {
         	reportParams.put("plotNo", pl.getParent().getSiteDetail().get(0).getMspPlotNumber() == null? EMPTY :  pl.getParent().getSiteDetail().get(0).getMspPlotNumber());
         	reportParams.put("sectorNo", pl.getParent().getSiteDetail().get(0).getAdminBoundary() == null? EMPTY :  pl.getParent().getSiteDetail().get(0).getAdminBoundary().getName());
+        	reportParams.put("fileNo", pl.getParent().getSiteDetail().get(0).getKhataNumber() == null? EMPTY :  pl.getParent().getSiteDetail().get(0).getKhataNumber());
         }else {
         	reportParams.put("plotNo", EMPTY);
         	reportParams.put("sectorNo", EMPTY);
+        	reportParams.put("fileNo", EMPTY);
         }       
         if (APPLICATION_STATUS_CANCELLED.equalsIgnoreCase(pl.getStatus().getCode())) {
             reportParams.put("rejectionReasons", buildRejectionReasons(pl, false));

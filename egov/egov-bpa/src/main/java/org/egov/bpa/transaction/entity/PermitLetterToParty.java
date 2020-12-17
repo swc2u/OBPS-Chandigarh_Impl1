@@ -29,6 +29,9 @@
  */
 package org.egov.bpa.transaction.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -41,7 +44,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.egov.bpa.model.LetterToPartyFees;
 import org.egov.bpa.transaction.entity.common.LetterToPartyCommon;
+import org.egov.common.entity.bpa.Occupancy;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 
 @Entity
@@ -64,6 +69,9 @@ public class PermitLetterToParty extends AbstractAuditable {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "letterToParty")
     private LetterToPartyCommon letterToParty;
+    
+    private transient List<LetterToPartyFees> letterToPartyFees = new ArrayList<LetterToPartyFees>(0);
+    private transient List<LetterToPartyFeeDetails> letterToPartyFeeDetails = new ArrayList<LetterToPartyFeeDetails>();
     
     @Override
     public Long getId() {
@@ -91,5 +99,19 @@ public class PermitLetterToParty extends AbstractAuditable {
         this.letterToParty = letterToParty;
     }
 
-    
+	public List<LetterToPartyFees> getLetterToPartyFees() {
+		return letterToPartyFees;
+	}
+
+	public void setLetterToPartyFees(List<LetterToPartyFees> letterToPartyFees) {
+		this.letterToPartyFees = letterToPartyFees;
+	}
+
+	public List<LetterToPartyFeeDetails> getLetterToPartyFeeDetails() {
+		return letterToPartyFeeDetails;
+	}
+
+	public void setLetterToPartyFeeDetails(List<LetterToPartyFeeDetails> letterToPartyFeeDetails) {
+		this.letterToPartyFeeDetails = letterToPartyFeeDetails;
+	}
 }

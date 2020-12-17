@@ -132,10 +132,15 @@
 					<li><a data-toggle="tab" href="#noc-info" data-tabidx=5><spring:message
 							code='lbl.noc.details' /></a></li>
 				</c:if>
-				<c:if
-					test="${not empty bpaApplication.permitFee || bpaApplication.admissionfeeAmount > 0}">
+				<c:if test="${not empty bpaApplication.permitFee || bpaApplication.admissionfeeAmount > 0}">
 					<li><a data-toggle="tab" href="#view-fee" data-tabidx=6><spring:message
 							code='lbl.fees.details' /></a></li>
+				</c:if>
+				<c:if test="${not empty tempFees && empty bpaApplication.permitFee}">
+					<li><a data-toggle="tab" href="#view-fee" data-tabidx=6>
+							<spring:message code='lbl.fees.details' />
+						</a>
+					</li>
 				</c:if>
 				<c:if test="${not empty lettertopartylist}">
 					<li><a data-toggle="tab" href="#view-lp" data-tabidx=7><spring:message
@@ -256,11 +261,17 @@
 						</div>
 					</div>
 				</c:if>
-				<c:if
-					test="${not empty bpaApplication.permitFee || bpaApplication.admissionfeeAmount > 0}">
+				<c:if test="${not empty bpaApplication.permitFee || bpaApplication.admissionfeeAmount > 0}">
 					<div id="view-fee" class="tab-pane fade">
 						<div class="panel panel-primary" data-collapsed="0">
 							<jsp:include page="view-bpa-fee-details.jsp"></jsp:include>
+						</div>
+					</div>
+				</c:if>
+				<c:if test="${not empty tempFees && empty bpaApplication.permitFee}">
+					<div id="view-fee" class="tab-pane fade">
+						<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="view-bpa-temp-fee-details.jsp"></jsp:include>
 						</div>
 					</div>
 				</c:if>

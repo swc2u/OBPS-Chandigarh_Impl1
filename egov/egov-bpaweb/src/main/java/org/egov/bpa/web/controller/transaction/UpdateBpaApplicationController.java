@@ -145,6 +145,8 @@ import org.egov.bpa.transaction.notice.PermitApplicationNoticesFormat;
 import org.egov.bpa.transaction.notice.impl.PermitOrderFormatImpl;
 import org.egov.bpa.transaction.notice.impl.PermitRejectionFormatImpl;
 import org.egov.bpa.transaction.notice.impl.PermitRevocationFormat;
+import org.egov.bpa.transaction.service.ApplicationBpaFeeCalculation;
+import org.egov.bpa.transaction.service.ApplicationFeeService;
 import org.egov.bpa.transaction.service.BpaApplicationPermitConditionsService;
 import org.egov.bpa.transaction.service.BpaDcrService;
 import org.egov.bpa.transaction.service.BpaStatusService;
@@ -153,6 +155,7 @@ import org.egov.bpa.transaction.service.InspectionApplicationService;
 import org.egov.bpa.transaction.service.InspectionService;
 import org.egov.bpa.transaction.service.LettertoPartyService;
 import org.egov.bpa.transaction.service.NocStatusService;
+import org.egov.bpa.transaction.service.PermitFeeCalculationService;
 import org.egov.bpa.transaction.service.PermitFeeService;
 import org.egov.bpa.transaction.service.PermitNocApplicationService;
 import org.egov.bpa.transaction.service.PermitRevocationService;
@@ -204,6 +207,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
     private static final String BPA_APPLICATION_RESULT = "bpa-application-result";
     private static final String PDFEXTN = ".pdf";
     private static final String BPA_PROCEED_FEE_MSG = "Set the minimal fee using modify fee button and proceed further";
+    private static final String PROPERTY_DOCUMENTS_VERIFICATION_INITIATED = "Property documents verification initiated"; 
 
     @Autowired
     private InspectionService inspectionService;
@@ -819,6 +823,11 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
                     || APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(application.getStatus().getCode())
                     || APPLICATION_STATUS_APPROVAL_PROCESS_INITIATED.equalsIgnoreCase(application.getStatus().getCode()))) {
             model.addAttribute("createlettertoparty", true);
+        }
+        
+        if (!BpaConstants.APPROVED.equalsIgnoreCase(application.getStatus().getCode())) {
+        	ApplicationBpaFeeCalculation feeCalculation = (ApplicationBpaFeeCalculation) specificNoticeService.find(PermitFeeCalculationService.class, specificNoticeService.getCityDetails());
+        	model.addAttribute("tempFees", feeCalculation.calculateAllFees(application));
         }
     }
 

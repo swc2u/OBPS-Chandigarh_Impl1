@@ -59,6 +59,7 @@ import static org.egov.bpa.utils.BpaConstants.WF_LBE_SUBMIT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_NEW_STATE;
 import static org.egov.bpa.utils.BpaConstants.WF_SAVE_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_SEND_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -145,6 +146,7 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
     private static final String COMMON_ERROR = "common-error";
     private static final String CITIZEN_OR_BUSINESS_USER = "citizenOrBusinessUser";
     private static final String TRUE = "TRUE";
+    private static final String PROPERTY_DOCUMENTS_VERIFICATION_INITIATED = "Property documents verification initiated";
 
     @Autowired
     LettertoPartyService lettertoPartyService;
@@ -350,6 +352,10 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
                         (enableOrDisablePayOnline.equalsIgnoreCase("YES") ? Boolean.TRUE : Boolean.FALSE));
             } else
                 model.addAttribute(COLLECT_FEE_VALIDATE, "");
+        }
+        
+        if (!BpaConstants.APPROVED.equalsIgnoreCase(application.getStatus().getCode())) {
+        	model.addAttribute("tempFees", feeCalculation.calculateAllFees(application));
         }
 
         if (application.getStatus() != null && application.getStatus().getCode().equals(APPLICATION_STATUS_CREATED)

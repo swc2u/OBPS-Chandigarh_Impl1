@@ -408,10 +408,10 @@ public class SchedularService {
     @Transactional
     public void reconcileSBI() {
     	LOGGER.debug("Inside SBI");
-   	 final Calendar fourDaysBackCalender = Calendar.getInstance();
+   	 	final Calendar fourDaysBackCalender = Calendar.getInstance();
         fourDaysBackCalender.add(Calendar.DATE, -4);
         final Calendar cal = Calendar.getInstance();
-      //  cal.add(Calendar.MINUTE, -30);
+        //cal.add(Calendar.MINUTE, -30);
         cal.add(Calendar.MINUTE, collectionApplicationProperties.sbiCronExpressionDelayTime()*-1);
         final Query qry = persistenceService
                 .getSession()

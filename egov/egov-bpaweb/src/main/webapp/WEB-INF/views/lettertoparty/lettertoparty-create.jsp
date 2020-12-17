@@ -165,6 +165,74 @@
 					</c:choose>
 				</div>
 			</div>
+			
+			<div class="panel panel-primary" data-collapsed="0">
+				<div class="panel-body">
+					<c:choose>
+						<c:when test="${not empty letterToPartyFees}">
+							<div class="panel-heading custom_form_panel_heading">
+								<div class="panel-title">
+									<spring:message code="lbl.fee.areas"/>
+								</div>
+							</div>
+							<div class="form-group view-content header-color hidden-xs">
+								<div class="col-sm-4">
+									<spring:message code="lbl.fee.floor"/>
+								</div>
+								<div class="col-sm-3">
+									<spring:message code="lbl.isrequested"/>
+								</div>
+								<div class="col-sm-2">
+									<spring:message code="lbl.area"/>
+								</div>
+								<div class="col-sm-3">
+									<spring:message code="lbl.remarks"/>
+								</div>
+							</div>
+							<c:forEach var="fees" items="${letterToPartyFees}" varStatus="status">
+								<div class="col-sm-4">
+									<form:hidden id="letterToPartyFees${status.index}.lpFeeId"
+												path="letterToPartyFees[${status.index}].lpFeeId"
+												value="${fees.lpFeeId}"/>
+										<form:hidden id="letterToPartyFees${status.index}.applicationId"
+												path="letterToPartyFees[${status.index}].applicationId"
+												value="${fees.applicationId}"/>
+										<form:hidden id="letterToPartyFees${status.index}.lpFeeDetailsId"
+												path="letterToPartyFees[${status.index}].lpFeeDetailsId"
+												value="${fees.lpFeeDetailsId}"/>
+										<form:hidden id="letterToPartyFees${status.index}.feeMstrId"
+												path="letterToPartyFees[${status.index}].feeMstrId"
+												value="${fees.feeMstrId}"/>
+										<form:hidden id="letterToPartyFees${status.index}.feeName"
+												path="letterToPartyFees[${status.index}].feeName"
+												value="${fees.feeName}"/>
+										<form:hidden id="letterToPartyFees${status.index}.floorNumber"
+												path="letterToPartyFees[${status.index}].floorNumber"
+												value="${fees.floorNumber}"/>
+									${fees.feeName} Floor ${fees.floorNumber}
+								</div>
+								<div class="col-sm-3">
+									<form:checkbox id="letterToPartyFees${status.index}.isMandatory"
+												path="letterToPartyFees[${status.index}].isMandatory"
+												class="requested"/>
+								</div>
+								<div class="col-sm-2">
+									<c:out value="${fees.floorarea}" default="N/A"/>
+								</div>
+								<div class="col-sm-3">
+									<form:textarea class="form-control patternvalidation"
+													   data-pattern="alphanumericspecialcharacters" maxlength="300"
+													   id="letterToPartyFees${status.index}.remarks" rows="3"
+													   path="letterToPartyFees[${status.index}].remarks"/>
+									<form:errors path="letterToPartyFees[${status.index}].remarks" cssClass="add-margin error-msg"/>
+								</div>
+							</c:forEach>
+						</c:when>
+					</c:choose>
+				</div>
+			</div>
+			
+			
 		</div>
 	</div>
 	<div class="text-center">

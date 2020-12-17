@@ -48,6 +48,7 @@ package org.egov.bpa.transaction.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.bpa.master.entity.ServiceType;
 import org.egov.bpa.transaction.entity.BpaApplication;
@@ -65,4 +66,6 @@ public interface ApplicationBpaFeeCalculation {
 	EgDemand createDemand(BpaApplication application);
 
 	EgDemand createDemandWhenFeeCollectionNotRequire(BpaApplication application);
+	
+	Map<String, String> calculateAllFees(final BpaApplication application);
 }
