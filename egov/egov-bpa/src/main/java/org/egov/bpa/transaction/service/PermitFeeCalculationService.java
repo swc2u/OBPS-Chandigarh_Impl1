@@ -485,7 +485,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(), String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 										if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
 											BigDecimal gstAmount = getTotalAmountOfGST(totalAmount);
-											fees.put(bpaFee.getBpaFeeCommon().getDescription(), String.valueOf(gstAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
+											fees.put(bpaGST.getBpaFeeCommon().getDescription(), String.valueOf(gstAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 										}
 									}
 								} else if (BpaConstants.LABOURCESS
