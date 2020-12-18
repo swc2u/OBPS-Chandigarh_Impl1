@@ -272,11 +272,13 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 									|| bpaFee.getServiceType().getDescription().equalsIgnoreCase(ALTERATION)) {
 								
 								List<LetterToPartyFees> lpRecifiedAreas = new ArrayList<LetterToPartyFees>();
-								for(LetterToPartyFees lpArea:lpAreas) {
-									if(lpArea.getFeeName().equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription()) 
-											&& null != lpArea.getFloorarea()
-												&& lpArea.getFloorarea().compareTo(BigDecimal.ZERO) > 0) {
-										lpRecifiedAreas.add(lpArea);
+								if(null!=lpAreas) {
+									for(LetterToPartyFees lpArea:lpAreas) {
+										if(lpArea.getFeeName().equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription()) 
+												&& null != lpArea.getFloorarea()
+													&& lpArea.getFloorarea().compareTo(BigDecimal.ZERO) > 0) {
+											lpRecifiedAreas.add(lpArea);
+										}
 									}
 								}
 								
@@ -449,11 +451,13 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 									|| bpaFee.getServiceType().getDescription().equalsIgnoreCase(ALTERATION)) {
 								
 								List<LetterToPartyFees> lpRecifiedAreas = new ArrayList<LetterToPartyFees>();
-								for(LetterToPartyFees lpArea:lpAreas) {
-									if(lpArea.getFeeName().equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())
-											&& null != lpArea.getFloorarea()
-												&& lpArea.getFloorarea().compareTo(BigDecimal.ZERO) > 0) {
-										lpRecifiedAreas.add(lpArea);
+								if(null!=lpAreas) {
+									for(LetterToPartyFees lpArea:lpAreas) {
+										if(lpArea.getFeeName().equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())
+												&& null != lpArea.getFloorarea()
+													&& lpArea.getFloorarea().compareTo(BigDecimal.ZERO) > 0) {
+											lpRecifiedAreas.add(lpArea);
+										}
 									}
 								}
 								
