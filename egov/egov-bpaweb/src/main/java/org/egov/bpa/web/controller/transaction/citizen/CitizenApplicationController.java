@@ -401,8 +401,7 @@ public class CitizenApplicationController extends BpaGenericApplicationControlle
             bpaApplication.setApplicationType(applicationTypeService.findByName(onedaypermit));
 
        
-        Map<String, String> eDcrApplDetails = bpaDcrService
-                .checkIsEdcrUsedInBpaApplication(bpaApplication.geteDcrNumber());
+        Map<String, String> eDcrApplDetails = bpaDcrService.checkIsEdcrUsedInBpaApplication(bpaApplication.geteDcrNumber());
         if(!eDcrApplDetails.isEmpty())
         if (eDcrApplDetails.get("isExists").equals("true")) {
             model.addAttribute("eDcrApplExistsMessage", eDcrApplDetails.get(BpaConstants.MESSAGE));

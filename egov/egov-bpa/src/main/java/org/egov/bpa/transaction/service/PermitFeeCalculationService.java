@@ -323,41 +323,56 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 									}
 								} else if (BpaConstants.RULE_5_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
+									BigDecimal rule5ExtraArea = BigDecimal.ZERO; 
+									if(null!=lpRecifiedAreas) {
+										for(LetterToPartyFees lprArea:lpRecifiedAreas) {
+											if(lprArea.getFeeName().equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription()) 
+													&& null != lprArea.getFloorarea()
+														&& lprArea.getFloorarea().compareTo(BigDecimal.ZERO) > 0) {
+												rule5ExtraArea = rule5ExtraArea.add(lprArea.getFloorarea());
+											}
+										}
+									}
 									boolean isWorkAlreadyStarted = (null != checkIsWorkAlreadyStarted(application))
 											? checkIsWorkAlreadyStarted(application)
 											: false;
-									if (isWorkAlreadyStarted) {
-										boolean isWorkInProgress = checkIsWorkInProgress(application);
-										BigDecimal totalAmount = BigDecimal.ZERO;
-										if (isWorkInProgress) {
-											BigDecimal totalConstArea = new BigDecimal(
-													application.getSiteDetail().get(0).getStateOfConstruction());
-											totalConstArea = totalConstArea.setScale(2, BigDecimal.ROUND_HALF_UP);
-											totalAmount = getTotalAmountOfRule5New(application.getBuildingDetail(),
-													plan, mostRestrictiveFarHelper, isWorkInProgress, totalConstArea, lpRecifiedAreas);
-										} else {
-											totalAmount = getTotalAmountOfRule5New(application.getBuildingDetail(),
-													plan, mostRestrictiveFarHelper, isWorkInProgress, BigDecimal.ZERO, lpRecifiedAreas);
-										}
-										if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
-											permitFee.getApplicationFee()
-													.addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee,
-															permitFee.getApplicationFee(), totalAmount));
-										}
+									BigDecimal totalAmount = BigDecimal.ZERO;
+									if (isWorkAlreadyStarted) {										
+										totalAmount = getTotalAmountOfRule5New(plan, lpRecifiedAreas, isWorkAlreadyStarted);
+									}else {
+										if(rule5ExtraArea.compareTo(BigDecimal.ZERO) > 0) {
+											totalAmount = getTotalAmountOfRule5New(plan, lpRecifiedAreas, isWorkAlreadyStarted);
+										}										
+									}
+									if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
+										permitFee.getApplicationFee()
+												.addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee,
+														permitFee.getApplicationFee(), totalAmount));
 									}
 								} else if (BpaConstants.ADDITIONAL_COVERAGE_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
-									if (plan.getIsAdditionalFeeApplicable()) {
-										BigDecimal totalAmount = BigDecimal.ZERO;
-
-										totalAmount = totalAmount.add(getTotalAmountForAdditionalCoverage(plan,
-												application.getBuildingDetail(), lpRecifiedAreas));
-
-										if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
-											permitFee.getApplicationFee()
-													.addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee,
-															permitFee.getApplicationFee(), totalAmount));
+									BigDecimal addCovExtraArea = BigDecimal.ZERO; 
+									if(null!=lpRecifiedAreas) {
+										for(LetterToPartyFees lprArea:lpRecifiedAreas) {
+											if(lprArea.getFeeName().equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription()) 
+													&& null != lprArea.getFloorarea()
+														&& lprArea.getFloorarea().compareTo(BigDecimal.ZERO) > 0) {
+												addCovExtraArea = addCovExtraArea.add(lprArea.getFloorarea());
+											}
 										}
+									}
+									BigDecimal totalAmount = BigDecimal.ZERO;
+									if (plan.getIsAdditionalFeeApplicable()) {
+										totalAmount = totalAmount.add(getTotalAmountForAdditionalCoverage(plan,
+												application.getBuildingDetail(), lpRecifiedAreas, Boolean.TRUE));										
+									}else {
+										totalAmount = totalAmount.add(getTotalAmountForAdditionalCoverage(plan,
+												application.getBuildingDetail(), lpRecifiedAreas, Boolean.FALSE));
+									}
+									if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
+										permitFee.getApplicationFee()
+												.addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee,
+														permitFee.getApplicationFee(), totalAmount));
 									}
 								}
 							}
@@ -494,36 +509,52 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 									if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(), String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 									}
-								} else if (BpaConstants.RULE_5_FEE
-										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
+								} else if (BpaConstants.RULE_5_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
+									BigDecimal rule5ExtraArea = BigDecimal.ZERO; 
+									if(null!=lpRecifiedAreas) {
+										for(LetterToPartyFees lprArea:lpRecifiedAreas) {
+											if(lprArea.getFeeName().equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription()) 
+													&& null != lprArea.getFloorarea()
+														&& lprArea.getFloorarea().compareTo(BigDecimal.ZERO) > 0) {
+												rule5ExtraArea = rule5ExtraArea.add(lprArea.getFloorarea());
+											}
+										}
+									}
 									boolean isWorkAlreadyStarted = (null != checkIsWorkAlreadyStarted(application))
 											? checkIsWorkAlreadyStarted(application)
 											: false;
-									if (isWorkAlreadyStarted) {
-										boolean isWorkInProgress = checkIsWorkInProgress(application);
-										BigDecimal totalAmount = BigDecimal.ZERO;
-										if (isWorkInProgress) {
-											BigDecimal totalConstArea = new BigDecimal(
-													application.getSiteDetail().get(0).getStateOfConstruction());
-											totalConstArea = totalConstArea.setScale(2, BigDecimal.ROUND_HALF_UP);
-											totalAmount = getTotalAmountOfRule5New(application.getBuildingDetail(),
-													plan, mostRestrictiveFarHelper, isWorkInProgress, totalConstArea,lpRecifiedAreas);
-										} else {
-											totalAmount = getTotalAmountOfRule5New(application.getBuildingDetail(),
-													plan, mostRestrictiveFarHelper, isWorkInProgress, BigDecimal.ZERO,lpRecifiedAreas);
-										}
-										if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
-											fees.put(bpaFee.getBpaFeeCommon().getDescription(), String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
+									BigDecimal totalAmount = BigDecimal.ZERO;
+									if (isWorkAlreadyStarted) {										
+										totalAmount = getTotalAmountOfRule5New(plan, lpRecifiedAreas, isWorkAlreadyStarted);
+									}else {
+										if(rule5ExtraArea.compareTo(BigDecimal.ZERO) > 0) {
+											totalAmount = getTotalAmountOfRule5New(plan, lpRecifiedAreas, isWorkAlreadyStarted);
+										}										
+									}
+									if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
+										fees.put(bpaFee.getBpaFeeCommon().getDescription(), String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
+									}
+								} else if (BpaConstants.ADDITIONAL_COVERAGE_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
+									BigDecimal addCovExtraArea = BigDecimal.ZERO; 
+									if(null!=lpRecifiedAreas) {
+										for(LetterToPartyFees lprArea:lpRecifiedAreas) {
+											if(lprArea.getFeeName().equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription()) 
+													&& null != lprArea.getFloorarea()
+														&& lprArea.getFloorarea().compareTo(BigDecimal.ZERO) > 0) {
+												addCovExtraArea = addCovExtraArea.add(lprArea.getFloorarea());
+											}
 										}
 									}
-								} else if (BpaConstants.ADDITIONAL_COVERAGE_FEE
-										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
+									BigDecimal totalAmount = BigDecimal.ZERO;
 									if (plan.getIsAdditionalFeeApplicable()) {
-										BigDecimal totalAmount = BigDecimal.ZERO;
-										totalAmount = totalAmount.add(getTotalAmountForAdditionalCoverage(plan, application.getBuildingDetail(),lpRecifiedAreas));
-										if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
-											fees.put(bpaFee.getBpaFeeCommon().getDescription(), String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
-										}
+										totalAmount = totalAmount.add(getTotalAmountForAdditionalCoverage(plan,
+												application.getBuildingDetail(), lpRecifiedAreas, Boolean.TRUE));										
+									}else {
+										totalAmount = totalAmount.add(getTotalAmountForAdditionalCoverage(plan,
+												application.getBuildingDetail(), lpRecifiedAreas, Boolean.FALSE));
+									}
+									if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
+										fees.put(bpaFee.getBpaFeeCommon().getDescription(), String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 									}
 								}
 							}
@@ -1356,17 +1387,16 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		return BigDecimal.ZERO;
 	}
 
-	public BigDecimal getTotalAmountForAdditionalCoverage(Plan plan, List<BuildingDetail> buildingDetails, List<LetterToPartyFees> letterToPartyFees) {
+	public BigDecimal getTotalAmountForAdditionalCoverage(Plan plan, List<BuildingDetail> buildingDetails, 
+			List<LetterToPartyFees> letterToPartyFees, boolean isAdditionalCovApplicable) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal GF_MULTIPLIER = BigDecimal.ZERO;
 		BigDecimal FF_MULTIPLIER = BigDecimal.ZERO;
 		BigDecimal SF_MULTIPLIER = BigDecimal.ZERO;
-
 		BigDecimal plotSizeInSQF = plan.getPlanInformation().getPlotArea();
 		if (plan.getDrawingPreference().getInMeters()) {
 			plotSizeInSQF = plotSizeInSQF.multiply(SQMT_SQFT_MULTIPLIER);
 		}
-
 		if (plotSizeInSQF.compareTo(new BigDecimal("500")) < 0) {
 			GF_MULTIPLIER = new BigDecimal("100");
 			FF_MULTIPLIER = new BigDecimal("40");
@@ -1376,59 +1406,58 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			FF_MULTIPLIER = new BigDecimal("100");
 			SF_MULTIPLIER = new BigDecimal("40");
 		}
-
-		for (Block block : plan.getBlocks()) {
-			for (Floor floor : block.getBuilding().getFloors()) {
-				for (Occupancy occupancy : floor.getOccupancies()) {
-					if (BpaConstants.A_AF.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
-						BigDecimal buildupArea = occupancy.getBuiltUpArea();
-						if (plan.getDrawingPreference().getInFeets())
-							buildupArea = buildupArea.divide(new BigDecimal("144"), 2, RoundingMode.HALF_UP);
-						else if (plan.getDrawingPreference().getInMeters())
-							buildupArea = buildupArea.multiply(new BigDecimal("10.764"));
-						if (floor.getNumber() == 0) {
-							for(LetterToPartyFees fees:letterToPartyFees) {
-								if(fees.getFloorNumber() == 0) {
-									buildupArea = buildupArea.add(fees.getFloorarea());
+		
+		if(isAdditionalCovApplicable) {
+			for (Block block : plan.getBlocks()) {
+				for (Floor floor : block.getBuilding().getFloors()) {
+					for (Occupancy occupancy : floor.getOccupancies()) {
+						if (BpaConstants.A_AF.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+							BigDecimal buildupArea = occupancy.getBuiltUpArea();
+							if (plan.getDrawingPreference().getInFeets())
+								buildupArea = buildupArea.divide(new BigDecimal("144"), 2, RoundingMode.HALF_UP);
+							else if (plan.getDrawingPreference().getInMeters())
+								buildupArea = buildupArea.multiply(new BigDecimal("10.764"));
+							if (floor.getNumber() == 0) {
+								for(LetterToPartyFees fees:letterToPartyFees) {
+									if(fees.getFloorNumber() == 0) {
+										buildupArea = buildupArea.add(fees.getFloorarea());
+									}
 								}
-							}
-							totalAmount = totalAmount
-									.add(buildupArea.multiply(GF_MULTIPLIER).setScale(2, BigDecimal.ROUND_HALF_UP));
-						} else if (floor.getNumber() == 1) {
-							for(LetterToPartyFees fees:letterToPartyFees) {
-								if(fees.getFloorNumber() == 1) {
-									buildupArea = buildupArea.add(fees.getFloorarea());
+								totalAmount = totalAmount
+										.add(buildupArea.multiply(GF_MULTIPLIER).setScale(2, BigDecimal.ROUND_HALF_UP));
+							} else if (floor.getNumber() == 1) {
+								for(LetterToPartyFees fees:letterToPartyFees) {
+									if(fees.getFloorNumber() == 1) {
+										buildupArea = buildupArea.add(fees.getFloorarea());
+									}
 								}
-							}
-							totalAmount = totalAmount
-									.add(buildupArea.multiply(FF_MULTIPLIER).setScale(2, BigDecimal.ROUND_HALF_UP));
-						} else if (floor.getNumber() == 2) {
-							for(LetterToPartyFees fees:letterToPartyFees) {
-								if(fees.getFloorNumber() == 2) {
-									buildupArea = buildupArea.add(fees.getFloorarea());
+								totalAmount = totalAmount
+										.add(buildupArea.multiply(FF_MULTIPLIER).setScale(2, BigDecimal.ROUND_HALF_UP));
+							} else if (floor.getNumber() == 2) {
+								for(LetterToPartyFees fees:letterToPartyFees) {
+									if(fees.getFloorNumber() == 2) {
+										buildupArea = buildupArea.add(fees.getFloorarea());
+									}
 								}
+								totalAmount = totalAmount.add(buildupArea.multiply(SF_MULTIPLIER).setScale(2, BigDecimal.ROUND_HALF_UP));
 							}
-							totalAmount = totalAmount
-									.add(buildupArea.multiply(SF_MULTIPLIER).setScale(2, BigDecimal.ROUND_HALF_UP));
 						}
 					}
 				}
 			}
+		}else {
+			for(LetterToPartyFees fees:letterToPartyFees) {
+				if(fees.getFloorNumber() == 0) {
+					totalAmount = totalAmount.add(fees.getFloorarea().multiply(GF_MULTIPLIER).setScale(2, BigDecimal.ROUND_HALF_UP));
+				}
+				if(fees.getFloorNumber() == 1) {
+					totalAmount = totalAmount.add(fees.getFloorarea().multiply(FF_MULTIPLIER).setScale(2, BigDecimal.ROUND_HALF_UP));
+				}
+				if(fees.getFloorNumber() == 2) {
+					totalAmount = totalAmount.add(fees.getFloorarea().multiply(SF_MULTIPLIER).setScale(2, BigDecimal.ROUND_HALF_UP));
+				}
+			}
 		}
-
-		/*
-		 * for (BuildingDetail building : buildingDetails) { for (ApplicationFloorDetail
-		 * floor : building.getApplicationFloorDetails()) { if (floor.getFloorNumber()
-		 * == 0) { totalAmount =
-		 * totalAmount.add(floor.getFloorArea().multiply(SQMT_SQFT_MULTIPLIER).multiply(
-		 * HUNDRED) .setScale(2, BigDecimal.ROUND_HALF_UP)); } else
-		 * if(floor.getFloorNumber() == 1 || floor.getFloorNumber() == 2) { totalAmount
-		 * =
-		 * totalAmount.add(floor.getFloorArea().multiply(SQMT_SQFT_MULTIPLIER).multiply(
-		 * FORTY).setScale(2, BigDecimal.ROUND_HALF_UP)); }
-		 * 
-		 * } }
-		 */
 		return totalAmount;
 	}
 
@@ -1536,18 +1565,20 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		return totalArea;
 	}
 
-	public BigDecimal getTotalAmountOfRule5New(List<BuildingDetail> buildingDetails, Plan plan,
-			OccupancyTypeHelper mostRestrictiveFarHelper, boolean isWorkInProgress, BigDecimal totalConstructedArea, List<LetterToPartyFees> letterToPartyFees) {
+	public BigDecimal getTotalAmountOfRule5New(Plan plan, List<LetterToPartyFees> letterToPartyFees, boolean isWorkStarted) {		
 		BigDecimal totalAmount = BigDecimal.ZERO;
-		BigDecimal totalArea = BigDecimal.ZERO;
-		totalArea = getTotalAreaForRule5(plan);
-		BigDecimal multiplier = BigDecimal.ZERO;
+		BigDecimal totalArea = BigDecimal.ZERO;		
+		BigDecimal multiplier = BigDecimal.ZERO;		
 		if (BpaConstants.NEW_CONSTRUCTION.equals(plan.getServiceType())
 				|| BpaConstants.RECONSTRUCTION.equals(plan.getServiceType()))
 			multiplier = new BigDecimal("10");
 		else if (BpaConstants.ALTERATION.equals(plan.getServiceType())
 				|| BpaConstants.ADDITION_OR_EXTENSION.equals(plan.getServiceType()))
 			multiplier = new BigDecimal("5");
+		
+		if(isWorkStarted) {
+			totalArea = getTotalAreaForRule5(plan);			
+		}
 		
 		for(LetterToPartyFees fees:letterToPartyFees) {
 			totalArea = totalArea.add(fees.getFloorarea());

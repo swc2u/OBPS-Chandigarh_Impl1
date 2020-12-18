@@ -131,7 +131,6 @@ public class BpaDcrService {
     	Plan plan = applicationBpaService.getPlanInfo(eDcrNumber);
 		String plotNumber=plan.getPlanInfoProperties().get(BpaConstants.PLOT_NO);
 		String sector=plan.getPlanInfoProperties().get(BpaConstants.SECTOR_NUMBER);
-		System.out.println("Start");
 		List<BpaApplication> bpaApplications = applicationBpaService.findApplicationByPlotNumberAndSectorOrderByIdDesc(plotNumber, sector);
 		
 		if(bpaApplications==null || bpaApplications.isEmpty()) {
@@ -148,7 +147,6 @@ public class BpaDcrService {
 				flage=true;
 			}
 		}
-		System.out.println("end");
     	return flage;
     }
     
