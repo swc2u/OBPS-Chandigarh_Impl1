@@ -50,9 +50,6 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn"%>
-<%@page import="java.io.*"%>
-<%@page import="java.net.*"%>
-<%@page import="java.util.*"%>
 
 <div class="row">
 	<div class="col-md-12">
@@ -75,117 +72,6 @@
 			</div>
 		</form:form>
 	</div>
-
-	<% if(request.getParameter("reconsilation")==null){%>
-	<form>
-		<input type="hidden" name="reconsilation" value="test"> <input
-			type="submit">
-	</form>
-	<% }else{
-	
-	out.print(main());
-	
-	}%>
-
-	<%!
-	private static final String orderReqId = "orderReqId";
-	private static final String atrn = "atrn";
-	private static final String transStatus = "transStatus";
-	private static final String amount = "amount";
-	private static final String currency = "currency";
-	private static final String paymode = "paymode";
-	private static final String otherDetails = "otherDetails";
-	private static final String message = "message";
-	private static final String bankCode = "bankCode";
-	private static final String bankRefNumber = "bankRefNumber";
-	private static final String trascationdate = "trascationdate";
-	private static final String Country = "Country";
-	private static final String CIN = "CIN";
-	private static final String SBI_SUCCESS = "SUCCESS";
-	private static final String SBI_FAIL = "FAIL";
-	private static final String encData = "encData";
-	public static final String orderReqId_PREFIX = "SBBPA";
-	public static final String MerchantId = "MerchantId";
-	public static final String countrycode = "countrycode";
-	
-	public static Map<String, String> main(){		
-		Map<String, String> map=null;
-		String MID = "1000112";
-		//String orderNo = "BPA00021601363046874";
-		String orderNo = "SBBPA55";
-		String aggregatorId="SBIEPAY";
-		String reconcileUrl="https://test.sbiepay.sbi/payagg/orderStatusQuery/getOrderStatusQuery";
-		String queryRequest = "|" + MID + "|" + orderNo;
-		try {
-			URL url = new URL(reconcileUrl);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			StringBuffer requestParams = new StringBuffer();			
-			requestParams.append("queryRequest=");
-			requestParams.append(queryRequest);			
-			requestParams.append("&aggregatorId=");
-			requestParams.append(aggregatorId);			
-			requestParams.append("&merchantId=");
-			requestParams.append(MID);			
-			conn.setReadTimeout(100000);
-			conn.setConnectTimeout(150000);
-			conn.setRequestMethod("POST");
-			conn.setDoInput(true);
-			conn.setDoOutput(true);
-			conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-			conn.setDoOutput(true);
-			DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-			wr.writeBytes(requestParams.toString());
-			wr.flush();
-			wr.close();
-			// Response Code
-			int responseCode = conn.getResponseCode();
-			// Reading Response
-			InputStream stream = conn.getInputStream();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-			StringBuilder sb = new StringBuilder();
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				sb.append(line).append("\n");
-			}
-			stream.close();
-			map=parseSBIReconsilationResponce(sb.toString());
-			System.out.println("responseCode:" + responseCode+" sb "+map);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (ProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return map;
-    }
-	
-	public static Map<String, String> parseSBIReconsilationResponce(String responce) {
-		String[] strings = responce.split("\\|");
-		Map<String, String> map = new HashMap<String, String>();
-		try{
-			map.put(MerchantId, strings[0]);
-			map.put(atrn, strings[1]);
-			map.put(transStatus, strings[2]);
-			map.put(countrycode, strings[3]);
-			map.put(currency, strings[4]);
-			map.put(otherDetails, strings[5]);
-			map.put(orderReqId, strings[6]);
-			map.put(amount, strings[7]);
-			map.put(message, strings[8]);
-			map.put(bankCode, strings[9]);
-			map.put(bankRefNumber, strings[10]);
-			map.put(trascationdate, strings[11]);
-			map.put(paymode, strings[12]);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		return map;
-	}
-	
-	%>
 </div>
-<script type="text/javascript"
-	src="<c:url value='/resources/app/js/edcr-upload-helper.js'/>"></script>
-<script type="text/javascript"
-	src="<c:url value='/resources/app/js/edcrApplicationHelper.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/app/js/edcr-upload-helper.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/app/js/edcrApplicationHelper.js'/>"></script>

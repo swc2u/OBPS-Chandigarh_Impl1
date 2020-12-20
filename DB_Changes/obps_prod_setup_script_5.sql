@@ -83,3 +83,6 @@ INSERT INTO chandigarh.egbpa_checklist_servicetype_mapping (id,checklist,service
 ,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from eg_checklist where checklisttypeid = (select id from chandigarh.eg_checklist_type where code='LTP') and code='LTP-36'),(select id from chandigarh.egbpa_mstr_servicetype where code='06'),true,false,0,1,now(),1,now())
 ,(nextval('seq_egbpa_checklist_servicetype_mapping'),(select id from eg_checklist where checklisttypeid = (select id from chandigarh.eg_checklist_type where code='LTP') and code='LTP-37'),(select id from chandigarh.egbpa_mstr_servicetype where code='06'),true,false,0,1,now(),1,now())
 ;
+
+
+

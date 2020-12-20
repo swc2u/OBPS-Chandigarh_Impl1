@@ -89,14 +89,13 @@ INSERT INTO chandigarh.eg_wf_matrix (id,department,objecttype,currentstate,curre
 ,(nextval('seq_eg_wf_matrix'),'ANY','BpaApplication','Rejected','','','','High Risk','generate rejection notice','Application is rejected by approver','SDO Building Urban','Rejected','Generate Rejection Notice',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL)
 ;
 
-
 SELECT setval('seq_eg_checklist_type', (SELECT max(id) FROM chandigarh.eg_checklist_type));
 INSERT INTO chandigarh.eg_checklist_type (id,code,description,"version",createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
 (nextval('seq_eg_checklist_type'),'PUB HEALTH NOC','Evaluation PUB HEALTH NOC',0,1,NOW(),1,NOW()),
 (nextval('seq_eg_checklist_type'),'ELECTRICAL NOC','Evaluation ELECTRICAL NOC',0,1,NOW(),1,NOW()),
 (nextval('seq_eg_checklist_type'),'FIRE NOC','Evaluation FIRE NOC',0,1,NOW(),1,NOW());
 
-
+SELECT setval('seq_eg_checklist', (SELECT max(id) FROM chandigarh.eg_checklist));
 INSERT INTO chandigarh.eg_checklist (id,checklisttypeid,code,description,"version",createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES 
 (nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='PUB HEALTH NOC'),'PUBHEALTHNOC-01','The proposal of Rain Water Harvesting System on Plot of 1 Kanal or more',0,1,NOW(),1,NOW()),
 (nextval('seq_eg_checklist'),(select id from chandigarh.eg_checklist_type where code ='PUB HEALTH NOC'),'PUBHEALTHNOC-02','There is no water line/sewer line on the common wall of the adjoining properties',0,1,NOW(),1,NOW()),

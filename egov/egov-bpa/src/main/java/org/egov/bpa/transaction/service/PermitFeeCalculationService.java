@@ -1404,7 +1404,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		} else {
 			GF_MULTIPLIER = new BigDecimal("100");
 			FF_MULTIPLIER = new BigDecimal("100");
-			SF_MULTIPLIER = new BigDecimal("40");
+			SF_MULTIPLIER = new BigDecimal("60");
 		}
 		
 		if(isAdditionalCovApplicable) {

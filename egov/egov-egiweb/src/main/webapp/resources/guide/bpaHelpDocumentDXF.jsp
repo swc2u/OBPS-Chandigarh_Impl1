@@ -161,83 +161,100 @@
 		</div>
 	</div>
 	<footer
-		class="f-regular bpa-login-footer page-common-padding col-md-12 color-black" style="bottom:0; position: fixed;">
-		<!-- <div class = "footer-list-content col-md-4">
-			<div style = "margin-bottom: 16px;" class = "color-black bpa-common-header2 bpa-common-header">About OBPS</div>
-			<div style = "opacity: 0.7;" class = "color-black bpa-common-text">Citizens, Officials, and other stakeholders can submit and track applications in real time and obtain approvals without having to physically visit an office.</div>
-		</div> -->
-		<div class = "color-black footer-list-content col-md-2">
-			<div style="margin-bottom: 16px;" class="color-black bpa-common-header2 bpa-common-header">Help Resources</div>
-			<ul class="tutorial-list color-black" >
-				
-				<li class="bpa-common-text tutorial-item">
-					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/User Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">User Manual for Architects</span></a>
-				</li>
-				<li class="bpa-common-text tutorial-item">
-					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/User Manual for Citizens.pdf" target="_blank"><span class = "color-black bpa-common-text">User Manual for Citizens</span></a>
-				</li>
-				<li class="bpa-common-text tutorial-item">
-					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/Drawing Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">Drawing Manual for Architects</span></a>
-				</li>
-				<li class="bpa-common-text tutorial-item">
-					<a href="/egi/resources/guide/bpaHelpDocument.jsp" target="_blank"><span class = "color-black bpa-common-text">Training Videos</span></a>
-				</li>
-				<li class="bpa-common-text tutorial-item">
-					<a href="/egi/resources/guide/bpaHelpDocumentDXF.jsp" target="_blank"><span class = "color-black bpa-common-text">Training Drawing</span></a>
-				</li>
+		class="f-regular bpa-login-footer page-common-padding col-md-12 color-black" style="bottom:0;">
+		<div class="footer-list-content col-md-4">
+			<div style="margin-bottom: 16px;"
+				class="color-black bpa-common-header2 bpa-common-header">About
+				OBPS</div>
+			<div style="opacity: 0.7;" class="color-black bpa-common-text">Citizens,
+				Officials, and other stakeholders can submit and track applications
+				in real time and obtain approvals without having to physically visit
+				an office.</div>
+		</div>
+		<div class="footer-list-content col-md-1"></div>
+		<div class="color-black footer-list-content col-md-3">
+			<div style="margin-bottom: 16px;"
+				class="color-black bpa-common-header2 bpa-common-header">Help
+				Resources</div>
+			<ul class="tutorial-list color-black">
+
+				<li class="bpa-common-text tutorial-item"><a
+					href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/User Manual for Architects.pdf"
+					target="_blank"><span class="color-black bpa-common-text">User
+							Manual for Architects</span></a></li>
+				<li class="bpa-common-text tutorial-item"><a
+					href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/User Manual for Citizens.pdf"
+					target="_blank"><span class="color-black bpa-common-text">User
+							Manual for Citizens</span></a></li>
+				<li class="bpa-common-text tutorial-item"><a
+					href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/Drawing Manual for Architects.pdf"
+					target="_blank"><span class="color-black bpa-common-text">Drawing
+							Manual for Architects</span></a></li>
+				<li class="bpa-common-text tutorial-item"><a
+					href="/egi/resources/guide/bpaHelpDocument.jsp" target="_blank"><span
+						class="color-black bpa-common-text">Training Videos</span></a></li>
+				<li class="bpa-common-text tutorial-item"><a
+					href="/egi/resources/guide/bpaHelpDocumentDXF.jsp" target="_blank"><span
+						class="color-black bpa-common-text">Training Drawing</span></a></li>
 			</ul>
 		</div>
-		<div class = "footer-list-content col-md-6"></div>
-		<div class = "footer-list-content col-md-4">
-			<div style = "margin-bottom: 16px;" class = "color-black bpa-common-header2 bpa-common-header">Get in Touch</div>
-			<div class = "footer-contact-info-cont">
-				<div class = "color-black bpa-common-text">Chandigarh Smart City Limited,
-3rd Floor, Building over the New Bridge (Above SCO 17,18,19) Sector 17-A
-Chandigarh 160017</div>
-				<div class = "footer-icon-info-cont" style="display:none;">
-					<div class = "footer-icon">
+
+		<div class="footer-list-content col-md-4">
+			<div style="margin-bottom: 16px;"
+				class="color-black bpa-common-header2 bpa-common-header">Get
+				in Touch</div>
+			<div class="footer-contact-info-cont">
+				<div class="color-black bpa-common-text">Chandigarh Smart City
+					Limited, 3rd Floor, Building over the New Bridge (Above SCO
+					17,18,19) Sector 17-A Chandigarh 160017</div>
+				<div class="footer-icon-info-cont" style="display: none;">
+					<div class="footer-icon">
 						<i class="fa fa-map-marker fa-1x"></i>
 					</div>
-					<div class = "footer-info">
-					<a href="javascript:void(0);" target="_blank">Find us on map</a>
+					<div class="footer-info">
+						<a href="javascript:void(0);" target="_blank">Find us on map</a>
 					</div>
 				</div>
-				<div class = "footer-icon-info-cont">
-					<div class = "footer-icon">
+				<div class="footer-icon-info-cont">
+					<div class="footer-icon">
 						<i class="fa fa-envelope-square fa-1x"></i>
 					</div>
-					<div class = "footer-info">
+					<div class="footer-info">
 						<a href="javascript:void(0);">obps.chd.helpdesk@gmail.com</a>
 					</div>
 				</div>
-				<div class = "footer-icon-info-cont">
-					<div class = "footer-icon">
+				<div class="footer-icon-info-cont">
+					<div class="footer-icon">
 						<i class="fa fa-phone fa-1x"></i>
 					</div>
-					<div class = "footer-info">
+					<div class="footer-info">
 						<a href="javascript:void(0);">0172-2787200</a>
 					</div>
 				</div>
-				
-				<div class = "footer-icon-info-cont" style="display:none;">
-					<div class = "footer-icon">
+
+				<div class="footer-icon-info-cont" style="display: none;">
+					<div class="footer-icon">
 						<i class="fa fa-envelope fa-1x"></i>
 					</div>
-					<div class = "footer-info">
-						<a href="mailto:smartcity.chd@nic.in"><p style = "margin: 0">smartcity.chd@nic.in</p></a>
+					<div class="footer-info">
+						<a href="mailto:smartcity.chd@nic.in"><p style="margin: 0">smartcity.chd@nic.in</p></a>
 					</div>
 				</div>
-				
-				<div class = "footer-icon-info-cont" style="display:none;">
-					<div class = "footer-icon">
-						<a href="javascript:void(0);" target="_blank" class="media-link"><i class="fa fa-facebook fa-1x"></i></a>
+
+				<div class="footer-icon-info-cont" style="display: none;">
+					<div class="footer-icon">
+						<a href="javascript:void(0);" target="_blank" class="media-link"><i
+							class="fa fa-facebook fa-1x"></i></a>
 					</div>
-					<div style = "margin-left: 5px;" class = "footer-info">
-						<a href="javascript:void(0);" target="_blank" class="media-link"><i class="fa fa-twitter fa-1x"></i></a>
+					<div style="margin-left: 5px;" class="footer-info">
+						<a href="javascript:void(0);" target="_blank" class="media-link"><i
+							class="fa fa-twitter fa-1x"></i></a>
 					</div>
 				</div>
 			</div>
 		</div>
+
+
 	</footer>
 </body>
 

@@ -87,8 +87,6 @@ INSERT INTO chandigarh.egbpa_lettertoparty_fee_mstr(id, feename, floornumber, is
 ,(nextval('seq_egbpa_lettertoparty_fee_mstr'), 'Additional Coverage fee', 0, true, 0, 1, now(), 1, now())
 ,(nextval('seq_egbpa_lettertoparty_fee_mstr'), 'Additional Coverage fee', 1, true, 0, 1, now(), 1, now())
 ,(nextval('seq_egbpa_lettertoparty_fee_mstr'), 'Additional Coverage fee', 2, true, 0, 1, now(), 1, now())
-,(nextval('seq_egbpa_lettertoparty_fee_mstr'), 'Additional Coverage fee', 3, true, 0, 1, now(), 1, now())
-,(nextval('seq_egbpa_lettertoparty_fee_mstr'), 'Additional Coverage fee', 4, true, 0, 1, now(), 1, now())
 ,(nextval('seq_egbpa_lettertoparty_fee_mstr'), 'Rule 5 fee', 0, true, 0, 1, now(), 1, now())
 ,(nextval('seq_egbpa_lettertoparty_fee_mstr'), 'Rule 5 fee', 1, true, 0, 1, now(), 1, now())
 ,(nextval('seq_egbpa_lettertoparty_fee_mstr'), 'Rule 5 fee', 2, true, 0, 1, now(), 1, now())
