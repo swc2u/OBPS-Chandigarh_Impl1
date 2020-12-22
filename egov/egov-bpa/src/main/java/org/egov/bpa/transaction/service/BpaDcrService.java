@@ -97,18 +97,46 @@ public class BpaDcrService {
     @Autowired
     private OccupancyCertificateService occupancyCertificateService;
 
+//    public Map<String, String> checkIsEdcrUsedInBpaApplication(final String eDcrNumber) {
+//        Map<String, String> eDcrApplicationDetails = new HashMap<>();
+//		if (eDcrNumber != null) {
+//			List<BpaApplication> bpaApplications = applicationBpaService.findApplicationByEDCRNumber(eDcrNumber);
+//			boolean plotUseFlage=checkIsPlotUsedInBpaApplication(eDcrNumber);
+//			if (bpaApplications.isEmpty() && !plotUseFlage) {
+//				eDcrApplicationDetails.put(IS_EXISTS, FALSE);
+//				eDcrApplicationDetails.put(BpaConstants.MESSAGE, "Not used");
+//			} else {
+//				if (!bpaApplications.isEmpty() && bpaApplications.get(0) != null && bpaApplications.get(0).getStatus() != null
+//						&& BpaConstants.APPLICATION_STATUS_CANCELLED
+//								.equals(bpaApplications.get(0).getStatus().getCode()) && !plotUseFlage) {
+//					eDcrApplicationDetails.put(IS_EXISTS, FALSE);
+//					eDcrApplicationDetails.put(BpaConstants.MESSAGE, "Not used");
+//				} else {
+//					String message = bpaMessageSource.getMessage("msg.dcr.exist.with.appln",
+//							new String[] { securityUtils.getCurrentUser().getName(),
+//									bpaApplications.get(0).geteDcrNumber(),
+//									bpaApplications.get(0).getApplicationNumber() },
+//							null);
+//					eDcrApplicationDetails.put(IS_EXISTS, TRUE);
+//					eDcrApplicationDetails.put("applnNoUsedEdcr", bpaApplications.get(0).getApplicationNumber());
+//					eDcrApplicationDetails.put(BpaConstants.MESSAGE, message);
+//				}
+//			}
+//		}
+//        return eDcrApplicationDetails;
+//    }
+    
     public Map<String, String> checkIsEdcrUsedInBpaApplication(final String eDcrNumber) {
         Map<String, String> eDcrApplicationDetails = new HashMap<>();
 		if (eDcrNumber != null) {
 			List<BpaApplication> bpaApplications = applicationBpaService.findApplicationByEDCRNumber(eDcrNumber);
-			boolean plotUseFlage=checkIsPlotUsedInBpaApplication(eDcrNumber);
-			if (bpaApplications.isEmpty() && !plotUseFlage) {
+			if (bpaApplications.isEmpty()) {
 				eDcrApplicationDetails.put(IS_EXISTS, FALSE);
 				eDcrApplicationDetails.put(BpaConstants.MESSAGE, "Not used");
 			} else {
 				if (bpaApplications.get(0) != null && bpaApplications.get(0).getStatus() != null
 						&& BpaConstants.APPLICATION_STATUS_CANCELLED
-								.equals(bpaApplications.get(0).getStatus().getCode()) && !plotUseFlage) {
+								.equals(bpaApplications.get(0).getStatus().getCode())) {
 					eDcrApplicationDetails.put(IS_EXISTS, FALSE);
 					eDcrApplicationDetails.put(BpaConstants.MESSAGE, "Not used");
 				} else {
