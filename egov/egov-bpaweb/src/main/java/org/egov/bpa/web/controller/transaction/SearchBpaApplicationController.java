@@ -80,11 +80,13 @@ import org.egov.bpa.transaction.entity.enums.BpaUom;
 import org.egov.bpa.transaction.entity.enums.GovernmentType;
 import org.egov.bpa.transaction.entity.enums.OneDayPermitLandType;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
+import org.egov.bpa.transaction.service.ApplicationBpaFeeCalculation;
 import org.egov.bpa.transaction.service.BpaDcrService;
 import org.egov.bpa.transaction.service.InConstructionInspectionService;
 import org.egov.bpa.transaction.service.InspectionApplicationService;
 import org.egov.bpa.transaction.service.InspectionService;
 import org.egov.bpa.transaction.service.LettertoPartyService;
+import org.egov.bpa.transaction.service.PermitFeeCalculationService;
 import org.egov.bpa.transaction.service.PermitNocApplicationService;
 import org.egov.bpa.transaction.service.SearchBpaApplicationService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
@@ -98,6 +100,7 @@ import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.admin.master.entity.BoundaryType;
 import org.egov.infra.admin.master.service.BoundaryTypeService;
 import org.egov.infra.admin.master.service.CrossHierarchyService;
+import org.egov.infra.custom.CustomImplProvider;
 import org.egov.infra.persistence.entity.enums.UserType;
 import org.egov.infra.web.support.ui.DataTable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,6 +146,8 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
     private InConstructionInspectionService inspectionConstService;
     @Autowired
     private OccupancyCertificateService occupancyCertificateService;
+    @Autowired
+    private CustomImplProvider specificNoticeService;
 
     @GetMapping("/search")
     public String showSearchApprovedforFee(final Model model) {
@@ -220,6 +225,11 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
         if(null!=application.getDemand()) {
         	buildReceiptDetails(application.getDemand().getEgDemandDetails(), application.getReceipts());
         }
+        if (!BpaConstants.APPROVED.equalsIgnoreCase(application.getStatus().getCode())) {
+        	ApplicationBpaFeeCalculation feeCalculation = (ApplicationBpaFeeCalculation) specificNoticeService.find(PermitFeeCalculationService.class, specificNoticeService.getCityDetails());
+        	model.addAttribute("tempFees", feeCalculation.calculateAllFees(application));
+        }
+
         return "viewapplication-form";
     }
 
