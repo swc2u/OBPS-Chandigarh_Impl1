@@ -1397,13 +1397,13 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		if (plan.getDrawingPreference().getInMeters()) {
 			plotSizeInSQF = plotSizeInSQF.multiply(SQMT_SQFT_MULTIPLIER);
 		}
-		if (plotSizeInSQF.compareTo(new BigDecimal("500")) < 0) {
+		if (plotSizeInSQF.compareTo(new BigDecimal("4500")) <= 0) {
 			GF_MULTIPLIER = new BigDecimal("100");
 			FF_MULTIPLIER = new BigDecimal("40");
 			SF_MULTIPLIER = new BigDecimal("40");
 		} else {
 			GF_MULTIPLIER = new BigDecimal("100");
-			FF_MULTIPLIER = new BigDecimal("100");
+			FF_MULTIPLIER = new BigDecimal("60");
 			SF_MULTIPLIER = new BigDecimal("60");
 		}
 		
