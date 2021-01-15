@@ -152,854 +152,864 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Transactional(readOnly = true)
 public class BpaNoticeUtil {
 
-    private static final String DESIGNATION = "designation";
-    private static final String APPLICATION_NUMBER = "Application number : ";
-    private static final String APPLICANT_NAME = "Applicant Name : ";
-    private static final String NAME_OF_APPROVER = "Name of approver : ";
-    private static final String DATE_OF_ISSUE_OF_PERMIT = "Date of issue of permit : ";
-    private static final String APPROVED_BY = "Approved by : ";
-    private static final String PERMIT_NUMBER = "Permit number : ";
-    private static final String NOTICE_TYPE_PERMITORDER = "PERMITORDER";
-    private static final String PERMIT_ORDER_TITLE = "permitOrderTitle";
-    private static final String TOTAL_CARPET_AREA = "totalCarpetArea";
-    private static final String TOTAL_FLOOR_AREA = "totalFloorArea";
-    private static final String TOTAL_BLT_UP_AREA = "totalBltUpArea";
-    private static final String EXST_TOTAL_CARPET_AREA = "exstTotalCarpetArea";
-    private static final String EXST_TOTAL_FLOOR_AREA = "exstTotalFloorArea";
-    private static final String EXST_TOTAL_BLT_UP_AREA = "exstTotalBltUpArea";
-    public static final String TWO_NEW_LINE = "\n\n";
-    public static final String N_A = "N/A";
-    public static final String ONE_NEW_LINE = "\n";
-    private static final String APPLICATION_PDF = "application/pdf";
-    private static final String APPLICATION_REJECTION_REASON = "applctn.reject.reason";
-    private static final String APPLICATION_AUTO_REJECTION_REASON = "applctn.auto.reject.reason";
-    private static final String MERGE_PM_EDCR_ENABLED = "MERGEPERMITEDCR";
-    private static final String MODULE_NAME = "BPA";
-    public static final String SECTION_CLERK = "SECTION CLERK";
-    
-    public static final String PLOT_NO = "PLOT_NUMBER";
+	private static final String DESIGNATION = "designation";
+	private static final String APPLICATION_NUMBER = "Application number : ";
+	private static final String APPLICANT_NAME = "Applicant Name : ";
+	private static final String NAME_OF_APPROVER = "Name of approver : ";
+	private static final String DATE_OF_ISSUE_OF_PERMIT = "Date of issue of permit : ";
+	private static final String APPROVED_BY = "Approved by : ";
+	private static final String PERMIT_NUMBER = "Permit number : ";
+	private static final String NOTICE_TYPE_PERMITORDER = "PERMITORDER";
+	private static final String PERMIT_ORDER_TITLE = "permitOrderTitle";
+	private static final String TOTAL_CARPET_AREA = "totalCarpetArea";
+	private static final String TOTAL_FLOOR_AREA = "totalFloorArea";
+	private static final String TOTAL_BLT_UP_AREA = "totalBltUpArea";
+	private static final String EXST_TOTAL_CARPET_AREA = "exstTotalCarpetArea";
+	private static final String EXST_TOTAL_FLOOR_AREA = "exstTotalFloorArea";
+	private static final String EXST_TOTAL_BLT_UP_AREA = "exstTotalBltUpArea";
+	public static final String TWO_NEW_LINE = "\n\n";
+	public static final String N_A = "N/A";
+	public static final String ONE_NEW_LINE = "\n";
+	private static final String APPLICATION_PDF = "application/pdf";
+	private static final String APPLICATION_REJECTION_REASON = "applctn.reject.reason";
+	private static final String APPLICATION_AUTO_REJECTION_REASON = "applctn.auto.reject.reason";
+	private static final String MERGE_PM_EDCR_ENABLED = "MERGEPERMITEDCR";
+	private static final String MODULE_NAME = "BPA";
+	public static final String SECTION_CLERK = "SECTION CLERK";
+
+	public static final String PLOT_NO = "PLOT_NUMBER";
 	public static final String ZONE = "ZONE";
 	public static final String ROOT_BOUNDARY_TYPE = "ROOT_BOUNDARY_TYPE";
 	public static final String SECTOR_NUMBER = "SECTOR_NUMBER";
 	public static final String PLOT_TYPE = "PLOT_TYPE";
-	
 
-    @Autowired
-    @Qualifier("fileStoreService")
-    protected FileStoreService fileStoreService;
-    @Autowired
-    private ReportService reportService;
-    @Autowired
-    private BpaUtils bpaUtils;
-    @Autowired
-    @Qualifier("parentMessageSource")
-    private MessageSource bpaMessageSource;
-    @Autowired
-    private BpaNoticeRepository bpaNoticeRepository;
-    @Autowired
-    private ApplicationBpaService applicationBpaService;
-    @Autowired
-    private BpaApplicationPermitConditionsService bpaApplicationPermitConditionsService;
-    @Autowired
-    private BpaWorkFlowService bpaWorkFlowService;
-    @Autowired
-    private DcrRestService dcrRestService;
-    @Autowired
-    private AppConfigValueService appConfigValuesService;
-    @Autowired
-    private CityService cityService;
-    @Autowired
-    private BpaApplicationReportProperties bpaApplicationReportProperties;
-    @Autowired
-    private NocConfigurationService nocConfigurationService;
-    @Autowired
-    private PermitNocApplicationService permitNocService;
+	@Autowired
+	@Qualifier("fileStoreService")
+	protected FileStoreService fileStoreService;
+	@Autowired
+	private ReportService reportService;
+	@Autowired
+	private BpaUtils bpaUtils;
+	@Autowired
+	@Qualifier("parentMessageSource")
+	private MessageSource bpaMessageSource;
+	@Autowired
+	private BpaNoticeRepository bpaNoticeRepository;
+	@Autowired
+	private ApplicationBpaService applicationBpaService;
+	@Autowired
+	private BpaApplicationPermitConditionsService bpaApplicationPermitConditionsService;
+	@Autowired
+	private BpaWorkFlowService bpaWorkFlowService;
+	@Autowired
+	private DcrRestService dcrRestService;
+	@Autowired
+	private AppConfigValueService appConfigValuesService;
+	@Autowired
+	private CityService cityService;
+	@Autowired
+	private BpaApplicationReportProperties bpaApplicationReportProperties;
+	@Autowired
+	private NocConfigurationService nocConfigurationService;
+	@Autowired
+	private PermitNocApplicationService permitNocService;
 
-    public BpaNotice findByApplicationAndNoticeType(final BpaApplication application, final String noticeType) {
-        return bpaNoticeRepository.findByApplicationAndNoticeType(application, noticeType);
-    }
+	public BpaNotice findByApplicationAndNoticeType(final BpaApplication application, final String noticeType) {
+		return bpaNoticeRepository.findByApplicationAndNoticeType(application, noticeType);
+	}
 
-    private Map<String, Object> buildParametersForDemandDetails(final BpaApplication bpaApplication) {
-        List<Response> demandResponseList = new ArrayList<>();
-        BigDecimal totalPendingAmt = BigDecimal.ZERO;
-        final Map<String, Object> reportParams = new HashMap<>();
-        Installment currentInstallemnt = bpaApplication.getDemand().getEgInstallmentMaster();
-        for (final EgDemandDetails demandDtl : bpaApplication.getDemand().getEgDemandDetails()) {
-            Response response = new Response();
-            if (!BPA_ADM_FEE.equalsIgnoreCase(demandDtl.getEgDemandReason().getEgDemandReasonMaster().getReasonMaster())
-                    && demandDtl.getBalance().compareTo(BigDecimal.ZERO) > 0) {
-                response.setDemandDescription(
-                        demandDtl.getEgDemandReason().getEgDemandReasonMaster().getReasonMaster());
-                response.setDemandAmount(demandDtl.getBalance().setScale(2, BigDecimal.ROUND_HALF_EVEN));
-                totalPendingAmt = totalPendingAmt.add(demandDtl.getBalance());
-                demandResponseList.add(response);
-            }
-        }
-        reportParams.put("installmentDesc",
-                currentInstallemnt.getDescription() == null ? EMPTY : currentInstallemnt.getDescription());
-        reportParams.put("demandResponseList", demandResponseList);
-        reportParams.put("totalPendingAmt", totalPendingAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN));
-        return reportParams;
-    }
+	private Map<String, Object> buildParametersForDemandDetails(final BpaApplication bpaApplication) {
+		List<Response> demandResponseList = new ArrayList<>();
+		BigDecimal totalPendingAmt = BigDecimal.ZERO;
+		final Map<String, Object> reportParams = new HashMap<>();
+		if (null != bpaApplication.getDemand()) {
+			Installment currentInstallemnt = bpaApplication.getDemand().getEgInstallmentMaster();
+			for (final EgDemandDetails demandDtl : bpaApplication.getDemand().getEgDemandDetails()) {
+				Response response = new Response();
+				if (!BPA_ADM_FEE
+						.equalsIgnoreCase(demandDtl.getEgDemandReason().getEgDemandReasonMaster().getReasonMaster())
+						&& demandDtl.getBalance().compareTo(BigDecimal.ZERO) > 0) {
+					response.setDemandDescription(
+							demandDtl.getEgDemandReason().getEgDemandReasonMaster().getReasonMaster());
+					response.setDemandAmount(demandDtl.getBalance().setScale(2, BigDecimal.ROUND_HALF_EVEN));
+					totalPendingAmt = totalPendingAmt.add(demandDtl.getBalance());
+					demandResponseList.add(response);
+				}
+			}
+			reportParams.put("installmentDesc",
+					currentInstallemnt.getDescription() == null ? EMPTY : currentInstallemnt.getDescription());
 
-    public ReportOutput getReportOutput(BpaApplication bpaApplication, String fileName, BpaNotice bpaNotice,
-            String bparejectionfilename, String bpaRejectionNoticeType, HttpServletRequest request) throws IOException {
-        ReportOutput reportOutput = new ReportOutput();
-        Plan plan = applicationBpaService.getPlanInfo(bpaApplication.geteDcrNumber());
-        if (bpaNotice == null || bpaNotice.getNoticeFileStore() == null) {
-            final Map<String, Object> reportParams = buildParametersForReport(bpaApplication);
-            reportParams.putAll(getUlbDetails(plan));
-            reportParams.putAll(buildParametersForDemandDetails(bpaApplication));
-            ReportRequest reportInput = new ReportRequest(bparejectionfilename, bpaApplication, reportParams);
-            reportOutput = reportService.createReport(reportInput);
-            saveBpaNotices(bpaApplication, reportOutput, null, fileName, bpaRejectionNoticeType, request);
-        } else {
-            final FileStoreMapper fmp = bpaNotice.getNoticeFileStore();
-            Path path = fileStoreService.fetchAsPath(fmp.getFileStoreId(), APPLICATION_MODULE_TYPE);
-            reportOutput.setReportOutputData(Files.readAllBytes(path));
-        }
-        return reportOutput;
-    }
+		} else {
+			reportParams.put("installmentDesc", EMPTY);
 
-    public BpaNotice saveBpaNotices(final BpaApplication application, ReportOutput reportOutput,
-            ReportOutput reportOutputForPermitNote, String fileName,
-            String noticeType, HttpServletRequest request) throws IOException {
-        BpaNotice bpaNotice = new BpaNotice();
-        bpaNotice.setApplication(application);
-        Boolean qrCodeEnabled = getEdcrRequiredServices().contains(application.getServiceType().getCode());
-        if (Boolean.valueOf(appConfigValuesService.getConfigValuesByModuleAndKey(MODULE_NAME,
-                MERGE_PM_EDCR_ENABLED).get(0).getValue()) && qrCodeEnabled
-                && noticeType.equalsIgnoreCase(NOTICE_TYPE_PERMITORDER)
-                && application.geteDcrNumber() != null) {
-            final List<InputStream> pdfs = new ArrayList<>();
-            pdfs.add(new ByteArrayInputStream(reportOutput.getReportOutputData()));
+		}
+		reportParams.put("demandResponseList", demandResponseList);
+		reportParams.put("totalPendingAmt", totalPendingAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN));
+		return reportParams;
+	}
 
-            try {
-                String reportOutputId = dcrRestService.getDcrReport(application.geteDcrNumber(), request);
-                Path path = fileStoreService.fetchAsPath(reportOutputId, "Digit DCR");
-                byte[] convertedDigitDcr = Files.readAllBytes(path);
-                ByteArrayInputStream dcrReport = new ByteArrayInputStream(convertedDigitDcr);
-                if (dcrReport != null)
-                    pdfs.add(dcrReport);
+	public ReportOutput getReportOutput(BpaApplication bpaApplication, String fileName, BpaNotice bpaNotice,
+			String bparejectionfilename, String bpaRejectionNoticeType, HttpServletRequest request) throws IOException {
+		ReportOutput reportOutput = new ReportOutput();
+		Plan plan = applicationBpaService.getPlanInfo(bpaApplication.geteDcrNumber());
+		if (bpaNotice == null || bpaNotice.getNoticeFileStore() == null) {
+			final Map<String, Object> reportParams = buildParametersForReport(bpaApplication);
+			reportParams.putAll(getUlbDetails(plan));
+			reportParams.putAll(buildParametersForDemandDetails(bpaApplication));
+			ReportRequest reportInput = new ReportRequest(bparejectionfilename, bpaApplication, reportParams);
+			reportOutput = reportService.createReport(reportInput);
+			saveBpaNotices(bpaApplication, reportOutput, null, fileName, bpaRejectionNoticeType, request);
+		} else {
+			final FileStoreMapper fmp = bpaNotice.getNoticeFileStore();
+			Path path = fileStoreService.fetchAsPath(fmp.getFileStoreId(), APPLICATION_MODULE_TYPE);
+			reportOutput.setReportOutputData(Files.readAllBytes(path));
+		}
+		return reportOutput;
+	}
 
-                if (reportOutputForPermitNote != null)
-                    pdfs.add(new ByteArrayInputStream(reportOutputForPermitNote.getReportOutputData()));
+	public BpaNotice saveBpaNotices(final BpaApplication application, ReportOutput reportOutput,
+			ReportOutput reportOutputForPermitNote, String fileName, String noticeType, HttpServletRequest request)
+			throws IOException {
+		BpaNotice bpaNotice = new BpaNotice();
+		bpaNotice.setApplication(application);
+		Boolean qrCodeEnabled = getEdcrRequiredServices().contains(application.getServiceType().getCode());
+		if (Boolean
+				.valueOf(appConfigValuesService.getConfigValuesByModuleAndKey(MODULE_NAME, MERGE_PM_EDCR_ENABLED).get(0)
+						.getValue())
+				&& qrCodeEnabled && noticeType.equalsIgnoreCase(NOTICE_TYPE_PERMITORDER)
+				&& application.geteDcrNumber() != null) {
+			final List<InputStream> pdfs = new ArrayList<>();
+			pdfs.add(new ByteArrayInputStream(reportOutput.getReportOutputData()));
 
-                final byte[] data = appendFiles(pdfs);
+			try {
+				String reportOutputId = dcrRestService.getDcrReport(application.geteDcrNumber(), request);
+				Path path = fileStoreService.fetchAsPath(reportOutputId, "Digit DCR");
+				byte[] convertedDigitDcr = Files.readAllBytes(path);
+				ByteArrayInputStream dcrReport = new ByteArrayInputStream(convertedDigitDcr);
+				if (dcrReport != null)
+					pdfs.add(dcrReport);
 
-                bpaNotice.setNoticeFileStore(fileStoreService.store(new ByteArrayInputStream(data), fileName, APPLICATION_PDF,
-                        APPLICATION_MODULE_TYPE));
+				if (reportOutputForPermitNote != null)
+					pdfs.add(new ByteArrayInputStream(reportOutputForPermitNote.getReportOutputData()));
 
-            } catch (final ApplicationRuntimeException e) {
-                throw new ValidationException(Arrays.asList(new ValidationError(
-                        "Error occurred, while fetching plan scrutiny report output file!!!!!", e.getMessage())));
-            }
-            updatePermitOrderReport(bpaNotice.getNoticeFileStore(), application);
-        } else if (!Boolean.valueOf(appConfigValuesService.getConfigValuesByModuleAndKey(MODULE_NAME,
-                MERGE_PM_EDCR_ENABLED).get(0).getValue()) && qrCodeEnabled
-                && noticeType.equalsIgnoreCase(NOTICE_TYPE_PERMITORDER)) {
-            final List<InputStream> pdfs = new ArrayList<>();
-            pdfs.add(new ByteArrayInputStream(reportOutput.getReportOutputData()));
-            if (reportOutputForPermitNote != null)
-                pdfs.add(new ByteArrayInputStream(reportOutputForPermitNote.getReportOutputData()));
+				final byte[] data = appendFiles(pdfs);
 
-            final byte[] data = appendFiles(pdfs);
-            bpaNotice.setNoticeFileStore(
-                    fileStoreService.store(new ByteArrayInputStream(data), fileName,
-                            APPLICATION_PDF,
-                            APPLICATION_MODULE_TYPE));
-        } else {
-            bpaNotice.setNoticeFileStore(
-                    fileStoreService.store(new ByteArrayInputStream(reportOutput.getReportOutputData()), fileName,
-                            APPLICATION_PDF,
-                            APPLICATION_MODULE_TYPE));
-        }
-        bpaNotice.setNoticeGeneratedDate(new Date());
-        bpaNotice.setNoticeType(noticeType);
-        application.addNotice(bpaNotice);
-        applicationBpaService.saveBpaApplication(application);
-        return bpaNotice;
-    }
+				bpaNotice.setNoticeFileStore(fileStoreService.store(new ByteArrayInputStream(data), fileName,
+						APPLICATION_PDF, APPLICATION_MODULE_TYPE));
 
-    public Map<String, Object> getUlbDetails(Plan pl) {
-        final Map<String, Object> ulbDetailsReportParams = new HashMap<>();
-       // ulbDetailsReportParams.put("cityName", ApplicationThreadLocals.getCityName());
-        ulbDetailsReportParams.put("cityName", "Chandigarh Administration");
-         ulbDetailsReportParams.put("logoPath", cityService.getCityLogoAsStream());
-        ulbDetailsReportParams.put("ulbName", ApplicationThreadLocals.getMunicipalityName());
-        if(pl.isRural()) {
-        	 ulbDetailsReportParams.put("cityName", BpaConstants.RURAL_ULB_NAME);
-             ulbDetailsReportParams.put("logoPath", cityService.getCityRuralLogoAsStream());
-            ulbDetailsReportParams.put("ulbName", BpaConstants.RURAL_ULB_NAME);
-        }
-        ulbDetailsReportParams.put("ulbGrade", cityService.getCityGrade());
-        ulbDetailsReportParams.put("cityNameLocal", ApplicationThreadLocals.getCityNameLocal());
-        return ulbDetailsReportParams;
-    }
-    
-    @Autowired
-    private DcrRestService drcRestService;
-    
-    private Map<String, String> getPlanInfo(String ocEdcrNumber){
-    	Map<String, String> map=new HashMap<String, String>();
-    	try {
-    		EdcrApplicationInfo odcrPlanInfo = drcRestService.getDcrPlanInfo(ocEdcrNumber,
-                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        	
-        	
-        	if(odcrPlanInfo!=null && odcrPlanInfo.getPlan()!=null)
-        		map= odcrPlanInfo.getPlan().getPlanInfoProperties();
-    	}catch (Exception e) {
+			} catch (final ApplicationRuntimeException e) {
+				throw new ValidationException(Arrays.asList(new ValidationError(
+						"Error occurred, while fetching plan scrutiny report output file!!!!!", e.getMessage())));
+			}
+			updatePermitOrderReport(bpaNotice.getNoticeFileStore(), application);
+		} else if (!Boolean.valueOf(appConfigValuesService
+				.getConfigValuesByModuleAndKey(MODULE_NAME, MERGE_PM_EDCR_ENABLED).get(0).getValue()) && qrCodeEnabled
+				&& noticeType.equalsIgnoreCase(NOTICE_TYPE_PERMITORDER)) {
+			final List<InputStream> pdfs = new ArrayList<>();
+			pdfs.add(new ByteArrayInputStream(reportOutput.getReportOutputData()));
+			if (reportOutputForPermitNote != null)
+				pdfs.add(new ByteArrayInputStream(reportOutputForPermitNote.getReportOutputData()));
+
+			final byte[] data = appendFiles(pdfs);
+			bpaNotice.setNoticeFileStore(fileStoreService.store(new ByteArrayInputStream(data), fileName,
+					APPLICATION_PDF, APPLICATION_MODULE_TYPE));
+		} else {
+			bpaNotice.setNoticeFileStore(
+					fileStoreService.store(new ByteArrayInputStream(reportOutput.getReportOutputData()), fileName,
+							APPLICATION_PDF, APPLICATION_MODULE_TYPE));
+		}
+		bpaNotice.setNoticeGeneratedDate(new Date());
+		bpaNotice.setNoticeType(noticeType);
+		application.addNotice(bpaNotice);
+		applicationBpaService.saveBpaApplication(application);
+		return bpaNotice;
+	}
+
+	public Map<String, Object> getUlbDetails(Plan pl) {
+		final Map<String, Object> ulbDetailsReportParams = new HashMap<>();
+		// ulbDetailsReportParams.put("cityName",
+		// ApplicationThreadLocals.getCityName());
+		ulbDetailsReportParams.put("cityName", "Chandigarh Administration");
+		ulbDetailsReportParams.put("logoPath", cityService.getCityLogoAsStream());
+		ulbDetailsReportParams.put("ulbName", ApplicationThreadLocals.getMunicipalityName());
+		if (pl.isRural()) {
+			ulbDetailsReportParams.put("cityName", BpaConstants.RURAL_ULB_NAME);
+			ulbDetailsReportParams.put("logoPath", cityService.getCityRuralLogoAsStream());
+			ulbDetailsReportParams.put("ulbName", BpaConstants.RURAL_ULB_NAME);
+		}
+		ulbDetailsReportParams.put("ulbGrade", cityService.getCityGrade());
+		ulbDetailsReportParams.put("cityNameLocal", ApplicationThreadLocals.getCityNameLocal());
+		return ulbDetailsReportParams;
+	}
+
+	@Autowired
+	private DcrRestService drcRestService;
+
+	private Map<String, String> getPlanInfo(String ocEdcrNumber) {
+		Map<String, String> map = new HashMap<String, String>();
+		try {
+			EdcrApplicationInfo odcrPlanInfo = drcRestService.getDcrPlanInfo(ocEdcrNumber,
+					((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+
+			if (odcrPlanInfo != null && odcrPlanInfo.getPlan() != null)
+				map = odcrPlanInfo.getPlan().getPlanInfoProperties();
+		} catch (Exception e) {
 			// TODO: handle exception
 		}
-    	return map;
-    }
+		return map;
+	}
 
-    public Map<String, Object> buildParametersForReport(final BpaApplication bpaApplication) {
-    	
-        StringBuilder serviceTypeDesc = new StringBuilder();
-        final Map<String, Object> reportParams = new HashMap<>();
-        reportParams.put("bpademandtitle", WordUtils.capitalize(BPADEMANDNOTICETITLE));
-        reportParams.put("currentDate", currentDateToDefaultDateFormat());
-        String approverName = getApproverName(bpaApplication);
-        String approverDesignation = getApproverDesignation(bpaApplication.getApproverPosition());
+	public Map<String, Object> buildParametersForReport(final BpaApplication bpaApplication) {
 
-        String lawAct;
-        /*if (!bpaApplication.getSiteDetail().isEmpty() && bpaApplication.getSiteDetail().get(0).getIsappForRegularization()
-                && bpaApplication.getDemand().getAmtCollected().compareTo(BigDecimal.ZERO) > 0) {
-            String applicantName = bpaApplication.getApplicantName();
-            String serviceType = bpaApplication.getServiceType().getDescription();
-            SiteDetail site = bpaApplication.getSiteDetail().get(0);
-            List<Receipt> receipts = new ArrayList<>();
+		StringBuilder serviceTypeDesc = new StringBuilder();
+		final Map<String, Object> reportParams = new HashMap<>();
+		reportParams.put("bpademandtitle", WordUtils.capitalize(BPADEMANDNOTICETITLE));
+		reportParams.put("currentDate", currentDateToDefaultDateFormat());
+		String approverName = getApproverName(bpaApplication);
+		String approverDesignation = getApproverDesignation(bpaApplication.getApproverPosition());
 
-            for (final EgDemandDetails demandDtl : bpaApplication.getDemand().getEgDemandDetails())
-                for (final EgdmCollectedReceipt collRecpt : demandDtl.getEgdmCollectedReceipts())
-                    if (!collRecpt.isCancelled()) {
-                        Receipt receipt = new Receipt();
-                        receipt.setReceiptNumber(collRecpt.getReceiptNumber());
-                        receipt.setReceiptDate(collRecpt.getReceiptDate());
-                        receipt.setReceiptAmt(collRecpt.getAmount());
-                        receipts.add(receipt);
-                    }
+		String lawAct;
+		/*
+		 * if (!bpaApplication.getSiteDetail().isEmpty() &&
+		 * bpaApplication.getSiteDetail().get(0).getIsappForRegularization() &&
+		 * bpaApplication.getDemand().getAmtCollected().compareTo(BigDecimal.ZERO) > 0)
+		 * { String applicantName = bpaApplication.getApplicantName(); String
+		 * serviceType = bpaApplication.getServiceType().getDescription(); SiteDetail
+		 * site = bpaApplication.getSiteDetail().get(0); List<Receipt> receipts = new
+		 * ArrayList<>();
+		 * 
+		 * for (final EgDemandDetails demandDtl :
+		 * bpaApplication.getDemand().getEgDemandDetails()) for (final
+		 * EgdmCollectedReceipt collRecpt : demandDtl.getEgdmCollectedReceipts()) if
+		 * (!collRecpt.isCancelled()) { Receipt receipt = new Receipt();
+		 * receipt.setReceiptNumber(collRecpt.getReceiptNumber());
+		 * receipt.setReceiptDate(collRecpt.getReceiptDate());
+		 * receipt.setReceiptAmt(collRecpt.getAmount()); receipts.add(receipt); }
+		 * 
+		 * receipts.sort((o1, o2) ->
+		 * o2.getReceiptDate().compareTo(o1.getReceiptDate()));
+		 * 
+		 * String regularizationMsg1 =
+		 * bpaMessageSource.getMessage("msg.regularization.permit.desc1", new String[] {
+		 * applicantName, serviceType, site.getReSurveyNumber(),
+		 * site.getPlotdoornumber(), site.getNearestbuildingnumber(),
+		 * DateUtils.toDefaultDateFormat(bpaApplication.getPlanPermissionDate()),
+		 * applicantName, String.valueOf(receipts.get(0).getReceiptAmt()),
+		 * String.valueOf(receipts.get(0).getReceiptNumber()),
+		 * String.valueOf(DateUtils.toDefaultDateFormat(receipts.get(0).getReceiptDate()
+		 * )) }, null); String regularizationMsg2 =
+		 * bpaMessageSource.getMessage("msg.regularization.permit.desc2", new String[] {
+		 * approverName, approverDesignation, serviceType, site.getPlotdoornumber(),
+		 * site.getNearestbuildingnumber(),
+		 * DateUtils.toDefaultDateFormat(bpaApplication.getPlanPermissionDate()),
+		 * applicantName, String.valueOf(receipts.get(0).getReceiptAmt()),
+		 * String.valueOf(receipts.get(0).getReceiptNumber()),
+		 * String.valueOf(DateUtils.toDefaultDateFormat(receipts.get(0).getReceiptDate()
+		 * )) }, null); reportParams.put("regularizationMsg1", regularizationMsg1);
+		 * reportParams.put("regularizationMsg2", regularizationMsg2);
+		 * 
+		 * lawAct = "APPENDIX -I, [See rule 146 (3)]"; } else { lawAct =
+		 * "APPENDIX C, [See Rule 11 (3)]"; }
+		 */
+		lawAct = "APPENDIX C, [See Rule 11 (3)]";
+		reportParams.put("lawAct", lawAct);
+		reportParams.put("applicationNumber", bpaApplication.getApplicationNumber());
+		reportParams.put("buildingPermitNumber",
+				bpaApplication.getPlanPermissionNumber() == null ? EMPTY : bpaApplication.getPlanPermissionNumber());
+		reportParams.put("applicantName", bpaApplication.getApplicantName());
+		reportParams.put("architectName", bpaApplication.getArchitectName());
+		reportParams.put("applicantAddress",
+				bpaApplication.getOwner() == null ? "Not Mentioned" : bpaApplication.getOwner().getAddress());
+		Boolean serviceEnabled = getEdcrRequiredServices().contains(bpaApplication.getServiceType().getCode());
+		Boolean mergeEnabled = Boolean.valueOf(appConfigValuesService
+				.getConfigValuesByModuleAndKey(MODULE_NAME, MERGE_PM_EDCR_ENABLED).get(0).getValue());
+		reportParams.put("qrCodeEnabled", mergeEnabled && serviceEnabled && bpaApplication.geteDcrNumber() != null);
+		reportParams.put("applicationDate", DateUtils.getDefaultFormattedDate(bpaApplication.getApplicationDate()));
+		if (APPLICATION_STATUS_CANCELLED.equalsIgnoreCase(bpaApplication.getStatus().getCode())) {
+			reportParams.put("rejectionReasons", buildRejectionReasons(bpaApplication, false));
+		} else {
+			reportParams.put("permitConditions", buildPermitConditions(bpaApplication));
+		}
+		reportParams.put("additionalNotes", getBuildingCommonPermitNotes());
+		String amenities = bpaApplication.getApplicationAmenity().stream().map(ServiceType::getDescription)
+				.collect(Collectors.joining(", "));
+		if (bpaApplication.getApplicationAmenity().isEmpty()) {
+			serviceTypeDesc.append(bpaApplication.getServiceType().getDescription());
+		} else {
+			serviceTypeDesc.append(bpaApplication.getServiceType().getDescription()).append(", ").append(amenities);
+		}
+		reportParams.put("serviceTypeDesc", serviceTypeDesc.toString());
+		reportParams.put("serviceTypeForDmd", bpaApplication.getServiceType().getDescription());
+		reportParams.put("amenities", StringUtils.isBlank(amenities) ? "N/A" : amenities);
+		reportParams.put("occupancy", bpaApplication.getOccupanciesName());
 
-            receipts.sort((o1, o2) -> o2.getReceiptDate().compareTo(o1.getReceiptDate()));
+		if (!bpaApplication.getSiteDetail().isEmpty()) {
+			reportParams.put("plotNo", bpaApplication.getSiteDetail().get(0).getMspPlotNumber() == null ? EMPTY
+					: bpaApplication.getSiteDetail().get(0).getMspPlotNumber());
+			reportParams.put("sectorNo", bpaApplication.getSiteDetail().get(0).getAdminBoundary() == null ? EMPTY
+					: bpaApplication.getSiteDetail().get(0).getAdminBoundary().getName());
 
-            String regularizationMsg1 = bpaMessageSource.getMessage("msg.regularization.permit.desc1",
-                    new String[] { applicantName, serviceType, site.getReSurveyNumber(), site.getPlotdoornumber(),
-                            site.getNearestbuildingnumber(),
-                            DateUtils.toDefaultDateFormat(bpaApplication.getPlanPermissionDate()), applicantName,
-                            String.valueOf(receipts.get(0).getReceiptAmt()),
-                            String.valueOf(receipts.get(0).getReceiptNumber()),
-                            String.valueOf(DateUtils.toDefaultDateFormat(receipts.get(0).getReceiptDate())) },
-                    null);
-            String regularizationMsg2 = bpaMessageSource.getMessage("msg.regularization.permit.desc2",
-                    new String[] { approverName, approverDesignation, serviceType, site.getPlotdoornumber(),
-                            site.getNearestbuildingnumber(),
-                            DateUtils.toDefaultDateFormat(bpaApplication.getPlanPermissionDate()), applicantName,
-                            String.valueOf(receipts.get(0).getReceiptAmt()),
-                            String.valueOf(receipts.get(0).getReceiptNumber()),
-                            String.valueOf(DateUtils.toDefaultDateFormat(receipts.get(0).getReceiptDate())) },
-                    null);
-            reportParams.put("regularizationMsg1", regularizationMsg1);
-            reportParams.put("regularizationMsg2", regularizationMsg2);
+			reportParams.put("electionWard",
+					bpaApplication.getSiteDetail().get(0).getElectionBoundary() != null
+							? bpaApplication.getSiteDetail().get(0).getElectionBoundary().getName()
+							: "");
+			reportParams.put("revenueWard",
+					bpaApplication.getSiteDetail().get(0).getAdminBoundary() != null
+							? bpaApplication.getSiteDetail().get(0).getAdminBoundary().getName()
+							: "");
+			reportParams.put("landExtent",
+					bpaApplication.getSiteDetail().get(0).getExtentinsqmts().setScale(2, BigDecimal.ROUND_HALF_UP));
+			reportParams.put("buildingNo", bpaApplication.getSiteDetail().get(0).getPlotnumber() == null ? EMPTY
+					: bpaApplication.getSiteDetail().get(0).getPlotnumber());
+			reportParams.put("nearestBuildingNo",
+					bpaApplication.getSiteDetail().get(0).getNearestbuildingnumber() == null ? EMPTY
+							: bpaApplication.getSiteDetail().get(0).getNearestbuildingnumber());
+			reportParams.put("surveyNo", bpaApplication.getSiteDetail().get(0).getReSurveyNumber() == null ? "N/A"
+					: bpaApplication.getSiteDetail().get(0).getReSurveyNumber());
+			reportParams.put("village", bpaApplication.getSiteDetail().get(0).getLocationBoundary() == null ? EMPTY
+					: bpaApplication.getSiteDetail().get(0).getLocationBoundary().getName());
+			reportParams.put("taluk",
+					(bpaApplication.getSiteDetail().get(0).getPostalAddress() == null
+							|| bpaApplication.getSiteDetail().get(0).getPostalAddress().getTaluk() == null) ? EMPTY
+									: bpaApplication.getSiteDetail().get(0).getPostalAddress().getTaluk());
+			reportParams.put("district",
+					bpaApplication.getSiteDetail().get(0).getPostalAddress() == null ? cityService.getDistrictName()
+							: bpaApplication.getSiteDetail().get(0).getPostalAddress().getDistrict());
+		}
+		reportParams.put("certificateValidity", getValidityDescription(bpaApplication.getServiceType().getValidity(),
+				bpaApplication.getPlanPermissionDate()));
+		reportParams.put("isBusinessUser", bpaUtils.logedInuseCitizenOrBusinessUser());
+		reportParams.put(DESIGNATION, approverDesignation);
+		reportParams.put("approverName", approverName);
+		reportParams.put("qrCode", generatePDF417Code(buildQRCodeDetails(bpaApplication)));
+		reportParams.put("mobileNo", bpaApplication.getOwner().getUser().getMobileNumber());
+		StringBuilder totalBuiltUpArea = new StringBuilder();
+		if (bpaApplication.getPermitOccupancies().size() > 1) {
+			for (Map.Entry<SubOccupancy, BigDecimal> innerMap : bpaUtils
+					.getBlockWiseOccupancyAndBuiltupArea(bpaApplication.getBuildingDetail()).entrySet()) {
+				totalBuiltUpArea = totalBuiltUpArea.append(innerMap.getKey().getDescription()).append(" : ")
+						.append(innerMap.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)).append(" Sq.Mtrs, ");
+			}
+			reportParams.put("totalBuiltUpArea", totalBuiltUpArea.toString());
+		} else {
+			reportParams.put("totalBuiltUpArea",
+					!bpaApplication.getBuildingDetail().isEmpty()
+							? bpaApplication.getBuildingDetail().get(0).getTotalPlintArea()
+									.setScale(2, BigDecimal.ROUND_HALF_UP).toString() + " Sq.Mtrs, "
+							: EMPTY);
+		}
+		if (bpaApplication.getIsOneDayPermitApplication())
+			reportParams.put(PERMIT_ORDER_TITLE, "ONE DAY BUILDING PERMIT");
+		/*
+		 * else if (!bpaApplication.getSiteDetail().isEmpty() &&
+		 * bpaApplication.getSiteDetail().get(0).getIsappForRegularization())
+		 * reportParams.put(PERMIT_ORDER_TITLE,
+		 * "REGULARISATION GRANTED- ORDERS ISSUED.");
+		 */
+		else
+			reportParams.put(PERMIT_ORDER_TITLE, "GENERAL BUILDING PERMIT");
 
-            lawAct = "APPENDIX -I, [See rule 146 (3)]";
-        } else {
-            lawAct = "APPENDIX C, [See Rule 11 (3)]";
-        }*/
-        lawAct = "APPENDIX C, [See Rule 11 (3)]";
-        reportParams.put("lawAct", lawAct);
-        reportParams.put("applicationNumber", bpaApplication.getApplicationNumber());
-        reportParams.put("buildingPermitNumber",
-                bpaApplication.getPlanPermissionNumber() == null ? EMPTY : bpaApplication.getPlanPermissionNumber());
-        reportParams.put("applicantName", bpaApplication.getApplicantName());
-        reportParams.put("architectName", bpaApplication.getArchitectName());
-        reportParams.put("applicantAddress",
-                bpaApplication.getOwner() == null ? "Not Mentioned" : bpaApplication.getOwner().getAddress());
-        Boolean serviceEnabled = getEdcrRequiredServices().contains(bpaApplication.getServiceType().getCode());
-        Boolean mergeEnabled = Boolean.valueOf(appConfigValuesService.getConfigValuesByModuleAndKey(MODULE_NAME,
-                MERGE_PM_EDCR_ENABLED).get(0).getValue());
-        reportParams.put("qrCodeEnabled", mergeEnabled && serviceEnabled && bpaApplication.geteDcrNumber() != null);
-        reportParams.put("applicationDate", DateUtils.getDefaultFormattedDate(bpaApplication.getApplicationDate()));
-        if (APPLICATION_STATUS_CANCELLED.equalsIgnoreCase(bpaApplication.getStatus().getCode())) {
-            reportParams.put("rejectionReasons", buildRejectionReasons(bpaApplication, false));
-        } else {
-            reportParams.put("permitConditions", buildPermitConditions(bpaApplication));
-        }
-        reportParams.put("additionalNotes", getBuildingCommonPermitNotes());
-        String amenities = bpaApplication.getApplicationAmenity().stream().map(ServiceType::getDescription).collect(Collectors.joining(", "));
-        if (bpaApplication.getApplicationAmenity().isEmpty()) {
-            serviceTypeDesc.append(bpaApplication.getServiceType().getDescription());
-        } else {
-            serviceTypeDesc.append(bpaApplication.getServiceType().getDescription()).append(", ").append(amenities);
-        }
-        reportParams.put("serviceTypeDesc", serviceTypeDesc.toString());
-        reportParams.put("serviceTypeForDmd", bpaApplication.getServiceType().getDescription());
-        reportParams.put("amenities", StringUtils.isBlank(amenities) ? "N/A" : amenities);
-        reportParams.put("occupancy", bpaApplication.getOccupanciesName());
-        
-        if (!bpaApplication.getSiteDetail().isEmpty()) {
-        	reportParams.put("plotNo", bpaApplication.getSiteDetail().get(0).getMspPlotNumber() == null? EMPTY :  bpaApplication.getSiteDetail().get(0).getMspPlotNumber());
-        	reportParams.put("sectorNo", bpaApplication.getSiteDetail().get(0).getAdminBoundary() == null? EMPTY :  bpaApplication.getSiteDetail().get(0).getAdminBoundary().getName());
-        	
-            reportParams.put("electionWard", bpaApplication.getSiteDetail().get(0).getElectionBoundary() != null
-                    ? bpaApplication.getSiteDetail().get(0).getElectionBoundary().getName()
-                    : "");
-            reportParams.put("revenueWard", bpaApplication.getSiteDetail().get(0).getAdminBoundary() != null
-                    ? bpaApplication.getSiteDetail().get(0).getAdminBoundary().getName()
-                    : "");
-            reportParams.put("landExtent", bpaApplication.getSiteDetail().get(0).getExtentinsqmts().setScale(2,
-                    BigDecimal.ROUND_HALF_UP));
-            reportParams.put("buildingNo", bpaApplication.getSiteDetail().get(0).getPlotnumber() == null
-                    ? EMPTY
-                    : bpaApplication.getSiteDetail().get(0).getPlotnumber());
-            reportParams.put("nearestBuildingNo",
-                    bpaApplication.getSiteDetail().get(0).getNearestbuildingnumber() == null
-                            ? EMPTY
-                            : bpaApplication.getSiteDetail().get(0).getNearestbuildingnumber());
-            reportParams.put("surveyNo", bpaApplication.getSiteDetail().get(0).getReSurveyNumber() == null
-                    ? "N/A"
-                    : bpaApplication.getSiteDetail().get(0).getReSurveyNumber());
-            reportParams.put("village", bpaApplication.getSiteDetail().get(0).getLocationBoundary() == null
-                    ? EMPTY
-                    : bpaApplication.getSiteDetail().get(0).getLocationBoundary().getName());
-            reportParams.put("taluk",
-                    (bpaApplication.getSiteDetail().get(0).getPostalAddress() == null
-                            || bpaApplication.getSiteDetail().get(0).getPostalAddress().getTaluk() == null)
-                                    ? EMPTY
-                                    : bpaApplication.getSiteDetail().get(0).getPostalAddress().getTaluk());
-            reportParams.put("district", bpaApplication.getSiteDetail().get(0).getPostalAddress() == null
-                    ? cityService.getDistrictName()
-                    : bpaApplication.getSiteDetail().get(0).getPostalAddress().getDistrict());
-        }
-        reportParams.put("certificateValidity",
-                getValidityDescription(bpaApplication.getServiceType().getValidity(), bpaApplication.getPlanPermissionDate()));
-        reportParams.put("isBusinessUser", bpaUtils.logedInuseCitizenOrBusinessUser());
-        reportParams.put(DESIGNATION, approverDesignation);
-        reportParams.put("approverName", approverName);
-        reportParams.put("qrCode", generatePDF417Code(buildQRCodeDetails(bpaApplication)));
-        reportParams.put("mobileNo", bpaApplication.getOwner().getUser().getMobileNumber());
-        StringBuilder totalBuiltUpArea = new StringBuilder();
-        if (bpaApplication.getPermitOccupancies().size() > 1) {
-            for (Map.Entry<SubOccupancy, BigDecimal> innerMap : bpaUtils
-                    .getBlockWiseOccupancyAndBuiltupArea(bpaApplication.getBuildingDetail()).entrySet()) {
-                totalBuiltUpArea = totalBuiltUpArea.append(innerMap.getKey().getDescription()).append(" : ")
-                        .append(innerMap.getValue().setScale(2,
-                                BigDecimal.ROUND_HALF_UP))
-                        .append(" Sq.Mtrs, ");
-            }
-            reportParams.put("totalBuiltUpArea", totalBuiltUpArea.toString());
-        } else {
-            reportParams
-                    .put("totalBuiltUpArea",
-                            !bpaApplication.getBuildingDetail().isEmpty()
-                                    ? bpaApplication.getBuildingDetail().get(0).getTotalPlintArea().setScale(2,
-                                            BigDecimal.ROUND_HALF_UP).toString() + " Sq.Mtrs, "
-                                    : EMPTY);
-        }
-        if (bpaApplication.getIsOneDayPermitApplication())
-            reportParams.put(PERMIT_ORDER_TITLE, "ONE DAY BUILDING PERMIT");
-        /*else if (!bpaApplication.getSiteDetail().isEmpty() && bpaApplication.getSiteDetail().get(0).getIsappForRegularization())
-            reportParams.put(PERMIT_ORDER_TITLE, "REGULARISATION GRANTED- ORDERS ISSUED.");*/
-        else
-            reportParams.put(PERMIT_ORDER_TITLE, "GENERAL BUILDING PERMIT");
-        
-        if (!bpaApplication.getPermitFee().isEmpty())
-            reportParams.put("permitFeeDetails", getPermitFeeDetails(bpaApplication));
+		if (!bpaApplication.getPermitFee().isEmpty())
+			reportParams.put("permitFeeDetails", getPermitFeeDetails(bpaApplication));
 
-     //   reportParams.put("cityName", ApplicationThreadLocals.getCityName());
-        Plan plan = applicationBpaService.getPlanInfo(bpaApplication.geteDcrNumber()); 
-        reportParams.put("cityName", "Chandigarh Administration");
-         String imageURL = ReportUtil.getImageURL(BpaConstants.STATE_LOGO_PATH);
-         if(plan.isRural()) {
-        	 reportParams.put("cityName",  BpaConstants.RURAL_ULB_NAME);
-         }
-        reportParams.put("stateLogo", imageURL);
-        if (bpaApplication.getExistingBuildingDetails() != null && !bpaApplication.getExistingBuildingDetails().isEmpty()) {
-            Map<String, BigDecimal> exstArea = BpaUtils.getTotalExstArea(bpaApplication.getExistingBuildingDetails());
-            reportParams.put(EXST_TOTAL_BLT_UP_AREA,
-                    exstArea.get(EXST_TOTAL_BLT_UP_AREA) != null ? exstArea.get(EXST_TOTAL_BLT_UP_AREA) : BigDecimal.ZERO);
-            reportParams.put(EXST_TOTAL_FLOOR_AREA,
-                    exstArea.get(EXST_TOTAL_FLOOR_AREA) != null ? exstArea.get(EXST_TOTAL_FLOOR_AREA) : BigDecimal.ZERO);
-            reportParams.put(EXST_TOTAL_CARPET_AREA,
-                    exstArea.get(EXST_TOTAL_CARPET_AREA) != null ? exstArea.get(EXST_TOTAL_CARPET_AREA) : BigDecimal.ZERO);
+		// reportParams.put("cityName", ApplicationThreadLocals.getCityName());
+		Plan plan = applicationBpaService.getPlanInfo(bpaApplication.geteDcrNumber());
+		reportParams.put("cityName", "Chandigarh Administration");
+		String imageURL = ReportUtil.getImageURL(BpaConstants.STATE_LOGO_PATH);
+		if (plan.isRural()) {
+			reportParams.put("cityName", BpaConstants.RURAL_ULB_NAME);
+		}
+		reportParams.put("stateLogo", imageURL);
+		if (bpaApplication.getExistingBuildingDetails() != null
+				&& !bpaApplication.getExistingBuildingDetails().isEmpty()) {
+			Map<String, BigDecimal> exstArea = BpaUtils.getTotalExstArea(bpaApplication.getExistingBuildingDetails());
+			reportParams.put(EXST_TOTAL_BLT_UP_AREA,
+					exstArea.get(EXST_TOTAL_BLT_UP_AREA) != null ? exstArea.get(EXST_TOTAL_BLT_UP_AREA)
+							: BigDecimal.ZERO);
+			reportParams.put(EXST_TOTAL_FLOOR_AREA,
+					exstArea.get(EXST_TOTAL_FLOOR_AREA) != null ? exstArea.get(EXST_TOTAL_FLOOR_AREA)
+							: BigDecimal.ZERO);
+			reportParams.put(EXST_TOTAL_CARPET_AREA,
+					exstArea.get(EXST_TOTAL_CARPET_AREA) != null ? exstArea.get(EXST_TOTAL_CARPET_AREA)
+							: BigDecimal.ZERO);
 
-        }
+		}
 
-        Map<String, BigDecimal> proposedArea = BpaUtils.getTotalProposedArea(bpaApplication.getBuildingDetail());
-        reportParams.put(TOTAL_BLT_UP_AREA,
-                proposedArea.get(TOTAL_BLT_UP_AREA) != null ? proposedArea.get(TOTAL_BLT_UP_AREA) : BigDecimal.ZERO);
-        reportParams.put(TOTAL_FLOOR_AREA,
-                proposedArea.get(TOTAL_FLOOR_AREA) != null ? proposedArea.get(TOTAL_FLOOR_AREA) : BigDecimal.ZERO);
-        reportParams.put(TOTAL_CARPET_AREA,
-                proposedArea.get(TOTAL_CARPET_AREA) != null ? proposedArea.get(TOTAL_CARPET_AREA) : BigDecimal.ZERO);
+		Map<String, BigDecimal> proposedArea = BpaUtils.getTotalProposedArea(bpaApplication.getBuildingDetail());
+		reportParams.put(TOTAL_BLT_UP_AREA,
+				proposedArea.get(TOTAL_BLT_UP_AREA) != null ? proposedArea.get(TOTAL_BLT_UP_AREA) : BigDecimal.ZERO);
+		reportParams.put(TOTAL_FLOOR_AREA,
+				proposedArea.get(TOTAL_FLOOR_AREA) != null ? proposedArea.get(TOTAL_FLOOR_AREA) : BigDecimal.ZERO);
+		reportParams.put(TOTAL_CARPET_AREA,
+				proposedArea.get(TOTAL_CARPET_AREA) != null ? proposedArea.get(TOTAL_CARPET_AREA) : BigDecimal.ZERO);
 
-        List<BuildingSubUsage> buildingSubUsages = bpaApplication.getBuildingSubUsages();
+		List<BuildingSubUsage> buildingSubUsages = bpaApplication.getBuildingSubUsages();
 
-        if (!buildingSubUsages.isEmpty()) {
-            StringBuilder subheader = new StringBuilder();
+		if (!buildingSubUsages.isEmpty()) {
+			StringBuilder subheader = new StringBuilder();
 
-            String mainUsage = null;
-            String lastString = " and ";
-            for (BuildingSubUsage buildingSubUsage : buildingSubUsages) {
-                for (BuildingSubUsageDetails buildingSubUsageDetail : buildingSubUsage.getSubUsageDetails()) {
-                    if(buildingSubUsageDetail!=null && buildingSubUsageDetail.getMainUsage()!=null) {
-                    	mainUsage = buildingSubUsageDetail.getMainUsage().getDescription();
-                        StringBuilder subUsage = new StringBuilder();
-                        for (Usage subOccupancy : buildingSubUsageDetail.getSubUsages()) {
-                            subUsage = subUsage.append(subOccupancy.getDescription()).append(", ");
-                        }
-                        subheader = subheader.append("Block ").append(buildingSubUsage.getBlockNumber())
-                                .append(" - ").append(subUsage.toString(), 0, subUsage.length() - 2)
-                                .append(" under ").append(mainUsage).append(" occupancy ").append(lastString);
-                    }
-                }
+			String mainUsage = null;
+			String lastString = " and ";
+			for (BuildingSubUsage buildingSubUsage : buildingSubUsages) {
+				for (BuildingSubUsageDetails buildingSubUsageDetail : buildingSubUsage.getSubUsageDetails()) {
+					if (buildingSubUsageDetail != null && buildingSubUsageDetail.getMainUsage() != null) {
+						mainUsage = buildingSubUsageDetail.getMainUsage().getDescription();
+						StringBuilder subUsage = new StringBuilder();
+						for (Usage subOccupancy : buildingSubUsageDetail.getSubUsages()) {
+							subUsage = subUsage.append(subOccupancy.getDescription()).append(", ");
+						}
+						subheader = subheader.append("Block ").append(buildingSubUsage.getBlockNumber()).append(" - ")
+								.append(subUsage.toString(), 0, subUsage.length() - 2).append(" under ")
+								.append(mainUsage).append(" occupancy ").append(lastString);
+					}
+				}
 
-            }
+			}
 
-            String subHeaderString = subheader.toString();
-            subHeaderString = subHeaderString.substring(0, subHeaderString.length() - lastString.length());
+			String subHeaderString = subheader.toString();
+			subHeaderString = subHeaderString.substring(0, subHeaderString.length() - lastString.length());
 
-            reportParams.put("subHeaderTitle", "Building permit to construct,");
-            reportParams.put("subheader", subHeaderString + "confirming to the details and conditions here under.");
-        }
-        reportParams.put("refusalFormat", bpaApplicationReportProperties.getRefusalFormat());
-        reportParams.put("nocDetails", getNocDetails(bpaApplication));
-        return reportParams;
+			reportParams.put("subHeaderTitle", "Building permit to construct,");
+			reportParams.put("subheader", subHeaderString + "confirming to the details and conditions here under.");
+		}
+		reportParams.put("refusalFormat", bpaApplicationReportProperties.getRefusalFormat());
+		reportParams.put("nocDetails", getNocDetails(bpaApplication));
+		return reportParams;
 
-    }
+	}
 
-    private List<NocDetailsHelper> getNocDetails(final BpaApplication application) {
-        List<NocDetailsHelper> nocDetails = new ArrayList<>();
+	private List<NocDetailsHelper> getNocDetails(final BpaApplication application) {
+		List<NocDetailsHelper> nocDetails = new ArrayList<>();
 
-        for (PermitNocDocument nocDocument : application.getPermitNocDocuments()) {
-            NocDetailsHelper nocHelper = new NocDetailsHelper();
+		for (PermitNocDocument nocDocument : application.getPermitNocDocuments()) {
+			NocDetailsHelper nocHelper = new NocDetailsHelper();
 
-            String code = nocDocument.getNocDocument().getServiceChecklist().getChecklist().getCode();
-            NocConfiguration nocConfig = nocConfigurationService
-                    .findByDepartmentAndType(code, BpaConstants.PERMIT);
-            nocHelper
-                    .setNocDepartmentName(nocDocument.getNocDocument().getServiceChecklist().getChecklist().getDescription());
+			String code = nocDocument.getNocDocument().getServiceChecklist().getChecklist().getCode();
+			NocConfiguration nocConfig = nocConfigurationService.findByDepartmentAndType(code, BpaConstants.PERMIT);
+			nocHelper.setNocDepartmentName(
+					nocDocument.getNocDocument().getServiceChecklist().getChecklist().getDescription());
 
-            if (nocConfig != null && nocConfig.getApplicationType().trim().equalsIgnoreCase(BpaConstants.PERMIT)) {
+			if (nocConfig != null && nocConfig.getApplicationType().trim().equalsIgnoreCase(BpaConstants.PERMIT)) {
 
-                PermitNocApplication permitNocApp = permitNocService
-                        .findByApplicationNumberAndType(application.getApplicationNumber(), code);
+				PermitNocApplication permitNocApp = permitNocService
+						.findByApplicationNumberAndType(application.getApplicationNumber(), code);
 
-                if (permitNocApp != null) {
-                    nocHelper.setNocApplicationNumber(
-                            permitNocApp.getBpaNocApplication().getNocApplicationNumber() != null
-                                    ? permitNocApp.getBpaNocApplication().getNocApplicationNumber()
-                                    : "N/A");
-                    nocHelper.setNocApplicationDate(permitNocApp.getBpaNocApplication().getCreatedDate());
-                    nocHelper.setStatusUpdatedDate(permitNocApp.getBpaNocApplication().getLastModifiedDate());
-                    nocHelper.setRemarks(permitNocApp.getBpaNocApplication().getRemarks());
-                    nocHelper.setNocStatusName(permitNocApp.getBpaNocApplication().getStatus().getCode());
-                } else {
-                    nocHelper.setNocApplicationNumber("N/A");
-                    nocHelper.setNocStatusName("N/A");
-                    nocHelper.setRemarks("N/A");
-                }
+				if (permitNocApp != null) {
+					nocHelper.setNocApplicationNumber(
+							permitNocApp.getBpaNocApplication().getNocApplicationNumber() != null
+									? permitNocApp.getBpaNocApplication().getNocApplicationNumber()
+									: "N/A");
+					nocHelper.setNocApplicationDate(permitNocApp.getBpaNocApplication().getCreatedDate());
+					nocHelper.setStatusUpdatedDate(permitNocApp.getBpaNocApplication().getLastModifiedDate());
+					nocHelper.setRemarks(permitNocApp.getBpaNocApplication().getRemarks());
+					nocHelper.setNocStatusName(permitNocApp.getBpaNocApplication().getStatus().getCode());
+				} else {
+					nocHelper.setNocApplicationNumber("N/A");
+					nocHelper.setNocStatusName("N/A");
+					nocHelper.setRemarks("N/A");
+				}
 
-            }
-            nocDetails.add(nocHelper);
-        }
+			}
+			nocDetails.add(nocHelper);
+		}
 
-        return nocDetails;
-    }
+		return nocDetails;
+	}
 
-    private List<PermitFeeHelper> getPermitFeeDetails(final BpaApplication application) {
-        List<PermitFeeHelper> permitFeeDetails = new ArrayList<>();
-        for (EgDemandDetails demandDetails : application.getDemand().getEgDemandDetails()) {
-            if (demandDetails.getAmount().compareTo(BigDecimal.ZERO) > 0) {
-                PermitFeeHelper feeHelper = new PermitFeeHelper();
-                feeHelper.setFeeDescription(demandDetails.getEgDemandReason().getEgDemandReasonMaster().getReasonMaster());
-                feeHelper.setAmount(demandDetails.getAmount());
-                permitFeeDetails.add(feeHelper);
-            }
-        }
-        return permitFeeDetails;
-    }
+	private List<PermitFeeHelper> getPermitFeeDetails(final BpaApplication application) {
+		List<PermitFeeHelper> permitFeeDetails = new ArrayList<>();
+		for (EgDemandDetails demandDetails : application.getDemand().getEgDemandDetails()) {
+			if (demandDetails.getAmount().compareTo(BigDecimal.ZERO) > 0) {
+				PermitFeeHelper feeHelper = new PermitFeeHelper();
+				feeHelper.setFeeDescription(
+						demandDetails.getEgDemandReason().getEgDemandReasonMaster().getReasonMaster());
+				feeHelper.setAmount(demandDetails.getAmount());
+				permitFeeDetails.add(feeHelper);
+			}
+		}
+		return permitFeeDetails;
+	}
 
-    public String buildQRCodeDetails(final BpaApplication bpaApplication) {
-        StringBuilder qrCodeValue = new StringBuilder();
-        qrCodeValue = isBlank(ApplicationThreadLocals.getMunicipalityName()) ? qrCodeValue.append("")
-                : qrCodeValue.append(ApplicationThreadLocals.getMunicipalityName()).append(ONE_NEW_LINE);
-        qrCodeValue = bpaApplication.getOwner() == null || isBlank(bpaApplication.getOwner().getName())
-                ? qrCodeValue.append(APPLICANT_NAME).append(N_A).append(ONE_NEW_LINE)
-                : qrCodeValue.append(APPLICANT_NAME).append(bpaApplication.getOwner().getName()).append(ONE_NEW_LINE);
-        qrCodeValue = isBlank(bpaApplication.getApplicationNumber())
-                ? qrCodeValue.append(APPLICATION_NUMBER).append(N_A).append(ONE_NEW_LINE)
-                : qrCodeValue.append(APPLICATION_NUMBER).append(bpaApplication.getApplicationNumber()).append(ONE_NEW_LINE);
-        if (!isBlank(bpaApplication.geteDcrNumber())) {
-            qrCodeValue = qrCodeValue.append("Edcr number : ").append(bpaApplication.geteDcrNumber()).append(ONE_NEW_LINE);
-        }
-        qrCodeValue = isBlank(bpaApplication.getPlanPermissionNumber())
-                ? qrCodeValue.append(PERMIT_NUMBER).append(N_A).append(ONE_NEW_LINE)
-                : qrCodeValue.append(PERMIT_NUMBER).append(bpaApplication.getPlanPermissionNumber()).append(ONE_NEW_LINE);
-        qrCodeValue = bpaWorkFlowService.getAmountRuleByServiceType(bpaApplication) == null
-                ? qrCodeValue.append(APPROVED_BY).append(N_A).append(ONE_NEW_LINE)
-                : qrCodeValue.append(APPROVED_BY)
-                        .append(getApproverDesignation(bpaApplication.getApproverPosition()))
-                        .append(ONE_NEW_LINE);
-        qrCodeValue = bpaApplication.getPlanPermissionDate() == null
-                ? qrCodeValue.append(DATE_OF_ISSUE_OF_PERMIT).append(N_A).append(ONE_NEW_LINE)
-                : qrCodeValue.append(DATE_OF_ISSUE_OF_PERMIT)
-                        .append(DateUtils.getDefaultFormattedDate(bpaApplication.getPlanPermissionDate())).append(ONE_NEW_LINE);
-        qrCodeValue = isBlank(getApproverName(bpaApplication))
-                ? qrCodeValue.append(NAME_OF_APPROVER).append(N_A).append(ONE_NEW_LINE)
-                : qrCodeValue.append(NAME_OF_APPROVER).append(getApproverName(bpaApplication)).append(ONE_NEW_LINE);
-        return qrCodeValue.toString();
-    }
+	public String buildQRCodeDetails(final BpaApplication bpaApplication) {
+		StringBuilder qrCodeValue = new StringBuilder();
+		qrCodeValue = isBlank(ApplicationThreadLocals.getMunicipalityName()) ? qrCodeValue.append("")
+				: qrCodeValue.append(ApplicationThreadLocals.getMunicipalityName()).append(ONE_NEW_LINE);
+		qrCodeValue = bpaApplication.getOwner() == null || isBlank(bpaApplication.getOwner().getName())
+				? qrCodeValue.append(APPLICANT_NAME).append(N_A).append(ONE_NEW_LINE)
+				: qrCodeValue.append(APPLICANT_NAME).append(bpaApplication.getOwner().getName()).append(ONE_NEW_LINE);
+		qrCodeValue = isBlank(bpaApplication.getApplicationNumber())
+				? qrCodeValue.append(APPLICATION_NUMBER).append(N_A).append(ONE_NEW_LINE)
+				: qrCodeValue.append(APPLICATION_NUMBER).append(bpaApplication.getApplicationNumber())
+						.append(ONE_NEW_LINE);
+		if (!isBlank(bpaApplication.geteDcrNumber())) {
+			qrCodeValue = qrCodeValue.append("Edcr number : ").append(bpaApplication.geteDcrNumber())
+					.append(ONE_NEW_LINE);
+		}
+		qrCodeValue = isBlank(bpaApplication.getPlanPermissionNumber())
+				? qrCodeValue.append(PERMIT_NUMBER).append(N_A).append(ONE_NEW_LINE)
+				: qrCodeValue.append(PERMIT_NUMBER).append(bpaApplication.getPlanPermissionNumber())
+						.append(ONE_NEW_LINE);
+		qrCodeValue = bpaWorkFlowService.getAmountRuleByServiceType(bpaApplication) == null
+				? qrCodeValue.append(APPROVED_BY).append(N_A).append(ONE_NEW_LINE)
+				: qrCodeValue.append(APPROVED_BY).append(getApproverDesignation(bpaApplication.getApproverPosition()))
+						.append(ONE_NEW_LINE);
+		qrCodeValue = bpaApplication.getPlanPermissionDate() == null
+				? qrCodeValue.append(DATE_OF_ISSUE_OF_PERMIT).append(N_A).append(ONE_NEW_LINE)
+				: qrCodeValue.append(DATE_OF_ISSUE_OF_PERMIT)
+						.append(DateUtils.getDefaultFormattedDate(bpaApplication.getPlanPermissionDate()))
+						.append(ONE_NEW_LINE);
+		qrCodeValue = isBlank(getApproverName(bpaApplication))
+				? qrCodeValue.append(NAME_OF_APPROVER).append(N_A).append(ONE_NEW_LINE)
+				: qrCodeValue.append(NAME_OF_APPROVER).append(getApproverName(bpaApplication)).append(ONE_NEW_LINE);
+		return qrCodeValue.toString();
+	}
 
-    public String buildQRCodeDetailsForOc(final OccupancyCertificate oc) {
-        StringBuilder qrCodeValue = new StringBuilder();
-        qrCodeValue = isBlank(ApplicationThreadLocals.getMunicipalityName()) ? qrCodeValue.append("")
-                : qrCodeValue.append(ApplicationThreadLocals.getMunicipalityName()).append(ONE_NEW_LINE);
+	public String buildQRCodeDetailsForOc(final OccupancyCertificate oc) {
+		StringBuilder qrCodeValue = new StringBuilder();
+		qrCodeValue = isBlank(ApplicationThreadLocals.getMunicipalityName()) ? qrCodeValue.append("")
+				: qrCodeValue.append(ApplicationThreadLocals.getMunicipalityName()).append(ONE_NEW_LINE);
 
-        qrCodeValue = isBlank(oc.getParent().getPlanPermissionNumber())
-                ? qrCodeValue.append(PERMIT_NUMBER).append(N_A).append(ONE_NEW_LINE)
-                : qrCodeValue.append(PERMIT_NUMBER).append(oc.getParent().getPlanPermissionNumber()).append(ONE_NEW_LINE);
-        qrCodeValue = oc.getParent().getPlanPermissionDate() == null
-                ? qrCodeValue.append(DATE_OF_ISSUE_OF_PERMIT).append(N_A).append(ONE_NEW_LINE)
-                : qrCodeValue.append(DATE_OF_ISSUE_OF_PERMIT)
-                        .append(DateUtils.getDefaultFormattedDate(oc.getParent().getPlanPermissionDate())).append(ONE_NEW_LINE);
+		qrCodeValue = isBlank(oc.getParent().getPlanPermissionNumber())
+				? qrCodeValue.append(PERMIT_NUMBER).append(N_A).append(ONE_NEW_LINE)
+				: qrCodeValue.append(PERMIT_NUMBER).append(oc.getParent().getPlanPermissionNumber())
+						.append(ONE_NEW_LINE);
+		qrCodeValue = oc.getParent().getPlanPermissionDate() == null
+				? qrCodeValue.append(DATE_OF_ISSUE_OF_PERMIT).append(N_A).append(ONE_NEW_LINE)
+				: qrCodeValue.append(DATE_OF_ISSUE_OF_PERMIT)
+						.append(DateUtils.getDefaultFormattedDate(oc.getParent().getPlanPermissionDate()))
+						.append(ONE_NEW_LINE);
 
-        qrCodeValue = isBlank(oc.getParent().getPlanPermissionNumber())
-                ? qrCodeValue.append("Occupancy certificate number : ").append(N_A).append(ONE_NEW_LINE)
-                : qrCodeValue.append("Occupancy certificate number : ").append(oc.getOccupancyCertificateNumber())
-                        .append(ONE_NEW_LINE);
-        qrCodeValue = oc.getParent().getPlanPermissionDate() == null
-                ? qrCodeValue.append("Date of issue of Occupancy certificate: ").append(N_A).append(ONE_NEW_LINE)
-                : qrCodeValue.append("Date of issue of Occupancy certificate: ")
-                        .append(DateUtils.getDefaultFormattedDate(oc.getApprovalDate())).append(ONE_NEW_LINE);
+		qrCodeValue = isBlank(oc.getParent().getPlanPermissionNumber())
+				? qrCodeValue.append("Occupancy certificate number : ").append(N_A).append(ONE_NEW_LINE)
+				: qrCodeValue.append("Occupancy certificate number : ").append(oc.getOccupancyCertificateNumber())
+						.append(ONE_NEW_LINE);
+		qrCodeValue = oc.getParent().getPlanPermissionDate() == null
+				? qrCodeValue.append("Date of issue of Occupancy certificate: ").append(N_A).append(ONE_NEW_LINE)
+				: qrCodeValue.append("Date of issue of Occupancy certificate: ")
+						.append(DateUtils.getDefaultFormattedDate(oc.getApprovalDate())).append(ONE_NEW_LINE);
 
-        qrCodeValue = bpaWorkFlowService.getAmountRuleByServiceTypeForOc(oc) == null
-                ? qrCodeValue.append(APPROVED_BY).append(N_A).append(ONE_NEW_LINE)
-                : qrCodeValue.append(APPROVED_BY)
-                        .append(getApproverDesignation(oc.getApproverPosition()))
-                        .append(ONE_NEW_LINE);
+		qrCodeValue = bpaWorkFlowService.getAmountRuleByServiceTypeForOc(oc) == null
+				? qrCodeValue.append(APPROVED_BY).append(N_A).append(ONE_NEW_LINE)
+				: qrCodeValue.append(APPROVED_BY).append(getApproverDesignation(oc.getApproverPosition()))
+						.append(ONE_NEW_LINE);
 
-        qrCodeValue = isBlank(getOcApproverName(oc))
-                ? qrCodeValue.append(NAME_OF_APPROVER).append(N_A).append(ONE_NEW_LINE)
-                : qrCodeValue.append(NAME_OF_APPROVER).append(getOcApproverName(oc)).append(ONE_NEW_LINE);
-        return qrCodeValue.toString();
-    }
+		qrCodeValue = isBlank(getOcApproverName(oc))
+				? qrCodeValue.append(NAME_OF_APPROVER).append(N_A).append(ONE_NEW_LINE)
+				: qrCodeValue.append(NAME_OF_APPROVER).append(getOcApproverName(oc)).append(ONE_NEW_LINE);
+		return qrCodeValue.toString();
+	}
 
-    private String getValidityDescription(Double validity, final Date planPermissionDate) {
-        StringBuilder certificateValidatiy = new StringBuilder();
-        String validityExpiryDate;
-        validityExpiryDate = calculateCertExpryDate(new DateTime(planPermissionDate), validity);
-        certificateValidatiy.append("\n\nValidity : This certificate is valid upto ").append(validityExpiryDate).append(" Only.");
-        return certificateValidatiy.toString();
-    }
+	private String getValidityDescription(Double validity, final Date planPermissionDate) {
+		StringBuilder certificateValidatiy = new StringBuilder();
+		String validityExpiryDate;
+		validityExpiryDate = calculateCertExpryDate(new DateTime(planPermissionDate), validity);
+		certificateValidatiy.append("\n\nValidity : This certificate is valid upto ").append(validityExpiryDate)
+				.append(" Only.");
+		return certificateValidatiy.toString();
+	}
 
-    private String getBuildingCommonPermitNotes() {
-        StringBuilder permitNotes = new StringBuilder();
-        permitNotes.append(getMessageFromPropertyFile("build.permit.note1"))
-                .append(getMessageFromPropertyFile("build.permit.note2")).append(getMessageFromPropertyFile("build.permit.note3"))
-                .append(getMessageFromPropertyFile("build.permit.note4"));
-        return permitNotes.toString();
-    }
+	private String getBuildingCommonPermitNotes() {
+		StringBuilder permitNotes = new StringBuilder();
+		permitNotes.append(getMessageFromPropertyFile("build.permit.note1"))
+				.append(getMessageFromPropertyFile("build.permit.note2"))
+				.append(getMessageFromPropertyFile("build.permit.note3"))
+				.append(getMessageFromPropertyFile("build.permit.note4"));
+		return permitNotes.toString();
+	}
 
-    private String buildPermitConditions(final BpaApplication bpaApplication) {
+	private String buildPermitConditions(final BpaApplication bpaApplication) {
 
-        StringBuilder permitConditions = new StringBuilder();
-        List<ApplicationPermitConditions> additionalPermitConditions = bpaApplicationPermitConditionsService
-                .findAllByApplicationAndPermitConditionType(bpaApplication, ConditionType.ADDITIONALCONDITIONS);
-        if (bpaApplication.getPlanPermissionDate() != null && bpaApplication.getServiceType().getCode().equals(ST_CODE_14)
-                || bpaApplication.getServiceType().getCode().equals(ST_CODE_15)) {
-            permitConditions.append(getMessageFromPropertyFile("tower.pole.permit.condition1"))
-                    .append(getMessageFromPropertyFile("tower.pole.permit.condition2"))
-                    .append(getMessageFromPropertyFile("tower.pole.permit.condition3"))
-                    .append(getMessageFromPropertyFile("tower.pole.permit.condition4"))
-                    .append(getMessageFromPropertyFile("tower.pole.permit.condition5"))
-                    .append(getMessageFromPropertyFile("tower.pole.permit.condition6"))
-                    .append(getMessageFromPropertyFile("tower.pole.permit.condition7"))
-                    .append(getMessageFromPropertyFileWithParameters("tower.pole.permit.condition8",
-                            bpaApplication.getOwner().getName()))
-                    .append(getMessageFromPropertyFile("tower.pole.permit.condition9"))
-                    .append(getMessageFromPropertyFileWithParameters("tower.pole.permit.condition10",
-                            DateUtils.getDefaultFormattedDate(bpaApplication.getPlanPermissionDate())))
-                    .append(getMessageFromPropertyFile("tower.pole.permit.condition11"));
-            int order = 12;
-            buildAdditionalPermitConditionsOrRejectionReason(permitConditions, additionalPermitConditions, order);
-        } else {
-            int order = buildApplicationPermitConditions(bpaApplication, permitConditions);
-            buildAdditionalPermitConditionsOrRejectionReason(permitConditions, additionalPermitConditions, order);
-        }
-        return permitConditions.toString();
-    }
+		StringBuilder permitConditions = new StringBuilder();
+		List<ApplicationPermitConditions> additionalPermitConditions = bpaApplicationPermitConditionsService
+				.findAllByApplicationAndPermitConditionType(bpaApplication, ConditionType.ADDITIONALCONDITIONS);
+		if (bpaApplication.getPlanPermissionDate() != null
+				&& bpaApplication.getServiceType().getCode().equals(ST_CODE_14)
+				|| bpaApplication.getServiceType().getCode().equals(ST_CODE_15)) {
+			permitConditions.append(getMessageFromPropertyFile("tower.pole.permit.condition1"))
+					.append(getMessageFromPropertyFile("tower.pole.permit.condition2"))
+					.append(getMessageFromPropertyFile("tower.pole.permit.condition3"))
+					.append(getMessageFromPropertyFile("tower.pole.permit.condition4"))
+					.append(getMessageFromPropertyFile("tower.pole.permit.condition5"))
+					.append(getMessageFromPropertyFile("tower.pole.permit.condition6"))
+					.append(getMessageFromPropertyFile("tower.pole.permit.condition7"))
+					.append(getMessageFromPropertyFileWithParameters("tower.pole.permit.condition8",
+							bpaApplication.getOwner().getName()))
+					.append(getMessageFromPropertyFile("tower.pole.permit.condition9"))
+					.append(getMessageFromPropertyFileWithParameters("tower.pole.permit.condition10",
+							DateUtils.getDefaultFormattedDate(bpaApplication.getPlanPermissionDate())))
+					.append(getMessageFromPropertyFile("tower.pole.permit.condition11"));
+			int order = 12;
+			buildAdditionalPermitConditionsOrRejectionReason(permitConditions, additionalPermitConditions, order);
+		} else {
+			int order = buildApplicationPermitConditions(bpaApplication, permitConditions);
+			buildAdditionalPermitConditionsOrRejectionReason(permitConditions, additionalPermitConditions, order);
+		}
+		return permitConditions.toString();
+	}
 
-    private int buildAdditionalPermitConditionsOrRejectionReason(StringBuilder permitConditions,
-            List<ApplicationPermitConditions> additionalPermitConditions, int order) {
-        int additionalOrder = order;
-        if (!additionalPermitConditions.isEmpty()
-                && isNotBlank(additionalPermitConditions.get(0).getNoticeCondition().getAdditionalCondition())) {
-            for (ApplicationPermitConditions addnlPermitConditions : additionalPermitConditions) {
-                if (isNotBlank(addnlPermitConditions.getNoticeCondition().getAdditionalCondition())) {
-                    permitConditions.append(
-                            additionalOrder + ") "
-                                    + addnlPermitConditions.getNoticeCondition().getAdditionalCondition()
-                                    + TWO_NEW_LINE);
-                    additionalOrder++;
-                }
-            }
-        }
-        return additionalOrder;
-    }
+	private int buildAdditionalPermitConditionsOrRejectionReason(StringBuilder permitConditions,
+			List<ApplicationPermitConditions> additionalPermitConditions, int order) {
+		int additionalOrder = order;
+		if (!additionalPermitConditions.isEmpty()
+				&& isNotBlank(additionalPermitConditions.get(0).getNoticeCondition().getAdditionalCondition())) {
+			for (ApplicationPermitConditions addnlPermitConditions : additionalPermitConditions) {
+				if (isNotBlank(addnlPermitConditions.getNoticeCondition().getAdditionalCondition())) {
+					permitConditions.append(additionalOrder + ") "
+							+ addnlPermitConditions.getNoticeCondition().getAdditionalCondition() + TWO_NEW_LINE);
+					additionalOrder++;
+				}
+			}
+		}
+		return additionalOrder;
+	}
 
-    public String buildRejectionReasons(final BpaApplication bpaApplication, final boolean isForRevocation) {
-        StringBuilder rejectReasons = new StringBuilder();
-        if (!bpaApplication.getRejectionReasons().isEmpty()) {
-            List<ApplicationPermitConditions> additionalPermitConditions = bpaApplicationPermitConditionsService
-                    .findAllByApplicationAndPermitConditionType(bpaApplication, ConditionType.ADDITIONALREJECTIONREASONS);
-            int order = buildPredefinedRejectReasons(bpaApplication, rejectReasons);
-            int additionalOrder = buildAdditionalPermitConditionsOrRejectionReason(rejectReasons, additionalPermitConditions,
-                    order);
-            StateHistory<Position> stateHistory = bpaUtils.getRejectionComments(bpaApplication.getStateHistory());
-            if (stateHistory != null && isNotBlank(stateHistory.getComments()) && !isForRevocation)
-                rejectReasons.append(additionalOrder + ") "
-                        + stateHistory.getComments() + TWO_NEW_LINE);
-        } else {
-            rejectReasons.append(bpaApplication.getState().getComments() != null
-                    && bpaApplication.getState().getComments().equalsIgnoreCase("Application cancelled by citizen")
-                            ? getMessageFromPropertyFile(APPLICATION_REJECTION_REASON)
-                            : getMessageFromPropertyFile(APPLICATION_AUTO_REJECTION_REASON));
-        }
-        return rejectReasons.toString();
-    }
+	public String buildRejectionReasons(final BpaApplication bpaApplication, final boolean isForRevocation) {
+		StringBuilder rejectReasons = new StringBuilder();
+		if (!bpaApplication.getRejectionReasons().isEmpty()) {
+			List<ApplicationPermitConditions> additionalPermitConditions = bpaApplicationPermitConditionsService
+					.findAllByApplicationAndPermitConditionType(bpaApplication,
+							ConditionType.ADDITIONALREJECTIONREASONS);
+			int order = buildPredefinedRejectReasons(bpaApplication, rejectReasons);
+			int additionalOrder = buildAdditionalPermitConditionsOrRejectionReason(rejectReasons,
+					additionalPermitConditions, order);
+			StateHistory<Position> stateHistory = bpaUtils.getRejectionComments(bpaApplication.getStateHistory());
+			if (stateHistory != null && isNotBlank(stateHistory.getComments()) && !isForRevocation)
+				rejectReasons.append(additionalOrder + ") " + stateHistory.getComments() + TWO_NEW_LINE);
+		} else {
+			rejectReasons.append(bpaApplication.getState().getComments() != null
+					&& bpaApplication.getState().getComments().equalsIgnoreCase("Application cancelled by citizen")
+							? getMessageFromPropertyFile(APPLICATION_REJECTION_REASON)
+							: getMessageFromPropertyFile(APPLICATION_AUTO_REJECTION_REASON));
+		}
+		return rejectReasons.toString();
+	}
 
-    private int buildPredefinedRejectReasons(final BpaApplication bpaApplication,
-            StringBuilder permitConditions) {
-        int order = 1;
-        for (ApplicationPermitConditions rejectReason : bpaApplication.getRejectionReasons()) {
-            if (rejectReason.getNoticeCondition().isRequired()
-                    && ConditionType.REJECTIONREASONS.equals(rejectReason.getNoticeCondition().getType())) {
-                permitConditions
-                        .append(order + ") "
-                                + rejectReason.getNoticeCondition().getChecklistServicetype().getChecklist().getDescription()
-                                + TWO_NEW_LINE);
-                order++;
-            }
-        }
-        return order;
-    }
+	private int buildPredefinedRejectReasons(final BpaApplication bpaApplication, StringBuilder permitConditions) {
+		int order = 1;
+		for (ApplicationPermitConditions rejectReason : bpaApplication.getRejectionReasons()) {
+			if (rejectReason.getNoticeCondition().isRequired()
+					&& ConditionType.REJECTIONREASONS.equals(rejectReason.getNoticeCondition().getType())) {
+				permitConditions.append(order + ") "
+						+ rejectReason.getNoticeCondition().getChecklistServicetype().getChecklist().getDescription()
+						+ TWO_NEW_LINE);
+				order++;
+			}
+		}
+		return order;
+	}
 
-    private int buildApplicationPermitConditions(final BpaApplication bpaApplication,
-            StringBuilder permitConditions) {
-        int order = 1;
-        for (ApplicationPermitConditions applnPermit : bpaApplication.getDefaultPermitConditions()) {
-            if (applnPermit.getNoticeCondition().isRequired()
-                    && ConditionType.PERMITDEFAULTCONDITIONS.equals(applnPermit.getNoticeCondition().getType())) {
-                permitConditions
-                        .append(order + ") "
-                                + applnPermit.getNoticeCondition().getChecklistServicetype().getChecklist().getDescription()
-                                + TWO_NEW_LINE);
-                order++;
-            }
-        }
-        for (ApplicationPermitConditions applnPermit : bpaApplication.getDynamicPermitConditions()) {
-            if (applnPermit.getNoticeCondition().isRequired()
-                    && ConditionType.NOCCONDITIONS.equals(applnPermit.getNoticeCondition().getType())) {
-                permitConditions
-                        .append(order + ") "
-                                + applnPermit.getNoticeCondition().getChecklistServicetype().getChecklist().getDescription()
-                                + applnPermit.getNoticeCondition().getConditionNumber() + " Dtd "
-                                + DateUtils.toDefaultDateFormat(applnPermit.getNoticeCondition().getConditiondDate()) + "."
-                                + TWO_NEW_LINE);
-                order++;
-            }
-        }
+	private int buildApplicationPermitConditions(final BpaApplication bpaApplication, StringBuilder permitConditions) {
+		int order = 1;
+		for (ApplicationPermitConditions applnPermit : bpaApplication.getDefaultPermitConditions()) {
+			if (applnPermit.getNoticeCondition().isRequired()
+					&& ConditionType.PERMITDEFAULTCONDITIONS.equals(applnPermit.getNoticeCondition().getType())) {
+				permitConditions.append(order + ") "
+						+ applnPermit.getNoticeCondition().getChecklistServicetype().getChecklist().getDescription()
+						+ TWO_NEW_LINE);
+				order++;
+			}
+		}
+		for (ApplicationPermitConditions applnPermit : bpaApplication.getDynamicPermitConditions()) {
+			if (applnPermit.getNoticeCondition().isRequired()
+					&& ConditionType.NOCCONDITIONS.equals(applnPermit.getNoticeCondition().getType())) {
+				permitConditions.append(order + ") "
+						+ applnPermit.getNoticeCondition().getChecklistServicetype().getChecklist().getDescription()
+						+ applnPermit.getNoticeCondition().getConditionNumber() + " Dtd "
+						+ DateUtils.toDefaultDateFormat(applnPermit.getNoticeCondition().getConditiondDate()) + "."
+						+ TWO_NEW_LINE);
+				order++;
+			}
+		}
 
-        for (ApplicationPermitConditions applnPermit : bpaApplication.getStaticPermitConditions()) {
-            if (applnPermit.getNoticeCondition().isRequired()
-                    && ConditionType.GENERALCONDITIONS.equals(applnPermit.getNoticeCondition().getType())) {
-                permitConditions
-                        .append(order + ") "
-                                + applnPermit.getNoticeCondition().getChecklistServicetype().getChecklist().getDescription()
-                                + TWO_NEW_LINE);
-                order++;
-            }
-        }
-        return order;
-    }
+		for (ApplicationPermitConditions applnPermit : bpaApplication.getStaticPermitConditions()) {
+			if (applnPermit.getNoticeCondition().isRequired()
+					&& ConditionType.GENERALCONDITIONS.equals(applnPermit.getNoticeCondition().getType())) {
+				permitConditions.append(order + ") "
+						+ applnPermit.getNoticeCondition().getChecklistServicetype().getChecklist().getDescription()
+						+ TWO_NEW_LINE);
+				order++;
+			}
+		}
+		return order;
+	}
 
-    public String getMessageFromPropertyFile(String key) {
-        return bpaMessageSource.getMessage(key, null, null);
-    }
+	public String getMessageFromPropertyFile(String key) {
+		return bpaMessageSource.getMessage(key, null, null);
+	}
 
-    private String getMessageFromPropertyFileWithParameters(String key, String value) {
-        return bpaMessageSource.getMessage(key, new String[] { value }, null);
-    }
+	private String getMessageFromPropertyFileWithParameters(String key, String value) {
+		return bpaMessageSource.getMessage(key, new String[] { value }, null);
+	}
 
-    public String calculateCertExpryDate(DateTime permissionDate, Double noOfYears) {
-        DateTimeFormatter fmt = DateUtils.defaultDateFormatter();
-        return fmt.print(permissionDate.plusYears(noOfYears.intValue()).minusDays(1));
-    }
+	public String calculateCertExpryDate(DateTime permissionDate, Double noOfYears) {
+		DateTimeFormatter fmt = DateUtils.defaultDateFormatter();
+		return fmt.print(permissionDate.plusYears(noOfYears.intValue()).minusDays(1));
+	}
 
-    public String getApproverDesignation(final Position position) {
-        String designation = "Assistant engineer";
-        if (position != null) {
-            designation = position.getDeptDesig().getDesignation().getName();
-        }
-        return designation;
-    }
+	public String getApproverDesignation(final Position position) {
+		String designation = "Assistant engineer";
+		if (position != null) {
+			designation = position.getDeptDesig().getDesignation().getName();
+		}
+		return designation;
+	}
 
-    public String getApproverName(final BpaApplication application) {
-        if (application.getApproverUser() == null) {
-            String desigName = getApproverDesignation(application.getApproverPosition());
-            StateHistory<Position> stateHistory = application.getStateHistory().stream()
-                    .filter(history -> history.getOwnerPosition().getDeptDesig().getDesignation().getName()
-                            .equalsIgnoreCase(desigName))
-                    .findAny().orElse(null);
-            Assignment assignment = getAssignment(stateHistory);
-            if (assignment == null) {
-                Long positionId = bpaUtils.getUserPositionIdByZone(desigName,
-                        bpaUtils.getBoundaryForWorkflow(application.getSiteDetail().get(0)).getId());
-                List<Assignment> assign = bpaWorkFlowService.getAssignmentsByPositionAndDate(positionId,
-                        application.getCreatedDate());
-                return assign.isEmpty() ? N_A : assign.get(0).getEmployee().getName();
-            } else
-                return assignment.getEmployee().getName();
-        } else
-            return application.getApproverUser().getName();
-    }
+	public String getApproverName(final BpaApplication application) {
+		if (application.getApproverUser() == null) {
+			String desigName = getApproverDesignation(application.getApproverPosition());
+			StateHistory<Position> stateHistory = application.getStateHistory().stream().filter(history -> history
+					.getOwnerPosition().getDeptDesig().getDesignation().getName().equalsIgnoreCase(desigName)).findAny()
+					.orElse(null);
+			Assignment assignment = getAssignment(stateHistory);
+			if (assignment == null) {
+				Long positionId = bpaUtils.getUserPositionIdByZone(desigName,
+						bpaUtils.getBoundaryForWorkflow(application.getSiteDetail().get(0)).getId());
+				List<Assignment> assign = bpaWorkFlowService.getAssignmentsByPositionAndDate(positionId,
+						application.getCreatedDate());
+				return assign.isEmpty() ? N_A : assign.get(0).getEmployee().getName();
+			} else
+				return assignment.getEmployee().getName();
+		} else
+			return application.getApproverUser().getName();
+	}
 
-    public String getOcApproverName(final OccupancyCertificate oc) {
-        if (oc.getApproverUser() == null) {
-            String designation = getApproverDesignation(oc.getApproverPosition());
-            StateHistory<Position> stateHistory = oc.getStateHistory().stream()
-                    .filter(history -> designation
-                            .equalsIgnoreCase(history.getOwnerPosition().getDeptDesig().getDesignation().getName()))
-                    .findAny().orElse(null);
-            Position ownerPos = null;
-            Date lastModifiedDate = null;
-            if (stateHistory == null && oc.getState() != null && designation
-                    .equals(oc.getState().getOwnerPosition().getDeptDesig().getDesignation().getName())) {
-                ownerPos = oc.getState().getOwnerPosition();
-                lastModifiedDate = oc.getState().getLastModifiedDate();
-            } else if (stateHistory != null) {
-                ownerPos = stateHistory.getOwnerPosition();
-                lastModifiedDate = stateHistory.getLastModifiedDate();
-            }
-            return ownerPos == null ? N_A
-                    : bpaWorkFlowService
-                            .getApproverAssignmentByDate(ownerPos, lastModifiedDate)
-                            .getEmployee().getName();
-        } else
-            return oc.getApproverUser().getName();
-    }
+	public String getOcApproverName(final OccupancyCertificate oc) {
+		if (oc.getApproverUser() == null) {
+			String designation = getApproverDesignation(oc.getApproverPosition());
+			StateHistory<Position> stateHistory = oc.getStateHistory().stream()
+					.filter(history -> designation
+							.equalsIgnoreCase(history.getOwnerPosition().getDeptDesig().getDesignation().getName()))
+					.findAny().orElse(null);
+			Position ownerPos = null;
+			Date lastModifiedDate = null;
+			if (stateHistory == null && oc.getState() != null
+					&& designation.equals(oc.getState().getOwnerPosition().getDeptDesig().getDesignation().getName())) {
+				ownerPos = oc.getState().getOwnerPosition();
+				lastModifiedDate = oc.getState().getLastModifiedDate();
+			} else if (stateHistory != null) {
+				ownerPos = stateHistory.getOwnerPosition();
+				lastModifiedDate = stateHistory.getLastModifiedDate();
+			}
+			return ownerPos == null ? N_A
+					: bpaWorkFlowService.getApproverAssignmentByDate(ownerPos, lastModifiedDate).getEmployee()
+							.getName();
+		} else
+			return oc.getApproverUser().getName();
+	}
 
-    private Assignment getAssignment(StateHistory<Position> stateHistory) {
-        if (stateHistory == null)
-            return null;
-        else {
-            Assignment assignment = bpaWorkFlowService.getApproverAssignmentByDate(stateHistory.getOwnerPosition(),
-                    stateHistory.getLastModifiedDate());
-            List<Assignment> assignments = Collections.emptyList();
-            if (stateHistory.getOwnerUser() != null)
-                assignments = bpaWorkFlowService.getAssignmentByPositionAndUserAsOnDate(stateHistory.getOwnerPosition().getId(),
-                        stateHistory.getOwnerUser().getId(), stateHistory.getLastModifiedDate());
-            else if (assignment == null && assignments.isEmpty())
-                assignments = bpaWorkFlowService.getAssignmentsByPositionAndDate(stateHistory.getOwnerPosition().getId(),
-                        stateHistory.getLastModifiedDate());
-            if (!assignments.isEmpty())
-                assignment = assignments.get(0);
-            if (assignment == null)
-                assignment = bpaWorkFlowService.getAssignmentsForPosition(stateHistory.getOwnerPosition().getId());
-            return assignment;
-        }
-    }
+	private Assignment getAssignment(StateHistory<Position> stateHistory) {
+		if (stateHistory == null)
+			return null;
+		else {
+			Assignment assignment = bpaWorkFlowService.getApproverAssignmentByDate(stateHistory.getOwnerPosition(),
+					stateHistory.getLastModifiedDate());
+			List<Assignment> assignments = Collections.emptyList();
+			if (stateHistory.getOwnerUser() != null)
+				assignments = bpaWorkFlowService.getAssignmentByPositionAndUserAsOnDate(
+						stateHistory.getOwnerPosition().getId(), stateHistory.getOwnerUser().getId(),
+						stateHistory.getLastModifiedDate());
+			else if (assignment == null && assignments.isEmpty())
+				assignments = bpaWorkFlowService.getAssignmentsByPositionAndDate(
+						stateHistory.getOwnerPosition().getId(), stateHistory.getLastModifiedDate());
+			if (!assignments.isEmpty())
+				assignment = assignments.get(0);
+			if (assignment == null)
+				assignment = bpaWorkFlowService.getAssignmentsForPosition(stateHistory.getOwnerPosition().getId());
+			return assignment;
+		}
+	}
 
-    private void updatePermitOrderReport(FileStoreMapper fileStoreMapper, BpaApplication application) {
-        try {
-            Path path = bpaUtils.getExistingFilePath(fileStoreMapper, APPLICATION_MODULE_TYPE);
+	private void updatePermitOrderReport(FileStoreMapper fileStoreMapper, BpaApplication application) {
+		try {
+			Path path = bpaUtils.getExistingFilePath(fileStoreMapper, APPLICATION_MODULE_TYPE);
 
-            PDDocument doc = PDDocument.load(new File(path.toString()));
-            for (int i = 0; i < doc.getNumberOfPages(); i++) {
-                PDPage page = doc.getPage(i);
-                PDRectangle mediaBox = page.getMediaBox();
-                PDPageContentStream contentStream = new PDPageContentStream(doc, page, PDPageContentStream.AppendMode.APPEND,
-                        true);
+			PDDocument doc = PDDocument.load(new File(path.toString()));
+			for (int i = 0; i < doc.getNumberOfPages(); i++) {
+				PDPage page = doc.getPage(i);
+				PDRectangle mediaBox = page.getMediaBox();
+				PDPageContentStream contentStream = new PDPageContentStream(doc, page,
+						PDPageContentStream.AppendMode.APPEND, true);
 
-                // adding qr code
-                String pathToFile = generatePDF417Code(buildQRCodeDetails(application)).getAbsolutePath();
-                PDImageXObject pdImage = PDImageXObject.createFromFile(pathToFile, doc);
+				// adding qr code
+				String pathToFile = generatePDF417Code(buildQRCodeDetails(application)).getAbsolutePath();
+				PDImageXObject pdImage = PDImageXObject.createFromFile(pathToFile, doc);
 
-                // over write the content to be replaced with a white rectangle to cover the footer from dcr report powered by
-                contentStream.setNonStrokingColor(Color.white);
-                contentStream.addRect((mediaBox.getWidth() / 2f) + 45, 35, mediaBox.getWidth(), 12);
-                contentStream.fill();
+				// over write the content to be replaced with a white rectangle to cover the
+				// footer from dcr report powered by
+				contentStream.setNonStrokingColor(Color.white);
+				contentStream.addRect((mediaBox.getWidth() / 2f) + 45, 35, mediaBox.getWidth(), 12);
+				contentStream.fill();
 
-                // over write the content to be replaced with a white rectangle for dcr report page number
-                contentStream.addRect(230, 35, 50, 12);
-                contentStream.fill();
+				// over write the content to be replaced with a white rectangle for dcr report
+				// page number
+				contentStream.addRect(230, 35, 50, 12);
+				contentStream.fill();
 
-                // set the color to black again as we are setting the color to white before
-                contentStream.setNonStrokingColor(Color.black);
+				// set the color to black again as we are setting the color to white before
+				contentStream.setNonStrokingColor(Color.black);
 
-                // set the coordinates of barcode in pdf page
-                float barCodeCoordinate = mediaBox.getWidth() - pdImage.getWidth() - 10;
+				// set the coordinates of barcode in pdf page
+				float barCodeCoordinate = mediaBox.getWidth() - pdImage.getWidth() - 10;
 
-                contentStream.drawImage(pdImage, barCodeCoordinate, 5);
+				contentStream.drawImage(pdImage, barCodeCoordinate, 5);
 
-                contentStream.beginText();
+				contentStream.beginText();
 
-                /*
-                 * if bar code width is large and its x coordinate exceeds half page we take bar code x coordinate minus 40
-                 */
-                float pageNoCoordinate = mediaBox.getWidth() / 2f > barCodeCoordinate ? barCodeCoordinate - 40
-                        : mediaBox.getWidth() / 2f - 24;
+				/*
+				 * if bar code width is large and its x coordinate exceeds half page we take bar
+				 * code x coordinate minus 40
+				 */
+				float pageNoCoordinate = mediaBox.getWidth() / 2f > barCodeCoordinate ? barCodeCoordinate - 40
+						: mediaBox.getWidth() / 2f - 24;
 
-                contentStream.newLineAtOffset(pageNoCoordinate, 37);
+				contentStream.newLineAtOffset(pageNoCoordinate, 37);
 
-                contentStream.setFont(PDType1Font.TIMES_ROMAN, 10);
-                String text = (i + 1) + " of " + doc.getNumberOfPages();
-                contentStream.showText(text);
-                contentStream.endText();
-                contentStream.close();
-            }
-            doc.save(new File(path.toString()));
-            doc.close();
-        } catch (IOException e) {
-            throw new ValidationException(Arrays.asList(new ValidationError("error", e.getMessage())));
-        }
-    }
+				contentStream.setFont(PDType1Font.TIMES_ROMAN, 10);
+				String text = (i + 1) + " of " + doc.getNumberOfPages();
+				contentStream.showText(text);
+				contentStream.endText();
+				contentStream.close();
+			}
+			doc.save(new File(path.toString()));
+			doc.close();
+		} catch (IOException e) {
+			throw new ValidationException(Arrays.asList(new ValidationError("error", e.getMessage())));
+		}
+	}
 
-    public List<Map<String, String>> getAllReviewersList(BpaApplication bpaApplication) {
-        bpaApplication.getStateHistory().sort(Comparator.comparing(StateHistory::getId));
-        List<Map<String, String>> reviewerNameAndDesignation = new LinkedList<>();
-        for (StateHistory<Position> stateHistory : bpaApplication.getStateHistory()) {
-            Assignment assignment = getAssignment(stateHistory);
-            if (assignment != null && !assignment.getDesignation().getName().equalsIgnoreCase(SECTION_CLERK)
-                    && !assignment.getDesignation().getName().equalsIgnoreCase("Superintendent") &&
-                    !assignment.getDesignation().getName().equalsIgnoreCase(
-                            getApproverDesignation(bpaApplication.getApproverPosition()))) {
-                Map<String, String> reviewerNameAndDesignationMap = new HashMap<>();
-                reviewerNameAndDesignationMap.put("name", assignment.getEmployee().getName());
-                reviewerNameAndDesignationMap.put(DESIGNATION, assignment.getDesignation().getName());
-                reviewerNameAndDesignation.add(reviewerNameAndDesignationMap);
-            }
-        }
-        return reviewerNameAndDesignation;
-    }
+	public List<Map<String, String>> getAllReviewersList(BpaApplication bpaApplication) {
+		bpaApplication.getStateHistory().sort(Comparator.comparing(StateHistory::getId));
+		List<Map<String, String>> reviewerNameAndDesignation = new LinkedList<>();
+		for (StateHistory<Position> stateHistory : bpaApplication.getStateHistory()) {
+			Assignment assignment = getAssignment(stateHistory);
+			if (assignment != null && !assignment.getDesignation().getName().equalsIgnoreCase(SECTION_CLERK)
+					&& !assignment.getDesignation().getName().equalsIgnoreCase("Superintendent")
+					&& !assignment.getDesignation().getName()
+							.equalsIgnoreCase(getApproverDesignation(bpaApplication.getApproverPosition()))) {
+				Map<String, String> reviewerNameAndDesignationMap = new HashMap<>();
+				reviewerNameAndDesignationMap.put("name", assignment.getEmployee().getName());
+				reviewerNameAndDesignationMap.put(DESIGNATION, assignment.getDesignation().getName());
+				reviewerNameAndDesignation.add(reviewerNameAndDesignationMap);
+			}
+		}
+		return reviewerNameAndDesignation;
+	}
 
-    public List<Map<String, String>> getAllOcReviewersList(OccupancyCertificate oc) {
-        oc.getStateHistory().sort(Comparator.comparing(StateHistory::getId));
-        List<Map<String, String>> reviewerNameAndDesignation = new LinkedList<>();
-        for (StateHistory<Position> stateHistory : oc.getStateHistory()) {
-            Assignment assignment = getAssignment(stateHistory);
-            if (assignment != null && !assignment.getDesignation().getName().equalsIgnoreCase(SECTION_CLERK)
-                    && !assignment.getDesignation().getName().equalsIgnoreCase("Superintendent") &&
-                    !assignment.getDesignation().getName().equalsIgnoreCase(
-                            getApproverDesignation(oc.getApproverPosition()))) {
-                Map<String, String> reviewerNameAndDesignationMap = new HashMap<>();
-                reviewerNameAndDesignationMap.put("name", assignment.getEmployee().getName());
-                reviewerNameAndDesignationMap.put(DESIGNATION, assignment.getDesignation().getName());
-                reviewerNameAndDesignation.add(reviewerNameAndDesignationMap);
-            }
-        }
-        return reviewerNameAndDesignation;
-    }
+	public List<Map<String, String>> getAllOcReviewersList(OccupancyCertificate oc) {
+		oc.getStateHistory().sort(Comparator.comparing(StateHistory::getId));
+		List<Map<String, String>> reviewerNameAndDesignation = new LinkedList<>();
+		for (StateHistory<Position> stateHistory : oc.getStateHistory()) {
+			Assignment assignment = getAssignment(stateHistory);
+			if (assignment != null && !assignment.getDesignation().getName().equalsIgnoreCase(SECTION_CLERK)
+					&& !assignment.getDesignation().getName().equalsIgnoreCase("Superintendent")
+					&& !assignment.getDesignation().getName()
+							.equalsIgnoreCase(getApproverDesignation(oc.getApproverPosition()))) {
+				Map<String, String> reviewerNameAndDesignationMap = new HashMap<>();
+				reviewerNameAndDesignationMap.put("name", assignment.getEmployee().getName());
+				reviewerNameAndDesignationMap.put(DESIGNATION, assignment.getDesignation().getName());
+				reviewerNameAndDesignation.add(reviewerNameAndDesignationMap);
+			}
+		}
+		return reviewerNameAndDesignation;
+	}
 }
