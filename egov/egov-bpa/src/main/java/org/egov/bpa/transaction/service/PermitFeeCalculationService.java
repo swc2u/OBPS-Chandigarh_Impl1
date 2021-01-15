@@ -1630,7 +1630,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		BigDecimal multiplier = BigDecimal.ZERO;
 		if (BpaConstants.NEW_CONSTRUCTION.equals(plan.getServiceType())
 				|| BpaConstants.RECONSTRUCTION.equals(plan.getServiceType()))
-			multiplier = new BigDecimal("10");
+			multiplier = new BigDecimal("5");
 		else if (BpaConstants.ALTERATION.equals(plan.getServiceType())
 				|| BpaConstants.ADDITION_OR_EXTENSION.equals(plan.getServiceType()))
 			multiplier = new BigDecimal("5");
