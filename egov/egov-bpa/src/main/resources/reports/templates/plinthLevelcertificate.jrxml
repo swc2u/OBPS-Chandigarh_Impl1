@@ -104,7 +104,7 @@ UT, Chandigarh.]]></text>
 				<textElement>
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Reference your application to erect/ re-erect/ add to/ alter building on "+$P{plotNo}+", Sector No- "+$P{sectorNo}+", Chandigarh, " + "Chandigarh accordance in with the plans construction under rule 5 of the Punjab capital (Dev. and Reg.) Building rules, 1952. Your attention is also invited to rule 16, rule 17, rule 119 (amended) of building rules for following: -"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["With reference your application to erect/ re-erect/ add to/ alter building on "+$P{plotNo}+", Sector No- "+$P{sectorNo}+", Chandigarh, " + "in accordance with the plans submitted along with the application, your application is hereby sanctioned for the aforesaid construction under rule 5 of the Punjab capital (Dev. and Reg.) Building rules, 1952. Your attention is also invited to rule 16, rule 17, rule 119 (amended) of building rules for following: -"]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="185">
@@ -116,7 +116,7 @@ UT, Chandigarh.]]></text>
 				<text><![CDATA[1. A notice in writing of the date and time at which erection/ re-election of the building shall be given.
 2. Plan sanctioned are valid for only five years from the date of issue on plan of valid last date of construction.
 3. For demarcation, plinth level, water connection etc. you may contact concerned departments as per Endst. Below.
-4. On completion of construction upto plinth level, you are further advised also to furnish a certificate from the architect that the construction of building is accordance with sanctioned plan.
+4. On completion of construction upto plinth level, you are further advised also to furnish a certificate from the architect that the construction of building in accordance with sanctioned plan.
 5. You are requested to obtain permission from the Municipal Corporation, Chandigarh, for stacking building materials on road berms, back lanes etc., against the payment of prescribed fee/payment, before starting the construction/ renovation work as per M.C norms. 
 6. You will have to get O\C for proposal sanctioned in this plan.
 You are also requested to intimate regarding construction of building upto DPC level and further construction shall not be taken in hand till the same is verified/ certified by the junior engineer and obtained DPC certificate from office.]]></text>
