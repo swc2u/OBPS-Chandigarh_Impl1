@@ -99,8 +99,11 @@ public class PlanService {
 			plan = extractService.extract(dcrApplication.getSavedDxfFile(), amd, asOnDate,
 					featureService.getFeatures());
 			setProperties(plan);
+			plan = applyRules(plan, amd, cityDetails);
+			setEDCRmandatoryNOC(plan);
 		}catch (Exception e) {
 			LOG.error(e.getMessage());
+			plan=getAbortedSupportPlan(e);
 		}
 		
 //		removeError(plan);
@@ -113,13 +116,19 @@ public class PlanService {
 			plan.setServiceType(dcrApplication.getServiceType());
 			plan.setApplicationType(dcrApplication.getApplicationType().toString());
 			plan.setPlanPermissionNumber(dcrApplication.getPlanPermitNumber());
-			plan = applyRules(plan, amd, cityDetails);
-			setEDCRmandatoryNOC(plan);
 		}
 		
 		InputStream reportStream = generateReport(plan, amd, dcrApplication);
 		saveOutputReport(dcrApplication, reportStream, plan);
 		return plan;
+	}
+	
+	private Plan  getAbortedSupportPlan(Exception e) {
+		Plan pl=new Plan();
+		pl.addError("1", "Dxf file aborted while extraction");
+		pl.addError("2", e.getCause().getMessage());
+		
+		return pl;
 	}
 	
 	public boolean checkUnits(Plan plan) {
@@ -369,53 +378,59 @@ public class PlanService {
 
 			FeatureProcess rule = null;
 			String str = ruleClass.getRuleClass().getSimpleName();
-			str = str.substring(0, 1).toLowerCase() + str.substring(1);
-			LOG.debug("Looking for bean " + str);
-			// when amendments are not present
-			if (amd.getDetails().isEmpty() || index == -1)
-				rule = (FeatureProcess) specificRuleService.find(ruleClass.getRuleClass().getSimpleName());
-			// when amendments are present
-			else {
-				if (index >= 0) {
-					// find amendment specific beans
-					for (int i = index; i < length; i++) {
-						if (a[i].getChanges().keySet().contains(ruleClass.getRuleClass().getSimpleName())) {
-							String strNew = str + "_" + a[i].getDateOfBylawString();
-							rule = (FeatureProcess) specificRuleService.find(strNew);
-							if (rule != null)
-								break;
+			try {
+				str = str.substring(0, 1).toLowerCase() + str.substring(1);
+				LOG.debug("Looking for bean " + str);
+				// when amendments are not present
+				if (amd.getDetails().isEmpty() || index == -1)
+					rule = (FeatureProcess) specificRuleService.find(ruleClass.getRuleClass().getSimpleName());
+				// when amendments are present
+				else {
+					if (index >= 0) {
+						// find amendment specific beans
+						for (int i = index; i < length; i++) {
+							if (a[i].getChanges().keySet().contains(ruleClass.getRuleClass().getSimpleName())) {
+								String strNew = str + "_" + a[i].getDateOfBylawString();
+								rule = (FeatureProcess) specificRuleService.find(strNew);
+								if (rule != null)
+									break;
+							}
 						}
-					}
-					// when amendment specific beans not found
-					if (rule == null) {
-						rule = (FeatureProcess) specificRuleService.find(ruleClass.getRuleClass().getSimpleName());
+						// when amendment specific beans not found
+						if (rule == null) {
+							rule = (FeatureProcess) specificRuleService.find(ruleClass.getRuleClass().getSimpleName());
+						}
+
 					}
 
 				}
 
-			}
+				if (rule != null) {
+					LOG.debug("Looking for bean resulted in " + rule.getClass().getSimpleName());
+					rule.process(plan);
+					LOG.debug("Completed Process " + rule.getClass().getSimpleName() + "  " + new Date());	
+				}
+				
+				// check occupancy type is present or not
+				if (ruleClass.getRuleClass().isAssignableFrom(Coverage.class)) {
+					OccupancyTypeHelper occupancyTypeHelper = plan.getVirtualBuilding().getMostRestrictiveFarHelper() != null
+							? plan.getVirtualBuilding().getMostRestrictiveFarHelper()
+							: null;
+					if (occupancyTypeHelper == null && !isOccupancyTypeHelperValid(occupancyTypeHelper)) {
+						plan.addError("buildupArea-occ", DxfFileConstants.BLT_UP_AREA_ERROR_MSG);
+						return plan;
+					}
+				}
 
-			if (rule != null) {
-				LOG.debug("Looking for bean resulted in " + rule.getClass().getSimpleName());
-				rule.process(plan);
-				LOG.debug("Completed Process " + rule.getClass().getSimpleName() + "  " + new Date());	
-			}
-			
-			// check occupancy type is present or not
-			if (ruleClass.getRuleClass().isAssignableFrom(Coverage.class)) {
-				OccupancyTypeHelper occupancyTypeHelper = plan.getVirtualBuilding().getMostRestrictiveFarHelper() != null
-						? plan.getVirtualBuilding().getMostRestrictiveFarHelper()
-						: null;
-				if (occupancyTypeHelper == null && !isOccupancyTypeHelperValid(occupancyTypeHelper)) {
-					plan.addError("buildupArea-occ", DxfFileConstants.BLT_UP_AREA_ERROR_MSG);
+				if (plan.getErrors().containsKey(DxfFileConstants.OCCUPANCY_ALLOWED_KEY)
+						|| plan.getErrors().containsKey("units not in meters")
+						|| plan.getErrors().containsKey(DxfFileConstants.OCCUPANCY_PO_NOT_ALLOWED_KEY))
 					return plan;
-				}
+			
+			}catch (Exception e) {
+				e.printStackTrace();
+				plan.addError("Error "+str, "Error occured while processing "+str+" !");
 			}
-
-			if (plan.getErrors().containsKey(DxfFileConstants.OCCUPANCY_ALLOWED_KEY)
-					|| plan.getErrors().containsKey("units not in meters")
-					|| plan.getErrors().containsKey(DxfFileConstants.OCCUPANCY_PO_NOT_ALLOWED_KEY))
-				return plan;
 		}
 		return plan;
 	}
