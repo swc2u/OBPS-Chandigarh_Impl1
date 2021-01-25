@@ -342,10 +342,14 @@ public class CDGAdditionalService {
 	
 	public static BigDecimal inchToFeet(BigDecimal value) {
 		BigDecimal feet=BigDecimal.ZERO;
-		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
-			return feet;
-		feet=value.divide(new BigDecimal("12"),MathContext.DECIMAL32);
-		feet=feet.setScale(ROUND_UP_SCALE,BigDecimal.ROUND_HALF_UP);
+		try {
+			if(value==null || BigDecimal.ZERO.compareTo(value)>0)
+				return feet;
+			feet=value.divide(new BigDecimal("12"),MathContext.DECIMAL32);
+			feet=feet.setScale(ROUND_UP_SCALE,BigDecimal.ROUND_HALF_UP);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 		return feet;
 	}
 	
@@ -466,9 +470,13 @@ public class CDGAdditionalService {
 	}
 	
 	public static BigDecimal inchtoFeetArea(BigDecimal value) {
-		if(value!=null && value.longValue()!=0)
-		value=value.divide(new BigDecimal(144),MathContext.DECIMAL32);
-		value=value.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
+		try {
+			if(value!=null && value.longValue()!=0)
+				value=value.divide(new BigDecimal(144),MathContext.DECIMAL32);
+				value=value.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 		return value;
 	}
 	
