@@ -270,7 +270,11 @@ public class PayUMoneyAdaptor implements PaymentGatewayAdaptor {
 		receiptHeader = (ReceiptHeader) qry.getSingleResult();
 		payuResponce.setAdditionalInfo6(receiptHeader.getConsumerCode().replace("-", "").replace("/", ""));
 		payuResponce.setAdditionalInfo2(ulbCode);
-		payuResponce.setBankId(new BigDecimal(responseMap.get("bank_ref_num")).intValue());
+		if(responseMap.get("bank_ref_num").matches("-?\\d+")){
+			payuResponce.setBankId(new BigDecimal(responseMap.get("bank_ref_num")).intValue());
+		} else {
+			payuResponce.setBankId(1);
+		}
 		payuResponce.setBankReferenceNo(responseMap.get("card_no"));
 		
 		
