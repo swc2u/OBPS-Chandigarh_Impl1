@@ -1138,13 +1138,26 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 					if (occupancy != null && occupancy.getTypeHelper() != null
 							&& !BpaUtils.isOccupancyExcludedFromFar(occupancy.getTypeHelper())) {
 						BigDecimal floorArea = occupancy.getFloorArea();
-						if (plan.getDrawingPreference().getInMeters())
+						BigDecimal builtUpArea = occupancy.getBuiltUpArea();
+						if (plan.getDrawingPreference().getInMeters()) {
 							floorArea = floorArea.multiply(SQMT_SQFT_MULTIPLIER).multiply(multiplier).setScale(2,
 									BigDecimal.ROUND_UP);
-						else if (plan.getDrawingPreference().getInFeets())
+							builtUpArea = builtUpArea.multiply(SQMT_SQFT_MULTIPLIER).multiply(multiplier).setScale(2,
+									BigDecimal.ROUND_UP);
+						}
+
+						else if (plan.getDrawingPreference().getInFeets()) {
 							floorArea = floorArea.divide(new BigDecimal("144"), 2, RoundingMode.HALF_UP);
-						totalProposedAreaInSqft = totalProposedAreaInSqft.add(floorArea).setScale(2,
-								BigDecimal.ROUND_UP);
+							builtUpArea = builtUpArea.divide(new BigDecimal("144"), 2, RoundingMode.HALF_UP);
+						}
+
+						if (floor.getNumber() >= 0) {
+							totalProposedAreaInSqft = totalProposedAreaInSqft.add(floorArea).setScale(2,
+									BigDecimal.ROUND_UP);
+						} else {
+							totalProposedAreaInSqft = totalProposedAreaInSqft.add(builtUpArea).setScale(2,
+									BigDecimal.ROUND_UP);
+						}
 					}
 				}
 			}
@@ -1249,8 +1262,13 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			if (plan.getDrawingPreference().getInMeters()) {
 				for (BuildingDetail building : buildingDetails) {
 					for (ApplicationFloorDetail floor : building.getApplicationFloorDetails()) {
-						estimatedAmount = estimatedAmount.add(floor.getFloorArea().multiply(SQMT_SQFT_MULTIPLIER)
-								.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+						if (floor.getFloorNumber() >= 0) {
+							estimatedAmount = estimatedAmount.add(floor.getFloorArea().multiply(SQMT_SQFT_MULTIPLIER)
+									.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+						} else {
+							estimatedAmount = estimatedAmount.add(floor.getPlinthArea().multiply(SQMT_SQFT_MULTIPLIER)
+									.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+						}
 					}
 				}
 				for (LetterToPartyFees fees : letterToPartyFees) {
@@ -1260,8 +1278,13 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			} else if (plan.getDrawingPreference().getInFeets()) {
 				for (BuildingDetail building : buildingDetails) {
 					for (ApplicationFloorDetail floor : building.getApplicationFloorDetails()) {
-						estimatedAmount = estimatedAmount
-								.add(floor.getFloorArea().multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+						if (floor.getFloorNumber() >= 0) {
+							estimatedAmount = estimatedAmount.add(
+									floor.getFloorArea().multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+						} else {
+							estimatedAmount = estimatedAmount.add(
+									floor.getPlinthArea().multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+						}
 					}
 				}
 				for (LetterToPartyFees fees : letterToPartyFees) {
