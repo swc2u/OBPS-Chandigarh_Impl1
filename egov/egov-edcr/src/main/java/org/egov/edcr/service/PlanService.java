@@ -126,7 +126,7 @@ public class PlanService {
 	private Plan  getAbortedSupportPlan(Exception e) {
 		Plan pl=new Plan();
 		pl.addError("1", "Dxf file aborted while extraction");
-		pl.addError("2", e.getCause().getMessage());
+		pl.addError("2", e.getMessage());
 		
 		return pl;
 	}
