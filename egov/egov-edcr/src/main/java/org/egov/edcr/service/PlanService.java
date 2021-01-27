@@ -126,14 +126,14 @@ public class PlanService {
 	private Plan  getAbortedSupportPlan(Exception e) {
 		Plan pl=new Plan();
 		pl.addError("1", "Your drawing is aborted due to one of the following reasons:");
-		pl.addError("2", "1. The FAR layers as mentioned in the drawing manual are not provided in the required occupancy colour in dxf file.");
-		pl.addError("3", "2. The carpet area layer as mentioned in the drawing manual are not provided in.");
-		pl.addError("4", "3. Building foot print layer for setback as mentioned in the drawing manual are not provided in the required occupancy colour in dxf file.");
-		pl.addError("5", "4. Plan_Info layer data is not provided as per drawing manual requirements.");
-		pl.addError("6", "5. Main Gate and Wicket Gate are not provided as per drawing manual.");
-		pl.addError("7", "6. Passage is not provided in the drawing, but the layer is present in the dxf flie.");
-		pl.addError("8", "7. Parapet is not provided in the drawing, but the layer is present in the dxf.");
-		pl.addError("9", "8. All the layer that are not in use are not deleted from thed drawing.");
+		pl.addError("2", "The FAR layers as mentioned in the drawing manual are not provided in the required occupancy colour in dxf file.");
+		pl.addError("3", "The carpet area layers as mentioned in the drawing manual are not provided in.");
+		pl.addError("4", "Building foot print layers for setback as mentioned in the drawing manual are not provided in the required occupancy colour in dxf file.");
+		pl.addError("5", "Plan_Info layer data is not provided as per drawing manual requirements.");
+		pl.addError("6", "Main Gate and Wicket Gate are not provided as per drawing manual.");
+		pl.addError("7", "Passage is not provided in the drawing, but the layer is present in the dxf flie.");
+		pl.addError("8", "Parapet is not provided in the drawing, but the layer is present in the dxf.");
+		pl.addError("9", "All the layers that are not in use are not deleted from the drawing.");
 		
 		return pl;
 	}
