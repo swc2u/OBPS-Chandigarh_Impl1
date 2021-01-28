@@ -442,6 +442,7 @@ public class PlanService {
 		return plan;
 	}
 	
+	
 	private boolean isOccupancyTypeHelperValid(OccupancyTypeHelper occupancyTypeHelper) {
 		boolean flage=false;
 		if(occupancyTypeHelper!=null && occupancyTypeHelper.getType()!=null && occupancyTypeHelper.getType().getCode()!=null && occupancyTypeHelper.getSubtype()!=null && occupancyTypeHelper.getSubtype().getCode()!=null)
