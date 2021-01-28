@@ -457,5 +457,4 @@
 <script
 	src="<cdn:url value='/resources/js/app/citizen-view-helper.js?rnd=${app_release_no}'/>"></script>
 <script
-	src="<cdn:url value='/resources/js/app/noc-helper.js?rnd=${app_release_no}'/>"></script>
-	
+	src="<cdn:url value='/resources/js/app/noc-helper.js?rnd=${app_release_no}'/>"></script>	
