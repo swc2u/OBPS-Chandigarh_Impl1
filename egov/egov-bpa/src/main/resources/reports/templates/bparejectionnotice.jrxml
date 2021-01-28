@@ -158,7 +158,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["For Secretary"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Estate Office"]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="30" width="65" height="20" uuid="4e4eb8e9-5fa0-4156-895b-3214d47f3736"/>
@@ -185,6 +185,20 @@
 				<reportElement x="285" y="40" width="95" height="23" uuid="04a0d406-7d35-4d6b-92fe-52e792b2d0a7"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="343" y="0" width="212" height="20" uuid="fd5555ee-42d5-42a5-bbf2-aef92f33677a"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["UT Administration"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="343" y="20" width="212" height="20" uuid="9f7358a8-2b40-44fa-bf83-2785b4e76a27"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Chandiarh"]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>
