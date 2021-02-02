@@ -86,6 +86,7 @@ public class Block extends Measurement {
     private List<Measurement> plantationGreenStripes;
     private List<BigDecimal> roofTanks;
     private List<BigDecimal> stairCovers;
+    private List<BigDecimal> stairCoversArea;
     private List<BigDecimal> chimneys;
     private List<BigDecimal> parapets;
     private List<TerraceUtility> terraceUtilities;
@@ -393,5 +394,15 @@ public class Block extends Measurement {
     public void setParapetWithColor(List<Measurement> parapetWithColor) {
         this.parapetWithColor = parapetWithColor;
     }
+
+	public List<BigDecimal> getStairCoversArea() {
+		return stairCoversArea;
+	}
+
+	public void setStairCoversArea(List<BigDecimal> stairCoversArea) {
+		this.stairCoversArea = stairCoversArea;
+	}
+    
+    
     
 }
