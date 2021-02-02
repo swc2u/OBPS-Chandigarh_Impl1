@@ -135,24 +135,40 @@ public abstract class AbstractQuartzJob extends QuartzJobBean implements Generic
 		ApplicationThreadLocals.setUserId(this.userService.getUserByUsername(this.userName).getId());
 		if (cityDataRequired) {
 			// TODO: get the city by tenant
-			City city = this.cityService.findAll().get(0);
-			if (city != null) {
-				ApplicationThreadLocals.setCityCode(city.getCode());
-				ApplicationThreadLocals.setCityName(city.getName());
-				ApplicationThreadLocals.setDistrictCode(city.getDistrictCode());
-				ApplicationThreadLocals.setDistrictName(city.getDistrictName());
+			try {
+				City city = this.cityService.findAll().get(0);
+				if (city != null) {
+					ApplicationThreadLocals.setCityCode(city.getCode());
+					ApplicationThreadLocals.setCityName(city.getName());
+					ApplicationThreadLocals.setDistrictCode(city.getDistrictCode());
+					ApplicationThreadLocals.setDistrictName(city.getDistrictName());
+					ApplicationThreadLocals.setStateName(clientId);
+					ApplicationThreadLocals.setGrade(city.getGrade());
+					ApplicationThreadLocals.setDomainName(city.getDomainURL());
+					ApplicationThreadLocals.setDomainURL("https://" + city.getDomainURL());
+				} else {
+					LOGGER.warn("Unable to find the city");
+				}
+				CityPreferences cityPreferences = city.getPreferences();
+				if (cityPreferences != null)
+					ApplicationThreadLocals.setMunicipalityName(cityPreferences.getMunicipalityName());
+				else
+					LOGGER.warn("City preferences not set for {}", city.getName());
+
+			} catch (IndexOutOfBoundsException e) {
+				//The below code has been written to handle production issue of City not being found.
+				ApplicationThreadLocals.setCityCode("0002");
+				ApplicationThreadLocals.setCityName("Chandigarh");
+				ApplicationThreadLocals.setDistrictCode("002");
+				ApplicationThreadLocals.setDistrictName("Chandigarh");
 				ApplicationThreadLocals.setStateName(clientId);
-				ApplicationThreadLocals.setGrade(city.getGrade());
-				ApplicationThreadLocals.setDomainName(city.getDomainURL());
-				ApplicationThreadLocals.setDomainURL("https://"+city.getDomainURL());
-			} else {
-				LOGGER.warn("Unable to find the city");
+				ApplicationThreadLocals.setGrade("Corp");
+				ApplicationThreadLocals.setDomainName("obps.chandigarhsmartcity.in");
+				ApplicationThreadLocals.setDomainURL("https://" + "obps.chandigarhsmartcity.in");
+				ApplicationThreadLocals.setMunicipalityName("Chandigarh Administration");
+				
+
 			}
-			CityPreferences cityPreferences = city.getPreferences();
-			if (cityPreferences != null)
-				ApplicationThreadLocals.setMunicipalityName(cityPreferences.getMunicipalityName());
-			else
-				LOGGER.warn("City preferences not set for {}", city.getName());
 		}
 	}
 }

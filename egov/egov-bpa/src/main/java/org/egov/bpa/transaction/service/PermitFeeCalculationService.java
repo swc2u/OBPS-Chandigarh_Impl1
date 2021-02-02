@@ -93,6 +93,7 @@ import org.egov.infra.admin.master.service.ModuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @author vinoth
@@ -1147,8 +1148,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 						}
 
 						else if (plan.getDrawingPreference().getInFeets()) {
-							floorArea = floorArea.divide(new BigDecimal("144"), 2, RoundingMode.HALF_UP);
-							builtUpArea = builtUpArea.divide(new BigDecimal("144"), 2, RoundingMode.HALF_UP);
+							floorArea = floorArea.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
+							builtUpArea = builtUpArea.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
 						}
 
 						if (floor.getNumber() >= 0) {
@@ -1161,13 +1162,19 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 					}
 				}
 			}
+			// Adding mumty area
+			if (CollectionUtils.isEmpty(block.getStairCoversArea())) {
+				BigDecimal totalMumtyArea = block.getStairCoversArea().stream().reduce(BigDecimal::add).get();
+				totalProposedAreaInSqft.add(totalMumtyArea);
+			}
 		}
+
 		BigDecimal totalExitingFloorAreaInSqft = BigDecimal.ZERO;
 		if (BpaConstants.ALTERATION.equals(plan.getServiceType())
 				|| BpaConstants.ADDITION_OR_EXTENSION.equals(plan.getServiceType())) {
 			totalExitingFloorAreaInSqft = plan.getVirtualBuilding().getTotalExistingFloorArea();
 			if (plan.getDrawingPreference().getInFeets())
-				totalExitingFloorAreaInSqft = totalExitingFloorAreaInSqft.divide(new BigDecimal("144"), 2,
+				totalExitingFloorAreaInSqft = totalExitingFloorAreaInSqft.divide(SQINCH_SQFT_DIVIDER, 2,
 						RoundingMode.HALF_UP);
 		}
 
@@ -1308,6 +1315,14 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 							}
 						}
 					}
+
+					// Adding mumty area
+					if (CollectionUtils.isEmpty(b.getStairCoversArea())) {
+						BigDecimal totalMumtyArea = b.getStairCoversArea().stream().reduce(BigDecimal::add).get();
+						estimatedAmount = estimatedAmount.add(totalMumtyArea.multiply(SQMT_SQFT_MULTIPLIER)
+								.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+					}
+
 				}
 			} else if (plan.getDrawingPreference().getInFeets()) {
 				for (Block b : plan.getBlocks()) {
@@ -1325,6 +1340,14 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 							}
 						}
 					}
+
+					// Adding mumty area
+					if (CollectionUtils.isEmpty(b.getStairCoversArea())) {
+						BigDecimal totalMumtyArea = b.getStairCoversArea().stream().reduce(BigDecimal::add).get();
+						estimatedAmount = estimatedAmount
+								.add(totalMumtyArea.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+					}
+
 				}
 			}
 			if (estimatedAmount.compareTo(TEN_LAKH) >= 0) {
@@ -1491,9 +1514,9 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 						if (BpaConstants.A_AF.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
 							BigDecimal buildupArea = occupancy.getBuiltUpArea();
 							if (plan.getDrawingPreference().getInFeets())
-								buildupArea = buildupArea.divide(new BigDecimal("144"), 2, RoundingMode.HALF_UP);
+								buildupArea = buildupArea.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
 							else if (plan.getDrawingPreference().getInMeters())
-								buildupArea = buildupArea.multiply(new BigDecimal("10.764"));
+								buildupArea = buildupArea.multiply(SQMT_SQFT_MULTIPLIER);
 							if (floor.getNumber() == 0) {
 								for (LetterToPartyFees fees : letterToPartyFees) {
 									if (fees.getFloorNumber() == 0) {
@@ -1635,7 +1658,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 						if (plan.getDrawingPreference().getInFeets())
 							area = area.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
 						else if (plan.getDrawingPreference().getInMeters())
-							area = area.multiply(new BigDecimal("10.764")).setScale(2, BigDecimal.ROUND_HALF_UP);
+							area = area.multiply(SQMT_SQFT_MULTIPLIER).setScale(2, BigDecimal.ROUND_HALF_UP);
 						totalArea = totalArea.add(area);
 					}
 
@@ -1709,4 +1732,5 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		}
 		return totalAmount;
 	}
+
 }
