@@ -94,6 +94,7 @@ public class PlanService {
 			setEDCRmandatoryNOC(plan);
 		}catch (Exception e) {
 			LOG.error(e.getMessage());
+			e.printStackTrace();
 			plan=getAbortedSupportPlan(e);
 		}
 		
