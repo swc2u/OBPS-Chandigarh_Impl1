@@ -1163,7 +1163,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 				}
 			}
 			// Adding mumty area
-			if (CollectionUtils.isEmpty(block.getStairCoversArea())) {
+			if (!CollectionUtils.isEmpty(block.getStairCoversArea())) {
 				BigDecimal totalMumtyArea = block.getStairCoversArea().stream().reduce(BigDecimal::add).get();
 				totalProposedAreaInSqft.add(totalMumtyArea);
 			}
@@ -1317,7 +1317,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 					}
 
 					// Adding mumty area
-					if (CollectionUtils.isEmpty(b.getStairCoversArea())) {
+					if (!CollectionUtils.isEmpty(b.getStairCoversArea())) {
 						BigDecimal totalMumtyArea = b.getStairCoversArea().stream().reduce(BigDecimal::add).get();
 						estimatedAmount = estimatedAmount.add(totalMumtyArea.multiply(SQMT_SQFT_MULTIPLIER)
 								.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
@@ -1342,7 +1342,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 					}
 
 					// Adding mumty area
-					if (CollectionUtils.isEmpty(b.getStairCoversArea())) {
+					if (!CollectionUtils.isEmpty(b.getStairCoversArea())) {
 						BigDecimal totalMumtyArea = b.getStairCoversArea().stream().reduce(BigDecimal::add).get();
 						estimatedAmount = estimatedAmount
 								.add(totalMumtyArea.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
