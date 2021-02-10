@@ -244,5 +244,6 @@ public class StairCover extends FeatureProcess {
 		} catch (Exception e) {
 			pl.addError(key, key + " is not valid.");
 		}
+		block.setStairCoversArea(stairCoversArea);
 	}
 }
