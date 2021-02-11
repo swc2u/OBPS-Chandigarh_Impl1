@@ -297,10 +297,10 @@ public class PermitNocApplicationService {
 					}
 				}else if(boundaryType.equalsIgnoreCase(BpaConstants.RURAL)){
 					edcrPlanInfo.getPlan().getPlanInformation().setNocFireDept("YES");
-					edcrPlanInfo.getPlan().getPlanInformation().setNocTehsildarDept("YES");
+					//edcrPlanInfo.getPlan().getPlanInformation().setNocTehsildarDept("YES");
 					edcrPlanInfo.getPlan().getPlanInformation().setNocManimajaraDept("YES");
 					edcrPlanInfo.getPlan().getPlanInformation().setNocElectricalDept("YES");
-					edcrPlanInfo.getPlan().getPlanInformation().setNocPollutionDept("YES");
+					//edcrPlanInfo.getPlan().getPlanInformation().setNocPollutionDept("YES");
 					edcrPlanInfo.getPlan().getPlanInformation().setNocPHDept("YES");
 					edcrPlanInfo.getPlan().getPlanInformation().setNocRoad2Dept("YES");
 				}

@@ -83,339 +83,383 @@ import static org.egov.bpa.utils.BpaConstants.FWD_TO_OVERSEER_AFTER_TS_INSPN;
  * The Class ApplicationCommonWorkflow.
  */
 public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplicationWorkflowCustom {
-    private static final Logger LOG = LoggerFactory.getLogger(BpaApplicationWorkflowCustomImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BpaApplicationWorkflowCustomImpl.class);
 
-    @Autowired
-    private SecurityUtils securityUtils;
+	@Autowired
+	private SecurityUtils securityUtils;
 
-    @Autowired
-    private PositionMasterService positionMasterService;
+	@Autowired
+	private PositionMasterService positionMasterService;
 
-    @Autowired
-    @Qualifier("workflowService")
-    private SimpleWorkflowService<BpaApplication> bpaApplicationWorkflowService;
+	@Autowired
+	@Qualifier("workflowService")
+	private SimpleWorkflowService<BpaApplication> bpaApplicationWorkflowService;
 
-    @Autowired
-    private BpaStatusService bpaStatusService;
+	@Autowired
+	private BpaStatusService bpaStatusService;
 
-    @Autowired
-    private BpaWorkFlowService bpaWorkFlowService;
+	@Autowired
+	private BpaWorkFlowService bpaWorkFlowService;
 
-    @Autowired
-    private BpaUtils bpaUtils;
-    @Autowired
-    private LettertoPartyService lettertoPartyService;
-    @Autowired
-    private WorkFlowMatrixService workFlowMatrixService;
-    @Autowired
-    private BpaAppConfigUtil bpaAppConfigUtil;
+	@Autowired
+	private BpaUtils bpaUtils;
+	@Autowired
+	private LettertoPartyService lettertoPartyService;
+	@Autowired
+	private WorkFlowMatrixService workFlowMatrixService;
+	@Autowired
+	private BpaAppConfigUtil bpaAppConfigUtil;
 
-    @Autowired
-    public BpaApplicationWorkflowCustomImpl() {
+	@Autowired
+	public BpaApplicationWorkflowCustomImpl() {
 
-    }
+	}
 
-    @Override
-    @Transactional
-    public void createCommonWorkflowTransition(final BpaApplication application,
-                                               Long approvalPosition, final String approvalComent, final String additionalRule,
-                                               final String workFlowAction, final BigDecimal amountRule) {
+	@Override
+	@Transactional
+	public void createCommonWorkflowTransition(final BpaApplication application, Long approvalPosition,
+			final String approvalComent, final String additionalRule, final String workFlowAction,
+			final BigDecimal amountRule) {
 
-        if (LOG.isDebugEnabled())
-            LOG.debug(" Create WorkFlow Transition Started  ...");
-        final User user = securityUtils.getCurrentUser();
-        final DateTime currentDate = new DateTime();
-        Position pos = null;
-        Assignment wfInitiator = null;
-        if (application.getCreatedBy() != null)
-            wfInitiator = bpaWorkFlowService.getWorkFlowInitiator(application.getState(), application.getCreatedBy());
-        User ownerUser = null;
-        if (approvalPosition != null && approvalPosition > 0)
-            pos = positionMasterService.getPositionById(approvalPosition);
-		if(pos != null)
-			ownerUser = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(), new Date()).get(0).getEmployee();
-        WorkFlowMatrix wfmatrix;
-        if (null == application.getState()) {
-            String pendingAction = null;
-            if(!bpaUtils.isDocScrutinyIntegrationRequired())
-                pendingAction = FWD_TO_CLERK_PENDING;
-            if (bpaUtils.applicationInitiatedByNonEmployee(application.getCreatedBy()) || (application.getAdmissionfeeAmount() != null
-                                                                                           && application.getAdmissionfeeAmount().compareTo(BigDecimal.ZERO) == 0))
-                wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null,
-                        null, additionalRule, BpaConstants.WF_NEW_STATE, pendingAction);
-            else
-                wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null,
-                        null, additionalRule, BpaConstants.WF_CREATED_STATE, pendingAction);
+		if (LOG.isDebugEnabled())
+			LOG.debug(" Create WorkFlow Transition Started  ...");
+		final User user = securityUtils.getCurrentUser();
+		final DateTime currentDate = new DateTime();
+		Position pos = null;
+		Assignment wfInitiator = null;
+		if (application.getCreatedBy() != null)
+			wfInitiator = bpaWorkFlowService.getWorkFlowInitiator(application.getState(), application.getCreatedBy());
+		User ownerUser = null;
+		if (approvalPosition != null && approvalPosition > 0)
+			pos = positionMasterService.getPositionById(approvalPosition);
+		if (pos != null)
+			ownerUser = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(), new Date()).get(0)
+					.getEmployee();
+		WorkFlowMatrix wfmatrix;
+		if (null == application.getState()) {
+			String pendingAction = null;
+			if (!bpaUtils.isDocScrutinyIntegrationRequired())
+				pendingAction = FWD_TO_CLERK_PENDING;
+			if (bpaUtils.applicationInitiatedByNonEmployee(application.getCreatedBy())
+					|| (application.getAdmissionfeeAmount() != null
+							&& application.getAdmissionfeeAmount().compareTo(BigDecimal.ZERO) == 0))
+				wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null,
+						additionalRule, BpaConstants.WF_NEW_STATE, pendingAction);
+			else
+				wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null,
+						additionalRule, BpaConstants.WF_CREATED_STATE, pendingAction);
 
-            if (wfmatrix != null) {
-                if (pos == null) {
-                    SiteDetail siteDetail = application.getSiteDetail().get(0);
+			if (wfmatrix != null) {
+				if (pos == null) {
+					SiteDetail siteDetail = application.getSiteDetail().get(0);
 					pos = bpaUtils.getUserPositionByZone(wfmatrix.getNextDesignation(),
 							bpaUtils.getBoundaryForWorkflow(siteDetail).getId());
-                    List<Assignment> assignments = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(), new Date());
-                    if(!assignments.isEmpty())
-                        ownerUser = assignments.get(0).getEmployee();
-                }
-                BpaStateInfo bpaStateInfo = bpaWorkFlowService.getBpaStateInfo(application.getCurrentState(), application.getStateHistory(), application.getTownSurveyorInspectionRequire(), new BpaStateInfo(), wfmatrix, workFlowAction);
+					List<Assignment> assignments = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(),
+							new Date());
+					if (!assignments.isEmpty())
+						ownerUser = assignments.get(0).getEmployee();
+				}
+				BpaStateInfo bpaStateInfo = bpaWorkFlowService.getBpaStateInfo(application.getCurrentState(),
+						application.getStateHistory(), application.getTownSurveyorInspectionRequire(),
+						new BpaStateInfo(), wfmatrix, workFlowAction);
 
-                application.setStatus(getStatusByCurrentMatrxiStatus(wfmatrix));
-                application.transition().start()
-                           .withSLA(bpaWorkFlowService.calculateDueDate(bpaAppConfigUtil.getSlaBpaApplication()))
-                           .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                           .withComments(approvalComent).withRefFileId(application.getWfFileRefId()).withInitiator(wfInitiator != null ? wfInitiator.getPosition() : null)
-                           .withStateValue(wfmatrix.getNextState()).withDateInfo(new Date()).withOwner(pos).withOwner(ownerUser)
-                           .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK).withExtraInfo(bpaStateInfo);
-            }
+				application.setStatus(getStatusByCurrentMatrxiStatus(wfmatrix));
+				application.transition().start()
+						.withSLA(bpaWorkFlowService.calculateDueDate(bpaAppConfigUtil.getSlaBpaApplication()))
+						.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+						.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+						.withInitiator(wfInitiator != null ? wfInitiator.getPosition() : null)
+						.withStateValue(wfmatrix.getNextState()).withDateInfo(new Date()).withOwner(pos)
+						.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
+						.withNatureOfTask(BpaConstants.NATURE_OF_WORK).withExtraInfo(bpaStateInfo);
+			}
 
-        } else if (BpaConstants.WF_PERMIT_FEE_COLL_PENDING.equalsIgnoreCase(workFlowAction)) {
-            if (LOG.isInfoEnabled())
-                LOG.info("**********Permit Fee Collection Pending******* Application Number---------->>>>>"+application.getApplicationNumber());
-            wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, amountRule,
-                    additionalRule, application.getCurrentState().getValue(), application.getState().getNextAction());
-            if (LOG.isInfoEnabled())
-                LOG.info(" *************workflow matrix**************"+wfmatrix);
-            if (LOG.isInfoEnabled())
-                LOG.info(" *************Date INFO*************"+currentDate);
-            if (LOG.isInfoEnabled())
-                LOG.info(" *************User INFO*************"+user);
-            application.transition().progressWithStateCopy()
-                       .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                       .withComments(approvalComent)
-                       .withRefFileId(application.getWfFileRefId())
-                       .withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate())
-                       .withOwner(pos).withOwner(ownerUser)
-                       .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK);
-        } else if (BpaConstants.WF_APPROVE_BUTTON.equalsIgnoreCase(workFlowAction)
-                   && (BpaConstants.APPLICATION_STATUS_APPROVED.equalsIgnoreCase(application.getStatus().getCode())
-                       || BpaConstants.APPLICATION_STATUS_NOCUPDATED.equalsIgnoreCase(application.getStatus().getCode()))) {
-            if(!bpaUtils.checkAnyTaxIsPendingToCollect(application.getDemand()))
-            	if(application.getApplicationType().getName().equals(BpaConstants.LOWRISK))
-                wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null,
-                            additionalRule, "Application Approval Pending", "Forwarded to SDO Building for Approval");
-            	else
-                wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null,
-                        additionalRule, "Final Approval Process initiated", "Permit Fee Collection Pending");
-            else
-                wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, amountRule,
-                    additionalRule, application.getCurrentState().getValue(), application.getState().getNextAction());
+		} else if (BpaConstants.WF_PERMIT_FEE_COLL_PENDING.equalsIgnoreCase(workFlowAction)) {
+			if (LOG.isInfoEnabled())
+				LOG.info("**********Permit Fee Collection Pending******* Application Number---------->>>>>"
+						+ application.getApplicationNumber());
+			wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, amountRule,
+					additionalRule, application.getCurrentState().getValue(), application.getState().getNextAction());
+			if (LOG.isInfoEnabled())
+				LOG.info(" *************workflow matrix**************" + wfmatrix);
+			if (LOG.isInfoEnabled())
+				LOG.info(" *************Date INFO*************" + currentDate);
+			if (LOG.isInfoEnabled())
+				LOG.info(" *************User INFO*************" + user);
+			application.transition().progressWithStateCopy()
+					.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+					.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+					.withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos)
+					.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
+					.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+		} else if (BpaConstants.WF_APPROVE_BUTTON.equalsIgnoreCase(workFlowAction)
+				&& (BpaConstants.APPLICATION_STATUS_APPROVED.equalsIgnoreCase(application.getStatus().getCode())
+						|| BpaConstants.APPLICATION_STATUS_NOCUPDATED
+								.equalsIgnoreCase(application.getStatus().getCode()))) {
+			if (!bpaUtils.checkAnyTaxIsPendingToCollect(application.getDemand()))
+				if (application.getApplicationType().getName().equals(BpaConstants.LOWRISK))
+					wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null,
+							additionalRule, "Application Approval Pending", "Forwarded to SDO Building for Approval");
+				else
+					wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null,
+							additionalRule, "Final Approval Process initiated", "Permit Fee Collection Pending");
+			else
+				wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, amountRule,
+						additionalRule, application.getCurrentState().getValue(),
+						application.getState().getNextAction());
 
-            BpaStatus status;
-            if(application.getApplicationType().getName().equals(BpaConstants.LOWRISK))
-            	status = bpaStatusService.findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE, BpaConstants.APPLICATION_STATUS_ACCEPTED_AS_SCRUTINIZED);
-            else
-             status = bpaStatusService.findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE, BpaConstants.APPLICATION_STATUS_APPROVED);
-            if (status != null)
-                application.setStatus(status);
+			BpaStatus status;
+			if (application.getApplicationType().getName().equals(BpaConstants.LOWRISK))
+				status = bpaStatusService.findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE,
+						BpaConstants.APPLICATION_STATUS_ACCEPTED_AS_SCRUTINIZED);
+			else
+				status = bpaStatusService.findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE,
+						BpaConstants.APPLICATION_STATUS_APPROVED);
+			if (status != null)
+				application.setStatus(status);
 
-        	if(application.getApplicationType().getName().equals(BpaConstants.LOWRISK))
-        		application.transition().end()
-                .withSLA(bpaWorkFlowService.calculateDueDate(bpaAppConfigUtil.getSlaBpaApplication()))
-                .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                .withComments(approvalComent)
-                .withRefFileId(application.getWfFileRefId())
-                .withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate())
-                .withOwner(pos).withOwner(ownerUser)
-                .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK);
-        	else
-               application.transition().progressWithStateCopy()
-                       .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                       .withComments(approvalComent)
-                       .withRefFileId(application.getWfFileRefId())
-                       .withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate())
-                       .withOwner(pos).withOwner(ownerUser)
-                       .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK);
-        } else if (BpaConstants.WF_REJECT_BUTTON.equalsIgnoreCase(workFlowAction)) {
-            wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null,
-                    null, additionalRule, BpaConstants.WF_REJECT_STATE, null);
-            application.setStatus(getStatusByPassingCode(BpaConstants.WF_REJECT_STATE));
-            application.transition().progressWithStateCopy()
-                       .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                       .withComments(approvalComent)
-                       .withRefFileId(application.getWfFileRefId())
-                       .withStateValue(BpaConstants.WF_REJECT_STATE).withDateInfo(currentDate.toDate())
-                       .withOwner(pos).withOwner(ownerUser)
-                       .withNextAction(wfmatrix.getNextAction())
-                       .withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+			if (application.getApplicationType().getName().equals(BpaConstants.LOWRISK))
+				application.transition().end()
+						.withSLA(bpaWorkFlowService.calculateDueDate(bpaAppConfigUtil.getSlaBpaApplication()))
+						.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+						.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+						.withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos)
+						.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
+						.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+			else
+				application.transition().progressWithStateCopy()
+						.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+						.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+						.withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos)
+						.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
+						.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+		} else if (BpaConstants.WF_REJECT_BUTTON.equalsIgnoreCase(workFlowAction)) {
+			wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null, additionalRule,
+					BpaConstants.WF_REJECT_STATE, null);
+			application.setStatus(getStatusByPassingCode(BpaConstants.WF_REJECT_STATE));
+			application.transition().progressWithStateCopy()
+					.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+					.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+					.withStateValue(BpaConstants.WF_REJECT_STATE).withDateInfo(currentDate.toDate()).withOwner(pos)
+					.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
+					.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
 
-        } else if (BpaConstants.WF_INITIATE_REJECTION_BUTTON.equalsIgnoreCase(workFlowAction)) {
-        	//For one day permit, position need not be set 
-        	if(!application.getIsOneDayPermitApplication())  {
-        		pos = bpaWorkFlowService.getApproverPositionOfElectionWardByCurrentState(application, BpaConstants.REJECTION_INITIATED);
-        		ownerUser = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(), new Date()).get(0).getEmployee();
-        	}
-            wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null,
-                    null, additionalRule, BpaConstants.REJECTION_INITIATED, BpaConstants.APPLICATION_ACTION_VERIFY_RR);
-            BpaStateInfo bpaStateInfo = bpaWorkFlowService.getBpaStateInfo(application.getCurrentState(), application.getStateHistory(), application.getTownSurveyorInspectionRequire(), new BpaStateInfo(), wfmatrix, workFlowAction);
-            application.setStatus(getStatusByPassingCode(BpaConstants.WF_REJECT_STATE));
-            application.transition().progressWithStateCopy()
-                       .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                       .withComments(approvalComent)
-                       .withRefFileId(application.getWfFileRefId())
-                       .withStateValue(BpaConstants.REJECTION_INITIATED).withDateInfo(currentDate.toDate())
-                       .withOwner(pos).withOwner(ownerUser)
-                       .withNextAction(wfmatrix.getNextAction())
-                       .withNatureOfTask(BpaConstants.NATURE_OF_WORK).withExtraInfo(bpaStateInfo);
+		} else if (BpaConstants.WF_INITIATE_REJECTION_BUTTON.equalsIgnoreCase(workFlowAction)) {
+			// For one day permit, position need not be set
+			if (!application.getIsOneDayPermitApplication()) {
+				pos = bpaWorkFlowService.getApproverPositionOfElectionWardByCurrentState(application,
+						BpaConstants.REJECTION_INITIATED);
+				ownerUser = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(), new Date()).get(0)
+						.getEmployee();
+			}
+			wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null, additionalRule,
+					BpaConstants.REJECTION_INITIATED, BpaConstants.APPLICATION_ACTION_VERIFY_RR);
+			BpaStateInfo bpaStateInfo = bpaWorkFlowService.getBpaStateInfo(application.getCurrentState(),
+					application.getStateHistory(), application.getTownSurveyorInspectionRequire(), new BpaStateInfo(),
+					wfmatrix, workFlowAction);
+			application.setStatus(getStatusByPassingCode(BpaConstants.WF_REJECT_STATE));
+			application.transition().progressWithStateCopy()
+					.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+					.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+					.withStateValue(BpaConstants.REJECTION_INITIATED).withDateInfo(currentDate.toDate()).withOwner(pos)
+					.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
+					.withNatureOfTask(BpaConstants.NATURE_OF_WORK).withExtraInfo(bpaStateInfo);
 
-        } else if (BpaConstants.GENERATEREJECTNOTICE.equalsIgnoreCase(workFlowAction) || BpaConstants.WF_CANCELAPPLICATION_BUTTON.equalsIgnoreCase(workFlowAction)) {
-            application.setStatus(getStatusByPassingCode(BpaConstants.APPLICATION_STATUS_CANCELLED));
-            application.transition().end()
-                       .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                       .withComments(approvalComent)
-                       .withRefFileId(application.getWfFileRefId())
-                       .withDateInfo(currentDate.toDate())
-                       .withNextAction(BpaConstants.WF_END_STATE).withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+		} else if (BpaConstants.GENERATEREJECTNOTICE.equalsIgnoreCase(workFlowAction)
+				|| BpaConstants.WF_CANCELAPPLICATION_BUTTON.equalsIgnoreCase(workFlowAction)) {
+			application.setStatus(getStatusByPassingCode(BpaConstants.APPLICATION_STATUS_CANCELLED));
+			application.transition().end()
+					.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+					.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+					.withDateInfo(currentDate.toDate()).withNextAction(BpaConstants.WF_END_STATE)
+					.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
 
-            if (additionalRule != null && additionalRule.equalsIgnoreCase(BpaConstants.CREATE_ADDITIONAL_RULE_CREATE))
-                application.setStatus(getStatusByPassingCode(BpaConstants.APPLICATION_STATUS_CANCELLED));
+			if (additionalRule != null && additionalRule.equalsIgnoreCase(BpaConstants.CREATE_ADDITIONAL_RULE_CREATE))
+				application.setStatus(getStatusByPassingCode(BpaConstants.APPLICATION_STATUS_CANCELLED));
 
-        } else if (BpaConstants.LETTERTOPARTYINITIATE.equalsIgnoreCase(workFlowAction)) {
-            wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null,
-                    null, additionalRule, workFlowAction, null);
+		} else if (BpaConstants.LETTERTOPARTYINITIATE.equalsIgnoreCase(workFlowAction)) {
+			wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null, additionalRule,
+					workFlowAction, null);
 
-            if (wfmatrix != null) {
-                application.setStatus(getStatusByCurrentMatrxiStatus(wfmatrix));
-                application.transition().progressWithStateCopy()
-                           .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                           .withComments(approvalComent)
-                           .withRefFileId(application.getWfFileRefId())
-                           .withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate())
-                           .withOwner(pos).withOwner(ownerUser)
-                           .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK);
-            }
-        } else if (BpaConstants.LPCREATED.equalsIgnoreCase(workFlowAction)) {
-            wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null, additionalRule,
-                    BpaConstants.LPCREATED, null);
-            application.setStatus(getStatusByCurrentMatrxiStatus(wfmatrix));
-            application.transition().progressWithStateCopy()
-                       .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                       .withComments(approvalComent)
-                       .withRefFileId(application.getWfFileRefId())
-                       .withStateValue(wfmatrix.getNextState())
-                       .withDateInfo(currentDate.toDate()).withOwner(application.getState().getOwnerPosition()).withOwner(application.getState().getOwnerUser())
-                       .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK);
-        } else if (BpaConstants.LPREPLYRECEIVED.equalsIgnoreCase(workFlowAction)) {
-            List<PermitLetterToParty> letterToParties = lettertoPartyService.findByBpaApplicationOrderByIdDesc(application);
-            StateHistory<Position> stateHistory = bpaWorkFlowService.getStateHistoryToGetLPInitiator(application.getStateHistory(), letterToParties.get(0).getLetterToParty().getStateForOwnerPosition());
-            wfmatrix = workFlowMatrixService.getWorkFlowObjectbyId(bpaWorkFlowService.getPreviousWfMatrixId(application.getStateHistory(),application.getState()));
-            if(null == wfmatrix)
-                wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null, additionalRule,
-                        letterToParties.get(0).getLetterToParty().getCurrentStateValueOfLP(), null);
-            application.setStatus(letterToParties.get(0).getLetterToParty().getCurrentApplnStatus());
-            application.transition().progressWithStateCopy()
-                       .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                       .withComments(approvalComent)
-                       .withRefFileId(application.getWfFileRefId())
-                       .withStateValue(wfmatrix.getNextState())
-                       .withDateInfo(currentDate.toDate()).withOwner(stateHistory.getOwnerPosition()).withOwner(stateHistory.getOwnerUser())
-                       .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK);
-        } else {
-            Assignment approverAssignment = bpaWorkFlowService.getApproverAssignment(pos);
-            if(approverAssignment == null)
-                approverAssignment = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(), new Date()).get(0);
-            if (BpaConstants.WF_REVERT_BUTTON.equalsIgnoreCase(workFlowAction)) {
-                application.setSentToPreviousOwner(true);
-                pos = application.getCurrentState().getPreviousOwner();
-                wfmatrix = workFlowMatrixService.getWorkFlowObjectbyId(bpaWorkFlowService.getPreviousWfMatrixId(application.getStateHistory(),application.getState()));
-            } else if (BpaConstants.WF_AUTO_RESCHDLE_APPMNT_BUTTON.equalsIgnoreCase(workFlowAction)) {
-                wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null,
-                        amountRule, additionalRule,
-                        application.getCurrentState().getValue(), BpaConstants.WF_AUTO_RESCHEDULE_PENDING);
-            } else if (BpaConstants.APPLICATION_STATUS_NOCUPDATED.equalsIgnoreCase(application.getStatus().getCode())) {
-                wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null,
-                        amountRule, additionalRule,
-                        application.getCurrentState().getValue(), application.getState().getNextAction());
-            } else if (BpaConstants.WF_TS_INSPECTION_INITIATED.equalsIgnoreCase(application.getStatus().getCode())) {
-                pos = positionMasterService.getPositionById(bpaWorkFlowService.getTownSurveyorInspnInitiator(application.getStateHistory(), application.getCurrentState()));
-                wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null,
-                        amountRule, additionalRule,
-                        application.getCurrentState().getValue(), BpaConstants.WF_TS_APPROVAL_PENDING);
-            } else if (BpaConstants.APPLICATION_STATUS_TS_INS.equalsIgnoreCase(application.getStatus().getCode())) {
-                Assignment currentUserAssgmnt = bpaWorkFlowService.getApproverAssignment(application.getCurrentState().getOwnerPosition());
-                if(currentUserAssgmnt == null)
-                    currentUserAssgmnt = bpaWorkFlowService.getAssignmentsByPositionAndDate(application.getCurrentState().getOwnerPosition().getId(), new Date()).get(0);
-                String pendingAction = StringUtils.EMPTY;
-                if (DESIGNATION_AE.equals(currentUserAssgmnt.getDesignation().getName()))
-                    pendingAction = FWD_TO_AE_AFTER_TS_INSP;
-                else if (DESIGNATION_OVERSEER.equals(currentUserAssgmnt.getDesignation().getName()))
-                    pendingAction = FWD_TO_OVERSEER_AFTER_TS_INSPN;
-                wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null,
-                        amountRule, additionalRule,
-                        application.getCurrentState().getValue(), pendingAction);
-            } else if (BpaConstants.APPLICATION_STATUS_APPROVED.equalsIgnoreCase(application.getStatus().getCode())
-                       && !BpaConstants.APPLICATION_STATUS_RECORD_APPROVED.equalsIgnoreCase(application.getState().getValue())) {
-                wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null,
-                        amountRule, additionalRule,
-                        application.getCurrentState().getValue(), null);
-            } else if (approvalComent != null && approvalComent.equals(BpaConstants.BPAFEECOLLECT)
-                       && bpaUtils.applicationInitiatedByNonEmployee(application.getCreatedBy())
-                       && application.getStatus().getCode().equals(BpaConstants.APPLICATION_STATUS_REGISTERED)) {
-                wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null,
-                        null, additionalRule, BpaConstants.WF_NEW_STATE, null);
-            } else if(approverAssignment != null && BpaConstants.DESIGNATION_TOWN_SURVEYOR.equalsIgnoreCase(approverAssignment.getDesignation().getName())) {
-                wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null,
-                        null, additionalRule, BpaConstants.WF_TS_INSPECTION_INITIATED, BpaConstants.WF_AE_APPROVAL_PENDING);
-            } else if(BpaConstants.WF_RESCHDLE_APPMNT_BUTTON.equalsIgnoreCase(workFlowAction)) {
-                wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null,
-                        null, additionalRule, application.getCurrentState().getValue(), BpaConstants.WF_DOC_SCRTNY_RE_SCHDLE_PENDING);
-            } else if (application.getState() != null
-                       && application.getState().getValue().equalsIgnoreCase(APPLICATION_STATUS_REGISTERED) ||
-                       application.getState().getValue().equalsIgnoreCase(APPLICATION_STATUS_SCHEDULED)
-                       || application.getState().getValue().equalsIgnoreCase(APPLICATION_STATUS_RESCHEDULED)) {
-                wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null,
-                        null, additionalRule, application.getCurrentState().getValue(), application.getState().getNextAction());
-            }  else {
-                wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null,
-                        null, additionalRule, application.getCurrentState().getValue(), application.getState().getNextAction());
-                if(wfmatrix == null)
-                    wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null,
-                        null, additionalRule, application.getCurrentState().getValue(), null);
-            }
-            if (wfmatrix != null) {
-                BpaStateInfo bpaStateInfo = bpaWorkFlowService.getBpaStateInfo(application.getCurrentState(), application.getStateHistory(), application.getTownSurveyorInspectionRequire(), new BpaStateInfo(), wfmatrix, workFlowAction);
-                BpaStatus status = getStatusByCurrentMatrxiStatus(wfmatrix);
-                ownerUser = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(), new Date()).get(0).getEmployee();
-                if (status != null)
-                    application.setStatus(getStatusByCurrentMatrxiStatus(wfmatrix));
-                
+			if (wfmatrix != null) {
+				application.setStatus(getStatusByCurrentMatrxiStatus(wfmatrix));
+				application.transition().progressWithStateCopy()
+						.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+						.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+						.withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos)
+						.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
+						.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+			}
+		} else if (BpaConstants.LPCREATED.equalsIgnoreCase(workFlowAction)) {
+			wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null, additionalRule,
+					BpaConstants.LPCREATED, null);
+			application.setStatus(getStatusByCurrentMatrxiStatus(wfmatrix));
+			application.transition().progressWithStateCopy()
+					.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+					.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+					.withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate())
+					.withOwner(application.getState().getOwnerPosition())
+					.withOwner(application.getState().getOwnerUser()).withNextAction(wfmatrix.getNextAction())
+					.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+		} else if (BpaConstants.LPREPLYRECEIVED.equalsIgnoreCase(workFlowAction)) {
+			List<PermitLetterToParty> letterToParties = lettertoPartyService
+					.findByBpaApplicationOrderByIdDesc(application);
+			StateHistory<Position> stateHistory = bpaWorkFlowService.getStateHistoryToGetLPInitiator(
+					application.getStateHistory(),
+					letterToParties.get(0).getLetterToParty().getStateForOwnerPosition());
+			wfmatrix = workFlowMatrixService.getWorkFlowObjectbyId(
+					bpaWorkFlowService.getPreviousWfMatrixId(application.getStateHistory(), application.getState()));
+			if (null == wfmatrix)
+				wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null,
+						additionalRule, letterToParties.get(0).getLetterToParty().getCurrentStateValueOfLP(), null);
+			application.setStatus(letterToParties.get(0).getLetterToParty().getCurrentApplnStatus());
+			application.transition().progressWithStateCopy()
+					.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+					.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+					.withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate())
+					.withOwner(stateHistory.getOwnerPosition()).withOwner(stateHistory.getOwnerUser())
+					.withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+		} else if ("Revert to HDM".equalsIgnoreCase(workFlowAction)) {
+			wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null, additionalRule,
+					"Property documents verification initiated", null);
+
+			if (wfmatrix != null) {
+				application.setStatus(getStatusByCurrentMatrxiStatus(wfmatrix));
+				application.transition().progressWithStateCopy()
+						.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+						.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+						.withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos)
+						.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
+						.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+			}
+		} else if ("Revert to BA".equalsIgnoreCase(workFlowAction)) {
+			wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null, additionalRule,
+					"NEW", null);
+
+			if (wfmatrix != null) {
+				application.setStatus(getStatusByCurrentMatrxiStatus(wfmatrix));
+				application.transition().progressWithStateCopy()
+						.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+						.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+						.withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos)
+						.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
+						.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+			}
+		} else {
+			Assignment approverAssignment = bpaWorkFlowService.getApproverAssignment(pos);
+			if (approverAssignment == null)
+				approverAssignment = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(), new Date()).get(0);
+			if (BpaConstants.WF_REVERT_BUTTON.equalsIgnoreCase(workFlowAction)) {
+				application.setSentToPreviousOwner(true);
+				pos = application.getCurrentState().getPreviousOwner();
+				wfmatrix = workFlowMatrixService.getWorkFlowObjectbyId(bpaWorkFlowService
+						.getPreviousWfMatrixId(application.getStateHistory(), application.getState()));
+			} else if (BpaConstants.WF_AUTO_RESCHDLE_APPMNT_BUTTON.equalsIgnoreCase(workFlowAction)) {
+				wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, amountRule,
+						additionalRule, application.getCurrentState().getValue(),
+						BpaConstants.WF_AUTO_RESCHEDULE_PENDING);
+			} else if (BpaConstants.APPLICATION_STATUS_NOCUPDATED.equalsIgnoreCase(application.getStatus().getCode())) {
+				wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, amountRule,
+						additionalRule, application.getCurrentState().getValue(),
+						application.getState().getNextAction());
+			} else if (BpaConstants.WF_TS_INSPECTION_INITIATED.equalsIgnoreCase(application.getStatus().getCode())) {
+				pos = positionMasterService.getPositionById(bpaWorkFlowService
+						.getTownSurveyorInspnInitiator(application.getStateHistory(), application.getCurrentState()));
+				wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, amountRule,
+						additionalRule, application.getCurrentState().getValue(), BpaConstants.WF_TS_APPROVAL_PENDING);
+			} else if (BpaConstants.APPLICATION_STATUS_TS_INS.equalsIgnoreCase(application.getStatus().getCode())) {
+				Assignment currentUserAssgmnt = bpaWorkFlowService
+						.getApproverAssignment(application.getCurrentState().getOwnerPosition());
+				if (currentUserAssgmnt == null)
+					currentUserAssgmnt = bpaWorkFlowService.getAssignmentsByPositionAndDate(
+							application.getCurrentState().getOwnerPosition().getId(), new Date()).get(0);
+				String pendingAction = StringUtils.EMPTY;
+				if (DESIGNATION_AE.equals(currentUserAssgmnt.getDesignation().getName()))
+					pendingAction = FWD_TO_AE_AFTER_TS_INSP;
+				else if (DESIGNATION_OVERSEER.equals(currentUserAssgmnt.getDesignation().getName()))
+					pendingAction = FWD_TO_OVERSEER_AFTER_TS_INSPN;
+				wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, amountRule,
+						additionalRule, application.getCurrentState().getValue(), pendingAction);
+			} else if (BpaConstants.APPLICATION_STATUS_APPROVED.equalsIgnoreCase(application.getStatus().getCode())
+					&& !BpaConstants.APPLICATION_STATUS_RECORD_APPROVED
+							.equalsIgnoreCase(application.getState().getValue())) {
+				wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, amountRule,
+						additionalRule, application.getCurrentState().getValue(), null);
+			} else if (approvalComent != null && approvalComent.equals(BpaConstants.BPAFEECOLLECT)
+					&& bpaUtils.applicationInitiatedByNonEmployee(application.getCreatedBy())
+					&& application.getStatus().getCode().equals(BpaConstants.APPLICATION_STATUS_REGISTERED)) {
+				wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null,
+						additionalRule, BpaConstants.WF_NEW_STATE, null);
+			} else if (approverAssignment != null && BpaConstants.DESIGNATION_TOWN_SURVEYOR
+					.equalsIgnoreCase(approverAssignment.getDesignation().getName())) {
+				wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null,
+						additionalRule, BpaConstants.WF_TS_INSPECTION_INITIATED, BpaConstants.WF_AE_APPROVAL_PENDING);
+			} else if (BpaConstants.WF_RESCHDLE_APPMNT_BUTTON.equalsIgnoreCase(workFlowAction)) {
+				wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null,
+						additionalRule, application.getCurrentState().getValue(),
+						BpaConstants.WF_DOC_SCRTNY_RE_SCHDLE_PENDING);
+			} else if (application.getState() != null
+					&& application.getState().getValue().equalsIgnoreCase(APPLICATION_STATUS_REGISTERED)
+					|| application.getState().getValue().equalsIgnoreCase(APPLICATION_STATUS_SCHEDULED)
+					|| application.getState().getValue().equalsIgnoreCase(APPLICATION_STATUS_RESCHEDULED)) {
+				wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null,
+						additionalRule, application.getCurrentState().getValue(),
+						application.getState().getNextAction());
+			} else {
+				wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null,
+						additionalRule, application.getCurrentState().getValue(),
+						application.getState().getNextAction());
+				if (wfmatrix == null)
+					wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null,
+							additionalRule, application.getCurrentState().getValue(), null);
+			}
+			if (wfmatrix != null) {
+				BpaStateInfo bpaStateInfo = bpaWorkFlowService.getBpaStateInfo(application.getCurrentState(),
+						application.getStateHistory(), application.getTownSurveyorInspectionRequire(),
+						new BpaStateInfo(), wfmatrix, workFlowAction);
+				BpaStatus status = getStatusByCurrentMatrxiStatus(wfmatrix);
+				ownerUser = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(), new Date()).get(0)
+						.getEmployee();
+				if (status != null)
+					application.setStatus(getStatusByCurrentMatrxiStatus(wfmatrix));
+
 				if (workFlowAction.equalsIgnoreCase(BpaConstants.GENERATEREVOCATIONNOTICE))
 					application.setStatus(getStatusByPassingCode("Revocated"));
-                
-                if (BpaConstants.GENERATEPERMITORDER.equalsIgnoreCase(workFlowAction) 
-                		|| BpaConstants.ACCEPTASSCRUTINIZED.equalsIgnoreCase(workFlowAction) 
-                		|| wfmatrix.getNextAction().contains("END"))
-                    application.transition().end()
-                               .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                               .withComments(approvalComent)
-                               .withRefFileId(application.getWfFileRefId())
-                               .withDateInfo(currentDate.toDate())
-                               .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK);
-                else
-                    application.transition().progressWithStateCopy()
-                               .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-                               .withComments(approvalComent)
-                               .withRefFileId(application.getWfFileRefId())
-                               .withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos).withOwner(ownerUser)
-                               .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(BpaConstants.NATURE_OF_WORK).withExtraInfo(bpaStateInfo);
-            }
-        }
-        if (LOG.isDebugEnabled())
-            LOG.debug(" WorkFlow Transition Completed ");
-        bpaUtils.updatePortalUserinbox(application, null);
 
-    }
+				if (BpaConstants.GENERATEPERMITORDER.equalsIgnoreCase(workFlowAction)
+						|| BpaConstants.ACCEPTASSCRUTINIZED.equalsIgnoreCase(workFlowAction)
+						|| wfmatrix.getNextAction().contains("END"))
+					application.transition().end()
+							.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+							.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+							.withDateInfo(currentDate.toDate()).withNextAction(wfmatrix.getNextAction())
+							.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+				else
+					application.transition().progressWithStateCopy()
+							.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+							.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+							.withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos)
+							.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
+							.withNatureOfTask(BpaConstants.NATURE_OF_WORK).withExtraInfo(bpaStateInfo);
+			}
+		}
+		if (LOG.isDebugEnabled())
+			LOG.debug(" WorkFlow Transition Completed ");
+		bpaUtils.updatePortalUserinbox(application, null);
 
-    private BpaStatus getStatusByCurrentMatrxiStatus(final WorkFlowMatrix wfmatrix) {
-        if (wfmatrix != null && wfmatrix.getNextStatus() != null && !"".equals(wfmatrix.getNextStatus()))
-            return bpaStatusService
-                    .findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE, wfmatrix.getNextStatus());
-        return null;
-    }
+	}
 
-    private BpaStatus getStatusByPassingCode(final String code) {
-        if (code != null && !"".equals(code))
-            return bpaStatusService
-                    .findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE, code);
-        return null;
-    }
+	private BpaStatus getStatusByCurrentMatrxiStatus(final WorkFlowMatrix wfmatrix) {
+		if (wfmatrix != null && wfmatrix.getNextStatus() != null && !"".equals(wfmatrix.getNextStatus()))
+			return bpaStatusService.findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE,
+					wfmatrix.getNextStatus());
+		return null;
+	}
+
+	private BpaStatus getStatusByPassingCode(final String code) {
+		if (code != null && !"".equals(code))
+			return bpaStatusService.findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE, code);
+		return null;
+	}
 
 }

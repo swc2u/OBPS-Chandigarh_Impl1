@@ -169,9 +169,12 @@ import org.egov.infra.reporting.engine.ReportOutput;
 import org.egov.infra.utils.DateUtils;
 import org.egov.infra.workflow.entity.State;
 import org.egov.infra.workflow.entity.StateHistory;
+import org.egov.infra.workflow.matrix.entity.WorkFlowMatrix;
+import org.egov.infra.workflow.service.SimpleWorkflowService;
 import org.egov.pims.commons.Designation;
 import org.egov.pims.commons.Position;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -239,6 +242,10 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
     private InspectionApplicationService inspectionAppService;
     @Autowired
     private InConstructionInspectionService inspectionConstService;
+	@Autowired
+	@Qualifier("workflowService")
+	private SimpleWorkflowService<BpaApplication> bpaApplicationWorkflowService;
+
     
     @ModelAttribute
     public BpaApplication getBpaApplication(@PathVariable final String applicationNumber) {
@@ -457,7 +464,29 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
                     bpaApplication.getStateHistory(),
                     lettertoParties.get(0).getLetterToParty().getStateForOwnerPosition());
             approvalPosition = stateHistory.getOwnerPosition().getId();
-        } else if (StringUtils.isNotBlank(request.getParameter(APPRIVALPOSITION))
+        } 
+        else if ("Revert to HDM".equalsIgnoreCase(workFlowAction)) {
+        	WorkFlowMatrix wfMatrix = bpaApplicationWorkflowService.getWfMatrix(bpaApplication.getStateType(), null, amountRule,
+        			bpaApplication.getApplicationType().getName(), "Property documents verification initiated",
+                    null);
+        	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
+                    bpaApplication.getSiteDetail().get(0) != null
+                            && bpaApplication.getSiteDetail().get(0).getAdminBoundary() != null
+                                    ? bpaApplication.getSiteDetail().get(0).getAdminBoundary().getId()
+                                    : null);
+        }
+        else if ("Revert to BA".equalsIgnoreCase(workFlowAction)) {
+        	WorkFlowMatrix wfMatrix = bpaApplicationWorkflowService.getWfMatrix(bpaApplication.getStateType(), null, amountRule,
+        			bpaApplication.getApplicationType().getName(), "NEW",
+                    null);
+        	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
+                    bpaApplication.getSiteDetail().get(0) != null
+                            && bpaApplication.getSiteDetail().get(0).getAdminBoundary() != null
+                                    ? bpaApplication.getSiteDetail().get(0).getAdminBoundary().getId()
+                                    : null);
+        }
+
+        else if (StringUtils.isNotBlank(request.getParameter(APPRIVALPOSITION))
                 && !WF_REJECT_BUTTON.equalsIgnoreCase(workFlowAction)
                 && !GENERATEREJECTNOTICE.equalsIgnoreCase(workFlowAction)) {
             approvalPosition = Long.valueOf(request.getParameter(APPRIVALPOSITION));
@@ -482,6 +511,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
                 approvalPosition = pos.getId();
             }
         }
+        
         if (!bpaApplication.getPermitDocuments().isEmpty())
             applicationBpaService.persistOrUpdateApplicationDocument(bpaApplication);
         
@@ -815,13 +845,11 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         model.addAttribute("nextAction", nextAction);
         
         if (!application.getIsOneDayPermitApplication()
-                && (WF_BA_NOC_UPDATION_IN_PROGRESS.equalsIgnoreCase(application.getState().getNextAction())
-                	|| REJECTION_INITIATED.equalsIgnoreCase(application.getState().getNextAction())
-                	|| WF_BA_FINAL_APPROVAL_PROCESS_INITIATED.equalsIgnoreCase(application.getState().getNextAction())
-                	|| WF_BA_AEE_APPLICATION_APPROVAL_PENDING.equalsIgnoreCase(application.getState().getNextAction())
-                	|| WF_BA_FORWARD_TO_SDO_BUILDING.equalsIgnoreCase(application.getState().getNextAction())
-                    || APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(application.getStatus().getCode())
-                    || APPLICATION_STATUS_APPROVAL_PROCESS_INITIATED.equalsIgnoreCase(application.getStatus().getCode()))) {
+                && ("Forwarded to SDO Building for Approval".equalsIgnoreCase(application.getState().getNextAction())
+                	|| "Forwarded to check NOC updation".equalsIgnoreCase(application.getState().getNextAction())
+                	|| "Permit Fee Collection Pending".equalsIgnoreCase(application.getState().getNextAction())
+                	|| "Forwarded to E- Assistant Estate Officer for Approval".equalsIgnoreCase(application.getState().getNextAction())
+                    )) {
             model.addAttribute("createlettertoparty", true);
         }
         
