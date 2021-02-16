@@ -849,7 +849,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
                 	|| "Forwarded to check NOC updation".equalsIgnoreCase(application.getState().getNextAction())
                 	|| "Permit Fee Collection Pending".equalsIgnoreCase(application.getState().getNextAction())
                 	|| "Forwarded to E- Assistant Estate Officer for Approval".equalsIgnoreCase(application.getState().getNextAction())
-                    )) {
+                    ) && !("Approved".equalsIgnoreCase(application.getStatus().getCode()))) {
             model.addAttribute("createlettertoparty", true);
         }
         
