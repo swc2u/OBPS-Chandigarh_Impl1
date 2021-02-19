@@ -313,7 +313,7 @@ public class PaytmAdaptor implements PaymentGatewayAdaptor {
 		LOGGER.info("RESULT : " + responseMap1.toString());
 		String result="";
 		try {
-			isValideChecksum = validateCheckSum(responseMap1, paytmChecksum,collectionApplicationProperties.paytmValue(prefix + ".paytm.MID"));
+			isValideChecksum = validateCheckSum(responseMap1, paytmChecksum,collectionApplicationProperties.paytmValue(prefix + ".paytm.merchantKey"));
 			if (isValideChecksum && responseMap1.containsKey(RESPCODE)) {
 				if (responseMap1.get(RESPCODE).equals("01")) {
 					result = CollectionConstants.PGI_AUTHORISATION_CODE_SUCCESS;
