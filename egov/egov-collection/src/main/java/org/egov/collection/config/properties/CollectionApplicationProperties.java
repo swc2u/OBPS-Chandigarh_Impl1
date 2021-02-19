@@ -287,6 +287,9 @@ public class CollectionApplicationProperties {
 		return environment.getProperty("sbi.cron.expression.delay.time", Integer.class);
 	}
 	
+	public String paytmValue(String key) {
+		return environment.getProperty(key, String.class);
+	}
 	
 	public String pnbMid() {
 		return environment.getProperty("pnb.mid");
