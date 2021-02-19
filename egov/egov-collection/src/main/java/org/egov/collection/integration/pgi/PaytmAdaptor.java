@@ -165,7 +165,7 @@ public class PaytmAdaptor implements PaymentGatewayAdaptor {
 		parameters.put(CALLBACK_URL, returnUrl.toString());
 		parameters.put(CHANNEL_ID, collectionApplicationProperties.paytmValue(prefix + ".paytm.channelId"));
 		parameters.put(INDUSTRY_TYPE_ID, collectionApplicationProperties.paytmValue(prefix + ".paytm.industryTypeId"));
-		parameters.put(MID, collectionApplicationProperties.paytmValue(prefix + ".paytm.MID"));
+		parameters.put(MID, collectionApplicationProperties.paytmValue(prefix + ".paytm.mid"));
 		parameters.put(WEBSITE, collectionApplicationProperties.paytmValue(prefix + ".paytm.website"));
 		parameters.put(MOBILE_NO, "");
 
@@ -176,8 +176,9 @@ public class PaytmAdaptor implements PaymentGatewayAdaptor {
 		parameters.put(CUST_ID, receiptHeader.getPaidBy());
 		String checkSum = null;
 		try {
-			checkSum = getCheckSum(parameters, collectionApplicationProperties.paytmValue(prefix + ".paytm.MID"));
+			checkSum = getCheckSum(parameters, collectionApplicationProperties.paytmValue(prefix + ".paytm.merchantKey"));
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOGGER.error(e);
 		}
 		parameters.put(CHECKSUMHASH, checkSum);
