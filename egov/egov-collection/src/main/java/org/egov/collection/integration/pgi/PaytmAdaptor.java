@@ -157,7 +157,7 @@ public class PaytmAdaptor implements PaymentGatewayAdaptor {
 		TreeMap<String, String> parameters = new TreeMap<>();
 
 		StringBuilder returnUrl = new StringBuilder();
-		String rbt = "&&rbt=" + (URBAN.equals(prefix) ? KEY_URBAN : KEY_RURAL);
+		String rbt = "&rbt=" + (URBAN.equals(prefix) ? KEY_URBAN : KEY_RURAL);
 		rbt = URLEncoder.encode(rbt);
 		returnUrl.append(paymentServiceDetails.getCallBackurl()).append("?paymentServiceId=")
 				.append(paymentServiceDetails.getId()).append(rbt);
@@ -173,7 +173,7 @@ public class PaytmAdaptor implements PaymentGatewayAdaptor {
 		parameters.put(ORDER_ID, receiptHeader.getId().toString());
 		parameters.put(TXN_AMOUNT, new BigDecimal(receiptHeader.getTotalAmount() + "")
 				.setScale(CollectionConstants.AMOUNT_PRECISION_DEFAULT, BigDecimal.ROUND_UP).toString());
-		parameters.put(CUST_ID, receiptHeader.getPaidBy());
+		parameters.put(CUST_ID, receiptHeader.getConsumerCode());
 		String checkSum = null;
 		try {
 			checkSum = getCheckSum(parameters, collectionApplicationProperties.paytmValue(prefix + ".paytm.merchantKey"));
