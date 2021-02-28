@@ -543,7 +543,12 @@ public class AdditionalFeature extends FeatureProcess {
 				
 				if(mostRestrictiveOccupancyType==null || mostRestrictiveOccupancyType.getSubtype() ==null)
 					return;
-
+		BigDecimal allowedMaxArea=FIFTY;
+		
+		if(pl.getDrawingPreference().getInFeets()) {
+			allowedMaxArea=CDGAdditionalService.meterToFootArea(allowedMaxArea);
+		}
+				
 		if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
 
 			ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
@@ -560,10 +565,10 @@ public class AdditionalFeature extends FeatureProcess {
 			BigDecimal totalCoverageAreaOf25Percent = totalCoverageArea.multiply(new BigDecimal("0.25"));
 			BigDecimal requiredProfessionalsConsultantsSpace = BigDecimal.ZERO;
 
-			if (totalCoverageAreaOf25Percent.compareTo(FIFTY) < 0)
+			if (totalCoverageAreaOf25Percent.compareTo(allowedMaxArea) < 0)
 				requiredProfessionalsConsultantsSpace = totalCoverageAreaOf25Percent;
 			else
-				requiredProfessionalsConsultantsSpace = FIFTY;
+				requiredProfessionalsConsultantsSpace = allowedMaxArea;
 			
 
 			Map<String, String> details = new HashMap<>();

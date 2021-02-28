@@ -120,14 +120,14 @@ public class HeightOfRoom extends FeatureProcess {
 
 	@Override
 	public Plan process(Plan pl) {
-		Map<String, Integer> heightOfRoomFeaturesColor = pl.getSubFeatureColorCodesMaster().get("HeightOfRoom");
-		validate(pl);
+		
 
 		if (pl.isRural()) {
 			processRural(pl);
 			return pl;
 		}
-
+		Map<String, Integer> heightOfRoomFeaturesColor = pl.getSubFeatureColorCodesMaster().get("HeightOfRoom");
+		validate(pl);
 		HashMap<String, String> errors = new HashMap<>();
 		if (pl != null && pl.getBlocks() != null) {
 			OccupancyTypeHelper mostRestrictiveOccupancy = pl.getVirtualBuilding() != null

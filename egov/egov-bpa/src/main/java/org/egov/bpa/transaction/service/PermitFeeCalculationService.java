@@ -1140,16 +1140,20 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 							&& !BpaUtils.isOccupancyExcludedFromFar(occupancy.getTypeHelper())) {
 						BigDecimal floorArea = occupancy.getFloorArea();
 						BigDecimal builtUpArea = occupancy.getBuiltUpArea();
+						BigDecimal existingBuiltUpArea=occupancy.getExistingBuiltUpArea();
 						if (plan.getDrawingPreference().getInMeters()) {
 							floorArea = floorArea.multiply(SQMT_SQFT_MULTIPLIER).multiply(multiplier).setScale(2,
 									BigDecimal.ROUND_UP);
 							builtUpArea = builtUpArea.multiply(SQMT_SQFT_MULTIPLIER).multiply(multiplier).setScale(2,
+									BigDecimal.ROUND_UP);
+							existingBuiltUpArea = existingBuiltUpArea.multiply(SQMT_SQFT_MULTIPLIER).multiply(multiplier).setScale(2,
 									BigDecimal.ROUND_UP);
 						}
 
 						else if (plan.getDrawingPreference().getInFeets()) {
 							floorArea = floorArea.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
 							builtUpArea = builtUpArea.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
+							existingBuiltUpArea = existingBuiltUpArea.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
 						}
 
 						if (floor.getNumber() >= 0) {
@@ -1158,6 +1162,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 						} else {
 							totalProposedAreaInSqft = totalProposedAreaInSqft.add(builtUpArea).setScale(2,
 									BigDecimal.ROUND_UP);
+							totalProposedAreaInSqft = totalProposedAreaInSqft.add(existingBuiltUpArea).setScale(2,
+									BigDecimal.ROUND_UP);
 						}
 					}
 				}
@@ -1165,7 +1171,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			// Adding mumty area
 			if (!CollectionUtils.isEmpty(block.getStairCoversArea())) {
 				BigDecimal totalMumtyArea = block.getStairCoversArea().stream().reduce(BigDecimal::add).get();
-				totalProposedAreaInSqft.add(totalMumtyArea);
+				totalProposedAreaInSqft=totalProposedAreaInSqft.add(totalMumtyArea).setScale(2,
+						BigDecimal.ROUND_UP);
 			}
 		}
 

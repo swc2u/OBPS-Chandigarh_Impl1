@@ -90,6 +90,7 @@ public class PlanService {
 			plan = extractService.extract(dcrApplication.getSavedDxfFile(), amd, asOnDate,
 					featureService.getFeatures());
 			setProperties(plan);
+			plan.setServiceType(dcrApplication.getServiceType());
 			plan = applyRules(plan, amd, cityDetails);
 			setEDCRmandatoryNOC(plan);
 		}catch (Exception e) {
@@ -105,7 +106,7 @@ public class PlanService {
 //		}
 		
 		if(plan!=null && checkUnits(plan)) {
-			plan.setServiceType(dcrApplication.getServiceType());
+			
 			plan.setApplicationType(dcrApplication.getApplicationType().toString());
 			plan.setPlanPermissionNumber(dcrApplication.getPlanPermitNumber());
 		}

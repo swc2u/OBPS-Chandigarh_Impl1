@@ -108,13 +108,17 @@
 			    <span id="drawPref"></span>
 			</div>
 			<ul class="nav nav-tabs" id="settingstab">
-				<li class="active"><a data-toggle="tab"
+				<li id="app-tab-link" class="active"><a data-toggle="tab"
 					href="#appliccation-info" data-tabidx=0><spring:message
 							code='lbl.appln.details' /></a></li>
 				<li><a data-toggle="tab" href="#document-info" data-tabidx=1><spring:message
 							code='title.documentdetail' /></a></li>
 				<li id="noc-document-tab-link" style="display: none;"><a data-toggle="tab" href="#noc-document-info"
-					data-tabidx=2><spring:message code='lbl.noc.doc.details' /></a></li>
+					data-tabidx=3><spring:message code='lbl.noc.doc.details' /></a></li>
+				<li>
+				<a id="fee-tab-link" data-toggle="tab" href="#view-fee"
+					data-tabidx=2><spring:message code='lbl.fees.details' /></a></li>
+				
 			</ul>
 			<div class="tab-content">
 				<div id="appliccation-info" class="tab-pane fade in active">
@@ -188,6 +192,22 @@
 						<jsp:include page="permit-noc-documents.jsp"></jsp:include>
 					</div>
 				</div>
+				 
+					<div id="view-fee" class="tab-pane fade" >
+						<div class="panel panel-primary" data-collapsed="0">
+							 <jsp:include page="bpa-register-fee-details.jsp"></jsp:include> 
+						</div>
+					</div>
+				 
+				
+				<%--
+				<c:if test="${not empty tempFees && empty bpaApplication.permitFee}">
+					<div id="view-fee" class="tab-pane fade">
+						<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="view-bpa-temp-fee-details.jsp"></jsp:include>
+						</div>
+					</div>
+				</c:if> --%>
 			</div>
 
 			<div align="center">
@@ -346,6 +366,7 @@
 <script src="<cdn:url value='/resources/js/app/citizen-helper.js?rnd=${app_release_no}'/>"></script>
 <script src="<cdn:url value='/resources/js/app/applicant-helper.js?rnd=${app_release_no}'/>"></script>
 <script src="<cdn:url value='/resources/js/app/edcr-helper.js?rnd=${app_release_no}'/>"></script>
+<script src="<cdn:url value='/resources/js/app/bpa-register-fee-details.js?rnd=${app_release_no}'/>"></script>
 	
 <script>
 	$(document).ready(function() {

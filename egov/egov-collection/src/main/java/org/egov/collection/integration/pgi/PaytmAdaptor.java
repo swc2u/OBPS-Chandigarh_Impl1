@@ -157,18 +157,18 @@ public class PaytmAdaptor implements PaymentGatewayAdaptor {
 		TreeMap<String, String> parameters = new TreeMap<>();
 
 		StringBuilder returnUrl = new StringBuilder();
-		String rbt = "&rbt=" + (URBAN.equals(prefix) ? KEY_URBAN : KEY_RURAL);
-		rbt = URLEncoder.encode(rbt);
+		//String rbt = "&&rbt=" + (URBAN.equals(prefix) ? KEY_URBAN : KEY_RURAL);
+		//rbt = URLEncoder.encode(rbt);
 		returnUrl.append(paymentServiceDetails.getCallBackurl()).append("?paymentServiceId=")
-				.append(paymentServiceDetails.getId()).append(rbt);
+				.append(paymentServiceDetails.getId());//.append(rbt);
 
-		parameters.put(CALLBACK_URL, returnUrl.toString());
+		parameters.put(MID, collectionApplicationProperties.paytmValue(prefix + ".paytm.mid"));
 		parameters.put(CHANNEL_ID, collectionApplicationProperties.paytmValue(prefix + ".paytm.channelId"));
 		parameters.put(INDUSTRY_TYPE_ID, collectionApplicationProperties.paytmValue(prefix + ".paytm.industryTypeId"));
-		parameters.put(MID, collectionApplicationProperties.paytmValue(prefix + ".paytm.mid"));
 		parameters.put(WEBSITE, collectionApplicationProperties.paytmValue(prefix + ".paytm.website"));
-		parameters.put(MOBILE_NO, "");
-
+		parameters.put(CALLBACK_URL, returnUrl.toString());
+		
+		parameters.put(MOBILE_NO, "88888888");
 		parameters.put(EMAIL, receiptHeader.getPayeeEmail());
 		parameters.put(ORDER_ID, receiptHeader.getId().toString());
 		parameters.put(TXN_AMOUNT, new BigDecimal(receiptHeader.getTotalAmount() + "")
@@ -196,6 +196,96 @@ public class PaytmAdaptor implements PaymentGatewayAdaptor {
 			LOGGER.debug("Second paymentRequest: " + paymentRequest.getRequestParameters());
 		}
 		return paymentRequest;
+	}
+	
+	@Override
+	public PaymentResponse parsePaymentResponse(final String response, final String rbt) {
+		LOGGER.debug("inside  paytm createPaymentRequest");
+		String[] keyValueStr = response.replace("{", "").replace("}", "").split(",");
+		PaymentResponse paytmResponse = new DefaultPaymentResponse();
+		TreeMap<String, String> responseMap1 = new TreeMap<String, String>();
+		String paytmChecksum="";
+		String paymentServiceId="";
+		for (String pair : keyValueStr) {
+			String[] entry = pair.split("=",2);
+			//responseMap1.put(entry[0].trim(), entry[1].trim());
+			if ("CHECKSUMHASH".equalsIgnoreCase(entry[0].trim())){
+                paytmChecksum = entry[1].trim();
+            }else if("paymentServiceId".equalsIgnoreCase(entry[0].trim())) {
+            	paymentServiceId=entry[1].trim();
+            }
+			else {
+				responseMap1.put(entry[0].trim(), entry[1].trim());
+            }
+		}
+
+		String prefix = prefix = RURAL;
+//		if (KEY_URBAN.equals(rbt))
+//			prefix = URBAN;
+//		else if (KEY_RURAL.equals(rbt))
+//			prefix = RURAL;
+
+		//paytmChecksum = responseMap1.get(CHECKSUMHASH);
+		boolean isValideChecksum = false;
+		LOGGER.info("RESULT : " + responseMap1.toString());
+		String result="";
+//		TreeMap<String, String> checkSumMap=new TreeMap<String, String>();
+//		checkSumMap.put("mid", collectionApplicationProperties.paytmValue(prefix + ".paytm.mid"));
+//		checkSumMap.put("orderId", responseMap1.get("ORDERID"));
+		try {
+			isValideChecksum = validateCheckSum(responseMap1, paytmChecksum,collectionApplicationProperties.paytmValue(prefix + ".paytm.merchantKey"));
+			if (isValideChecksum && responseMap1.containsKey(RESPCODE)) {
+				if (responseMap1.get(RESPCODE).equals("01")) {
+					result = CollectionConstants.PGI_AUTHORISATION_CODE_SUCCESS;
+				} else {
+					result = responseMap1.get(RESPCODE);
+					paytmResponse.setErrorDescription(responseMap1.get(RESPMSG));
+				}
+			} else {
+				result = "Checksum mismatched";
+				if (responseMap1.get(RESPCODE).equals("01")) {
+					result = CollectionConstants.PGI_AUTHORISATION_CODE_SUCCESS;
+				} else {
+					result = responseMap1.get(RESPCODE);
+					paytmResponse.setErrorDescription(responseMap1.get(RESPMSG));
+				}
+			}
+		} catch (Exception e) {
+			LOGGER.error(e);
+		}
+		paytmResponse.setAuthStatus(result);
+		paytmResponse.setReceiptId(responseMap1.get("ORDERID"));
+		//paytmResponse.setReceiptId(responseMap1.get(BANKTXNID));
+		paytmResponse.setTxnAmount(new BigDecimal(responseMap1.get(TXNAMOUNT)));
+		paytmResponse.setTxnReferenceNo(responseMap1.get(TXNID));
+
+		final String receiptId = responseMap1.get("ORDERID");
+		final String ulbCode = ApplicationThreadLocals.getCityCode();
+		final ReceiptHeader receiptHeader;
+		final Query qry = entityManager.createNamedQuery(CollectionConstants.QUERY_RECEIPT_BY_ID_AND_CITYCODE);
+		qry.setParameter(1, Long.valueOf(receiptId));
+		qry.setParameter(2, ulbCode);
+		receiptHeader = (ReceiptHeader) qry.getSingleResult();
+		paytmResponse.setAdditionalInfo6(receiptHeader.getConsumerCode().replace("-", "").replace("/", ""));
+		paytmResponse.setAdditionalInfo2(ulbCode);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS", Locale.getDefault());
+		Date transactionDate = null;
+		try {
+			if(responseMap1.get(TXNDATE)!=null) {
+				transactionDate = sdf.parse(responseMap1.get(TXNDATE));
+				paytmResponse.setTxnDate(transactionDate);
+			}
+		} catch (ParseException e) {
+			LOGGER.error("Error occured in parsing the transaction date [" + transactionDate + "]", e);
+			try {
+				throw new ApplicationException(".transactiondate.parse.error", e);
+			} catch (ApplicationException e1) {
+				// TODO Auto-generated catch block
+				LOGGER.error(e.getMessage());
+			}
+		}
+		return paytmResponse;
 	}
 
 	@Transactional
@@ -291,75 +381,7 @@ public class PaytmAdaptor implements PaymentGatewayAdaptor {
 		return atomResponse;
 	}
 
-	@Override
-	public PaymentResponse parsePaymentResponse(final String response, final String rbt) {
-		LOGGER.debug("inside  paytm createPaymentRequest");
-		String[] keyValueStr = response.replace("{", "").replace("}", "").split(",");
-		PaymentResponse paytmResponse = new DefaultPaymentResponse();
-		TreeMap<String, String> responseMap1 = new TreeMap<String, String>();
-		for (String pair : keyValueStr) {
-			String[] entry = pair.split("=");
-			responseMap1.put(entry[0].trim(), entry[1].trim());
-		}
-
-		String prefix = null;
-		if (KEY_URBAN.equals(rbt))
-			prefix = URBAN;
-		else if (KEY_RURAL.equals(rbt))
-			prefix = RURAL;
-
-		String paytmChecksum = "";
-		boolean isValideChecksum = false;
-		LOGGER.info("RESULT : " + responseMap1.toString());
-		String result="";
-		try {
-			isValideChecksum = validateCheckSum(responseMap1, paytmChecksum,collectionApplicationProperties.paytmValue(prefix + ".paytm.merchantKey"));
-			if (isValideChecksum && responseMap1.containsKey(RESPCODE)) {
-				if (responseMap1.get(RESPCODE).equals("01")) {
-					result = CollectionConstants.PGI_AUTHORISATION_CODE_SUCCESS;
-				} else {
-					result = responseMap1.get(RESPCODE);
-					paytmResponse.setErrorDescription(responseMap1.get(RESPMSG));
-				}
-			} else {
-				result = "Checksum mismatched";
-				paytmResponse.setErrorDescription(responseMap1.get(RESPMSG));
-			}
-		} catch (Exception e) {
-			LOGGER.error(e);
-		}
-
-		paytmResponse.setAuthStatus(result);
-		paytmResponse.setReceiptId(responseMap1.get(BANKTXNID));
-		paytmResponse.setTxnAmount(new BigDecimal(responseMap1.get(TXNAMOUNT)));
-		paytmResponse.setTxnReferenceNo(responseMap1.get(TXNID));
-
-		final String receiptId = responseMap1.get("ORDERID");
-		final String ulbCode = ApplicationThreadLocals.getCityCode();
-		final ReceiptHeader receiptHeader;
-		final Query qry = entityManager.createNamedQuery(CollectionConstants.QUERY_RECEIPT_BY_ID_AND_CITYCODE);
-		qry.setParameter(1, Long.valueOf(receiptId));
-		qry.setParameter(2, ulbCode);
-		receiptHeader = (ReceiptHeader) qry.getSingleResult();
-		paytmResponse.setAdditionalInfo6(receiptHeader.getConsumerCode().replace("-", "").replace("/", ""));
-		paytmResponse.setAdditionalInfo2(ulbCode);
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS", Locale.getDefault());
-		Date transactionDate = null;
-		try {
-			transactionDate = sdf.parse(responseMap1.get(TXNDATE));
-			paytmResponse.setTxnDate(transactionDate);
-		} catch (ParseException e) {
-			LOGGER.error("Error occured in parsing the transaction date [" + transactionDate + "]", e);
-			try {
-				throw new ApplicationException(".transactiondate.parse.error", e);
-			} catch (ApplicationException e1) {
-				// TODO Auto-generated catch block
-				LOGGER.error(e.getMessage());
-			}
-		}
-		return paytmResponse;
-	}
+	
 
 	private boolean validateCheckSum(TreeMap<String, String> parameters, String paytmChecksum, String merchantKey)
 			throws Exception {
@@ -369,5 +391,5 @@ public class PaytmAdaptor implements PaymentGatewayAdaptor {
 	private String getCheckSum(TreeMap<String, String> parameters, String merchantKey) throws Exception {
 		return PaytmChecksum.generateSignature(parameters, merchantKey);
 	}
-
+	
 }

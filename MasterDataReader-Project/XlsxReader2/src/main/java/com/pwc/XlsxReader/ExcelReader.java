@@ -41,7 +41,7 @@ public class ExcelReader {
 //	public static final String SAMPLE_XLSX_FILE_PATH="/XlsxReader2/src/main/java/com/pwc/xlsx/Master rule book v-18.xlsx";
 //	public static final String SAMPLE_XLSX_FILE_PATH="src/main/java/com/pwc/xlsx/44A&44C v3.xlsx";
 //	public static final String SAMPLE_XLSX_FILE_PATH="src/main/java/com/pwc/xlsx/freedy-01Aug2020.xlsx";
-	public static final String SAMPLE_XLSX_FILE_PATH = "/home/root1/Desktop/workspaces/w1/XlsxReader2/src/main/java/com/pwc/xlsx/Master rule book 59 sectors v2.3.xlsx";
+	public static final String SAMPLE_XLSX_FILE_PATH = "C:\\Workspace\\chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\33C MASTER DATA-updated for 28 Feb 2021.xlsx";
 
 	public static void main(String[] args) throws IOException, InvalidFormatException {
 		System.out.println("==================Start===================");

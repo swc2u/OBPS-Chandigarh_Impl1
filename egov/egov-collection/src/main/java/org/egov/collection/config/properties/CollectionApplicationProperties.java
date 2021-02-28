@@ -47,6 +47,9 @@
  */
 package org.egov.collection.config.properties;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -361,5 +364,11 @@ public class CollectionApplicationProperties {
     public String hdfcTransactionPhone(){
 	    return environment.getProperty("hdfc.phone");
     }
+    
+    public List<String> paymentGatewayCode(String prefix) {
+		List<String> s=environment.getProperty(prefix+".payment.gateway.code",List.class);
+		//return Arrays.asList(s.split(",", -1));
+		return s;
+	}
 
 }

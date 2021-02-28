@@ -95,6 +95,7 @@ import org.egov.bpa.transaction.service.PermitRenewalService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.utils.BpaUtils;
+import org.egov.bpa.utils.FeeCalculationUtils;
 import org.egov.bpa.utils.OccupancyCertificateUtils;
 import org.egov.common.entity.bpa.Occupancy;
 import org.egov.common.entity.bpa.SubOccupancy;
@@ -1057,5 +1058,36 @@ public class BpaAjaxController {
         }
         IOUtils.write(jsonObj.toString(), response.getWriter());
     }
+    
+    @Autowired
+    FeeCalculationUtils feeCalculationUtils;
+    @Autowired
+    ApplicationSubTypeService applicationSubTypeService;
+
+	@GetMapping(value = "/ajax/getFeeDetailsDuringRegister", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public void getFeeDetailsDuringRegister(@RequestParam final String edcr, @RequestParam final String serviceType,
+			@RequestParam final String applicationType, final HttpServletResponse response) throws IOException {
+		System.out.println("EDCR NO:" + edcr);
+		System.out.println("service type:" + serviceType);
+		System.out.println("application subtype id :" + applicationType);
+		BpaApplication bpa = new BpaApplication();
+		bpa.seteDcrNumber(edcr);
+		ServiceType serviceTypeObj = new ServiceType();
+		serviceTypeObj.setId(Long.valueOf(serviceType));
+		bpa.setServiceType(serviceTypeObj);
+		ApplicationSubType applicationSubtypeObj = applicationSubTypeService.findById(Long.valueOf(applicationType));
+		bpa.setApplicationType(applicationSubtypeObj);
+		Map<String, String> map = feeCalculationUtils.calculateAllFeesWhileApplying(bpa);
+		final List<JSONObject> jsonObjects = new ArrayList<>();
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			final JSONObject jsonObj = new JSONObject();
+			jsonObj.put("name", entry.getKey());
+			jsonObj.put("amount", Double.valueOf(entry.getValue()));
+			jsonObjects.add(jsonObj);
+		}
+		IOUtils.write(jsonObjects.toString(), response.getWriter());
+
+	}
 
 }

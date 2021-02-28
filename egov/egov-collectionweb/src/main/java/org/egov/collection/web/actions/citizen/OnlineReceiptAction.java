@@ -780,7 +780,7 @@ public class OnlineReceiptAction extends BaseFormAction {
                 final String paramName = paramNames.nextElement();
                 final String paramValue = httpRequest.getParameter(paramName);
                 if (null != paramValue && !"".equals(paramValue))
-                    responseMap.put(paramName, paramValue);
+                    responseMap.put(paramName, paramValue!=null?paramValue.replace(",", "."):null);
             }
             responseMsg = responseMap.toString();
         }
