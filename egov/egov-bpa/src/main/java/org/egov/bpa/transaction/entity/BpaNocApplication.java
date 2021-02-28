@@ -113,7 +113,8 @@ public class BpaNocApplication extends AbstractAuditable {
     private transient User ownerUser;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name="eg_noc_evaluation",joinColumns =@JoinColumn(name= "nocapplication"))
+   // @JoinTable(name="eg_noc_evaluation",joinColumns =@JoinColumn(name= "nocapplication"))
+    @JoinColumn(name= "nocapplication")
 	private List<NocEvaluation> nocEvaluations;
 	
     public Long getId() {

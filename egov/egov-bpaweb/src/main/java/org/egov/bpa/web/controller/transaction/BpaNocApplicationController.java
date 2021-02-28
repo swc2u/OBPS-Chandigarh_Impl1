@@ -62,6 +62,7 @@ import org.egov.bpa.transaction.entity.BpaStatus;
 import org.egov.bpa.transaction.entity.NocEvaluation;
 import org.egov.bpa.transaction.entity.PermitNocApplication;
 import org.egov.bpa.transaction.entity.PermitNocDocument;
+import org.egov.bpa.transaction.repository.NocEvaluationRepository;
 import org.egov.bpa.transaction.repository.PermitNocApplicationRepository;
 import org.egov.bpa.transaction.service.ApplicationBpaService;
 import org.egov.bpa.transaction.service.BpaStatusService;
@@ -75,6 +76,7 @@ import org.egov.commons.service.OccupancyService;
 import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -157,7 +159,10 @@ public class BpaNocApplicationController {
 
 		return checklists;
 	}
-
+	@Autowired
+	private NocEvaluationRepository nocEvaluationRepository;
+	
+	@Transactional
 	@RequestMapping(value = "/updateNoc/{applicationNumber}", method = RequestMethod.POST)
 	public String updateNoc(@ModelAttribute final PermitNocApplication permitNocApplication,
 			@PathVariable final String applicationNumber, final HttpServletRequest request, final Model model,
@@ -173,6 +178,7 @@ public class BpaNocApplicationController {
 			nocEvaluation.setNocapplication(permitNocApplication.getBpaNocApplication().getId());
 			nocEvaluation.setComment(request.getParameter(checklist.getCode() + ".comment"));
 			nocEvaluation.setRemarks(request.getParameter(checklist.getCode() + ".remark"));
+			//nocEvaluationRepository.save(nocEvaluation);
 			evaluations.add(nocEvaluation);
 		}
 

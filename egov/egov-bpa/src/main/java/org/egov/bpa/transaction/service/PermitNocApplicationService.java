@@ -296,25 +296,25 @@ public class PermitNocApplicationService {
 						}
 					}
 				}else if(boundaryType.equalsIgnoreCase(BpaConstants.RURAL)){
-//					edcrPlanInfo.getPlan().getPlanInformation().setNocFireDept("YES");
-//					//edcrPlanInfo.getPlan().getPlanInformation().setNocTehsildarDept("YES");
-//					edcrPlanInfo.getPlan().getPlanInformation().setNocManimajaraDept("YES");
-//					edcrPlanInfo.getPlan().getPlanInformation().setNocElectricalDept("YES");
-//					//edcrPlanInfo.getPlan().getPlanInformation().setNocPollutionDept("YES");
-//					edcrPlanInfo.getPlan().getPlanInformation().setNocPHDept("YES");
-//					edcrPlanInfo.getPlan().getPlanInformation().setNocRoad2Dept("YES");
+					edcrPlanInfo.getPlan().getPlanInformation().setNocFireDept("YES");
+					//edcrPlanInfo.getPlan().getPlanInformation().setNocTehsildarDept("YES");
+					edcrPlanInfo.getPlan().getPlanInformation().setNocManimajaraDept("YES");
+					edcrPlanInfo.getPlan().getPlanInformation().setNocElectricalDept("YES");
+					//edcrPlanInfo.getPlan().getPlanInformation().setNocPollutionDept("YES");
+					edcrPlanInfo.getPlan().getPlanInformation().setNocPHDept("YES");
+					edcrPlanInfo.getPlan().getPlanInformation().setNocRoad2Dept("YES");
 				}
 			}			
-//			nocTypeMap.put(BpaConstants.FIRENOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocFireDept());
-//			nocTypeMap.put(BpaConstants.PH7NOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPH7Dept());
-//			nocTypeMap.put(BpaConstants.TEHNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocTehsildarDept());
-//			nocTypeMap.put(BpaConstants.PHNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPHDept());
-//			nocTypeMap.put(BpaConstants.MANINOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocManimajaraDept());
-//			nocTypeMap.put(BpaConstants.ROAD2NOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocRoad2Dept());
-//			nocTypeMap.put(BpaConstants.PACNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPACDept());
-//			nocTypeMap.put(BpaConstants.STRCNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocStructureDept());
-//			nocTypeMap.put(BpaConstants.ELECNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocElectricalDept());
-//			nocTypeMap.put(BpaConstants.POLNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPollutionDept());
+			nocTypeMap.put(BpaConstants.FIRENOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocFireDept());
+			nocTypeMap.put(BpaConstants.PH7NOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPH7Dept());
+			nocTypeMap.put(BpaConstants.TEHNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocTehsildarDept());
+			nocTypeMap.put(BpaConstants.PHNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPHDept());
+			nocTypeMap.put(BpaConstants.MANINOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocManimajaraDept());
+			nocTypeMap.put(BpaConstants.ROAD2NOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocRoad2Dept());
+			nocTypeMap.put(BpaConstants.PACNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPACDept());
+			nocTypeMap.put(BpaConstants.STRCNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocStructureDept());
+			nocTypeMap.put(BpaConstants.ELECNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocElectricalDept());
+			nocTypeMap.put(BpaConstants.POLNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPollutionDept());
 		}		 
         return nocTypeMap;
     }

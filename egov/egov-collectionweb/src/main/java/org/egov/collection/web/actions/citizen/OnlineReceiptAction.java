@@ -74,6 +74,7 @@ import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.service.ApplicationBpaService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
 import org.egov.collection.cdg.finance.service.VocherService;
+import org.egov.collection.config.properties.CollectionApplicationProperties;
 import org.egov.collection.constants.CollectionConstants;
 import org.egov.collection.entity.ReceiptDetail;
 import org.egov.collection.entity.ReceiptHeader;
@@ -199,6 +200,8 @@ public class OnlineReceiptAction extends BaseFormAction {
     private VocherService vocherService;
     @Autowired
     private EdcrExternalService edcrExternalService;
+    @Autowired
+	private CollectionApplicationProperties collectionApplicationProperties;
     private Map<String, String> getPlanInfo(String applicationNumber, String serviceCode){
     	Map<String, String> map=new HashMap<String, String>();
     	try {
@@ -556,11 +559,28 @@ public class OnlineReceiptAction extends BaseFormAction {
                 addActionError(getText("billreceipt.error.improperbilldata"));
             }
         }
+        
+        String dcr;    	
+    	String serviceCode="";
+    	String rootBoundaryType="";
+    	if(receiptHeader!=null && null!=receiptHeader.getService()) {
+    		serviceCode=receiptHeader.getService().getCode();
+    	}   	
+    	
+    	try {
+    		dcr=receiptHeader.getConsumerCode();    
+    		Map<String, String> planInfo=getPlanInfo(dcr,serviceCode);
+        	rootBoundaryType=planInfo.get(CollectionConstants.ROOT_BOUNDARY_TYPE);
+    	}catch (Exception e) {
+			// TODO: handle exception
+		}
+    	
         addDropdownData(
                 "paymentServiceList",
                 getPersistenceService().findAllByNamedQuery(CollectionConstants.QUERY_SERVICES_BY_TYPE,
                         CollectionConstants.SERVICE_TYPE_PAYMENT));
         constructServiceDetailsList();
+        filterPaymentGateway(serviceDetailsList, rootBoundaryType);
         // Fetching pending transaction by consumer code. If transaction is in pending status display message
 	    if (null != receiptHeader && null != receiptHeader.getConsumerCode() && !"".equals(receiptHeader.getConsumerCode())
 	            && receiptHeader.getService().getCode() != null && !receiptHeader.getService().getCode().isEmpty()) {
@@ -981,5 +1001,24 @@ public class OnlineReceiptAction extends BaseFormAction {
 
     public void setCollectionService(final CollectionService collectionService) {
         this.collectionService = collectionService;
+    }
+    
+    private void filterPaymentGateway(List<ServiceDetails> serviceDetails,String rootBoundaryType) {
+    	List<ServiceDetails> list2=new ArrayList<>();
+    	try {
+    		if(rootBoundaryType!=null) {
+    			List<String> allowedPaymentGateway=collectionApplicationProperties.paymentGatewayCode(rootBoundaryType);
+            	for(ServiceDetails details:serviceDetails) {
+            		if(allowedPaymentGateway.contains(details.getCode()))
+            			list2.add(details);
+            	}
+    		}else{
+    			list2=serviceDetails;
+    		}
+    	}catch (NullPointerException e) {
+			// TODO: handle exception
+		}
+    	
+    	setServiceDetailsList(list2);
     }
 }
