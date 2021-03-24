@@ -127,6 +127,7 @@ public class FeeCalculationUtils {
 								bpaGST = fee;
 							}
 						}
+						System.out.println(fee.getBpaFeeCommon().getDescription());
 					}
 					for (BpaFeeMapping bpaFee : bpaFeeMappingService.getPermitFeesByAppType(application,
 							serviceTypeId)) {
@@ -212,10 +213,12 @@ public class FeeCalculationUtils {
 										totalAmount = permitFeeCalculationService.getTotalAmountOfRule5New(plan,
 												lpRecifiedAreas, isWorkAlreadyStarted);
 									} else {
-										if (rule5ExtraArea.compareTo(BigDecimal.ZERO) > 0) {
-											totalAmount = permitFeeCalculationService.getTotalAmountOfRule5New(plan,
-													lpRecifiedAreas, isWorkAlreadyStarted);
-										}
+//										if (rule5ExtraArea.compareTo(BigDecimal.ZERO) > 0) {
+//											totalAmount = permitFeeCalculationService.getTotalAmountOfRule5New(plan,
+//													lpRecifiedAreas, isWorkAlreadyStarted);
+//										}
+										totalAmount = permitFeeCalculationService.getTotalAmountOfRule5New(plan,
+												lpRecifiedAreas, isWorkAlreadyStarted);
 									}
 									if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(),
@@ -262,7 +265,9 @@ public class FeeCalculationUtils {
 	}
 
 	public Boolean checkIsWorkAlreadyStarted(final BpaApplication application) {
-		return application.getSiteDetail().get(0).getIsappForRegularization();
+		if (application.getSiteDetail() != null && application.getSiteDetail().size() > 0 &&application.getSiteDetail().get(0) != null)
+			return application.getSiteDetail().get(0).getIsappForRegularization();
+		return false;
 	}
 
 }
