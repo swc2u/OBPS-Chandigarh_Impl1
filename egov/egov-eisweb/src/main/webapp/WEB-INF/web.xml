@@ -134,6 +134,11 @@
         <filter-name>XSSFilter</filter-name>
         <filter-class>org.egov.infra.web.security.filter.XSSFilter</filter-class>
     </filter>
+    
+    <filter>
+       <filter-name>XFrameFilter</filter-name>
+       <filter-class>org.egov.eis.web.filter.XFrameFilter</filter-class>
+    </filter>
 
     <filter-mapping>
         <filter-name>springSessionRepositoryFilter</filter-name>
@@ -200,6 +205,11 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     
+     <filter-mapping>
+        <filter-name>XFrameFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
@@ -262,7 +272,7 @@
         <cookie-config>
             <path>/</path>
             <http-only>true</http-only>
-            <secure>false</secure>
+            <secure>true</secure>
         </cookie-config>
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>

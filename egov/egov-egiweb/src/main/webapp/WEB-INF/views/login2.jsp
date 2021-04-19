@@ -206,7 +206,7 @@
 									</div>
 									<input type="password" class="form-control style-form"
 										name="j_password" id="j_password" placeholder="Password"
-										autocomplete="new-password" required="required" />
+										autocomplete="off" required="required" />
 									<div class="input-group-addon font-12" data-toggle="modal"
 										data-target="#fpassword" data-backdrop="static">Forgot?
 									</div>
@@ -429,7 +429,7 @@
 												<input style="display: none" type="password"> <input
 													type="password" class="form-control style-form"
 													name="token" id="token" placeholder="Enter your OTP"
-													autocomplete="new-password" required="required" /> <span
+													autocomplete="off" required="required" /> <span
 													class="mandatory set-mandatory"></span>
 											</div>
 											<div class="text-right font-12">OTP sent to your

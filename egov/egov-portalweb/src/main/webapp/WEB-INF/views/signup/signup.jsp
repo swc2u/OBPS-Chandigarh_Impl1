@@ -130,7 +130,7 @@
                             <div class="input-group-addon style-label">
                                 <i class="fa fa-key fa-fw theme-color style-color"></i>
                             </div>
-                            <form:password path="password" cssClass="form-control style-form check-password" id="password" placeholder="Password" maxlength="32" autocomplete="new-password" required="required" data-container="#wrap" data-toggle="popover" data-content='${pwdmsg}'/>
+                            <form:password path="password" cssClass="form-control style-form check-password" id="password" placeholder="Password" maxlength="32" autocomplete="off" required="required" data-container="#wrap" data-toggle="popover" data-content='${pwdmsg}'/>
                             <span class="mandatory set-mandatory"></span>
                             <div class="input-group-addon" style="background:#fff;border:none;border-bottom:1px solid #D0D2D7;cursor:default;">
                                 <i class="fa fa-eye show password-view" data-view="show" aria-hidden="true"></i>
@@ -148,7 +148,7 @@
                                 <i class="fa fa-key fa-fw theme-color style-color"></i>
                             </div>
                             <input type="password" class="form-control style-form check-password" name="con-password" id="con-password" placeholder="Confirm password"
-                                   autocomplete="new-password" required="required" maxlength="32"/>
+                                   autocomplete="off" required="required" maxlength="32"/>
                             <span class="mandatory set-mandatory"></span>
                             <label id="con-password-error" class="error pull-right display-hide" for="con-password">Required</label>
                             <div class="text-right add-margin error-msg display-hide password-error" style="margin:0;">

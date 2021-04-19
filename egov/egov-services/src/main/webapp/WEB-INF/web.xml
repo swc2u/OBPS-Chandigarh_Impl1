@@ -291,5 +291,12 @@
         <error-code>404</error-code>
         <location>/error/404.jsp</location>
     </error-page>
+    
+    <session-config>
+	    <cookie-config>
+	        <http-only>true</http-only>
+	        <secure>true</secure>
+	    </cookie-config>
+	</session-config>
 
 </web-app>

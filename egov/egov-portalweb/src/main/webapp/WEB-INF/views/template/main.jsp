@@ -117,7 +117,7 @@
                                 <label class="control-label">Old Password</label>
                             </div>
                             <div class="col-md-8 add-margin">
-                                <input type="password" autocomplete="new-password" class="form-control" id="old-pass"
+                                <input type="password" autocomplete="off" class="form-control" id="old-pass"
                                        required="required">
                             </div>
                         </div>
@@ -136,7 +136,7 @@
                                 <label class="control-label">Re-type Password</label>
                             </div>
                             <div class="col-md-8 add-margin">
-                                <input type="password" class="form-control checkpassword" autocomplete="new-password"
+                                <input type="password" class="form-control checkpassword" autocomplete="off"
                                        id="retype-pass">
                                 <div id="pwd-incorrt-match"
                                      class="password-error error-msg alert alert-danger display-hide">Password is not matching
