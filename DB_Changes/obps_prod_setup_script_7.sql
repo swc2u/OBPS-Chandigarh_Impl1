@@ -44,3 +44,65 @@ INSERT INTO chandigarh.eg_wf_matrix (id,department,objecttype,currentstate,curre
 INSERT INTO chandigarh.eg_wf_matrix (id,department,objecttype,currentstate,currentstatus,pendingactions,currentdesignation,additionalrule,nextstate,nextaction,nextdesignation,nextstatus,validactions,fromqty,toqty,fromdate,todate,"version",enablefields,forwardenabled,smsemailenabled,nextref,rejectenabled) VALUES
 	 (482,'ANY','BpaApplication','Registered','','Forward to junior engineer is pending','','Medium Risk','Registered','Forward to tehsildar is pending','Tehsildar','Registered','Forward',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL),
 	 (483,'ANY','BpaApplication','Registered','','Forward to tehsildar is pending','','Medium Risk','Property documents verification initiated','Forwarded to property documents verification','MC Architect','Document Verification Completed','Forward',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL);
+	 
+	 
+	 
+-- 2021-22 year changes
+
+---------------Installment for 2020-21----------------------
+Insert into eg_installment_master (ID,INSTALLMENT_NUM,INSTALLMENT_YEAR,START_DATE,END_DATE,ID_MODULE,LASTUPDATEDTIMESTAMP, DESCRIPTION,INSTALLMENT_TYPE) values (nextval('SEQ_EG_INSTALLMENT_MASTER'),201805,to_date('01-04-21','DD-MM-YY'),to_date('01-04-21','DD-MM-YY'),to_date('31-03-22','DD-MM-YY'), (select id from eg_module where name = 'BPA' and parentmodule is null), current_timestamp,'BPA/21-22','Yearly');
+
+
+INSERT INTO financialyear (id, financialyear, startingdate, endingdate, isactive, createddate, lastmodifieddate,lastmodifiedby,createdby,version, isactiveforposting, isclosed, transferclosingbalance) VALUES (nextval('seq_financialyear'), '2021-22', '2021-04-01 00:00:00', '2022-03-31 00:00:00', true, now(), now(), 1,1,0, true, false, false);
+
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 72, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 73, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 74, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 75, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 76, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 77, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 71, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 78, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 79, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 80, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 81, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 83, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 84, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 85, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 86, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 87, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 90, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 92, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 93, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 94, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 70, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 88, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 89, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+INSERT INTO chandigarh.eg_demand_reason (id, id_demand_reason_master, id_installment, percentage_basis, id_base_reason, create_date, modified_date, glcodeid) VALUES(nextval('seq_eg_demand_reason'), 91, 5, NULL, NULL, current_timestamp, current_timestamp, 394);
+
+
+--- end
