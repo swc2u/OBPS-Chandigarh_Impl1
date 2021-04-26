@@ -1,4 +1,9 @@
 /.metadata/
+/target/
+/.classpath
+/*.project
+/.settings
+/*.springBeans
 
 MasterDataReader-Project/XlsxReader2/.classpath
 

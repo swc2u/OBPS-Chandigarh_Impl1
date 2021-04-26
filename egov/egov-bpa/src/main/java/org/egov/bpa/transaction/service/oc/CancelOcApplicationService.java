@@ -108,12 +108,12 @@ public class CancelOcApplicationService {
                         Date appointmentDate = ocSlotList.get(0).getSlotDetail().getSlot().getAppointmentDate();
                         logger.info("**********appointmentDate For last scheduled or rescheduled application is*************"
                                 + appointmentDate);
-                        logger.info("compare date :" + DateUtils
+                        logger.debug("compare date :" + DateUtils
                                 .toDateUsingDefaultPattern(DateUtils.toDefaultDateFormat(Calendar.getInstance().getTime()))
                                 .after(DateUtils.toDateUsingDefaultPattern(DateUtils.toDefaultDateFormat(appointmentDate))));
                         if (DateUtils.toDateUsingDefaultPattern(DateUtils.toDefaultDateFormat(Calendar.getInstance().getTime()))
                                 .after(DateUtils.toDateUsingDefaultPattern(DateUtils.toDefaultDateFormat(appointmentDate)))) {
-                            logger.info(
+                            logger.debug(
                                     "**********now changing oc Application Status to Cancelled and close the workflow for ApplicationNumber :************"
                                             + occupancyCertificate.getApplicationNumber());
                             WorkflowBean workflowBean = new WorkflowBean();

@@ -384,12 +384,12 @@ public class PdfQrCodeAppendService {
             }
 
             if (LOG.isDebugEnabled()) {
-                LOG.debug(String.format("Path = %s", path));
-                LOG.debug(String.format("Height =%s width =%s", height, width));
-                LOG.debug(String.format("x =%s :: y =%s", x, y));
-                LOG.debug(String.format("Rotation =%s", pageRotation));
-                LOG.debug(String.format("RATIO HEIGT =%s", height1));
-                LOG.debug(String.format("RATIO width =%s", width));
+               LOG.debug(String.format("Path = %s", path));
+               LOG.debug(String.format("Height =%s width =%s", height, width));
+               LOG.debug(String.format("x =%s :: y =%s", x, y));
+               LOG.debug(String.format("Rotation =%s", pageRotation));
+               LOG.debug(String.format("RATIO HEIGT =%s", height1));
+               LOG.debug(String.format("RATIO width =%s", width));
             }
             if (height > width || pageRotation == 0 || pageRotation == 90) {
                 LOG.debug(PORTRAIT);
@@ -546,12 +546,12 @@ public class PdfQrCodeAppendService {
             }
 
             if (LOG.isDebugEnabled()) {
-                LOG.debug(String.format("Path = %s", path));
-                LOG.debug(String.format("Height =%s width =%s", height, width));
-                LOG.debug(String.format("x =%s :: y =%s", x, y));
-                LOG.debug(String.format("Rotation =%s", pageRotation));
-                LOG.debug(String.format("RATIO HEIGT =%s", height1));
-                LOG.debug(String.format("RATIO width =%s", width));
+               LOG.debug(String.format("Path = %s", path));
+               LOG.debug(String.format("Height =%s width =%s", height, width));
+               LOG.debug(String.format("x =%s :: y =%s", x, y));
+               LOG.debug(String.format("Rotation =%s", pageRotation));
+               LOG.debug(String.format("RATIO HEIGT =%s", height1));
+               LOG.debug(String.format("RATIO width =%s", width));
             }
             if (height > width || pageRotation == 0 || pageRotation == 90) {
                 LOG.debug(PORTRAIT);

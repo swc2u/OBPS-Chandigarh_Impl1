@@ -677,10 +677,10 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
             List<PermitDcrDocument> dcrDocuments = dcrDocumentRepository.findByApplication(application);
             for (PermitDcrDocument dcrDocument : dcrDocuments) {
                 if (LOG.isInfoEnabled())
-                    LOG.info("#### Dcr Document ####", dcrDocument.getId());
+                    LOG.debug("#### Dcr Document ####", dcrDocument.getId());
                 for (StoreDcrFiles file : dcrDocument.getDcrDocument().getDcrAttachments()) {
                     if (LOG.isInfoEnabled())
-                        LOG.info("#### file ####", file.getId());
+                        LOG.debug("#### file ####", file.getId());
                     bpaUtils.addQrCodeToPdfDocuments(file.getFileStoreMapper(), application);
                 }
             }
