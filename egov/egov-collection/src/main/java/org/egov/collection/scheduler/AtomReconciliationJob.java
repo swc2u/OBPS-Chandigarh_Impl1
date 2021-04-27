@@ -65,5 +65,7 @@ public class AtomReconciliationJob extends AbstractQuartzJob {
         schedularService.reconcileATOM();
        schedularService.reconcilePayUMoeny();
        schedularService.reconcileSBI();
+       schedularService.reconcilePaytm();
+       
     }
 }

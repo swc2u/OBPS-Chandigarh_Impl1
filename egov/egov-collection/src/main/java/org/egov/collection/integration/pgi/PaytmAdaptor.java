@@ -260,7 +260,7 @@ public class PaytmAdaptor implements PaymentGatewayAdaptor {
 		paytmResponse.setTxnAmount(new BigDecimal(responseMap1.get(TXNAMOUNT)));
 		paytmResponse.setTxnReferenceNo(responseMap1.get(TXNID));
 
-		final String receiptId = responseMap1.get("ORDERID");
+		final String receiptId = responseMap1.get("ORDERID").replace(PAYTM_PREFIX, "");
 		final String ulbCode = ApplicationThreadLocals.getCityCode();
 		final ReceiptHeader receiptHeader;
 		final Query qry = entityManager.createNamedQuery(CollectionConstants.QUERY_RECEIPT_BY_ID_AND_CITYCODE);
@@ -293,7 +293,8 @@ public class PaytmAdaptor implements PaymentGatewayAdaptor {
 	public PaymentResponse createOfflinePaymentRequest(final OnlinePayment onlinePayment) {
 		LOGGER.debug("Inside paytm createOfflinePaymentRequest");
 
-		String prefix = onlinePayment.getReceiptHeader().getRootBoundaryType();
+		//String prefix = onlinePayment.getReceiptHeader().getRootBoundaryType();
+		String prefix = RURAL;
 		HashMap<String, String> parameters = new HashMap<>();
 		ReceiptHeader receiptHeader = onlinePayment.getReceiptHeader();
 		ServiceDetails paymentServiceDetails = onlinePayment.getService();
