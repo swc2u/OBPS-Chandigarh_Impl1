@@ -290,6 +290,14 @@ public class CollectionApplicationProperties {
 		return environment.getProperty("sbi.cron.expression.delay.time", Integer.class);
 	}
 	
+	public String sbiLabourcessIdentifier(String prefix) {
+		return environment.getProperty(prefix+".sbi.account.labourcess.identifier",String.class);
+	}
+	
+	public String sbiUtestateIdentifier(String prefix) {
+		return environment.getProperty(prefix+".sbi.account.utestate.identifier",String.class);
+	}
+	
 	public String paytmValue(String key) {
 		return environment.getProperty(key, String.class);
 	}

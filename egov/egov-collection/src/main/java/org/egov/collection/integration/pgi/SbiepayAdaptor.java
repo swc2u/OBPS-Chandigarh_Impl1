@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.egov.collection.config.properties.CollectionApplicationProperties;
 import org.egov.collection.constants.CollectionConstants;
 import org.egov.collection.entity.OnlinePayment;
+import org.egov.collection.entity.ReceiptDetail;
 import org.egov.collection.entity.ReceiptHeader;
 import org.egov.infra.config.core.ApplicationThreadLocals;
 import org.egov.infra.exception.ApplicationException;
@@ -68,6 +69,7 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 	public static final String orderReqId_PREFIX = "SBBPA";
 	public static final String MerchantId = "MerchantId";
 	public static final String countrycode = "countrycode";
+	public static final String LABOURCESS = "Labour cess";
 
 	@Override
 	public PaymentRequest createPaymentRequest(final ServiceDetails paymentServiceDetails,
@@ -115,10 +117,25 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 		paymentRequest.setParameter(CollectionConstants.ONLINEPAYMENT_INVOKE_URL, uriComponents.toUriString());
 		paymentRequest.setParameter("EncryptTrans", hash);
 		paymentRequest.setParameter("merchIdVal", MID);
-
+		
+		String multiAccountInstructionDtls="";
+		BigDecimal labourCess=BigDecimal.ZERO;
+		BigDecimal amount2=BigDecimal.ZERO;
+		for(ReceiptDetail detail:receiptHeader.getReceiptDetails()) {
+			if(LABOURCESS.equals(detail.getFeeDescription())) {
+				labourCess=labourCess.add(detail.getCramount());
+			}else {
+				amount2=amount2.add(detail.getCramount());
+			}
+		}
+		multiAccountInstructionDtls=multiAccountInstructionDtls+labourCess.toString()+"|"+Currency+"|"+collectionApplicationProperties.sbiLabourcessIdentifier(prefix)+"||";
+		multiAccountInstructionDtls=multiAccountInstructionDtls+amount2+"|"+Currency+"|"+collectionApplicationProperties.sbiUtestateIdentifier(prefix);
+		
+		paymentRequest.setParameter("MultiAccountInstructionDtls", AES256Bit.encrypt(multiAccountInstructionDtls,
+				AES256Bit.readKeyBytes(collectionApplicationProperties.sbiMkey(prefix))));
 		return paymentRequest;
 	}
-
+	
 	@Override
 	public PaymentResponse parsePaymentResponse(final String response, final String rbt) {
 		LOGGER.info("response " + response + " rbt " + rbt);
