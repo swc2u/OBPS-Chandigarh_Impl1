@@ -28,7 +28,7 @@ import com.pwc.XlsxReader.entity.NoOfStory;
 import com.pwc.XlsxReader.entity.PermissibleBuildingHeight;
 import com.pwc.XlsxReader.entity.SetBack;
 
-public class ExcelReader {
+public class ExcelReaderCommercial {
 
 	public static final String SHEET_NAME_MASTER = "Master";
 	public static final String SHEET_NAME_FAR = "FAR";
@@ -36,12 +36,6 @@ public class ExcelReader {
 	public static final String SHEET_NAME_BACK_YARD_COMSTRUCTIONS = "Back Yard construction";
 	public static final String SHEET_NAME_SETBACKS = "Setbacks";
 	public static final String SHEET_NAME_PERMISSIBLE_BUILDING_HEIGHT = "Height";
-	// public static final String SAMPLE_XLSX_FILE_PATH =
-	// "/home/root1/Desktop/doc/project ref doc/march/Master rule book v-18.xlsx";
-//	public static final String SAMPLE_XLSX_FILE_PATH="/XlsxReader2/src/main/java/com/pwc/xlsx/Master rule book v-18.xlsx";
-//	public static final String SAMPLE_XLSX_FILE_PATH="src/main/java/com/pwc/xlsx/44A&44C v3.xlsx";
-//	public static final String SAMPLE_XLSX_FILE_PATH="src/main/java/com/pwc/xlsx/freedy-01Aug2020.xlsx";
-//	public static final String SAMPLE_XLSX_FILE_PATH = "C:\\Workspace\\chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\33C MASTER DATA-updated for 28 Feb 2021.xlsx";
 	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\REVISED MASTER DATA FOR 12 SECTORS-new.xlsx";
 	public static void main(String[] args) throws IOException, InvalidFormatException {
 		System.out.println("==================Start===================");
