@@ -38,12 +38,17 @@ public class CDGAdditionalService {
 	public static final String FILE_NO_OF_STORY = "NoOfStory.properties";
 	public static final String FILE_BACK_YARD_CONSTRUCTION = "BackYardConstruction.properties";
 	public static final String FILE_BYLAWS = "ByLaws.properties";
-
+	public static final String FILE_DRAWING_NUMBER="DrawingNumber.properties";
+	public static final String FILE_JOB_NUMBER="JobNumber.properties";
+	
 	public static final String SETBACKS = "setBack";
 	public static final String FAR = "far";
 	public static final String PERMISSIBLE_BUILDING_HEIGHT = "pbh";
 	public static final String NO_OF_STORY = "nos";
 	public static final String BACK_YARD_CONSTRUCTION = "byc";
+	public static final String DRAWING_NUMBER="dn";
+	public static final String JOB_NUMBER="jn";
+	
 
 	public static final String OCCUPENCY_CODE = "OCC";
 	public static final String SECTOR = "SECTOR";
@@ -67,6 +72,7 @@ public class CDGAdditionalService {
 	public static final String BACK_COURTYARD_CONSTRUCTION_WIDTH = "backCourtyardConstructionWidth";
 	public static final String BACK_COURTYARD_CONSTRUCTION_HEIGHT = "backCourtyardConstructionHeight";
 	public static final int ROUND_UP_SCALE=1;
+	
 
 	private String featurePropertiesLocation;
 
@@ -76,6 +82,8 @@ public class CDGAdditionalService {
 	private Properties noOfStoryProperties;
 	private Properties backYardConstructionProperties;
 	private static Properties byLawsProperties;
+	private static Properties drawingNumberProperties;
+	private static Properties jobNumberProperties;
 
 	@Autowired
 	public void PwcService(@Value("${pwc.properties.dir}") String featurePropertiesLocation) {
@@ -111,6 +119,14 @@ public class CDGAdditionalService {
 			FileReader byLawsReader = new FileReader(featurePropertiesLocation + FILE_BYLAWS);
 			byLawsProperties = new Properties();
 			byLawsProperties.load(byLawsReader);
+			
+			FileReader drawingNumberReader = new FileReader(featurePropertiesLocation + FILE_DRAWING_NUMBER);
+			drawingNumberProperties = new Properties();
+			drawingNumberProperties.load(drawingNumberReader);
+			
+			FileReader jobNumberReader = new FileReader(featurePropertiesLocation + FILE_JOB_NUMBER);
+			jobNumberProperties = new Properties();
+			jobNumberProperties.load(jobNumberReader);
 
 		} catch (Exception e) {
 			throw new RuntimeException("Properties file is required. // LOCATION:-" + featurePropertiesLocation

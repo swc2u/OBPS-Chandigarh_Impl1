@@ -22,7 +22,9 @@ public class Master {
 	private String minimumPermissibleSetback_left;
 	private String minimumPermissibleSetback_Right;
 	private String key;
-
+	private String drawingNumber;
+	private String jobNumber;
+	
 	public String getPermissibleBuildingHeight() {
 		return permissibleBuildingHeight;
 	}
@@ -181,6 +183,22 @@ public class Master {
 
 	public void setMinimumPermissibleSetback_Right(String minimumPermissibleSetback_Right) {
 		this.minimumPermissibleSetback_Right = minimumPermissibleSetback_Right;
+	}
+
+	public String getDrawingNumber() {
+		return drawingNumber;
+	}
+
+	public void setDrawingNumber(String drawingNumber) {
+		this.drawingNumber = drawingNumber;
+	}
+
+	public String getJobNumber() {
+		return jobNumber;
+	}
+
+	public void setJobNumber(String jobNumber) {
+		this.jobNumber = jobNumber;
 	}
 
 	@Override

@@ -14,7 +14,7 @@ public class XFrameFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		response.setHeader("X-FRAME-OPTIONS", "DENY");
+		//response.setHeader("X-FRAME-OPTIONS", "DENY");
         filterChain.doFilter(request, response);
 		
 	}

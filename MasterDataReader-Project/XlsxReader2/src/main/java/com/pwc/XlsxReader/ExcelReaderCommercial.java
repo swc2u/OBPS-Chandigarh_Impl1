@@ -20,8 +20,10 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import com.pwc.XlsxReader.entity.BackYardConstruction;
+import com.pwc.XlsxReader.entity.DrawingNumber;
 import com.pwc.XlsxReader.entity.DxfConstent;
 import com.pwc.XlsxReader.entity.Far;
+import com.pwc.XlsxReader.entity.JobNumber;
 import com.pwc.XlsxReader.entity.Master;
 import com.pwc.XlsxReader.entity.MyShorting;
 import com.pwc.XlsxReader.entity.NoOfStory;
@@ -36,7 +38,9 @@ public class ExcelReaderCommercial {
 	public static final String SHEET_NAME_BACK_YARD_COMSTRUCTIONS = "Back Yard construction";
 	public static final String SHEET_NAME_SETBACKS = "Setbacks";
 	public static final String SHEET_NAME_PERMISSIBLE_BUILDING_HEIGHT = "Height";
-	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\REVISED MASTER DATA FOR 12 SECTORS-new.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\REVISED MASTER DATA FOR 12 SECTORS-new.xlsx";
+	public static final String SAMPLE_XLSX_FILE_PATH = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\MASTER DATA FOR COMMERCIAL.xlsx";
+
 	public static void main(String[] args) throws IOException, InvalidFormatException {
 		System.out.println("==================Start===================");
 		Workbook workbook = WorkbookFactory.create(new File(SAMPLE_XLSX_FILE_PATH));
@@ -70,47 +74,53 @@ public class ExcelReaderCommercial {
 				case 'G':
 					master.setPlotNo(cellValue);
 					break;
-				case 'H':
-					master.setBackCourtyardConstructionWidth(cellValue);
+//				case 'H':
+//					master.setBackCourtyardConstructionWidth(cellValue);
+//					break;
+//				case 'I':
+//					master.setBackCourtyardConstructionHeight(cellValue);
+//					break;
+//				case 'J':
+//					master.setPlotAreaInSqm(cellValue);
+//					break;
+//				case 'K':
+//					master.setPlotAreaInSqy(cellValue);
+//					break;
+//				case 'L':
+//					master.setAreaType(cellValue);
+//					break;
+//				case 'M':
+//					master.setPlotDepth(cellValue);
+//					break;
+//				case 'N':
+//					master.setPlotWidth(cellValue);
+//					break;
+//				case 'O':
+//					master.setPermissibleBuildingStories(cellValue);
+//					break;
+//				case 'P':
+//					master.setPermissibleBuildingHeight(cellValue);
+//					break;
+//				case 'Q':
+//					master.setMaxmimumPermissibleFAR(cellValue);
+//					break;
+//				case 'R':
+//					master.setMinimumPermissibleSetback_Front(cellValue);
+//					break;
+//				case 'S':
+//					master.setMinimumPermissibleSetback_Rear(cellValue);
+//					break;
+//				case 'T':
+//					master.setMinimumPermissibleSetback_left(cellValue);
+//					break;
+//				case 'U':
+//					master.setMinimumPermissibleSetback_Right(cellValue);
+//					break;
+				case 'V':
+					master.setDrawingNumber(cellValue);
 					break;
-				case 'I':
-					master.setBackCourtyardConstructionHeight(cellValue);
-					break;
-				case 'J':
-					master.setPlotAreaInSqm(cellValue);
-					break;
-				case 'K':
-					master.setPlotAreaInSqy(cellValue);
-					break;
-				case 'L':
-					master.setAreaType(cellValue);
-					break;
-				case 'M':
-					master.setPlotDepth(cellValue);
-					break;
-				case 'N':
-					master.setPlotWidth(cellValue);
-					break;
-				case 'O':
-					master.setPermissibleBuildingStories(cellValue);
-					break;
-				case 'P':
-					master.setPermissibleBuildingHeight(cellValue);
-					break;
-				case 'Q':
-					master.setMaxmimumPermissibleFAR(cellValue);
-					break;
-				case 'R':
-					master.setMinimumPermissibleSetback_Front(cellValue);
-					break;
-				case 'S':
-					master.setMinimumPermissibleSetback_Rear(cellValue);
-					break;
-				case 'T':
-					master.setMinimumPermissibleSetback_left(cellValue);
-					break;
-				case 'U':
-					master.setMinimumPermissibleSetback_Right(cellValue);
+				case 'W':
+					master.setJobNumber(cellValue);
 					break;
 				default:
 					break;
@@ -118,217 +128,53 @@ public class ExcelReaderCommercial {
 
 				key++;
 			}
-			master.setKey(master.getCode() + "." + master.getSector() + "." + master.getPlotNo() + "."
-					+ master.getAreaType());
+			master.setKey(master.getCode() + "." + master.getSector() + "." + master.getPlotNo());
 			masters.add(master);
 
 		}
-		processBackYardConstruction(masters);
-		System.out.println();
-		processFar(masters);
-		System.out.println();
-		processNoOfStory(masters);
-		System.out.println();
-		processPermissibleBuildingHight(masters);
-		System.out.println();
-		processSetBack(masters);
+
+		processDrawingNumber(masters);
+		processJobNumber(masters);
 	}
 
-	private static void processFar(List<Master> masters) {
-		System.out.println("----------------start processFar ------------------");
-		List<Far> fars = new ArrayList<Far>();
+	private static void processDrawingNumber(List<Master> masters) {
+		System.out.println("----------------start DrawingNumber ------------------");
+		List<DrawingNumber> dns = new ArrayList<DrawingNumber>();
 
 		for (Master master : masters) {
-			Far far = new Far();
-			far.setKey(Far.FAR_PREFIX + "." + master.getKey());
-			far.setMaxmimumPermissibleFAR(master.getMaxmimumPermissibleFAR());
-			fars.add(far);
+			DrawingNumber dn = new DrawingNumber();
+			dn.setKey(DrawingNumber.DRAWING_NUMBER_PREFIX + "." + master.getKey());
+			dn.setDrawingNumber(master.getDrawingNumber());
+			dns.add(dn);
 		}
 
 		HashMap<String, String> properties = new HashMap<String, String>();
-		for (Far far : fars) {
-			String s = properties.put(far.getKey(), far.getMaxmimumPermissibleFAR());
+		for (DrawingNumber dn : dns) {
+			String s = properties.put(dn.getKey(), dn.getDrawingNumber());
 		}
-		System.out.println("Master "+masters.size()+" | properties "+properties.size());
-		Utill.writeToPropertiesFile(properties, "Far.properties");
-		System.out.println("----------------end processFar ------------------");
+		System.out.println("Master " + masters.size() + " | properties " + properties.size());
+		Utill.writeToPropertiesFile(properties, "DrawingNumber.properties");
+		System.out.println("----------------end DrawingNumber ------------------");
 	}
 
-	private static void processNoOfStory(List<Master> masters) {
-		System.out.println("----------------start processNoOfStory ------------------");
-		List<NoOfStory> noOfStories = new ArrayList<NoOfStory>();
+	private static void processJobNumber(List<Master> masters) {
+		System.out.println("----------------start JobNumber ------------------");
+		List<JobNumber> jns = new ArrayList<JobNumber>();
 
 		for (Master master : masters) {
-			NoOfStory noOfStory = new NoOfStory();
-			noOfStory.setKey(NoOfStory.NO_OF_STORY_PREFIX + "." + master.getKey());
-			noOfStory.setPermissibleBuildingStories(master.getPermissibleBuildingStories());
-			noOfStories.add(noOfStory);
+			JobNumber jn = new JobNumber();
+			jn.setKey(JobNumber.JOB_NUMBER_PREFIX + "." + master.getKey());
+			jn.setJobNumber(master.getJobNumber());
+			jns.add(jn);
 		}
 
 		HashMap<String, String> properties = new HashMap<String, String>();
-		for (NoOfStory far : noOfStories) {
-			properties.put(far.getKey(), far.getPermissibleBuildingStories());
+		for (JobNumber jn : jns) {
+			String s = properties.put(jn.getKey(), jn.getJobNumber());
 		}
-		System.out.println("Master "+masters.size()+" | properties "+properties.size());
-		Utill.writeToPropertiesFile(properties, "NoOfStory.properties");
-		System.out.println("----------------end processNoOfStory ------------------");
+		System.out.println("Master " + masters.size() + " | properties " + properties.size());
+		Utill.writeToPropertiesFile(properties, "JobNumber.properties");
+		System.out.println("----------------end JobNumber ------------------");
 	}
 
-	private static void processPermissibleBuildingHight(List<Master> masters) {
-		System.out.println("----------------start processPermissibleBuildingHight ------------------");
-		List<PermissibleBuildingHeight> permissibleBuildingHeights = new ArrayList<PermissibleBuildingHeight>();
-
-		for (Master master : masters) {
-			PermissibleBuildingHeight permissibleBuildingHeight = new PermissibleBuildingHeight();
-			permissibleBuildingHeight
-					.setKey(PermissibleBuildingHeight.PERMISSIBLE_BUILDING_HEIGHT_PREFIX + "." + master.getKey());
-			permissibleBuildingHeight.setPermissibleBuildingHeight(master.getPermissibleBuildingHeight());
-			permissibleBuildingHeights.add(permissibleBuildingHeight);
-		}
-
-		HashMap<String, String> properties = new HashMap<String, String>();
-		for (PermissibleBuildingHeight buildingHeight : permissibleBuildingHeights) {
-			properties.put(buildingHeight.getKey(), buildingHeight.getPermissibleBuildingHeight());
-		}
-		System.out.println("Master "+masters.size()+" | properties "+properties.size());
-		Utill.writeToPropertiesFile(properties, "PermissibleBuildingHeight.properties");
-		System.out.println("----------------end processBackYardConstruction ------------------");
-	}
-
-	private static void processSetBack(List<Master> masters) {
-		System.out.println("----------------start processSetBack ------------------");
-		List<SetBack> setBacks = new ArrayList<SetBack>();
-
-		for (Master master : masters) {
-			SetBack setBack = new SetBack();
-
-			setBack.setKeyFront(SetBack.SETBACK_PREFIX + "." + master.getKey() + "." + SetBack.FRONT_SUFFIX);
-			setBack.setKeyRear(SetBack.SETBACK_PREFIX + "." + master.getKey() + "." + SetBack.REAR_SUFFIX);
-
-			setBack.setMinimumPermissibleSetback_Front(master.getMinimumPermissibleSetback_Front());
-			setBack.setMinimumPermissibleSetback_Rear(master.getMinimumPermissibleSetback_Rear());
-
-			if (master.getMinimumPermissibleSetback_left() != null
-					&& !master.getMinimumPermissibleSetback_left().contains("*")) {
-				setBack.setMinimumPermissibleSetback_left(master.getMinimumPermissibleSetback_left());
-				setBack.setKeyLeft(SetBack.SETBACK_PREFIX + "." + master.getKey() + "." + SetBack.LEFT_SUFFIX);
-			} else if (master.getMinimumPermissibleSetback_left() != null) {
-				DxfConstent.processSetBackLeft(master.getMinimumPermissibleSetback_left(), setBack);
-				setBack.setKeyLeftArea(SetBack.SETBACK_PREFIX + "." + master.getKey() + "." + SetBack.LEFT_SUFFIX + "."
-						+ SetBack.Area_SUFFIX);
-				setBack.setKeyLeftDepth(SetBack.SETBACK_PREFIX + "." + master.getKey() + "." + SetBack.LEFT_SUFFIX + "."
-						+ SetBack.DEPTH_SUFFIX);
-				setBack.setKeyLeftWidth(SetBack.SETBACK_PREFIX + "." + master.getKey() + "." + SetBack.LEFT_SUFFIX + "."
-						+ SetBack.WIDTH_SUFFIX);
-			}
-
-			if (master.getMinimumPermissibleSetback_Right() != null
-					&& !master.getMinimumPermissibleSetback_Right().contains("*")) {
-				setBack.setMinimumPermissibleSetback_Right(master.getMinimumPermissibleSetback_Right());
-				setBack.setKeyRight(SetBack.SETBACK_PREFIX + "." + master.getKey() + "." + SetBack.RIGHT_SUFFIX);
-			} else if (master.getMinimumPermissibleSetback_Right() != null) {
-				DxfConstent.processSetBackRight(master.getMinimumPermissibleSetback_Right(), setBack);
-				setBack.setKeyRightArea(SetBack.SETBACK_PREFIX + "." + master.getKey() + "." + SetBack.RIGHT_SUFFIX
-						+ "." + SetBack.Area_SUFFIX);
-				setBack.setKeyRightDepth(SetBack.SETBACK_PREFIX + "." + master.getKey() + "." + SetBack.RIGHT_SUFFIX
-						+ "." + SetBack.DEPTH_SUFFIX);
-				setBack.setKeyRightWidth(SetBack.SETBACK_PREFIX + "." + master.getKey() + "." + SetBack.RIGHT_SUFFIX
-						+ "." + SetBack.WIDTH_SUFFIX);
-			}
-
-			setBacks.add(setBack);
-		}
-
-		HashMap<String, String> properties = new HashMap<String, String>();
-		for (SetBack setBack : setBacks) {
-			properties.put(setBack.getKeyFront(), setBack.getMinimumPermissibleSetback_Front());
-			properties.put(setBack.getKeyRear(), setBack.getMinimumPermissibleSetback_Rear());
-
-			if (setBack.getKeyRight() != null) {
-				properties.put(setBack.getKeyRight(), setBack.getMinimumPermissibleSetback_Right());
-			} else {
-				if (setBack.getMinimumPermissibleSetback_Right_Area() != null)
-					properties.put(setBack.getKeyRightArea(), setBack.getMinimumPermissibleSetback_Right_Area());
-				if (setBack.getMinimumPermissibleSetback_Right_Depth() != null)
-					properties.put(setBack.getKeyRightDepth(), setBack.getMinimumPermissibleSetback_Right_Depth());
-				if (setBack.getMinimumPermissibleSetback_Right_Width() != null)
-					properties.put(setBack.getKeyRightWidth(), setBack.getMinimumPermissibleSetback_Right_Width());
-			}
-
-			if (setBack.getKeyLeft() != null) {
-				properties.put(setBack.getKeyLeft(), setBack.getMinimumPermissibleSetback_left());
-			} else {
-				if (setBack.getMinimumPermissibleSetback_left_Area() != null)
-					properties.put(setBack.getKeyLeftArea(), setBack.getMinimumPermissibleSetback_left_Area());
-				if (setBack.getMinimumPermissibleSetback_left_Depth() != null)
-					properties.put(setBack.getKeyLeftDepth(), setBack.getMinimumPermissibleSetback_left_Depth());
-				if (setBack.getMinimumPermissibleSetback_left_Width() != null)
-					properties.put(setBack.getKeyLeftWidth(), setBack.getMinimumPermissibleSetback_left_Width());
-			}
-		}
-		System.out.println("Master "+masters.size()+" | properties "+properties.size());
-		Utill.writeToPropertiesFile(properties, "Setback.properties");
-		System.out.println("----------------end processSetBack ------------------");
-	}
-
-	private static void processBackYardConstruction(List<Master> masters) {
-		
-		System.out.println("----------------start processBackYardConstruction ------------------");
-
-		List<BackYardConstruction> backYardConstructions = new ArrayList<BackYardConstruction>();
-
-		for (Master master : masters) {
-			BackYardConstruction backYardConstruction = new BackYardConstruction();
-
-			backYardConstruction.setKeyWidth(BackYardConstruction.BACKCOURTYARDCONSTRUCTION_PREFIX + "."
-					+ master.getKey() + "." + BackYardConstruction.BACKCOURTYARDCONSTRUCTIONWIDTH_SUFFIX);
-			;
-			backYardConstruction.setKeyHight(BackYardConstruction.BACKCOURTYARDCONSTRUCTION_PREFIX + "."
-					+ master.getKey() + "." + BackYardConstruction.BACKCOURTYARDCONSTRUCTIONHIGHT_SUFFIX);
-
-			backYardConstruction.setBackCourtyardConstructionWidth(master.getBackCourtyardConstructionWidth());
-			backYardConstruction.setBackCourtyardConstructionHeight(master.getBackCourtyardConstructionHeight());
-
-			backYardConstructions.add(backYardConstruction);
-		}
-
-		HashMap<String, String> properties = new HashMap<String, String>();
-		for (BackYardConstruction backYardConstruction : backYardConstructions) {
-			properties.put(backYardConstruction.getKeyWidth(),
-					backYardConstruction.getBackCourtyardConstructionWidth());
-			properties.put(backYardConstruction.getKeyHight(),
-					backYardConstruction.getBackCourtyardConstructionHeight());
-		}
-		System.out.println("Master "+masters.size()+" | properties "+properties.size());
-		Utill.writeToPropertiesFile(properties, "BackYardConstruction.properties");
-		System.out.println("----------------end processBackYardConstruction ------------------");
-	}
-
-	private static void printCellValue(Cell cell) {
-		switch (cell.getCellTypeEnum()) {
-		case BOOLEAN:
-			System.out.print(cell.getBooleanCellValue());
-			break;
-		case STRING:
-			System.out.print(cell.getRichStringCellValue().getString());
-			break;
-		case NUMERIC:
-			if (DateUtil.isCellDateFormatted(cell)) {
-				System.out.print(cell.getDateCellValue());
-			} else {
-				System.out.print(cell.getNumericCellValue());
-			}
-			break;
-		case FORMULA:
-			System.out.print(cell.getCellFormula());
-			break;
-		case BLANK:
-			System.out.print("");
-			break;
-		default:
-			System.out.print("");
-		}
-
-		System.out.print("\t");
-	}
 }
