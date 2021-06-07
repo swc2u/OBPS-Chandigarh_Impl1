@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="edcr_report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ccdee1e7-8a6e-4168-a80a-d10d6f4f913c">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -53,6 +53,7 @@
 	<parameter name="surrenderRoadArea" class="java.math.BigDecimal"/>
 	<parameter name="plotNumber" class="java.lang.String"/>
 	<parameter name="areaType" class="java.lang.String"/>
+	<parameter name="disclaimer" class="java.lang.String"/>
 	<field name="planInformation" class="org.egov.common.entity.edcr.PlanInformation"/>
 	<field name="plot" class="org.egov.common.entity.edcr.Plot"/>
 	<field name="electricLine" class="org.egov.common.entity.edcr.ElectricLine"/>
@@ -1502,7 +1503,7 @@
 		</band>
 	</title>
 	<pageFooter>
-		<band height="52">
+		<band height="47">
 			<image scaleImage="RetainShape" hAlign="Left" vAlign="Middle" isUsingCache="true" onErrorType="Blank">
 				<reportElement mode="Transparent" x="9" y="22" width="109" height="25" uuid="a44f1994-7654-4816-a0f5-0de0ffecc5ce"/>
 				<imageExpression><![CDATA[$P{egovLogo}]]></imageExpression>
@@ -1510,7 +1511,7 @@
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="747">
+		<band height="593">
 			<textField isBlankWhenNull="true">
 				<reportElement key="" stretchType="RelativeToTallestObject" x="5" y="575" width="517" height="18" isRemoveLineWhenBlank="true" uuid="a41cfed2-1239-43a2-aa02-5a86c5ca0b9a">
 					<printWhenExpression><![CDATA[!$P{nocs}.isEmpty()]]></printWhenExpression>
@@ -1527,7 +1528,7 @@
 				<text><![CDATA[Verify Noc's]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="7" y="19" width="100" height="20" uuid="05a014bb-04c1-4e2c-b8ad-9e768696425b">
+				<reportElement x="6" y="77" width="100" height="20" uuid="05a014bb-04c1-4e2c-b8ad-9e768696425b">
 					<printWhenExpression><![CDATA[!$P{errors}.isEmpty()]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -1536,11 +1537,22 @@
 				<text><![CDATA[Errors]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="6" y="49" width="534" height="401" uuid="c69e1c51-83a0-411d-bebe-4fa86adfd03d">
+				<reportElement x="6" y="101" width="534" height="401" uuid="c69e1c51-83a0-411d-bebe-4fa86adfd03d">
 					<printWhenExpression><![CDATA[!$P{errors}.isEmpty()]]></printWhenExpression>
 				</reportElement>
 				<textFieldExpression><![CDATA[$P{errorString}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="5" y="24" width="543" height="51" uuid="348b61be-4306-4368-86b8-efc1474e7644"/>
+				<textFieldExpression><![CDATA[$P{disclaimer}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="4" width="100" height="20" uuid="670e6b91-21d3-4973-95e3-e3f2bd2016a5"/>
+				<textElement textAlignment="Left">
+					<font size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Disclaimer:]]></text>
+			</staticText>
 		</band>
 	</summary>
 </jasperReport>

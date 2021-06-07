@@ -24,7 +24,7 @@ public class DxfFileConstants {
 	public static final String PLOT_TYPE = "PLOT_TYPE";
 	public static final String KHATA_NO = "KHATA_NO";
 
-	// ROOT_BOUNDARY_TYPE values
+	// ROOT_BOUNDARY_TYPE values 
 	public static final String URBAN = "URBAN";
 	public static final String RURAL = "RURAL";
 	

@@ -92,9 +92,10 @@
         <div class="row">
             <div class="col-sm-6 add-margin">
                 <c:out value="${permitDcrDoc.dcrDocument.serviceChecklist.checklist.description}"></c:out>
-                <c:if test="${permitDcrDoc.dcrDocument.serviceChecklist.mandatory}">
+                 <c:if test="${permitDcrDoc.dcrDocument.serviceChecklist.mandatory}">
                     <span class="mandatory"></span>
                 </c:if>
+               <%--  <a href="/egi/downloadfile/ref-doc/${permitDcrDoc.dcrDocument.serviceChecklist.checklist.code}">Reference doc</a> --%>
                 <form:hidden path="permitDcrDocuments[${dcrDocStatus.index}].dcrDocument.serviceChecklist"
                              value="${permitDcrDoc.dcrDocument.serviceChecklist.id}"/>
             </div>

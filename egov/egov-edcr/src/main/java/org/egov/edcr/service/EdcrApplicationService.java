@@ -220,6 +220,20 @@ public class EdcrApplicationService {
             searchResults.add(buildResponseAsPerForm(applicationDetail));
         return new PageImpl<>(searchResults, pageable, dcrApplications.getTotalElements());
     }
+    
+    @ReadOnly
+    public Page<SearchBuildingPlanScrutinyForm> planScrutinyPagedSearchGrap(SearchBuildingPlanScrutinyForm searchRequest) {
+        final Pageable pageable = new PageRequest(1,100);
+        List<SearchBuildingPlanScrutinyForm> searchResults = new ArrayList<>();
+//        Page<EdcrApplicationDetail> dcrApplications1 = edcrApplicationDetailRepository
+//                .findAll(DcrReportSearchSpec.searchReportsSpecification(searchRequest), pageable);
+       // Page<EdcrApplicationDetail> dcrApplications = edcrApplicationDetailRepository.findAll(DcrReportSearchSpec.searchReportsSpecification(searchRequest),pageable);
+        Sort sort=new Sort("id");
+        List<EdcrApplicationDetail> dcrApplications = edcrApplicationDetailRepository.findAll(DcrReportSearchSpec.searchReportsSpecification(searchRequest),sort);
+        for (EdcrApplicationDetail applicationDetail : dcrApplications)
+            searchResults.add(buildResponseAsPerForm(applicationDetail));
+        return new PageImpl<>(searchResults, pageable, dcrApplications.size());
+    }
 
     private SearchBuildingPlanScrutinyForm buildResponseAsPerForm(EdcrApplicationDetail applicationDetail) {
         SearchBuildingPlanScrutinyForm planScrtnyFrm = new SearchBuildingPlanScrutinyForm();

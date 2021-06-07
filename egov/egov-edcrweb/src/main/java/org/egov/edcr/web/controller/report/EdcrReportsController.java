@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,7 +24,9 @@ import org.springframework.web.client.RestTemplate;
 @Controller
 @RequestMapping("/reports")
 public class EdcrReportsController {
-    private static final String SCR_SRCH_RPRT = "search-building-plan-scrutiny-report";
+	private static final String SCR_SRCH_RPRT = "search-building-plan-scrutiny-report";
+	private static final String SCR_SRCH_RPRT_CHART = "search-building-plan-scrutiny-report-chart";
+	private static final String ARCHITECTS_STATISTICAL= "architects-statistical";
     private static final String BPA_REST_URL = "%s/bpa/rest/stakeholder/type";
 
     @Autowired
@@ -54,5 +57,37 @@ public class EdcrReportsController {
         final RestTemplate restTemplate = new RestTemplate();
         final String url = String.format(BPA_REST_URL, WebUtils.extractRequestDomainURL(request, false));
         return restTemplate.getForObject(url, List.class);
+    }
+    
+    @PostMapping(value = "/buildingplan-scrutinyreport/{rootBoundry}", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String searchBuildingPlanScrutinyChart(final SearchBuildingPlanScrutinyForm srchPlnScrtny) {
+        return new DataTable<>(edcrApplicationService.planScrutinyPagedSearchGrap(srchPlnScrtny),
+                1).toJson(SearchBuildingPlanScrutinyAdaptor.class);
+    }
+    
+    @GetMapping("/buildingplan-scrutinyreport/{rootBoundry}")
+    public String searchBuildingPlanScrutinyFormChart(@PathVariable String rootBoundry,final Model model, final HttpServletRequest request) {
+        List<String> statusList = new ArrayList<>();
+        statusList.add("Accepted");
+        statusList.add("Not Accepted");
+        statusList.add("Aborted");
+        model.addAttribute("searchBuildingPlanScrutinyForm", new SearchBuildingPlanScrutinyForm());
+        model.addAttribute("buildingLicenseeTypeList", getStakeHolderTypes(request));
+        model.addAttribute("statusList", statusList);
+        model.addAttribute("rootBoundry", rootBoundry);
+        return SCR_SRCH_RPRT_CHART;
+    }
+    
+    @GetMapping("/architects-statistical")
+    public String architectsStatisticalPage(final Model model, final HttpServletRequest request) {
+        List<String> statusList = new ArrayList<>();
+        statusList.add("Accepted");
+        statusList.add("Not Accepted");
+        statusList.add("Aborted");
+        model.addAttribute("searchBuildingPlanScrutinyForm", new SearchBuildingPlanScrutinyForm());
+        model.addAttribute("buildingLicenseeTypeList", getStakeHolderTypes(request));
+        model.addAttribute("statusList", statusList);
+        return ARCHITECTS_STATISTICAL;
     }
 }

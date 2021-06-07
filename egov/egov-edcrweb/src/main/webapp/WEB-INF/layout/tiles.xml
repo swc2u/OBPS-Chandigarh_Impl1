@@ -84,6 +84,16 @@
         <put-attribute name="page-title" value="title.report.building.plan.scrutiny" cascade="true"/>
         <put-attribute name="body" value="/WEB-INF/views/reports/search-building-plan-scrutiny-report.jsp"/>
     </definition>
+    
+     <definition name="search-building-plan-scrutiny-report-chart" extends="base_layout">
+        <put-attribute name="page-title" value="title.report.building.plan.scrutiny" cascade="true"/>
+        <put-attribute name="body" value="/WEB-INF/views/reports/search-building-plan-scrutiny-report-chart.jsp"/>
+    </definition>
+    
+    <definition name="architects-statistical" extends="base_layout">
+        <put-attribute name="page-title" value="title.architects.statistical" cascade="true"/>
+        <put-attribute name="body" value="/WEB-INF/views/reports/architects-statistical.jsp"/>
+    </definition>
 
     <definition name="view-edcr-pdf" extends="base_layout">
         <put-attribute name="page-title" value="title.edcr.pdf.converted" cascade="true"/>

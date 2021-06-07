@@ -657,7 +657,7 @@ public class PlanReportService {
         	valuesMap.put("UNIT_DECLARATION", DxfFileConstants.DECLARATION_METER);
         else if(plan.getDrawingPreference().getInFeets())
         	valuesMap.put("UNIT_DECLARATION", DxfFileConstants.DECLARATION_FEET);
-        
+        valuesMap.put("disclaimer", "	In case of application for Residential Plotted property in Marla category, refer to the frame controls applicable as provided in the link - https://urbanplanning.chd.gov.in/index.php/home/architectural_controls . If the drawing does not comply with the applicable frame controls, the application may be rejected by the Estate office.");
         if (clientSpecificSubReport) {
 
             List<DcrReportBlockDetail> blockDetails = new ArrayList<>();
