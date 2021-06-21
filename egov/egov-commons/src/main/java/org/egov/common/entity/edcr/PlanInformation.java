@@ -130,6 +130,7 @@ public class PlanInformation implements Serializable {
     //YES/NO/NA.Extracted from Plan info. Is case of death.
   	private Boolean isDeathCase = false;
   	private Boolean isAllotmentOfNewNumber = false;
+  	private Boolean isTransferFeeApplicable=false;
     
     //Extracted from Plan info. Type of area. Whether old or new area.
     private String typeOfArea;
@@ -1063,4 +1064,13 @@ public class PlanInformation implements Serializable {
 	public void setIsAllotmentOfNewNumber(Boolean isAllotmentOfNewNumber) {
 		this.isAllotmentOfNewNumber = isAllotmentOfNewNumber;
 	}
+
+	public Boolean getIsTransferFeeApplicable() {
+		return isTransferFeeApplicable;
+	}
+
+	public void setIsTransferFeeApplicable(Boolean isTransferFeeApplicable) {
+		this.isTransferFeeApplicable = isTransferFeeApplicable;
+	}
+	
 }

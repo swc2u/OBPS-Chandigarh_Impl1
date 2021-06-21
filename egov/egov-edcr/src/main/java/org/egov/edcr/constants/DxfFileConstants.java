@@ -559,4 +559,6 @@ public class DxfFileConstants {
 	public static final String MULTI_BAY_PARTITIONS_NUMBER="MULTI_BAY_PARTITIONS_NUMBER";
 	
 	public static final String PLAN_INFO_STAIR_COVERS_AREA="BLOCK_%s_STAIR_COVERS_AREA";
+	
+	public static final String TRANSFER_FEE_APPLICABLE="TRANSFER_FEE_APPLICABLE";
 }

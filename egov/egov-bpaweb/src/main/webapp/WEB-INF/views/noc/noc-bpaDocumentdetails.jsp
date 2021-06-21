@@ -49,7 +49,8 @@
 	</div>
 </div>
 <div class="panel-body">
-	<input type="hidden" id="appType" value="${bpaApplication.applicationType.name}">
+	<input type="hidden" id="appType"
+		value="${bpaApp.applicationType.name}">
 	<table class="table table-bordered  multiheadertbl">
 		<thead>
 			<tr>
@@ -61,19 +62,26 @@
 		</thead>
 		<tbody>
 			<c:choose>
-				<c:when test="${not empty  bpaApp.permitDocuments}">
-					<c:forEach items="${bpaApp.permitDocuments}" var="docs"
+				<c:when test="${not empty  bpaApp.getPermitDocuments()}">
+					<c:forEach items="${bpaApp.getPermitDocuments()}" var="docs"
 						varStatus="status">
-						<tr id="${docs.document.serviceChecklist.checklist.code}" class="genDocs">
-							<td class="view-content text-center" style="font-size: 97%;"><c:out value="${status.index+1}" /></td>
-							<td class="view-content text-justify" style="font-size: 97%;"><c:out value="${docs.document.serviceChecklist.checklist.description}"
+						<tr id="${docs.document.serviceChecklist.checklist.code}"
+							class="genDocs">
+							<td class="view-content text-center" style="font-size: 97%;"><c:out
+									value="${status.index+1}" /></td>
+							<td class="view-content text-justify" style="font-size: 97%;"><c:out
+									value="${docs.document.serviceChecklist.checklist.description}"
 									default="N/A" /></td>
-							<td class="view-content text-justify" style="font-size: 97%;"><c:out value="${docs.document.remarks}" default="N/A" /></td>
-							<td class="view-content" style="font-size: 97%;"><c:set value="false" var="isDocFound"></c:set> <c:forEach
-									var="bpadoc" items="${docs.document.getOrderedSupportDocs()}" varStatus="loop">
+							<td class="view-content text-justify" style="font-size: 97%;"><c:out
+									value="${docs.document.remarks}" default="N/A" /></td>
+							<td class="view-content" style="font-size: 97%;"><c:set
+									value="false" var="isDocFound"></c:set> <c:forEach var="bpadoc"
+									items="${docs.document.getOrderedSupportDocs()}"
+									varStatus="loop">
 									<c:if test="${bpadoc.fileStoreId ne null}">
 										<c:set value="true" var="isDocFound"></c:set>
-										<a target="_blank" href="/bpa/application/downloadfile/${bpadoc.fileStoreId}"
+										<a target="_blank"
+											href="/bpa/application/downloadfile/${bpadoc.fileStoreId}"
 											data-gallery>${loop.index +1} - ${bpadoc.fileName} </a>
 										<c:if test="${!loop.last}">,</c:if>&nbsp;
 									</c:if>

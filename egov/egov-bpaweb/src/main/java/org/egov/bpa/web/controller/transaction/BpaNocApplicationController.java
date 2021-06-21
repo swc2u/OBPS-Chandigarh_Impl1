@@ -60,6 +60,8 @@ import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BpaNocApplication;
 import org.egov.bpa.transaction.entity.BpaStatus;
 import org.egov.bpa.transaction.entity.NocEvaluation;
+import org.egov.bpa.transaction.entity.PermitDcrDocument;
+import org.egov.bpa.transaction.entity.PermitDocument;
 import org.egov.bpa.transaction.entity.PermitNocApplication;
 import org.egov.bpa.transaction.entity.PermitNocDocument;
 import org.egov.bpa.transaction.repository.NocEvaluationRepository;
@@ -136,8 +138,11 @@ public class BpaNocApplicationController {
 					.equals(permitNoc.getBpaNocApplication().getNocType()))
 				model.addAttribute("nocDocs", nocDocument);
 		}
-		model.addAttribute("bpaApp",
-				applicationBpaService.findByApplicationNumber(permitNoc.getBpaApplication().getApplicationNumber()));
+		BpaApplication bpaApp=applicationBpaService.findByApplicationNumber(permitNoc.getBpaApplication().getApplicationNumber());
+		for(PermitDocument p:bpaApp.getPermitDocuments()) {
+			System.out.println(p.getDocument().getServiceChecklist().getChecklist().getDescription());
+		}
+		model.addAttribute("bpaApp",bpaApp);
 		permitNoc.getBpaApplication().setPermitOccupanciesTemp(permitNoc.getBpaApplication().getPermitOccupancies());
 		model.addAttribute("occupancyList", occupancyService.findAllOrderByOrderNumber());
 		model.addAttribute("permitNocApplication", permitNoc);

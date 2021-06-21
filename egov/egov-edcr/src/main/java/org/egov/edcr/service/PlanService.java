@@ -245,6 +245,12 @@ public class PlanService {
 			if(null!=pl.getPlanInfoProperties().get(DxfFileConstants.ALLOTMENT_OF_NEW_NUMBER)
 					&& DxfFileConstants.YES.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.ALLOTMENT_OF_NEW_NUMBER)))
 				pl.getPlanInformation().setIsAllotmentOfNewNumber(true);
+			
+			if(null!=pl.getPlanInfoProperties().get(DxfFileConstants.TRANSFER_FEE_APPLICABLE)
+					&& DxfFileConstants.NO.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.TRANSFER_FEE_APPLICABLE)))
+				pl.getPlanInformation().setIsTransferFeeApplicable(false);
+			else
+				pl.getPlanInformation().setIsTransferFeeApplicable(true);
 		}
 		
 		if(pl.getDrawingPreference().getInFeets())

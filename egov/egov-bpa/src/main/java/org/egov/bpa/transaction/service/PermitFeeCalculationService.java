@@ -1458,20 +1458,22 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	}
 
 	public BigDecimal getTotalTransferFee(Plan plan) {
-		if (plan.getPlanInformation().getIsDeathCase()) {
-			return THOUSAND;
-		} else {
-			BigDecimal plotSizeInSQF = plan.getPlanInformation().getPlotArea();
-			if (plan.getDrawingPreference().getInMeters()) {
-				plotSizeInSQF = plotSizeInSQF.multiply(SQMT_SQFT_MULTIPLIER);
-			}
-			if (plotSizeInSQF.compareTo(new BigDecimal(900)) <= 0) {
+		if(plan.getPlanInformation().getIsTransferFeeApplicable()) {
+			if (plan.getPlanInformation().getIsDeathCase()) {
 				return THOUSAND;
-			} else if (plotSizeInSQF.compareTo(new BigDecimal(900)) > 0
-					&& plotSizeInSQF.compareTo(new BigDecimal(1800)) <= 0) {
-				return TWO_THOUSAND;
-			} else if (plotSizeInSQF.compareTo(new BigDecimal(1800)) > 0) {
-				return FOUR_THOUSAND;
+			} else {
+				BigDecimal plotSizeInSQF = plan.getPlanInformation().getPlotArea();
+				if (plan.getDrawingPreference().getInMeters()) {
+					plotSizeInSQF = plotSizeInSQF.multiply(SQMT_SQFT_MULTIPLIER);
+				}
+				if (plotSizeInSQF.compareTo(new BigDecimal(900)) <= 0) {
+					return THOUSAND;
+				} else if (plotSizeInSQF.compareTo(new BigDecimal(900)) > 0
+						&& plotSizeInSQF.compareTo(new BigDecimal(1800)) <= 0) {
+					return TWO_THOUSAND;
+				} else if (plotSizeInSQF.compareTo(new BigDecimal(1800)) > 0) {
+					return FOUR_THOUSAND;
+				}
 			}
 		}
 		return BigDecimal.ZERO;
