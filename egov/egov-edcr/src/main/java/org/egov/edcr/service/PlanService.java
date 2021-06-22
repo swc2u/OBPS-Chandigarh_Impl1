@@ -247,10 +247,10 @@ public class PlanService {
 				pl.getPlanInformation().setIsAllotmentOfNewNumber(true);
 			
 			if(null!=pl.getPlanInfoProperties().get(DxfFileConstants.TRANSFER_FEE_APPLICABLE)
-					&& DxfFileConstants.NO.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.TRANSFER_FEE_APPLICABLE)))
-				pl.getPlanInformation().setIsTransferFeeApplicable(false);
+					&& (DxfFileConstants.NO.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.TRANSFER_FEE_APPLICABLE)) || DxfFileConstants.YES.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.TRANSFER_FEE_APPLICABLE))))
+				pl.getPlanInformation().setIsTransferFeeApplicable(DxfFileConstants.NO.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.TRANSFER_FEE_APPLICABLE))?false:true);
 			else
-				pl.getPlanInformation().setIsTransferFeeApplicable(true);
+				pl.addError("TRANSFER_FEE_APPLICABLE", "TRANSFER_FEE_APPLICABLE is mandatory");
 		}
 		
 		if(pl.getDrawingPreference().getInFeets())
