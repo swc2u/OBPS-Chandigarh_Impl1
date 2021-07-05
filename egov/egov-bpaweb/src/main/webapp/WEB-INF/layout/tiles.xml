@@ -340,6 +340,20 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/reports/search-servicewise-status-report.jsp" />
 	</definition>
+	<definition name="search-servicewise-status-report-Rural"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.report.appln.status" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/reports/search-servicewise-status-report-Rural.jsp" />
+	</definition>
+	<definition name="search-servicewise-status-report-Urban"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.report.appln.status" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/reports/search-servicewise-status-report-Urban.jsp" />
+	</definition>
 	<definition name="view-servicewise-appln-details"
 		extends="base_layout">
 		<put-attribute name="page-title"

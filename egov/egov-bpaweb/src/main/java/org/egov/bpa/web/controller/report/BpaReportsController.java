@@ -51,11 +51,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.egov.bpa.master.entity.ApplicationSubType;
 import org.egov.bpa.master.service.ApplicationSubTypeService;
 import org.egov.bpa.master.service.NocConfigurationService;
@@ -102,6 +105,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
+
 @Controller
 @RequestMapping(value = "/reports")
 public class BpaReportsController extends BpaGenericApplicationController {
@@ -142,6 +147,92 @@ public class BpaReportsController extends BpaGenericApplicationController {
 		prepareFormData(model);
 		model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
 		return "search-servicewise-status-report";
+	}
+	
+	@RequestMapping(value = "/servicewise-statusreport/d/r", method = RequestMethod.GET)
+	public String searchStatusCountByServicetypeFormForRural(final Model model) {
+		prepareFormData(model);
+		model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
+		return "search-servicewise-status-report-Rural";
+	}
+	
+	@RequestMapping(value = "/servicewise-statusreport/d/u", method = RequestMethod.GET)
+	public String searchStatusCountByServicetypeFormForUrban(final Model model) {
+		prepareFormData(model);
+		model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
+		return "search-servicewise-status-report-Urban";
+	}
+	
+	@RequestMapping(value = "/servicewise-statusreport/d/u", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String getStatusCountByServicetypeResultForUrban(final Model model) {
+		Map<String, Long> map=new HashMap<String, Long>();
+		
+		SearchBpaApplicationForm aboveTwoKanal=new SearchBpaApplicationForm();
+		aboveTwoKanal.setApplicationTypeId(5L);//Above two Kanal 
+		final List<SearchBpaApplicationReport> aboveTwoKanalResultList = bpaReportsService
+				.getResultsByServicetypeAndStatus(aboveTwoKanal);
+		map.put("Above two Kanal", getCount(aboveTwoKanalResultList));
+		
+		SearchBpaApplicationForm belowTwoKanal=new SearchBpaApplicationForm();
+		belowTwoKanal.setApplicationTypeId(3L);//Below two Kanal
+		final List<SearchBpaApplicationReport> belowTwoKanalResultList = bpaReportsService
+				.getResultsByServicetypeAndStatus(belowTwoKanal);
+		
+		map.put("Below two Kanal", getCount(belowTwoKanalResultList));
+		
+		Gson gson = new Gson(); 
+		String json = gson.toJson(map); 
+		
+		return json;
+	}
+	
+	@RequestMapping(value = "/servicewise-statusreport/d/r", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String getStatusCountByServicetypeResultForRural(final Model model) {
+		Map<String, Long> map=new HashMap<String, Long>();
+		
+		SearchBpaApplicationForm rural=new SearchBpaApplicationForm();
+		rural.setApplicationTypeId(4L);//RURAL
+		
+		final List<SearchBpaApplicationReport> ruralResultList = bpaReportsService
+				.getResultsByServicetypeAndStatus(rural);
+		
+		map.put("RURAL", getCount(ruralResultList));
+		
+		Gson gson = new Gson(); 
+		String json = gson.toJson(map); 
+		
+		return json;
+	}
+	
+	private Long getCount(List<SearchBpaApplicationReport> list) {
+		Long result=0l;
+		for(SearchBpaApplicationReport report:list) {
+			if (report.getServiceType01() != null)
+				result += report.getServiceType01();
+			if (report.getServiceType02() != null)
+				result += report.getServiceType02();
+			if (report.getServiceType03() != null)
+				result += report.getServiceType03();
+			if (report.getServiceType04() != null)
+				result += report.getServiceType04();
+			if (report.getServiceType05() != null)
+				result += report.getServiceType05();
+			if (report.getServiceType06() != null)
+				result += report.getServiceType06();
+			if (report.getServiceType07() != null)
+				result += report.getServiceType07();
+			if (report.getServiceType08() != null)
+				result += report.getServiceType08();
+			if (report.getServiceType09() != null)
+				result += report.getServiceType09();
+			if (report.getServiceType14() != null)
+				result += report.getServiceType14();
+			if (report.getServiceType15() != null)
+				result += report.getServiceType15();
+		}
+		return result;
 	}
 
 	@RequestMapping(value = "/servicewise-statusreport", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
