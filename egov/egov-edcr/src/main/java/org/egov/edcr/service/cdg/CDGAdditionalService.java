@@ -176,6 +176,12 @@ public class CDGAdditionalService {
 					value1 != null && value1.length() > 0 ? value1 : DxfFileConstants.DATA_NOT_FOUND);
 			map.put(BACK_COURTYARD_CONSTRUCTION_HEIGHT,
 					value2 != null && value2.length() > 0 ? value2 : DxfFileConstants.DATA_NOT_FOUND);
+		}else if(featureName.getCDGAConstantValue()
+				.equals(CDGAConstant.JOB_NUMBER.getCDGAConstantValue())) {
+			map.put(JOB_NUMBER, jobNumberProperties.getProperty(getBaseKeyCom(JOB_NUMBER, keyArrgument)));
+		}else if(featureName.getCDGAConstantValue()
+				.equals(CDGAConstant.DRAWING_NUMBER.getCDGAConstantValue())) {
+			map.put(DRAWING_NUMBER, drawingNumberProperties.getProperty(getBaseKeyCom(DRAWING_NUMBER, keyArrgument)));
 		}
 
 		return map;
@@ -225,6 +231,16 @@ public class CDGAdditionalService {
 		stringBuffer.append(getString(keyArrgument.get(SECTOR) + "."));
 		stringBuffer.append(getString(keyArrgument.get(PLOT_NO) + "."));
 		stringBuffer.append(getString(getAreaType(keyArrgument.get(PLOT_TYPE))));
+
+		return stringBuffer.toString();
+	}
+	
+	private String getBaseKeyCom(String prefix, Map<String, String> keyArrgument) {
+
+		StringBuffer stringBuffer = new StringBuffer(prefix + ".");
+		stringBuffer.append(keyArrgument.get(OCCUPENCY_CODE) + ".");
+		stringBuffer.append(getString(keyArrgument.get(SECTOR) + "."));
+		stringBuffer.append(getString(keyArrgument.get(PLOT_NO)));
 
 		return stringBuffer.toString();
 	}

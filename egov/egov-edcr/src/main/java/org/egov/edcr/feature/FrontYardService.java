@@ -409,7 +409,7 @@ public class FrontYardService extends GeneralRule {
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
 				
-		if(pl.isRural()) {
+		if(pl.isRural() || DxfFileConstants.F.equals(mostRestrictiveOccupancyType.getType().getCode())) {
 			return;
 		}
 

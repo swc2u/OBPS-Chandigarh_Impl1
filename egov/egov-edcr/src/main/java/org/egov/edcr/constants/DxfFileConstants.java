@@ -14,7 +14,7 @@ public class DxfFileConstants {
 	public static final String DATA_NOT_FOUND="Master data not available";
 	public static final String NOT_PERMITTED="NOT PERMITTED";
 	public static final String NOT_PROVIDED="NOT PROVIDED";
-
+	public static final String NA="NA";
 	// CGCL start according to 26jan
 
 	public static final String PLOT_NO = "PLOT_NUMBER";

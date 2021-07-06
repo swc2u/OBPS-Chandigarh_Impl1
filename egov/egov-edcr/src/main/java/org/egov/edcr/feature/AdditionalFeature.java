@@ -223,6 +223,7 @@ public class AdditionalFeature extends FeatureProcess {
 		}
 		
 		validateAr(pl);
+		validateCommercialData(pl);
 		validateNumberOfFloorsSkelton(pl);
 		validatePlinthHeight(pl, errors);
 		// validateIntCourtYard(pl, errors);
@@ -245,6 +246,52 @@ public class AdditionalFeature extends FeatureProcess {
 		oCAdditionalFeature.process(pl);// for disabling the code OC comparation 
 
 		return pl;
+	}
+	
+	private void validateCommercialData(Plan plan) {
+		OccupancyTypeHelper occupancyTypeHelper = plan.getVirtualBuilding().getMostRestrictiveFarHelper();
+
+		if (!DxfFileConstants.F.equals(occupancyTypeHelper.getType().getCode())) {
+			return;
+		}
+
+		String suboccTypeCode = occupancyTypeHelper.getSubtype().getCode();
+		Map<String, String> keyArrgument = new HashMap<String, String>();
+		keyArrgument.put(CDGAdditionalService.OCCUPENCY_CODE, suboccTypeCode);
+		keyArrgument.put(CDGAdditionalService.SECTOR, plan.getPlanInfoProperties().get(DxfFileConstants.SECTOR_NUMBER));
+		keyArrgument.put(CDGAdditionalService.PLOT_NO, plan.getPlanInfoProperties().get(DxfFileConstants.PLOT_NO));
+		Map<String, String> jobNumberValue = cDGAdditionalService.getFeatureValue(CDGAConstant.JOB_NUMBER,
+				keyArrgument);
+
+		Map<String, String> drawingNumberValue = cDGAdditionalService.getFeatureValue(CDGAConstant.DRAWING_NUMBER,
+				keyArrgument);
+
+		String jn = jobNumberValue.get(CDGAdditionalService.JOB_NUMBER);
+		String dn = drawingNumberValue.get(CDGAdditionalService.DRAWING_NUMBER);
+
+		String JOB = "Job Number";
+		String Drawing_name = "Drawing Number";
+
+		if (jn == null)
+			plan.addError(DcrConstants.OBJECTNOTDEFINED, JOB + " in master data.");
+		if (dn == null)
+			plan.addError(DcrConstants.OBJECTNOTDEFINED, Drawing_name + " in master data.");
+
+		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
+		scrutinyDetail.setKey("Common_Architecture controls");
+		scrutinyDetail.addColumnHeading(2, JOB);
+		scrutinyDetail.addColumnHeading(3, Drawing_name);
+
+		scrutinyDetail.addColumnHeading(4, STATUS);
+		Map<String, String> details = new HashMap<>();
+
+		details.put(JOB, jn);
+		details.put(Drawing_name, dn);
+		details.put(STATUS, Result.Verify.getResultVal());
+
+		scrutinyDetail.getDetail().add(details);
+		plan.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+		
 	}
 
 	private void validateAr(Plan pl) {
@@ -855,8 +902,13 @@ public class AdditionalFeature extends FeatureProcess {
 						.get(CDGAdditionalService.PERMISSIBLE_BUILDING_STORIES);
 
 				if (DxfFileConstants.DATA_NOT_FOUND.equals(noc)) {
-					pl.addError("NO OF STOREYS", "NO OF STOREYS, " + DxfFileConstants.DATA_NOT_FOUND);
-					requiredFloorCount = DxfFileConstants.DATA_NOT_FOUND;
+					if (DxfFileConstants.F.equals(occTypeCode)) {
+						requiredFloorCount = DxfFileConstants.NA;
+						isAccepted = true;
+					} else {
+						pl.addError("NO OF STOREYS", "NO OF STOREYS, " + DxfFileConstants.DATA_NOT_FOUND);
+						requiredFloorCount = DxfFileConstants.DATA_NOT_FOUND;
+					}
 				} else if (DxfFileConstants.NOT_PROVIDED.equalsIgnoreCase(noc)) {
 //					isAccepted = false;
 //					requiredFloorCount = "Master data " + DxfFileConstants.NOT_PROVIDED;

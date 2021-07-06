@@ -19,7 +19,7 @@ public enum CDGAConstant {
 	COMMERCAIL_OR_COMMUNLTY_FACLTITIES("Commercial-or-community-facitities"), DWELLING_UNITS("Dwelling-units"),
 	DG_SET("DG-set"), LIGHT_AND_VENTILATION_IN_BASEMENT("Light-and-Ventilation-in-Basement"), CHECKPOST("Checkpost"),
 	SEATING_CAPACITY("Seating-Capacity"), COMMERCIAL_AREAS("Commercial-areas"), RESIDENTIAL("Residential"),
-	PANTRY("Pantry"), ANCLLARY_FACIITIES("Ancillary-facilities"),COMPOUND_WALL_SERVICE("bw"),NORTH_DIRECTION("nd"),HEADWAY("Headway");
+	PANTRY("Pantry"), ANCLLARY_FACIITIES("Ancillary-facilities"),COMPOUND_WALL_SERVICE("bw"),NORTH_DIRECTION("nd"),HEADWAY("Headway"),DRAWING_NUMBER("dn"),JOB_NUMBER("jn");
 	
 	
     private final String occupancyTypeVal;

@@ -1939,16 +1939,19 @@ public class Far extends FeatureProcess {
 
 		expectedResult = result.get(CDGAdditionalService.MAXMIUM_PERMISSIBLE_FAR);
 
-		
-
-		if(!DxfFileConstants.DATA_NOT_FOUND.equals(expectedResult)) {
-			pl.getFarDetails().setPermissableFar((new BigDecimal(expectedResult)).doubleValue());
-			isAccepted = far.compareTo(new BigDecimal(expectedResult)) <= 0;
-			//pl.getFarDetails().setPermissableFar(ONE_POINTTWO.doubleValue());
-			expectedResult = "<= " + expectedResult;
+		if(DxfFileConstants.F.equals(occupancyType.getType().getCode())) {
+			isAccepted=true;
+			expectedResult=DxfFileConstants.NA;
 		}else {
-			errors.put(OBJECTNOTDEFINED+CDGAdditionalService.FAR, DxfFileConstants.DATA_NOT_FOUND+" : FAR");
-			pl.addErrors(errors);
+			if(!DxfFileConstants.DATA_NOT_FOUND.equals(expectedResult)) {
+				pl.getFarDetails().setPermissableFar((new BigDecimal(expectedResult)).doubleValue());
+				isAccepted = far.compareTo(new BigDecimal(expectedResult)) <= 0;
+				//pl.getFarDetails().setPermissableFar(ONE_POINTTWO.doubleValue());
+				expectedResult = "<= " + expectedResult;
+			}else {
+				errors.put(OBJECTNOTDEFINED+CDGAdditionalService.FAR, DxfFileConstants.DATA_NOT_FOUND+" : FAR");
+				pl.addErrors(errors);
+			}
 		}
 
 		if (errors.isEmpty() && StringUtils.isNotBlank(expectedResult)) {

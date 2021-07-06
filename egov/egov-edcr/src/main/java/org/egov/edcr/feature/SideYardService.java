@@ -332,8 +332,11 @@ public class SideYardService extends GeneralRule {
 			return;
 
 		validateSideYardRule(pl);
+		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
+				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+				: null;
 		
-		if(pl.getIsRowHouse() || pl.isRural())
+		if(pl.getIsRowHouse() || pl.isRural() || DxfFileConstants.F.equals(mostRestrictiveOccupancyType.getType().getCode()))
 			return;
 
 		// Side yard 1 and side yard 2 both may not mandatory in same levels. Get
@@ -420,9 +423,6 @@ public class SideYardService extends GeneralRule {
 							scrutinyDetail.setKey("Block_" + block.getName() + "_" + "Side Setback");
 
 
-							OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
-									? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
-									: null;
 
 							if(!pl.isRural()) {
 								exceptedValueLeft =getSetBack(pl, mostRestrictiveOccupancyType).get(CDGAdditionalService.SETBACK_LEFT);
@@ -1256,7 +1256,7 @@ if(pl.getDrawingPreference().getInFeets()) {
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
 				
-		if(pl.isRural()) {
+		if(pl.isRural() || DxfFileConstants.F.equals(mostRestrictiveOccupancyType.getType().getCode())) {
 			return;
 		}
 				

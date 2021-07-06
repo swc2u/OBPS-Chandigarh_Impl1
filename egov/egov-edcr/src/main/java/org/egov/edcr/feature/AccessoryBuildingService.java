@@ -253,8 +253,14 @@ public class AccessoryBuildingService extends FeatureProcess {
 			
 			boolean notPermittedFlage=false;
 			if(DxfFileConstants.DATA_NOT_FOUND.equals(distanceStr) || DxfFileConstants.DATA_NOT_FOUND.equals(heightStr)) {
-				plan.addError("BACK_COURTYARD_CONSTRUCTION_WIDTH", DxfFileConstants.DATA_NOT_FOUND +": BACK_COURTYARD_CONSTRUCTION");
-				return;
+				if(DxfFileConstants.F.equals(occupancyTypeHelper.getType().getCode())) {
+					distanceStr=DxfFileConstants.NA;
+					heightStr=DxfFileConstants.NA;
+				}
+				else {
+					plan.addError("BACK_COURTYARD_CONSTRUCTION_WIDTH", DxfFileConstants.DATA_NOT_FOUND +": BACK_COURTYARD_CONSTRUCTION");
+					return;
+				}
 			}
 			
 			if(DxfFileConstants.NOT_PERMITTED.equals(distanceStr) || DxfFileConstants.NOT_PERMITTED.equals(heightStr)) 

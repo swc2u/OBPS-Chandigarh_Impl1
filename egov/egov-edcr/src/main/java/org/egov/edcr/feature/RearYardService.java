@@ -335,6 +335,11 @@ public class RearYardService extends GeneralRule {
 							exceptedValue=result.get(CDGAdditionalService.SETBACK_REAR);
 							//exceptedValue="4.96";
 							}
+							if(DxfFileConstants.F.equals(mostRestrictiveOccupancyType.getType().getCode())) {
+								exceptedValue=DxfFileConstants.NA;
+								return;
+							}
+							
 							if(DxfFileConstants.DATA_NOT_FOUND.equals(exceptedValue)) {
 								pl.addError(OBJECTNOTDEFINED+CDGAdditionalService.SETBACK_REAR, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_REAR");
 								return;
@@ -940,6 +945,14 @@ public class RearYardService extends GeneralRule {
 	}
 
 	private void validateRearYard(final Plan pl) {
+		
+		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
+				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+				: null;
+		
+		if(DxfFileConstants.F.equals(mostRestrictiveOccupancyType.getType().getCode()))
+			return;
+		
 		for (Block block : pl.getBlocks()) {
 			if (!block.getCompletelyExisting()) {
 				Boolean rearYardDefined = false;
