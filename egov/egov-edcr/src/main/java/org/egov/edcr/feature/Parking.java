@@ -258,6 +258,9 @@ public class Parking extends FeatureProcess {
          
               if(DxfFileConstants.P_N.equals(mostRestrictiveOccupancy.getSubtype().getCode()))//is not applicable because parking area is  excluded
             	  return;
+              
+              if(DxfFileConstants.F_SCO.equals(mostRestrictiveOccupancy.getSubtype().getCode()))//is not applicable because parking area is  excluded
+            	  return;
                 
         BigDecimal totalBuiltupArea = pl.getOccupancies().stream().map(Occupancy::getBuiltUpArea)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -355,6 +358,10 @@ public class Parking extends FeatureProcess {
             	if(basementParkingArea.compareTo(totalProvidedCarParkArea.multiply(new BigDecimal("0.80")))<0) {
             		pl.addError("basment parking", "Basement parking should be more then 80% of Total parking area");
             	}
+            	
+            }else if(mostRestrictiveOccupancy!=null && DxfFileConstants.F_SCO.equals(mostRestrictiveOccupancy.getSubtype().getCode())) {
+            	requiredCarParkArea=0d;
+            	requiredVisitorParkArea=0d;
             	
             }
             else {
@@ -849,4 +856,36 @@ public class Parking extends FeatureProcess {
     public Map<String, Date> getAmendments() {
         return new LinkedHashMap<>();
     }
+
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		return super.equals(obj);
+	}
+    
+    
+}
+
+class A{
+	public static void m1() {
+		
+	}
+}
+class B extends A{
+	public static void m1() {
+		
+	}
+}
+
+class Main{
+	public static void main(String[] args) {
+		B b=new B();
+		b.m1();
+	}
 }

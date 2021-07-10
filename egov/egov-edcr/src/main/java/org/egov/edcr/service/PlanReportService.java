@@ -783,7 +783,9 @@ public class PlanReportService {
                         if (blkFeature.equals(REAR_YARD_DESC)) {
                             rear = allMap.get(blkName + blkFeature);
                             rear.getDetail().get(0).put(SIDENUMBER_NAME, "Rear");
-                            if(!plan.getIsRowHouse())
+//                            if(!plan.getIsRowHouse())
+//                            	continue;
+                            if( blocks.get(blkName).contains(SIDE_YARD_DESC))
                             	continue;
                         }
                         if(blkFeature.equals(SIDE_YARD_DESC))

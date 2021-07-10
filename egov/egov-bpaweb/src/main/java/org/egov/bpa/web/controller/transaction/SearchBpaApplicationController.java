@@ -46,24 +46,18 @@
  */
 package org.egov.bpa.web.controller.transaction;
 
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_TYPE_ONEDAYPERMIT;
 import static org.egov.bpa.utils.BpaConstants.BOUNDARY_TYPE_CITY;
-import static org.egov.bpa.utils.BpaConstants.BPASTATUS_MODULETYPE;
 import static org.egov.bpa.utils.BpaConstants.FILESTORE_MODULECODE;
 import static org.egov.bpa.utils.BpaConstants.IS_AUTO_CANCEL_UNATTENDED_DOCUMENT_SCRUTINY_APPLICATION;
-import static org.egov.bpa.utils.BpaConstants.LOCALITY;
-import static org.egov.bpa.utils.BpaConstants.LOCATION_HIERARCHY_TYPE;
 import static org.egov.bpa.utils.BpaConstants.OCCUPANCY_CERTIFICATE_NOTICE_TYPE;
 import static org.egov.bpa.utils.BpaConstants.REVENUE_HIERARCHY_TYPE;
-import static org.egov.bpa.utils.BpaConstants.STREET;
 import static org.egov.bpa.utils.BpaConstants.WARD;
-import static org.egov.bpa.utils.BpaConstants.ZONE;
-import static org.egov.bpa.utils.BpaConstants.getBuildingFloorsList;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -76,9 +70,6 @@ import org.egov.bpa.transaction.entity.PermitNocApplication;
 import org.egov.bpa.transaction.entity.PermitNocDocument;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
 import org.egov.bpa.transaction.entity.dto.SearchPendingItemsForm;
-import org.egov.bpa.transaction.entity.enums.BpaUom;
-import org.egov.bpa.transaction.entity.enums.GovernmentType;
-import org.egov.bpa.transaction.entity.enums.OneDayPermitLandType;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.service.ApplicationBpaFeeCalculation;
 import org.egov.bpa.transaction.service.BpaDcrService;
@@ -101,10 +92,10 @@ import org.egov.infra.admin.master.entity.BoundaryType;
 import org.egov.infra.admin.master.service.BoundaryTypeService;
 import org.egov.infra.admin.master.service.CrossHierarchyService;
 import org.egov.infra.custom.CustomImplProvider;
-import org.egov.infra.persistence.entity.enums.UserType;
 import org.egov.infra.web.support.ui.DataTable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -116,6 +107,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
+
 @Controller
 @RequestMapping(value = "/application")
 public class SearchBpaApplicationController extends BpaGenericApplicationController {
@@ -123,6 +116,7 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
     private static final String APPLICATION_HISTORY = "applicationHistory";
     private static final String SEARCH_BPA_APPLICATION_FORM = "searchBpaApplicationForm";
     private static final String SEARCH_PENDING_ITEM_FORM = "searchPendingItemsForm";
+    private static final String SEARCH_PENDING_ITEM_FORM_GRAPH = "searchPendingItemsFormG";
 
     @Autowired
     private SearchBpaApplicationService searchBpaApplicationService;
@@ -156,7 +150,7 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
         model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
         return "search-bpa-application";
     }
-
+    
     @PostMapping(value = "/search", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String searchRegisterStatusMarriageRecords(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
@@ -164,6 +158,79 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
                 searchBpaApplicationForm.draw())
                         .toJson(SearchBpaApplicationAdaptor.class);
     }
+    
+    @GetMapping("/searchPendingItems/d/u")
+    public String showSearchApprovedforFeeGrapUrban(final Model model) {
+    	prepareFormDataForPendingItems(model);
+    	model.addAttribute(SEARCH_PENDING_ITEM_FORM, new SearchPendingItemsForm());
+    	model.addAttribute(SEARCH_PENDING_ITEM_FORM_GRAPH, new SearchPendingItemsForm());
+        return "search-bpa-pending-task-urban";
+    }
+    
+    @GetMapping("/searchPendingItems/d/r")
+    public String showSearchApprovedforFeeGrapRural(final Model model) {
+    	prepareFormDataForPendingItems(model);
+    	 model.addAttribute(SEARCH_PENDING_ITEM_FORM, new SearchPendingItemsForm());
+    	 model.addAttribute(SEARCH_PENDING_ITEM_FORM_GRAPH, new SearchPendingItemsForm());
+          return "search-bpa-pending-task-rural";
+    }
+    
+    @PostMapping(value = "/searchPendingItems/d/u", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchPendingItemsRecordsUrban(@ModelAttribute final SearchPendingItemsForm searchPendingItemsFormG) {
+    	
+    	Map<String, Long> map=new HashMap<String, Long>(); 
+    	
+//    	map.put("SDoBuilding", 100L);
+//    	map.put("SDoBuilding1", 150L);
+//    	map.put("SDoBuilding2", 160L);
+//    	map.put("SDoBuilding3", 10L);
+//    	map.put("SDoBuilding4", 20L);
+    	
+    	
+//        return new DataTable<>(,
+//        		searchPendingItemsFormG.draw())
+//                        .toJson(SearchBpaPendingTaskAdaptor.class);
+    	fillterData(searchBpaApplicationService.pagedSearchForPendingTaskGraph(searchPendingItemsFormG), map);
+        
+        Gson gson = new Gson();  
+		String json = gson.toJson(map); 
+		return json;
+    }
+    
+    private void fillterData(Page<SearchPendingItemsForm> page,Map<String, Long> map) {
+    	for(SearchPendingItemsForm pendingItemsForm:page) {
+    		if(map.get(pendingItemsForm.getCurrentOwner())==null) {
+    			map.put(pendingItemsForm.getCurrentOwner(), 1l);
+    		}else {
+    			map.put(pendingItemsForm.getCurrentOwner(), map.get(pendingItemsForm.getCurrentOwner())+1);
+    		}
+    	}
+    }
+    
+    @PostMapping(value = "/searchPendingItems/d/r", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchPendingItemsRecordsRural(@ModelAttribute final SearchPendingItemsForm searchPendingItemsFormG) {
+
+    	Map<String, Long> map=new HashMap<String, Long>(); 
+    	
+//    	map.put("SDoBuilding", 100L);
+//    	map.put("SDoBuilding1", 150L);
+//    	map.put("SDoBuilding2", 160L);
+//    	map.put("SDoBuilding3", 10L);
+//    	map.put("SDoBuilding4", 20L);
+    	
+    	
+//        return new DataTable<>(,
+//        		searchPendingItemsFormG.draw())
+//                        .toJson(SearchBpaPendingTaskAdaptor.class);
+    	fillterData(searchBpaApplicationService.pagedSearchForPendingTaskGraph(searchPendingItemsFormG), map);
+        
+        Gson gson = new Gson();  
+		String json = gson.toJson(map); 
+		return json;
+    }
+
     
     @GetMapping("/searchPendingItems")
     public String showSearchPendingItems(final Model model) {

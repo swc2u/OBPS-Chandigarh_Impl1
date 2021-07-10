@@ -1429,4 +1429,12 @@
 		<put-attribute name="page-title" value="title.search.appln" cascade="true" />
 		<put-attribute name="body" value="/WEB-INF/views/application/search-bpa-pending-task.jsp" />
 	</definition>
+	<definition name="search-bpa-pending-task-urban" extends="base_layout">
+		<put-attribute name="page-title" value="title.search.appln" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/search-bpa-pending-task-urban.jsp" />
+	</definition>
+	<definition name="search-bpa-pending-task-rural" extends="base_layout">
+		<put-attribute name="page-title" value="title.search.appln" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/search-bpa-pending-task-rural.jsp" />
+	</definition>
 </tiles-definitions>

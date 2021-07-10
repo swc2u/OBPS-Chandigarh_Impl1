@@ -203,7 +203,7 @@ public class GeneralStair extends FeatureProcess {
 		boolean flage=false;
 		OccupancyTypeHelper occupancyTypeHelper=plan.getVirtualBuilding().getMostRestrictiveFarHelper();
 		
-		if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) {
+		if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode()) || DxfFileConstants.F_SCO.equals(occupancyTypeHelper.getSubtype().getCode())) {
 			int tf=block.getBuilding().getFloorsAboveGround().intValue()-1;
 			if(tf==floor.getNumber()) 
 				if(block.getStairCovers()==null || block.getStairCovers().isEmpty())
