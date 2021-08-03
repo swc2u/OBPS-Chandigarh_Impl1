@@ -66,6 +66,7 @@ import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.ProcessHelper;
 import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGADeviationConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.DcrConstants;
 import org.egov.infra.utils.StringUtils;
@@ -110,114 +111,6 @@ public class Coverage extends FeatureProcess {
 		}
 		return pl;
 	}
-
-	/*
-	 * @Override public Plan process(Plan pl) { validate(pl); BigDecimal
-	 * totalCoverage = BigDecimal.ZERO; BigDecimal totalCoverageArea =
-	 * BigDecimal.ZERO;
-	 * 
-	 * for (Block block : pl.getBlocks()) { BigDecimal coverageAreaWithoutDeduction
-	 * = BigDecimal.ZERO; BigDecimal coverageDeductionArea = BigDecimal.ZERO;
-	 * 
-	 * for (Measurement coverage : block.getCoverage()) {
-	 * coverageAreaWithoutDeduction =
-	 * coverageAreaWithoutDeduction.add(coverage.getArea()); } for (Measurement
-	 * deduct : block.getCoverageDeductions()) { coverageDeductionArea =
-	 * coverageDeductionArea.add(deduct.getArea()); } if (block.getBuilding() !=
-	 * null) {
-	 * block.getBuilding().setCoverageArea(coverageAreaWithoutDeduction.subtract(
-	 * coverageDeductionArea)); BigDecimal coverage = BigDecimal.ZERO; if
-	 * (pl.getPlot().getArea().doubleValue() > 0) coverage =
-	 * block.getBuilding().getCoverageArea().multiply(BigDecimal.valueOf(100)).
-	 * divide( pl.getPlanInformation().getPlotArea(),
-	 * DcrConstants.DECIMALDIGITS_MEASUREMENTS,
-	 * DcrConstants.ROUNDMODE_MEASUREMENTS);
-	 * 
-	 * block.getBuilding().setCoverage(coverage);
-	 * 
-	 * totalCoverageArea =
-	 * totalCoverageArea.add(block.getBuilding().getCoverageArea()); //
-	 * totalCoverage = // totalCoverage.add(block.getBuilding().getCoverage()); }
-	 * 
-	 * }
-	 * 
-	 * // pl.setCoverageArea(totalCoverageArea); // use plotBoundaryArea if
-	 * (pl.getPlot() != null && pl.getPlot().getArea().doubleValue() > 0)
-	 * totalCoverage = totalCoverageArea.multiply(BigDecimal.valueOf(100)).divide(
-	 * pl.getPlanInformation().getPlotArea(),
-	 * DcrConstants.DECIMALDIGITS_MEASUREMENTS,
-	 * DcrConstants.ROUNDMODE_MEASUREMENTS); pl.setCoverage(totalCoverage); if
-	 * (pl.getVirtualBuilding() != null) {
-	 * pl.getVirtualBuilding().setTotalCoverageArea(totalCoverageArea); }
-	 * 
-	 * 
-	 * 
-	 * 
-	 * commented for CGCL
-	 * 
-	 * BigDecimal roadWidth = pl.getPlanInformation().getRoadWidth(); if (roadWidth
-	 * != null && roadWidth.compareTo(ROAD_WIDTH_TWELVE_POINTTWO) >= 0 &&
-	 * roadWidth.compareTo(ROAD_WIDTH_THIRTY_POINTFIVE) <= 0) { processCoverage(pl,
-	 * StringUtils.EMPTY, totalCoverage, Forty); }
-	 * 
-	 * 
-	 * /* // for weighted coverage if (pl.getPlot().getArea().doubleValue() >= 5000)
-	 * { BigDecimal provideCoverage = BigDecimal.ZERO; BigDecimal weightedArea =
-	 * BigDecimal.ZERO; BigDecimal weightedCoverage = BigDecimal.ZERO; weightedArea
-	 * = weightedArea.setScale(DECIMALDIGITS_MEASUREMENTS, ROUNDMODE_MEASUREMENTS);
-	 * weightedCoverage = weightedCoverage.setScale(DECIMALDIGITS_MEASUREMENTS,
-	 * ROUNDMODE_MEASUREMENTS); provideCoverage =
-	 * provideCoverage.setScale(DECIMALDIGITS_MEASUREMENTS, ROUNDMODE_MEASUREMENTS);
-	 * 
-	 * for (Occupancy occ : pl.getOccupancies()) { BigDecimal occupancyWiseCoverage
-	 * = occ.getBuiltUpArea().multiply(getPermissibleCoverage(occ.getType()));
-	 * weightedArea = weightedArea.add(occupancyWiseCoverage);
-	 * 
-	 * } if (pl.getVirtualBuilding().getTotalBuitUpArea().doubleValue() > 0)
-	 * weightedCoverage =
-	 * weightedArea.divide(pl.getVirtualBuilding().getTotalBuitUpArea(),
-	 * DECIMALDIGITS, ROUNDMODE_MEASUREMENTS); if
-	 * (pl.getPlot().getArea().doubleValue() > 0) provideCoverage =
-	 * pl.getCoverageArea() .divide(pl.getPlot().getPlotBndryArea(), DECIMALDIGITS,
-	 * ROUNDMODE_MEASUREMENTS) .multiply(BigDecimal.valueOf(100)); //
-	 * provideCoverage.setScale(2); processCoverage(pl, "-",
-	 * provideCoverage.setScale(2, ROUNDMODE_MEASUREMENTS),
-	 * weightedCoverage.setScale(2, ROUNDMODE_MEASUREMENTS)); }
-	 */ /*
-		 * else { boolean exemption = ProcessHelper.isSmallPlot(pl); if (!exemption) {
-		 * OccupancyType mostRestrictiveOccupancy = getMostRestrictiveCoverage(
-		 * pl.getVirtualBuilding().getOccupancies()); if (mostRestrictiveOccupancy !=
-		 * null) { switch (mostRestrictiveOccupancy) { case OCCUPANCY_B1: case
-		 * OCCUPANCY_B2: case OCCUPANCY_B3: processCoverage(pl,
-		 * mostRestrictiveOccupancy.getOccupancyTypeVal(), totalCoverage, ThirtyFive);
-		 * break; case OCCUPANCY_D: case OCCUPANCY_D1: case OCCUPANCY_I2:
-		 * processCoverage(pl, mostRestrictiveOccupancy.getOccupancyTypeVal(),
-		 * totalCoverage, Forty); break; case OCCUPANCY_I1: processCoverage(pl,
-		 * mostRestrictiveOccupancy.getOccupancyTypeVal(), totalCoverage, FortyFive);
-		 * break;
-		 * 
-		 * case OCCUPANCY_C: processCoverage(pl,
-		 * mostRestrictiveOccupancy.getOccupancyTypeVal(), totalCoverage, Sixty); break;
-		 * 
-		 * case OCCUPANCY_A1: case OCCUPANCY_A4: case OCCUPANCY_A2: case OCCUPANCY_G1:
-		 * processCoverage(pl, mostRestrictiveOccupancy.getOccupancyTypeVal(),
-		 * totalCoverage, SixtyFive); break; case OCCUPANCY_E: case OCCUPANCY_F: case
-		 * OCCUPANCY_F4: processCoverage(pl,
-		 * mostRestrictiveOccupancy.getOccupancyTypeVal(), totalCoverage, Seventy);
-		 * break;
-		 * 
-		 * case OCCUPANCY_G2: processCoverage(pl,
-		 * mostRestrictiveOccupancy.getOccupancyTypeVal(), totalCoverage, SeventyFive);
-		 * break; case OCCUPANCY_H: processCoverage(pl,
-		 * mostRestrictiveOccupancy.getOccupancyTypeVal(), totalCoverage, Eighty);
-		 * break; default: break; } } } }
-		 */
-
-	// CGCL end
-
-	/*
-	 * return pl; }
-	 */
 
 	// CGCL start according to 26jan
 	@Override
@@ -591,6 +484,12 @@ public class Coverage extends FeatureProcess {
 	public void processRuler(Plan plan) {
 
 		BigDecimal plotArea = plan.getPlot().getArea();
+		
+		if(plan.getDrawingPreference().getInFeets()) {
+			plotArea=CDGAdditionalService.feetToMeterArea(plotArea);
+		}
+			
+		
 		BigDecimal expectedCoverage = BigDecimal.ZERO;
 
 		if (plotArea.compareTo(BigDecimal.valueOf(210)) <= 0)

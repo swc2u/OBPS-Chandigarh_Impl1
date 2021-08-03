@@ -778,7 +778,8 @@ public class PlanReportService {
                         if (blkFeature.equals(FRONT_YARD_DESC)) {
                             front = allMap.get(blkName + blkFeature);
                             front.getDetail().get(0).put(SIDENUMBER_NAME, "Front");
-                            continue;
+                            if( blocks.get(blkName).contains(REAR_YARD_DESC) ||  blocks.get(blkName).contains(SIDE_YARD_DESC))
+                            	continue;
                         }
                         if (blkFeature.equals(REAR_YARD_DESC)) {
                             rear = allMap.get(blkName + blkFeature);

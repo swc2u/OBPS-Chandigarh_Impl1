@@ -78,7 +78,6 @@ public class RainWaterHarvesting extends FeatureProcess {
 	private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
 	private static final String RWH_DECLARATION_ERROR = DxfFileConstants.RWH_DECLARED
 			+ " in PLAN_INFO layer must be declared as YES for plot area greater than 100 sqm.";
-	
 
 	@Override
 	public Plan validate(Plan pl) {
@@ -143,21 +142,39 @@ public class RainWaterHarvesting extends FeatureProcess {
 		OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
-				
-		if(pl.isRural()) {
-			if(pl.getPlot().getArea().compareTo(BigDecimal.valueOf(250))>=0) {
-				if ((pl.getUtility().getRainWaterHarvestingTankCapacity()!=null)&&(pl.getUtility().getRainWaterHarvestingTankCapacity().compareTo(expectedTankCapacity) > 0))
-					setReportOutputDetails(pl, subRule, subRuleDesc, "Mandatory",
-							pl.getUtility().getRainWaterHarvestingTankCapacity() + " litre",
-							Result.Verify.getResultVal());
-				else
-					setReportOutputDetails(pl, subRule, subRuleDesc, "Mandatory", "Not Defined in the plan",
-							Result.Not_Accepted.getResultVal());
+
+		if (pl.isRural()) {
+
+			if (pl.getDrawingPreference().getInFeets()) {
+				if (pl.getPlot().getArea().compareTo(CDGAdditionalService.meterToFootArea("250")) >= 0) {
+					if ((pl.getUtility().getRainWaterHarvestingTankCapacity() != null) && (pl.getUtility()
+							.getRainWaterHarvestingTankCapacity().compareTo(expectedTankCapacity) > 0))
+						setReportOutputDetails(pl, subRule, subRuleDesc, "Mandatory",
+								pl.getUtility().getRainWaterHarvestingTankCapacity() + " litre",
+								Result.Verify.getResultVal());
+					else
+						setReportOutputDetails(pl, subRule, subRuleDesc, "Mandatory", "Not Defined in the plan",
+								Result.Not_Accepted.getResultVal());
+				}
+
+			} else {
+				if (pl.getPlot().getArea().compareTo(BigDecimal.valueOf(250)) >= 0) {
+					if ((pl.getUtility().getRainWaterHarvestingTankCapacity() != null) && (pl.getUtility()
+							.getRainWaterHarvestingTankCapacity().compareTo(expectedTankCapacity) > 0))
+						setReportOutputDetails(pl, subRule, subRuleDesc, "Mandatory",
+								pl.getUtility().getRainWaterHarvestingTankCapacity() + " litre",
+								Result.Verify.getResultVal());
+					else
+						setReportOutputDetails(pl, subRule, subRuleDesc, "Mandatory", "Not Defined in the plan",
+								Result.Not_Accepted.getResultVal());
+				}
+
 			}
 			return pl;
 		}
-				
-		if(mostRestrictiveFarHelper==null || mostRestrictiveFarHelper.getSubtype() ==null || isOccupancyTypeNotApplicable(mostRestrictiveFarHelper))
+
+		if (mostRestrictiveFarHelper == null || mostRestrictiveFarHelper.getSubtype() == null
+				|| isOccupancyTypeNotApplicable(mostRestrictiveFarHelper))
 			return pl;
 
 		String plotAreaType = pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE);
@@ -172,12 +189,13 @@ public class RainWaterHarvesting extends FeatureProcess {
 								pl.getUtility().getRainWaterHarvestingTankCapacity() + " litre",
 								Result.Verify.getResultVal());
 					} else {
-						setReportOutputDetails(pl, subRule, subRuleDesc, DxfFileConstants.OPTIONAL, "Not Defined in the plan",
-								Result.Verify.getResultVal());
+						setReportOutputDetails(pl, subRule, subRuleDesc, DxfFileConstants.OPTIONAL,
+								"Not Defined in the plan", Result.Verify.getResultVal());
 					}
 
 				} else {
-					if ((pl.getUtility().getRainWaterHarvestingTankCapacity()!=null)&&(pl.getUtility().getRainWaterHarvestingTankCapacity().compareTo(expectedTankCapacity) > 0))
+					if ((pl.getUtility().getRainWaterHarvestingTankCapacity() != null) && (pl.getUtility()
+							.getRainWaterHarvestingTankCapacity().compareTo(expectedTankCapacity) > 0))
 						setReportOutputDetails(pl, subRule, subRuleDesc, "Mandatory",
 								pl.getUtility().getRainWaterHarvestingTankCapacity() + " litre",
 								Result.Verify.getResultVal());
@@ -187,18 +205,20 @@ public class RainWaterHarvesting extends FeatureProcess {
 				}
 
 			} else if (!isOccupancyTypeNotApplicable(mostRestrictiveFarHelper)) {
-				
-				if(DxfFileConstants.G.equals(mostRestrictiveFarHelper.getType().getCode()) && (plotAreaType.equals(DxfFileConstants.MARLA) || plotAreaType.equals(DxfFileConstants.ONE_KANAL)) ) {
+
+				if (DxfFileConstants.G.equals(mostRestrictiveFarHelper.getType().getCode())
+						&& (plotAreaType.equals(DxfFileConstants.MARLA)
+								|| plotAreaType.equals(DxfFileConstants.ONE_KANAL))) {
 					if (pl.getUtility().getRainWaterHarvestingTankCapacity() != null) {
 						setReportOutputDetails(pl, subRule, subRuleDesc, DxfFileConstants.OPTIONAL,
 								pl.getUtility().getRainWaterHarvestingTankCapacity() + " litre",
 								Result.Verify.getResultVal());
 					} else {
-						setReportOutputDetails(pl, subRule, subRuleDesc, DxfFileConstants.OPTIONAL, "Not Defined in the plan",
-								Result.Verify.getResultVal());
+						setReportOutputDetails(pl, subRule, subRuleDesc, DxfFileConstants.OPTIONAL,
+								"Not Defined in the plan", Result.Verify.getResultVal());
 					}
-				}
-				else if (pl.getUtility().getRainWaterHarvestingTankCapacity() !=null && (pl.getUtility().getRainWaterHarvestingTankCapacity().compareTo(expectedTankCapacity) > 0))
+				} else if (pl.getUtility().getRainWaterHarvestingTankCapacity() != null
+						&& (pl.getUtility().getRainWaterHarvestingTankCapacity().compareTo(expectedTankCapacity) > 0))
 					setReportOutputDetails(pl, subRule, subRuleDesc, "Mandatory",
 							pl.getUtility().getRainWaterHarvestingTankCapacity() + " litre",
 							Result.Verify.getResultVal());
@@ -244,7 +264,7 @@ public class RainWaterHarvesting extends FeatureProcess {
 		return pl;
 	}
 
-	public  boolean isOccupancyTypeNotApplicable(OccupancyTypeHelper occupancyTypeHelper) {
+	public boolean isOccupancyTypeNotApplicable(OccupancyTypeHelper occupancyTypeHelper) {
 		boolean flage = false;
 
 		if (DxfFileConstants.F_SCO.equals(occupancyTypeHelper.getSubtype().getCode())

@@ -153,6 +153,16 @@ public class BuildingHeight extends FeatureProcess {
 			BigDecimal exptectedHeight = BigDecimal.ZERO;
 			BigDecimal buildingHeight = BigDecimal.ZERO;
 
+			if("Stair Cover".equals(block.getBuilding().getHeightIncreasedBy())) {
+				try {
+					BigDecimal mumtyHeight=block.getStairCovers().stream().reduce(BigDecimal::min).get();
+					block.getBuilding().setBuildingHeight(block.getBuilding().getBuildingHeight().subtract(mumtyHeight));
+				}catch (Exception e) {
+					e.printStackTrace();
+					Plan.addError("Stair Cover height det", "Error while subtracting the mumty height from building height.");
+				}
+			}
+			
 			exptectedHeight = new BigDecimal("10.36");
 
 			buildingHeight = block.getBuilding().getBuildingHeight();

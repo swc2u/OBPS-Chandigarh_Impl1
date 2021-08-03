@@ -107,6 +107,11 @@ public class BathRoomWaterClosets extends FeatureProcess {
 				int countInBlock = 0;
 
 				for (Floor f : b.getBuilding().getFloors()) {
+					
+					if(f.getBathRoomWaterClosets()!=null && f.getBathRoomWaterClosets().getRooms()!=null && f.getBathRoomWaterClosets().getRooms().size()>0 
+							&& (f.getBathRoomWaterClosets().getHeights()==null || f.getBathRoomWaterClosets().getHeights().size()==0)) {
+						pl.addError("BathRoomWaterClosets", "Toilet height is not defind block "+b.getNumber()+" floor "+f.getNumber());
+					}
 
 					if (f.getBathRoomWaterClosets() != null && f.getBathRoomWaterClosets().getHeights() != null
 							&& !f.getBathRoomWaterClosets().getHeights().isEmpty()

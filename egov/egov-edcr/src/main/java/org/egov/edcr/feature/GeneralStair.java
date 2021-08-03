@@ -45,7 +45,8 @@ public class GeneralStair extends FeatureProcess {
 
 	@Override
 	public Plan validate(Plan plan) {
-		
+		if(!CDGAdditionalService.isFeatureValidationRequired(plan, GeneralStair.class))
+			return plan;
 		for(Block block:plan.getBlocks()) {
 			for(Floor floor:block.getBuilding().getFloors()) {
 				if(floor.getNumber()<0) {
