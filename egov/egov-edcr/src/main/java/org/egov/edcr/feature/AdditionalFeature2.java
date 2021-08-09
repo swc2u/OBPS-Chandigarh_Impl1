@@ -217,7 +217,19 @@ public class AdditionalFeature2 extends FeatureProcess {
 			for (Floor floor : block.getBuilding().getFloors()) {
 				for (Occupancy occupancy : floor.getOccupancies()) {
 					if (DxfFileConstants.A_AF.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
-						if (floor.getNumber() >= 0) {
+//						if (floor.getNumber() >= 0) {
+//							isParsent = true;
+//							Map<String, String> details = new HashMap<>();
+//							details.put(BLOCK, "block-" + block.getNumber());
+//							details.put(FLOOR, "floor-" + floor.getNumber());
+//							details.put(PROVIDED, CDGAdditionalService.viewArea(plan,
+//									CDGAdditionalService.inchtoFeetArea(occupancy.getBuiltUpArea())));
+//							details.put(STATUS, Result.Accepted.getResultVal());
+//							scrutinyDetail.getDetail().add(details);
+//						} else {
+//							plan.addError("Addtional Fee", "Addtional Fee layer is not allowed in block "
+//									+ block.getNumber() + " floor " + floor.getNumber());
+//						}
 							isParsent = true;
 							Map<String, String> details = new HashMap<>();
 							details.put(BLOCK, "block-" + block.getNumber());
@@ -226,19 +238,17 @@ public class AdditionalFeature2 extends FeatureProcess {
 									CDGAdditionalService.inchtoFeetArea(occupancy.getBuiltUpArea())));
 							details.put(STATUS, Result.Accepted.getResultVal());
 							scrutinyDetail.getDetail().add(details);
-						} else {
-							plan.addError("Addtional Fee", "Addtional Fee layer is not allowed in block "
-									+ block.getNumber() + " floor " + floor.getNumber());
-						}
+						
 					}
 				}
 
 			}
 		}
-		if (isParsent && DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode()))
-			plan.setIsAdditionalFeeApplicable(true);// is required at time of fee calculation
-		else if (isParsent)
-			plan.addError("Addtional Fee", "Addtional fee layer is not allowed.");
+//		if (isParsent && DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode()))
+//			plan.setIsAdditionalFeeApplicable(true);// is required at time of fee calculation
+//		else if (isParsent)
+//			plan.addError("Addtional Fee", "Addtional fee layer is not allowed.");
+		plan.setIsAdditionalFeeApplicable(true);// is required at time of fee calculation
 		plan.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 
 	}
