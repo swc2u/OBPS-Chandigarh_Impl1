@@ -92,6 +92,7 @@ public class PlanService {
 			setProperties(plan);
 			plan.setServiceType(dcrApplication.getServiceType());
 			plan = applyRules(plan, amd, cityDetails);
+			additionalValidation(plan);
 			setEDCRmandatoryNOC(plan);
 		}catch (Exception e) {
 			LOG.error(e.getMessage());
@@ -256,8 +257,40 @@ public class PlanService {
 		if(pl.getDrawingPreference().getInFeets())
 			pl.getPlot().setPlotBndryArea(CDGAdditionalService.inchtoFeetArea(pl.getPlot().getPlotBndryArea()));
 		
+		if(!pl.isRural()) {
+			//AREA_FOR_ADDITIONAL_HEIGHT_SQFT
+			String areaForAdditionalHeight=pl.getPlanInfoProperties().get(DxfFileConstants.AREA_FOR_ADDITIONAL_HEIGHT_SQFT);
+			if(areaForAdditionalHeight!=null && !DxfFileConstants.NA.equals(areaForAdditionalHeight)) {
+				try {
+					pl.getPlanInformation().setAreaForAdditionalHeight(new BigDecimal(areaForAdditionalHeight));
+				}catch (Exception e) {
+					pl.addError("AREA_FOR_ADDITIONAL_HEIGHT_SQFT", "AREA_FOR_ADDITIONAL_HEIGHT_SQFT is wrong in plan info layer.");
+				}
+			}
+			
+			//PRESENT_COLLECTOR
+			String presentCollector=pl.getPlanInfoProperties().get(DxfFileConstants.PRESENT_COLLECTOR_RATE);
+			if(!DxfFileConstants.NA.equals(presentCollector)) {
+				try {
+					pl.getPlanInformation().setPresentCollectorRate(new BigDecimal(presentCollector));
+				} catch (Exception e) {
+					pl.addError("PRESENT_COLLECTOR_RATE", "PRESENT_COLLECTOR_RATE is wrong in plan info layer.");
+				}
+			}
+		}
+		
 	}
-
+	
+	private void additionalValidation(Plan pl) {
+		//PRESENT_COLLECTOR for sco/scf
+		
+		OccupancyTypeHelper typeHelper=pl.getVirtualBuilding().getMostRestrictiveFarHelper();
+		
+		if(DxfFileConstants.F_SCO.equals(typeHelper.getSubtype().getCode()) && pl.getPlanInformation().getPresentCollectorRate().compareTo(BigDecimal.ZERO)==0) {
+			pl.addError("PRESENT_COLLECTOR_RATE_1", "PRESENT_COLLECTOR_RATE should  not be empty or zero for SCO/SCF.");
+		}
+		
+	}
 	private void setEDCRmandatoryNOC(Plan plan) {		
 		plan.getPlanInformation().setNocPACDept("NO");
 		plan.getPlanInformation().setNocStructureDept("NO");

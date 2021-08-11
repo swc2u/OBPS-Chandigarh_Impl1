@@ -561,4 +561,7 @@ public class DxfFileConstants {
 	public static final String PLAN_INFO_STAIR_COVERS_AREA="BLOCK_%s_STAIR_COVERS_AREA";
 	
 	public static final String TRANSFER_FEE_APPLICABLE="TRANSFER_FEE_APPLICABLE";
+	
+	public static final String PRESENT_COLLECTOR_RATE="PRESENT_COLLECTOR_RATE";
+	public static final String AREA_FOR_ADDITIONAL_HEIGHT_SQFT="AREA_FOR_ADDITIONAL_HEIGHT_SQFT";
 }

@@ -276,7 +276,11 @@ public class PlanInformation implements Serializable {
     //COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE
     private transient String commercialAreaOccupancyAsPerRule=NA;
     
-    private BigDecimal conversionChargesArea=BigDecimal.ZERO;;
+    private BigDecimal conversionChargesArea=BigDecimal.ZERO;
+    
+    private BigDecimal areaForAdditionalHeight=BigDecimal.ZERO;
+    
+    private BigDecimal presentCollectorRate=BigDecimal.ZERO;
     
 	public String getRootBoundaryType() {
 		return rootBoundaryType;
@@ -1072,5 +1076,24 @@ public class PlanInformation implements Serializable {
 	public void setIsTransferFeeApplicable(Boolean isTransferFeeApplicable) {
 		this.isTransferFeeApplicable = isTransferFeeApplicable;
 	}
+
+	public BigDecimal getAreaForAdditionalHeight() {
+		return areaForAdditionalHeight;
+	}
+
+	public void setAreaForAdditionalHeight(BigDecimal areaForAdditionalHeight) {
+		this.areaForAdditionalHeight = areaForAdditionalHeight;
+	}
+
+	public BigDecimal getPresentCollectorRate() {
+		return presentCollectorRate;
+	}
+
+	public void setPresentCollectorRate(BigDecimal presentCollectorRate) {
+		this.presentCollectorRate = presentCollectorRate;
+	}
+
+	
+	
 	
 }
