@@ -129,6 +129,7 @@ public class FeeCalculationUtils {
 						}
 						System.out.println(fee.getBpaFeeCommon().getDescription());
 					}
+					BigDecimal totalGstApplicable=BigDecimal.ZERO;
 					for (BpaFeeMapping bpaFee : bpaFeeMappingService.getPermitFeesByAppType(application,
 							serviceTypeId)) {
 						if (bpaFee != null) {
@@ -158,6 +159,17 @@ public class FeeCalculationUtils {
 												.valueOf(securityFeeAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 									}
 								}
+								if (BpaConstants.ADDITIONAL_HEIGHT_FEE
+										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
+									BigDecimal additionalHeightFeeAmount = permitFeeCalculationService.getAdditionalHeightFee(plan);
+									if (additionalHeightFeeAmount.compareTo(BigDecimal.ZERO) >= 0) {
+										fees.put(bpaFee.getBpaFeeCommon().getDescription(), String
+												.valueOf(additionalHeightFeeAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
+										
+										if(BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+											totalGstApplicable=totalGstApplicable.add(additionalHeightFeeAmount);
+									}
+								}
 								if (BpaConstants.SCRUTINY_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal multiplier = BigDecimal.ZERO;
@@ -176,12 +188,13 @@ public class FeeCalculationUtils {
 									if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(),
 												String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
-										if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
-											BigDecimal gstAmount = permitFeeCalculationService
-													.getTotalAmountOfGST(totalAmount);
-											fees.put(bpaGST.getBpaFeeCommon().getDescription(),
-													String.valueOf(gstAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
-										}
+//										if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
+//											BigDecimal gstAmount = permitFeeCalculationService
+//													.getTotalAmountOfGST(totalAmount);
+//											fees.put(bpaGST.getBpaFeeCommon().getDescription(),
+//													String.valueOf(gstAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
+//										}
+										totalGstApplicable=totalGstApplicable.add(totalAmount);
 									}
 								} else if (BpaConstants.LABOURCESS
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
@@ -192,6 +205,8 @@ public class FeeCalculationUtils {
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(),
 												String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 									}
+									if(BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+										totalGstApplicable=totalGstApplicable.add(totalAmount);
 								} else if (BpaConstants.RULE_5_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal rule5ExtraArea = BigDecimal.ZERO;
@@ -224,6 +239,10 @@ public class FeeCalculationUtils {
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(),
 												String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 									}
+									
+									if(BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+										totalGstApplicable=totalGstApplicable.add(totalAmount);
+									
 								} else if (BpaConstants.ADDITIONAL_COVERAGE_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal addCovExtraArea = BigDecimal.ZERO;
@@ -253,11 +272,22 @@ public class FeeCalculationUtils {
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(),
 												String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 									}
+									if(BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+										totalGstApplicable=totalGstApplicable.add(totalAmount);
 								}
 							}
 						}
 					}
-				}
+					
+					//GST calculation
+					if (totalGstApplicable.compareTo(BigDecimal.ZERO) > 0) {
+						BigDecimal gstAmount = permitFeeCalculationService
+								.getTotalAmountOfGST(totalGstApplicable);
+						fees.put(bpaGST.getBpaFeeCommon().getDescription(),
+								String.valueOf(gstAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
+					}
+					
+				}		
 			}
 		}
 

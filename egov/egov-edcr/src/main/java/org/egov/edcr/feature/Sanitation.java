@@ -412,15 +412,15 @@ public class Sanitation extends FeatureProcess {
 				Map<Integer, Integer> failedDimensionSpWcMap = new ConcurrentHashMap<>();
 				Double noOfPerson = CDGAdditionalService.getNumberOfPerson(pl).doubleValue();
 				for (Occupancy type : b.getBuilding().getTotalArea()) {
-					double carpetArea = 0d;
-					if (type.getCarpetArea() != null && type.getCarpetArea().doubleValue() > 0) {
-						carpetArea = type.getCarpetArea().doubleValue();
-					}else if(!DxfFileConstants.APPLICATION_TYPE_OCCUPANCY_CERTIFICATE.equals(pl.getApplicationType())){
-						pl.addError("Invalid carpet area",
-								"Carpet area is not calculated . Some thing wrong with builtup area");
-						return;
-					}
-					LOG.debug(type.getType() + " area" + carpetArea);
+//					double carpetArea = 0d;
+//					if (type.getCarpetArea() != null && type.getCarpetArea().doubleValue() > 0) {
+//						carpetArea = type.getCarpetArea().doubleValue();
+//					}else if(!DxfFileConstants.APPLICATION_TYPE_OCCUPANCY_CERTIFICATE.equals(pl.getApplicationType())){
+//						pl.addError("Invalid carpet area",
+//								"Carpet area is not calculated . Some thing wrong with builtup area");
+//						return;
+//					}
+//					LOG.debug(type.getType() + " area" + carpetArea);
 
 					OccupancyHelperDetail o = type.getTypeHelper().getSubtype() != null
 							? type.getTypeHelper().getSubtype()

@@ -39,7 +39,7 @@ public class ExcelReaderCommercial {
 	public static final String SHEET_NAME_SETBACKS = "Setbacks";
 	public static final String SHEET_NAME_PERMISSIBLE_BUILDING_HEIGHT = "Height";
 //	public static final String SAMPLE_XLSX_FILE_PATH = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\REVISED MASTER DATA FOR 12 SECTORS-new.xlsx";
-	public static final String SAMPLE_XLSX_FILE_PATH = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\MASTER DATA FOR COMMERCIAL.xlsx";
+	public static final String SAMPLE_XLSX_FILE_PATH = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\MASTER DATA FOR COMBINED PLOT_6sep21 Commercial.xlsx";
 
 	public static void main(String[] args) throws IOException, InvalidFormatException {
 		System.out.println("==================Start===================");

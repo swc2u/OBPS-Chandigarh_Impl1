@@ -286,8 +286,11 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 							}
 						}
 					}
+					System.out.println("====================");
+					BigDecimal totalGstApplicable=BigDecimal.ZERO;
 					for (BpaFeeMapping bpaFee : bpaFeeMappingService.getPermitFeesByAppType(application,
 							serviceTypeId)) {
+						System.out.println(bpaFee.getBpaFeeCommon().getDescription());
 						if (bpaFee != null) {
 							if (bpaFee.getServiceType().getDescription().equalsIgnoreCase(NEW_CONSTRUCTION)
 									|| bpaFee.getServiceType().getDescription().equalsIgnoreCase(RECONSTRUCTION)
@@ -314,6 +317,18 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 												bpaFee, permitFee.getApplicationFee(), securityFeeAmount));
 									}
 								}
+								
+								if (BpaConstants.ADDITIONAL_HEIGHT_FEE
+										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
+									BigDecimal additionalHeightFeeAmount = getAdditionalHeightFee(plan);
+									if (additionalHeightFeeAmount.compareTo(BigDecimal.ZERO) >= 0) {
+										permitFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(
+												bpaFee, permitFee.getApplicationFee(), additionalHeightFeeAmount));
+										if(BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+											totalGstApplicable=totalGstApplicable.add(additionalHeightFeeAmount);
+									}
+								}
+								
 								if (BpaConstants.SCRUTINY_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal multiplier = BigDecimal.ZERO;
@@ -333,12 +348,13 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 									if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
 										permitFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(
 												bpaFee, permitFee.getApplicationFee(), totalAmount));
-										if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
-											BigDecimal gstAmount = getTotalAmountOfGST(totalAmount);
-											permitFee.getApplicationFee()
-													.addApplicationFeeDetail(buildApplicationFeeDetail(bpaGST,
-															permitFee.getApplicationFee(), gstAmount));
-										}
+//										if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
+//											BigDecimal gstAmount = getTotalAmountOfGST(totalAmount);
+//											permitFee.getApplicationFee()
+//													.addApplicationFeeDetail(buildApplicationFeeDetail(bpaGST,
+//															permitFee.getApplicationFee(), gstAmount));
+//										}
+										totalGstApplicable=totalGstApplicable.add(totalAmount);
 									}
 								} else if (BpaConstants.LABOURCESS
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
@@ -348,6 +364,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										permitFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(
 												bpaFee, permitFee.getApplicationFee(), totalAmount));
 									}
+									if(BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+										totalGstApplicable=totalGstApplicable.add(totalAmount);
 								} else if (BpaConstants.RULE_5_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal rule5ExtraArea = BigDecimal.ZERO;
@@ -380,6 +398,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										permitFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(
 												bpaFee, permitFee.getApplicationFee(), totalAmount));
 									}
+									if(BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+										totalGstApplicable=totalGstApplicable.add(totalAmount);
 								} else if (BpaConstants.ADDITIONAL_COVERAGE_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal addCovExtraArea = BigDecimal.ZERO;
@@ -405,9 +425,18 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										permitFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(
 												bpaFee, permitFee.getApplicationFee(), totalAmount));
 									}
+									if(BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+										totalGstApplicable=totalGstApplicable.add(totalAmount);
 								}
 							}
 						}
+					}
+					//GST calculation
+					if (totalGstApplicable.compareTo(BigDecimal.ZERO) > 0) {
+						BigDecimal gstAmount = getTotalAmountOfGST(totalGstApplicable);
+						permitFee.getApplicationFee()
+								.addApplicationFeeDetail(buildApplicationFeeDetail(bpaGST,
+										permitFee.getApplicationFee(), gstAmount));
 					}
 				}
 			}
@@ -501,8 +530,11 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 							}
 						}
 					}
+					System.out.println("===================");
+					BigDecimal totalGstApplicable=BigDecimal.ZERO;
 					for (BpaFeeMapping bpaFee : bpaFeeMappingService.getPermitFeesByAppType(application,
 							serviceTypeId)) {
+						System.out.println(bpaFee.getBpaFeeCommon().getDescription());
 						if (bpaFee != null) {
 							if (bpaFee.getServiceType().getDescription().equalsIgnoreCase(NEW_CONSTRUCTION)
 									|| bpaFee.getServiceType().getDescription().equalsIgnoreCase(RECONSTRUCTION)
@@ -529,6 +561,17 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 												.valueOf(securityFeeAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 									}
 								}
+								if (BpaConstants.ADDITIONAL_HEIGHT_FEE
+										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
+									BigDecimal additionalHeightFeeAmount = getAdditionalHeightFee(plan);
+									if (additionalHeightFeeAmount.compareTo(BigDecimal.ZERO) >= 0) {
+										fees.put(bpaFee.getBpaFeeCommon().getDescription(), String
+												.valueOf(additionalHeightFeeAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
+										
+										if(BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+											totalGstApplicable=totalGstApplicable.add(additionalHeightFeeAmount);
+									}
+								}
 								if (BpaConstants.SCRUTINY_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal multiplier = BigDecimal.ZERO;
@@ -547,11 +590,12 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 									if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(),
 												String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
-										if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
-											BigDecimal gstAmount = getTotalAmountOfGST(totalAmount);
-											fees.put(bpaGST.getBpaFeeCommon().getDescription(),
-													String.valueOf(gstAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
-										}
+//										if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
+//											BigDecimal gstAmount = getTotalAmountOfGST(totalAmount);
+//											fees.put(bpaGST.getBpaFeeCommon().getDescription(),
+//													String.valueOf(gstAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
+//										}
+										totalGstApplicable=totalGstApplicable.add(totalAmount);
 									}
 								} else if (BpaConstants.LABOURCESS
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
@@ -561,6 +605,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(),
 												String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 									}
+									if(BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+										totalGstApplicable=totalGstApplicable.add(totalAmount);
 								} else if (BpaConstants.RULE_5_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal rule5ExtraArea = BigDecimal.ZERO;
@@ -593,6 +639,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(),
 												String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 									}
+									if(BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+										totalGstApplicable=totalGstApplicable.add(totalAmount);
 								} else if (BpaConstants.ADDITIONAL_COVERAGE_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal addCovExtraArea = BigDecimal.ZERO;
@@ -618,9 +666,18 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(),
 												String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 									}
+									if(BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+										totalGstApplicable=totalGstApplicable.add(totalAmount);
 								}
 							}
 						}
+					}
+					
+					//GST calculation
+					if (totalGstApplicable.compareTo(BigDecimal.ZERO) > 0) {
+						BigDecimal gstAmount = getTotalAmountOfGST(totalGstApplicable);
+						fees.put(bpaGST.getBpaFeeCommon().getDescription(),
+								String.valueOf(gstAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 					}
 				}
 			}
@@ -628,7 +685,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 		return fees;
 	}
-
+	
 	private List<LetterToPartyFees> populateLPExtAreas(BpaApplication application) {
 		List<LetterToPartyFeeDetails> letterToPartyFeeDetails = lettertoPartyFeeService
 				.getLPFeeDetailsByApplication(application);
@@ -1586,6 +1643,12 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			FF_MULTIPLIER = new BigDecimal("100");
 			SF_MULTIPLIER = new BigDecimal("60");
 		}
+		
+		OccupancyTypeHelper typeHelper=plan.getVirtualBuilding().getMostRestrictiveFarHelper();
+		
+		if(BpaConstants.F_SCO.equals(typeHelper.getSubtype().getCode())) {
+			return getTotalAmountForAdditionalCoverageForSCO(plan, buildingDetails, letterToPartyFees, isAdditionalCovApplicable);
+		}
 
 		if (isAdditionalCovApplicable) {
 			for (Block block : plan.getBlocks()) {
@@ -1644,7 +1707,53 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		}
 		return totalAmount;
 	}
+	
+	private BigDecimal getTotalAmountForAdditionalCoverageForSCO(Plan plan, List<BuildingDetail> buildingDetails,
+			List<LetterToPartyFees> letterToPartyFees, boolean isAdditionalCovApplicable) {
+		BigDecimal totalAmount=BigDecimal.ZERO;
+		
+		Double newFar=plan.getFarDetails().getProvidedFar();
+		BigDecimal plotArea=plan.getPlot().getArea();
+		BigDecimal totalAdditinalArea=BigDecimal.ZERO;
+		BigDecimal presentCollectorRate=plan.getPlanInformation().getPresentCollectorRate();
+		if(isAdditionalCovApplicable) {
+			for (Block block : plan.getBlocks()) {
+				for (Floor floor : block.getBuilding().getFloors()) {
+					for (Occupancy occupancy : floor.getOccupancies()) {
+						if (BpaConstants.A_AF.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+							
+							if(plan.getDrawingPreference().getInFeets()) {
+								totalAdditinalArea=totalAdditinalArea.add(occupancy.getBuiltUpArea().divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP));
+							}else {
+								totalAdditinalArea=totalAdditinalArea.add(occupancy.getBuiltUpArea());
+							}
+						}
+					}
+				}
+			}	
+		}else {
+			for (LetterToPartyFees fees : letterToPartyFees) {
+				totalAdditinalArea=totalAdditinalArea.add(fees.getFloorarea());
+			}
+		}
+		double additonalAreaFar=0.0;
+		try {
+			 additonalAreaFar=  totalAdditinalArea.divide(plotArea, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
+		} catch (Exception e) {
+			
+		}
+		double oldFar=newFar-additonalAreaFar;
+		
+		totalAmount=presentCollectorRate.multiply(new BigDecimal("0.35")).multiply(totalAdditinalArea);
+		if(totalAmount.compareTo(BigDecimal.ZERO)>0) {
+			totalAmount=totalAmount.divide(new BigDecimal(oldFar+""),BigDecimal.ROUND_HALF_UP);
+			totalAmount=totalAmount.setScale(2,BigDecimal.ROUND_HALF_UP);
+		}
+		
+		return totalAmount;
+	}
 
+	
 	public BigDecimal getTotalAmountOfRule5(List<BuildingDetail> buildingDetails, Plan plan,
 			OccupancyTypeHelper mostRestrictiveFarHelper, boolean isWorkInProgress, BigDecimal totalConstructedArea) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
@@ -1765,6 +1874,16 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 //		if (isWorkStarted) {
 //			totalArea = getTotalAreaForRule5(plan);
 //		}
+		
+		OccupancyTypeHelper typeHelper=plan.getVirtualBuilding().getMostRestrictiveFarHelper();
+		if(BpaConstants.F.equals(typeHelper.getType().getCode())) {
+			if (BpaConstants.NEW_CONSTRUCTION.equals(plan.getServiceType()))
+				multiplier = new BigDecimal("30");
+			else if (BpaConstants.ALTERATION.equals(plan.getServiceType())
+					|| BpaConstants.ADDITION_OR_EXTENSION.equals(plan.getServiceType()) || BpaConstants.RECONSTRUCTION.equals(plan.getServiceType()))
+				multiplier = new BigDecimal("5");
+		}
+		
 		totalArea = getTotalAreaForRule5(plan);
 
 		for (LetterToPartyFees fees : letterToPartyFees) {
@@ -1820,5 +1939,16 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		}
 		return totalAmount;
 	}
-
+	
+	public BigDecimal getAdditionalHeightFee(Plan plan) {
+		BigDecimal totalAmount=BigDecimal.ZERO;
+		BigDecimal totalAdditionalHeightArea=plan.getPlanInformation().getAreaForAdditionalHeight();
+		
+		if(totalAdditionalHeightArea.compareTo(BigDecimal.ZERO)>0) {
+			totalAmount=totalAdditionalHeightArea.multiply(new BigDecimal("50"));
+			totalAmount=totalAmount.setScale(2, BigDecimal.ROUND_HALF_UP);
+		}
+		
+		return totalAmount;
+	}
 }

@@ -270,7 +270,7 @@ public class PlanService {
 			
 			//PRESENT_COLLECTOR
 			String presentCollector=pl.getPlanInfoProperties().get(DxfFileConstants.PRESENT_COLLECTOR_RATE);
-			if(!DxfFileConstants.NA.equals(presentCollector)) {
+			if(presentCollector!=null && !DxfFileConstants.NA.equals(presentCollector)) {
 				try {
 					pl.getPlanInformation().setPresentCollectorRate(new BigDecimal(presentCollector));
 				} catch (Exception e) {
