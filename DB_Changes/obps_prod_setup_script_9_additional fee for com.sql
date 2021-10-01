@@ -31,3 +31,8 @@ INSERT INTO chandigarh.EGBPA_MSTR_BPAFEEMAPPING (id,applicationtype,feesubtype,s
 ----
 INSERT INTO chandigarh.chandigarh.eg_demand_reason (id,id_demand_reason_master,id_installment,percentage_basis,id_base_reason,create_date,modified_date,glcodeid) VALUES
 	 (nextval('seq_eg_installment_master'),(select id from chandigarh.chandigarh.eg_demand_reason_master edrm where reasonmaster ='Additional height fee'),(select id from chandigarh.chandigarh.eg_installment_master eim where description ='BPA/21-22'),NULL,NULL,now(),now(),394);
+
+select setval('seq_eg_boundary',(select max(id) from chandigarh.eg_boundary )) 
+
+INSERT INTO chandigarh.eg_boundary (id,boundarynum,parent,"name",boundarytype,localname,bndry_name_old,bndry_name_old_local,fromdate,todate,bndryid,longitude,latitude,materializedpath,active,createddate,lastmodifieddate,createdby,lastmodifiedby,"version",code) VALUES
+	 (nextval('seq_eg_boundary'),1,6,'43B',11,'43B',NULL,NULL,'2019-04-01 00:00:00.000','2099-03-31 00:00:00.000',NULL,NULL,NULL,NULL,true,now(),now(),1,1,0,'43B');

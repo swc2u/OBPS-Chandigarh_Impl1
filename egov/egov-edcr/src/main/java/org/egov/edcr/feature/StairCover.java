@@ -146,9 +146,9 @@ public class StairCover extends FeatureProcess {
 
 			return pl;
 		}
-
+//&& !isOccupancyNotApplicable(mostRestrictiveFarHelper)
 		if (mostRestrictiveFarHelper != null && mostRestrictiveFarHelper.getSubtype() != null
-				&& !isOccupancyNotApplicable(mostRestrictiveFarHelper)) {
+				) {
 			for (Block b : pl.getBlocks()) {
 				minHeight = BigDecimal.ZERO;
 				if (b.getStairCovers() != null && !b.getStairCovers().isEmpty() && mostRestrictiveFarHelper != null
@@ -189,7 +189,15 @@ public class StairCover extends FeatureProcess {
 							scrutinyDetail.getDetail().add(details);
 							pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 						}
-					} else {
+					} else if(isOccupancyNotApplicable(mostRestrictiveFarHelper)) {
+						details.put(DESCRIPTION, STAIRCOVER_DESCRIPTION);
+						details.put(REQUIRED, DxfFileConstants.NA);
+						details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minHeight));
+						details.put(STATUS, Result.Verify.getResultVal());
+						scrutinyDetail.getDetail().add(details);
+						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+					}
+					else {
 						details.put(DESCRIPTION, STAIRCOVER_DESCRIPTION);
 						details.put(REQUIRED, "Allowed ( " + CDGAdditionalService.viewLenght(pl, expactedHeiht) + " )");
 						details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minHeight));

@@ -273,9 +273,9 @@ public class AdditionalFeature extends FeatureProcess {
 		String Drawing_name = "Drawing Number";
 
 		if (jn == null)
-			plan.addError(DcrConstants.OBJECTNOTDEFINED, JOB + " in master data.");
+			plan.addError(DcrConstants.OBJECTNOTDEFINED, JOB + " not present in master data.");
 		if (dn == null)
-			plan.addError(DcrConstants.OBJECTNOTDEFINED, Drawing_name + " in master data.");
+			plan.addError(DcrConstants.OBJECTNOTDEFINED, Drawing_name + " not present in master data.");
 
 		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
 		scrutinyDetail.setKey("Common_Architecture controls");
