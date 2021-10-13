@@ -65,11 +65,14 @@ import org.egov.bpa.transaction.entity.common.LetterToPartyDocumentCommon;
 import org.egov.bpa.transaction.notice.LetterToPartyFormat;
 import org.egov.bpa.transaction.notice.impl.LetterToPartyCreateFormatImpl;
 import org.egov.bpa.transaction.notice.impl.LetterToPartyReplyFormatImpl;
+import org.egov.bpa.transaction.service.DcrRestService;
 import org.egov.bpa.transaction.service.LettertoPartyDocumentService;
 import org.egov.bpa.transaction.service.LettertoPartyFeeService;
 import org.egov.bpa.transaction.service.LettertoPartyService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.web.controller.transaction.BpaGenericApplicationController;
+import org.egov.common.entity.dcr.helper.EdcrApplicationInfo;
+import org.egov.common.entity.edcr.Plan;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.custom.CustomImplProvider;
 import org.egov.infra.reporting.engine.ReportOutput;
@@ -90,6 +93,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -132,13 +137,30 @@ public class LetterToPartyController extends BpaGenericApplicationController {
     @Autowired
     private LettertoPartyFeeService lettertoPartyFeeService;
 
+    @Autowired
+    private DcrRestService drcRestService;
+    
     @ModelAttribute("lpReasonList")
     public List<LpReason> getLpReasonList() {
         return lpReasonService.findAll();
     }
 
-    public List<ChecklistServiceTypeMapping> getCheckListDetailList(final Long serviceTypeId) {
-        return checklistServiceTypeService.findByActiveByServiceTypeAndChecklist(serviceTypeId, BpaConstants.LP_CHECKLIST);
+    public List<ChecklistServiceTypeMapping> getCheckListDetailList(final Long serviceTypeId,String areaCategory) {
+    	List<ChecklistServiceTypeMapping> checklistServiceTypeMappings=new ArrayList<ChecklistServiceTypeMapping>();
+    	for(ChecklistServiceTypeMapping checklistServiceTypeMapping:checklistServiceTypeService.findByActiveByServiceTypeAndChecklist(serviceTypeId, BpaConstants.LP_CHECKLIST)) {
+    		String lpcode=checklistServiceTypeMapping.getChecklist().getCode();
+    		if(BpaConstants.RURAL.equals(areaCategory)) {
+    			if(lpcode.startsWith("LTP-R-")) {
+    				checklistServiceTypeMappings.add(checklistServiceTypeMapping);
+    			}
+    		}else {
+    			if(!lpcode.startsWith("LTP-R-")) {
+    				checklistServiceTypeMappings.add(checklistServiceTypeMapping);
+    			}
+    		}
+    	}
+      //  return checklistServiceTypeService.findByActiveByServiceTypeAndChecklist(serviceTypeId, BpaConstants.LP_CHECKLIST);
+    	return checklistServiceTypeMappings;
     }
 
     @GetMapping("/create/{applicationNumber}")
@@ -153,16 +175,23 @@ public class LetterToPartyController extends BpaGenericApplicationController {
     }
 
     private void prepareData(final PermitLetterToParty lettertoParty, final BpaApplication bpaApplication, final Model model) {
+    	Plan plan = applicationBpaService.getPlanInfo(bpaApplication.geteDcrNumber());
+    	String areaCategory=plan.isRural()?BpaConstants.RURAL:BpaConstants.URBAN;
         model.addAttribute("mode", "new");
         model.addAttribute(BPA_APPLICATION, bpaApplication);
-        model.addAttribute(CHECK_LIST_DETAIL_LIST, getCheckListDetailList(bpaApplication.getServiceType().getId()));
-        model.addAttribute(LETTERTO_PARTY_FEES, lettertoPartyFeeService.getLPFees(bpaApplication));
+        model.addAttribute(CHECK_LIST_DETAIL_LIST, getCheckListDetailList(bpaApplication.getServiceType().getId(),areaCategory));
+        model.addAttribute(LETTERTO_PARTY_FEES, lettertoPartyFeeService.getLPFees(bpaApplication,areaCategory));
         lettertoParty.setApplication(bpaApplication);
     }
 
     public void validateCreateLetterToParty(PermitLetterToParty permitLTP, BindingResult errors) {
         if (permitLTP.getLetterToParty().getLpReason() == null)
             errors.rejectValue("lpReason", "lbl.lp.reason.required");
+    }
+    
+    public Plan getPlanInfo(final String edcrNumber) {		
+		EdcrApplicationInfo edcrPlanInfo = drcRestService.getDcrPlanInfo(edcrNumber, ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest());		 
+        return edcrPlanInfo.getPlan();
     }
 
     @PostMapping("/create")
@@ -273,6 +302,8 @@ public class LetterToPartyController extends BpaGenericApplicationController {
         final BpaApplication bpaApplication = applicationBpaService.findByApplicationNumber(applicationNumber);
         final List<PermitLetterToParty> lettertoPartyList = lettertoPartyService
                 .findByBpaApplicationOrderByIdDesc(bpaApplication);
+        Plan plan = applicationBpaService.getPlanInfo(bpaApplication.geteDcrNumber());
+    	String areaCategory=plan.isRural()?BpaConstants.RURAL:BpaConstants.URBAN;
         PermitLetterToParty lettertoParty = null;
         if (!lettertoPartyList.isEmpty())
             lettertoParty = lettertoPartyList.get(0);
@@ -280,7 +311,7 @@ public class LetterToPartyController extends BpaGenericApplicationController {
             model.addAttribute(LETTERTO_PARTY, lettertoParty);
             model.addAttribute(LETTERTOPARTYDOC_LIST, lettertoParty.getLetterToParty().getLetterToPartyDocuments());
         }
-        model.addAttribute(CHECK_LIST_DETAIL_LIST, getCheckListDetailList(bpaApplication.getServiceType().getId()));
+        model.addAttribute(CHECK_LIST_DETAIL_LIST, getCheckListDetailList(bpaApplication.getServiceType().getId(),areaCategory));
         model.addAttribute(BPA_APPLICATION, bpaApplication);
     }
 
@@ -377,10 +408,12 @@ public class LetterToPartyController extends BpaGenericApplicationController {
     @GetMapping("/lettertopartyreply/{id}")
     public String createLettertoPartyReply(@PathVariable final Long id, final Model model) {
         PermitLetterToParty lettertoParty = lettertoPartyService.findById(id);
+        Plan plan = applicationBpaService.getPlanInfo(lettertoParty.getApplication().geteDcrNumber());
+    	String areaCategory=plan.isRural()?BpaConstants.RURAL:BpaConstants.URBAN;
         model.addAttribute(LETTERTO_PARTY, lettertoParty);
         model.addAttribute(LETTERTOPARTYDOC_LIST, lettertoParty.getLetterToParty().getLetterToPartyDocuments());
         model.addAttribute(BPA_APPLICATION, lettertoParty.getApplication());
-        model.addAttribute(CHECK_LIST_DETAIL_LIST, getCheckListDetailList(lettertoParty.getApplication().getServiceType().getId()));        
+        model.addAttribute(CHECK_LIST_DETAIL_LIST, getCheckListDetailList(lettertoParty.getApplication().getServiceType().getId(),areaCategory));        
         model.addAttribute(LETTERTO_PARTY_FEE_LIST, lettertoPartyFeeService.getLPFeeDetailsByLetterToParty(lettertoParty));
         return LETTERTOPARTY_LPREPLY;
     }

@@ -48,6 +48,7 @@ package org.egov.bpa.utils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -62,7 +63,8 @@ public class BpaConstants {
 	public static final String SECTOR_NUMBER = "SECTOR_NUMBER";
 	public static final String PLOT_TYPE = "PLOT_TYPE";
 	public static final String KHATA_NO = "KHATA_NO";
-
+	public static final String VILLAGE = "VILLAGE";
+	public static final String MANIMAJRA = "MANIMAJRA";
 	// CGCL SERVIVE_TYPE
 	public static final String RECONSTRUCTION = "Reconstruction";
 	public static final String ALTERATION = "Alteration";
@@ -841,6 +843,8 @@ public class BpaConstants {
 	 * static { EDCRREQUIREDSERVICES.put(ST_CODE_01, EDCRREQUIREDOCCUPANCY);
 	 * EDCRREQUIREDSERVICES.put(ST_CODE_06, EDCRREQUIREDOCCUPANCY); }
 	 */
+	
+	public static final List<String> LP_RURAL_FEES=Arrays.asList("Development charges of roads","Conversion charges","Transfer fees","C & D (Construction & Demolition)");
 
 	private BpaConstants() {
 		// only invariants

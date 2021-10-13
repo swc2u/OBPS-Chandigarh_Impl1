@@ -40,8 +40,17 @@ public class LettertoPartyFeeService {
         this.letterToPartyFeeDetailsRepository = letterToPartyFeeDetailsRepository;
     }
 	
-	public List<LetterToPartyFeeMaster> getActiveLPFees() {
-        return letterToPartyFeeMasterRepository.findByIsActiveTrueOrderByIdAsc();
+	public List<LetterToPartyFeeMaster> getActiveLPFees(String areaCategory) {
+//        return letterToPartyFeeMasterRepository.findByIsActiveTrueOrderByIdAsc();
+		List<LetterToPartyFeeMaster> letterToPartyFeeMasters=new ArrayList<LetterToPartyFeeMaster>();
+		for(LetterToPartyFeeMaster letterToPartyFeeMaster:letterToPartyFeeMasterRepository.findByIsActiveTrueOrderByIdAsc()) {
+			if(BpaConstants.RURAL.equals(areaCategory) && BpaConstants.LP_RURAL_FEES.contains(letterToPartyFeeMaster.getFeeName())) {
+				letterToPartyFeeMasters.add(letterToPartyFeeMaster);
+			}else if(BpaConstants.URBAN.equals(areaCategory)){
+				letterToPartyFeeMasters.add(letterToPartyFeeMaster);
+			}
+		}
+		return letterToPartyFeeMasters;
     }
 	
 	public LetterToPartyFeeMaster getLPFeeMasterById(Long id) {
@@ -88,9 +97,9 @@ public class LettertoPartyFeeService {
         return letterToPartyFeeDetailsRepository.findByLetterToPartyFeeOrderByIdDesc(letterToPartyFee);
     }
 	
-	public List<LetterToPartyFees> getLPFees(BpaApplication application) {
+	public List<LetterToPartyFees> getLPFees(BpaApplication application,String areaCategory) {
 		List<LetterToPartyFees> letterToPartyFeeList = new ArrayList<LetterToPartyFees>();
-		List<LetterToPartyFeeMaster> letterToPartyFeeMasters = getActiveLPFees();
+		List<LetterToPartyFeeMaster> letterToPartyFeeMasters = getActiveLPFees(areaCategory);
 		List<LetterToPartyFee> letterToPartyFees = getLPFeesByApplication(application);
 		for(LetterToPartyFeeMaster letterToPartyFeeMaster:letterToPartyFeeMasters) {
 			LetterToPartyFees lpFees = new LetterToPartyFees();
