@@ -843,8 +843,12 @@ public class BpaConstants {
 	 * static { EDCRREQUIREDSERVICES.put(ST_CODE_01, EDCRREQUIREDOCCUPANCY);
 	 * EDCRREQUIREDSERVICES.put(ST_CODE_06, EDCRREQUIREDOCCUPANCY); }
 	 */
-	
-	public static final List<String> LP_RURAL_FEES=Arrays.asList("Development charges of roads","Conversion charges","Transfer fees","C & D (Construction & Demolition)");
+	public static final String LPF_DEVELOPMENT_CHARGES_OF_ROADS="Development charges of roads";
+	public static final String LPF_CONVERSION_CHARGES="Conversion charges";
+	public static final String LPF_TRANSFER_FEES="Transfer fees";
+	public static final String LPF_CONSTRUCTION_AND_DEMOLITION="C & D (Construction & Demolition)";
+	public static final String LPF_ALLOTMENT_OF_NEW_NUMBER="Allotment of new number";
+	public static final List<String> LP_RURAL_FEES=Arrays.asList(LPF_DEVELOPMENT_CHARGES_OF_ROADS,LPF_CONVERSION_CHARGES,LPF_TRANSFER_FEES,LPF_CONSTRUCTION_AND_DEMOLITION,LPF_ALLOTMENT_OF_NEW_NUMBER);
 
 	private BpaConstants() {
 		// only invariants
@@ -929,4 +933,6 @@ public class BpaConstants {
 	public static List<String> getAvailableDesignations() {
 		return Collections.unmodifiableList(AVAILABLE_DESIGNATIONS);
 	}
+	
+	public static final List<String> RURAL_LP_ADDITIONAL_DOC=Arrays.asList(new String[] {"LTP-01","LTP-02","LTP-03","LTP-04","LTP-05","LTP-06","LTP-07","LTP-08","LTP-09","LTP-10"});
 }

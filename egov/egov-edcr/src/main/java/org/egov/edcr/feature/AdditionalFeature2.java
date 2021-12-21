@@ -178,6 +178,8 @@ public class AdditionalFeature2 extends FeatureProcess {
 		scrutinyDetail.addColumnHeading(2, FLOOR);
 		scrutinyDetail.addColumnHeading(3, PROVIDED);
 		scrutinyDetail.addColumnHeading(4, STATUS);
+		String applicableStr=plan.getPlanInfoProperties().get(DxfFileConstants.RULE_5_APPLICABLE);
+		boolean isApplicable=applicableStr!=null && DxfFileConstants.YES.equals(applicableStr);
 		boolean isParsent = false;
 		for (Block block : plan.getBlocks()) {
 			for (Floor floor : block.getBuilding().getFloors()) {
@@ -200,6 +202,9 @@ public class AdditionalFeature2 extends FeatureProcess {
 		}
 		if(isParsent)
 			plan.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+		else if(isApplicable) {
+			plan.addError("RULE5", " Rule 5 polygon is mandatory");
+		}
 	}
 
 	private void addAddtionalFee(Plan plan) {

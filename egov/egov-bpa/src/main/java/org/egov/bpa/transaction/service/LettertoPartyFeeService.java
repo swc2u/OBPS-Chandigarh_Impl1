@@ -46,7 +46,7 @@ public class LettertoPartyFeeService {
 		for(LetterToPartyFeeMaster letterToPartyFeeMaster:letterToPartyFeeMasterRepository.findByIsActiveTrueOrderByIdAsc()) {
 			if(BpaConstants.RURAL.equals(areaCategory) && BpaConstants.LP_RURAL_FEES.contains(letterToPartyFeeMaster.getFeeName())) {
 				letterToPartyFeeMasters.add(letterToPartyFeeMaster);
-			}else if(BpaConstants.URBAN.equals(areaCategory)){
+			}else if(BpaConstants.URBAN.equals(areaCategory) && !BpaConstants.LP_RURAL_FEES.contains(letterToPartyFeeMaster.getFeeName())){
 				letterToPartyFeeMasters.add(letterToPartyFeeMaster);
 			}
 		}

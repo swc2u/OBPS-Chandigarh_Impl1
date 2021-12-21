@@ -51,4 +51,5 @@ INSERT INTO chandigarh.egbpa_lettertoparty_fee_mstr(id, feename, floornumber, is
 (nextval('seq_egbpa_lettertoparty_fee_mstr'), 'Development charges of roads', 0, true, 0, 1, now(), 1, now()),
 (nextval('seq_egbpa_lettertoparty_fee_mstr'), 'Conversion charges', 0, true, 0, 1, now(), 1, now()),
 (nextval('seq_egbpa_lettertoparty_fee_mstr'), 'Transfer fees', 0, true, 0, 1, now(), 1, now()),
-(nextval('seq_egbpa_lettertoparty_fee_mstr'), 'C & D (Construction & Demolition)', 0, true, 0, 1, now(), 1, now());
+(nextval('seq_egbpa_lettertoparty_fee_mstr'), 'C & D (Construction & Demolition)', 0, true, 0, 1, now(), 1, now()),
+(nextval('seq_egbpa_lettertoparty_fee_mstr'), 'Allotment of new number', 0, true, 0, 1, now(), 1, now());

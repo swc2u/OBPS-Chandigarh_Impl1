@@ -164,7 +164,8 @@ public class GeneralStairRural extends FeatureProcess {
 									}
 								}
 							} else {
-								stairAbsent.add("Block " + block.getNumber() + " floor " + floor.getNumber());
+								if(!isStairOptional(plan, block, floor))
+									stairAbsent.add("Block " + block.getNumber() + " floor " + floor.getNumber());
 							}
 
 						}
@@ -597,5 +598,13 @@ public class GeneralStairRural extends FeatureProcess {
 	public Map<String, Date> getAmendments() {
 		return new LinkedHashMap<>();
 	}
-
+	
+	public boolean isStairOptional(Plan plan,Block block, Floor floor) {
+		boolean flage=false;
+		int tf=block.getBuilding().getFloorsAboveGround().intValue()-1;
+		if(tf==floor.getNumber()) 
+			if(block.getStairCovers()==null || block.getStairCovers().isEmpty())
+				flage=true;
+		return flage;
+	}
 }

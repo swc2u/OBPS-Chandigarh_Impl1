@@ -564,4 +564,6 @@ public class DxfFileConstants {
 	
 	public static final String PRESENT_COLLECTOR_RATE="PRESENT_COLLECTOR_RATE";
 	public static final String AREA_FOR_ADDITIONAL_HEIGHT_SQFT="AREA_FOR_ADDITIONAL_HEIGHT_SQFT";
+	
+	public static final String RULE_5_APPLICABLE="RULE_5_APPLICABLE";
 }

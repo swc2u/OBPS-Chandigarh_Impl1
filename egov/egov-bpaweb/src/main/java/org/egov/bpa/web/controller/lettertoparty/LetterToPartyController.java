@@ -150,7 +150,7 @@ public class LetterToPartyController extends BpaGenericApplicationController {
     	for(ChecklistServiceTypeMapping checklistServiceTypeMapping:checklistServiceTypeService.findByActiveByServiceTypeAndChecklist(serviceTypeId, BpaConstants.LP_CHECKLIST)) {
     		String lpcode=checklistServiceTypeMapping.getChecklist().getCode();
     		if(BpaConstants.RURAL.equals(areaCategory)) {
-    			if(lpcode.startsWith("LTP-R-")) {
+    			if(lpcode.startsWith("LTP-R-") || BpaConstants.RURAL_LP_ADDITIONAL_DOC.contains(lpcode)) {
     				checklistServiceTypeMappings.add(checklistServiceTypeMapping);
     			}
     		}else {

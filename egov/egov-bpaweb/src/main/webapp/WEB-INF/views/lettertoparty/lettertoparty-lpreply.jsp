@@ -305,9 +305,9 @@
 									<c:out value="${fees.isMandatory ? 'Yes' : 'No'}"/>
 								</div>
 								<div class="col-sm-2">
-									<form:input class="form-control patternvalidation" maxlength="20" data-pattern="number" 
+									<form:input class="form-control patternvalidation" maxlength="20" data-pattern="text" 
 												id="letterToPartyFeeDetails[${status.index}].floorarea" 
-												path="letterToPartyFeeDetails[${status.index}].floorarea" />
+												path="letterToPartyFeeDetails[${status.index}].floorarea"  onkeypress="return checkIfValid(this, event)"/>
 									<form:errors path="letterToPartyFees[${status.index}].floorarea" cssClass="add-margin error-msg" />
 								</div>
 								<div class="col-sm-3">
@@ -349,6 +349,37 @@
 	<div id="caption"></div>
 </div>
 
+<script>
+        function isValid(el, evnt) {
+            var charC = (evnt.which) ? evnt.which : evnt.keyCode;
+            if (charC == 45) {
+                if (el.value.indexOf('-') === -1) {
+                    return true;
+                }
+                 else {
+                    return false;
+                }
+            }
+            else if (charC == 46) {
+                if (el.value.indexOf('.') === -1) {
+                    return true;
+                }
+                 else {
+                    return false;
+                }
+            }
+            else {
+                if (charC > 31 && (charC < 48 || charC > 57))
+                    return false;
+            }
+            return true;
+        }
+
+        function checkIfValid(t, evnt) {
+            var a = isValid(t, evnt);
+            return a;
+        }
+    </script>
 <script
 		src="<cdn:url value='/resources/global/js/egov/inbox.js?rnd=${app_release_no}' context='/egi'/>"></script>
 <script
