@@ -53,10 +53,14 @@ import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.infra.web.support.search.DataTableSearchRequest;
 import org.hibernate.validator.constraints.SafeHtml;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class SearchBpaApplicationForm extends DataTableSearchRequest {
     private Long id;
     @SafeHtml
     private String applicationNumber;
+    
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date applicationDate;
     @SafeHtml
     private String applicantType;
@@ -92,7 +96,11 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
     private String zone;
     private Long zoneId;
     private boolean isFeeCollected;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date fromDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date toDate;
     @SafeHtml
     private String address;
@@ -124,6 +132,7 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
     private Long locationBoundary;
     @SafeHtml
     private String revocationNumber;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date planPermissionDate;
     @SafeHtml
     private String occupancyCertificateNumber;

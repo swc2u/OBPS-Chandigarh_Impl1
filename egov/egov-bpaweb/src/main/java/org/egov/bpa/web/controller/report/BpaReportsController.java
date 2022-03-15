@@ -47,6 +47,8 @@ import static org.egov.bpa.utils.BpaConstants.REVENUE_HIERARCHY_TYPE;
 import static org.egov.bpa.utils.BpaConstants.WARD;
 import static org.egov.infra.utils.JsonUtils.toJSON;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -58,7 +60,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang.StringUtils;
 import org.egov.bpa.master.entity.ApplicationSubType;
 import org.egov.bpa.master.service.ApplicationSubTypeService;
 import org.egov.bpa.master.service.NocConfigurationService;
@@ -246,6 +248,129 @@ public class BpaReportsController extends BpaGenericApplicationController {
 				.toString();
 	}
 
+	@RequestMapping(value = "/statusreport-api", method = RequestMethod.GET)
+	@ResponseBody
+	public List<SearchBpaApplicationForm> getStatusReportRestAPI(
+			@RequestParam(name = "appType", required = false) String appType,
+			@RequestParam(name = "appNumber", required = false) String appNumber,
+			@RequestParam(name = "appName", required = false) String appName,
+			@RequestParam(name = "serviceType", required = false) String serviceType,
+			@RequestParam(name = "fromDate", required = false) String fromDate,
+			@RequestParam(name = "toDate", required = false) String toDate,
+			@RequestParam(name = "status", required = false) String status,
+			@RequestParam(name = "ward", required = false) String ward) {
+		SimpleDateFormat mdyFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+		SearchBpaApplicationForm searchBpaApplicationForm = new SearchBpaApplicationForm();
+		if (!StringUtils.isEmpty(appType)) {
+			if (appType.equalsIgnoreCase("Above two Kanal"))
+				searchBpaApplicationForm.setApplicationTypeId(5L);
+			else if (appType.equalsIgnoreCase("Below two Kanal"))
+				searchBpaApplicationForm.setApplicationTypeId(3L);
+			else if (appType.equalsIgnoreCase("RURAL"))
+				searchBpaApplicationForm.setApplicationTypeId(4L);
+			else if (appType.equalsIgnoreCase("DPC / Plinth Level Certificate"))
+				searchBpaApplicationForm.setApplicationTypeId(7L);
+			else if (appType.equalsIgnoreCase("Occupancy Certificate"))
+				searchBpaApplicationForm.setApplicationTypeId(6L);
+
+		}
+		if (!StringUtils.isEmpty(serviceType)) {
+			if (serviceType.equalsIgnoreCase("New Construction"))
+				searchBpaApplicationForm.setServiceTypeId(59L);
+			else if (serviceType.equalsIgnoreCase("Reconstruction"))
+				searchBpaApplicationForm.setServiceTypeId(61L);
+			else if (serviceType.equalsIgnoreCase("Alteration"))
+				searchBpaApplicationForm.setServiceTypeId(64L);
+			else if (serviceType.equalsIgnoreCase("Addition or Extension"))
+				searchBpaApplicationForm.setServiceTypeId(64L);
+		}
+
+		if (!StringUtils.isEmpty(appNumber)) {
+			searchBpaApplicationForm.setApplicationNumber(appNumber);
+		}
+		if (!StringUtils.isEmpty(appName)) {
+			searchBpaApplicationForm.setApplicantName(appName);
+		}
+		if (!StringUtils.isEmpty(status)) {
+			searchBpaApplicationForm.setStatus(status);
+		}
+		if (!StringUtils.isEmpty(ward)) {
+			searchBpaApplicationForm.setWard(ward);
+		}
+
+		try {
+			if (!StringUtils.isEmpty(fromDate)) {
+				searchBpaApplicationForm.setFromDate(mdyFormat.parse(fromDate));
+			}
+			if (!StringUtils.isEmpty(toDate)) {
+				searchBpaApplicationForm.setToDate(mdyFormat.parse(toDate));
+			}
+		} catch (ParseException e) {}
+
+		final List<SearchBpaApplicationForm> searchResultList = searchBpaApplicationService
+				.search(searchBpaApplicationForm);
+		
+		return searchResultList;
+	}
+
+	@RequestMapping(value = "/servicewise-summary-api", method = RequestMethod.GET)
+	@ResponseBody
+	public List<SearchBpaApplicationReport> getStatusReportSummaryRestAPI(
+			@RequestParam(name = "appType", required = false) String appType,
+			@RequestParam(name = "appNumber", required = false) String appNumber,
+			@RequestParam(name = "appName", required = false) String appName,
+			@RequestParam(name = "serviceType", required = false) String serviceType,
+			@RequestParam(name = "fromDate", required = false) String fromDate,
+			@RequestParam(name = "toDate", required = false) String toDate) {
+		SimpleDateFormat mdyFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+		SearchBpaApplicationForm searchBpaApplicationForm = new SearchBpaApplicationForm();
+		if (!StringUtils.isEmpty(appType)) {
+			if (appType.equalsIgnoreCase("Above two Kanal"))
+				searchBpaApplicationForm.setApplicationTypeId(5L);
+			else if (appType.equalsIgnoreCase("Below two Kanal"))
+				searchBpaApplicationForm.setApplicationTypeId(3L);
+			else if (appType.equalsIgnoreCase("RURAL"))
+				searchBpaApplicationForm.setApplicationTypeId(4L);
+			else if (appType.equalsIgnoreCase("DPC / Plinth Level Certificate"))
+				searchBpaApplicationForm.setApplicationTypeId(7L);
+			else if (appType.equalsIgnoreCase("Occupancy Certificate"))
+				searchBpaApplicationForm.setApplicationTypeId(6L);
+
+		}
+		if (!StringUtils.isEmpty(serviceType)) {
+			if (serviceType.equalsIgnoreCase("New Construction"))
+				searchBpaApplicationForm.setServiceTypeId(59L);
+			else if (serviceType.equalsIgnoreCase("Reconstruction"))
+				searchBpaApplicationForm.setServiceTypeId(61L);
+			else if (serviceType.equalsIgnoreCase("Alteration"))
+				searchBpaApplicationForm.setServiceTypeId(64L);
+			else if (serviceType.equalsIgnoreCase("Addition or Extension"))
+				searchBpaApplicationForm.setServiceTypeId(64L);
+		}
+
+		if (!StringUtils.isEmpty(appNumber)) {
+			searchBpaApplicationForm.setApplicationNumber(appNumber);
+		}
+		if (!StringUtils.isEmpty(appName)) {
+			searchBpaApplicationForm.setApplicantName(appName);
+		}
+		try {
+			if (!StringUtils.isEmpty(fromDate)) {
+				searchBpaApplicationForm.setFromDate(mdyFormat.parse(fromDate));
+			}
+			if (!StringUtils.isEmpty(toDate)) {
+				searchBpaApplicationForm.setToDate(mdyFormat.parse(toDate));
+			}
+		} catch (ParseException e) {}
+
+		
+		final List<SearchBpaApplicationReport> searchResultList = bpaReportsService.getResultsByServicetypeAndStatus(searchBpaApplicationForm);
+		return searchResultList;
+	}
+	
+	
 	@RequestMapping(value = "/servicewise-statusreport/view", method = RequestMethod.GET)
 	public String viewStatusCountByServicetypeDetails(@RequestParam final String applicantName,
 													  @RequestParam final String applicationNumber,
