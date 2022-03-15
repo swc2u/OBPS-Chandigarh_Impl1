@@ -43,7 +43,8 @@ public class ExcelReader {
 //	public static final String SAMPLE_XLSX_FILE_PATH="src/main/java/com/pwc/xlsx/freedy-01Aug2020.xlsx";
 //	public static final String SAMPLE_XLSX_FILE_PATH = "C:\\Workspace\\chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\33C MASTER DATA-updated for 28 Feb 2021.xlsx";
 //	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\MASTER DATA FOR COMBINED PLOT_6sep21.xlsx";
-	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\35D  MASTER DATA.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\35D  MASTER DATA.xlsx";
+	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\master data for sector 18 and 22.xlsx";
 	public static void main(String[] args) throws IOException, InvalidFormatException {
 		System.out.println("==================Start===================");
 		Workbook workbook = WorkbookFactory.create(new File(SAMPLE_XLSX_FILE_PATH));

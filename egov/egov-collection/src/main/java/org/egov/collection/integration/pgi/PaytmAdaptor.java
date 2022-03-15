@@ -95,6 +95,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+
 import com.paytm.pg.merchant.PaytmChecksum;
 
 /**
@@ -120,7 +121,7 @@ public class PaytmAdaptor implements PaymentGatewayAdaptor {
 	 * @param receiptHeader
 	 * @return
 	 */
-	public static final String PAYTM_PREFIX = "PAYTM";
+	public static final String PAYTM_PREFIX = "PAYTM1";
 	public static final String CALLBACK_URL = "CALLBACK_URL";
 	public static final String CHANNEL_ID = "CHANNEL_ID";
 	public static final String CHECKSUMHASH = "CHECKSUMHASH";
@@ -138,6 +139,8 @@ public class PaytmAdaptor implements PaymentGatewayAdaptor {
 	public static final String TXNAMOUNT = "TXNAMOUNT";
 	public static final String TXNID = "TXNID";
 	public static final String TXNDATE = "TXNDATE";
+	//public static final String MERC_UNI_REF="Merc_Uni_Ref";
+	public static final String MERC_UNI_REF="MERC_UNQ_REF";
 
 	@Override
 	public PaymentRequest createPaymentRequest(final ServiceDetails paymentServiceDetails,
@@ -174,6 +177,7 @@ public class PaytmAdaptor implements PaymentGatewayAdaptor {
 		parameters.put(TXN_AMOUNT, new BigDecimal(receiptHeader.getTotalAmount() + "")
 				.setScale(CollectionConstants.AMOUNT_PRECISION_DEFAULT, BigDecimal.ROUND_UP).toString());
 		parameters.put(CUST_ID, receiptHeader.getConsumerCode());
+		parameters.put(MERC_UNI_REF, "obps");
 		String checkSum = null;
 		try {
 			checkSum = getCheckSum(parameters,

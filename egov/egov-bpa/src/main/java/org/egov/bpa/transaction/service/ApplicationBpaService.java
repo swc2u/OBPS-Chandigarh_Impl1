@@ -602,6 +602,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         		&& WF_APPROVE_BUTTON.equals(workFlowAction)
         	) {
             String feeCalculationMode = bpaUtils.getBPAFeeCalculationMode();
+            LOG.info("1 feeCalculationMode "+feeCalculationMode);
             if (feeCalculationMode.equalsIgnoreCase(BpaConstants.AUTOFEECAL) ||
                     feeCalculationMode.equalsIgnoreCase(BpaConstants.AUTOFEECALEDIT)) {
                 ApplicationBpaFeeCalculation feeCalculation = (ApplicationBpaFeeCalculation) specificNoticeService
@@ -609,9 +610,11 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
                 PermitFee permitFee = feeCalculation.calculateBpaSanctionFees(application);
                 ApplicationFee applicationFee = applicationFeeService.saveApplicationFee(permitFee.getApplicationFee());
                 permitFee.setApplicationFee(applicationFee);
+                LOG.info("applicationFee "+applicationFee);
                 permitFeeRepository.save(permitFee);
                 application.setDemand(bpaDemandService.generateDemandUsingSanctionFeeList(permitFee.getApplicationFee(),
                         permitFee.getApplication().getDemand()));
+                LOG.info("2 "+permitFee.getApplication().getDemand());
             }
         }
         if (WF_APPROVE_BUTTON.equals(workFlowAction)) {
