@@ -90,6 +90,8 @@ public class PlanService {
 			plan = extractService.extract(dcrApplication.getSavedDxfFile(), amd, asOnDate,
 					featureService.getFeatures());
 			setProperties(plan);
+			plan.setApplicationType(dcrApplication.getApplicationType().name());
+			plan.setPlanPermissionNumber(dcrApplication.getPlanPermitNumber());
 			plan.setServiceType(dcrApplication.getServiceType());
 			plan = applyRules(plan, amd, cityDetails);
 			additionalValidation(plan);
