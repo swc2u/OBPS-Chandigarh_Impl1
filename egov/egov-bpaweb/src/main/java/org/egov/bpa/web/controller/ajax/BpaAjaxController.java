@@ -79,11 +79,13 @@ import org.egov.bpa.master.service.ServiceTypeService;
 import org.egov.bpa.master.service.SlotMappingService;
 import org.egov.bpa.master.service.StakeHolderService;
 import org.egov.bpa.master.service.StakeholderTypeService;
+import org.egov.bpa.transaction.entity.ApplicationFee;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.OwnershipTransfer;
 import org.egov.bpa.transaction.entity.PermitInspectionApplication;
 import org.egov.bpa.transaction.entity.PermitRenewal;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
+import org.egov.bpa.transaction.entity.oc.OccupancyFee;
 import org.egov.bpa.transaction.notice.util.BpaNoticeUtil;
 import org.egov.bpa.transaction.service.ApplicationBpaFeeCalculation;
 import org.egov.bpa.transaction.service.ApplicationBpaService;
@@ -92,6 +94,7 @@ import org.egov.bpa.transaction.service.InspectionApplicationService;
 import org.egov.bpa.transaction.service.OwnershipTransferService;
 import org.egov.bpa.transaction.service.PermitFeeCalculationService;
 import org.egov.bpa.transaction.service.PermitRenewalService;
+import org.egov.bpa.transaction.service.impl.OccupancyCertificateFeeService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.utils.BpaUtils;
@@ -215,6 +218,9 @@ public class BpaAjaxController {
     private OwnershipTransferService ownershipTransferService;
     @Autowired
     private PermitRenewalService renewalService;
+    @Autowired
+    private OccupancyCertificateFeeService occupancyCertificateFeeService;
+
 
     @GetMapping(value = "/ajax/getAdmissionFees", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -1079,6 +1085,32 @@ public class BpaAjaxController {
 		ApplicationSubType applicationSubtypeObj = applicationSubTypeService.findById(Long.valueOf(applicationType));
 		bpa.setApplicationType(applicationSubtypeObj);
 		Map<String, String> map = feeCalculationUtils.calculateAllFeesWhileApplying(bpa);
+		final List<JSONObject> jsonObjects = new ArrayList<>();
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			final JSONObject jsonObj = new JSONObject();
+			jsonObj.put("name", entry.getKey());
+			jsonObj.put("amount", Double.valueOf(entry.getValue()));
+			jsonObjects.add(jsonObj);
+		}
+		IOUtils.write(jsonObjects.toString(), response.getWriter());
+
+	}
+	
+	@GetMapping(value = "/ajax/getFeeDetailsDuringRegisterForOC", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public void getFeeDetailsDuringRegisterForOC(@RequestParam final String ocedcr, @RequestParam final String ocserviceType,
+			@RequestParam String permitNo,final HttpServletResponse response) throws IOException {
+		System.out.println("EDCR NO:" + ocedcr);
+		System.out.println("service type:" + ocserviceType);
+		System.out.println("Pemrit No:" + permitNo);
+		OccupancyCertificate oc = new OccupancyCertificate();
+		OccupancyFee occupancyFee = new OccupancyFee();
+		oc.seteDcrNumber(ocedcr);
+		occupancyFee.setApplicationFee(new ApplicationFee());
+		occupancyFee.setOc(oc);
+		BpaApplication parent = applicationBpaService.findByPermitNumber(permitNo);
+		oc.setParent(parent);
+		Map<String, String> map = occupancyCertificateFeeService.calculateOCFees(oc,occupancyFee);
 		final List<JSONObject> jsonObjects = new ArrayList<>();
 		for (Map.Entry<String, String> entry : map.entrySet()) {
 			final JSONObject jsonObj = new JSONObject();

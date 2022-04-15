@@ -82,7 +82,7 @@
 			</div>
 			<div class="col-sm-3 add-margin view-content">
 				<a target="popup" onclick="window.open('/bpa/application/details-view/by-permit-number/${occupancyCertificate.parent.planPermissionNumber}','popup','width=1100,height=700'); return false;"
-				>${occupancyCertificate.parent.planPermissionNumber}</a>
+				>${occupancyCertificate.parent.planPermissionNumber}&nbsp;<i class="fa-solid fa-arrow-up-right-from-square"></i></a>
 			</div>
 			</c:otherwise>
 		</c:choose>
@@ -201,3 +201,4 @@
 	</div> --%>
 </div>
 
+<script src="https://kit.fontawesome.com/df33c39e0f.js" crossorigin="anonymous"></script>

@@ -27,6 +27,11 @@ public class OCDataComparison implements Serializable {
 	public static final String Glazing_Of_Verandah = "Glazing of verandah";
 	public static final String Additional_height_on_second_floor_of_SCFs_converted_into_SCOs = "Additional height on second floor of SCFs converted into SCOs";
 	public static final String Partitions_on_ground_floor_on_multi_bays_shops = "Partitions on ground floor on multi-bays shops";
+	public static final String Barsati_Floor = "Barsati floor height";
+	public static final String Stair_Headway_Height = "Stair headway height";
+	public static final String Terrace_Utilities = "Terrace utilities(water tank, solar panel, etc)";
+	
+	
 
 	//@JsonProperty(value = "oCDataComparison")
 	private Map<String, Data> ocdataComparison = new HashMap<String, Data>();

@@ -1,8 +1,10 @@
 package org.egov.edcr.feature;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -17,6 +19,7 @@ import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.ScrutinyDetail;
+import org.egov.common.entity.edcr.TerraceUtility;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.EdcrExternalService;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
@@ -39,6 +42,10 @@ public class OCAdditionalFeature extends FeatureProcess {
 	@Autowired
 	private RestTemplate restTemplate;
 
+	private static final BigDecimal SQMT_SQFT_MULTIPLIER = BigDecimal.valueOf(10.764);
+	private static final BigDecimal SQINCH_SQFT_DIVIDER = new BigDecimal("144");
+	private static final int FRONT_AND_REAR_COLOR_CODE = 37;
+	private static final int SIDE_COLOR_CODE = 39;
 	private static final String EDCR_PLANIFO_RESTURL = "%s/bpa/application/findby-permit-number?permitNumber=%s";
 
 	private String getDcrNumberByPermitNumber(String permitNumber) {
@@ -82,6 +89,10 @@ public class OCAdditionalFeature extends FeatureProcess {
 
 	@Override
 	public Plan process(Plan pl) {
+		OCDataComparison ocDataComparison = new OCDataComparison();
+		Map<String, Data> ocDataMapping = new HashMap<String, Data>();
+		ocDataComparison.setOcdataComparison(ocDataMapping);
+		pl.setOcdataComparison(ocDataComparison);
 		if (DxfFileConstants.APPLICATION_TYPE_OCCUPANCY_CERTIFICATE.equals(pl.getApplicationType())) {
 			minorInternalChanges(pl);
 			excessCoverageBeyondZoning6Inch(pl);
@@ -267,11 +278,132 @@ public class OCAdditionalFeature extends FeatureProcess {
 		glazingOfVerandah(ocPlan, permitPlan, scrutinyDetail);
 		additionalHeightOnSecondFloorOfSCFsConvertedIntoSCOs(ocPlan, permitPlan, scrutinyDetail);
 		PartitionsOnGroundFloorOnMulti_baysShops(ocPlan, permitPlan, scrutinyDetail);
-		
+		barsatiFloor(ocPlan, permitPlan, scrutinyDetail);
+		stairHeadwayHeight(ocPlan, permitPlan, scrutinyDetail);
+		waterTankLocation(ocPlan, permitPlan, scrutinyDetail);
+
 		ocPlan.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 	}
-	
-	
+
+	private void waterTankLocation(Plan ocPlan, Plan permitPlan, ScrutinyDetail scrutinyDetail) {
+		BigDecimal expectedFrontAndRearDistance = new BigDecimal("4.0");// 3.048
+		BigDecimal expectedSideDistance = new BigDecimal("4.0");
+		String decision = "";
+
+		List<BigDecimal> frontAndRear = new ArrayList<BigDecimal>();
+		List<BigDecimal> side = new ArrayList<BigDecimal>();
+
+		for (Block block : ocPlan.getBlocks()) {
+			for (TerraceUtility terraceUtility : block.getTerraceUtilities()) {
+				if (terraceUtility.getColorCode() == FRONT_AND_REAR_COLOR_CODE) {
+					frontAndRear.addAll(terraceUtility.getDistances());
+				} else if (terraceUtility.getColorCode() == SIDE_COLOR_CODE) {
+					side.addAll(terraceUtility.getDistances());
+				}			
+			}
+		}
+		
+		BigDecimal providedMinFront = BigDecimal.ZERO;
+		BigDecimal providedMinSide = BigDecimal.ZERO;
+		providedMinFront = frontAndRear.stream().reduce(BigDecimal::min).get();
+		providedMinSide = side.stream().reduce(BigDecimal::min).get();
+
+		if (ocPlan.getDrawingPreference().getInFeets()) {
+			providedMinFront = CDGAdditionalService.inchToFeet(providedMinFront);
+			providedMinSide = CDGAdditionalService.inchToFeet(providedMinSide);
+		}
+
+		boolean frontAccepted = false;
+		boolean sideAccepted = false;
+		if (providedMinFront.compareTo(expectedFrontAndRearDistance) >= 0) {
+			frontAccepted = true;
+		}
+		if (providedMinSide.compareTo(expectedSideDistance) >= 0) {
+			sideAccepted = true;
+		}
+
+		if (frontAccepted && sideAccepted) {
+			decision = Result.Accepted.getResultVal();
+		} else {
+			decision = Result.Verify.getResultVal();
+		}
+
+		String description = OCDataComparison.Terrace_Utilities;
+		String oc = decision;
+		String permit = Result.Accepted.getResultVal();
+		String deviation = "";
+		String status = decision;
+		setReport(scrutinyDetail, description, oc, permit, deviation, status);
+	}
+
+	private void stairHeadwayHeight(Plan ocPlan, Plan permitPlan, ScrutinyDetail scrutinyDetail) {
+		BigDecimal ocStairHeadwayHeight = BigDecimal.ZERO;
+		BigDecimal expectedMinWidth = BigDecimal.valueOf(2.2);
+		BigDecimal allowedMinWidth = BigDecimal.valueOf(6.9);
+		String decision = "";
+
+		ocStairHeadwayHeight = CDGAdditionalService.inchToFeet(getStairHeadwayHeight(ocPlan));
+		expectedMinWidth = CDGAdditionalService.meterToFoot(expectedMinWidth);
+
+		if (ocStairHeadwayHeight.compareTo(expectedMinWidth) > 0) {
+			decision = Result.Accepted.getResultVal();
+		}
+		if (ocStairHeadwayHeight.compareTo(expectedMinWidth) < 0
+				&& ocStairHeadwayHeight.compareTo(allowedMinWidth) >= 0) {
+			decision = Result.Verify.getResultVal();
+		}
+		if (ocStairHeadwayHeight.compareTo(allowedMinWidth) < 0) {
+			decision = Result.Not_Accepted.getResultVal();
+		}
+
+		String description = OCDataComparison.Stair_Headway_Height;
+		String oc = decision;
+		String permit = Result.Accepted.getResultVal();
+		String deviation = "";
+		String status = decision;
+		setReport(scrutinyDetail, description, oc, permit, deviation, status);
+	}
+
+	private BigDecimal getStairHeadwayHeight(Plan plan) {
+		BigDecimal stairHeadwayHeight = BigDecimal.ZERO;
+		for (Block block : plan.getBlocks()) {
+			if (block.getBuilding() != null) {
+				org.egov.common.entity.edcr.HeadRoom headRoom = block.getBuilding().getHeadRoom();
+				if (headRoom != null) {
+					List<BigDecimal> headRoomDimensions = headRoom.getHeadRoomDimensions();
+					if (headRoomDimensions != null && headRoomDimensions.size() > 0) {
+						stairHeadwayHeight = headRoomDimensions.stream().reduce(BigDecimal::min).get();
+					}
+				}
+			}
+		}
+		return stairHeadwayHeight;
+	}
+
+	private void barsatiFloor(Plan ocPlan, Plan permitPlan, ScrutinyDetail scrutinyDetail) {
+		BigDecimal ocBarsatiFloor = BigDecimal.ZERO;
+		BigDecimal permitBarsatiFloor = BigDecimal.ZERO;
+		BigDecimal deviationArea = BigDecimal.ZERO;
+
+		deviationArea = ocBarsatiFloor.subtract(permitBarsatiFloor);
+		if (ocPlan.getDrawingPreference().getInFeets()) {
+			ocBarsatiFloor = CDGAdditionalService.inchtoFeetArea(permitBarsatiFloor);
+			deviationArea = CDGAdditionalService.inchtoFeetArea(deviationArea);
+		}
+		String description = OCDataComparison.Barsati_Floor;
+		String oc = CDGAdditionalService.viewArea(ocPlan, ocBarsatiFloor);
+		String permit = CDGAdditionalService.viewArea(permitPlan, permitBarsatiFloor);
+		String deviation = CDGAdditionalService.viewArea(ocPlan, deviationArea);
+		String status = validateDeviation(deviationArea) ? Result.Verify.getResultVal()
+				: Result.Not_Accepted.getResultVal();
+		setReport(scrutinyDetail, description, oc, permit, deviation, status);
+		Data ocData = new Data();
+		ocData.setPermit(permitBarsatiFloor);
+		ocData.setOc(ocBarsatiFloor);
+		ocData.setDeviation(deviationArea);
+		ocPlan.getOcdataComparison().getOcdataComparison().put(description, ocData);
+
+	}
 
 	public void PartitionsOnGroundFloorOnMulti_baysShops(Plan ocPlan, Plan permitPlan, ScrutinyDetail scrutinyDetail) {
 		BigDecimal ocValue = BigDecimal.ZERO;
@@ -284,19 +416,20 @@ public class OCAdditionalFeature extends FeatureProcess {
 				ocValue = new BigDecimal(
 						ocPlan.getPlanInfoProperties().get(DxfFileConstants.MULTI_BAY_PARTITIONS_NUMBER));
 			}
-		} catch (Exception e) {} 
-		
-		ocPlan.getOcdataComparison().addData(OCDataComparison.Partitions_on_ground_floor_on_multi_bays_shops,
-				new Data(ocValue,
-						BigDecimal.ZERO, ocValue));
-		
+		} catch (Exception e) {
+		}
+
 		String description = OCDataComparison.Partitions_on_ground_floor_on_multi_bays_shops;
 		String oc = CDGAdditionalService.viewArea(ocPlan, ocValue);
-		
+		String permit = CDGAdditionalService.viewArea(ocPlan, ocValue);
 		String deviation = CDGAdditionalService.viewArea(ocPlan, ocValue);
-		String status = validateDeviation(ocValue) ? Result.Verify.getResultVal()
-				: Result.Not_Accepted.getResultVal();
-		setReport(scrutinyDetail, description, oc, "", deviation, status);
+		String status = validateDeviation(ocValue) ? Result.Verify.getResultVal() : Result.Not_Accepted.getResultVal();
+		setReport(scrutinyDetail, description, oc, permit, deviation, status);
+		Data ocData = new Data();
+		ocData.setOc(ocValue);
+		ocData.setPermit(BigDecimal.ZERO);
+		ocData.setDeviation(ocValue);
+		ocPlan.getOcdataComparison().getOcdataComparison().put(description, ocData);
 	}
 
 	public void additionalHeightOnSecondFloorOfSCFsConvertedIntoSCOs(Plan ocPlan, Plan permitPlan,
@@ -309,15 +442,12 @@ public class OCAdditionalFeature extends FeatureProcess {
 
 		deviationArea = ocAdditionalHeightOnSecondFloorOfSCFsConvertedIntoSCOs
 				.subtract(permitAdditionalHeightOnSecondFloorOfSCFsConvertedIntoSCOs);
-		ocPlan.getOcdataComparison().addData(OCDataComparison.Glazing_Of_Verandah,
-				new Data(ocAdditionalHeightOnSecondFloorOfSCFsConvertedIntoSCOs,
-						permitAdditionalHeightOnSecondFloorOfSCFsConvertedIntoSCOs, deviationArea));
 		if (ocPlan.getDrawingPreference().getInFeets()) {
 			ocAdditionalHeightOnSecondFloorOfSCFsConvertedIntoSCOs = CDGAdditionalService
 					.inchtoFeetArea(ocAdditionalHeightOnSecondFloorOfSCFsConvertedIntoSCOs);
 			deviationArea = CDGAdditionalService.inchtoFeetArea(deviationArea);
 		}
-		String description = OCDataComparison.Minor_Internal_Changes_During_Construction;
+		String description = OCDataComparison.Additional_height_on_second_floor_of_SCFs_converted_into_SCOs;
 		String oc = CDGAdditionalService.viewArea(ocPlan, ocAdditionalHeightOnSecondFloorOfSCFsConvertedIntoSCOs);
 		String permit = CDGAdditionalService.viewArea(permitPlan,
 				permitAdditionalHeightOnSecondFloorOfSCFsConvertedIntoSCOs);
@@ -325,55 +455,64 @@ public class OCAdditionalFeature extends FeatureProcess {
 		String status = validateDeviation(deviationArea) ? Result.Verify.getResultVal()
 				: Result.Not_Accepted.getResultVal();
 		setReport(scrutinyDetail, description, oc, permit, deviation, status);
+		Data ocData = new Data();
+		ocData.setPermit(permitAdditionalHeightOnSecondFloorOfSCFsConvertedIntoSCOs);
+		ocData.setOc(ocAdditionalHeightOnSecondFloorOfSCFsConvertedIntoSCOs);
+		ocData.setDeviation(deviationArea);
+		ocPlan.getOcdataComparison().getOcdataComparison().put(description, ocData);
 	}
 
 	public void glazingOfVerandah(Plan ocPlan, Plan permitPlan, ScrutinyDetail scrutinyDetail) {
-		BigDecimal ocGlazingOfVerandahArea=BigDecimal.ZERO;
-		BigDecimal permitGlazingOfVerandahArea=BigDecimal.ZERO;
-		BigDecimal deviationArea=BigDecimal.ZERO;
-		
+		BigDecimal ocGlazingOfVerandahArea = BigDecimal.ZERO;
+		BigDecimal permitGlazingOfVerandahArea = BigDecimal.ZERO;
+		BigDecimal deviationArea = BigDecimal.ZERO;
+
 		for (Block block : ocPlan.getBlocks()) {
 			for (Floor floor : block.getBuilding().getFloors()) {
 				for (Occupancy occupancy : floor.getOccupancies()) {
 					if (DxfFileConstants.OC_GOV.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
-						ocGlazingOfVerandahArea=ocGlazingOfVerandahArea.add(occupancy.getBuiltUpArea());
+						ocGlazingOfVerandahArea = ocGlazingOfVerandahArea.add(occupancy.getBuiltUpArea());
 					}
 
 				}
 			}
 		}
-		deviationArea=ocGlazingOfVerandahArea.subtract(permitGlazingOfVerandahArea);
-		ocPlan.getOcdataComparison().addData(OCDataComparison.Glazing_Of_Verandah,
-				new Data(ocGlazingOfVerandahArea, permitGlazingOfVerandahArea, deviationArea));
+		deviationArea = ocGlazingOfVerandahArea.subtract(permitGlazingOfVerandahArea);
 		if (ocPlan.getDrawingPreference().getInFeets()) {
 			ocGlazingOfVerandahArea = CDGAdditionalService.inchtoFeetArea(ocGlazingOfVerandahArea);
 			deviationArea = CDGAdditionalService.inchtoFeetArea(deviationArea);
 		}
-		String description = OCDataComparison.Minor_Internal_Changes_During_Construction;
+		String description = OCDataComparison.Glazing_Of_Verandah;
 		String oc = CDGAdditionalService.viewArea(ocPlan, ocGlazingOfVerandahArea);
 		String permit = CDGAdditionalService.viewArea(permitPlan, permitGlazingOfVerandahArea);
 		String deviation = CDGAdditionalService.viewArea(ocPlan, deviationArea);
 		String status = validateDeviation(deviationArea) ? Result.Verify.getResultVal()
 				: Result.Not_Accepted.getResultVal();
 		setReport(scrutinyDetail, description, oc, permit, deviation, status);
+		Data ocData = new Data();
+		ocData.setPermit(permitGlazingOfVerandahArea);
+		ocData.setOc(ocGlazingOfVerandahArea);
+		ocData.setDeviation(deviationArea);
+		ocPlan.getOcdataComparison().getOcdataComparison().put(description, ocData);
 	}
 
 	public void excessCoverageBeyondZoning6Inch(Plan ocPlan, Plan permitPlan, ScrutinyDetail scrutinyDetail) {
-		// DxfFileConstants.EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA
+		BigDecimal ocCoverageBeyondZoning = BigDecimal.ZERO;
+		BigDecimal permitCoverageBeyondZoning = BigDecimal.ZERO;
+		BigDecimal deviationArea = BigDecimal.ZERO;
 
-//		if(DxfFileConstants.YES.equalsIgnoreCase(
-//						ocPlan.getPlanInfoProperties().get(DxfFileConstants.EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA)){
-//			
-//			
-//			String description = OCDataComparison.Excess_Coverage_Beyond_Zoning_6_INCH;
-//			String oc = CDGAdditionalService.viewArea(ocPlan, ocMinorInternalChangesArea);
-//			String permit = CDGAdditionalService.viewArea(permitPlan, permitMinorInternalChangesArea);
-//			String deviation = CDGAdditionalService.viewArea(ocPlan, deviationArea);
-//			String status = validateDeviation(deviationArea) ? Result.Verify.getResultVal()
-//					: Result.Not_Accepted.getResultVal();
-//			setReport(scrutinyDetail, description, oc, permit, deviation, status);
-//			
-//		}
+		String description = OCDataComparison.Excess_Coverage_Beyond_Zoning_6_INCH;
+		String oc = CDGAdditionalService.viewArea(ocPlan, ocCoverageBeyondZoning);
+		String permit = CDGAdditionalService.viewArea(permitPlan, permitCoverageBeyondZoning);
+		String deviation = CDGAdditionalService.viewArea(ocPlan, deviationArea);
+		String status = validateDeviation(deviationArea) ? Result.Verify.getResultVal()
+				: Result.Not_Accepted.getResultVal();
+		setReport(scrutinyDetail, description, oc, permit, deviation, status);
+		Data ocData = new Data();
+		ocData.setPermit(permitCoverageBeyondZoning);
+		ocData.setOc(ocCoverageBeyondZoning);
+		ocData.setDeviation(deviationArea);
+		ocPlan.getOcdataComparison().getOcdataComparison().put(description, ocData);
 
 	}
 
@@ -391,8 +530,6 @@ public class OCAdditionalFeature extends FeatureProcess {
 				}
 			}
 		}
-		ocPlan.getOcdataComparison().addData(OCDataComparison.Minor_Internal_Changes_During_Construction,
-				new Data(ocMinorInternalChangesArea, BigDecimal.ZERO, BigDecimal.ZERO));
 		if (ocPlan.getDrawingPreference().getInFeets()) {
 			ocMinorInternalChangesArea = CDGAdditionalService.inchtoFeetArea(ocMinorInternalChangesArea);
 			deviationArea = CDGAdditionalService.inchtoFeetArea(deviationArea);
@@ -404,6 +541,11 @@ public class OCAdditionalFeature extends FeatureProcess {
 		String status = validateDeviation(deviationArea) ? Result.Verify.getResultVal()
 				: Result.Not_Accepted.getResultVal();
 		setReport(scrutinyDetail, description, oc, permit, deviation, status);
+		Data ocData = new Data();
+		ocData.setPermit(permitMinorInternalChangesArea);
+		ocData.setOc(ocMinorInternalChangesArea);
+		ocData.setDeviation(deviationArea);
+		ocPlan.getOcdataComparison().getOcdataComparison().put(description, ocData);
 	}
 
 	public void rule5(Plan ocPlan, Plan permitPlan, ScrutinyDetail scrutinyDetail) {
@@ -413,9 +555,6 @@ public class OCAdditionalFeature extends FeatureProcess {
 		ocRule5 = getRule5Area(ocPlan);
 		permitRule5 = getRule5Area(permitPlan);
 		deviationArea = ocRule5.subtract(permitRule5);
-		ocPlan.getOcdataComparison().addData(OCDataComparison.RULE5,
-				new Data(ocRule5, permitRule5, deviationArea));
-
 		if (ocPlan.getDrawingPreference().getInFeets()) {
 			ocRule5 = CDGAdditionalService.inchtoFeetArea(ocRule5);
 			permitRule5 = CDGAdditionalService.inchtoFeetArea(permitRule5);
@@ -429,19 +568,28 @@ public class OCAdditionalFeature extends FeatureProcess {
 		String status = validateDeviation(deviationArea) ? Result.Verify.getResultVal()
 				: Result.Not_Accepted.getResultVal();
 		setReport(scrutinyDetail, description, oc, permit, deviation, status);
-
+		Data ocData = new Data();
+		ocData.setPermit(permitRule5);
+		ocData.setOc(ocRule5);
+		ocData.setDeviation(deviationArea);
+		ocPlan.getOcdataComparison().getOcdataComparison().put(description, ocData);
 	}
 
 	public BigDecimal getRule5Area(Plan plan) {
-		BigDecimal rule5Area = BigDecimal.ZERO;
+		BigDecimal totalArea = BigDecimal.ZERO;
 		for (Block block : plan.getBlocks()) {
 			for (Floor floor : block.getBuilding().getFloors()) {
 				for (Occupancy occupancy : floor.getOccupancies()) {
-					rule5Area = rule5Area.add(occupancy.getBuiltUpArea());
+					if (DxfFileConstants.A_R5.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+						BigDecimal area = occupancy.getBuiltUpArea();
+						totalArea = totalArea.add(area);
+					}
+
 				}
 			}
+
 		}
-		return rule5Area;
+		return totalArea;
 	}
 
 	public void additionalCoverageInRearCourtyard(Plan ocPlan, Plan permitPlan, ScrutinyDetail scrutinyDetail) {
@@ -456,9 +604,6 @@ public class OCAdditionalFeature extends FeatureProcess {
 			permitCoverageInRearCourtyardArea = CDGAdditionalService.inchtoFeetArea(permitCoverageInRearCourtyardArea);
 			deviationArea = ocCoverageInRearCourtyardArea.subtract(permitCoverageInRearCourtyardArea);
 		}
-		ocPlan.getOcdataComparison().addData(OCDataComparison.Additional_Coverage_In_RearCourtyard,
-				new Data(ocCoverageInRearCourtyardArea, permitCoverageInRearCourtyardArea,
-						deviationArea));
 		String description = OCDataComparison.Additional_Coverage_In_RearCourtyard;
 
 		String oc = CDGAdditionalService.viewArea(ocPlan, ocCoverageInRearCourtyardArea);
@@ -467,12 +612,17 @@ public class OCAdditionalFeature extends FeatureProcess {
 		String status = validateDeviation(deviationArea) ? Result.Verify.getResultVal()
 				: Result.Not_Accepted.getResultVal();
 		setReport(scrutinyDetail, description, oc, permit, deviation, status);
+		Data ocData = new Data();
+		ocData.setPermit(permitCoverageInRearCourtyardArea);
+		ocData.setOc(ocCoverageInRearCourtyardArea);
+		ocData.setDeviation(deviationArea);
+		ocPlan.getOcdataComparison().getOcdataComparison().put(description, ocData);
 	}
 
 	public BigDecimal getRearCourtyardArea(Plan pl) {
 		BigDecimal area = BigDecimal.ZERO;
 		for (AccessoryBlock accessoryBlock : pl.getAccessoryBlocks()) {
-			area = area.add(accessoryBlock.getArea());
+			area = area.add(accessoryBlock.getAccessoryBuilding().getArea());
 		}
 		return area;
 	}
@@ -483,8 +633,6 @@ public class OCAdditionalFeature extends FeatureProcess {
 		BigDecimal permitAdditionalFeeArea = additionalFeeResidentialPlotted(permitPlan);
 		BigDecimal deviationArea = ocAdditionalFeeArea.subtract(permitAdditionalFeeArea);
 		String description = OCDataComparison.Additional_fee_Residential_plotted;
-		ocPlan.getOcdataComparison().addData(OCDataComparison.Additional_fee_Residential_plotted,
-				new Data(ocAdditionalFeeArea, permitAdditionalFeeArea, deviationArea));
 		if (ocPlan.getDrawingPreference().getInFeets() && permitPlan.getDrawingPreference().getInFeets()) {
 			ocAdditionalFeeArea = CDGAdditionalService.inchtoFeetArea(ocAdditionalFeeArea);
 			permitAdditionalFeeArea = CDGAdditionalService.inchtoFeetArea(permitAdditionalFeeArea);
@@ -496,6 +644,11 @@ public class OCAdditionalFeature extends FeatureProcess {
 		String status = validateDeviation(deviationArea) ? Result.Verify.getResultVal()
 				: Result.Not_Accepted.getResultVal();
 		setReport(scrutinyDetail, description, oc, permit, deviation, status);
+		Data ocData = new Data();
+		ocData.setPermit(permitAdditionalFeeArea);
+		ocData.setOc(ocAdditionalFeeArea);
+		ocData.setDeviation(deviationArea);
+		ocPlan.getOcdataComparison().getOcdataComparison().put(description, ocData);
 	}
 
 	public void labourcess(Plan ocPlan, Plan permitPlan, ScrutinyDetail scrutinyDetail) {
@@ -503,8 +656,6 @@ public class OCAdditionalFeature extends FeatureProcess {
 		BigDecimal permitLabourcessArea = labourcess(permitPlan);
 		BigDecimal deviationArea = ocLabourcessArea.subtract(permitLabourcessArea);
 		String description = OCDataComparison.Labour_Cess;
-		ocPlan.getOcdataComparison().addData(OCDataComparison.Labour_Cess,
-				new Data(ocLabourcessArea, permitLabourcessArea, deviationArea));
 		if (ocPlan.getDrawingPreference().getInFeets() && permitPlan.getDrawingPreference().getInFeets()) {
 			ocLabourcessArea = CDGAdditionalService.inchtoFeetArea(ocLabourcessArea);
 			permitLabourcessArea = CDGAdditionalService.inchtoFeetArea(permitLabourcessArea);
@@ -516,13 +667,27 @@ public class OCAdditionalFeature extends FeatureProcess {
 		String status = validateDeviation(deviationArea) ? Result.Verify.getResultVal()
 				: Result.Not_Accepted.getResultVal();
 		setReport(scrutinyDetail, description, oc, permit, deviation, status);
+		Data ocData = new Data();
+		ocData.setPermit(permitLabourcessArea);
+		ocData.setOc(ocLabourcessArea);
+		ocData.setDeviation(deviationArea);
+		ocPlan.getOcdataComparison().getOcdataComparison().put(description, ocData);
 	}
 
 	public BigDecimal labourcess(Plan plan) {
 		BigDecimal totalArea = BigDecimal.ZERO;
 		for (Block block : plan.getBlocks()) {
 			for (Floor floor : block.getBuilding().getFloors()) {
-				totalArea = totalArea.add(floor.getArea());
+				for (Occupancy occupancy : floor.getOccupancies()) {
+					if (occupancy.getTypeHelper() != null && occupancy.getTypeHelper().getSubtype() != null
+							&& DxfFileConstants.A_R5.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+						continue;
+					}
+					if (floor.getNumber() >= 0)
+						totalArea = totalArea.add(occupancy.getFloorArea());
+					else
+						totalArea = totalArea.add(occupancy.getBuiltUpArea());
+				}
 			}
 		}
 		return totalArea;
@@ -530,7 +695,7 @@ public class OCAdditionalFeature extends FeatureProcess {
 
 	private boolean validateDeviation(BigDecimal deviationArea) {
 		if (deviationArea != null && deviationArea.compareTo(BigDecimal.ZERO) < 0)
-			return false;
+			return true;
 		return true;
 	}
 
@@ -541,7 +706,7 @@ public class OCAdditionalFeature extends FeatureProcess {
 				for (Occupancy occupancy : floor.getOccupancies()) {
 					if (DxfFileConstants.A_AF.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
 						if (floor.getNumber() >= 0) {
-							additionalArea = occupancy.getBuiltUpArea();
+							additionalArea = additionalArea.add(occupancy.getBuiltUpArea());
 						}
 					}
 				}

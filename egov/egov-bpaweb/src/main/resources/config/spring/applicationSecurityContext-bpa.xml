@@ -64,6 +64,7 @@
 				<security:filter-chain pattern="/application/findby-permit-number" filters="none"/>
 				<security:filter-chain pattern="/collection/citizen/**" filters="none" />
 				<security:filter-chain pattern="/ajax/getFeeDetailsDuringRegister" filters="none"/>
+				<security:filter-chain pattern="/ajax/getFeeDetailsDuringRegisterForOC" filters="none"/>
 				<security:filter-chain pattern="/reports/statusreport-api" filters="none" />
 				<security:filter-chain pattern="/reports/servicewise-summary-api" filters="none" />
 				<security:filter-chain pattern="/rest/**" filters="anonymousAuthenticationFilter"/>

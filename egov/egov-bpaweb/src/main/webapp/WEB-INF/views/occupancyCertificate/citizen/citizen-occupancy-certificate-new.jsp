@@ -100,6 +100,10 @@
 				<li style="display: none;">
 					<a data-toggle="tab" href="#noc-document-info" data-tabidx=2><spring:message code='lbl.noc.doc.details' /></a>
 				</li>
+				<li>
+				<a id="fee-tab-link" data-toggle="tab" href="#view-fee"
+					data-tabidx=3><spring:message code='lbl.fees.details' /></a>
+				</li>
 			</ul>
 			<div class="tab-content">
 				<div id="application-info" class="tab-pane fade in active">
@@ -133,6 +137,12 @@
 					<div class="panel panel-primary" data-collapsed="0">
 						<jsp:include page="../oc-noc-documents.jsp"></jsp:include>
 					</div>
+				</div>
+				
+				<div id="view-fee" class="tab-pane fade" >
+						<div class="panel panel-primary" data-collapsed="0">
+							 <jsp:include page="../oc-register-fee-details.jsp"></jsp:include> 
+						</div>
 				</div>
 			</div>
 
@@ -194,3 +204,11 @@
 	src="<cdn:url value='/resources/js/app/occupancy-certificate/occupancy-certificate-new.js?rnd=${app_release_no}'/>"></script>
 <script
 	src="<cdn:url value='/resources/js/app/occupancy-certificate/oc-edcr-helper.js?rnd=${app_release_no}'/>"></script>
+<script 
+	src="<cdn:url value='/resources/js/app/oc-register-fee-details.js?rnd=${app_release_no}'/>"></script>	
+
+<script>
+	$(document).ready(function() {
+	    $('#applicationType').removeAttr("disabled");
+	});
+</script>	

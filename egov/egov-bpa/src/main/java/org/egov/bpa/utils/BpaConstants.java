@@ -425,6 +425,7 @@ public class BpaConstants {
 	public static final String BARSATI_FLOOR_FEE = "Fee for barsati floor height";
 	public static final String STAIR_HEADWAY_HEIGHT_FEE = "Fee for stair headway height";
 	public static final String WATER_TANK_LOCATION_FEE = "Fee for water tank location";
+	public static final String EXCESS_COVERAGE_BEYOND_ZONING_FEE = "Fee for excess coverage beyond zoning 6";
 
 	public static final String TP_DEPT = "TOWN PLANNING DEPARTMENT";
 	public static final String DEV_PERMIT_FEE = "DPF";
