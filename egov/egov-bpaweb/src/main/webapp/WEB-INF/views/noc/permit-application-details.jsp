@@ -110,7 +110,8 @@
 		</div>
 
 		<c:if test="${mode != 'new'}">
-			<div class="form-group">
+		<div class = "form-group">
+			<!--<div class="form-group">
 				<label class="col-sm-3 control-label text-right"><spring:message
 						code="lbl.application.number" /> <span class="mandatory"></span>
 				</label>
@@ -120,9 +121,16 @@
 					<form:errors path="bpaApplication.applicationNumber"
 						cssClass="add-margin error-msg" />
 				</div>
-			</div>
+			</div>-->
+				<label class="col-sm-3 control-label text-right">
+					<spring:message code="lbl.application.number"/> <span class="mandatory"></span>
+				</label>
+				<div class="col-sm-3 add-margin view-content">
+					<a target="popup" onclick="window.open('/bpa/application/citizen/update/${permitNocApplication.bpaApplication.applicationNumber}','popup','width=1100,height=700'); return false;"
+					>${permitNocApplication.bpaApplication.applicationNumber}&nbsp;<i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+				</div>			
+		</div>
 		</c:if>
-
 		<div class="form-group">
 
 			<label class="col-sm-3 control-label text-right"> <spring:message
@@ -134,8 +142,9 @@
 					data-inputmask="'mask': 'd/m/y'" required="required" />
 				<form:errors path="bpaApplication.applicationDate" cssClass="add-margin error-msg" />
 			</div>
-
-			
 		</div>
 	</div>
 </div>
+
+<script src="https://kit.fontawesome.com/df33c39e0f.js" crossorigin="anonymous"></script>
+
