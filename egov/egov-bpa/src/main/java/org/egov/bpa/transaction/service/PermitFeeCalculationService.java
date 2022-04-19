@@ -2009,7 +2009,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 				totalAreaInHalfAcre = totalAreaOfPlot.divide(HALF_ACRE_IN_SQMT, 2, BigDecimal.ROUND_HALF_UP);
 			} else if (plan.getDrawingPreference().getInFeets()) {
 
-				totalAreaInHalfAcre = totalAreaOfPlot.divide(HALF_ACRE_FROM_SQFT).setScale(2, BigDecimal.ROUND_HALF_UP);
+				totalAreaInHalfAcre = totalAreaOfPlot.divide(HALF_ACRE_FROM_SQFT,2,BigDecimal.ROUND_HALF_UP).setScale(2, BigDecimal.ROUND_HALF_UP);
 			}
 
 			int halfAcreCount = totalAreaInHalfAcre.intValue();

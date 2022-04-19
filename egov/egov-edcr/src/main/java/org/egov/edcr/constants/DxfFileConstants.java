@@ -1,8 +1,12 @@
 package org.egov.edcr.constants;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class DxfFileConstants {
-	
-	public static final String FLUSHING_UNITS_VOLUME_ABOVE_SEVEN_LITRES="FLUSHING_UNITS_VOLUME_ABOVE_SEVEN_LITRES";
+
+	public static final String FLUSHING_UNITS_VOLUME_ABOVE_SEVEN_LITRES = "FLUSHING_UNITS_VOLUME_ABOVE_SEVEN_LITRES";
 
 	// CGCL SERVIVE_TYPE
 	public static final String RECONSTRUCTION = "Reconstruction";
@@ -10,11 +14,11 @@ public class DxfFileConstants {
 	public static final String NEW_CONSTRUCTION = "New Construction";
 	public static final String ADDITION_OR_EXTENSION = "Addition or Extension";
 	public static final String CHANGE_IN_OCCUPANCY = "Change in occupancy";
-	
-	public static final String DATA_NOT_FOUND="Master data not available";
-	public static final String NOT_PERMITTED="NOT PERMITTED";
-	public static final String NOT_PROVIDED="NOT PROVIDED";
-	public static final String NA="NA";
+
+	public static final String DATA_NOT_FOUND = "Master data not available";
+	public static final String NOT_PERMITTED = "NOT PERMITTED";
+	public static final String NOT_PROVIDED = "NOT PROVIDED";
+	public static final String NA = "NA";
 	// CGCL start according to 26jan
 
 	public static final String PLOT_NO = "PLOT_NUMBER";
@@ -24,13 +28,13 @@ public class DxfFileConstants {
 	public static final String PLOT_TYPE = "PLOT_TYPE";
 	public static final String KHATA_NO = "KHATA_NO";
 
-	// ROOT_BOUNDARY_TYPE values 
+	// ROOT_BOUNDARY_TYPE values
 	public static final String URBAN = "URBAN";
 	public static final String RURAL = "RURAL";
-	
-	//DrawingPreference constant
-	public static final String DRAWING_PREFERENCE_FEET="feet";
-	public static final String DRAWING_PREFERENCE_METER="meter";
+
+	// DrawingPreference constant
+	public static final String DRAWING_PREFERENCE_FEET = "feet";
+	public static final String DRAWING_PREFERENCE_METER = "meter";
 
 	// ZONE values
 	public static final String CENTER = "CENTER";
@@ -42,55 +46,55 @@ public class DxfFileConstants {
 	public static final String ONE_KANAL = "ONE_KANAL"; // 379.35sqm to less than 505.85 sqm //low risk
 	public static final String TWO_KANAL = "TWO_KANAL"; // 505.85sqm to less than 1011.7sqm // low risk
 	public static final String ABOVE_TWO_KANAL = "ABOVE_TWO_KANAL"; // Above 1011.7sqm // high risk
-	
-	//Plan info 
-	public static final String METER=" m";
-	public static final String METER_SQM=" sqm";
-	public static final String FEET="'";
-	public static final String INCH="\"";
-	public static final String FEET_SQM="sqft";
+
+	// Plan info
+	public static final String METER = " m";
+	public static final String METER_SQM = " sqm";
+	public static final String FEET = "'";
+	public static final String INCH = "\"";
+	public static final String FEET_SQM = "sqft";
 
 	// Other
-	public static final String Hospital_Bedded ="Hospital _Bedded";
-	public static final String No_Of_WARD="No_Of_WARD";
-	public static final String IS_BOARDING="IS_BOARDING";
-	public static final String IS_DRINKING_WATER_ON_EACH_FLOOR="IS_DRINKING_WATER_ON_EACH_FLOOR";
+	public static final String Hospital_Bedded = "Hospital _Bedded";
+	public static final String No_Of_WARD = "No_Of_WARD";
+	public static final String IS_BOARDING = "IS_BOARDING";
+	public static final String IS_DRINKING_WATER_ON_EACH_FLOOR = "IS_DRINKING_WATER_ON_EACH_FLOOR";
 	public static final String YES = "YES";
 	public static final String NO = "NO";
-	public static final String DAMP_PROOFING_AT_BASEMENT="DAMP_PROOFING_AT_BASEMENT";
-	public static final String COMBUSTIBLE_MATERIAL_IN_FIRE_TOWER="COMBUSTIBLE_MATERIAL _IN_FIRE_TOWER";
-	public static final String EXIT_REQUIREMENT_FIRE_AND_LIFE_SAFETY_AS_PER_NBC="EXIT_REQUIREMENT_FIRE_&_LIFE_SAFETY_AS_PER_NBC";
-	public static final String FIRE_SAFETY_PROVISIONS_AS_PER_NBC_DFPF_FSA="FIRE_SAFETY_PROVISIONS_AS_PER_NBC_DFPF_FSA";
-	public static final String SERVICE_FLOOR_HEIGHT_M="SERVICE_FLOOR_HEIGHT_M";
-	public static final String BASEMENT_SERVICES_PRINTING_PRESS_A_C_PLANTS_ELECTRICAL_PANELS_FILTRATIONPLANTS_LAUNDRYPLANTS_OR_MACHINES_AUTOMATED_STACK_PARKING="BASEMENT_SERVICES_PRINTING PRESS_A.C. PLANTS_ELECTRICAL PANELS_FILTRATIONPLANTS_LAUNDRYPLANTS_OR_MACHINES_ AUTOMATED/STACK PARKING";
-	public static final String SOLAR_PHOTOVOLTAIC_KWP="SOLAR_PHOTOVOLTAIC_KWP";
-	public static final String WHETHER_STAIRCASE_TOUCHING_LIFT_SHAFT="WHETHER_STAIRCASE_TOUCHING_LIFT_SHAFT";
-	public static final String SOIL_OR_VENTILATING_PIPE_EXTERNAL_WALL="SOIL_OR_VENTILATING_PIPE_EXTERNAL_WALL";
-	public static final String ARTIFICIAL_AND_MECHANICAL_VENTILATION_PROVIDED="ARTIFICIAL_AND_MECHANICAL_VENTILATION_PROVIDED";
-	public static final String EXISTING_BUILDING_CONSTRUCTED_WITHOUT_BASEMENT="EXISTING_BUILDING_CONSTRUCTED_WITHOUT_BASEMENT";
-	public static final String TOTAL_USERS="TOTAL_USERS";
-	public static final String HOSPITAL_TYPE="HOSPITAL_TYPE";
-	public static final String SOLOR_WATER_HEATING_IN_LTR="SOLOR_WATER_HEATING_IN_LTR";
-	public static final String RESIDENTIAL_NO_OWNER="RESIDENTIAL_NO_OWNER";
-	
-	public static final String HOSPITAL_GOVERNMENT="Government";
-	public static final String HOSPITAL_PRIVATE="Private";
-	public static final String ARCHITCTURE_CONTROLS_APPLICABLE="ARCHITCTURE_CONTROLS_APPLICABLE";
-	public static final String JOB_NUMBER="JOB_NUMBER";
-	public static final String DWG_NUMBER="DWG_NUMBER";
-	
+	public static final String DAMP_PROOFING_AT_BASEMENT = "DAMP_PROOFING_AT_BASEMENT";
+	public static final String COMBUSTIBLE_MATERIAL_IN_FIRE_TOWER = "COMBUSTIBLE_MATERIAL _IN_FIRE_TOWER";
+	public static final String EXIT_REQUIREMENT_FIRE_AND_LIFE_SAFETY_AS_PER_NBC = "EXIT_REQUIREMENT_FIRE_&_LIFE_SAFETY_AS_PER_NBC";
+	public static final String FIRE_SAFETY_PROVISIONS_AS_PER_NBC_DFPF_FSA = "FIRE_SAFETY_PROVISIONS_AS_PER_NBC_DFPF_FSA";
+	public static final String SERVICE_FLOOR_HEIGHT_M = "SERVICE_FLOOR_HEIGHT_M";
+	public static final String BASEMENT_SERVICES_PRINTING_PRESS_A_C_PLANTS_ELECTRICAL_PANELS_FILTRATIONPLANTS_LAUNDRYPLANTS_OR_MACHINES_AUTOMATED_STACK_PARKING = "BASEMENT_SERVICES_PRINTING PRESS_A.C. PLANTS_ELECTRICAL PANELS_FILTRATIONPLANTS_LAUNDRYPLANTS_OR_MACHINES_ AUTOMATED/STACK PARKING";
+	public static final String SOLAR_PHOTOVOLTAIC_KWP = "SOLAR_PHOTOVOLTAIC_KWP";
+	public static final String WHETHER_STAIRCASE_TOUCHING_LIFT_SHAFT = "WHETHER_STAIRCASE_TOUCHING_LIFT_SHAFT";
+	public static final String SOIL_OR_VENTILATING_PIPE_EXTERNAL_WALL = "SOIL_OR_VENTILATING_PIPE_EXTERNAL_WALL";
+	public static final String ARTIFICIAL_AND_MECHANICAL_VENTILATION_PROVIDED = "ARTIFICIAL_AND_MECHANICAL_VENTILATION_PROVIDED";
+	public static final String EXISTING_BUILDING_CONSTRUCTED_WITHOUT_BASEMENT = "EXISTING_BUILDING_CONSTRUCTED_WITHOUT_BASEMENT";
+	public static final String TOTAL_USERS = "TOTAL_USERS";
+	public static final String HOSPITAL_TYPE = "HOSPITAL_TYPE";
+	public static final String SOLOR_WATER_HEATING_IN_LTR = "SOLOR_WATER_HEATING_IN_LTR";
+	public static final String RESIDENTIAL_NO_OWNER = "RESIDENTIAL_NO_OWNER";
+
+	public static final String HOSPITAL_GOVERNMENT = "Government";
+	public static final String HOSPITAL_PRIVATE = "Private";
+	public static final String ARCHITCTURE_CONTROLS_APPLICABLE = "ARCHITCTURE_CONTROLS_APPLICABLE";
+	public static final String JOB_NUMBER = "JOB_NUMBER";
+	public static final String DWG_NUMBER = "DWG_NUMBER";
+
 	public static final String ULBNAME = "Chandigarh Administration";
-	
-	public static final String OPTIONAL="Optional";
-	
-	//Rural plan info
-	public static final String LOCATION="LOCATION";
-	public static final String PLOT_LENGTH="PLOT_LENGTH";
-	public static final String PLOT_WIDTH="PLOT_WIDTH";
-	public static final String COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE="COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE";
-	
+
+	public static final String OPTIONAL = "Optional";
+
+	// Rural plan info
+	public static final String LOCATION = "LOCATION";
+	public static final String PLOT_LENGTH = "PLOT_LENGTH";
+	public static final String PLOT_WIDTH = "PLOT_WIDTH";
+	public static final String COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE = "COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE";
+
 	// CGCL start
-	// occupancies code	
+	// occupancies code
 	public static final String A = "A"; // Residential --29
 	public static final String F = "F"; // Mercantile / Commercial
 	public static final String G = "G"; // Industrial
@@ -102,28 +106,28 @@ public class DxfFileConstants {
 	public static final String IP = "IP";// Integrated projects --np
 	public static final String T = "T";// Transit Oriented Development (TOD) --np
 
-	// sub occupancies code	
+	// sub occupancies code
 	public static final String A_P = "A-P";// Plotted --220
-	public static final String A_G = "A-G";// Grouped --223	
-	
-	public static final String F_CIR="F-CIR";// commercial in rural
-	
-	public static final String A_SQ="A-SQ";//Servant quarter
+	public static final String A_G = "A-G";// Grouped --223
+
+	public static final String F_CIR = "F-CIR";// commercial in rural
+
+	public static final String A_SQ = "A-SQ";// Servant quarter
 	public static final String A_PO = "A-PO";// Professional Office
-	public static final String A_S="A-S";//  STD/ PCO/ fax and photostat machine
-	public static final String A_PG="A-PG";//Creche and paying guest facility
-	public static final String A_EWS="A-EWS";//EWS
-	public static final String A_ICP="A-ICP"; // In Checkpost
-	public static final String A_OCP="A-OCP"; // Out Checkpost
-	public static final String IT_AF="IT-AF";//Ancillary Facilities
-	public static final String A_GF="A-GF";//Gallery floor;
-	public static final String A_RU="A-RU";//Residential use ;
-	public static final String A_CC="A-CC";//Community Facilities In Group Housing Building 
-	public static final String A_AF="A-AF";//Additional Fee
-	public static final String A_R5="A-R5";//Additional Fee
-	
+	public static final String A_S = "A-S";// STD/ PCO/ fax and photostat machine
+	public static final String A_PG = "A-PG";// Creche and paying guest facility
+	public static final String A_EWS = "A-EWS";// EWS
+	public static final String A_ICP = "A-ICP"; // In Checkpost
+	public static final String A_OCP = "A-OCP"; // Out Checkpost
+	public static final String IT_AF = "IT-AF";// Ancillary Facilities
+	public static final String A_GF = "A-GF";// Gallery floor;
+	public static final String A_RU = "A-RU";// Residential use ;
+	public static final String A_CC = "A-CC";// Community Facilities In Group Housing Building
+	public static final String A_AF = "A-AF";// Additional Fee
+	public static final String A_R5 = "A-R5";// Additional Fee
+
 	public static final String F_SCO = "F-SCO";// SCO'S/ SCF'S / BAYSHOP'S/ SEMI INDUSTRIAL -- 272
-	public static final String F_B ="F-B"; // BOOTHS ETC. 
+	public static final String F_B = "F-B"; // BOOTHS ETC.
 	public static final String F_H = "F-H";// Hotels -- 236
 	public static final String F_M = "F-M";// MULTIPLEX/MALLS (specifically earmarked sites) -- 278
 	public static final String F_CFI = "F-CFI";// COMMERCIAL (converted from Industrial) --237
@@ -133,7 +137,7 @@ public class DxfFileConstants {
 	public static final String F_TCIM = "F-TCIM";// Comercial_Theatre converted into multiplex -- 270
 	public static final String F_PP = "F-PP"; // Petrol Pump -- 234
 	public static final String F_CD = "F-CD"; // Coal Depot
-	
+
 	public static final String G_GBAC = "G-GBAC";// Governed by Architectural Controls //CHANGED //245
 	public static final String G_GBZP = "G-GBZP";// Governed by Zoning Plans //14
 
@@ -149,13 +153,13 @@ public class DxfFileConstants {
 
 	public static final String B_EC = "B-EC";// Education city (Sarangpur)
 	public static final String B_HEI = "B-HEI";// Higher Educational Institute //Educational/ Academic
-	public static final String B_H = "B-H";// Hostels	
-	
+	public static final String B_H = "B-H";// Hostels
+
 	public static final String IT_MCL = "IT-MCL";// Main Campus (above 6 acre)
 	public static final String IT_MCM = "IT-MCM";// Small Campus (2 to 6 acre)
 	public static final String IT_MCS = "IT-MCS";// built to suite site (2 acre or below)
-	
-	public static final String R1="R1"; // Railway Station, Chandigarh
+
+	public static final String R1 = "R1"; // Railway Station, Chandigarh
 
 	public static final String ITH_H = "ITH-H";// Hospital //CHANGED
 	public static final String ITH_C = "ITH-C";// COMMERCIAL / HOTEL
@@ -167,12 +171,12 @@ public class DxfFileConstants {
 	public static final String IP_C = "IP-C";// Commercial (5%)
 
 	public static final String T1 = "T1";// Transit Oriented Development (TOD)
-	
-	//OC buildup area
-	public static final String OC="OC";//Occupancy Certificate
-	public static final String OC_MIC="OC-MIC";//Minor Internal Changes
-	public static final String OC_GOV="OC-GOV";//Glazing Of Verandah
-	
+
+	// OC buildup area
+	public static final String OC = "OC";// Occupancy Certificate
+	public static final String OC_MIC = "OC-MIC";// Minor Internal Changes
+	public static final String OC_GOV = "OC-GOV";// Glazing Of Verandah
+
 	// CGCL end
 
 	public static final String C = "C"; // Medical/Hospital
@@ -180,15 +184,15 @@ public class DxfFileConstants {
 	public static final String E = "E"; // Office/Business
 	public static final String H = "H"; // Storage
 	public static final String I = "I"; // Hazardous
-	
+
 	public static final String A2 = "A2";// Old Age Home
 	public static final String A_R = "A-R"; // Single family Residential
-	//public static final String A_AF = "A-AF"; // Apartment/Flat
+	// public static final String A_AF = "A-AF"; // Apartment/Flat
 	public static final String A_FH = "A-FH"; // Farm House
 	public static final String A_SR = "A-SR";// Special Residential
 	public static final String A_HE = "A-HE";// Hostel Educational
 	public static final String A_SA = "A-SA";// Service Apartment
-	
+
 	public static final String A_AF_GH = "A-AF-GH";
 
 	public static final String F_K = "F-K";// Kiosk
@@ -237,9 +241,6 @@ public class DxfFileConstants {
 	public static final String E_CLG = "E-CLG";// College
 	public static final String E_SACA = "E-SACA";// Sports and Cultural Activities
 
-	
-	
-	
 	// change raza end
 
 	public static final String H_PP = "H-PP"; // Petrol Pump
@@ -508,7 +509,7 @@ public class DxfFileConstants {
 	public static final int YARD_DIMENSION_COLOR = 2;
 
 	public static final String AREA_TYPE = "Area Type";
-	//public static final String ROAD_WIDTH = "Road Width";
+	// public static final String ROAD_WIDTH = "Road Width";
 	public static final String COMMERCIAL = "COMMERCIAL";
 	public static final String RULE_28 = "28";
 	public static final String SETBACK = "SetBack";
@@ -524,46 +525,49 @@ public class DxfFileConstants {
 	public static final String NEWCONSTRUCTION_SERVICE = "New Construction";
 	public static final String MAINRIVER = "MainRiver";
 	public static final String SUBRIVER = "SubRiver";
-	
+
 	// dimensioning message
-	public static final String MESSAGE_FEET="All provided values are in feets and Sq ft.";
-	public static final String MESSAGE_METER="All provided values are in meters and Sq m.";
-	
-	public static final String LITTERS="litres";
-	
-	public static final String BLT_UP_AREA_ERROR_MSG="Please cross verify *_BLT_UP_AREA layer";
-	public static final String RURAL_ULB_NAME="Chandigarh Municipal Corporation";
-	
-	public static final String DECLARATION_METER="All dimensions are in metre or square metre.";
-	public static final String DECLARATION_FEET="All dimensions are in feet or square feet.";
-	
-	public static final String KEY_METER_ENABLE="dcr.meter.enabled";
-	public static final String KEY_FEET_ENABLE="dcr.feet.enabled";
-	
-	public static final String ROAD_WIDTH="ROAD_WIDTH";
-	public static final String ROAD_LENGTH="ROAD_LENGTH";	
-	public static final String ROAD_2_WIDTH="ROAD_2_WIDTH";
-	public static final String ROAD_2_LENGTH="ROAD_2_LENGTH";
-	
-	public static final String CONVERSION_CHARGES_AREA="CONVERSION_CHARGES_AREA";
-	public static final String DEMOLITION_AREA="DEMOLITION_AREA";
-	
-	public static final String ALLOTMENT_OF_NEW_NUMBER="ALLOTMENT_OF_NEW_NUMBER";
-	
-	public static final String IS_CASE_OF_DEATH="IS_CASE_OF_DEATH";
-	
-	//ApplicationType
-	public static final String APPLICATION_TYPE_PERMIT="PERMIT";
-	public static final String APPLICATION_TYPE_OCCUPANCY_CERTIFICATE="OCCUPANCY_CERTIFICATE";
-	public static final String EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA="EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA";
-	public static final String MULTI_BAY_PARTITIONS_NUMBER="MULTI_BAY_PARTITIONS_NUMBER";
-	
-	public static final String PLAN_INFO_STAIR_COVERS_AREA="BLOCK_%s_STAIR_COVERS_AREA";
-	
-	public static final String TRANSFER_FEE_APPLICABLE="TRANSFER_FEE_APPLICABLE";
-	
-	public static final String PRESENT_COLLECTOR_RATE="PRESENT_COLLECTOR_RATE";
-	public static final String AREA_FOR_ADDITIONAL_HEIGHT_SQFT="AREA_FOR_ADDITIONAL_HEIGHT_SQFT";
-	
-	public static final String RULE_5_APPLICABLE="RULE_5_APPLICABLE";
+	public static final String MESSAGE_FEET = "All provided values are in feets and Sq ft.";
+	public static final String MESSAGE_METER = "All provided values are in meters and Sq m.";
+
+	public static final String LITTERS = "litres";
+
+	public static final String BLT_UP_AREA_ERROR_MSG = "Please cross verify *_BLT_UP_AREA layer";
+	public static final String RURAL_ULB_NAME = "Chandigarh Municipal Corporation";
+
+	public static final String DECLARATION_METER = "All dimensions are in metre or square metre.";
+	public static final String DECLARATION_FEET = "All dimensions are in feet or square feet.";
+
+	public static final String KEY_METER_ENABLE = "dcr.meter.enabled";
+	public static final String KEY_FEET_ENABLE = "dcr.feet.enabled";
+
+	public static final String ROAD_WIDTH = "ROAD_WIDTH";
+	public static final String ROAD_LENGTH = "ROAD_LENGTH";
+	public static final String ROAD_2_WIDTH = "ROAD_2_WIDTH";
+	public static final String ROAD_2_LENGTH = "ROAD_2_LENGTH";
+
+	public static final String CONVERSION_CHARGES_AREA = "CONVERSION_CHARGES_AREA";
+	public static final String DEMOLITION_AREA = "DEMOLITION_AREA";
+
+	public static final String ALLOTMENT_OF_NEW_NUMBER = "ALLOTMENT_OF_NEW_NUMBER";
+
+	public static final String IS_CASE_OF_DEATH = "IS_CASE_OF_DEATH";
+
+	// ApplicationType
+	public static final String APPLICATION_TYPE_PERMIT = "PERMIT";
+	public static final String APPLICATION_TYPE_OCCUPANCY_CERTIFICATE = "OCCUPANCY_CERTIFICATE";
+	public static final String EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA = "EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA";
+	public static final String MULTI_BAY_PARTITIONS_NUMBER = "MULTI_BAY_PARTITIONS_NUMBER";
+
+	public static final String PLAN_INFO_STAIR_COVERS_AREA = "BLOCK_%s_STAIR_COVERS_AREA";
+
+	public static final String TRANSFER_FEE_APPLICABLE = "TRANSFER_FEE_APPLICABLE";
+
+	public static final String PRESENT_COLLECTOR_RATE = "PRESENT_COLLECTOR_RATE";
+	public static final String AREA_FOR_ADDITIONAL_HEIGHT_SQFT = "AREA_FOR_ADDITIONAL_HEIGHT_SQFT";
+
+	public static final String RULE_5_APPLICABLE = "RULE_5_APPLICABLE";
+
+	public static final List<String> IS_FEATURE = Arrays.asList(new String[] { "A-R5", "A-GF", "A-OCP", "A-ICP", "A-AF",
+			"A-PO", "A-PG", "A-S", "A-SQ", "OC-MIC", "OC-GOV"});
 }

@@ -568,8 +568,11 @@ public class PlanReportRuralService extends PlanReportService{
             		});   
           
             Set<String> distinctOccupancies = new HashSet<>(occupancies);
+//            plan.getPlanInformation()
+//                    .setOccupancy(distinctOccupancies.stream().map(String::new).collect(Collectors.joining(",")));
+            if(plan.getVirtualBuilding().getMostRestrictiveFarHelper()!=null)
             plan.getPlanInformation()
-                    .setOccupancy(distinctOccupancies.stream().map(String::new).collect(Collectors.joining(",")));
+            .setOccupancy(plan.getVirtualBuilding().getMostRestrictiveFarHelper().getType().getName());
         }
         boolean reportStatus = false;
         boolean finalReportStatus = true;

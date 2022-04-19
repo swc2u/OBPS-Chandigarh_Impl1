@@ -88,6 +88,7 @@ import static org.egov.edcr.utility.DcrConstants.ROUNDMODE_MEASUREMENTS;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -117,6 +118,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+
 
 @Service
 public class Far extends FeatureProcess {
@@ -170,6 +172,9 @@ public class Far extends FeatureProcess {
 	public static final String OLD_AREA_ERROR_MSG = "No construction shall be permitted if the road width is less than 2.4m for old area.";
 	public static final String NEW_AREA_ERROR_MSG = "No construction shall be permitted if the road width is less than 6.1m for new area.";
 
+	public static final List<String> IS_FEATURE = Arrays.asList(new String[] { "A-R5", "A-GF", "A-OCP", "A-ICP", "A-AF",
+			"A-PO", "A-PG", "A-S", "A-SQ", "OC-MIC", "OC-GOV"});
+	
 	@Override
 	public Plan validate(Plan pl) {
 		if (pl.getPlot() == null || (pl.getPlot() != null
@@ -1323,8 +1328,14 @@ public class Far extends FeatureProcess {
 			Building building = blk.getBuilding();
 			List<OccupancyTypeHelper> blockWiseOccupancyTypes = new ArrayList<>();
 			for (Occupancy occupancy : blk.getBuilding().getOccupancies()) {
-				if (occupancy.getTypeHelper() != null)
+				if (occupancy.getTypeHelper() != null) {
+					if(occupancy.getTypeHelper().getSubtype()!=null && IS_FEATURE.contains(occupancy.getTypeHelper().getSubtype().getCode())) {
+						//not need to consider as occupancy
+						continue;
+					}
+					
 					blockWiseOccupancyTypes.add(occupancy.getTypeHelper());
+				}
 			}
 			Set<OccupancyTypeHelper> setOfBlockDistinctOccupancyTypes = new HashSet<>(blockWiseOccupancyTypes);
 			OccupancyTypeHelper mostRestrictiveFar = getMostRestrictiveFar(setOfBlockDistinctOccupancyTypes);
@@ -1664,7 +1675,9 @@ public class Far extends FeatureProcess {
 		Set<String> codes = new HashSet<>();
 		Map<String, OccupancyTypeHelper> codesMap = new HashMap<>();
 		for (OccupancyTypeHelper typeHelper : distinctOccupancyTypes) {
-
+			
+//			if(typeHelper.getSubtype()!=null )
+			
 			if (typeHelper.getType() != null)
 				codesMap.put(typeHelper.getType().getCode(), typeHelper);
 			if (typeHelper.getSubtype() != null)

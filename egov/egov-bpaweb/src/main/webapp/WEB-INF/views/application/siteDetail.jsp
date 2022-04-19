@@ -198,7 +198,7 @@
 		<label class="col-sm-2 control-label text-right"><spring:message
 				code="lbl.plot.no" /><span class="mandatory"></span> </label>
 		<div class="col-sm-3 add-margin">
-			<form:input class="form-control patternvalidation" maxlength="20"
+			<form:input class="form-control patternvalidation" maxlength="65"
 				data-pattern="alphanumericspecialcharacters"  id="mspPlotNumber"
 				path="siteDetail[0].mspPlotNumber" required="required" />
 		<%-- 		<small class="text-info view-content"><spring:message code="lbl.validate.msg"/></small>    --%>	
