@@ -15,3 +15,9 @@ values
 (225, 'OCCUPANCY_CERTIFICATE', 'SANCTION_FEE', 61, 'AUTO', 25, 0, 0, 1, '2020-09-18 05:55:20.745', 1, '2020-09-18 05:55:20.745', null), 
 (226, 'OCCUPANCY_CERTIFICATE', 'SANCTION_FEE', 62, 'AUTO', 25, 0, 0, 1, '2020-09-18 05:55:20.745', 1, '2020-09-18 05:55:20.745', null), 
 (227, 'OCCUPANCY_CERTIFICATE', 'SANCTION_FEE', 64, 'AUTO', 25, 0, 0, 1, '2020-09-18 05:55:20.745', 1, '2020-09-18 05:55:20.745', null);
+
+
+-- plot number length increased 
+alter table chandigarh.egbpa_sitedetail alter column mspplotnumber type varchar(128);
+
+alter table chandigarh.egbpa_application alter column plotnumber type varchar(128);
