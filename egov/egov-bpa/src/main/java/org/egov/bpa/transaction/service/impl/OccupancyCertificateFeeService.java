@@ -64,6 +64,7 @@ import org.egov.bpa.transaction.entity.ApplicationFeeDetail;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.entity.oc.OccupancyFee;
 import org.egov.bpa.transaction.service.ApplicationBpaService;
+import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
 import org.egov.bpa.transaction.service.oc.OccupancyFeeService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.utils.BpaUtils;
@@ -90,7 +91,8 @@ public class OccupancyCertificateFeeService {
 	// private static final String TOTAL_FLOOR_AREA = "totalFloorArea";
 	// private static final String OTHERS = "Others";
 	// private static final String RESIDENTIAL_DESC = "Residential";
-
+	
+	private static final BigDecimal ONE = BigDecimal.valueOf(1);
 	private static final BigDecimal TEN = BigDecimal.valueOf(10);
 	private static final BigDecimal TWENTY = BigDecimal.valueOf(20);
 	private static final BigDecimal THIRTY = BigDecimal.valueOf(30);
@@ -112,6 +114,8 @@ public class OccupancyCertificateFeeService {
 	private static final BigDecimal SQINCH_SQFT_DIVIDER = new BigDecimal("144");
 	private static final BigDecimal HALF_ACRE_FROM_SQFT = new BigDecimal("21780");
 	private static final BigDecimal SEVEN_HUNDRED_FIFTY = BigDecimal.valueOf(750);
+	private static final BigDecimal GST = BigDecimal.valueOf(0.18);
+
 
 	private static final int FRONT_AND_REAR_COLOR_CODE = 37;
 	private static final int SIDE_COLOR_CODE = 39;
@@ -123,6 +127,9 @@ public class OccupancyCertificateFeeService {
 
 	@Autowired
 	protected OccupancyService occupancyService;
+	
+	@Autowired
+	protected OccupancyCertificateService occupancyCertificateService;
 
 	@Autowired
 	protected OccupancyFeeService ocFeeService;
@@ -169,6 +176,7 @@ public class OccupancyCertificateFeeService {
 
 	public Map<String, String> calculateFeeByServiceType(OccupancyCertificate oc, Plan bpaPlan, Plan ocPlan,
 			OccupancyFee ocFee, OccupancyTypeHelper mostRestrictiveFarHelper, Map<String, String> feeDetails) {
+		boolean dpcCertificateflag = false;
 		List<BpaFeeMapping> bpaFees = bpaFeeCommonService
 				.getOCFeeForListOfServices(oc.getParent().getServiceType().getId());
 		for (BpaFeeMapping bpaFee : bpaFees) {
@@ -199,15 +207,189 @@ public class OccupancyCertificateFeeService {
 			} else if (BpaConstants.EXCESS_COVERAGE_BEYOND_ZONING_FEE
 					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
 				amount = amount.add(getTotalCoverageBeyondZoningFee(bpaPlan, ocPlan));
+			} else if (BpaConstants.MINOR_CHANGES_IN_DOORS_AND_WINDOWS_FEE
+					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+				amount = amount.add(getTotalMinorChangesInDoorsAndWindowsFee(bpaPlan, ocPlan));
+			} else if (BpaConstants.LOFTS_FEE
+					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+				amount = amount.add(getTotalLoftsFee(bpaPlan, ocPlan));
+			} else if (BpaConstants.NON_STANDARD_GATE_FEE
+					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+				amount = amount.add(getTotalNonStandardGateFee(bpaPlan, ocPlan));
+			} else if (BpaConstants.NICHES_ON_THE_COMMON_WALL_FEE
+					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+				amount = amount.add(getTotalNichesOnTheCommonWallFee(bpaPlan, ocPlan));
+			} else if (BpaConstants.DPC_CERTIFICATE_MISSING_FEE
+					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+				if(dpcCertificateflag) {
+				amount = amount.add(getTotalDPCCertificateMissingFee(oc, ocPlan, mostRestrictiveFarHelper));
+				}
+			} else if (BpaConstants.FALSE_CEILING_FEE
+					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+				amount = amount.add(getTotalFalseCeilingFee(bpaPlan, ocPlan));
+			} else if (BpaConstants.SECURITY_FEE
+					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+				if(ocPlan.getPlanInformation().getIsThisACaseOfOwnershipChange().equalsIgnoreCase(BpaConstants.YES)) {
+					amount = amount.add(getTotalSecurityFee(ocPlan, mostRestrictiveFarHelper));
+				}
+			} else if (BpaConstants.TRANSFER_OF_BUILDING_PLAN_FEE
+					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+				if(ocPlan.getPlanInformation().getIsThisACaseOfOwnershipChange().equalsIgnoreCase(BpaConstants.YES)) {
+					amount = amount.add(getTotalTransferOfBuildingPlanFee(oc, mostRestrictiveFarHelper));
+				}
 			}
 
 			if (amount.compareTo(BigDecimal.ZERO) > 0) {
+				amount = amount.add(amount.multiply(GST).setScale(2, BigDecimal.ROUND_HALF_UP));
 				ocFee.getApplicationFee()
 						.addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee, ocFee.getApplicationFee(), amount));
 				feeDetails.put(bpaFee.getBpaFeeCommon().getName(), String.valueOf(amount));
 			}
 		}
 		return feeDetails;
+	}
+
+	private BigDecimal getTotalTransferOfBuildingPlanFee(OccupancyCertificate oc, OccupancyTypeHelper mostRestrictiveFarHelper) {
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		if(BpaConstants.A_P.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())) {
+			if(oc.getParent().getApplicationType().getName().equalsIgnoreCase(BpaConstants.APPLICATION_TYPE_LOWRISK)) {
+				totalAmount = BigDecimal.valueOf(750);
+			} else if(oc.getParent().getApplicationType().getName().equalsIgnoreCase(BpaConstants.APPLICATION_TYPE_HIGHRISK)) {
+				totalAmount = BigDecimal.valueOf(1000);
+			}
+		}
+		else {
+			totalAmount = BigDecimal.valueOf(2000);
+		}
+		
+		return totalAmount;
+	}
+
+	private BigDecimal getTotalSecurityFee(Plan ocPlan, OccupancyTypeHelper mostRestrictiveFarHelper) {
+		boolean isFeeDynamic = false;
+		BigDecimal multiplier = BigDecimal.ZERO;
+		BigDecimal totalAmount = BigDecimal.ZERO;
+
+		if (BpaConstants.A_P.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+				|| BpaConstants.F_SCO.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+				|| BpaConstants.G_GBAC.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+				|| BpaConstants.G_GBZP.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())) {
+			isFeeDynamic = false;
+			multiplier = TEN_THOUSAND;
+		} else if (BpaConstants.F_B.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())) {
+			isFeeDynamic = false;
+			multiplier = FIVE_THOUSAND;
+		} else {
+			isFeeDynamic = true;
+			multiplier = TEN_THOUSAND;
+		}
+		if (ocPlan.isRural()) {
+			return BigDecimal.ZERO;
+		}
+		if (isFeeDynamic) {
+			BigDecimal totalAreaOfPlot = ocPlan.getPlanInformation().getPlotArea();
+			BigDecimal totalAreaInHalfAcre = BigDecimal.ZERO;
+			if (ocPlan.getDrawingPreference().getInMeters()) {
+				totalAreaInHalfAcre = totalAreaOfPlot.divide(HALF_ACRE_IN_SQMT, 2, BigDecimal.ROUND_HALF_UP);
+			} else if (ocPlan.getDrawingPreference().getInFeets()) {
+
+				totalAreaInHalfAcre = totalAreaOfPlot.divide(HALF_ACRE_FROM_SQFT,2,BigDecimal.ROUND_HALF_UP).setScale(2, BigDecimal.ROUND_HALF_UP);
+			}
+
+			int halfAcreCount = totalAreaInHalfAcre.intValue();
+			halfAcreCount = (totalAreaInHalfAcre.compareTo(new BigDecimal(halfAcreCount)) >= 0) ? halfAcreCount + 1
+					: halfAcreCount;
+			totalAmount = totalAmount
+					.add(multiplier.multiply(new BigDecimal(halfAcreCount)).setScale(2, BigDecimal.ROUND_HALF_UP));
+		} else {
+			totalAmount = multiplier;
+		}
+		//return totalAmount.divide(GST);
+		return totalAmount;
+	}
+
+	private BigDecimal getTotalFalseCeilingFee(Plan bpaPlan, Plan ocPlan) {
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		BigDecimal multiplier = BigDecimal.valueOf(100);
+		
+		BigDecimal areaOfFalseCeiling = ocPlan.getPlanInformation().getAreaOfFalseCeiling();
+		
+		totalAmount = areaOfFalseCeiling.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP);
+		return totalAmount;
+	}
+
+	private BigDecimal getTotalDPCCertificateMissingFee(OccupancyCertificate oc, Plan ocPlan, OccupancyTypeHelper mostRestrictiveFarHelper) {
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		String plotType = ocPlan.getPlanInfoProperties().get(BpaConstants.PLOT_TYPE);
+		
+		if (BpaConstants.A_P.equals(mostRestrictiveFarHelper.getSubtype().getCode())) {
+			if(BpaConstants.MARLA.equals(plotType)) {
+				totalAmount = BigDecimal.valueOf(2500);
+			}
+			else if(oc.getParent().getApplicationType().getName().equalsIgnoreCase(BpaConstants.APPLICATION_TYPE_LOWRISK)
+					|| oc.getParent().getApplicationType().getName().equalsIgnoreCase(BpaConstants.APPLICATION_TYPE_HIGHRISK)) {
+				totalAmount = BigDecimal.valueOf(5000);
+			}
+		}
+		else if (BpaConstants.F_B.equals(mostRestrictiveFarHelper.getSubtype().getCode())) {
+			totalAmount = BigDecimal.valueOf(5000);
+		}	
+		else if (BpaConstants.P.equals(mostRestrictiveFarHelper.getType().getCode())) {
+			if (BpaConstants.P_CNA.equals(mostRestrictiveFarHelper.getSubtype().getCode())
+					|| BpaConstants.B_HEI.equals(mostRestrictiveFarHelper.getSubtype().getCode())) {
+				totalAmount = BigDecimal.valueOf(7500);
+			}
+		}
+		else if (BpaConstants.G.equals(mostRestrictiveFarHelper.getType().getCode())) {
+			if (BpaConstants.F_SCO.equals(mostRestrictiveFarHelper.getSubtype().getCode())) {
+				totalAmount = BigDecimal.valueOf(10000);
+			}
+		}
+		else {
+			totalAmount = BigDecimal.valueOf(10000);
+		}
+		
+		return totalAmount;
+	}
+
+	private BigDecimal getTotalNichesOnTheCommonWallFee(Plan bpaPlan, Plan ocPlan) {
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		BigDecimal multiplier = BigDecimal.valueOf(500);
+		
+		BigDecimal numberOfNiches = ocPlan.getPlanInformation().getNumberOfNichesOnTheCommonWall();
+		
+		totalAmount = numberOfNiches.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP);
+		return totalAmount;
+	}
+
+	private BigDecimal getTotalNonStandardGateFee(Plan bpaPlan, Plan ocPlan) {
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		BigDecimal multiplier = BigDecimal.valueOf(500);
+		
+		BigDecimal numberOfGates = ocPlan.getPlanInformation().getNumberOfNonStandardGates();
+		
+		totalAmount = numberOfGates.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP);
+		return totalAmount;
+	}
+
+	private BigDecimal getTotalLoftsFee(Plan bpaPlan, Plan ocPlan) {
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		BigDecimal multiplier = BigDecimal.valueOf(500);
+		
+		BigDecimal numberOfLofts = ocPlan.getPlanInformation().getNumberOfLoftsConstructedBeyondPermit();
+		
+		totalAmount = numberOfLofts.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP);
+		return totalAmount;
+	}
+
+	private BigDecimal getTotalMinorChangesInDoorsAndWindowsFee(Plan bpaPlan, Plan ocPlan) {
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		BigDecimal multiplier = BigDecimal.valueOf(500);
+		
+		BigDecimal numberOfFloors = ocPlan.getPlanInformation().getNumberOfFloorsWithChangesInDoorsOrWindowsLocations();
+		
+		totalAmount = numberOfFloors.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP);
+		return totalAmount;
 	}
 
 	private BigDecimal getTotalCoverageBeyondZoningFee(Plan bpaPlan, Plan ocPlan) {
@@ -357,12 +539,23 @@ public class OccupancyCertificateFeeService {
 	public BigDecimal getTotalInternalChangesFee(Plan bpaPlan, Plan ocPlan) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal multiplier = BigDecimal.valueOf(500);
-		BigDecimal minorChangesDeviation = ocPlan.getOcdataComparison().getOcdataComparison()
+		BigDecimal floorCount = BigDecimal.ZERO;
+		for (Block block : ocPlan.getBlocks()) {
+			for (Floor floor : block.getBuilding().getFloors()) {
+				for (Occupancy occupancy : floor.getOccupancies()) {
+					if (BpaConstants.OC_MIC.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+						floorCount = floorCount.add(ONE);
+					}
+					}
+			}
+		}
+		totalAmount = multiplier.multiply(floorCount).setScale(2, BigDecimal.ROUND_HALF_UP);
+		/*BigDecimal minorChangesDeviation = ocPlan.getOcdataComparison().getOcdataComparison()
 				.get(OCDataComparison.Minor_Internal_Changes_During_Construction).getDeviation();
 
 		if (minorChangesDeviation.compareTo(BigDecimal.ZERO) > 0) {
 			totalAmount = minorChangesDeviation.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP);
-		}
+		}*/
 		return totalAmount;
 	}
 
@@ -380,13 +573,17 @@ public class OccupancyCertificateFeeService {
 
 	public BigDecimal getTotalGlazingVerandahFee(Plan bpaPlan, Plan ocPlan) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
-		BigDecimal Multiplier = BigDecimal.valueOf(500);
+		BigDecimal Multiplier = BigDecimal.ZERO;
 		BigDecimal deviation = BigDecimal.ZERO;
 
 		OccupancyTypeHelper typeHelper = ocPlan.getVirtualBuilding().getMostRestrictiveFarHelper();
 
-		if (BpaConstants.F_SCO.equals(typeHelper.getSubtype().getCode())) {
-			return getTotalAmountForGlazingVerandahForSCO(ocPlan);
+		if (BpaConstants.A_P.equals(typeHelper.getSubtype().getCode())) {
+			Multiplier = BigDecimal.valueOf(500);
+		}
+		
+		if (BpaConstants.A_P.equals(typeHelper.getSubtype().getCode()) && (ocPlan.getPlanInformation().getSectorNumber().equals("22A") || ocPlan.getPlanInformation().getSectorNumber().equals("22B") || ocPlan.getPlanInformation().getSectorNumber().equals("22C") || ocPlan.getPlanInformation().getSectorNumber().equals("22D") || ocPlan.getPlanInformation().getSectorNumber().equals("22"))) {
+			Multiplier = BigDecimal.valueOf(200);
 		}
 
 		deviation = ocPlan.getOcdataComparison().getOcdataComparison().get(OCDataComparison.Glazing_Of_Verandah)

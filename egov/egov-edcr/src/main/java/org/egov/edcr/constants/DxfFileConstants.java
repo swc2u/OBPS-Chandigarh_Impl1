@@ -76,6 +76,17 @@ public class DxfFileConstants {
 	public static final String HOSPITAL_TYPE = "HOSPITAL_TYPE";
 	public static final String SOLOR_WATER_HEATING_IN_LTR = "SOLOR_WATER_HEATING_IN_LTR";
 	public static final String RESIDENTIAL_NO_OWNER = "RESIDENTIAL_NO_OWNER";
+	
+	
+	//OC fee calculation
+	public static final String IS_THIS_A_CASE_OF_OWNERSHIP_CHANGE = "IS_THIS_A_CASE_OF_OWNERSHIP CHANGE";
+	public static final String NUMBER_OF_FLOORS_WITH_CHANGES_IN_DOORS_OR_WINDOWS_LOCATIONS = "NUMBER_OF_FLOORS_WITH_CHANGES_IN_DOORS_OR_WINDOWS_LOCATIONS";
+	public static final String NUMBER_OF_GLAZING_IN_VERANDAH = "NUMBER_OF_GLAZING_IN_VERANDAH";
+	public static final String NUMBER_OF_LOFTS_CONSTRUCTED_BEYOND_PERMIT = "NUMBER_OF_LOFTS_CONSTRUCTED_BEYOND_PERMIT";
+	public static final String NUMBER_OF_NON_STANDARD_GATES = "NUMBER_OF_NON_STANDARD_GATES";
+	public static final String NUMBER_OF_NICHES_ON_THE_COMMON_WALL = "NUMBER_OF_NICHES_ON_THE_COMMON_WALL";
+	public static final String AREA_OF_FALSE_CEILING = "AREA_OF_FALSE_CEILING";
+	
 
 	public static final String HOSPITAL_GOVERNMENT = "Government";
 	public static final String HOSPITAL_PRIVATE = "Private";

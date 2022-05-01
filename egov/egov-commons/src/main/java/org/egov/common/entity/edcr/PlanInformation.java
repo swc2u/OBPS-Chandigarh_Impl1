@@ -272,8 +272,87 @@ public class PlanInformation implements Serializable {
     
     //PLOT_WIDTH
     private transient String plotWidth=NA;
-     
-    //COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE
+    
+    //IS_OWNERSHIP_CHANGE
+    private transient String isThisACaseOfOwnershipChange=NA;
+    
+    //NUMBER_OF_FLOORS_WITH_CHANGES_IN_DOORS_OR_WINDOWS_LOCATIONS
+    private BigDecimal numberOfFloorsWithChangesInDoorsOrWindowsLocations = BigDecimal.ZERO;
+    
+    //NUMBER_OF_GLAZING_IN_VERANDAH
+    private BigDecimal numberOfGlazingOfVerandah = BigDecimal.ZERO;
+    
+    //NUMBER_OF_LOFTS_CONSTRUCTED_BEYOND_PERMIT
+    private BigDecimal numberOfLoftsConstructedBeyondPermit = BigDecimal.ZERO;
+    
+    //NUMBER_OF_NON_STANDARD_GATES
+    private BigDecimal numberOfNonStandardGates = BigDecimal.ZERO;
+    
+    //NUMBER_OF_NICHES_ON_THE_COMMON_WALL
+    private BigDecimal numberOfNichesOnTheCommonWall = BigDecimal.ZERO;
+    
+    //AREA_OF_FALSE_CEILING
+    private BigDecimal areaOfFalseCeiling = BigDecimal.ZERO;
+    
+ 
+    public BigDecimal getNumberOfFloorsWithChangesInDoorsOrWindowsLocations() {
+		return numberOfFloorsWithChangesInDoorsOrWindowsLocations;
+	}
+
+	public void setNumberOfFloorsWithChangesInDoorsOrWindowsLocations(
+			BigDecimal numberOfFloorsWithChangesInDoorsOrWindowsLocations) {
+		this.numberOfFloorsWithChangesInDoorsOrWindowsLocations = numberOfFloorsWithChangesInDoorsOrWindowsLocations;
+	}
+
+	public BigDecimal getNumberOfGlazingOfVerandah() {
+		return numberOfGlazingOfVerandah;
+	}
+
+	public void setNumberOfGlazingOfVerandah(BigDecimal numberOfGlazingOfVerandah) {
+		this.numberOfGlazingOfVerandah = numberOfGlazingOfVerandah;
+	}
+
+	public BigDecimal getNumberOfLoftsConstructedBeyondPermit() {
+		return numberOfLoftsConstructedBeyondPermit;
+	}
+
+	public void setNumberOfLoftsConstructedBeyondPermit(BigDecimal numberOfLoftsConstructedBeyondPermit) {
+		this.numberOfLoftsConstructedBeyondPermit = numberOfLoftsConstructedBeyondPermit;
+	}
+
+	public BigDecimal getNumberOfNonStandardGates() {
+		return numberOfNonStandardGates;
+	}
+
+	public void setNumberOfNonStandardGates(BigDecimal numberOfNonStandardGates) {
+		this.numberOfNonStandardGates = numberOfNonStandardGates;
+	}
+
+	public BigDecimal getNumberOfNichesOnTheCommonWall() {
+		return numberOfNichesOnTheCommonWall;
+	}
+
+	public void setNumberOfNichesOnTheCommonWall(BigDecimal numberOfNichesOnTheCommonWall) {
+		this.numberOfNichesOnTheCommonWall = numberOfNichesOnTheCommonWall;
+	}
+
+	public BigDecimal getAreaOfFalseCeiling() {
+		return areaOfFalseCeiling;
+	}
+
+	public void setAreaOfFalseCeiling(BigDecimal areaOfFalseCeiling) {
+		this.areaOfFalseCeiling = areaOfFalseCeiling;
+	}
+
+	public String getIsThisACaseOfOwnershipChange() {
+		return isThisACaseOfOwnershipChange;
+	}
+
+	public void setIsThisACaseOfOwnershipChange(String isThisACaseOfOwnershipChange) {
+		this.isThisACaseOfOwnershipChange = isThisACaseOfOwnershipChange;
+	}
+
+	//COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE
     private transient String commercialAreaOccupancyAsPerRule=NA;
     
     private BigDecimal conversionChargesArea=BigDecimal.ZERO;

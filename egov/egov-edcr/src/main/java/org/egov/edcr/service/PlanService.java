@@ -89,10 +89,10 @@ public class PlanService {
 		try {
 			plan = extractService.extract(dcrApplication.getSavedDxfFile(), amd, asOnDate,
 					featureService.getFeatures());
-			setProperties(plan);
 			plan.setApplicationType(dcrApplication.getApplicationType().name());
 			plan.setPlanPermissionNumber(dcrApplication.getPlanPermitNumber());
 			plan.setServiceType(dcrApplication.getServiceType());
+			setProperties(plan);
 			plan = applyRules(plan, amd, cityDetails);
 			additionalValidation(plan);
 			setEDCRmandatoryNOC(plan);
@@ -191,6 +191,7 @@ public class PlanService {
 		pl.getPlanInformation().setPlotLength(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_LENGTH)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_LENGTH):"NA");
 		pl.getPlanInformation().setPlotWidth(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_WIDTH)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_WIDTH):"NA");
 		pl.getPlanInformation().setCommercialAreaOccupancyAsPerRule(pl.getPlanInfoProperties().get(DxfFileConstants.COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE):"NA");
+
 		
 		try {
 			pl.getPlanInformation().setDemolitionArea(pl.getPlanInfoProperties().get(DxfFileConstants.DEMOLITION_AREA)!=null?new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.DEMOLITION_AREA)):BigDecimal.ZERO);
@@ -280,7 +281,49 @@ public class PlanService {
 				}
 			}
 		}
-		
+		//for OC
+		if(pl.getServiceType().equalsIgnoreCase(DxfFileConstants.OCCUPANCY)) {
+			try {
+				pl.getPlanInformation().setIsThisACaseOfOwnershipChange(pl.getPlanInfoProperties().get(DxfFileConstants.IS_THIS_A_CASE_OF_OWNERSHIP_CHANGE)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.IS_THIS_A_CASE_OF_OWNERSHIP_CHANGE):"NA");
+			} catch (Exception e) {
+				pl.addError("IS_THIS_A_CASE_OF_OWNERSHIP_CHANGE", "IS_THIS_A_CASE_OF_OWNERSHIP_CHANGE is wrongly defined in plan info layer.");
+			}
+			try {
+				pl.getPlanInformation().setNumberOfFloorsWithChangesInDoorsOrWindowsLocations(pl.getPlanInfoProperties().get(DxfFileConstants.NUMBER_OF_FLOORS_WITH_CHANGES_IN_DOORS_OR_WINDOWS_LOCATIONS)!=null?new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.NUMBER_OF_FLOORS_WITH_CHANGES_IN_DOORS_OR_WINDOWS_LOCATIONS)):BigDecimal.ZERO);
+			} catch (Exception e) {
+				pl.addError("NUMBER_OF_FLOORS_WITH_CHANGES_IN_DOORS_OR_WINDOWS_LOCATIONS", "NUMBER_OF_FLOORS_WITH_CHANGES_IN_DOORS_OR_WINDOWS_LOCATIONS is invalid in planinfo layer.");
+			}
+			try {
+				pl.getPlanInformation().setNumberOfGlazingOfVerandah(pl.getPlanInfoProperties().get(DxfFileConstants.NUMBER_OF_GLAZING_IN_VERANDAH)!=null?new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.NUMBER_OF_GLAZING_IN_VERANDAH)):BigDecimal.ZERO);
+
+			} catch (Exception e) {
+				pl.addError("NUMBER_OF_GLAZING_IN_VERANDAH", "NUMBER_OF_GLAZING_IN_VERANDAH is invalid in planinfo layer.");
+			}
+			try {
+				pl.getPlanInformation().setNumberOfLoftsConstructedBeyondPermit(pl.getPlanInfoProperties().get(DxfFileConstants.NUMBER_OF_LOFTS_CONSTRUCTED_BEYOND_PERMIT)!=null?new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.NUMBER_OF_LOFTS_CONSTRUCTED_BEYOND_PERMIT)):BigDecimal.ZERO);
+				
+			} catch (Exception e) {
+				pl.addError("NUMBER_OF_LOFTS_CONSTRUCTED_BEYOND_PERMIT", "NUMBER_OF_LOFTS_CONSTRUCTED_BEYOND_PERMIT is invalid in planinfo layer.");
+			}
+			try {
+				pl.getPlanInformation().setNumberOfNonStandardGates(pl.getPlanInfoProperties().get(DxfFileConstants.NUMBER_OF_NON_STANDARD_GATES)!=null?new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.NUMBER_OF_NON_STANDARD_GATES)):BigDecimal.ZERO);
+				
+			} catch (Exception e) {
+				pl.addError("NUMBER_OF_NON_STANDARD_GATES", "NUMBER_OF_NON_STANDARD_GATES is invalid in planinfo layer.");
+			}
+			try {
+				pl.getPlanInformation().setNumberOfNichesOnTheCommonWall(pl.getPlanInfoProperties().get(DxfFileConstants.NUMBER_OF_NICHES_ON_THE_COMMON_WALL)!=null?new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.NUMBER_OF_NICHES_ON_THE_COMMON_WALL)):BigDecimal.ZERO);
+
+			} catch (Exception e) {
+				pl.addError("NUMBER_OF_NICHES_ON_THE_COMMON_WALL", "NUMBER_OF_NICHES_ON_THE_COMMON_WALL is invalid in planinfo layer.");
+			}
+			try {
+				pl.getPlanInformation().setAreaOfFalseCeiling(pl.getPlanInfoProperties().get(DxfFileConstants.AREA_OF_FALSE_CEILING)!=null?new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.AREA_OF_FALSE_CEILING)):BigDecimal.ZERO);
+
+			} catch (Exception e) {
+				pl.addError("AREA_OF_FALSE_CEILING", "AREA_OF_FALSE_CEILING is invalid in planinfo layer.");
+			}
+		}
 	}
 	
 	private void additionalValidation(Plan pl) {

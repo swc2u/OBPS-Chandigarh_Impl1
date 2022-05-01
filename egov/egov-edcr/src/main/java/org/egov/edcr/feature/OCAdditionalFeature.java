@@ -281,8 +281,78 @@ public class OCAdditionalFeature extends FeatureProcess {
 		barsatiFloor(ocPlan, permitPlan, scrutinyDetail);
 		stairHeadwayHeight(ocPlan, permitPlan, scrutinyDetail);
 		waterTankLocation(ocPlan, permitPlan, scrutinyDetail);
+		minorChangesInDoorsAndWindows(ocPlan, permitPlan, scrutinyDetail);
+		numberOfLofts(ocPlan, permitPlan, scrutinyDetail);
+		numberOfNonStandardGate(ocPlan, permitPlan, scrutinyDetail);
+		numberOfNichesOnTheCommonWall(ocPlan, permitPlan, scrutinyDetail);
+		areaOfFalseCeiling(ocPlan, permitPlan, scrutinyDetail);
 
 		ocPlan.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+	}
+
+	private void areaOfFalseCeiling(Plan ocPlan, Plan permitPlan, ScrutinyDetail scrutinyDetail) {
+		String decision = Result.Verify.getResultVal();
+		BigDecimal areaOfFalseCeiling = ocPlan.getPlanInformation().getAreaOfFalseCeiling();
+		
+		
+		String description = OCDataComparison.Area_Of_False_Ceiling;
+		String oc = areaOfFalseCeiling.toString();
+		String permit = Result.Accepted.getResultVal();
+		String deviation = "";
+		String status = decision;
+		setReport(scrutinyDetail, description, oc, permit, deviation, status);			
+	}
+
+	private void numberOfNichesOnTheCommonWall(Plan ocPlan, Plan permitPlan, ScrutinyDetail scrutinyDetail) {
+		String decision = Result.Verify.getResultVal();
+		BigDecimal numberOfNiches = ocPlan.getPlanInformation().getNumberOfNichesOnTheCommonWall();
+		
+		
+		String description = OCDataComparison.Number_Of_Niches_On_Common_Wall;
+		String oc = numberOfNiches.toString();
+		String permit = Result.Accepted.getResultVal();
+		String deviation = "";
+		String status = decision;
+		setReport(scrutinyDetail, description, oc, permit, deviation, status);			
+	}
+
+	private void numberOfNonStandardGate(Plan ocPlan, Plan permitPlan, ScrutinyDetail scrutinyDetail) {
+		String decision = Result.Verify.getResultVal();
+		BigDecimal numberOfGates = ocPlan.getPlanInformation().getNumberOfNonStandardGates();
+		
+		
+		String description = OCDataComparison.Number_Of_Non_Standard_Gate;
+		String oc = numberOfGates.toString();
+		String permit = Result.Accepted.getResultVal();
+		String deviation = "";
+		String status = decision;
+		setReport(scrutinyDetail, description, oc, permit, deviation, status);			
+	}
+
+	private void numberOfLofts(Plan ocPlan, Plan permitPlan, ScrutinyDetail scrutinyDetail) {
+		String decision = Result.Verify.getResultVal();
+		BigDecimal numberOfLofts = ocPlan.getPlanInformation().getNumberOfLoftsConstructedBeyondPermit();
+		
+		
+		String description = OCDataComparison.Number_Of_Lofts;
+		String oc = numberOfLofts.toString();
+		String permit = Result.Accepted.getResultVal();
+		String deviation = "";
+		String status = decision;
+		setReport(scrutinyDetail, description, oc, permit, deviation, status);		
+	}
+
+	private void minorChangesInDoorsAndWindows(Plan ocPlan, Plan permitPlan, ScrutinyDetail scrutinyDetail) {
+		String decision = Result.Verify.getResultVal();
+		BigDecimal numberOfFloors = ocPlan.getPlanInformation().getNumberOfFloorsWithChangesInDoorsOrWindowsLocations();
+		
+		
+		String description = OCDataComparison.Minor_Changes_In_Doors_And_Windows;
+		String oc = numberOfFloors.toString();
+		String permit = Result.Accepted.getResultVal();
+		String deviation = "";
+		String status = decision;
+		setReport(scrutinyDetail, description, oc, permit, deviation, status);
 	}
 
 	private void waterTankLocation(Plan ocPlan, Plan permitPlan, ScrutinyDetail scrutinyDetail) {

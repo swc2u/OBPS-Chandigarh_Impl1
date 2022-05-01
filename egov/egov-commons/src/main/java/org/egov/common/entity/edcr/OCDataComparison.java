@@ -30,6 +30,13 @@ public class OCDataComparison implements Serializable {
 	public static final String Barsati_Floor = "Barsati floor height";
 	public static final String Stair_Headway_Height = "Stair headway height";
 	public static final String Terrace_Utilities = "Terrace utilities(water tank, solar panel, etc)";
+	public static final String Minor_Changes_In_Doors_And_Windows = "Minor changes in - doors and windows (Number of floors)";
+	public static final String Number_Of_Lofts = "Number of Lofts";
+	public static final String Number_Of_Non_Standard_Gate = "Number of Non Standard Gate";
+	public static final String Number_Of_Niches_On_Common_Wall = "Number of Niches on the common wall";
+	public static final String Area_Of_False_Ceiling = "False ceiling";
+	
+	
 	
 	
 
