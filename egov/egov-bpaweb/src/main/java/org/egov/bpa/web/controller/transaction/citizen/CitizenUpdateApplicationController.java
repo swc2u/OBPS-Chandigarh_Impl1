@@ -268,7 +268,7 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
 	                List<User> userList = nocUsers.stream()
 	                        .filter(usr -> usr.getRoles().stream()
 	                                .anyMatch(usrrl -> usrrl.getName()
-	                                        .equals(BpaConstants.getNocRole().get(nocConfig.getDepartment()))))
+	                                        .equals(getNocRoles(application, nocConfig))))
 	                        .collect(Collectors.toList());
 	                if (!userList.isEmpty())
 	                    nocAutoUsers.add(userList.get(0));
@@ -601,5 +601,15 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
                     new String[] { bpaApplication.getApplicationNumber() }, null));
 
         return "redirect:/application/citizen/success/" + bpaApplication.getApplicationNumber();
+    }
+    
+    public String getNocRoles(BpaApplication application, NocConfiguration nocConfig) {
+    	String nocRole = "";
+    	if(BpaConstants.APPLICATION_TYPE_MEDIUMRISK.equalsIgnoreCase(application.getApplicationType().getName())) {
+    		nocRole = BpaConstants.getNocRuralRole().get(nocConfig.getDepartment());
+    	} else {
+    		nocRole = BpaConstants.getNocRole().get(nocConfig.getDepartment());
+    	}
+    	return nocRole;
     }
 }

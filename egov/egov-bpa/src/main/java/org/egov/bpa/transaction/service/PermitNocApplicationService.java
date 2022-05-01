@@ -158,14 +158,14 @@ public class PermitNocApplicationService {
 	                userList = nocUsers.stream()
 	                        .filter(usr -> usr.getRoles().stream()
 	                                .anyMatch(usrrl -> usrrl.getName()
-	                                        .equals(BpaConstants.getNocRole().get(nocConfig.getDepartment()))))
+	                                        .equals(getNocRoles(application, nocConfig))))
 	                        .collect(Collectors.toList());
 	                if (userList.isEmpty()) {
 	                    nocUsers = userService.getUsersByTypeAndTenantId(UserType.BUSINESS, ApplicationConstant.STATE_TENANTID);
 	                    userList = nocUsers.stream()
 	                            .filter(usr -> usr.getRoles().stream()
 	                                    .anyMatch(usrrl -> usrrl.getName()
-	                                            .equals(BpaConstants.getNocRole().get(nocConfig.getDepartment()))))
+	                                            .equals(getNocRoles(application, nocConfig))))
 	                            .collect(Collectors.toList());
 	                }
 	                nocUser.add(userList.get(0));
@@ -201,14 +201,15 @@ public class PermitNocApplicationService {
                     userService.getUsersByTypeAndTenantId(UserType.BUSINESS, ApplicationThreadLocals.getTenantID()));
             userList = nocUsers.stream()
                     .filter(usr -> usr.getRoles().stream()
-                            .anyMatch(usrrl -> usrrl.getName().equals(BpaConstants.getNocRole().get(nocConfig.getDepartment()))))
+                            .anyMatch(usrrl -> usrrl.getName()
+                            		.equals(getNocRoles(application, nocConfig))))
                     .collect(Collectors.toList());
             if (userList.isEmpty()) {
                 nocUsers = userService.getUsersByTypeAndTenantId(UserType.BUSINESS, ApplicationConstant.STATE_TENANTID);
                 userList = nocUsers.stream()
                         .filter(usr -> usr.getRoles().stream()
                                 .anyMatch(usrrl -> usrrl.getName()
-                                        .equals(BpaConstants.getNocRole().get(nocConfig.getDepartment()))))
+                                        .equals(getNocRoles(application, nocConfig))))
                         .collect(Collectors.toList());
             }
             nocUser.add(userList.get(0));
@@ -243,6 +244,16 @@ public class PermitNocApplicationService {
 
         nocApplication.setSlaEndDate(c.getTime());
     }
+    
+    public String getNocRoles(BpaApplication application, NocConfiguration nocConfig) {
+    	String nocRole = "";
+    	if(BpaConstants.APPLICATION_TYPE_MEDIUMRISK.equalsIgnoreCase(application.getApplicationType().getName())) {
+    		nocRole = BpaConstants.getNocRuralRole().get(nocConfig.getDepartment());
+    	} else {
+    		nocRole = BpaConstants.getNocRole().get(nocConfig.getDepartment());
+    	}
+    	return nocRole;
+    }
 
     public Map<String, String> getEdcrNocMandatory(final String edcrNumber) {		
 		EdcrApplicationInfo edcrPlanInfo = drcRestService.getDcrPlanInfo(edcrNumber, ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest());
@@ -267,7 +278,7 @@ public class PermitNocApplicationService {
 			edcrPlanInfo.getPlan().getPlanInformation().setNocPollutionDept("NO");
 			edcrPlanInfo.getPlan().getPlanInformation().setNocPH7Dept("NO");
 			edcrPlanInfo.getPlan().getPlanInformation().setNocPHDept("NO");
-			edcrPlanInfo.getPlan().getPlanInformation().setNocRoad2Dept("NO");
+			edcrPlanInfo.getPlan().getPlanInformation().setNocRoad2Dept("NO");	
 			if(null!=edcrPlanInfo.getPlan()) {
 				OccupancyTypeHelper occupancyTypeHelper = edcrPlanInfo.getPlan().getVirtualBuilding() != null
 						? edcrPlanInfo.getPlan().getVirtualBuilding().getMostRestrictiveFarHelper()

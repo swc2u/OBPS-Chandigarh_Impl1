@@ -95,6 +95,7 @@ public class BpaConstants {
 	public static final String T = "T";// Transit Oriented Development (TOD)
 
 	// sub occupancies code
+	public static final String OC_MIC = "OC-MIC";// Minor Internal Changes
 	public static final String A_P = "A-P";// Plotted
 	public static final String A_G = "A-G";// Grouped
 	public static final String F_CIR = "F-CIR";// commercial in rural
@@ -417,6 +418,9 @@ public class BpaConstants {
 	public static final String ALLOTMENT_OF_NEW_NUMBER = "Fee for allotment of new number";
 	public static final String ADDITIONAL_HEIGHT_FEE = "Additional height fee";
 	
+	
+	
+	
 	public static final String INTERNAL_CHANGES_FEE = "Fee for internal changes during construction";
 	public static final String EXCESS_COVERAGE_FEE = "Fee for excess coverage area";
 	public static final String GLAZING_OF_VERANDAH_FEE = "Fee for glazing of verandah";
@@ -426,6 +430,25 @@ public class BpaConstants {
 	public static final String STAIR_HEADWAY_HEIGHT_FEE = "Fee for stair headway height";
 	public static final String WATER_TANK_LOCATION_FEE = "Fee for water tank location";
 	public static final String EXCESS_COVERAGE_BEYOND_ZONING_FEE = "Fee for excess coverage beyond zoning 6";
+	public static final String TRANSFER_OF_BUILDING_PLAN_FEE = "Transfer of building plan fee"; //code = TBP
+	public static final String REVALIDATION_OF_BUILDING_PLAN_FEE = "Revalidation of building plan fee"; 
+	public static final String MINOR_CHANGES_IN_DOORS_AND_WINDOWS_FEE = "Minor changes in doors and windows fee"; //code = MCDW
+	public static final String LOFTS_FEE = "Lofts fee"; //code = LFT
+	public static final String NON_STANDARD_GATE_FEE = "Non standard gate fee"; // code = NSG
+	public static final String NICHES_ON_THE_COMMON_WALL_FEE = "Niches on the common wall fee"; // code = NCW
+	public static final String DPC_CERTIFICATE_MISSING_FEE = "DPC certificate missing fee"; // code = DCM
+	public static final String FALSE_CEILING_FEE = "False Ceiling Fee"; // code = FCL
+	
+	
+	//OC FEE CALCULATION KEYS FOR PLANINFO
+	public static final String IS_THIS_A_CASE_OF_OWNERSHIP_CHANGE = "IS_THIS_A_CASE_OF_OWNERSHIP CHANGE";
+	public static final String NUMBER_OF_FLOORS_WITH_CHANGES_IN_DOORS_OR_WINDOWS_LOCATIONS = "NUMBER_OF_FLOORS_WITH_CHANGES_IN_DOORS_OR_WINDOWS_LOCATIONS";
+	public static final String NUMBER_OF_GLAZING_IN_VERANDAH = "NUMBER_OF_GLAZING_IN_VERANDAH";
+	public static final String NUMBER_OF_LOFTS_CONSTRUCTED_BEYOND_PERMIT = "NUMBER_OF_LOFTS_CONSTRUCTED_BEYOND_PERMIT";
+	public static final String NUMBER_OF_NON_STANDARD_GATES = "NUMBER_OF_NON_STANDARD_GATES";
+	public static final String NUMBER_OF_NICHES_ON_THE_COMMON_WALL = "NUMBER_OF_NICHES_ON_THE_COMMON_WALL";
+	public static final String AREA_OF_FALSE_CEILING = "AREA_OF_FALSE_CEILING";
+	
 
 	public static final String TP_DEPT = "TOWN PLANNING DEPARTMENT";
 	public static final String DEV_PERMIT_FEE = "DPF";
@@ -466,6 +489,17 @@ public class BpaConstants {
 	public static final String POLNOCROLE = "BPA_POL_CONTROL_NOC_ROLE";
 	public static final String MANINOCROLE = "BPA_MANIMAJARA_NOC_ROLE";
 	public static final String ACTAXNOCROLE = "BPA_AC_TAX_NOC_ROLE";
+	public static final String FIRENOCRURALROLE = "BPA_FIRE_NOC_RURAL_ROLE";
+	public static final String PHNOCRURALROLE = "BPA_PUB_HEALTH_NOC_RURAL_ROLE";
+	public static final String TEHNOCRURALROLE = "BPA_TEHSILDAR_NOC_RURAL_ROLE";
+	public static final String PH7NOCRURALROLE = "BPA_PUB_HEALTH_7_NOC_RURAL_ROLE";
+	public static final String ROAD2NOCRURALROLE = "BPA_ROAD_2_NOC_RURAL_ROLE";
+	public static final String PACNOCRURALROLE = "BPA_PAC_NOC_RURAL_ROLE";
+	public static final String STRCNOCRURALROLE = "BPA_STRUCTURE_NOC_RURAL_ROLE";
+	public static final String ELECNOCRURALROLE = "BPA_ELECTRICAL_NOC_RURAL_ROLE";
+	public static final String POLNOCRURALROLE = "BPA_POL_CONTROL_NOC_RURAL_ROLE";
+	public static final String MANINOCRURALROLE = "BPA_MANIMAJARA_NOC_RURAL_ROLE";
+	public static final String ACTAXNOCRURALROLE = "BPA_AC_TAX_NOC_RURAL_ROLE";
 
 	// designation constants
 	public static final String DESIGNATION_AEE = "Assistant executive engineer";
@@ -826,13 +860,36 @@ public class BpaConstants {
 		NOCTYPE.put(POLNOCTYPE, POLNOCROLE);
 		NOCTYPE.put(ACTAXNOCTYPE, ACTAXNOCROLE);
 	}
+	
+	private static final Map<String, String> NOCTYPERURAL = new ConcurrentHashMap<>();
+	static {
+		NOCTYPERURAL.put(FIRENOCTYPE, FIRENOCRURALROLE);
+		NOCTYPERURAL.put(PH7NOCTYPE, PH7NOCRURALROLE);
+		NOCTYPERURAL.put(TEHNOCTYPE, TEHNOCRURALROLE);
+		NOCTYPERURAL.put(PHNOCTYPE, PHNOCRURALROLE);
+		NOCTYPERURAL.put(MANINOCTYPE, MANINOCRURALROLE);
+		NOCTYPERURAL.put(ROAD2NOCTYPE, ROAD2NOCRURALROLE);
+		NOCTYPERURAL.put(PACNOCTYPE, PACNOCRURALROLE);
+		NOCTYPERURAL.put(STRCNOCTYPE, STRCNOCRURALROLE);
+		NOCTYPERURAL.put(ELECNOCTYPE, ELECNOCRURALROLE);
+		NOCTYPERURAL.put(POLNOCTYPE, POLNOCRURALROLE);
+		NOCTYPERURAL.put(ACTAXNOCTYPE, ACTAXNOCRURALROLE);
+	}
 
 	private static final Map<String, String> OCNOCTYPE = new ConcurrentHashMap<>();
 	static {
-		NOCTYPE.put(FIRENOCTYPE, FIRENOCROLE);
-		NOCTYPE.put(PACNOCTYPE, PACNOCROLE);
-		NOCTYPE.put(POLNOCTYPE, POLNOCROLE);
-		NOCTYPE.put(ACTAXNOCTYPE, ACTAXNOCROLE);
+		OCNOCTYPE.put(FIRENOCTYPE, FIRENOCROLE);
+		OCNOCTYPE.put(PACNOCTYPE, PACNOCROLE);
+		OCNOCTYPE.put(POLNOCTYPE, POLNOCROLE);
+		OCNOCTYPE.put(ACTAXNOCTYPE, ACTAXNOCROLE);
+	}
+	
+	private static final Map<String, String> OCNOCTYPERURAL = new ConcurrentHashMap<>();
+	static {
+		OCNOCTYPERURAL.put(FIRENOCTYPE, FIRENOCRURALROLE);
+		OCNOCTYPERURAL.put(PACNOCTYPE, PACNOCRURALROLE);
+		OCNOCTYPERURAL.put(POLNOCTYPE, POLNOCRURALROLE);
+		OCNOCTYPERURAL.put(ACTAXNOCTYPE, ACTAXNOCRURALROLE);
 	}
 
 	// Update and use this code if DCR integration require to particular service
@@ -930,6 +987,14 @@ public class BpaConstants {
 	public static Map<String, String> getOCNocRole() {
 		return Collections.unmodifiableMap(OCNOCTYPE);
 	}
+	
+	public static Map<String, String> getNocRuralRole() {
+		return Collections.unmodifiableMap(NOCTYPERURAL);
+	}
+
+	public static Map<String, String> getOCNocRuralRole() {
+		return Collections.unmodifiableMap(OCNOCTYPERURAL);
+	}	
 
 	public static List<String> getAvailableDesignations() {
 		return Collections.unmodifiableList(AVAILABLE_DESIGNATIONS);

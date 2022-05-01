@@ -51,6 +51,7 @@ import org.egov.bpa.master.entity.Holiday;
 import org.egov.bpa.master.entity.NocConfiguration;
 import org.egov.bpa.master.service.HolidayListService;
 import org.egov.bpa.master.service.NocConfigurationService;
+import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BpaNocApplication;
 import org.egov.bpa.transaction.entity.BpaStatus;
 import org.egov.bpa.transaction.entity.enums.NocIntegrationInitiationEnum;
@@ -153,14 +154,14 @@ public class OccupancyCertificateNocService {
 			userList = nocUsers.stream()
 		    	      .filter(usr -> usr.getRoles().stream()
 		    	        .anyMatch(usrrl -> 
-		    	          usrrl.getName().equals(BpaConstants.getNocRole().get(nocConfig.getDepartment()))))
+		    	          usrrl.getName().equals(getNocRoles(oc.getParent(), nocConfig))))
 		    	        .collect(Collectors.toList());	
 			if(userList.isEmpty()) {
 				nocUsers = userService.getUsersByTypeAndTenantId(UserType.BUSINESS, ApplicationConstant.STATE_TENANTID);
 				userList = nocUsers.stream()
 			    	      .filter(usr -> usr.getRoles().stream()
 			    	        .anyMatch(usrrl -> 
-			    	          usrrl.getName().equals(BpaConstants.getNocRole().get(nocConfig.getDepartment()))))
+			    	          usrrl.getName().equals(getNocRoles(oc.getParent(), nocConfig))))
 			    	        .collect(Collectors.toList());	
 			}	
 		     nocUser.add(userList.get(0));
@@ -186,14 +187,14 @@ public class OccupancyCertificateNocService {
 			userList = nocUsers.stream()
 		    	      .filter(usr -> usr.getRoles().stream()
 		    	        .anyMatch(usrrl -> 
-		    	          usrrl.getName().equals(BpaConstants.getNocRole().get(nocConfig.getDepartment()))))
+		    	          usrrl.getName().equals(getNocRoles(oc.getParent(), nocConfig))))
 		    	        .collect(Collectors.toList());	
 			if(userList.isEmpty()) {
 				nocUsers = userService.getUsersByTypeAndTenantId(UserType.BUSINESS, ApplicationConstant.STATE_TENANTID);
 				userList = nocUsers.stream()
 			    	      .filter(usr -> usr.getRoles().stream()
 			    	        .anyMatch(usrrl -> 
-			    	          usrrl.getName().equals(BpaConstants.getNocRole().get(nocConfig.getDepartment()))))
+			    	          usrrl.getName().equals(getNocRoles(oc.getParent(), nocConfig))))
 			    	        .collect(Collectors.toList());	
 			}
 		     nocUser.add(userList.get(0));
@@ -218,6 +219,16 @@ public class OccupancyCertificateNocService {
 		c.add(Calendar.DATE, holiday.size()); 
 
 		nocApplication.setSlaEndDate(c.getTime());
+    }
+	
+	public String getNocRoles(BpaApplication application, NocConfiguration nocConfig) {
+    	String nocRole = "";
+    	if(BpaConstants.APPLICATION_TYPE_MEDIUMRISK.equalsIgnoreCase(application.getApplicationType().getName())) {
+    		nocRole = BpaConstants.getOCNocRuralRole().get(nocConfig.getDepartment());
+    	} else {
+    		nocRole = BpaConstants.getOCNocRole().get(nocConfig.getDepartment());
+    	}
+    	return nocRole;
     }
 	
 	public Map<String, String> getEdcrNocMandatory(final String edcrNumber){	

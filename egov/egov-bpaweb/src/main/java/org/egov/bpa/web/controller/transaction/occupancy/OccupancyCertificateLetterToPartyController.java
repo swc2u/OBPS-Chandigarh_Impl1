@@ -67,6 +67,7 @@ import org.egov.bpa.transaction.service.messaging.oc.OcSmsAndEmailService;
 import org.egov.bpa.transaction.service.oc.OCLetterToPartyService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
 import org.egov.bpa.transaction.workflow.BpaWorkFlowService;
+import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.utils.BpaUtils;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.custom.CustomImplProvider;
@@ -85,6 +86,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -186,9 +188,17 @@ public class OccupancyCertificateLetterToPartyController {
         }
         processAndStoreLetterToPartyDocuments(ocLetterToParty);
         ocLetterToParty.getLetterToParty().setCurrentApplnStatus(ocLetterToParty.getOc().getStatus());
-        ocLetterToParty.getLetterToParty().setCurrentStateValueOfLP(getStateHistoryObjByDesc(ocLetterToParty).getValue());
+        if(ocLetterToParty.getOc().getOccupancyCertificateType().equalsIgnoreCase(BpaConstants.APPLICATION_TYPE_LOWRISK) 
+        		&& StringUtils.isEmpty(ocLetterToParty.getOc().getState().getPreviousOwner())
+        		&& ocLetterToParty.getOc().getState().getValue().equalsIgnoreCase(BpaConstants.APPLICATION_STATUS_REGISTERED)) {
+        	ocLetterToParty.getLetterToParty().setCurrentStateValueOfLP("NEW");
+            ocLetterToParty.getLetterToParty().setPendingAction("Forwarded to property documents verification");
+        }
+        else {
+            ocLetterToParty.getLetterToParty().setCurrentStateValueOfLP(getStateHistoryObjByDesc(ocLetterToParty).getValue());
+            ocLetterToParty.getLetterToParty().setPendingAction(getStateHistoryObjByDesc(ocLetterToParty).getNextAction());
+        }
         ocLetterToParty.getLetterToParty().setStateForOwnerPosition(ocLetterToParty.getOc().getState().getValue());
-        ocLetterToParty.getLetterToParty().setPendingAction(getStateHistoryObjByDesc(ocLetterToParty).getNextAction());
         List<OCLetterToParty> existingLetterToParties = ocLetterToPartyService.findAllByOC(ocLetterToParty.getOc());
         if (!existingLetterToParties.isEmpty()) {
             OCLetterToParty existingLpParty = existingLetterToParties.get(0);

@@ -75,6 +75,7 @@ import javax.validation.Valid;
 import org.egov.bpa.master.entity.NocConfiguration;
 import org.egov.bpa.master.service.NocConfigurationService;
 import org.egov.bpa.transaction.entity.ApplicationFloorDetail;
+import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BuildingDetail;
 import org.egov.bpa.transaction.entity.OwnershipTransfer;
 import org.egov.bpa.transaction.entity.WorkflowBean;
@@ -288,7 +289,7 @@ public class CitizenUpdateOccupancyCertificateController extends BpaGenericAppli
 				 List<User> userList = nocUsers.stream()
 			    	      .filter(usr -> usr.getRoles().stream()
 			    	        .anyMatch(usrrl -> 
-			    	          usrrl.getName().equals(BpaConstants.getNocRole().get(nocConfig.getDepartment()))))
+			    	          usrrl.getName().equals(getNocRoles(oc.getParent(), nocConfig))))
 			    	        .collect(Collectors.toList());	
 				 if(!userList.isEmpty())
                 	nocAutoUsers.add(userList.get(0));
@@ -413,5 +414,15 @@ public class CitizenUpdateOccupancyCertificateController extends BpaGenericAppli
                 model.addAttribute("appointmentTitle", "Scheduled Appointment Details For Field Inspection");
             }
         }
+    }
+    
+    public String getNocRoles(BpaApplication application, NocConfiguration nocConfig) {
+    	String nocRole = "";
+    	if(BpaConstants.APPLICATION_TYPE_MEDIUMRISK.equalsIgnoreCase(application.getApplicationType().getName())) {
+    		nocRole = BpaConstants.getOCNocRuralRole().get(nocConfig.getDepartment());
+    	} else {
+    		nocRole = BpaConstants.getOCNocRole().get(nocConfig.getDepartment());
+    	}
+    	return nocRole;
     }
 }

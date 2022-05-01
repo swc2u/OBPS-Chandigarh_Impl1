@@ -324,9 +324,7 @@ public class OccupancyCertificateService {
         oc.setDcrDocuments(persistApplnDCRDocuments(oc, oc.getDcrDocuments()));
         processAndStoreNocDocuments(oc);
         if (!WF_SAVE_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())
-                && (APPLICATION_STATUS_REGISTERED.equalsIgnoreCase(oc.getStatus().getCode())
-                		|| APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(oc.getStatus().getCode()))
-                && APPLICATION_DOCUMENTS_VERIFICATION_IN_PROGRESS.equalsIgnoreCase(oc.getState().getValue())) {
+                && (APPLICATION_STATUS_REGISTERED.equalsIgnoreCase(oc.getStatus().getCode()))) {
             String feeCalculationMode = bpaUtils.getOCFeeCalculationMode();
             if (feeCalculationMode.equalsIgnoreCase(BpaConstants.AUTOFEECAL) ||
                     feeCalculationMode.equalsIgnoreCase(BpaConstants.AUTOFEECALEDIT)) {
