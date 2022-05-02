@@ -289,6 +289,12 @@ public class PlanService {
 			} else {
 				pl.addError("IS_THIS_A_CASE_OF_OWNERSHIP_CHANGE", "IS_THIS_A_CASE_OF_OWNERSHIP_CHANGE is wrongly defined in plan info layer.");
 			}
+			String isDPCCertificateAvailable = pl.getPlanInfoProperties().get(DxfFileConstants.IS_DPC_CERTIFICATE_AVAILABLE);
+			if(isDPCCertificateAvailable!=null && (DxfFileConstants.NA.equals(isDPCCertificateAvailable) || DxfFileConstants.YES.equals(isDPCCertificateAvailable) || DxfFileConstants.NO.equals(isDPCCertificateAvailable))) {
+				pl.getPlanInformation().setIsDPCCertificateAvailable(isDPCCertificateAvailable);
+			} else {
+				pl.addError("IS_DPC_CERTIFICATE_AVAILABLE", "IS_DPC_CERTIFICATE_AVAILABLE is wrongly defined in plan info layer.");
+			}
 			String numberOfFloorsWithChangesDW = pl.getPlanInfoProperties().get(DxfFileConstants.NUMBER_OF_FLOORS_WITH_CHANGES_IN_DOORS_OR_WINDOWS_LOCATIONS);
 			if(numberOfFloorsWithChangesDW!=null && !DxfFileConstants.NA.equals(numberOfFloorsWithChangesDW)) {
 				pl.getPlanInformation().setNumberOfFloorsWithChangesInDoorsOrWindowsLocations(new BigDecimal(numberOfFloorsWithChangesDW));

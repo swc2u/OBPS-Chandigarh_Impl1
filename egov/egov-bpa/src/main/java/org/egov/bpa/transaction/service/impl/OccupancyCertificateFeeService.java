@@ -176,7 +176,6 @@ public class OccupancyCertificateFeeService {
 
 	public Map<String, String> calculateFeeByServiceType(OccupancyCertificate oc, Plan bpaPlan, Plan ocPlan,
 			OccupancyFee ocFee, OccupancyTypeHelper mostRestrictiveFarHelper, Map<String, String> feeDetails) {
-		boolean dpcCertificateflag = false;
 		List<BpaFeeMapping> bpaFees = bpaFeeCommonService
 				.getOCFeeForListOfServices(oc.getParent().getServiceType().getId());
 		for (BpaFeeMapping bpaFee : bpaFees) {
@@ -221,8 +220,8 @@ public class OccupancyCertificateFeeService {
 				amount = amount.add(getTotalNichesOnTheCommonWallFee(bpaPlan, ocPlan));
 			} else if (BpaConstants.DPC_CERTIFICATE_MISSING_FEE
 					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				if(dpcCertificateflag) {
-				amount = amount.add(getTotalDPCCertificateMissingFee(oc, ocPlan, mostRestrictiveFarHelper));
+				if(ocPlan.getPlanInformation().getIsDPCCertificateAvailable().equals(BpaConstants.NO) || ocPlan.getPlanInformation().getIsDPCCertificateAvailable().equals(BpaConstants.NA)) {
+					amount = amount.add(getTotalDPCCertificateMissingFee(oc, ocPlan, mostRestrictiveFarHelper));
 				}
 			} else if (BpaConstants.FALSE_CEILING_FEE
 					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {

@@ -294,8 +294,19 @@ public class PlanInformation implements Serializable {
     //AREA_OF_FALSE_CEILING
     private BigDecimal areaOfFalseCeiling = BigDecimal.ZERO;
     
- 
-    public BigDecimal getNumberOfFloorsWithChangesInDoorsOrWindowsLocations() {
+    //IS_DPC_CERTIFICATE_AVAILABLE
+    private String isDPCCertificateAvailable = NA;
+    
+
+	public String getIsDPCCertificateAvailable() {
+		return isDPCCertificateAvailable;
+	}
+
+	public void setIsDPCCertificateAvailable(String isDPCCertificateAvailable) {
+		this.isDPCCertificateAvailable = isDPCCertificateAvailable;
+	}
+
+	public BigDecimal getNumberOfFloorsWithChangesInDoorsOrWindowsLocations() {
 		return numberOfFloorsWithChangesInDoorsOrWindowsLocations;
 	}
 

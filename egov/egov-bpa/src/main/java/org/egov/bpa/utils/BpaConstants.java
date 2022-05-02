@@ -442,6 +442,7 @@ public class BpaConstants {
 	
 	//OC FEE CALCULATION KEYS FOR PLANINFO
 	public static final String IS_THIS_A_CASE_OF_OWNERSHIP_CHANGE = "IS_THIS_A_CASE_OF_OWNERSHIP CHANGE";
+	public static final String IS_DPC_CERTIFICATE_AVAILABLE = "IS_DPC_CERTIFICATE_AVAILABLE";
 	public static final String NUMBER_OF_FLOORS_WITH_CHANGES_IN_DOORS_OR_WINDOWS_LOCATIONS = "NUMBER_OF_FLOORS_WITH_CHANGES_IN_DOORS_OR_WINDOWS_LOCATIONS";
 	public static final String NUMBER_OF_GLAZING_IN_VERANDAH = "NUMBER_OF_GLAZING_IN_VERANDAH";
 	public static final String NUMBER_OF_LOFTS_CONSTRUCTED_BEYOND_PERMIT = "NUMBER_OF_LOFTS_CONSTRUCTED_BEYOND_PERMIT";
@@ -602,6 +603,7 @@ public class BpaConstants {
 	// configuration value constants
 	public static final String YES = "YES";
 	public static final String NO = "NO";
+	public static final String NA = "NA";
 	public static final String MANUAL = "MANUAL";
 	public static final String AUTOFEECAL = "AUTOFEECAL";
 	public static final String AUTOFEECALEDIT = "AUTOFEECAL_EDIT";
