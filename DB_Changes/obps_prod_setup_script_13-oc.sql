@@ -11,10 +11,11 @@ values (25, null, 'CBZ', 'Fee for excess coverage beyond zoning 6', 'Fee for exc
 
 insert into chandigarh.egbpa_mstr_bpafeemapping 
 values 
-(224, 'OCCUPANCY_CERTIFICATE', 'SANCTION_FEE', 59, 'AUTO', 25, 0, 0, 1, '2020-09-18 05:55:20.745', 1, '2020-09-18 05:55:20.745', null), 
-(225, 'OCCUPANCY_CERTIFICATE', 'SANCTION_FEE', 61, 'AUTO', 25, 0, 0, 1, '2020-09-18 05:55:20.745', 1, '2020-09-18 05:55:20.745', null), 
-(226, 'OCCUPANCY_CERTIFICATE', 'SANCTION_FEE', 62, 'AUTO', 25, 0, 0, 1, '2020-09-18 05:55:20.745', 1, '2020-09-18 05:55:20.745', null), 
-(227, 'OCCUPANCY_CERTIFICATE', 'SANCTION_FEE', 64, 'AUTO', 25, 0, 0, 1, '2020-09-18 05:55:20.745', 1, '2020-09-18 05:55:20.745', null);
+(nextval('seq_egbpa_mstr_bpafeemapping'), 'OCCUPANCY_CERTIFICATE', 'SANCTION_FEE', 59, 'AUTO', 25, 0, 0, 1, '2020-09-18 05:55:20.745', 1, '2020-09-18 05:55:20.745', null), 
+(nextval('seq_egbpa_mstr_bpafeemapping'), 'OCCUPANCY_CERTIFICATE', 'SANCTION_FEE', 61, 'AUTO', 25, 0, 0, 1, '2020-09-18 05:55:20.745', 1, '2020-09-18 05:55:20.745', null), 
+(nextval('seq_egbpa_mstr_bpafeemapping'), 'OCCUPANCY_CERTIFICATE', 'SANCTION_FEE', 62, 'AUTO', 25, 0, 0, 1, '2020-09-18 05:55:20.745', 1, '2020-09-18 05:55:20.745', null), 
+(nextval('seq_egbpa_mstr_bpafeemapping'), 'OCCUPANCY_CERTIFICATE', 'SANCTION_FEE', 64, 'AUTO', 25, 0, 0, 1, '2020-09-18 05:55:20.745', 1, '2020-09-18 05:55:20.745', null);
+
 
 
 -- plot number length increased 
