@@ -2,7 +2,7 @@ SELECT setval('chandigarh.seq_eg_checklist',(SELECT max(id) FROM chandigarh.eg_c
 
 INSERT INTO chandigarh.eg_checklist
 (id, checklisttypeid, code, description, "version", createdby, createddate, lastmodifiedby, lastmodifieddate)
-VALUES(nextval('chandigarh.seq_eg_checklist'), 5, 'OCDCRDOC-11', 'DPC Certificate(If Available).', 0, 1, '2020-09-11 04:47:19.869', 1, '2020-09-11 04:47:19.869');
+VALUES(nextval('chandigarh.seq_eg_checklist'), 5, 'OCDCRDOC-11', 'DPC Certificate.', 0, 1, '2020-09-11 04:47:19.869', 1, '2020-09-11 04:47:19.869');
 
 SELECT setval('chandigarh.seq_egbpa_checklist_servicetype_mapping',(SELECT max(id) FROM chandigarh.egbpa_checklist_servicetype_mapping));
 

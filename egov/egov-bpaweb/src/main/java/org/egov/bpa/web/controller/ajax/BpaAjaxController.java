@@ -750,6 +750,31 @@ public class BpaAjaxController {
 
         checklistServicetypeMappingService.findByActiveByServiceTypeAndChecklist(serviceType, checklistType).stream()
                 .forEach(servicecklst -> {
+                	if(BpaConstants.DPC_CERTIFICATE_DOCUMENT_DESC.equals(servicecklst.getChecklist().getDescription())) {
+                		if(odcrPlanInfo.getPlan().getPlanInformation().getIsDPCCertificateAvailable().equals(BpaConstants.YES)) {
+                			final JsonObject jsonObj = new JsonObject();
+                            jsonObj.addProperty("id", servicecklst.getId());
+                            jsonObj.addProperty("checklistId", servicecklst.getChecklist().getId());
+                            jsonObj.addProperty("checklistDesc", servicecklst.getChecklist().getDescription());
+                            jsonObj.addProperty("checklistType", servicecklst.getChecklist().getChecklistType().getCode());
+                            jsonObj.addProperty("serviceId", servicecklst.getServiceType().getId());
+                            if (servicecklst.getChecklist().getChecklistType().getCode().equalsIgnoreCase("OCNOC")) {
+                                NocConfiguration nocConfig = nocConfigService
+                                        .findByDepartmentAndType(servicecklst.getChecklist().getCode(), BpaConstants.OC);
+                                if (nocConfig != null) {
+                                    jsonObj.addProperty("documentMandatory", nocConfig.getIntegrationType().equals("MANUAL"));
+                                    jsonObj.addProperty(MANDATORY, nocTypeMap.get(servicecklst.getChecklist().getCode()));
+                                }
+                                if (nocTypeMap.get(servicecklst.getChecklist().getCode()) == null) {
+                                    jsonObj.addProperty(MANDATORY, servicecklst.isMandatory());
+                                }
+
+                            } else {
+                                jsonObj.addProperty(MANDATORY, servicecklst.isMandatory());
+                            }
+                            jsonObjects.add(jsonObj);
+                		}
+                	} else {
                     final JsonObject jsonObj = new JsonObject();
                     jsonObj.addProperty("id", servicecklst.getId());
                     jsonObj.addProperty("checklistId", servicecklst.getChecklist().getId());
@@ -771,6 +796,7 @@ public class BpaAjaxController {
                         jsonObj.addProperty(MANDATORY, servicecklst.isMandatory());
                     }
                     jsonObjects.add(jsonObj);
+                	}
                 });
         IOUtils.write(jsonObjects.toString(), response.getWriter());
     }
