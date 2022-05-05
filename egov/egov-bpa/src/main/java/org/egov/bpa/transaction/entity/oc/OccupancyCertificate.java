@@ -157,9 +157,9 @@ public class OccupancyCertificate extends StateAware<Position> {
     @Temporal(value = TemporalType.DATE)
     private Date workCompletionDueDate;
 
-    private Boolean citizenAccepted = false;
+    private boolean citizenAccepted = false;
 
-    private Boolean architectAccepted = false;
+    private boolean architectAccepted = false;
 
     private Boolean isSentToPreviousOwner = false;
 
@@ -370,19 +370,19 @@ public class OccupancyCertificate extends StateAware<Position> {
         this.workCompletionDueDate = workCompletionDueDate;
     }
 
-    public Boolean isCitizenAccepted() {
+    public boolean isCitizenAccepted() {
         return citizenAccepted;
     }
 
-    public void setCitizenAccepted(Boolean citizenAccepted) {
+    public void setCitizenAccepted(boolean citizenAccepted) {
         this.citizenAccepted = citizenAccepted;
     }
 
-    public Boolean isArchitectAccepted() {
+    public boolean isArchitectAccepted() {
         return architectAccepted;
     }
 
-    public void setArchitectAccepted(Boolean architectAccepted) {
+    public void setArchitectAccepted(boolean architectAccepted) {
         this.architectAccepted = architectAccepted;
     }
 

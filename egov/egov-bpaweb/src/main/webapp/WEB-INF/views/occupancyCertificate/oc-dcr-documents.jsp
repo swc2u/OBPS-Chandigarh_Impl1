@@ -78,7 +78,15 @@
 				scale conventions. Keep a blank space of not less than 10 cm x 10
 				cm, on the bottom right corner of every drawing for validation
 				stamp.</div>
-		</div>
+			<div class="panel-body view-content">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please ensure the following:
+				1. The provided information in this application is as per the current site 
+				conditions. 2. There is no variation in the fee estimation done by the system
+				and calculated by the applicant. In case any variation/ violation is found in 
+				the provided information and on site condition, architect will be liable for 
+				disciplinary actions and may lead to revocation of license 
+				(within 60 days of OC certificate issuance)</div>	
+		</div>		
 	</c:if>
 	<div class="row view-content header-color hidden-xs">
 		<label class="col-sm-6 "> <spring:message
