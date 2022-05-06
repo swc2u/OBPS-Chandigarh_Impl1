@@ -197,6 +197,10 @@ public class CitizenNewOccupancyCertificateController extends BpaGenericApplicat
         }
 
         wfBean.setWorkFlowAction(request.getParameter(WORK_FLOW_ACTION));
+        
+        occupancyCertificate.setCitizenAccepted(true);
+        occupancyCertificate.setArchitectAccepted(true);
+        
         OccupancyCertificate ocResponse = occupancyCertificateService.saveOrUpdate(occupancyCertificate, wfBean);
         if (citizenOrBusinessUser) {
             if (isCitizen)

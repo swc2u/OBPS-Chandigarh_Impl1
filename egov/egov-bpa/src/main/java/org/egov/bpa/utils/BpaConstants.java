@@ -442,6 +442,7 @@ public class BpaConstants {
 	
 	//OC FEE CALCULATION KEYS FOR PLANINFO
 	public static final String IS_THIS_A_CASE_OF_OWNERSHIP_CHANGE = "IS_THIS_A_CASE_OF_OWNERSHIP CHANGE";
+	public static final String IS_DPC_CERTIFICATE_AVAILABLE = "IS_DPC_CERTIFICATE_AVAILABLE";
 	public static final String NUMBER_OF_FLOORS_WITH_CHANGES_IN_DOORS_OR_WINDOWS_LOCATIONS = "NUMBER_OF_FLOORS_WITH_CHANGES_IN_DOORS_OR_WINDOWS_LOCATIONS";
 	public static final String NUMBER_OF_GLAZING_IN_VERANDAH = "NUMBER_OF_GLAZING_IN_VERANDAH";
 	public static final String NUMBER_OF_LOFTS_CONSTRUCTED_BEYOND_PERMIT = "NUMBER_OF_LOFTS_CONSTRUCTED_BEYOND_PERMIT";
@@ -602,6 +603,7 @@ public class BpaConstants {
 	// configuration value constants
 	public static final String YES = "YES";
 	public static final String NO = "NO";
+	public static final String NA = "NA";
 	public static final String MANUAL = "MANUAL";
 	public static final String AUTOFEECAL = "AUTOFEECAL";
 	public static final String AUTOFEECALEDIT = "AUTOFEECAL_EDIT";
@@ -618,6 +620,8 @@ public class BpaConstants {
 	public static final String IS_AUTO_CANCEL_UNATTENDED_DOCUMENT_SCRUTINY_APPLICATION = "IS_AUTO_CANCEL_UNATTENDED_DOCUMENT_SCRUTINY_APPLICATION";
 	public static final String DCR_BPA_INTEGRATION_REQUIRE = "DCR_INTEGRATION_REQUIRE_WITH_BPA";
 	public static final String AUTO_CANCEL_UNATTENDED_DOCUMENT_SCRUTINY_OC = "AUTO_CANCEL_UNATTENDED_DOCUMENT_SCRUTINY_OC";
+	public static final String DPC_CERTIFICATE_DOCUMENT_DESC = "DPC Certificate.";
+	
 	// other
 	public static final int SCALING_FACTOR = 2;
 	public static final String MESSAGE = "message";

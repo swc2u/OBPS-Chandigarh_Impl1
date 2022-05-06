@@ -125,7 +125,7 @@ jQuery(document).ready(function ($) {
     }
 
     function validateAdditionalConditions() {
-        /*if ($('#citizenOrBusinessUser').val()) {
+        if ($('#citizenOrBusinessUser').val()) {
             if ($('#isCitizen').val() === 'true') {
                 if ($('#validateCitizenAcceptance').val() === 'true' && !$('#citizenAccepted').prop('checked')) {
                     bootbox.alert("Please accept disclaimer to continue...");
@@ -137,7 +137,7 @@ jQuery(document).ready(function ($) {
                     return false;
                 }
             }
-        }*/
+        }
 
         return true;
     }

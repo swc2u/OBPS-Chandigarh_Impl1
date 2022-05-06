@@ -124,6 +124,12 @@
 					<div class="panel panel-primary" data-collapsed="0">
 						<jsp:include page="../oc-edcr-building-details.jsp"></jsp:include>
 					</div>
+					<c:if
+						test="${(isCitizen && validateCitizenAcceptance) || (!isCitizen)}">
+						<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="disclaimer-oc.jsp" />
+						</div>
+					</c:if>
 				</div>
 				<div id="document-info" class="tab-pane fade">
 					<div class="panel panel-primary" data-collapsed="0">
@@ -151,17 +157,28 @@
 					value="Save">
 					<spring:message code="lbl.save" />
 				</form:button> --%>
+				<c:choose>
+				<c:when test="${citizenDisclaimerAccepted}">
+								<form:button type="submit" id="ocSubmit"
+									class="btn btn-primary" value="Submit">
+									<spring:message code="lbl.submit" />
+								</form:button>
+				</c:when>
+				<c:otherwise>
 				<form:button type="submit" id="ocSubmit" class="btn btn-primary"
 					value="Submit">
 					<spring:message code="lbl.submit" />
 				</form:button>
 				<input type="button" name="button2" id="button2" value="Close"
 					class="btn btn-default" onclick="window.close();" />
+				</c:otherwise>
+				</c:choose>
 			</div>
 		</form:form>
 		<!-- Start --- For javascript messages localization purpose following hidden input tags used -->
 		<input type="hidden" id="saveAppln" value="<spring:message code='msg.confirm.save.appln'/>"/>
 		<input type="hidden" id="submitAppln" value="<spring:message code='msg.confirm.submit.appln'/>"/>
+		<input type="hidden" id="citizenDisclaimerAccepted" name="citizenDisclaimerAccepted" value="${citizenDisclaimerAccepted}" />
 	    <input type="hidden" id="uploadMsg" value="<spring:message code='msg.upload' />" />
         <input type="hidden" id="docNameLength" value="<spring:message code='msg.validate.docname.length' />" />
 	    <input type="hidden" id="fileSizeLimit" value="<spring:message code='msg.validate.filesize.limit' />" />
