@@ -53,7 +53,7 @@ function searchViaAjax() {
 					trHTML += '<tfoot><tr><td></td><td class="text-right view-content">Total Amount</td><td class="text-right view-content">'
 							+ total + '</td></tr></tfoot>';
 					trHTML += '</table>';
-					$('#neha').append(trHTML);
+					$('#neha').html(trHTML);
 
 				},
 				error : function(response) {
