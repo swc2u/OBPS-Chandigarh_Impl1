@@ -150,13 +150,13 @@
 			<ul class="tutorial-list color-black" >
 				
 				<li class="bpa-common-text tutorial-item">
-					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/User Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">User Manual for Architects</span></a>
+					<a href="/egi/resources/guide/assets/docs/User Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">User Manual for Architects</span></a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
-					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/User Manual for Citizens.pdf" target="_blank"><span class = "color-black bpa-common-text">User Manual for Citizens</span></a>
+					<a href="/egi/resources/guide/assets/docs/User Manual for Citizens.pdf" target="_blank"><span class = "color-black bpa-common-text">User Manual for Citizens</span></a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
-					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/Drawing Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">Drawing Manual for Architects</span></a>
+					<a href="/egi/resources/guide/assets/docs/Drawing Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">Drawing Manual for Architects</span></a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
 					<a href="/egi/resources/guide/bpaHelpDocument.jsp" target="_blank"><span class = "color-black bpa-common-text">Training Videos</span></a>

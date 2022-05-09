@@ -510,8 +510,8 @@ public class OccupancyCertificateFeeService {
 		BigDecimal oc = ocPlan.getOcdataComparison().getOcdataComparison()
 				.get(OCDataComparison.Partitions_on_ground_floor_on_multi_bays_shops).getDeviation();
 
-		if (ocPlan.getPlanInformation().getSectorNumber().equalsIgnoreCase("17")
-				&& ocPlan.getPlanInformation().getSectorNumber().equalsIgnoreCase("34")) {
+		if (ocPlan.getPlanInformation().getSectorNumber().equalsIgnoreCase("17B")
+				|| (ocPlan.getPlanInformation().getSectorNumber().equalsIgnoreCase("34") || ocPlan.getPlanInformation().getSectorNumber().equalsIgnoreCase("34C") || ocPlan.getPlanInformation().getSectorNumber().equalsIgnoreCase("34D"))) {
 			multiplier = BigDecimal.valueOf(100);
 			totalAmount = totalAmount.add(oc.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
 		} else {
@@ -585,9 +585,8 @@ public class OccupancyCertificateFeeService {
 			Multiplier = BigDecimal.valueOf(200);
 		}
 
-		deviation = ocPlan.getOcdataComparison().getOcdataComparison().get(OCDataComparison.Glazing_Of_Verandah)
-				.getDeviation();
-		totalAmount = deviation.multiply(Multiplier).setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigDecimal noOfGlazingVerandah = ocPlan.getPlanInformation().getNumberOfGlazingOfVerandah();
+		totalAmount = noOfGlazingVerandah.multiply(Multiplier).setScale(2, BigDecimal.ROUND_HALF_UP);
 		return totalAmount;
 	}
 
