@@ -2,24 +2,55 @@
 -- This Entries are used as a foreign key constraint in table egbpa_application_feedetails and need to be removed
 -- from there first before deleting it from the 'egbpa_mstr_bpafeemapping' table
 
-DELETE FROM chandigarh.egbpa_application_feedetails 
-WHERE bpafeemapping = 164;
-DELETE FROM chandigarh.egbpa_application_feedetails 
-WHERE bpafeemapping = 175;
-DELETE FROM chandigarh.egbpa_application_feedetails 
-WHERE bpafeemapping = 186;
-DELETE FROM chandigarh.egbpa_application_feedetails 
-WHERE bpafeemapping = 197;
-DELETE FROM chandigarh.egbpa_application_feedetails 
-WHERE bpafeemapping = 208;
+delete from chandigarh.egbpa_application_feedetails 
+where bpafeemapping = (select MAX(id) from chandigarh.egbpa_mstr_bpafeemapping group by servicetype, applicationtype, bpafeecommon, feesubtype 
+having applicationtype = 'OCCUPANCY_CERTIFICATE' and bpafeecommon = (select id from chandigarh.egbpa_mstr_bpafee_common where code = 'OF') 
+and servicetype = (select id from egbpa_mstr_servicetype where description = 'New Construction'));
 
-DELETE FROM chandigarh.egbpa_mstr_bpafeemapping
-WHERE id=164;
-DELETE FROM chandigarh.egbpa_mstr_bpafeemapping
-WHERE id=175;
-DELETE FROM chandigarh.egbpa_mstr_bpafeemapping
-WHERE id=186;
-DELETE FROM chandigarh.egbpa_mstr_bpafeemapping
-WHERE id=197;
-DELETE FROM chandigarh.egbpa_mstr_bpafeemapping
+delete from chandigarh.egbpa_application_feedetails 
+where bpafeemapping = (select MAX(id) from chandigarh.egbpa_mstr_bpafeemapping group by servicetype, applicationtype, bpafeecommon, feesubtype 
+having applicationtype = 'OCCUPANCY_CERTIFICATE' and bpafeecommon = (select id from chandigarh.egbpa_mstr_bpafee_common where code = 'OF') 
+and servicetype = (select id from egbpa_mstr_servicetype where description = 'Reconstruction'));
+
+delete from chandigarh.egbpa_application_feedetails 
+where bpafeemapping = (select MAX(id) from chandigarh.egbpa_mstr_bpafeemapping group by servicetype, applicationtype, bpafeecommon, feesubtype 
+having applicationtype = 'OCCUPANCY_CERTIFICATE' and bpafeecommon = (select id from chandigarh.egbpa_mstr_bpafee_common where code = 'OF') 
+and servicetype = (select id from egbpa_mstr_servicetype where description = 'Addition or Extension'));
+
+delete from chandigarh.egbpa_application_feedetails 
+where bpafeemapping = (select MAX(id) from chandigarh.egbpa_mstr_bpafeemapping group by servicetype, applicationtype, bpafeecommon, feesubtype 
+having applicationtype = 'OCCUPANCY_CERTIFICATE' and bpafeecommon = (select id from chandigarh.egbpa_mstr_bpafee_common where code = 'OF') 
+and servicetype = (select id from egbpa_mstr_servicetype where description = 'Change in occupancy'));
+
+delete from chandigarh.egbpa_application_feedetails 
+where bpafeemapping = (select MAX(id) from chandigarh.egbpa_mstr_bpafeemapping group by servicetype, applicationtype, bpafeecommon, feesubtype 
+having applicationtype = 'OCCUPANCY_CERTIFICATE' and bpafeecommon = (select id from chandigarh.egbpa_mstr_bpafee_common where code = 'OF') 
+and servicetype = (select id from egbpa_mstr_servicetype where description = 'Alteration'));
+
+
+
+delete from chandigarh.egbpa_mstr_bpafeemapping where id = 
+(select MAX(id) from chandigarh.egbpa_mstr_bpafeemapping group by servicetype, applicationtype, bpafeecommon, feesubtype 
+having applicationtype = 'OCCUPANCY_CERTIFICATE' and bpafeecommon = (select id from chandigarh.egbpa_mstr_bpafee_common where code = 'OF') 
+and servicetype = (select id from egbpa_mstr_servicetype where description = 'New Construction'));
+
+delete from chandigarh.egbpa_mstr_bpafeemapping where id = 
+(select MAX(id) from chandigarh.egbpa_mstr_bpafeemapping group by servicetype, applicationtype, bpafeecommon, feesubtype 
+having applicationtype = 'OCCUPANCY_CERTIFICATE' and bpafeecommon = (select id from chandigarh.egbpa_mstr_bpafee_common where code = 'OF') 
+and servicetype = (select id from egbpa_mstr_servicetype where description = 'Reconstruction'));
+
+delete from chandigarh.egbpa_mstr_bpafeemapping where id = 
+(select MAX(id) from chandigarh.egbpa_mstr_bpafeemapping group by servicetype, applicationtype, bpafeecommon, feesubtype 
+having applicationtype = 'OCCUPANCY_CERTIFICATE' and bpafeecommon = (select id from chandigarh.egbpa_mstr_bpafee_common where code = 'OF') 
+and servicetype = (select id from egbpa_mstr_servicetype where description = 'Addition or Extension'));
+
+delete from chandigarh.egbpa_mstr_bpafeemapping where id = 
+(select MAX(id) FROM chandigarh.egbpa_mstr_bpafeemapping group by servicetype, applicationtype, bpafeecommon, feesubtype 
+having applicationtype = 'OCCUPANCY_CERTIFICATE' and bpafeecommon = (select id from chandigarh.egbpa_mstr_bpafee_common where code = 'OF') 
+and servicetype = (select id from egbpa_mstr_servicetype where description = 'Change in occupancy'));
+
+delete from chandigarh.egbpa_mstr_bpafeemapping where id = 
+(select MAX(id) from chandigarh.egbpa_mstr_bpafeemapping group by servicetype, applicationtype, bpafeecommon, feesubtype 
+having applicationtype = 'OCCUPANCY_CERTIFICATE' and bpafeecommon = (select id from chandigarh.egbpa_mstr_bpafee_common where code = 'OF') 
+and servicetype = (select id from egbpa_mstr_servicetype where description = 'Alteration'));
 WHERE id=208;
