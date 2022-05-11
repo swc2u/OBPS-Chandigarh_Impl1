@@ -660,7 +660,13 @@ public class PlanReportService {
         	valuesMap.put("UNIT_DECLARATION", DxfFileConstants.DECLARATION_METER);
         else if(plan.getDrawingPreference().getInFeets())
         	valuesMap.put("UNIT_DECLARATION", DxfFileConstants.DECLARATION_FEET);
-        valuesMap.put("disclaimer", "	In case of application for Residential Plotted property in Marla category, refer to the frame controls applicable as provided in the link - https://urbanplanning.chd.gov.in/index.php/home/architectural_controls . If the drawing does not comply with the applicable frame controls, the application may be rejected by the Estate office.");
+        String conditionalOCNote = "";
+        if(ApplicationType.OCCUPANCY_CERTIFICATE.equals(dcrApplication.getApplicationType()) && !finalReportStatus) {
+        	conditionalOCNote = "\t3. Architect needs ensure that the provided information in the drawing is as per the current site condition. In case variation is found in the provided information and on site condition, architect will be liable for disciplinary actions and may lead to revocation of license.";
+        }
+        valuesMap.put("disclaimer", "	1. In case of application for Residential Plotted property in Marla category, refer to the frame controls applicable as provided in the link - https://urbanplanning.chd.gov.in/index.php/home/architectural_controls . If the drawing does not comply with the applicable frame controls, the application may be rejected by the Estate office.\n"
+        		+ "\t2. Architect shall ensure all the information provided in the dxf drawing and scrutiny report is correct and as per drawing manual and applicable building regulations CBRL 2017 UT Chandigarh/ MCC in case of villages. If the information provided by the architect in the drawing is found incorrect, Architect will be liable for further actions.\n"
+        		+ conditionalOCNote);
         if (clientSpecificSubReport) {
 
             List<DcrReportBlockDetail> blockDetails = new ArrayList<>();

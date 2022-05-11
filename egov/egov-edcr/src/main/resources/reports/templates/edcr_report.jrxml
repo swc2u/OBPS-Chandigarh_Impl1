@@ -1543,7 +1543,7 @@
 				<textFieldExpression><![CDATA[$P{errorString}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="5" y="24" width="543" height="51" uuid="348b61be-4306-4368-86b8-efc1474e7644"/>
+				<reportElement x="5" y="24" width="543" height="120" uuid="348b61be-4306-4368-86b8-efc1474e7644"/>
 				<textFieldExpression><![CDATA[$P{disclaimer}]]></textFieldExpression>
 			</textField>
 			<staticText>
