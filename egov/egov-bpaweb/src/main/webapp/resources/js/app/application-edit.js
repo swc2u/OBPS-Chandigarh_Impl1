@@ -396,7 +396,7 @@ jQuery(document)
                             }
                             return false;
                         } else if (action == 'Revert') {
-                            if (validateOnRevert() && validateForm(validator)) {
+                            if (validateOnRevert() && validateOnApproveAndForward(validator, action)) {
                                 bootbox
                                     .dialog({
                                         message: $('#sendBackApplnPreOfficial').val(),
@@ -686,7 +686,12 @@ function validateOnApproveAndForward(validator, action) {
         $('#approvalDesignation').removeAttr('required');
         $('#approvalPosition').removeAttr('required');
         return true;
-    } else {
+    } else if(action == 'Revert'){
+		$('#approvalDepartment').removeAttr('required');
+        $('#approvalDesignation').removeAttr('required');
+        $('#approvalPosition').removeAttr('required');
+        return true;
+	} else {
         var serviceTypeName = $("#serviceType").val();
         if ($('#showPermitConditions').val() && serviceTypeName != 'Tower Construction'
             && serviceTypeName != 'Pole Structures') {

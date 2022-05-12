@@ -217,7 +217,8 @@ public class OCNoticeUtil {
         reportParams.put("amenities", StringUtils.isBlank(amenities) ? "N/A" : amenities);
         reportParams.put("occupancy", oc.getParent().getOccupanciesName());
         reportParams.put("applicantAddress",
-                oc.getParent().getOwner() == null ? "Not Mentioned" : oc.getParent().getOwner().getAddress());        
+                oc.getParent().getOwner() == null ? "Not Mentioned" : oc.getParent().getOwner().getAddress());
+        reportParams.put("parent", oc.getParent());
         
         String coApplicantNames = "";        
         if(null != oc.getParent().getCoApplicants()) {
@@ -261,6 +262,9 @@ public class OCNoticeUtil {
             reportParams.put("village", oc.getParent().getSiteDetail().get(0).getLocationBoundary() == null
                     ? EMPTY
                     : oc.getParent().getSiteDetail().get(0).getLocationBoundary().getName());
+            reportParams.put("revenueWard", oc.getParent().getSiteDetail().get(0).getAdminBoundary().getBoundaryNum() == null
+                    ? EMPTY
+                    : oc.getParent().getSiteDetail().get(0).getAdminBoundary().getBoundaryNum());
             reportParams.put("taluk",
                     oc.getParent().getSiteDetail().get(0).getPostalAddress() == null
                             || oc.getParent().getSiteDetail().get(0).getPostalAddress().getTaluk() == null
