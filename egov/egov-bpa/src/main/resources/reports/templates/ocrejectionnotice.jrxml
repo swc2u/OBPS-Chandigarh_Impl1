@@ -4,6 +4,7 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<import value="org.egov.infra.utils.DateUtils"/>
 	<parameter name="rejectionReasons" class="java.lang.String"/>
 	<parameter name="currentDate" class="java.lang.String"/>
@@ -12,7 +13,12 @@
 	<parameter name="cityName" class="java.lang.String"/>
 	<parameter name="ulbName" class="java.lang.String"/>
 	<parameter name="logoPath" class="java.io.InputStream"/>
-	<field name="applicationNumber" class="java.lang.String"/>
+	<parameter name="applicationNumber" class="java.lang.String"/>
+	<parameter name="surveyNo" class="java.lang.String"/>
+	<parameter name="revenueWard" class="java.lang.String"/>
+	<parameter name="electionWard" class="java.lang.String"/>
+	<parameter name="serviceType" class="java.lang.String"/>
+	<parameter name="village" class="java.lang.String"/>
 	<field name="applicationDate" class="java.util.Date"/>
 	<field name="parent" class="org.egov.bpa.transaction.entity.BpaApplication"/>
 	<background>
@@ -47,7 +53,7 @@
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{applicationNumber}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{applicationNumber}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="474" y="76" width="81" height="20" uuid="0efe26f4-820a-4afc-8419-4365102a1ead"/>
@@ -96,14 +102,14 @@
 			<textField isStretchWithOverflow="true">
 				<reportElement x="23" y="19" width="532" height="20" uuid="d7b21c92-04d4-4c38-8a61-56d9052898a3"/>
 				<textElement textAlignment="Justified"/>
-				<textFieldExpression><![CDATA["Shri./Smt.\n"+$F{parent}.getApplicantName() +",\n"+$F{parent}.getOwner().getAddress()+"."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Shri1./Smt.\n"+$F{parent}.getApplicantName() +",\n"+$F{parent}.getOwner().getAddress()+"."]]></textFieldExpression>
 			</textField>
 		</band>
-		<band height="78">
+		<band height="80">
 			<textField isStretchWithOverflow="true">
 				<reportElement x="0" y="30" width="555" height="48" uuid="d9ada7e9-755a-4e4a-aaab-6eea193e0e6f"/>
 				<textElement textAlignment="Justified"/>
-				<textFieldExpression><![CDATA["       Your application, dated "+DateUtils.toDefaultDateFormat($F{parent}.getApplicationDate())+" for occupancy certificate for "+$F{parent}.getServiceType().getDescription()+"  in "+ $P{ulbName} +" falling in "+$F{parent}.getSiteDetail().get(0).getLocationBoundary().getName()+" Locality,Revenue Ward "+$F{parent}.getSiteDetail().get(0).getAdminBoundary().getBoundaryNum()+",Electoral Ward "+$F{parent}.getSiteDetail().get(0).getElectionBoundary().getBoundaryNum()+",Re-Survey No."+$F{parent}.getSiteDetail().get(0).getReSurveyNumber()+",is rejected due the following reason(s),"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["       Your application, dated "+DateUtils.toDefaultDateFormat($F{applicationDate})+" for occupancy certificate for "+$P{serviceType}+"  in "+ $P{ulbName} +" falling in "+$P{village}+" Locality,Revenue Ward "+$P{revenueWard}+",Electoral Ward "+$P{electionWard}+",Re-Survey No."+$P{surveyNo}+",is rejected due the following reason(s),"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="12" width="555" height="19" uuid="bd9a4c63-8f75-42e2-ab92-b852ddc19032"/>

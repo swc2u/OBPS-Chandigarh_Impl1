@@ -109,6 +109,9 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+
 @Service
 @Transactional(readOnly = true)
 public class OCNoticeUtil {
@@ -154,7 +157,7 @@ public class OCNoticeUtil {
 
     public ReportOutput getReportOutput(OccupancyCertificate occupancyCertificate, OCNotice ocNotice,
             String ocrejectionfilename, String fileName, String ocRejectionNoticeType) throws IOException {
-        ReportOutput reportOutput = new ReportOutput();
+    	ReportOutput reportOutput = new ReportOutput();
         if (ocNotice == null || ocNotice.getNoticeCommon().getNoticeFileStore() == null) {
             final Map<String, Object> reportParams = buildParametersForOc(occupancyCertificate);
             reportParams.putAll(getUlbDetails());
@@ -259,12 +262,12 @@ public class OCNoticeUtil {
             reportParams.put("surveyNo", oc.getParent().getSiteDetail().get(0).getReSurveyNumber() == null
                     ? EMPTY
                     : oc.getParent().getSiteDetail().get(0).getReSurveyNumber());
-            reportParams.put("village", oc.getParent().getSiteDetail().get(0).getLocationBoundary() == null
+            reportParams.put("village", oc.getParent().getSiteDetail().get(0).getLocationBoundary()== null
                     ? EMPTY
                     : oc.getParent().getSiteDetail().get(0).getLocationBoundary().getName());
-            reportParams.put("revenueWard", oc.getParent().getSiteDetail().get(0).getAdminBoundary().getBoundaryNum() == null
-                    ? EMPTY
-                    : oc.getParent().getSiteDetail().get(0).getAdminBoundary().getBoundaryNum());
+//            reportParams.put("electoralWard", oc.getParent().getSiteDetail().get(0).getElectionBoundary() == null
+//                    ? EMPTY
+//                    : String.valueOf(oc.getParent().getSiteDetail().get(0).getElectionBoundary().getBoundaryNum()));
             reportParams.put("taluk",
                     oc.getParent().getSiteDetail().get(0).getPostalAddress() == null
                             || oc.getParent().getSiteDetail().get(0).getPostalAddress().getTaluk() == null
