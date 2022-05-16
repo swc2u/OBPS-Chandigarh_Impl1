@@ -590,16 +590,16 @@ public class OccupancyCertificateFeeService {
 		return totalAmount;
 	}
 
-	private BigDecimal getTotalAmountForGlazingVerandahForSCO(Plan ocPlan) {
-		BigDecimal totalAmount = BigDecimal.ZERO;
-		BigDecimal Multiplier = BigDecimal.valueOf(200);
-		BigDecimal deviation = BigDecimal.ZERO;
-
-		deviation = ocPlan.getOcdataComparison().getOcdataComparison().get(OCDataComparison.Glazing_Of_Verandah)
-				.getDeviation();
-		totalAmount = deviation.multiply(Multiplier).setScale(2, BigDecimal.ROUND_HALF_UP);
-		return totalAmount;
-	}
+//	private BigDecimal getTotalAmountForGlazingVerandahForSCO(Plan ocPlan) {
+//		BigDecimal totalAmount = BigDecimal.ZERO;
+//		BigDecimal Multiplier = BigDecimal.valueOf(200);
+//		BigDecimal deviation = BigDecimal.ZERO;
+//
+//		deviation = ocPlan.getOcdataComparison().getOcdataComparison().get(OCDataComparison.Glazing_Of_Verandah)
+//				.getDeviation();
+//		totalAmount = deviation.multiply(Multiplier).setScale(2, BigDecimal.ROUND_HALF_UP);
+//		return totalAmount;
+//	}
 
 	public BigDecimal getTotalLabourCess(Plan bpaPlan, Plan ocPlan, OccupancyTypeHelper mostRestrictiveFarHelper) {
 		BigDecimal totalAmount = BigDecimal.ZERO;

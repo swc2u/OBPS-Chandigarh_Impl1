@@ -89,6 +89,7 @@ import static org.egov.bpa.utils.BpaConstants.WF_NEW_STATE;
 import static org.egov.bpa.utils.BpaConstants.WF_REJECT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_REJECT_STATE;
 import static org.egov.bpa.utils.BpaConstants.WF_REVERT_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.WF_REVERT_TO_PREVIOUS_REVIEWER_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_SAVE_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_TS_INSPECTION_INITIATED;
 import static org.egov.bpa.utils.BpaConstants.WF_FORWARD_BUTTON;
@@ -98,6 +99,8 @@ import static org.egov.bpa.utils.BpaConstants.WF_BA_CHECK_NOC_UPDATION;
 import static org.egov.bpa.utils.BpaConstants.WF_PERMIT_FEE_COLL_PENDING;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_AE_APPROVAL;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_SDO_APPROVAL;
+import static org.egov.bpa.utils.BpaConstants.WF_BA_VARIFICATION_INITIATED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_TYPE_MEDIUMRISK;
 import static org.egov.bpa.utils.BpaConstants.REJECTION_INITIATED;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_NOC_UPDATION_IN_PROGRESS;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_FINAL_APPROVAL_PROCESS_INITIATED;
@@ -455,7 +458,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
                     .getPositionById(bpaWorkFlowService.getTownSurveyorInspnInitiator(bpaApplication.getStateHistory(),
                             bpaApplication.getCurrentState()))
                     .getId();
-        } else if (WF_REVERT_BUTTON.equalsIgnoreCase(workFlowAction)) {
+        } else if (WF_REVERT_BUTTON.equalsIgnoreCase(workFlowAction) || WF_REVERT_TO_PREVIOUS_REVIEWER_BUTTON.equalsIgnoreCase(workFlowAction)) {
             pos = bpaApplication.getCurrentState().getPreviousOwner();
             approvalPosition = bpaApplication.getCurrentState().getPreviousOwner().getId();
         } else if (FWDINGTOLPINITIATORPENDING.equalsIgnoreCase(bpaApplication.getState().getNextAction())) {
@@ -990,7 +993,8 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         if (WF_BA_CHECK_NOC_UPDATION.equals(application.getCurrentState().getNextAction())
                 || WF_PERMIT_FEE_COLL_PENDING.equalsIgnoreCase(application.getCurrentState().getNextAction())
                 	|| WF_BA_AE_APPROVAL.equalsIgnoreCase(application.getCurrentState().getNextAction())
-                		|| WF_BA_SDO_APPROVAL.equalsIgnoreCase(application.getCurrentState().getNextAction())) {
+                		|| WF_BA_SDO_APPROVAL.equalsIgnoreCase(application.getCurrentState().getNextAction())
+                			|| (APPLICATION_TYPE_MEDIUMRISK.equalsIgnoreCase(application.getApplicationType().getName()) && WF_BA_VARIFICATION_INITIATED.equalsIgnoreCase(application.getCurrentState().getNextAction()))) {
         	model.addAttribute("showRejectionReasons", true);
 
             List<ChecklistServiceTypeMapping> additionalRejectionReasonList = checklistServiceTypeService

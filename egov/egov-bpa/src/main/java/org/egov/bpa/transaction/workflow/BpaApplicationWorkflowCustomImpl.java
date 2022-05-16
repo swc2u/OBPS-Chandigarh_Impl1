@@ -349,7 +349,7 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 			Assignment approverAssignment = bpaWorkFlowService.getApproverAssignment(pos);
 			if (approverAssignment == null)
 				approverAssignment = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(), new Date()).get(0);
-			if (BpaConstants.WF_REVERT_BUTTON.equalsIgnoreCase(workFlowAction)) {
+			if (BpaConstants.WF_REVERT_BUTTON.equalsIgnoreCase(workFlowAction) || BpaConstants.WF_REVERT_TO_PREVIOUS_REVIEWER_BUTTON.equalsIgnoreCase(workFlowAction)) {
 				application.setSentToPreviousOwner(true);
 				pos = application.getCurrentState().getPreviousOwner();
 				wfmatrix = workFlowMatrixService.getWorkFlowObjectbyId(bpaWorkFlowService

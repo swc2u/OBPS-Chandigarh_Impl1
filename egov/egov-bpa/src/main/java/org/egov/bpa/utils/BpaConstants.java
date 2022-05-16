@@ -574,6 +574,7 @@ public class BpaConstants {
 	public static final String WF_LBE_SUBMIT_BUTTON = "Submit";
 	public static final String WF_PAY_ONLINE_BUTTON = "Pay Online";
 	public static final String WF_REVERT_BUTTON = "Revert";
+	public static final String WF_REVERT_TO_PREVIOUS_REVIEWER_BUTTON = "Revert To Previous Reviewer";
 	public static final String WF_SAVE_BUTTON = "Save";
 	public static final String WF_SEND_BUTTON = "Send";
 	public static final String WF_RESCHDLE_APPMNT_BUTTON = "Reschedule Appointment";

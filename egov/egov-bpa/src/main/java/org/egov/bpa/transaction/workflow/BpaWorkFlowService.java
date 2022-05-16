@@ -54,6 +54,8 @@ import static org.egov.bpa.utils.BpaConstants.ST_CODE_09;
 import static org.egov.bpa.utils.BpaConstants.ST_CODE_14;
 import static org.egov.bpa.utils.BpaConstants.ST_CODE_15;
 import static org.egov.bpa.utils.BpaConstants.WF_REVERT_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.WF_REVERT_TO_PREVIOUS_REVIEWER_BUTTON;
+
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -284,7 +286,8 @@ public class BpaWorkFlowService {
         else if (isTownSurveyorInspectionRequire)
             bpaStateInfo.setTsInitiatorPos(state.getOwnerPosition().getId());
 
-        if (!isBlank(workFlowAction) && WF_REVERT_BUTTON.equalsIgnoreCase(workFlowAction)
+        if (!isBlank(workFlowAction) && (WF_REVERT_BUTTON.equalsIgnoreCase(workFlowAction)
+        		|| WF_REVERT_TO_PREVIOUS_REVIEWER_BUTTON.equalsIgnoreCase(workFlowAction))
                 && !assignments.isEmpty() && assignments.get(0).getDesignation() != null) {
             bpaStateInfo.setRevertedBy("Reverted By " + securityUtils.getCurrentUser().getName() + " - "
                     + assignments.get(0).getDesignation().getName());
