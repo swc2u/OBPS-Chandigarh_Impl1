@@ -200,6 +200,9 @@ public class AdditionalFeature2 extends FeatureProcess {
 			}
 
 		}
+		if(!isParsent && DxfFileConstants.YES.equals(plan.getPlanInformation().getIsRule5Applicable())) {
+			plan.addError("RULE5", " Rule 5 polygon is mandatory");
+		}
 		if(isParsent)
 			plan.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 		else if(isApplicable) {
@@ -253,6 +256,11 @@ public class AdditionalFeature2 extends FeatureProcess {
 //			plan.setIsAdditionalFeeApplicable(true);// is required at time of fee calculation
 //		else if (isParsent)
 //			plan.addError("Addtional Fee", "Addtional fee layer is not allowed.");
+		
+		if(!isParsent && DxfFileConstants.YES.equals(plan.getPlanInformation().getIsAdditionalAreaApplicable()))
+		{
+			plan.addError("Additional Area", "Additional Area polygon is mandatory");
+		}
 		plan.setIsAdditionalFeeApplicable(true);// is required at time of fee calculation
 		plan.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 

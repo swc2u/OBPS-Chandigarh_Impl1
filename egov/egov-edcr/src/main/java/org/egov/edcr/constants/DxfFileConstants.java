@@ -87,6 +87,9 @@ public class DxfFileConstants {
 	public static final String NUMBER_OF_NON_STANDARD_GATES = "NUMBER_OF_NON_STANDARD_GATES";
 	public static final String NUMBER_OF_NICHES_ON_THE_COMMON_WALL = "NUMBER_OF_NICHES_ON_THE_COMMON_WALL";
 	public static final String AREA_OF_FALSE_CEILING = "AREA_OF_FALSE_CEILING";
+	public static final String IS_RULE_5_APPLICABLE = "IS_RULE_5_APPLICABLE";
+	public static final String IS_ADDITIONAL_AREA_APPLICABLE = "IS_ADDITIONAL_AREA_APPLICABLE";
+	
 	
 
 	public static final String HOSPITAL_GOVERNMENT = "Government";

@@ -198,6 +198,24 @@ public class PlanService {
 		}catch (Exception e) {
 			pl.addError("DEMOLITION_AREA", "DEMOLITION_AREA is invalid in planinfo layer.");
 		}
+		
+		//IS_RULE_5_APPLICABLE mandatory
+		String isRule5Applicable = pl.getPlanInfoProperties().get(DxfFileConstants.IS_RULE_5_APPLICABLE);		
+		if(isRule5Applicable!=null && !DxfFileConstants.NA.equals(isRule5Applicable) && (DxfFileConstants.YES.equals(isRule5Applicable) || DxfFileConstants.NO.equals(isRule5Applicable))) {
+			pl.getPlanInformation().setIsRule5Applicable(isRule5Applicable);
+		} else {
+			pl.addError("IS_RULE_5_APPLICABLE", "IS_RULE_5_APPLICABLE is wrongly defined in plan info layer.");
+		}
+		
+		//IS_ADDITIONAL_AREA_APPLICABLE mandatory
+		String isAdditionalAreaApplicable = pl.getPlanInfoProperties().get(DxfFileConstants.IS_ADDITIONAL_AREA_APPLICABLE);				
+		if(isAdditionalAreaApplicable!=null && !DxfFileConstants.NA.equals(isAdditionalAreaApplicable) && (DxfFileConstants.YES.equals(isAdditionalAreaApplicable) || DxfFileConstants.NO.equals(isAdditionalAreaApplicable))) {
+			pl.getPlanInformation().setIsAdditionalAreaApplicable(isAdditionalAreaApplicable);
+		} else {
+			pl.addError("IS_ADDITIONAL_AREA_APPLICABLE", "IS_ADDITIONAL_AREA_APPLICABLE is wrongly defined in plan info layer.");
+		}
+		
+		
 		if(DxfFileConstants.RURAL.equals(pl.getPlanInfoProperties().get(DxfFileConstants.ROOT_BOUNDARY_TYPE)))
 			pl.setRural(true);
 		else
