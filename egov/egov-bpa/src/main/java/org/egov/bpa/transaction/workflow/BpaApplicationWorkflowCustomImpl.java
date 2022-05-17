@@ -192,7 +192,7 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 					.withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos)
 					.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
 					.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
-		} else if (BpaConstants.WF_APPROVE_BUTTON.equalsIgnoreCase(workFlowAction)
+		} else if ((BpaConstants.WF_APPROVE_BUTTON.equalsIgnoreCase(workFlowAction) || BpaConstants.WF_FORWARD_FOR_PAYMENT_BUTTON.equalsIgnoreCase(workFlowAction))
 				&& (BpaConstants.APPLICATION_STATUS_APPROVED.equalsIgnoreCase(application.getStatus().getCode())
 						|| BpaConstants.APPLICATION_STATUS_NOCUPDATED
 								.equalsIgnoreCase(application.getStatus().getCode()))) {

@@ -79,6 +79,7 @@ import static org.egov.bpa.utils.BpaConstants.GENERATEREVOCATIONNOTICE;
 import static org.egov.bpa.utils.BpaConstants.LOWRISK;
 import static org.egov.bpa.utils.BpaConstants.MESSAGE;
 import static org.egov.bpa.utils.BpaConstants.WF_APPROVE_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.WF_FORWARD_FOR_PAYMENT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_CANCELAPPLICATION_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_CREATED_STATE;
 import static org.egov.bpa.utils.BpaConstants.WF_DOC_SCRUTINY_SCHEDLE_PEND;
@@ -417,7 +418,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
             }
         }
 
-        if (WF_APPROVE_BUTTON.equalsIgnoreCase(workFlowAction)
+        if ((WF_APPROVE_BUTTON.equalsIgnoreCase(workFlowAction) || WF_FORWARD_FOR_PAYMENT_BUTTON.equalsIgnoreCase(workFlowAction))
                 && feeCalculationMode.equalsIgnoreCase(BpaConstants.MANUAL)) {
             List<PermitFee> permitFeeList = permitFeeService
                     .getPermitFeeListByApplicationId(bpaApplication.getId());
@@ -547,13 +548,13 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
             message = getMessageOnRejectionInitiation(approvalComent, bpaAppln, user, MSG_REJECT_FORWARD_REGISTRATION, pos);
         else if (WF_SAVE_BUTTON.equalsIgnoreCase(workFlowAction))
             message = messageSource.getMessage("msg.noc.update.success", new String[] {}, LocaleContextHolder.getLocale());
-        else if (WF_APPROVE_BUTTON.equalsIgnoreCase(workFlowAction) && ! bpaAppln.getApplicationType().getName().equals(BpaConstants.LOWRISK))
+        else if ((WF_APPROVE_BUTTON.equalsIgnoreCase(workFlowAction) || WF_FORWARD_FOR_PAYMENT_BUTTON.equalsIgnoreCase(workFlowAction)) && ! bpaAppln.getApplicationType().getName().equals(BpaConstants.LOWRISK))
             message = messageSource.getMessage(MSG_APPROVE_FORWARD_REGISTRATION, new String[] {
                     user == null ? ""
                             : user.getUsername().concat("~")
                                     .concat(getDesinationNameByPosition(pos)),
                     bpaAppln.getApplicationNumber() }, LocaleContextHolder.getLocale());
-        else if (WF_APPROVE_BUTTON.equalsIgnoreCase(workFlowAction) && bpaAppln.getApplicationType().getName().equals(BpaConstants.LOWRISK))
+        else if ((WF_APPROVE_BUTTON.equalsIgnoreCase(workFlowAction) || WF_FORWARD_FOR_PAYMENT_BUTTON.equalsIgnoreCase(workFlowAction)) && bpaAppln.getApplicationType().getName().equals(BpaConstants.LOWRISK))
             message = messageSource.getMessage("msg.nocapplcn.apprvd.succes", new String[] {
                     user == null ? ""
                             : bpaAppln.getApplicationNumber() }, LocaleContextHolder.getLocale());
@@ -811,7 +812,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         if (!application.getApplicationType().getName().equals(BpaConstants.LOWRISK)
                 && ((APPLICATION_STATUS_APPROVED.equals(application.getStatus().getCode())
                         || APPLICATION_STATUS_DIGI_SIGNED.equalsIgnoreCase(application.getStatus().getCode()))
-                        || (!actions.isEmpty() && actions.contains(WF_APPROVE_BUTTON))))
+                        || (!actions.isEmpty() && (actions.contains(WF_APPROVE_BUTTON) || actions.contains(WF_FORWARD_FOR_PAYMENT_BUTTON)))))
             buildApplicationPermitConditions(application, model);
 
         List<PermitNocDocument> nocDocStatus = application.getPermitNocDocuments().stream()

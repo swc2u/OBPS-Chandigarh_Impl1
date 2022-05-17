@@ -476,6 +476,33 @@ jQuery(document)
                                 e.preventDefault();
                             }
                             return false;
+                        } else if (action == 'Forward For Payment') {
+                            if (validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .dialog({
+                                        message: $('#forwardToPayment').val(),
+                                        buttons: {
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary',
+                                                callback: function (result) {
+                                                    $('#viewBpaApplicationForm').trigger('submit');
+                                                }
+                                            },
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger',
+                                                callback: function (result) {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                }
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
                         } else if (action == 'Forward') {
                             if (validateOnApproveAndForward(validator, action) && validateAdditionalConditionsOnFwd()) {
                                 bootbox
