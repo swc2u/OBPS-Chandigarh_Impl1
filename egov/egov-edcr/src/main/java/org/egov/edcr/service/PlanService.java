@@ -353,6 +353,12 @@ public class PlanService {
 			} else {
 				pl.addError("AREA_OF_FALSE_CEILING", "AREA_OF_FALSE_CEILING is invalid in planinfo layer.");
 			}
+			String excessCoverageBeyondBuildUp = pl.getPlanInfoProperties().get(DxfFileConstants.EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA);
+			if(excessCoverageBeyondBuildUp!=null && ! DxfFileConstants.NA.equals(excessCoverageBeyondBuildUp)) {
+				pl.getPlanInformation().setExcessCoverageBeyondBuildUp(new BigDecimal(excessCoverageBeyondBuildUp));				
+			} else {
+				pl.addError("EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA", "EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA is invalid in planifo layer");
+			}
 		}
 	}
 	
