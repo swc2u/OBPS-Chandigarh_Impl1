@@ -79,7 +79,7 @@
 							<div class="col s12 m4 video-play">
 								<video width="320" height="240" controls>
 									<source
-										src="https://chstage.blob.core.windows.net/assets/OBPS/Architects/Videos/Drawing%20Scrutiny%20and%20Application%20Submission%20by%20Architect.mp4"
+										src="/egi/resources/guide/assets/videos/Drawing%20Scrutiny%20and%20Application%20Submission%20by%20Architect.mp4"
 										type="video/mp4">
 								</video>
 								<p class="landingpage-card-icon-description">1.Drawing Scrutiny & Application Submission by Architect</p>
@@ -127,13 +127,16 @@
 			<ul class="tutorial-list color-black" >
 				
 				<li class="bpa-common-text tutorial-item">
-					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/User Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">User Manual for Architects</span></a>
+					<a href="/egi/resources/guide/assets/docs/User Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">User Manual for Architects</span></a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
-					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/User Manual for Citizens.pdf" target="_blank"><span class = "color-black bpa-common-text">User Manual for Citizens</span></a>
+					<a href="/egi/resources/guide/assets/docs/User Manual for Citizens.pdf" target="_blank"><span class = "color-black bpa-common-text">User Manual for Citizens</span></a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
-					<a href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/Drawing Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">Drawing Manual for Architects</span></a>
+					<a href="/egi/resources/guide/assets/docs/Drawing Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">Drawing Manual for Architects</span></a>
+				</li>
+				<li class="bpa-common-text tutorial-item">
+					<a href="/egi/resources/guide/assets/docs/Drawing Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">Rural User Manual</span></a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
 					<a href="/egi/resources/guide/bpaHelpDocument.jsp" target="_blank"><span class = "color-black bpa-common-text">Training Videos</span></a>

@@ -159,6 +159,9 @@
 					<a href="/egi/resources/guide/assets/docs/Drawing Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">Drawing Manual for Architects</span></a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
+					<a href="/egi/resources/guide/assets/docs/Drawing Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">Rural User Manual</span></a>
+				</li>
+				<li class="bpa-common-text tutorial-item">
 					<a href="/egi/resources/guide/bpaHelpDocument.jsp" target="_blank"><span class = "color-black bpa-common-text">Training Videos</span></a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
