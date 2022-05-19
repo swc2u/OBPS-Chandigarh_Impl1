@@ -79,6 +79,7 @@ import static org.egov.bpa.utils.BpaConstants.GENERATEREVOCATIONNOTICE;
 import static org.egov.bpa.utils.BpaConstants.LOWRISK;
 import static org.egov.bpa.utils.BpaConstants.MESSAGE;
 import static org.egov.bpa.utils.BpaConstants.WF_APPROVE_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.WF_FORWARD_FOR_PAYMENT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_CANCELAPPLICATION_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_CREATED_STATE;
 import static org.egov.bpa.utils.BpaConstants.WF_DOC_SCRUTINY_SCHEDLE_PEND;
@@ -89,6 +90,7 @@ import static org.egov.bpa.utils.BpaConstants.WF_NEW_STATE;
 import static org.egov.bpa.utils.BpaConstants.WF_REJECT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_REJECT_STATE;
 import static org.egov.bpa.utils.BpaConstants.WF_REVERT_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.WF_REVERT_TO_PREVIOUS_REVIEWER_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_SAVE_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_TS_INSPECTION_INITIATED;
 import static org.egov.bpa.utils.BpaConstants.WF_FORWARD_BUTTON;
@@ -98,6 +100,8 @@ import static org.egov.bpa.utils.BpaConstants.WF_BA_CHECK_NOC_UPDATION;
 import static org.egov.bpa.utils.BpaConstants.WF_PERMIT_FEE_COLL_PENDING;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_AE_APPROVAL;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_SDO_APPROVAL;
+import static org.egov.bpa.utils.BpaConstants.WF_BA_VARIFICATION_INITIATED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_TYPE_MEDIUMRISK;
 import static org.egov.bpa.utils.BpaConstants.REJECTION_INITIATED;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_NOC_UPDATION_IN_PROGRESS;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_FINAL_APPROVAL_PROCESS_INITIATED;
@@ -414,7 +418,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
             }
         }
 
-        if (WF_APPROVE_BUTTON.equalsIgnoreCase(workFlowAction)
+        if ((WF_APPROVE_BUTTON.equalsIgnoreCase(workFlowAction) || WF_FORWARD_FOR_PAYMENT_BUTTON.equalsIgnoreCase(workFlowAction))
                 && feeCalculationMode.equalsIgnoreCase(BpaConstants.MANUAL)) {
             List<PermitFee> permitFeeList = permitFeeService
                     .getPermitFeeListByApplicationId(bpaApplication.getId());
@@ -455,7 +459,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
                     .getPositionById(bpaWorkFlowService.getTownSurveyorInspnInitiator(bpaApplication.getStateHistory(),
                             bpaApplication.getCurrentState()))
                     .getId();
-        } else if (WF_REVERT_BUTTON.equalsIgnoreCase(workFlowAction)) {
+        } else if (WF_REVERT_BUTTON.equalsIgnoreCase(workFlowAction) || WF_REVERT_TO_PREVIOUS_REVIEWER_BUTTON.equalsIgnoreCase(workFlowAction)) {
             pos = bpaApplication.getCurrentState().getPreviousOwner();
             approvalPosition = bpaApplication.getCurrentState().getPreviousOwner().getId();
         } else if (FWDINGTOLPINITIATORPENDING.equalsIgnoreCase(bpaApplication.getState().getNextAction())) {
@@ -544,13 +548,13 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
             message = getMessageOnRejectionInitiation(approvalComent, bpaAppln, user, MSG_REJECT_FORWARD_REGISTRATION, pos);
         else if (WF_SAVE_BUTTON.equalsIgnoreCase(workFlowAction))
             message = messageSource.getMessage("msg.noc.update.success", new String[] {}, LocaleContextHolder.getLocale());
-        else if (WF_APPROVE_BUTTON.equalsIgnoreCase(workFlowAction) && ! bpaAppln.getApplicationType().getName().equals(BpaConstants.LOWRISK))
+        else if ((WF_APPROVE_BUTTON.equalsIgnoreCase(workFlowAction) || WF_FORWARD_FOR_PAYMENT_BUTTON.equalsIgnoreCase(workFlowAction)) && ! bpaAppln.getApplicationType().getName().equals(BpaConstants.LOWRISK))
             message = messageSource.getMessage(MSG_APPROVE_FORWARD_REGISTRATION, new String[] {
                     user == null ? ""
                             : user.getUsername().concat("~")
                                     .concat(getDesinationNameByPosition(pos)),
                     bpaAppln.getApplicationNumber() }, LocaleContextHolder.getLocale());
-        else if (WF_APPROVE_BUTTON.equalsIgnoreCase(workFlowAction) && bpaAppln.getApplicationType().getName().equals(BpaConstants.LOWRISK))
+        else if ((WF_APPROVE_BUTTON.equalsIgnoreCase(workFlowAction) || WF_FORWARD_FOR_PAYMENT_BUTTON.equalsIgnoreCase(workFlowAction)) && bpaAppln.getApplicationType().getName().equals(BpaConstants.LOWRISK))
             message = messageSource.getMessage("msg.nocapplcn.apprvd.succes", new String[] {
                     user == null ? ""
                             : bpaAppln.getApplicationNumber() }, LocaleContextHolder.getLocale());
@@ -808,7 +812,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         if (!application.getApplicationType().getName().equals(BpaConstants.LOWRISK)
                 && ((APPLICATION_STATUS_APPROVED.equals(application.getStatus().getCode())
                         || APPLICATION_STATUS_DIGI_SIGNED.equalsIgnoreCase(application.getStatus().getCode()))
-                        || (!actions.isEmpty() && actions.contains(WF_APPROVE_BUTTON))))
+                        || (!actions.isEmpty() && (actions.contains(WF_APPROVE_BUTTON) || actions.contains(WF_FORWARD_FOR_PAYMENT_BUTTON)))))
             buildApplicationPermitConditions(application, model);
 
         List<PermitNocDocument> nocDocStatus = application.getPermitNocDocuments().stream()
@@ -990,7 +994,8 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         if (WF_BA_CHECK_NOC_UPDATION.equals(application.getCurrentState().getNextAction())
                 || WF_PERMIT_FEE_COLL_PENDING.equalsIgnoreCase(application.getCurrentState().getNextAction())
                 	|| WF_BA_AE_APPROVAL.equalsIgnoreCase(application.getCurrentState().getNextAction())
-                		|| WF_BA_SDO_APPROVAL.equalsIgnoreCase(application.getCurrentState().getNextAction())) {
+                		|| WF_BA_SDO_APPROVAL.equalsIgnoreCase(application.getCurrentState().getNextAction())
+                			|| (APPLICATION_TYPE_MEDIUMRISK.equalsIgnoreCase(application.getApplicationType().getName()) && WF_BA_VARIFICATION_INITIATED.equalsIgnoreCase(application.getCurrentState().getNextAction()))) {
         	model.addAttribute("showRejectionReasons", true);
 
             List<ChecklistServiceTypeMapping> additionalRejectionReasonList = checklistServiceTypeService

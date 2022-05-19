@@ -331,7 +331,7 @@ jQuery(document)
                             }
                             return false;
                         } else if (action === 'Generate Rejection Notice') {
-                            if (validateOnApproveAndForward(validator, action) && validateOnReject(false)) {
+                            if (validateOnReject(false) && validateGenerateRejectionNotice()) {
                                 bootbox
                                     .dialog({
                                         message: $('#generateRejectNotice').val(),
@@ -441,6 +441,14 @@ function validateForm(validator) {
     }
 }
 
+function validateGenerateRejectionNotice() {
+	$('#approvalDepartment').removeAttr('required');
+    $('#approvalDesignation').removeAttr('required');
+    $('#approvalPosition').removeAttr('required');
+    return true;
+	}
+	
+
 
 function validateOnApproveAndForward(validator, action) {
     validateWorkFlowApprover(action);
@@ -449,7 +457,12 @@ function validateOnApproveAndForward(validator, action) {
         $('#approvalDesignation').removeAttr('required');
         $('#approvalPosition').removeAttr('required');
         return true;
-    } else {
+    } else if(action === 'Generate Rejection Notice'){
+		$('#approvalDepartment').removeAttr('required');
+        $('#approvalDesignation').removeAttr('required');
+        $('#approvalPosition').removeAttr('required');
+        return true;
+	} else {
         return validateForm(validator);
     }
 }

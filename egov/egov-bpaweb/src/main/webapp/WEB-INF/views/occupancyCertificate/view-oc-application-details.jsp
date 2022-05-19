@@ -68,6 +68,18 @@
 				value="${occupancyCertificate.eDcrNumber}">
 			<c:out value="${occupancyCertificate.eDcrNumber}" default="N/A"></c:out>
 		</div>
+		<div class="col-sm-3 add-margin view-content">
+			<input type="hidden" id="eDcrNumber" name="eDcrNumber"
+				value="${occupancyCertificate.eDcrNumber}">
+		</div>
+		<div class="col-sm-3 add-margin view-content">
+			<input type="hidden" id="planPermissionNumber" name="planPermissionNumber"
+				value="${occupancyCertificate.parent.planPermissionNumber}">
+		</div>
+		<div class="col-sm-3 add-margin view-content">
+			<input type="hidden" id="serviceTypeDesc" name="serviceTypeDesc"
+				value="${occupancyCertificate.parent.serviceType.description}">
+		</div>
 		<div class="col-sm-6 add-margin view-content">
 			<a target="popup" class="btn btn-primary"
 				onclick="window.open('/bpa/application/citizen/occupancy-certificate/comparison-report/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;"

@@ -50,13 +50,13 @@ var atkGenDocs = [
 	"DOCUMENTATION-01","DOCUMENTATION-02","DOCUMENTATION-03","DOCUMENTATION-10","DOCUMENTATION-11","DOCUMENTATION-12","DOCUMENTATION-13",
 	"DOCUMENTATION-14","DOCUMENTATION-15","DOCUMENTATION-16","DOCUMENTATION-18","DOCUMENTATION-19","DOCUMENTATION-06","DOCUMENTATION-07",
 	"DOCUMENTATION-08","DOCUMENTATION-09","DOCUMENTATION-17","DOCUMENTATION-22","DOCUMENTATION-34","DOCUMENTATION-23","DOCUMENTATION-24",
-	"DOCUMENTATION-25","DOCUMENTATION-26","DOCUMENTATION-27"
+	"DOCUMENTATION-25","DOCUMENTATION-26","DOCUMENTATION-27","DOCUMENTATION-35","DOCUMENTATION-36"
 ];
 
 var btkGenDocs = [
 	"DOCUMENTATION-04","DOCUMENTATION-05","DOCUMENTATION-10","DOCUMENTATION-11","DOCUMENTATION-12","DOCUMENTATION-13","DOCUMENTATION-14",
 	"DOCUMENTATION-15","DOCUMENTATION-16","DOCUMENTATION-21","DOCUMENTATION-06","DOCUMENTATION-07","DOCUMENTATION-08","DOCUMENTATION-09",
-	"DOCUMENTATION-17","DOCUMENTATION-22","DOCUMENTATION-26","DOCUMENTATION-27"
+	"DOCUMENTATION-17","DOCUMENTATION-22","DOCUMENTATION-26","DOCUMENTATION-27","DOCUMENTATION-35","DOCUMENTATION-36"
 ];
 
 var ruralDocs = [
@@ -396,7 +396,34 @@ jQuery(document)
                             }
                             return false;
                         } else if (action == 'Revert') {
-                            if (validateOnRevert() && validateForm(validator)) {
+                            if (validateOnRevert() && validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .dialog({
+                                        message: $('#sendBackApplnPreOfficial').val(),
+                                        buttons: {
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary',
+                                                callback: function (result) {
+                                                    $('#viewBpaApplicationForm').trigger('submit');
+                                                }
+                                            },
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger',
+                                                callback: function (result) {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                }
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        } else if (action == 'Revert To Previous Reviewer') {
+                            if (validateOnRevert() && validateOnApproveAndForward(validator, action)) {
                                 bootbox
                                     .dialog({
                                         message: $('#sendBackApplnPreOfficial').val(),
@@ -427,6 +454,33 @@ jQuery(document)
                                 bootbox
                                     .dialog({
                                         message: $('#approveAppln').val(),
+                                        buttons: {
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary',
+                                                callback: function (result) {
+                                                    $('#viewBpaApplicationForm').trigger('submit');
+                                                }
+                                            },
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger',
+                                                callback: function (result) {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                }
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        } else if (action == 'Forward For Payment') {
+                            if (validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .dialog({
+                                        message: $('#forwardToPayment').val(),
                                         buttons: {
                                             'confirm': {
                                                 label: 'Yes',
@@ -686,7 +740,12 @@ function validateOnApproveAndForward(validator, action) {
         $('#approvalDesignation').removeAttr('required');
         $('#approvalPosition').removeAttr('required');
         return true;
-    } else {
+    } else if(action == 'Revert' || action == 'Generate Rejection Notice' || action == 'Revert To Previous Reviewer'){
+		$('#approvalDepartment').removeAttr('required');
+        $('#approvalDesignation').removeAttr('required');
+        $('#approvalPosition').removeAttr('required');
+        return true;
+	} else {
         var serviceTypeName = $("#serviceType").val();
         if ($('#showPermitConditions').val() && serviceTypeName != 'Tower Construction'
             && serviceTypeName != 'Pole Structures') {

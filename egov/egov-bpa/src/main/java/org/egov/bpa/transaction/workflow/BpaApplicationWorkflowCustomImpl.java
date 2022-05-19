@@ -192,7 +192,7 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 					.withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos)
 					.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
 					.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
-		} else if (BpaConstants.WF_APPROVE_BUTTON.equalsIgnoreCase(workFlowAction)
+		} else if ((BpaConstants.WF_APPROVE_BUTTON.equalsIgnoreCase(workFlowAction) || BpaConstants.WF_FORWARD_FOR_PAYMENT_BUTTON.equalsIgnoreCase(workFlowAction))
 				&& (BpaConstants.APPLICATION_STATUS_APPROVED.equalsIgnoreCase(application.getStatus().getCode())
 						|| BpaConstants.APPLICATION_STATUS_NOCUPDATED
 								.equalsIgnoreCase(application.getStatus().getCode()))) {
@@ -349,7 +349,7 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 			Assignment approverAssignment = bpaWorkFlowService.getApproverAssignment(pos);
 			if (approverAssignment == null)
 				approverAssignment = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(), new Date()).get(0);
-			if (BpaConstants.WF_REVERT_BUTTON.equalsIgnoreCase(workFlowAction)) {
+			if (BpaConstants.WF_REVERT_BUTTON.equalsIgnoreCase(workFlowAction) || BpaConstants.WF_REVERT_TO_PREVIOUS_REVIEWER_BUTTON.equalsIgnoreCase(workFlowAction)) {
 				application.setSentToPreviousOwner(true);
 				pos = application.getCurrentState().getPreviousOwner();
 				wfmatrix = workFlowMatrixService.getWorkFlowObjectbyId(bpaWorkFlowService

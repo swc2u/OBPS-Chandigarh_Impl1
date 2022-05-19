@@ -261,7 +261,10 @@ public class Parking extends FeatureProcess {
               
               if(DxfFileConstants.F_SCO.equals(mostRestrictiveOccupancy.getSubtype().getCode()))//is not applicable because parking area is  excluded
             	  return;
-                
+              
+              if(DxfFileConstants.F_B.equals(mostRestrictiveOccupancy.getSubtype().getCode()))//is not applicable because parking area is  excluded
+            	  return;
+            		  
         BigDecimal totalBuiltupArea = pl.getOccupancies().stream().map(Occupancy::getBuiltUpArea)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal coverParkingArea = BigDecimal.ZERO;

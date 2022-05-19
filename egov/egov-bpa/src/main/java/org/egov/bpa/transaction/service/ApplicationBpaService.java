@@ -63,6 +63,7 @@ import static org.egov.bpa.utils.BpaConstants.ROOF_CONVERSION;
 import static org.egov.bpa.utils.BpaConstants.SHUTTER_DOOR_CONVERSION;
 import static org.egov.bpa.utils.BpaConstants.WELL;
 import static org.egov.bpa.utils.BpaConstants.WF_APPROVE_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.WF_FORWARD_FOR_PAYMENT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_CREATED_STATE;
 import static org.egov.bpa.utils.BpaConstants.WF_INITIATE_REJECTION_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_LBE_SUBMIT_BUTTON;
@@ -599,7 +600,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
                 //&& APPLICATION_STATUS_REGISTERED.equalsIgnoreCase(application.getStatus().getCode())
         		//&& BpaConstants.APPLICATION_STATUS_RECORD_APPROVED.equalsIgnoreCase(application.getState().getValue())
                 //&& BpaConstants.APPROVED.equalsIgnoreCase(application.getStatus().getCode())
-        		&& WF_APPROVE_BUTTON.equals(workFlowAction)
+        		&& (WF_APPROVE_BUTTON.equals(workFlowAction) || WF_FORWARD_FOR_PAYMENT_BUTTON.equals(workFlowAction))
         	) {
             String feeCalculationMode = bpaUtils.getBPAFeeCalculationMode();
             LOG.info("1 feeCalculationMode "+feeCalculationMode);
@@ -617,7 +618,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
                 LOG.info("2 "+permitFee.getApplication().getDemand());
             }
         }
-        if (WF_APPROVE_BUTTON.equals(workFlowAction)) {
+        if (WF_APPROVE_BUTTON.equals(workFlowAction) || WF_FORWARD_FOR_PAYMENT_BUTTON.equals(workFlowAction)) {
 
             if (application.getPlanPermissionNumber() == null) {
                 application.setPlanPermissionNumber(generatePlanPermissionNumber(application));
@@ -637,7 +638,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         }
         if (APPLICATION_STATUS_APPROVED.equals(application.getStatus().getCode())
                 || APPLICATION_STATUS_DIGI_SIGNED.equalsIgnoreCase(application.getStatus().getCode())
-                || WF_APPROVE_BUTTON.equals(workFlowAction)) {
+                || (WF_APPROVE_BUTTON.equals(workFlowAction) || WF_FORWARD_FOR_PAYMENT_BUTTON.equals(workFlowAction))) {
             buildPermitConditions(application);
         }
         if (application.getFiles() != null && application.getFiles().length > 0) {
@@ -649,7 +650,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         if (WF_REJECT_BUTTON.equalsIgnoreCase(workFlowAction)
                 || WF_INITIATE_REJECTION_BUTTON.equalsIgnoreCase(workFlowAction)
                 || APPLICATION_STATUS_REJECTED.equalsIgnoreCase(application.getStatus().getCode())
-                || (!WF_APPROVE_BUTTON.equals(workFlowAction)
+                || ((!WF_APPROVE_BUTTON.equals(workFlowAction) || !WF_FORWARD_FOR_PAYMENT_BUTTON.equals(workFlowAction))
                         && APPLICATION_STATUS_NOCUPDATED.equals(application.getStatus().getCode()))
                 || (GENERATEREVOCATIONNOTICE.equalsIgnoreCase(workFlowAction)
                         && application.getApplicationType().getName().equals(LOWRISK))) {

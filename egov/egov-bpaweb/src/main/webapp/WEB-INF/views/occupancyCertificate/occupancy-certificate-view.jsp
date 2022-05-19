@@ -139,10 +139,8 @@
 					<li><a data-toggle="tab" href="#view-lp" data-tabidx=7><spring:message
 								code='lbl.lp.details' /></a></li>
 				</c:if>
-				<c:if test="${not empty occupancyCertificate.occupancyFee}">
 					<li><a data-toggle="tab" href="#view-fee" data-tabidx=8><spring:message
 								code='lbl.ocfee.details' /></a></li>
-				</c:if>
 			</ul>
 			<div class="tab-content">
 				<div id="application-info" class="tab-pane fade in active">
@@ -255,13 +253,11 @@
 						</div>
 					</div>
 				</c:if>
-				<c:if test="${not empty occupancyCertificate.occupancyFee}">
-					<div id="view-fee" class="tab-pane fade">
-						<div class="panel panel-primary" data-collapsed="0">
-							<jsp:include page="view-oc-fee-details.jsp"></jsp:include>
-						</div>
-					</div>
-				</c:if>
+				<div id="view-fee" class="tab-pane fade">
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="./oc-register-fee-details.jsp"></jsp:include>
+				</div>
+				</div>
 			</div>
 
 			<div class="text-center">
@@ -468,3 +464,5 @@
 	src="<cdn:url value='/resources/js/app/occupancy-certificate/oc-edcr-helper.js?rnd=${app_release_no}'/>"></script>
 <script
 	src="<cdn:url value='/resources/js/app/occupancy-certificate/occupancy-certificate-view.js?rnd=${app_release_no}'/>"></script>
+<script 
+	src="<cdn:url value='/resources/js/app/oc-register-fee-details.js?rnd=${app_release_no}'/>"></script>		

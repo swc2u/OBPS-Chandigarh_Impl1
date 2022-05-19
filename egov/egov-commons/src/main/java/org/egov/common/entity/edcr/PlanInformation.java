@@ -297,6 +297,38 @@ public class PlanInformation implements Serializable {
     //IS_DPC_CERTIFICATE_AVAILABLE
     private String isDPCCertificateAvailable = NA;
     
+    //IS_RULE_5_APPLICABLE
+    private transient String isRule5Applicable=NA;
+    
+    //IS_ADDITIONAL_AREA_APPLICABLE
+    private transient String isAdditionalAreaApplicable=NA;
+    
+    //EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA
+    private BigDecimal excessCoverageBeyondBuildUp = BigDecimal.ZERO;
+
+	public BigDecimal getExcessCoverageBeyondBuildUp() {
+		return excessCoverageBeyondBuildUp;
+	}
+
+	public void setExcessCoverageBeyondBuildUp(BigDecimal excessCoverageBeyondBuildUp) {
+		this.excessCoverageBeyondBuildUp = excessCoverageBeyondBuildUp;
+	}
+
+	public String getIsRule5Applicable() {
+		return isRule5Applicable;
+	}
+
+	public void setIsRule5Applicable(String isRule5Applicable) {
+		this.isRule5Applicable = isRule5Applicable;
+	}
+
+	public String getIsAdditionalAreaApplicable() {
+		return isAdditionalAreaApplicable;
+	}
+
+	public void setIsAdditionalAreaApplicable(String isAdditionalAreaApplicable) {
+		this.isAdditionalAreaApplicable = isAdditionalAreaApplicable;
+	}
 
 	public String getIsDPCCertificateAvailable() {
 		return isDPCCertificateAvailable;

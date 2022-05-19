@@ -59,6 +59,7 @@ import org.apache.log4j.Logger;
 import org.egov.common.entity.edcr.Block;
 import org.egov.common.entity.edcr.Floor;
 import org.egov.common.entity.edcr.Measurement;
+import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.RoomHeight;
@@ -85,6 +86,13 @@ public class BathRoomWaterClosets extends FeatureProcess {
 	@Override
 	public Plan process(Plan pl) {
 
+		OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
+				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+				: null;
+		
+		if (mostRestrictiveFarHelper==null || mostRestrictiveFarHelper.getSubtype() ==null || DxfFileConstants.F_SCO.equals(mostRestrictiveFarHelper.getSubtype().getCode()))
+			return pl;
+		
 		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
 		scrutinyDetail.setKey("Common_Toilet");
 		scrutinyDetail.addColumnHeading(1, RULE_NO);

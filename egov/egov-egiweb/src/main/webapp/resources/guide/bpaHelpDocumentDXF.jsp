@@ -82,7 +82,7 @@
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 services"
 					style="display: block;">
 					<a
-						href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/Drawings/MARLA_ALTERATION_1.dxf">
+						href="/egi/resources/guide/assets/drawings/MARLA_ALTERATION_1.dxf">
 						<div class="content a" style="height: 42px;">Marla
 							Alteration</div>
 					</a>
@@ -92,7 +92,7 @@
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 services"
 					style="display: block;">
 					<a
-						href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/Drawings/MARLA_RECONSTRUCTION_1.dxf">
+						href="/egi/resources/guide/assets/drawings/MARLA_RECONSTRUCTION_1.dxf">
 						<div class="content a" style="height: 42px;">Marla
 							Reconstruction 1</div>
 					</a>
@@ -102,7 +102,7 @@
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 services"
 					style="display: block;">
 					<a
-						href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/Drawings/MARLA_RECONSTRUCTION_2.dxf">
+						href="/egi/resources/guide/assets/drawings/MARLA_RECONSTRUCTION_2.dxf">
 						<div class="content a" style="height: 42px;">Marla
 							Reconstruction 2</div>
 					</a>
@@ -112,7 +112,7 @@
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 services"
 					style="display: block;">
 					<a
-						href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/Drawings/ONE_KANAL_RECONSTRUCTION_1.dxf">
+						href="/egi/resources/guide/assets/drawings/ONE_KANAL_RECONSTRUCTION_1.dxf">
 						<div class="content a" style="height: 42px;">One Kanal
 							Reconstruction</div>
 					</a>
@@ -122,7 +122,7 @@
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 services"
 					style="display: block;">
 					<a
-						href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/Drawings/ONE_KANAL_RECONSTRUCTION_BASEMENT.dxf">
+						href="/egi/resources/guide/assets/drawings/ONE_KANAL_RECONSTRUCTION_BASEMENT.dxf">
 						<div class="content a" style="height: 42px;">One Kanal
 							Reconstructions Basement</div>
 					</a>
@@ -132,7 +132,7 @@
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 services"
 					style="display: block;">
 					<a
-						href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/Drawings/Template_Staircase_V1.dxf">
+						href="/egi/resources/guide/assets/drawings/Template_Staircase_V1.dxf">
 						<div class="content a" style="height: 42px;">Template
 							Staircase v-1</div>
 					</a>
@@ -142,7 +142,7 @@
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 services"
 					style="display: block;">
 					<a
-						href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/Drawings/INNER COURTYARD _SHAFT_TEMPLATE.dxf">
+						href="/egi/resources/guide/assets/drawings/INNER COURTYARD _SHAFT_TEMPLATE.dxf">
 						<div class="content a" style="height: 42px;">Inner Courtyard
 							Shaft Template</div>
 					</a>
@@ -152,7 +152,7 @@
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 services"
 					style="display: block;">
 					<a
-						href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/Drawings/Urban_Chandigarh Template V-4.dxf">
+						href="/egi/resources/guide/assets/drawings/Urban_Chandigarh Template V-4.dxf">
 						<div class="content a" style="height: 42px;">Urban
 							Chandigarh Template V-4</div>
 					</a>
@@ -179,17 +179,20 @@
 			<ul class="tutorial-list color-black">
 
 				<li class="bpa-common-text tutorial-item"><a
-					href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/User Manual for Architects.pdf"
+					href="/egi/resources/guide/assets/docs/User Manual for Architects.pdf"
 					target="_blank"><span class="color-black bpa-common-text">User
 							Manual for Architects</span></a></li>
 				<li class="bpa-common-text tutorial-item"><a
-					href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/User Manual for Citizens.pdf"
+					href="/egi/resources/guide/assets/docs/User Manual for Citizens.pdf"
 					target="_blank"><span class="color-black bpa-common-text">User
 							Manual for Citizens</span></a></li>
 				<li class="bpa-common-text tutorial-item"><a
-					href="https://chstage.blob.core.windows.net/assets/OBPS/Architects/UserManuals/Drawing Manual for Architects.pdf"
+					href="/egi/resources/guide/assets/docs/Drawing Manual for Architects.pdf"
 					target="_blank"><span class="color-black bpa-common-text">Drawing
 							Manual for Architects</span></a></li>
+				<li class="bpa-common-text tutorial-item"><a
+					href="/egi/resources/guide/assets/docs/Drawing Manual for Architects.pdf"
+					target="_blank"><span class="color-black bpa-common-text">Rural User Manual</span></a></li>			
 				<li class="bpa-common-text tutorial-item"><a
 					href="/egi/resources/guide/bpaHelpDocument.jsp" target="_blank"><span
 						class="color-black bpa-common-text">Training Videos</span></a></li>

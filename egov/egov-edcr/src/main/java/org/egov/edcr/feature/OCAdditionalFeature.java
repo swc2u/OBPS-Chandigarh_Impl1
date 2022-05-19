@@ -138,21 +138,13 @@ public class OCAdditionalFeature extends FeatureProcess {
 	public void excessCoverageBeyondZoning6Inch(Plan pl) {// take from plan key //
 															// EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA= number
 
-		String excessCoverag = "";
+		BigDecimal excessCoverag = BigDecimal.ZERO;
 
-		if (null == pl.getPlanInfoProperties().get(DxfFileConstants.EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA))
+		if (null == pl.getPlanInformation().getExcessCoverageBeyondBuildUp())
 			pl.addError("EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA",
 					"EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA is not defined in plan info.");
-		else if ("NA".equalsIgnoreCase(DxfFileConstants.EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA)
-				|| DxfFileConstants.YES.equalsIgnoreCase(
-						pl.getPlanInfoProperties().get(DxfFileConstants.EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA))
-				|| DxfFileConstants.NO.equalsIgnoreCase(
-						pl.getPlanInfoProperties().get(DxfFileConstants.EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA)))
-			excessCoverag = pl.getPlanInfoProperties()
-					.get(DxfFileConstants.EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA);
 		else
-			pl.addError("EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA",
-					"EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA value is not valid in plan info.");
+			excessCoverag = pl.getPlanInformation().getExcessCoverageBeyondBuildUp();
 
 		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
 		scrutinyDetail.setKey("Common_OC Excess coverage beyond zoning 6'");
@@ -166,7 +158,7 @@ public class OCAdditionalFeature extends FeatureProcess {
 
 			Map<String, String> details = new HashMap<>();
 			details.put(DESCRIPTION, "Excess coverage beyond zoning 6'");
-			details.put(PROVIDED, excessCoverag);
+			details.put(PROVIDED, excessCoverag.toString());
 			details.put(STATUS, Result.Verify.getResultVal());
 			scrutinyDetail.getDetail().add(details);
 

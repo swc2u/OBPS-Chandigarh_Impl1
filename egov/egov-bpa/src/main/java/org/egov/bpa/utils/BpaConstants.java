@@ -439,6 +439,8 @@ public class BpaConstants {
 	public static final String DPC_CERTIFICATE_MISSING_FEE = "DPC certificate missing fee"; // code = DCM
 	public static final String FALSE_CEILING_FEE = "False Ceiling Fee"; // code = FCL
 	
+	public static final String IS_RULE_5_APPLICABLE = "IS_RULE_5_APPLICABLE";
+	public static final String IS_ADDITIONAL_AREA_APPLICABLE = "IS_ADDITIONAL_AREA_APPLICABLE";
 	
 	//OC FEE CALCULATION KEYS FOR PLANINFO
 	public static final String IS_THIS_A_CASE_OF_OWNERSHIP_CHANGE = "IS_THIS_A_CASE_OF_OWNERSHIP CHANGE";
@@ -563,6 +565,7 @@ public class BpaConstants {
 
 	// button name constants
 	public static final String WF_APPROVE_BUTTON = "Approve";
+	public static final String WF_FORWARD_FOR_PAYMENT_BUTTON = "Forward For Payment";
 	public static final String WF_ACCEPT_AS_SCRUTINIZED_BUTTON = "Accept as Scrutinized";
 	public static final String WF_REJECT_BUTTON = "REJECT";
 	public static final String WF_REVOCATE_BUTTON = "Revocate";
@@ -574,6 +577,7 @@ public class BpaConstants {
 	public static final String WF_LBE_SUBMIT_BUTTON = "Submit";
 	public static final String WF_PAY_ONLINE_BUTTON = "Pay Online";
 	public static final String WF_REVERT_BUTTON = "Revert";
+	public static final String WF_REVERT_TO_PREVIOUS_REVIEWER_BUTTON = "Revert To Previous Reviewer";
 	public static final String WF_SAVE_BUTTON = "Save";
 	public static final String WF_SEND_BUTTON = "Send";
 	public static final String WF_RESCHDLE_APPMNT_BUTTON = "Reschedule Appointment";

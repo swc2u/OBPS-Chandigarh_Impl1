@@ -435,6 +435,7 @@
 		<input type="hidden" id="rejectAppln" value="<spring:message code='msg.confirm.reject.appln' />" />
 		<input type="hidden" id="sendBackApplnPreOfficial" value="<spring:message code='msg.confirm.sendback.previous.approved.official' />" />
 		<input type="hidden" id="approveAppln" value="<spring:message code='msg.confirm.approve.appln' />" />
+		<input type="hidden" id="forwardToPayment" value="<spring:message code='msg.confirm.forward.to.payment' />" />
 		<input type="hidden" id="forwardAppln" value="<spring:message code='msg.confirm.forward.application' />" />
 		<input type="hidden" id="generatePermitOrder" value="<spring:message code='msg.confirm.generate.permitorder' />" />
 		<input type="hidden" id="acceptedasscrutinized" value="<spring:message code='msg.confirm.accepted.as.scrutinized' />" />

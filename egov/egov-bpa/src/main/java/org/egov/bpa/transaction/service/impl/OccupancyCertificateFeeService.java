@@ -394,12 +394,10 @@ public class OccupancyCertificateFeeService {
 	private BigDecimal getTotalCoverageBeyondZoningFee(Plan bpaPlan, Plan ocPlan) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal multiplier = BigDecimal.valueOf(800);
-		BigDecimal deviation = ocPlan.getOcdataComparison().getOcdataComparison()
-				.get(OCDataComparison.Excess_Coverage_Beyond_Zoning_6_INCH).getDeviation();
+		BigDecimal excessCoverage = ocPlan.getPlanInformation().getExcessCoverageBeyondBuildUp();
 
-		if (deviation.compareTo(BigDecimal.valueOf(6)) > 0) {
-			totalAmount = totalAmount.add(deviation.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
-		}
+		totalAmount = totalAmount.add(excessCoverage.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+		
 
 		return totalAmount;
 
@@ -573,8 +571,7 @@ public class OccupancyCertificateFeeService {
 	public BigDecimal getTotalGlazingVerandahFee(Plan bpaPlan, Plan ocPlan) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal Multiplier = BigDecimal.ZERO;
-		BigDecimal deviation = BigDecimal.ZERO;
-
+		
 		OccupancyTypeHelper typeHelper = ocPlan.getVirtualBuilding().getMostRestrictiveFarHelper();
 
 		if (BpaConstants.A_P.equals(typeHelper.getSubtype().getCode())) {
@@ -590,16 +587,16 @@ public class OccupancyCertificateFeeService {
 		return totalAmount;
 	}
 
-	private BigDecimal getTotalAmountForGlazingVerandahForSCO(Plan ocPlan) {
-		BigDecimal totalAmount = BigDecimal.ZERO;
-		BigDecimal Multiplier = BigDecimal.valueOf(200);
-		BigDecimal deviation = BigDecimal.ZERO;
-
-		deviation = ocPlan.getOcdataComparison().getOcdataComparison().get(OCDataComparison.Glazing_Of_Verandah)
-				.getDeviation();
-		totalAmount = deviation.multiply(Multiplier).setScale(2, BigDecimal.ROUND_HALF_UP);
-		return totalAmount;
-	}
+//	private BigDecimal getTotalAmountForGlazingVerandahForSCO(Plan ocPlan) {
+//		BigDecimal totalAmount = BigDecimal.ZERO;
+//		BigDecimal Multiplier = BigDecimal.valueOf(200);
+//		BigDecimal deviation = BigDecimal.ZERO;
+//
+//		deviation = ocPlan.getOcdataComparison().getOcdataComparison().get(OCDataComparison.Glazing_Of_Verandah)
+//				.getDeviation();
+//		totalAmount = deviation.multiply(Multiplier).setScale(2, BigDecimal.ROUND_HALF_UP);
+//		return totalAmount;
+//	}
 
 	public BigDecimal getTotalLabourCess(Plan bpaPlan, Plan ocPlan, OccupancyTypeHelper mostRestrictiveFarHelper) {
 		BigDecimal totalAmount = BigDecimal.ZERO;

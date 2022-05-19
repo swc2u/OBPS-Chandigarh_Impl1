@@ -748,7 +748,7 @@
 					<font size="10"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Whether existing building constructed without basement ?"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Whether adjacent building constructed without basement ?"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="371" y="417" width="177" height="19" uuid="66850446-2663-4002-a8b3-9f2c0bcdf981"/>
@@ -1511,7 +1511,7 @@
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="593">
+		<band height="700">
 			<textField isBlankWhenNull="true">
 				<reportElement key="" stretchType="RelativeToTallestObject" x="5" y="575" width="517" height="18" isRemoveLineWhenBlank="true" uuid="a41cfed2-1239-43a2-aa02-5a86c5ca0b9a">
 					<printWhenExpression><![CDATA[!$P{nocs}.isEmpty()]]></printWhenExpression>
@@ -1528,7 +1528,7 @@
 				<text><![CDATA[Verify Noc's]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="6" y="77" width="100" height="20" uuid="05a014bb-04c1-4e2c-b8ad-9e768696425b">
+				<reportElement x="6" y="157" width="100" height="20" uuid="05a014bb-04c1-4e2c-b8ad-9e768696425b">
 					<printWhenExpression><![CDATA[!$P{errors}.isEmpty()]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -1537,13 +1537,13 @@
 				<text><![CDATA[Errors]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="6" y="101" width="534" height="401" uuid="c69e1c51-83a0-411d-bebe-4fa86adfd03d">
+				<reportElement x="6" y="181" width="534" height="401" uuid="c69e1c51-83a0-411d-bebe-4fa86adfd03d">
 					<printWhenExpression><![CDATA[!$P{errors}.isEmpty()]]></printWhenExpression>
 				</reportElement>
 				<textFieldExpression><![CDATA[$P{errorString}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="5" y="24" width="543" height="51" uuid="348b61be-4306-4368-86b8-efc1474e7644"/>
+				<reportElement x="5" y="24" width="543" height="200" uuid="348b61be-4306-4368-86b8-efc1474e7644"/>
 				<textFieldExpression><![CDATA[$P{disclaimer}]]></textFieldExpression>
 			</textField>
 			<staticText>
