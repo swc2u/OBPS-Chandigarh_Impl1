@@ -34,4 +34,4 @@ where checklist = (select id from chandigarh.eg_checklist where code = 'OCGENERA
 
 delete from chandigarh.eg_checklist where code = 'OCGENERALDOC-25';
 
-delete from chandigarh.eg_checklist where code = 'OCGENERALDOC-25';
+delete from chandigarh.eg_checklist where code = 'OCGENERALDOC-26';
