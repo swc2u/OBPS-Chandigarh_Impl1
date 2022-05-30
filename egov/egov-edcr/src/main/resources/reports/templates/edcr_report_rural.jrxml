@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="edcr_report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ccdee1e7-8a6e-4168-a80a-d10d6f4f913c">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -53,6 +53,7 @@
 	<parameter name="surrenderRoadArea" class="java.math.BigDecimal"/>
 	<parameter name="plotNumber" class="java.lang.String"/>
 	<parameter name="areaType" class="java.lang.String"/>
+	<parameter name="disclaimer" class="java.lang.String"/>
 	<field name="planInformation" class="org.egov.common.entity.edcr.PlanInformation"/>
 	<field name="plot" class="org.egov.common.entity.edcr.Plot"/>
 	<field name="electricLine" class="org.egov.common.entity.edcr.ElectricLine"/>
@@ -1015,15 +1016,15 @@
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="747">
+		<band height="757">
 			<textField isBlankWhenNull="true">
-				<reportElement key="" stretchType="RelativeToTallestObject" x="5" y="128" width="517" height="18" isRemoveLineWhenBlank="true" uuid="a41cfed2-1239-43a2-aa02-5a86c5ca0b9a">
+				<reportElement key="" stretchType="RelativeToTallestObject" x="7" y="148" width="517" height="18" isRemoveLineWhenBlank="true" uuid="a41cfed2-1239-43a2-aa02-5a86c5ca0b9a">
 					<printWhenExpression><![CDATA[!$P{nocs}.isEmpty()]]></printWhenExpression>
 				</reportElement>
 				<textFieldExpression><![CDATA[$P{nocString}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="5" y="108" width="193" height="19" isRemoveLineWhenBlank="true" uuid="6c9fce2c-90f2-4013-b9d9-719aa716287e">
+				<reportElement x="7" y="128" width="193" height="19" isRemoveLineWhenBlank="true" uuid="6c9fce2c-90f2-4013-b9d9-719aa716287e">
 					<printWhenExpression><![CDATA[!$P{nocs}.isEmpty()]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -1032,7 +1033,7 @@
 				<text><![CDATA[Verify Noc's]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="7" y="172" width="100" height="20" uuid="05a014bb-04c1-4e2c-b8ad-9e768696425b">
+				<reportElement x="8" y="192" width="100" height="20" uuid="05a014bb-04c1-4e2c-b8ad-9e768696425b">
 					<printWhenExpression><![CDATA[!$P{errors}.isEmpty()]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -1041,10 +1042,21 @@
 				<text><![CDATA[Errors]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="6" y="202" width="538" height="545" uuid="c69e1c51-83a0-411d-bebe-4fa86adfd03d">
+				<reportElement x="8" y="212" width="538" height="545" uuid="c69e1c51-83a0-411d-bebe-4fa86adfd03d">
 					<printWhenExpression><![CDATA[!$P{errors}.isEmpty()]]></printWhenExpression>
 				</reportElement>
 				<textFieldExpression><![CDATA[$P{errorString}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="7" y="10" width="191" height="21" uuid="61f1bce9-7867-45a2-9a59-bb15c0856eb8"/>
+				<textElement markup="styled">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Disclaimer:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="7" y="39" width="517" height="81" uuid="a1f31243-717f-45bf-ad82-810de51a0bfd"/>
+				<textFieldExpression><![CDATA[$P{disclaimer}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

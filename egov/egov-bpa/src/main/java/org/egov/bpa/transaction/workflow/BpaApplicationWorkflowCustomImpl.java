@@ -345,6 +345,58 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 						.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
 						.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
 			}
+		} else if ("Send Back To SDOMC".equalsIgnoreCase(workFlowAction)) {
+			wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null, additionalRule,
+					"Property documents verification initiated", "Forwarded to property documents verification");
+
+			if (wfmatrix != null) {
+				application.setStatus(getStatusByCurrentMatrxiStatus(wfmatrix));
+				application.transition().progressWithStateCopy()
+						.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+						.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+						.withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos)
+						.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
+						.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+			}
+		} else if ("Send Back To MCA".equalsIgnoreCase(workFlowAction)) {
+			wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null, additionalRule,
+					"Registered", "Forward to tehsildar is pending");
+
+			if (wfmatrix != null) {
+				application.setStatus(getStatusByCurrentMatrxiStatus(wfmatrix));
+				application.transition().progressWithStateCopy()
+						.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+						.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+						.withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos)
+						.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
+						.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+			}
+		} else if ("Send Back To Tehsildar".equalsIgnoreCase(workFlowAction)) {
+			wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null, additionalRule,
+					"Registered", "Forward to junior engineer is pending");
+
+			if (wfmatrix != null) {
+				application.setStatus(getStatusByCurrentMatrxiStatus(wfmatrix));
+				application.transition().progressWithStateCopy()
+						.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+						.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+						.withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos)
+						.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
+						.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+			}
+		} else if ("Send Back To SJE".equalsIgnoreCase(workFlowAction)) {
+			wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null, additionalRule,
+					"NEW", "Forward to section clerk is pending");
+
+			if (wfmatrix != null) {
+				application.setStatus(getStatusByCurrentMatrxiStatus(wfmatrix));
+				application.transition().progressWithStateCopy()
+						.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+						.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+						.withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos)
+						.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
+						.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+			}
 		} else {
 			Assignment approverAssignment = bpaWorkFlowService.getApproverAssignment(pos);
 			if (approverAssignment == null)

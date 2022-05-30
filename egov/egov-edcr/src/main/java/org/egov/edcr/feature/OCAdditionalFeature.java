@@ -564,12 +564,13 @@ public class OCAdditionalFeature extends FeatureProcess {
 		BigDecimal deviationArea = BigDecimal.ZERO;
 
 		String description = OCDataComparison.Excess_Coverage_Beyond_Zoning_6_INCH;
-		String oc = CDGAdditionalService.viewArea(ocPlan, ocCoverageBeyondZoning);
-		String permit = CDGAdditionalService.viewArea(permitPlan, permitCoverageBeyondZoning);
-		String deviation = CDGAdditionalService.viewArea(ocPlan, deviationArea);
+		BigDecimal oc = ocPlan.getPlanInformation().getExcessCoverageBeyondBuildUp();
+		deviationArea = oc.subtract(deviationArea);
+		String permit = Result.Accepted.getResultVal();
+		String deviation = deviationArea.toString();
 		String status = validateDeviation(deviationArea) ? Result.Verify.getResultVal()
 				: Result.Not_Accepted.getResultVal();
-		setReport(scrutinyDetail, description, oc, permit, deviation, status);
+		setReport(scrutinyDetail, description, oc.toString(), permit, deviation, status);
 		Data ocData = new Data();
 		ocData.setPermit(permitCoverageBeyondZoning);
 		ocData.setOc(ocCoverageBeyondZoning);
@@ -581,7 +582,7 @@ public class OCAdditionalFeature extends FeatureProcess {
 	public void minorInternalChangesDuringConstruction(Plan ocPlan, Plan permitPlan, ScrutinyDetail scrutinyDetail) {
 		BigDecimal ocMinorInternalChangesArea = BigDecimal.ZERO;
 		BigDecimal permitMinorInternalChangesArea = BigDecimal.ZERO;
-		BigDecimal deviationArea = ocMinorInternalChangesArea.subtract(permitMinorInternalChangesArea);
+		BigDecimal deviationArea = BigDecimal.ZERO;
 		for (Block block : ocPlan.getBlocks()) {
 			for (Floor floor : block.getBuilding().getFloors()) {
 				for (Occupancy occupancy : floor.getOccupancies()) {
@@ -596,6 +597,7 @@ public class OCAdditionalFeature extends FeatureProcess {
 			ocMinorInternalChangesArea = CDGAdditionalService.inchtoFeetArea(ocMinorInternalChangesArea);
 			deviationArea = CDGAdditionalService.inchtoFeetArea(deviationArea);
 		}
+		deviationArea = ocMinorInternalChangesArea.subtract(permitMinorInternalChangesArea);
 		String description = OCDataComparison.Minor_Internal_Changes_During_Construction;
 		String oc = CDGAdditionalService.viewArea(ocPlan, ocMinorInternalChangesArea);
 		String permit = CDGAdditionalService.viewArea(permitPlan, permitMinorInternalChangesArea);
@@ -756,7 +758,7 @@ public class OCAdditionalFeature extends FeatureProcess {
 	}
 
 	private boolean validateDeviation(BigDecimal deviationArea) {
-		if (deviationArea != null && deviationArea.compareTo(BigDecimal.ZERO) < 0)
+		if (deviationArea != null)
 			return true;
 		return true;
 	}

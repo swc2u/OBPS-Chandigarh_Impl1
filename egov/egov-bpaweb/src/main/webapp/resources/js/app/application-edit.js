@@ -449,6 +449,114 @@ jQuery(document)
                                 e.preventDefault();
                             }
                             return false;
+                        }else if (action == 'Send Back To SDOMC') {
+                            if (validateOnRevert() && validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .dialog({
+                                        message: $('#sendBackApplnPreOfficial').val(),
+                                        buttons: {
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary',
+                                                callback: function (result) {
+                                                    $('#viewBpaApplicationForm').trigger('submit');
+                                                }
+                                            },
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger',
+                                                callback: function (result) {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                }
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        }else if (action == 'Send Back To MCA') {
+                            if (validateOnRevert() && validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .dialog({
+                                        message: $('#sendBackApplnPreOfficial').val(),
+                                        buttons: {
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary',
+                                                callback: function (result) {
+                                                    $('#viewBpaApplicationForm').trigger('submit');
+                                                }
+                                            },
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger',
+                                                callback: function (result) {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                }
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        }else if (action == 'Send Back To Tehsildar') {
+                            if (validateOnRevert() && validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .dialog({
+                                        message: $('#sendBackApplnPreOfficial').val(),
+                                        buttons: {
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary',
+                                                callback: function (result) {
+                                                    $('#viewBpaApplicationForm').trigger('submit');
+                                                }
+                                            },
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger',
+                                                callback: function (result) {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                }
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        }else if (action == 'Send Back To SJE') {
+                            if (validateOnRevert() && validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .dialog({
+                                        message: $('#sendBackApplnPreOfficial').val(),
+                                        buttons: {
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary',
+                                                callback: function (result) {
+                                                    $('#viewBpaApplicationForm').trigger('submit');
+                                                }
+                                            },
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger',
+                                                callback: function (result) {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                }
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
                         } else if (action == 'Approve') {
                             if (validateOnApproveAndForward(validator, action)) {
                                 bootbox
@@ -740,7 +848,13 @@ function validateOnApproveAndForward(validator, action) {
         $('#approvalDesignation').removeAttr('required');
         $('#approvalPosition').removeAttr('required');
         return true;
-    } else if(action == 'Revert' || action == 'Generate Rejection Notice' || action == 'Revert To Previous Reviewer'){
+    } else if(action == 'Revert' 
+				|| action == 'Generate Rejection Notice' 
+					|| action == 'Revert To Previous Reviewer'
+						|| action == 'Send Back To SDOMC'
+						 	|| action == 'Send Back To MCA'
+						 		|| action == 'Send Back To Tehsildar'
+									|| action == 'Send Back To SJE'){
 		$('#approvalDepartment').removeAttr('required');
         $('#approvalDesignation').removeAttr('required');
         $('#approvalPosition').removeAttr('required');
