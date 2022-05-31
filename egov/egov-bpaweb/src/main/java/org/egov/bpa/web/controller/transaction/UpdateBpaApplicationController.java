@@ -489,6 +489,46 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
                                     ? bpaApplication.getSiteDetail().get(0).getAdminBoundary().getId()
                                     : null);
         }
+        else if ("Send Back To SDOMC".equalsIgnoreCase(workFlowAction)) {
+        	WorkFlowMatrix wfMatrix = bpaApplicationWorkflowService.getWfMatrix(bpaApplication.getStateType(), null, amountRule,
+        			bpaApplication.getApplicationType().getName(), "Property documents verification initiated",
+        			"Forwarded to property documents verification");
+        	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
+                    bpaApplication.getSiteDetail().get(0) != null
+                            && bpaApplication.getSiteDetail().get(0).getAdminBoundary() != null
+                                    ? bpaApplication.getSiteDetail().get(0).getAdminBoundary().getId()
+                                    : null);
+        }
+        else if ("Send Back To MCA".equalsIgnoreCase(workFlowAction)) {
+        	WorkFlowMatrix wfMatrix = bpaApplicationWorkflowService.getWfMatrix(bpaApplication.getStateType(), null, amountRule,
+        			bpaApplication.getApplicationType().getName(), "Registered",
+                    "Forward to tehsildar is pending");
+        	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
+                    bpaApplication.getSiteDetail().get(0) != null
+                            && bpaApplication.getSiteDetail().get(0).getAdminBoundary() != null
+                                    ? bpaApplication.getSiteDetail().get(0).getAdminBoundary().getId()
+                                    : null);
+        }
+        else if ("Send Back To Tehsildar".equalsIgnoreCase(workFlowAction)) {
+        	WorkFlowMatrix wfMatrix = bpaApplicationWorkflowService.getWfMatrix(bpaApplication.getStateType(), null, amountRule,
+        			bpaApplication.getApplicationType().getName(), "Registered",
+                    "Forward to junior engineer is pending");
+        	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
+                    bpaApplication.getSiteDetail().get(0) != null
+                            && bpaApplication.getSiteDetail().get(0).getAdminBoundary() != null
+                                    ? bpaApplication.getSiteDetail().get(0).getAdminBoundary().getId()
+                                    : null);
+        }
+        else if ("Send Back To SJE".equalsIgnoreCase(workFlowAction)) {
+        	WorkFlowMatrix wfMatrix = bpaApplicationWorkflowService.getWfMatrix(bpaApplication.getStateType(), null, amountRule,
+        			bpaApplication.getApplicationType().getName(), "NEW",
+                    "Forward to section clerk is pending");
+        	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
+                    bpaApplication.getSiteDetail().get(0) != null
+                            && bpaApplication.getSiteDetail().get(0).getAdminBoundary() != null
+                                    ? bpaApplication.getSiteDetail().get(0).getAdminBoundary().getId()
+                                    : null);
+        }
 
         else if (StringUtils.isNotBlank(request.getParameter(APPRIVALPOSITION))
                 && !WF_REJECT_BUTTON.equalsIgnoreCase(workFlowAction)

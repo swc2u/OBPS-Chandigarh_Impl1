@@ -567,6 +567,9 @@ public class DxfFileConstants {
 	public static final String ALLOTMENT_OF_NEW_NUMBER = "ALLOTMENT_OF_NEW_NUMBER";
 
 	public static final String IS_CASE_OF_DEATH = "IS_CASE_OF_DEATH";
+	
+	//Disclaimer
+	public static final String DISCLAIMER_ONE = "Architect shall ensure all the information provided in the dxf drawing and scrutiny report is correct and as per drawing manual and applicable building regulations CBRL 2017 UT Chandigarh/ MCC in case of villages. If the information provided by the architect in the drawing is found incorrect, Architect will be liable for further actions.";
 
 	// ApplicationType
 	public static final String APPLICATION_TYPE_PERMIT = "PERMIT";

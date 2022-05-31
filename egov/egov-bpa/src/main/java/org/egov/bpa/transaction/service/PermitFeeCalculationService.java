@@ -1604,7 +1604,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			
 			
 //			totalAmount = plotAreaInSqm.multiply(new BigDecimal("22")).setScale(2,BigDecimal.ROUND_HALF_UP);
-			totalAmount = plotAreaInSqm.multiply(new BigDecimal("24.2")).setScale(2, BigDecimal.ROUND_HALF_UP);
+//			totalAmount = plotAreaInSqm.multiply(new BigDecimal("24.2")).setScale(2, BigDecimal.ROUND_HALF_UP);
+			totalAmount = plotAreaInSqm.multiply(new BigDecimal("21")).setScale(2, BigDecimal.ROUND_HALF_UP);
 		} else {
 			BigDecimal demolitionAreaInSqm = plan.getPlanInformation().getDemolitionArea();
 			if(letterToPartyFees!=null)
@@ -1637,7 +1638,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 			// totalAmount = demolitionAreaInSqm.multiply(new
 			// BigDecimal("176")).setScale(2,BigDecimal.ROUND_HALF_UP);
-			totalAmount = demolitionAreaInSqm.multiply(new BigDecimal("193.6")).setScale(2, BigDecimal.ROUND_HALF_UP);
+			//totalAmount = demolitionAreaInSqm.multiply(new BigDecimal("193.6")).setScale(2, BigDecimal.ROUND_HALF_UP);
+			totalAmount = demolitionAreaInSqm.multiply(new BigDecimal("178.5")).setScale(2, BigDecimal.ROUND_HALF_UP);
 			BigDecimal leftProposedAreaInSqm = totalProposedAreaInSqm.subtract(demolitionAreaInSqm).setScale(2,
 					BigDecimal.ROUND_HALF_UP);
 			if (leftProposedAreaInSqm.compareTo(BigDecimal.ZERO) <= 0) {
@@ -1645,7 +1647,9 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			}
 //			totalAmount = totalAmount.add(leftProposedAreaInSqm.multiply(new BigDecimal("22"))).setScale(2,
 //					BigDecimal.ROUND_HALF_UP);
-			totalAmount = totalAmount.add(leftProposedAreaInSqm.multiply(new BigDecimal("24.2"))).setScale(2,
+//			totalAmount = totalAmount.add(leftProposedAreaInSqm.multiply(new BigDecimal("24.2"))).setScale(2,
+//					BigDecimal.ROUND_HALF_UP);
+			totalAmount = totalAmount.add(leftProposedAreaInSqm.multiply(new BigDecimal("21"))).setScale(2,
 					BigDecimal.ROUND_HALF_UP);
 		}
 		return totalAmount;

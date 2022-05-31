@@ -83,6 +83,8 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import static org.egov.edcr.constants.DxfFileConstants.DISCLAIMER_ONE;
+
 
 @Service
 public class PlanReportRuralService extends PlanReportService{
@@ -661,6 +663,9 @@ public class PlanReportRuralService extends PlanReportService{
         	valuesMap.put("UNIT_DECLARATION", DxfFileConstants.DECLARATION_METER);
         else if(plan.getDrawingPreference().getInFeets())
         	valuesMap.put("UNIT_DECLARATION", DxfFileConstants.DECLARATION_FEET);
+        
+        valuesMap.put("disclaimer", "\t1. "+DISCLAIMER_ONE+"\n");
+        
         if (clientSpecificSubReport) {
 
             List<DcrReportBlockDetail> blockDetails = new ArrayList<>();
