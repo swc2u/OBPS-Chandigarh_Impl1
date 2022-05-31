@@ -1,5 +1,5 @@
 UPDATE chandigarh.eg_wf_matrix
-SET validactions='Forward,Send Back To SJE'
+SET validactions='Forward,Send Back To JE'
 WHERE objecttype = 'BpaApplication' and currentstate = 'Registered' and nextstate ='Property documents verification initiated'
 and nextdesignation = 'MC Architect' and additionalrule = 'Medium Risk';
 

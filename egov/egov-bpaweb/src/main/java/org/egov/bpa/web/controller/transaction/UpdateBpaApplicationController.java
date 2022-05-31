@@ -519,7 +519,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
                                     ? bpaApplication.getSiteDetail().get(0).getAdminBoundary().getId()
                                     : null);
         }
-        else if ("Send Back To SJE".equalsIgnoreCase(workFlowAction)) {
+        else if ("Send Back To JE".equalsIgnoreCase(workFlowAction)) {
         	WorkFlowMatrix wfMatrix = bpaApplicationWorkflowService.getWfMatrix(bpaApplication.getStateType(), null, amountRule,
         			bpaApplication.getApplicationType().getName(), "NEW",
                     "Forward to section clerk is pending");
