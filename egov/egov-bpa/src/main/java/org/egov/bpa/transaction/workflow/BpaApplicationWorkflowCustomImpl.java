@@ -384,7 +384,7 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 						.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
 						.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
 			}
-		} else if ("Send Back To SJE".equalsIgnoreCase(workFlowAction)) {
+		} else if ("Send Back To JE".equalsIgnoreCase(workFlowAction)) {
 			wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null, additionalRule,
 					"NEW", "Forward to section clerk is pending");
 

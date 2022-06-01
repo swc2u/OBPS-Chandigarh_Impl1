@@ -530,7 +530,7 @@ jQuery(document)
                                 e.preventDefault();
                             }
                             return false;
-                        }else if (action == 'Send Back To SJE') {
+                        }else if (action == 'Send Back To JE') {
                             if (validateOnRevert() && validateOnApproveAndForward(validator, action)) {
                                 bootbox
                                     .dialog({
@@ -854,7 +854,7 @@ function validateOnApproveAndForward(validator, action) {
 						|| action == 'Send Back To SDOMC'
 						 	|| action == 'Send Back To MCA'
 						 		|| action == 'Send Back To Tehsildar'
-									|| action == 'Send Back To SJE'){
+									|| action == 'Send Back To JE'){
 		$('#approvalDepartment').removeAttr('required');
         $('#approvalDesignation').removeAttr('required');
         $('#approvalPosition').removeAttr('required');
