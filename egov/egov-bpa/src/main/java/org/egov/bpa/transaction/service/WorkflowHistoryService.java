@@ -87,6 +87,10 @@ public class WorkflowHistoryService {
     private static final String INSPECTION = "INSPECTION";
     private static final String DEPARTMENT = "department";
     private static final String ATTACHMENT = "attachment";
+    private static final String TEHSILDAR_USER = "MC_Tehsildar_T1";
+    
+    
+    
     @Autowired
     private PositionMasterService positionMasterService;
     @Autowired
@@ -134,7 +138,7 @@ public class WorkflowHistoryService {
             User ownerUser) {
         User userObject;
         if (b
-                && value.equalsIgnoreCase(APPLICATION_STATUS_REGISTERED) ||
+                && value.equalsIgnoreCase(APPLICATION_STATUS_REGISTERED) && (!ownerPosition2.getName().equalsIgnoreCase(TEHSILDAR_USER)) ||
                 value.equalsIgnoreCase(APPLICATION_STATUS_SCHEDULED)
                 || value.equalsIgnoreCase(APPLICATION_STATUS_RESCHEDULED)) {
             Position scrutinizedByPos = positionMasterService
