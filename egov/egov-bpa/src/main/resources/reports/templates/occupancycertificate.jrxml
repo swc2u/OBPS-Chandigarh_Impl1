@@ -127,8 +127,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="11" isBold="true"/>
 				</textElement>
-				<text><![CDATA[SDO (Buildings)
-For Estate office
+				<text><![CDATA[Estate office
 exercising the power of
 Chief Administrator, UT- Chandigarh"]]></text>
 			</staticText>
