@@ -30,7 +30,7 @@ import com.pwc.XlsxReader.entity.SetBack;
 
 public class ExcelReader {
 
-	public static final String SHEET_NAME_MASTER = "Master";
+	public static final String SHEET_NAME_MASTER = "school";
 	public static final String SHEET_NAME_FAR = "FAR";
 	public static final String SHEET_NAME_NO_OF_STOREYS = "No of storeys";
 	public static final String SHEET_NAME_BACK_YARD_COMSTRUCTIONS = "Back Yard construction";
@@ -46,7 +46,7 @@ public class ExcelReader {
 //	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\35D  MASTER DATA.xlsx";
 //	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\master data for sector 18 and 22.xlsx";
 //	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\master data_8A_8B_8C and commercial_10-20 & above 40 V3.xlsx";
-	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\OTHER OCCUPANCY MASTER DATA VERSION 2.xlsx";
+	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\master data for sector 15A,B, 23c and booth.xlsx";
 	
 	public static void main(String[] args) throws IOException, InvalidFormatException {
 		System.out.println("==================Start===================");
