@@ -246,9 +246,9 @@ public class CDGAdditionalService {
 	}
 
 	public static String getString(String str) {
-		return str.replaceAll("[^a-zA-Z0-9,.,*]", "_").toUpperCase();
+		return str.replaceAll("[^a-zA-Z0-9,.,*,&]", "_").toUpperCase();
 	}
-
+	
 	private static String getAreaType(String at) {
 		if (at.equalsIgnoreCase(DxfFileConstants.ONE_KANAL)) {
 			return DxfFileConstants.ONE_KANAL;
