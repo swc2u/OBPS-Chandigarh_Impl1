@@ -303,7 +303,7 @@ public class OccupancyCertificateFeeService {
 		} else {
 			totalAmount = multiplier;
 		}
-		//return totalAmount.divide(GST);
+		totalAmount = totalAmount.divide(GST);
 		return totalAmount;
 	}
 
@@ -719,6 +719,11 @@ public class OccupancyCertificateFeeService {
 			if (estimatedAmount.compareTo(BigDecimal.ZERO) > 0) {
 				totalAmount = totalAmount.add((estimatedAmount.divide(HUNDRED)).setScale(2, BigDecimal.ROUND_HALF_UP));
 			}
+		}
+		
+		if(BpaConstants.F_B.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode()) 
+				|| BpaConstants.F_SCO.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode()) ){
+			totalAmount = totalAmount.divide(GST);
 		}
 		return totalAmount;
 	}
