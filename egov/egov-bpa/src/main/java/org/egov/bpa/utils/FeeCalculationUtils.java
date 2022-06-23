@@ -212,8 +212,8 @@ public class FeeCalculationUtils {
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(),
 												String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 									}
-									if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
-										totalGstApplicable = totalGstApplicable.add(totalAmount);
+//									if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+//										totalGstApplicable = totalGstApplicable.add(totalAmount);
 								} else if (BpaConstants.RULE_5_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal rule5ExtraArea = BigDecimal.ZERO;

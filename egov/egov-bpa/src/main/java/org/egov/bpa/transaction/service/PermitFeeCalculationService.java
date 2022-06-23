@@ -363,12 +363,12 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										permitFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(
 												bpaFee, permitFee.getApplicationFee(), totalAmount));
 									}
-									if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
-										totalGstApplicable = totalGstApplicable.add(totalAmount);
-									if(BpaConstants.F_B.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode()) 
-											|| BpaConstants.F_SCO.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode()) ){
-										totalGstApplicable = totalAmount;
-									}
+//									if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+//										totalGstApplicable = totalGstApplicable.add(totalAmount);
+//									if(BpaConstants.F_B.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode()) 
+//											|| BpaConstants.F_SCO.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode()) ){
+//										totalGstApplicable = totalAmount;
+//									}
 								} else if (BpaConstants.RULE_5_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal rule5ExtraArea = BigDecimal.ZERO;
@@ -607,8 +607,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(),
 												String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 									}
-									if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
-										totalGstApplicable = totalGstApplicable.add(totalAmount);
+//									if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+//										totalGstApplicable = totalGstApplicable.add(totalAmount);
 								} else if (BpaConstants.RULE_5_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal rule5ExtraArea = BigDecimal.ZERO;
