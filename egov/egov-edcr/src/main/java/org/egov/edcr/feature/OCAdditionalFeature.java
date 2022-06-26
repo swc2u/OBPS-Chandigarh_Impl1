@@ -714,10 +714,12 @@ public class OCAdditionalFeature extends FeatureProcess {
 		ocData.setDeviation(deviationArea);
 		ocPlan.getOcdataComparison().getOcdataComparison().put(description, ocData);
 	}
+	@Autowired
+	private Far far;
 
 	public void labourcess(Plan ocPlan, Plan permitPlan, ScrutinyDetail scrutinyDetail) {
-		BigDecimal ocLabourcessArea = labourcess(ocPlan);
-		BigDecimal permitLabourcessArea = labourcess(permitPlan);
+		BigDecimal ocLabourcessArea = labourcessOC(ocPlan);
+		BigDecimal permitLabourcessArea = labourcessPermit(permitPlan);
 		BigDecimal deviationArea = ocLabourcessArea.subtract(permitLabourcessArea);
 		String description = OCDataComparison.Labour_Cess;
 		if (ocPlan.getDrawingPreference().getInFeets() && permitPlan.getDrawingPreference().getInFeets()) {
@@ -738,7 +740,7 @@ public class OCAdditionalFeature extends FeatureProcess {
 		ocPlan.getOcdataComparison().getOcdataComparison().put(description, ocData);
 	}
 
-	public BigDecimal labourcess(Plan plan) {
+	public BigDecimal labourcessPermit(Plan plan) {
 		BigDecimal totalArea = BigDecimal.ZERO;
 		for (Block block : plan.getBlocks()) {
 			for (Floor floor : block.getBuilding().getFloors()) {
@@ -747,16 +749,51 @@ public class OCAdditionalFeature extends FeatureProcess {
 							&& DxfFileConstants.A_R5.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
 						continue;
 					}
-					if (floor.getNumber() >= 0)
-						totalArea = totalArea.add(occupancy.getFloorArea());
-					else
-						totalArea = totalArea.add(occupancy.getBuiltUpArea());
+					if (floor.getNumber() >= 0) {
+						BigDecimal floorArea = occupancy.getFloorArea();
+//						if(occupancy.getFloorArea().compareTo(BigDecimal.ZERO)>0)
+//							floorArea = floorArea.subtract(occupancy.getExistingFloorArea()).setScale(2,BigDecimal.ROUND_HALF_UP);
+						totalArea = totalArea.add(floorArea);
+					}
+					else {
+						BigDecimal buildUpArea = occupancy.getBuiltUpArea();
+//						if(occupancy.getExistingBuiltUpArea().compareTo(BigDecimal.ZERO)>0)
+//							buildUpArea = buildUpArea.subtract(occupancy.getExistingBuiltUpArea()).setScale(2,BigDecimal.ROUND_HALF_UP);
+						totalArea = totalArea.add(buildUpArea);
+					}
 				}
 			}
 		}
 		return totalArea;
 	}
-
+	
+	public BigDecimal labourcessOC(Plan plan) {
+		BigDecimal totalArea = BigDecimal.ZERO;
+		for (Block block : plan.getBlocks()) {
+			for (Floor floor : block.getBuilding().getFloors()) {
+				for (Occupancy occupancy : floor.getOccupancies()) {
+					if (occupancy.getTypeHelper() != null && occupancy.getTypeHelper().getSubtype() != null
+							&& DxfFileConstants.A_R5.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+						continue;
+					}
+					if (floor.getNumber() >= 0) {
+						BigDecimal floorArea = occupancy.getFloorArea();
+						if(occupancy.getFloorArea().compareTo(BigDecimal.ZERO)>0)
+							floorArea = floorArea.subtract(occupancy.getExistingFloorArea()).setScale(2,BigDecimal.ROUND_HALF_UP);
+						totalArea = totalArea.add(floorArea);
+					}
+					else {
+						BigDecimal buildUpArea = occupancy.getBuiltUpArea();
+						if(occupancy.getExistingBuiltUpArea().compareTo(BigDecimal.ZERO)>0)
+							buildUpArea = buildUpArea.subtract(occupancy.getExistingBuiltUpArea()).setScale(2,BigDecimal.ROUND_HALF_UP);
+						totalArea = totalArea.add(buildUpArea);
+					}
+				}
+			}
+		}
+		return totalArea;
+	}
+	
 	private boolean validateDeviation(BigDecimal deviationArea) {
 		if (deviationArea != null)
 			return true;
