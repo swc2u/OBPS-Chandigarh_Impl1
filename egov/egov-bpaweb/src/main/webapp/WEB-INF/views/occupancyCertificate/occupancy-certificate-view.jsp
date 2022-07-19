@@ -328,7 +328,15 @@
 					</div>
 				</div>
 			</c:if> --%>
-
+			<c:if test="${occupancyCertificate.status.code eq 'Approved'}">
+				<div class="row">
+	                <label class="col-sm-3 control-label text-right"><spring:message code="lbl.comments"/></label>
+	                <div class="col-sm-8 add-margin">
+	                    <form:textarea class="form-control" path="approvalComent" maxlength="3750" id="approvalComent"
+	                                   name="approvalComent"/>
+	                </div>
+	            </div>
+			</c:if>
 			<c:choose>
 				<c:when test="${isFeeCollected && occupancyCertificate.status.code eq 'Approved'}">
 					<div class="buttonbottom" align="center">
