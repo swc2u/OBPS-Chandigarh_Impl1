@@ -32,15 +32,17 @@ import com.pwc.XlsxReader.entity.SetBack;
 
 public class ExcelReaderCommercial {
 
-	public static final String SHEET_NAME_MASTER = "Master";
+	public static final String SHEET_NAME_MASTER = "SCF MASTER DATA";
 	public static final String SHEET_NAME_FAR = "FAR";
 	public static final String SHEET_NAME_NO_OF_STOREYS = "No of storeys";
 	public static final String SHEET_NAME_BACK_YARD_COMSTRUCTIONS = "Back Yard construction";
 	public static final String SHEET_NAME_SETBACKS = "Setbacks";
 	public static final String SHEET_NAME_PERMISSIBLE_BUILDING_HEIGHT = "Height";
 //	public static final String SAMPLE_XLSX_FILE_PATH = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\REVISED MASTER DATA FOR 12 SECTORS-new.xlsx";
-	public static final String SAMPLE_XLSX_FILE_PATH = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\MASTER DATA FOR COMBINED PLOT_6sep21 Commercial.xlsx";
-
+//	public static final String SAMPLE_XLSX_FILE_PATH = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\MASTER DATA FOR COMBINED PLOT_6sep21 Commercial.xlsx";
+	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Updated Mater data.xlsx";
+	
+	
 	public static void main(String[] args) throws IOException, InvalidFormatException {
 		System.out.println("==================Start===================");
 		Workbook workbook = WorkbookFactory.create(new File(SAMPLE_XLSX_FILE_PATH));

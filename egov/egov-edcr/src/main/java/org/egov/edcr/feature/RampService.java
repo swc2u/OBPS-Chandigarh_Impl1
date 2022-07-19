@@ -702,7 +702,6 @@ public class RampService extends FeatureProcess {
 		if (DxfFileConstants.P_D.equals(occupancyTypeHelper.getSubtype().getCode())
 				|| DxfFileConstants.P_N.equals(occupancyTypeHelper.getSubtype().getCode())
 				|| DxfFileConstants.P_H.equals(occupancyTypeHelper.getSubtype().getCode())
-				|| DxfFileConstants.B_HEI.equals(occupancyTypeHelper.getSubtype().getCode())
 				|| DxfFileConstants.ITH_H.equals(occupancyTypeHelper.getSubtype().getCode())
 				|| DxfFileConstants.IP_I.equals(occupancyTypeHelper.getSubtype().getCode())
 				)

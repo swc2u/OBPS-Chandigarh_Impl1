@@ -47,6 +47,13 @@
 				</textElement>
 				<text><![CDATA[OCCUPANCY CERTIFICATE]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="121" y="84" width="339" height="22" uuid="1b2c9027-ab47-4b46-927d-2f319da0b808"/>
+				<textElement textAlignment="Center">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(Provisional)]]></text>
+			</staticText>
 		</band>
 	</title>
 	<detail>
