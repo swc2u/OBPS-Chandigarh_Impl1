@@ -17,6 +17,7 @@ import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.commons.entity.cdg.ServiceAvailabilityCheckConstant;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.entity.PlotMaster;
 import org.egov.edcr.feature.AccessoryBuildingService;
 import org.egov.edcr.feature.FireStair;
 import org.egov.edcr.feature.GeneralStair;
@@ -25,6 +26,7 @@ import org.egov.edcr.feature.OpenStairService;
 import org.egov.edcr.feature.PassageService;
 import org.egov.edcr.feature.SpiralStair;
 import org.egov.edcr.feature.Verandah;
+import org.egov.edcr.service.PlotMasterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -84,6 +86,9 @@ public class CDGAdditionalService {
 	private static Properties byLawsProperties;
 	private static Properties drawingNumberProperties;
 	private static Properties jobNumberProperties;
+	
+	@Autowired
+	private PlotMasterService plotMasterService;
 
 	@Autowired
 	public void PwcService(@Value("${pwc.properties.dir}") String featurePropertiesLocation) {
@@ -149,6 +154,8 @@ public class CDGAdditionalService {
 			map.put(SETBACK_LEFT, value2 != null && value2.length() > 0 ? value2 : DxfFileConstants.DATA_NOT_FOUND);
 			map.put(SETBACK_FRONT, value3 != null && value3.length() > 0 ? value3 : DxfFileConstants.DATA_NOT_FOUND);
 			map.put(SETBACK_REAR, value4 != null && value4.length() > 0 ? value4 : DxfFileConstants.DATA_NOT_FOUND);
+			
+			PlotMaster dataFromDB = plotMasterService.searchPlotMasterData(keyArrgument.get(OCCUPENCY_CODE),keyArrgument.get(SECTOR),keyArrgument.get(PLOT_NO),keyArrgument.get(PLOT_TYPE));
 
 		} else if (featureName.getCDGAConstantValue().equals(CDGAConstant.FAR.getCDGAConstantValue())) {
 			String value = farProperties.getProperty(getBaseKey(CDGAConstant.FAR.getCDGAConstantValue(), keyArrgument));
