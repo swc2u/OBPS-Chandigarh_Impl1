@@ -91,10 +91,12 @@ public class PlotMasterService {
 
 	public PlotMaster searchPlotMasterData(final String occupancyCode, final String sector, final String plotNumber, final String plotType) {
 		
-		Long plotNum = Long.valueOf(plotNumber).longValue();
-		Plot plot = plotService.searchPlot(plotNum);
-		AllowedSubOccupancyPlot allowedPlot = allowedSubOccupancyPlotService.searchAllowedSOPlot(plot.getId());
-		return plotMasterRepository.findPlotMasterData(occupancyCode,allowedPlot.getId());
+//		Long plotNum = Long.valueOf(plotNumber).longValue();
+//		Long plotId = plotService.searchPlot(plotNumber);
+//		System.out.println("plotId))))))))))))"+plotId);
+		Long allowedPlotId = allowedSubOccupancyPlotService.searchAllowedSOPlot(2L);
+		System.out.println("allowedPlotId))))))))))))"+allowedPlotId);
+		return plotMasterRepository.findPlotMasterData(occupancyCode,allowedPlotId);
 		
 	}
 }

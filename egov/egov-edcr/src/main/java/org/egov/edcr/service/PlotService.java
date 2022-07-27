@@ -75,13 +75,9 @@ public class PlotService {
         this.plotRepository = plotRepository;
     }
 
-//    @Transactional
-//    public PlotMaster searchPlotMasterData(final PlotMaster plotMaster) {
-//        return plotMasterRepository.findPlotMasterData(plotMaster);
-//    }
-
-	public Plot searchPlot(final Long plotNumber) {
-		return plotRepository.findPlot(plotNumber);
+	public Long searchPlot(final String plotNumber) {
+//		return plotRepository.findPlotByPlotNum(plotNumber);
+		return plotRepository.findPlotIdByPlotNum(plotNumber);
 		
 	}
 }

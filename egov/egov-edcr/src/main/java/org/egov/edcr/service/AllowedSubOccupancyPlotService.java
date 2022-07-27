@@ -81,8 +81,8 @@ public class AllowedSubOccupancyPlotService {
 //        return plotMasterRepository.findPlotMasterData(plotMaster);
 //    }
 
-	public AllowedSubOccupancyPlot searchAllowedSOPlot(final Long plotId) {
-		return allowedSubOccupancyPlotRepository.findAllowedSubOccupancyPlot(plotId);
+	public Long searchAllowedSOPlot(final Long plotId) {
+		return allowedSubOccupancyPlotRepository.findAllowedSubOccupancyPlotId(plotId);
 		
 	}
 }

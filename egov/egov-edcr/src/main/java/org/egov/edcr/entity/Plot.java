@@ -56,6 +56,7 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.validator.constraints.SafeHtml;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import javax.persistence.GeneratedValue;
@@ -69,7 +70,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "eg_plot")
+@Table(name = "eg_plot",schema="chandigarh")
 @SequenceGenerator(name = Plot.SEQ_PLOT, sequenceName = Plot.SEQ_PLOT, allocationSize = 1)
 @Unique(fields = "name", enableDfltMsg = true)
 @Audited
@@ -82,28 +83,36 @@ public class Plot extends AbstractAuditable {
     @GeneratedValue(generator = SEQ_PLOT, strategy = GenerationType.SEQUENCE)
     private Long id;
     
+    @Column(name="plotnum")
     private String plotNum;
 
     @NotAudited
 	@SafeHtml
+	@Column(name="name")
     private String name;
 
     @NotAudited
 	@SafeHtml
+	@Column(name="localname")
     private String localName;
     
     @NotAudited
 	@SafeHtml
+	@Column(name="areatype")
     private String areaType;
     
+    @Column(name="plotarea")
     private Double plotArea;
     
+    @Column(name="plotdepth")
     private Double plotDepth;
     
+    @Column(name="plotwidth")
     private Double plotWidth;
     
     @NotAudited
 	@SafeHtml
+	@Column(name="phase")
     private String phase;
 
     @ManyToOne

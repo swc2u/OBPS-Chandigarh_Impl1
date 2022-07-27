@@ -64,7 +64,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "eg_plot_master_data")
+@Table(name = "eg_plot_master_data",schema="chandigarh")
 @Audited
 @SequenceGenerator(name = PlotMaster.SEQ_PLOT_MASTER, sequenceName = PlotMaster.SEQ_PLOT_MASTER, allocationSize = 1)
 public class PlotMaster extends AbstractAuditable {
