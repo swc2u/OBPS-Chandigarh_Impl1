@@ -69,7 +69,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "EG_PLOT")
+@Table(name = "eg_plot")
 @SequenceGenerator(name = Plot.SEQ_PLOT, sequenceName = Plot.SEQ_PLOT, allocationSize = 1)
 @Unique(fields = "name", enableDfltMsg = true)
 @Audited
@@ -82,7 +82,7 @@ public class Plot extends AbstractAuditable {
     @GeneratedValue(generator = SEQ_PLOT, strategy = GenerationType.SEQUENCE)
     private Long id;
     
-    private Long plotNum;
+    private String plotNum;
 
     @NotAudited
 	@SafeHtml
@@ -119,11 +119,11 @@ public class Plot extends AbstractAuditable {
 		this.id = id;
 	}
 
-	public Long getPlotNum() {
+	public String getPlotNum() {
 		return plotNum;
 	}
 
-	public void setPlotNum(Long plotNum) {
+	public void setPlotNum(String plotNum) {
 		this.plotNum = plotNum;
 	}
 

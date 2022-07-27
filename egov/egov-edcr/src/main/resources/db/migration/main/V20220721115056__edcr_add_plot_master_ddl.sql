@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS eg_plot;
 CREATE TABLE eg_plot(
     id bigint NOT NULL,
     boundary bigint,
-    plotnum bigint,
+    plotnum character varying(150),
     name character varying(150) COLLATE pg_catalog."default",
     localname character varying(150) COLLATE pg_catalog."default",
     plotarea numeric(13,6),
