@@ -253,7 +253,7 @@ public class AccessoryBuildingService extends FeatureProcess {
 			
 			boolean notPermittedFlage=false;
 			if(DxfFileConstants.DATA_NOT_FOUND.equals(distanceStr) || DxfFileConstants.DATA_NOT_FOUND.equals(heightStr)) {
-				if(DxfFileConstants.F.equals(occupancyTypeHelper.getType().getCode())) {
+				if(DxfFileConstants.F.equals(occupancyTypeHelper.getType().getCode()) || DxfFileConstants.P.equals(occupancyTypeHelper.getType().getCode())) {
 					distanceStr=DxfFileConstants.NA;
 					heightStr=DxfFileConstants.NA;
 				}
