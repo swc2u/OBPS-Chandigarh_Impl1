@@ -52,8 +52,6 @@ package org.egov.edcr.service;
 import java.util.List;
 
 import org.egov.edcr.entity.Plot;
-import org.egov.edcr.repository.AllowedSubOccupancyPlotRepository;
-import org.egov.edcr.repository.PlotMasterRepository;
 import org.egov.edcr.repository.PlotRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,8 +74,10 @@ public class PlotService {
     }
 
 	public Long searchPlot(final String plotNumber) {
-//		return plotRepository.findPlotByPlotNum(plotNumber);
 		return plotRepository.findPlotIdByPlotNum(plotNumber);
+//		Plot plot= plotRepository.findPlotByPlotNum(plotNumber);
+//		System.out.println(plot.getId());
+//		return plot.getId();
 		
 	}
 }

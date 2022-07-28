@@ -100,8 +100,8 @@ public class PlotMaster extends AbstractAuditable {
     private Double minimumPermissibleSetback_Right;
     
     @ManyToOne
-    @JoinColumn(name = "allowedsuboccupancyid", updatable = false)
-    private AllowedSubOccupancyPlot allowedsuboccupancyid;
+    @JoinColumn(name = "allowedsuboccupancy", updatable = false)
+    private AllowedSubOccupancyPlot allowedsuboccupancy;
 
 	public Long getId() {
 		return id;
@@ -192,11 +192,11 @@ public class PlotMaster extends AbstractAuditable {
 	}
 
 	public AllowedSubOccupancyPlot getAllowedsuboccupancyid() {
-		return allowedsuboccupancyid;
+		return allowedsuboccupancy;
 	}
 
 	public void setAllowedsuboccupancyid(AllowedSubOccupancyPlot allowedsuboccupancyid) {
-		this.allowedsuboccupancyid = allowedsuboccupancyid;
+		this.allowedsuboccupancy = allowedsuboccupancyid;
 	}
     
 

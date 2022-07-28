@@ -50,7 +50,6 @@ package org.egov.edcr.entity;
 
 import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.persistence.entity.AbstractAuditable;
-import org.egov.infra.persistence.entity.AbstractPersistable;
 import org.egov.infra.persistence.validator.annotation.Unique;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;

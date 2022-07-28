@@ -156,7 +156,9 @@ public class CDGAdditionalService {
 			map.put(SETBACK_REAR, value4 != null && value4.length() > 0 ? value4 : DxfFileConstants.DATA_NOT_FOUND);
 			
 			PlotMaster dataFromDB = plotMasterService.searchPlotMasterData(keyArrgument.get(OCCUPENCY_CODE),keyArrgument.get(SECTOR),keyArrgument.get(PLOT_NO),keyArrgument.get(PLOT_TYPE));
+
 			System.out.println(dataFromDB.getCode());
+			
 		} else if (featureName.getCDGAConstantValue().equals(CDGAConstant.FAR.getCDGAConstantValue())) {
 			String value = farProperties.getProperty(getBaseKey(CDGAConstant.FAR.getCDGAConstantValue(), keyArrgument));
 			map.put(MAXMIUM_PERMISSIBLE_FAR,

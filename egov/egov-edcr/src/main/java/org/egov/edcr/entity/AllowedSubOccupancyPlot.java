@@ -48,9 +48,11 @@
 
 package org.egov.edcr.entity;
 
+import com.google.common.base.Objects;
 import com.google.gson.annotations.Expose;
 
 import org.egov.common.entity.bpa.SubOccupancy;
+import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -79,9 +81,9 @@ public class AllowedSubOccupancyPlot extends AbstractAuditable {
     @GeneratedValue(generator = SEQ_PLOT_SO_ALLOWED, strategy = GenerationType.SEQUENCE)
     private Long id;
     
-    @ManyToOne
-    @JoinColumn(name = "plot")
-   private Plot  plot;
+    @ManyToOne 
+    @JoinColumn(name = "plot", updatable = false)
+    private Plot  plot;
    
     @ManyToOne
     @JoinColumn(name = "subOccupancy")
@@ -112,5 +114,4 @@ public class AllowedSubOccupancyPlot extends AbstractAuditable {
 		this.subOccupancy = subOccupancy;
 	}
 
-	
 }

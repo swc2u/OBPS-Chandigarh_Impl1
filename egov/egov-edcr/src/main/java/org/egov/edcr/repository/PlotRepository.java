@@ -50,6 +50,8 @@ package org.egov.edcr.repository;
 
 import static org.hibernate.jpa.QueryHints.HINT_CACHEABLE;
 
+import java.util.ArrayList;
+
 import javax.persistence.QueryHint;
 
 import org.egov.edcr.entity.Plot;
@@ -63,14 +65,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PlotRepository extends JpaRepository<Plot, Long> {
- 
-//    @Query("select p from Plot p where p.plotNum = :plotNum")
-//	Plot findPlotByPlotNum(@Param("plotNum") Long plotNum);
-    
-//    @QueryHints({@QueryHint(name = HINT_CACHEABLE, value = "true")})
-//    Plot findPlotByPlotNum(String plotNum);
+     
+    @QueryHints({@QueryHint(name = HINT_CACHEABLE, value = "true")})
+    Plot findPlotByPlotNum(String plotNum);
     
     @Query("select p.id from Plot p where p.plotNum = :plotNumber")
 	Long findPlotIdByPlotNum(@Param("plotNumber") String plotNumber);
-
+    
 }

@@ -93,10 +93,9 @@ public class PlotMasterService {
 		
 //		Long plotNum = Long.valueOf(plotNumber).longValue();
 //		Long plotId = plotService.searchPlot(plotNumber);
-//		System.out.println("plotId))))))))))))"+plotId);
-		Long allowedPlotId = allowedSubOccupancyPlotService.searchAllowedSOPlot(2L);
-		System.out.println("allowedPlotId))))))))))))"+allowedPlotId);
-		return plotMasterRepository.findPlotMasterData(occupancyCode,allowedPlotId);
+			Long allowedPlotId = allowedSubOccupancyPlotService.searchAllowedSOPlot(plotNumber);
+			System.out.println("allowedPlotId****************"+allowedPlotId);
+			return plotMasterRepository.findPlotMasterData(occupancyCode,allowedPlotId);
 		
 	}
 }

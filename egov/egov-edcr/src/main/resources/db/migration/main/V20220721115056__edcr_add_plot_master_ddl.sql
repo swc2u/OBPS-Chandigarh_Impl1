@@ -17,6 +17,7 @@ CREATE TABLE eg_plot(
     createddate timestamp without time zone DEFAULT now(),
     lastmodifiedby numeric DEFAULT 1,
     lastmodifieddate timestamp without time zone DEFAULT now(),
+    version numeric DEFAULT 0,
 	
     CONSTRAINT eg_plot_pkey PRIMARY KEY (id),
     CONSTRAINT eg_plot_fkey FOREIGN KEY (boundary)
@@ -26,24 +27,25 @@ CREATE TABLE eg_plot(
 CREATE TABLE eg_plot_supoccupancy_allowed
 (
     id bigint NOT NULL,
-	plotid bigint,
-	suboccupancyid bigint,
+	plot bigint,
+	suboccupancy bigint,
 	createdby numeric DEFAULT 1,
     createddate timestamp without time zone DEFAULT now(),
     lastmodifiedby numeric DEFAULT 1,
     lastmodifieddate timestamp without time zone DEFAULT now(),
+	version numeric DEFAULT 0,
 	
     CONSTRAINT eg_plot_supoccupancy_allowed_pkey PRIMARY KEY (id),
-    CONSTRAINT eg_plot_supoccupancy_allowed_fkey_plot FOREIGN KEY (plotid)
+    CONSTRAINT eg_plot_supoccupancy_allowed_fkey_plot FOREIGN KEY (plot)
         REFERENCES eg_plot (id),
-	CONSTRAINT eg_plot_supoccupancy_allowed_fkey_so FOREIGN KEY (subOccupancyid)
+	CONSTRAINT eg_plot_supoccupancy_allowed_fkey_so FOREIGN KEY (subOccupancy)
         REFERENCES egbpa_sub_occupancy (id)
 );
 
 CREATE TABLE eg_plot_master_data
 (
     id bigint NOT NULL,
-	allowedsuboccupancyid bigint,
+	allowedsuboccupancy bigint,
 	code character varying(10) NOT NULL,    
     backCourtyardWidth numeric(13,6),
     backCourtyardHeight numeric(13,6),  
@@ -58,9 +60,10 @@ CREATE TABLE eg_plot_master_data
     createddate timestamp without time zone DEFAULT now(),
     lastmodifiedby numeric DEFAULT 1,
     lastmodifieddate timestamp without time zone DEFAULT now(),
+	version numeric DEFAULT 0,
 	
     CONSTRAINT eg_plot_master_data_pkey PRIMARY KEY (id),
-    CONSTRAINT eg_plot_master_data_fkey FOREIGN KEY (allowedsuboccupancyid)
+    CONSTRAINT eg_plot_master_data_fkey FOREIGN KEY (allowedsuboccupancy)
         REFERENCES eg_plot_supoccupancy_allowed (id)
 );
 

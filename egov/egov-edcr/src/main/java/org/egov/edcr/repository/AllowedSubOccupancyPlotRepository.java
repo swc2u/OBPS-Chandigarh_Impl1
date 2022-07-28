@@ -60,7 +60,7 @@ import static org.hibernate.jpa.QueryHints.HINT_CACHEABLE;
 @Repository
 public interface AllowedSubOccupancyPlotRepository extends JpaRepository<AllowedSubOccupancyPlot, Long> {
     
-    @Query("select ap.id from AllowedSubOccupancyPlot ap where ap.plot = :plotId")
-	Long findAllowedSubOccupancyPlotId(@Param("plotId") Long plotId);
+    @Query("select ap.id from AllowedSubOccupancyPlot ap where ap.plot.plotNum = :plotNumber")
+	Long findAllowedSubOccupancyPlotId(@Param("plotNumber") String plotNumber);
 
 }
