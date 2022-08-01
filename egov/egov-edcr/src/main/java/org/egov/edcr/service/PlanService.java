@@ -191,7 +191,7 @@ public class PlanService {
 		pl.getPlanInformation().setPlotLength(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_LENGTH)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_LENGTH):"NA");
 		pl.getPlanInformation().setPlotWidth(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_WIDTH)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_WIDTH):"NA");
 		pl.getPlanInformation().setCommercialAreaOccupancyAsPerRule(pl.getPlanInfoProperties().get(DxfFileConstants.COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE):"NA");
-
+		pl.getPlanInformation().setIsSecurityFeeApplicable(pl.getPlanInfoProperties().get(DxfFileConstants.IS_SECRUITY_FEE_APPLICABLE)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.IS_SECRUITY_FEE_APPLICABLE):"Yes");
 		
 		try {
 			pl.getPlanInformation().setDemolitionArea(pl.getPlanInfoProperties().get(DxfFileConstants.DEMOLITION_AREA)!=null?new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.DEMOLITION_AREA)):BigDecimal.ZERO);

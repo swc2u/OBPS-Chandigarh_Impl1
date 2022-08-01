@@ -159,7 +159,7 @@ public class FeeCalculationUtils {
 								if (BpaConstants.SECURITY_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal securityFeeAmount = permitFeeCalculationService.getTotalSecurityFee(plan,
-											mostRestrictiveFarHelper);
+											mostRestrictiveFarHelper,null);
 									if (securityFeeAmount.compareTo(BigDecimal.ZERO) >= 0) {
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(), String
 												.valueOf(securityFeeAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
