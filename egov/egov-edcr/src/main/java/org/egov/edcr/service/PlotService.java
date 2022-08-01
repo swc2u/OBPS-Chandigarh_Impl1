@@ -75,9 +75,9 @@ public class PlotService {
 
 	public Long searchPlot(final String plotNumber) {
 		return plotRepository.findPlotIdByPlotNum(plotNumber);
-//		Plot plot= plotRepository.findPlotByPlotNum(plotNumber);
-//		System.out.println(plot.getId());
-//		return plot.getId();
-		
+	}
+
+	public List<Plot> getAllPlots() {
+		return plotRepository.findAll();
 	}
 }

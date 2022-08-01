@@ -146,7 +146,7 @@ public class CDGAdditionalService {
 		PlotMaster masterDataFromDB = plotMasterService.searchPlotMasterData(keyArrgument.get(OCCUPENCY_CODE),keyArrgument.get(SECTOR),keyArrgument.get(PLOT_NO),keyArrgument.get(PLOT_TYPE));
 		
 		if (featureName.getCDGAConstantValue().equals(SETBACKS)) {
-//			String key = getBaseKey(SETBACKS, keyArrgument);
+			String key = getBaseKey(SETBACKS, keyArrgument);
 //			String value1 = setbackProperties.getProperty(key + "." + RIGHT);
 //			String value2 = setbackProperties.getProperty(key + "." + LEFT);
 //			String value3 = setbackProperties.getProperty(key + "." + FRONT);
@@ -155,7 +155,6 @@ public class CDGAdditionalService {
 //			map.put(SETBACK_LEFT, value2 != null && value2.length() > 0 ? value2 : DxfFileConstants.DATA_NOT_FOUND);
 //			map.put(SETBACK_FRONT, value3 != null && value3.length() > 0 ? value3 : DxfFileConstants.DATA_NOT_FOUND);
 //			map.put(SETBACK_REAR, value4 != null && value4.length() > 0 ? value4 : DxfFileConstants.DATA_NOT_FOUND);
-			
 			
 
 			System.out.println(masterDataFromDB.getCode());

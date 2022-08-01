@@ -46,54 +46,70 @@
  *
  */
 
-package org.egov.edcr.service;
+package org.egov.edcr.web.controller.master;
 
-
+import org.egov.common.entity.edcr.Plot;
 import org.egov.edcr.entity.PlotMaster;
-import org.egov.edcr.repository.PlotMasterRepository;
+import org.egov.edcr.service.PlotMasterService;
+import org.egov.edcr.service.PlotService;
+import org.egov.infra.admin.master.entity.Boundary;
+import org.egov.infra.admin.master.entity.BoundaryType;
 import org.egov.infra.admin.master.entity.Department;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.egov.infra.admin.master.entity.HierarchyType;
+import org.egov.infra.admin.master.service.BoundaryService;
+import org.egov.infra.admin.master.service.BoundaryTypeService;
+import org.egov.infra.admin.master.service.HierarchyTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
+import java.util.List;
 
-@Service
-@Transactional(readOnly = true)
-public class PlotMasterService {
+@Controller
+@RequestMapping("plotMaster/create")
+public class CreatePlotMasterDataController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PlotMasterService.class);
-    
-    private final PlotMasterRepository plotMasterRepository;
+    private static final String PLOTMASTER_CREATE_VIEW = "plot-master-create";
     
     @Autowired
-    private PlotService plotService;
+    PlotService plotService;
     
     @Autowired
-    private AllowedSubOccupancyPlotService allowedSubOccupancyPlotService;
-
-
-    @Autowired
-    public PlotMasterService(final PlotMasterRepository plotMasterRepository) {
-        this.plotMasterRepository = plotMasterRepository;
+    PlotMasterService plotMasterService;
+    
+    @ModelAttribute
+    public PlotMaster plotMaster() {
+        return new PlotMaster();
     }
 
-	public PlotMaster searchPlotMasterData(final String occupancyCode, final String sector, final String plotNumber, final String plotType) {
-		
-			Long allowedPlotId = allowedSubOccupancyPlotService.searchAllowedSOPlot(plotNumber);
-			return plotMasterRepository.findPlotMasterData(occupancyCode,allowedPlotId);
-		
-	}
+    @ModelAttribute("plots")
+    public List<org.egov.edcr.entity.Plot> plot() {
+        return plotService.getAllPlots();
+    }
 
-	public PlotMaster getPlotMasterByName(String plotName) {
-		return plotMasterRepository.findAllByPlotName(plotName);
-	}
-	
-	@Transactional
-	public PlotMaster createPlotMasterData(PlotMaster plotMaster) {
-		
-		return plotMasterRepository.save(plotMaster);
-		
-	}
+    public String showCreateBoundarySearchForm(Model model) {
+        model.addAttribute("search", true);
+        return PLOTMASTER_CREATE_VIEW;
+    }
+    
+    @RequestMapping(method = RequestMethod.POST)
+    public String createDepartment(@Valid @ModelAttribute final PlotMaster plotMaster, final BindingResult errors,
+            final RedirectAttributes redirectAttrs) {
+        if (errors.hasErrors())
+            return PLOTMASTER_CREATE_VIEW;
+        
+        plotMasterService.createPlotMasterData(plotMaster);
+        redirectAttrs.addFlashAttribute("message", "msg.plotMaster.create.success");
+
+        return "redirect:/plotMaster/view/" + plotMaster.getCode();
+    }
 }

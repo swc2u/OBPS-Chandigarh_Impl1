@@ -50,6 +50,7 @@ package org.egov.edcr.repository;
 
 
 import org.egov.edcr.entity.PlotMaster;
+import org.egov.infra.admin.master.entity.Department;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
@@ -68,5 +69,8 @@ public interface PlotMasterRepository extends JpaRepository<PlotMaster,Long> {
     @Query("select pm from PlotMaster pm where pm.code = :occupancyCode AND pm.allowedsuboccupancy.id = :allowedsuboccupancyId")
 	PlotMaster findPlotMasterData(@Param("occupancyCode") String occupancyCode,
 							            @Param("allowedsuboccupancyId") Long allowedsuboccupancyId);
+   
+    @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.plot.name = :plotName")
+	PlotMaster findAllByPlotName(@Param("plotName") String plotName);
 
 }

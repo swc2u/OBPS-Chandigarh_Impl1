@@ -46,54 +46,40 @@
  *
  */
 
-package org.egov.edcr.service;
-
+package org.egov.edcr.web.controller.master;
 
 import org.egov.edcr.entity.PlotMaster;
-import org.egov.edcr.repository.PlotMasterRepository;
+import org.egov.edcr.service.PlotMasterService;
 import org.egov.infra.admin.master.entity.Department;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.egov.infra.admin.master.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+/**
+ * @author subhash
+ */
+@Controller
+@RequestMapping(value = "/plotMaster/view/{name}")
+public class ViewPlotMasterController {
 
-@Service
-@Transactional(readOnly = true)
-public class PlotMasterService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PlotMasterService.class);
-    
-    private final PlotMasterRepository plotMasterRepository;
-    
-    @Autowired
-    private PlotService plotService;
-    
-    @Autowired
-    private AllowedSubOccupancyPlotService allowedSubOccupancyPlotService;
-
+    private final PlotMasterService plotMasterService;
 
     @Autowired
-    public PlotMasterService(final PlotMasterRepository plotMasterRepository) {
-        this.plotMasterRepository = plotMasterRepository;
+    public ViewPlotMasterController(final PlotMasterService plotMasterService) {
+        this.plotMasterService = plotMasterService;
     }
 
-	public PlotMaster searchPlotMasterData(final String occupancyCode, final String sector, final String plotNumber, final String plotType) {
-		
-			Long allowedPlotId = allowedSubOccupancyPlotService.searchAllowedSOPlot(plotNumber);
-			return plotMasterRepository.findPlotMasterData(occupancyCode,allowedPlotId);
-		
-	}
+    @ModelAttribute
+    public PlotMaster plotMasterModel(@PathVariable final String name) {
+        return plotMasterService.getPlotMasterByName(name);
+    }
 
-	public PlotMaster getPlotMasterByName(String plotName) {
-		return plotMasterRepository.findAllByPlotName(plotName);
-	}
-	
-	@Transactional
-	public PlotMaster createPlotMasterData(PlotMaster plotMaster) {
-		
-		return plotMasterRepository.save(plotMaster);
-		
-	}
+    @RequestMapping(method = RequestMethod.GET)
+    public String viewPlotMaster() {
+        return "plot-master-view";
+    }
 }
