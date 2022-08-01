@@ -304,12 +304,25 @@
 								<div class="col-sm-3">
 									<c:out value="${fees.isMandatory ? 'Yes' : 'No'}"/>
 								</div>
-								<div class="col-sm-2">
-									<form:input class="form-control patternvalidation" maxlength="20" data-pattern="text" 
-												id="letterToPartyFeeDetails[${status.index}].floorarea" 
-												path="letterToPartyFeeDetails[${status.index}].floorarea"  onkeypress="return checkIfValid(this, event)"/>
-									<form:errors path="letterToPartyFees[${status.index}].floorarea" cssClass="add-margin error-msg" />
+								<div class="col-sm-2 add-margin">
+									<c:choose>
+										<c:when test="${fees.letterToPartyFeeMaster.feeName eq 'Security fee'}">
+											<form:select id="letterToPartyFeeDetails[${status.index}].floorarea" 
+													path="letterToPartyFeeDetails[${status.index}].floorarea" cssClass="form-control" >
+												<form:option value="1">Yes</form:option>		
+												<form:option value="0">No</form:option>		
+											</form:select>
+											<form:errors path="letterToPartyFees[${status.index}].floorarea" cssClass="add-margin error-msg" />
+										</c:when>
+										<c:otherwise>
+											<form:input class="form-control patternvalidation" maxlength="20" data-pattern="text" 
+														id="letterToPartyFeeDetails[${status.index}].floorarea" 
+														path="letterToPartyFeeDetails[${status.index}].floorarea"  onkeypress="return checkIfValid(this, event)"/>
+											<form:errors path="letterToPartyFees[${status.index}].floorarea" cssClass="add-margin error-msg" />
+										</c:otherwise>
+									</c:choose>
 								</div>
+								
 								<div class="col-sm-3">
 									<c:out value="${fees.remarks}" default="N/A"/>
 								</div>
