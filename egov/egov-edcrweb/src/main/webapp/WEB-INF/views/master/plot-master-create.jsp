@@ -116,76 +116,7 @@
                                     </div>
                                 </div>
 
-                                <div class="panel-body custom-form">
-                                   <div class="form-group">
-                                        <label class="col-sm-3 control-label"><spring:message code="lbl.occupancy"/></label>
-                                        <div class="col-sm-6" style="padding-top: 7px">
-                                            <strong><c:out value="${subOccupancy.occupancy.name}"/></strong>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">
-                                            <spring:message code="lbl.subOccupancy"/>
-                                        </label>
-                                        <div class="col-sm-6" style="padding-top: 7px">
-                                            <strong><c:out value="${subOccupancy.name}"/></strong>
-                                            <input type="hidden" name="boundaryType" value="<c:out value="${subOccupancy.id}" />"/>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="panel-body custom-form">
-                                       
-                                       
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">
-                                                <spring:message code="lbl.code"/><span class="mandatory"></span>
-                                            </label>
-                                            <div class="col-sm-6">
-                                                <form:input path="code" id="code" type="text" class="form-control low-width patternvalidation" data-pattern="masterCode" value="${subOccupancy.code}" readonly="true" autocomplete="off"  maxlength="25"/>
-                                            </div>
-                                        </div>
-                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">
-                                                <spring:message code="lbl.phase"/><span class="mandatory"></span>
-                                            </label>
-                                            <div class="col-sm-6">
-                                                <form:input path="phase" id="phase" type="text" class="form-control low-width patternvalidation" data-pattern="specialName" placeholder="" autocomplete="off" required="required"/>
-                                                <form:errors path="phase" cssClass="add-margin error-msg"/>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">
-                                                <spring:message code="lbl.local.sector"/>
-                                            </label>
-                                            <div class="col-sm-6">
-                                                <form:input path="sector" id="sector" type="text" class="form-control low-width patternvalidation" data-pattern="specialName" placeholder="" autocomplete="off"/>
-                                                <form:errors path="sector" cssClass="add-margin error-msg"/>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">
-                                                <spring:message code="lbl.plot.number"/><span class="mandatory"></span>
-                                            </label>
-                                            <div class="col-sm-6">
-                                                <form:input path="plotNum" id="name" type="text" class="form-control low-width is_valid_number" placeholder="" autocomplete="off" required="required"/>
-                                                <form:errors path="plotNum" cssClass="add-margin error-msg"/>
-                                            </div>
-                                        </div>
-                                        
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="text-center">
-                                    <button type="submit" class="btn btn-primary"><spring:message code="lbl.submit"/></button>
-                                    <a href="javascript:void(0)" class="btn btn-default" id="backBtnId">
-                                        <spring:message code="lbl.create"/>&nbsp;<spring:message code="lbl.search"/>
-                                    </a>
-                                    <a href="javascript:void(0)" class="btn btn-default" onclick="self.close()"><spring:message code="lbl.close"/></a>
-                                </div>
-                            </div>
+                                
                         </form:form>
                     </c:otherwise>
                 </c:choose>

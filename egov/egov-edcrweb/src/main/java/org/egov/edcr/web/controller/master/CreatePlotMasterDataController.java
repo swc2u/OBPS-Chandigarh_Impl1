@@ -48,17 +48,13 @@
 
 package org.egov.edcr.web.controller.master;
 
-import org.egov.common.entity.edcr.Plot;
+import org.egov.common.entity.bpa.Occupancy;
+import org.egov.common.entity.bpa.SubOccupancy;
+import org.egov.commons.service.OccupancyService;
+import org.egov.commons.service.SubOccupancyService;
 import org.egov.edcr.entity.PlotMaster;
 import org.egov.edcr.service.PlotMasterService;
 import org.egov.edcr.service.PlotService;
-import org.egov.infra.admin.master.entity.Boundary;
-import org.egov.infra.admin.master.entity.BoundaryType;
-import org.egov.infra.admin.master.entity.Department;
-import org.egov.infra.admin.master.entity.HierarchyType;
-import org.egov.infra.admin.master.service.BoundaryService;
-import org.egov.infra.admin.master.service.BoundaryTypeService;
-import org.egov.infra.admin.master.service.HierarchyTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -68,7 +64,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -86,6 +81,12 @@ public class CreatePlotMasterDataController {
     @Autowired
     PlotMasterService plotMasterService;
     
+    @Autowired
+    OccupancyService occupancyService;
+    
+    @Autowired
+    SubOccupancyService subOccupancyService;
+    
     @ModelAttribute
     public PlotMaster plotMaster() {
         return new PlotMaster();
@@ -95,21 +96,41 @@ public class CreatePlotMasterDataController {
     public List<org.egov.edcr.entity.Plot> plot() {
         return plotService.getAllPlots();
     }
+    @ModelAttribute("occupancy")
+    public List<Occupancy> occupancy() {
+        return occupancyService.findAll();
+    }
 
-    public String showCreateBoundarySearchForm(Model model) {
+    
+    @GetMapping
+    public String showCreatePlotMasterSearchForm(Model model) {
         model.addAttribute("search", true);
+        return "edcrapplication-new";
+    }
+    
+    
+    @GetMapping("{subOccupancyId}")
+    public String showCreateBoundaryForm(@PathVariable Long subOccupancyId, Model model, RedirectAttributes redirectAttributes) {
+        SubOccupancy subOccupancy =subOccupancyService.findById(subOccupancyId);
+        if (subOccupancy!=null) {
+            redirectAttributes.addFlashAttribute("warning", "err.root.subOccupancy.exists");
+            return "redirect:/plotMaster/create";
+        }
+
+        model.addAttribute("subOccupancy", subOccupancy);
+        model.addAttribute("search", false);
         return PLOTMASTER_CREATE_VIEW;
     }
     
-    @RequestMapping(method = RequestMethod.POST)
-    public String createDepartment(@Valid @ModelAttribute final PlotMaster plotMaster, final BindingResult errors,
-            final RedirectAttributes redirectAttrs) {
-        if (errors.hasErrors())
+    @PostMapping
+    public String createBoundary(@Valid @ModelAttribute PlotMaster plotMaster, BindingResult errors,
+                                 RedirectAttributes redirectAttributes, Model model) {
+        if (errors.hasErrors()) {
             return PLOTMASTER_CREATE_VIEW;
-        
+        }
         plotMasterService.createPlotMasterData(plotMaster);
-        redirectAttrs.addFlashAttribute("message", "msg.plotMaster.create.success");
-
+        redirectAttributes.addFlashAttribute("message", "msg.plotMaster.create.success");
+        redirectAttributes.addFlashAttribute("create", true);
         return "redirect:/plotMaster/view/" + plotMaster.getCode();
     }
 }
