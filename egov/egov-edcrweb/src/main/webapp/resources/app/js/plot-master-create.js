@@ -26,12 +26,12 @@
  *
  *         1) All versions of this program, verbatim or modified must carry this
  *            Legal Notice.
- *            Further, all user interfaces, including but not limited to citizen facing interfaces,
- *            Urban Local Bodies interfaces, dashboards, mobile applications, of the program and any
+ *            Further, all user interfaces, including but not limited to citizen facing interfaces, 
+ *            Urban Local Bodies interfaces, dashboards, mobile applications, of the program and any 
  *            derived works should carry eGovernments Foundation logo on the top right corner.
  *
  *            For the logo, please refer http://egovernments.org/html/logo/egov_logo.png.
- *            For any further queries on attribution, including queries on brand guidelines,
+ *            For any further queries on attribution, including queries on brand guidelines, 
  *            please contact contact@egovernments.org
  *
  *         2) Any misrepresentation of the origin of the material is prohibited. It
@@ -46,43 +46,22 @@
  *
  */
 
-package org.egov.edcr.service;
+function populateSubOccupancy(dropdown) {
+    populatesubOccupancy({
+        occupancyId: dropdown.value
+    });
+}
 
-
-import java.util.List;
-
-import org.egov.edcr.entity.Plot;
-import org.egov.edcr.repository.PlotRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-
-@Service
-@Transactional(readOnly = true)
-public class PlotService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PlotService.class);
-    
-    private final PlotRepository plotRepository;
-
-    @Autowired
-    public PlotService(final PlotRepository plotRepository) {
-        this.plotRepository = plotRepository;
+$('#searchBtn').click(function () {
+    if ($("#occupancy").val() === '' || $("#subOccupancy").val() === '') {
+        bootbox.alert("Please select a valid sub occupancy");
+        return;
     }
 
-	public Long searchPlot(final String plotNumber) {
-		return plotRepository.findPlotIdByPlotNum(plotNumber);
-	}
+    $("#plotMasterCreateSearchForm").attr('action', 'create/' + $("#subOccupancy").val());
+    $("#plotMasterCreateSearchForm").submit();
+});
 
-	public List<Plot> getAllPlots() {
-		return plotRepository.findAll();
-	}
-	
-	@Transactional
-	public Plot savePlotData(Plot plot) {
-		return plotRepository.saveAndFlush(plot) ;
-	}
-}
+$('#backBtnId').click(function () {
+    window.location = '/edcr/plotMaster/create';
+});

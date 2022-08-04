@@ -50,36 +50,34 @@ package org.egov.edcr.web.controller.master;
 
 import org.egov.edcr.entity.PlotMaster;
 import org.egov.edcr.service.PlotMasterService;
-import org.egov.infra.admin.master.entity.Department;
-import org.egov.infra.admin.master.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-/**
- * @author subhash
- */
+
 @Controller
-@RequestMapping(value = "/plotMaster/view/{name}")
+@RequestMapping(value = "/plotMaster/view")
 public class ViewPlotMasterController {
-
-    private final PlotMasterService plotMasterService;
-
-    @Autowired
-    public ViewPlotMasterController(final PlotMasterService plotMasterService) {
-        this.plotMasterService = plotMasterService;
+	
+	@Autowired
+    private PlotMasterService plotMasterService;
+	
+	private final String PM_VIEW="plot-master-view";
+   
+    @GetMapping
+    public String viewBoundarySearchForm() {
+        return PM_VIEW;
     }
-
-    @ModelAttribute
-    public PlotMaster plotMasterModel(@PathVariable final String name) {
-        return plotMasterService.getPlotMasterByName(name);
-    }
-
-    @RequestMapping(method = RequestMethod.GET)
-    public String viewPlotMaster() {
-        return "plot-master-view";
+    
+    @GetMapping(value = "{plotMasterId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String viewPlotMasterData(@PathVariable Long plotMasterId, Model model) {
+        model.addAttribute("plotMaster", plotMasterService.getPlotMasterById(plotMasterId));
+        return PM_VIEW;
     }
 }

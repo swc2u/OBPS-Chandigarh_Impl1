@@ -50,9 +50,9 @@ package org.egov.edcr.entity;
 
 import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.persistence.entity.AbstractAuditable;
-import org.egov.infra.persistence.validator.annotation.Unique;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.Column;
@@ -64,16 +64,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "eg_plot",schema="chandigarh")
 @SequenceGenerator(name = Plot.SEQ_PLOT, sequenceName = Plot.SEQ_PLOT, allocationSize = 1)
-@Unique(fields = "name", enableDfltMsg = true)
-@Audited
-
+@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 public class Plot extends AbstractAuditable {
 
     public static final String SEQ_PLOT = "seq_eg_plot";
@@ -104,15 +101,15 @@ public class Plot extends AbstractAuditable {
     private Double plotArea;
     
     @Column(name="plotdepth")
-    private Double plotDepth;
+    private String plotDepth;
     
     @Column(name="plotwidth")
-    private Double plotWidth;
+    private String plotWidth;
     
     @NotAudited
 	@SafeHtml
 	@Column(name="phase")
-    private String phase;
+    private int phase;
 
     @ManyToOne
     @JoinColumn(name = "boundary")
@@ -167,27 +164,27 @@ public class Plot extends AbstractAuditable {
 		this.plotArea = plotArea;
 	}
 
-	public Double getPlotDepth() {
+	public String getPlotDepth() {
 		return plotDepth;
 	}
 
-	public void setPlotDepth(Double plotDepth) {
+	public void setPlotDepth(String plotDepth) {
 		this.plotDepth = plotDepth;
 	}
 
-	public Double getPlotWidth() {
+	public String getPlotWidth() {
 		return plotWidth;
 	}
 
-	public void setPlotWidth(Double plotWidth) {
+	public void setPlotWidth(String plotWidth) {
 		this.plotWidth = plotWidth;
 	}
 
-	public String getPhase() {
+	public int getPhase() {
 		return phase;
 	}
 
-	public void setPhase(String phase) {
+	public void setPhase(int phase) {
 		this.phase = phase;
 	}
 

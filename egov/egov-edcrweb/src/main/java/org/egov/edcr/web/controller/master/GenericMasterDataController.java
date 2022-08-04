@@ -46,43 +46,62 @@
  *
  */
 
-package org.egov.edcr.service;
+package org.egov.edcr.web.controller.master;
 
+import org.apache.commons.io.IOUtils;
+import org.egov.common.entity.bpa.Occupancy;
+import org.egov.common.entity.bpa.SubOccupancy;
+import org.egov.commons.service.OccupancyService;
+import org.egov.commons.service.SubOccupancyService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 import java.util.List;
 
-import org.egov.edcr.entity.Plot;
-import org.egov.edcr.repository.PlotRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+@Controller
+public class GenericMasterDataController {
 
-
-@Service
-@Transactional(readOnly = true)
-public class PlotService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PlotService.class);
+    private static final String DISPLAY_KEY = "Text";
+    private static final String VALUE_KEY = "Value";
     
-    private final PlotRepository plotRepository;
-
     @Autowired
-    public PlotService(final PlotRepository plotRepository) {
-        this.plotRepository = plotRepository;
+    OccupancyService occupancyService;
+    
+    @Autowired
+    SubOccupancyService subOccupancyService;
+    
+    @GetMapping("/suboccupancy/ajax/suboccupancylist-for-occupancy")
+    @ResponseBody
+    public void getBoundaryTypeByHierarchyType(@RequestParam Long occupancyId, HttpServletResponse response)
+            throws IOException {
+    	Occupancy occupancy = occupancyService.findById(occupancyId);
+        final List<SubOccupancy> subOccupancy = subOccupancyService.findSubOccupanciesByOccupancy(occupancy.getName());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        IOUtils.write(buildJSONString(subOccupancy), response.getWriter());
     }
+    
+    
+    
+    private String buildJSONString(List<SubOccupancy> subOccupancies) {
+        final JsonArray jsonArray = new JsonArray();
+        for (final SubOccupancy subOccupancy : subOccupancies) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty(DISPLAY_KEY, subOccupancy.getName());
+            jsonObject.addProperty(VALUE_KEY, subOccupancy.getId());
+            jsonArray.add(jsonObject);
+        }
 
-	public Long searchPlot(final String plotNumber) {
-		return plotRepository.findPlotIdByPlotNum(plotNumber);
-	}
-
-	public List<Plot> getAllPlots() {
-		return plotRepository.findAll();
-	}
-	
-	@Transactional
-	public Plot savePlotData(Plot plot) {
-		return plotRepository.saveAndFlush(plot) ;
-	}
+        return jsonArray.toString();
+    }
+    
 }

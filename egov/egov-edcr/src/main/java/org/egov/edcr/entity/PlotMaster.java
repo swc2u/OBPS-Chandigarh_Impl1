@@ -49,24 +49,32 @@
 package org.egov.edcr.entity;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.SafeHtml;
+
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.LAZY;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
 @Entity
 @Table(name = "eg_plot_master_data",schema="chandigarh")
-@Audited
 @SequenceGenerator(name = PlotMaster.SEQ_PLOT_MASTER, sequenceName = PlotMaster.SEQ_PLOT_MASTER, allocationSize = 1)
+@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 public class PlotMaster extends AbstractAuditable {
 	private static final long serialVersionUID = 13233L;
 	public static final String SEQ_PLOT_MASTER = "seq_eg_plot_master_data";
@@ -81,9 +89,9 @@ public class PlotMaster extends AbstractAuditable {
     @NotBlank
     private String code;
     
-    private Double backCourtyardWidth;
+    private String backCourtyardWidth;
     
-    private Double backCourtyardHeight;
+    private String backCourtyardHeight;
     
     private Long permissibleBuildingStories;
     
@@ -91,17 +99,30 @@ public class PlotMaster extends AbstractAuditable {
     
     private Long maxmimumPermissibleFAR;
     
-    private Double minimumPermissibleSetback_Front;
+    private String minimumPermissibleSetback_Front;
     
-    private Double minimumPermissibleSetback_Rear;
+    private String minimumPermissibleSetback_Rear;
     
-    private Double minimumPermissibleSetback_Left;
+    private String minimumPermissibleSetback_Left;
     
-    private Double minimumPermissibleSetback_Right;
+    private String minimumPermissibleSetback_Right;
     
-    @ManyToOne
-    @JoinColumn(name = "allowedsuboccupancy", updatable = false)
+    @OneToOne(fetch = LAZY, cascade = ALL)
+    @Cascade(CascadeType.SAVE_UPDATE)
+    @JoinColumn(name = "allowedsuboccupancy")
+    @NotAudited
     private AllowedSubOccupancyPlot allowedsuboccupancy;
+    
+    private transient AllowedSubOccupancyPlot savedAllowedSubOccupancyPlot;
+    
+    
+    public PlotMaster() {
+    	this.allowedsuboccupancy=new AllowedSubOccupancyPlot();
+    }
+    
+    public PlotMaster(AllowedSubOccupancyPlot allowedSubOccupancyPlot) {
+    	this.allowedsuboccupancy=allowedSubOccupancyPlot;
+    }
 
 	public Long getId() {
 		return id;
@@ -119,19 +140,19 @@ public class PlotMaster extends AbstractAuditable {
 		this.code = code;
 	}
 
-	public Double getBackCourtyardWidth() {
+	public String getBackCourtyardWidth() {
 		return backCourtyardWidth;
 	}
 
-	public void setBackCourtyardWidth(Double backCourtyardWidth) {
+	public void setBackCourtyardWidth(String backCourtyardWidth) {
 		this.backCourtyardWidth = backCourtyardWidth;
 	}
 
-	public Double getBackCourtyardHeight() {
+	public String getBackCourtyardHeight() {
 		return backCourtyardHeight;
 	}
 
-	public void setBackCourtyardHeight(Double backCourtyardHeight) {
+	public void setBackCourtyardHeight(String backCourtyardHeight) {
 		this.backCourtyardHeight = backCourtyardHeight;
 	}
 
@@ -159,44 +180,52 @@ public class PlotMaster extends AbstractAuditable {
 		this.maxmimumPermissibleFAR = maxmimumPermissibleFAR;
 	}
 
-	public Double getMinimumPermissibleSetback_Front() {
+	public String getMinimumPermissibleSetback_Front() {
 		return minimumPermissibleSetback_Front;
 	}
 
-	public void setMinimumPermissibleSetback_Front(Double minimumPermissibleSetback_Front) {
+	public void setMinimumPermissibleSetback_Front(String minimumPermissibleSetback_Front) {
 		this.minimumPermissibleSetback_Front = minimumPermissibleSetback_Front;
 	}
 
-	public Double getMinimumPermissibleSetback_Rear() {
+	public String getMinimumPermissibleSetback_Rear() {
 		return minimumPermissibleSetback_Rear;
 	}
 
-	public void setMinimumPermissibleSetback_Rear(Double minimumPermissibleSetback_Rear) {
+	public void setMinimumPermissibleSetback_Rear(String minimumPermissibleSetback_Rear) {
 		this.minimumPermissibleSetback_Rear = minimumPermissibleSetback_Rear;
 	}
 
-	public Double getMinimumPermissibleSetback_Left() {
+	public String getMinimumPermissibleSetback_Left() {
 		return minimumPermissibleSetback_Left;
 	}
 
-	public void setMinimumPermissibleSetback_Left(Double minimumPermissibleSetback_Left) {
+	public void setMinimumPermissibleSetback_Left(String minimumPermissibleSetback_Left) {
 		this.minimumPermissibleSetback_Left = minimumPermissibleSetback_Left;
 	}
 
-	public Double getMinimumPermissibleSetback_Right() {
+	public String getMinimumPermissibleSetback_Right() {
 		return minimumPermissibleSetback_Right;
 	}
 
-	public void setMinimumPermissibleSetback_Right(Double minimumPermissibleSetback_Right) {
+	public void setMinimumPermissibleSetback_Right(String minimumPermissibleSetback_Right) {
 		this.minimumPermissibleSetback_Right = minimumPermissibleSetback_Right;
 	}
 
-	public AllowedSubOccupancyPlot getAllowedsuboccupancyid() {
+	public AllowedSubOccupancyPlot getAllowedsuboccupancy() {
 		return allowedsuboccupancy;
 	}
 
-	public void setAllowedsuboccupancyid(AllowedSubOccupancyPlot allowedsuboccupancyid) {
-		this.allowedsuboccupancy = allowedsuboccupancyid;
+	public void setAllowedsuboccupancy(AllowedSubOccupancyPlot allowedsuboccupancy) {
+		this.allowedsuboccupancy = allowedsuboccupancy;
+	}
+
+	public AllowedSubOccupancyPlot getSavedAllowedSubOccupancyPlot() {
+		return savedAllowedSubOccupancyPlot;
+	}
+
+	public void setSavedAllowedSubOccupancyPlot(AllowedSubOccupancyPlot savedAllowedSubOccupancyPlot) {
+		this.savedAllowedSubOccupancyPlot = savedAllowedSubOccupancyPlot;
 	}
     
 

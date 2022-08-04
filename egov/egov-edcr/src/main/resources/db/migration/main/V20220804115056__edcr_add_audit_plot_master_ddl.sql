@@ -1,9 +1,10 @@
-DROP TABLE IF EXISTS eg_plot_master_data;
-DROP TABLE IF EXISTS eg_plot_supoccupancy_allowed;
-DROP TABLE IF EXISTS eg_plot;
+DROP TABLE IF EXISTS eg_plot_master_data_aud;
+DROP TABLE IF EXISTS eg_plot_supoccupancy_allowed_aud;
+DROP TABLE IF EXISTS eg_plot_aud;
 
-CREATE TABLE eg_plot(
+CREATE TABLE eg_plot_aud(
     id bigint NOT NULL,
+    rev integer,
     boundary bigint,
     plotnum character varying(150),
     name character varying(150) COLLATE pg_catalog."default",
@@ -18,15 +19,12 @@ CREATE TABLE eg_plot(
     lastmodifiedby numeric DEFAULT 1,
     lastmodifieddate timestamp without time zone DEFAULT now(),
     version numeric DEFAULT 0,
-	
-    CONSTRAINT eg_plot_pkey PRIMARY KEY (id),
-    CONSTRAINT eg_plot_fkey FOREIGN KEY (boundary)
-        REFERENCES eg_boundary (id)
+    revtype numeric DEFAULT 0
 );
-
-CREATE TABLE eg_plot_supoccupancy_allowed
+CREATE TABLE eg_plot_supoccupancy_allowed_aud
 (
     id bigint NOT NULL,
+     rev integer,
 	plot bigint,
 	suboccupancy bigint,
 	createdby numeric DEFAULT 1,
@@ -34,17 +32,13 @@ CREATE TABLE eg_plot_supoccupancy_allowed
     lastmodifiedby numeric DEFAULT 1,
     lastmodifieddate timestamp without time zone DEFAULT now(),
 	version numeric DEFAULT 0,
-	
-    CONSTRAINT eg_plot_supoccupancy_allowed_pkey PRIMARY KEY (id),
-    CONSTRAINT eg_plot_supoccupancy_allowed_fkey_plot FOREIGN KEY (plot)
-        REFERENCES eg_plot (id),
-	CONSTRAINT eg_plot_supoccupancy_allowed_fkey_so FOREIGN KEY (subOccupancy)
-        REFERENCES egbpa_sub_occupancy (id)
+	revtype numeric DEFAULT 0
 );
 
-CREATE TABLE eg_plot_master_data
+CREATE TABLE eg_plot_master_data_aud
 (
     id bigint NOT NULL,
+     rev integer,
 	allowedsuboccupancy bigint,
 	code character varying(10) NOT NULL,    
     backCourtyardWidth character varying(30),
@@ -61,26 +55,26 @@ CREATE TABLE eg_plot_master_data
     lastmodifiedby numeric DEFAULT 1,
     lastmodifieddate timestamp without time zone DEFAULT now(),
 	version numeric DEFAULT 0,
-	
-    CONSTRAINT eg_plot_master_data_pkey PRIMARY KEY (id),
-    CONSTRAINT eg_plot_master_data_fkey FOREIGN KEY (allowedsuboccupancy)
-        REFERENCES eg_plot_supoccupancy_allowed (id)
+	revtype numeric DEFAULT 0
 );
 
-CREATE SEQUENCE IF NOT EXISTS seq_eg_plot
-       START WITH 1
-       INCREMENT BY 1
-       NO MINVALUE
-       NO MAXVALUE
-       CACHE 1;
- CREATE SEQUENCE IF NOT EXISTS seq_eg_plot_supoccupancy_allowed
+
+
+CREATE SEQUENCE IF NOT EXISTS seq_eg_plot_aud
        START WITH 1
        INCREMENT BY 1
        NO MINVALUE
        NO MAXVALUE
        CACHE 1;
        
-   CREATE SEQUENCE IF NOT EXISTS seq_eg_plot_master_data
+ CREATE SEQUENCE IF NOT EXISTS seq_eg_plot_supoccupancy_allowed_aud
+       START WITH 1
+       INCREMENT BY 1
+       NO MINVALUE
+       NO MAXVALUE
+       CACHE 1;
+       
+   CREATE SEQUENCE IF NOT EXISTS seq_eg_plot_master_data_aud
        START WITH 1
        INCREMENT BY 1
        NO MINVALUE

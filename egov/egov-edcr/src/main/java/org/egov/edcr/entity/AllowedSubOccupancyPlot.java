@@ -48,14 +48,18 @@
 
 package org.egov.edcr.entity;
 
-import com.google.common.base.Objects;
 import com.google.gson.annotations.Expose;
 
 import org.egov.common.entity.bpa.SubOccupancy;
-import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
+
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.LAZY;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -65,13 +69,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 
 //import static org.egov.infra.admin.master.entity.Sector.SEQ_Sector;
 
 @Entity
 @Table(name = "eg_plot_supoccupancy_allowed",schema="chandigarh")
-@Audited
 @SequenceGenerator(name = AllowedSubOccupancyPlot.SEQ_PLOT_SO_ALLOWED, sequenceName = AllowedSubOccupancyPlot.SEQ_PLOT_SO_ALLOWED, allocationSize = 1)
 public class AllowedSubOccupancyPlot extends AbstractAuditable {
     public static final String SEQ_PLOT_SO_ALLOWED = "seq_eg_plot_supoccupancy_allowed";
@@ -81,14 +85,24 @@ public class AllowedSubOccupancyPlot extends AbstractAuditable {
     @GeneratedValue(generator = SEQ_PLOT_SO_ALLOWED, strategy = GenerationType.SEQUENCE)
     private Long id;
     
-    @ManyToOne 
-    @JoinColumn(name = "plot", updatable = false)
+    @ManyToOne(fetch = LAZY)
+    @Cascade(CascadeType.ALL)
+    @JoinColumn(name = "plot")
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private Plot  plot;
    
-    @ManyToOne
-    @JoinColumn(name = "subOccupancy")
-    @NotAudited
-   private SubOccupancy subOccupancy;
+   private Long subOccupancy;
+    
+    
+//    private transient Plot savedPlot;
+    
+    public AllowedSubOccupancyPlot() {
+    	this.plot = new Plot();
+    }
+    
+    public AllowedSubOccupancyPlot(Plot plot) {
+    	this.plot = plot;
+    }
 
 	public Long getId() {
 		return id;
@@ -106,12 +120,20 @@ public class AllowedSubOccupancyPlot extends AbstractAuditable {
 		this.plot = plot;
 	}
 
-	public SubOccupancy getSubOccupancy() {
+	public Long getSubOccupancy() {
 		return subOccupancy;
 	}
 
-	public void setSubOccupancy(SubOccupancy subOccupancy) {
+	public void setSubOccupancy(Long subOccupancy) {
 		this.subOccupancy = subOccupancy;
 	}
+
+//	public Plot getSavedPlot() {
+//		return savedPlot;
+//	}
+//
+//	public void setSavedPlot(Plot savedPlot) {
+//		this.savedPlot = savedPlot;
+//	}
 
 }

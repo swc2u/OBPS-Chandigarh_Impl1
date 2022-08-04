@@ -117,5 +117,13 @@
         <put-attribute name="page-title" value="title.edr.oc.scrutiny.result" cascade="true"/>
         <put-attribute name="body" value="/WEB-INF/views/edcrapplication/oc-plan-scrutiny-result.jsp"/>
     </definition>
+     <definition name="plot-master-create" extends="base_layout">
+        <put-attribute name="page-title" value="title.plotmaster.create" cascade="true"/>
+        <put-attribute name="body" value="/WEB-INF/views/master/plot-master-create.jsp"/>
+    </definition>
+    <definition name="plot-master-view" extends="base_layout">
+        <put-attribute name="page-title" value="title.plotmaster.view" cascade="true"/>
+        <put-attribute name="body" value="/WEB-INF/views/master/plot-master-view.jsp"/>
+    </definition>
     
 </tiles-definitions>

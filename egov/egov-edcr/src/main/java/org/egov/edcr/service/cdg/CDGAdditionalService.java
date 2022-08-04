@@ -158,10 +158,10 @@ public class CDGAdditionalService {
 			
 
 			System.out.println(masterDataFromDB.getCode());
-			map.put(SETBACK_RIGHT, masterDataFromDB.getMinimumPermissibleSetback_Right() != null && masterDataFromDB.getMinimumPermissibleSetback_Right() > 0 ? masterDataFromDB.getMinimumPermissibleSetback_Right().toString() : DxfFileConstants.DATA_NOT_FOUND);
-			map.put(SETBACK_LEFT, masterDataFromDB.getMinimumPermissibleSetback_Left() != null && masterDataFromDB.getMinimumPermissibleSetback_Left() > 0 ? masterDataFromDB.getMinimumPermissibleSetback_Left().toString() : DxfFileConstants.DATA_NOT_FOUND);
-			map.put(SETBACK_FRONT, masterDataFromDB.getMinimumPermissibleSetback_Front() != null && masterDataFromDB.getMinimumPermissibleSetback_Front() > 0 ? masterDataFromDB.getMinimumPermissibleSetback_Front().toString() : DxfFileConstants.DATA_NOT_FOUND);
-			map.put(SETBACK_REAR, masterDataFromDB.getMinimumPermissibleSetback_Rear() != null && masterDataFromDB.getMinimumPermissibleSetback_Rear() > 0 ? masterDataFromDB.getMinimumPermissibleSetback_Rear().toString() : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(SETBACK_RIGHT, masterDataFromDB.getMinimumPermissibleSetback_Right() != null && Double.parseDouble(masterDataFromDB.getMinimumPermissibleSetback_Right()) > 0 ? masterDataFromDB.getMinimumPermissibleSetback_Right().toString() : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(SETBACK_LEFT, masterDataFromDB.getMinimumPermissibleSetback_Left() != null && Double.parseDouble(masterDataFromDB.getMinimumPermissibleSetback_Left()) > 0 ? masterDataFromDB.getMinimumPermissibleSetback_Left().toString() : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(SETBACK_FRONT, masterDataFromDB.getMinimumPermissibleSetback_Front() != null && Double.parseDouble(masterDataFromDB.getMinimumPermissibleSetback_Front()) > 0 ? masterDataFromDB.getMinimumPermissibleSetback_Front().toString() : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(SETBACK_REAR, masterDataFromDB.getMinimumPermissibleSetback_Rear() != null &&Double.parseDouble( masterDataFromDB.getMinimumPermissibleSetback_Rear()) > 0 ? masterDataFromDB.getMinimumPermissibleSetback_Rear().toString() : DxfFileConstants.DATA_NOT_FOUND);
 			
 			
 		} else if (featureName.getCDGAConstantValue().equals(CDGAConstant.FAR.getCDGAConstantValue())) {
@@ -187,9 +187,9 @@ public class CDGAdditionalService {
 //					.getProperty(getBaseKey(CDGAConstant.BACK_YARD_CONSTRUCTION.getCDGAConstantValue(), keyArrgument)
 //							+ "." + BACK_COURTYARD_CONSTRUCTION_HEIGHT);
 			map.put(BACK_COURTYARD_CONSTRUCTION_WIDTH,
-					masterDataFromDB.getBackCourtyardWidth() != null && masterDataFromDB.getBackCourtyardWidth() > 0 ? masterDataFromDB.getBackCourtyardWidth().toString() : DxfFileConstants.DATA_NOT_FOUND);
+					masterDataFromDB.getBackCourtyardWidth() != null && Double.parseDouble(masterDataFromDB.getBackCourtyardWidth()) > 0 ? masterDataFromDB.getBackCourtyardWidth().toString() : DxfFileConstants.DATA_NOT_FOUND);
 			map.put(BACK_COURTYARD_CONSTRUCTION_HEIGHT,
-					masterDataFromDB.getBackCourtyardHeight() != null && masterDataFromDB.getBackCourtyardHeight() > 0 ? masterDataFromDB.getBackCourtyardHeight().toString() : DxfFileConstants.DATA_NOT_FOUND);
+					masterDataFromDB.getBackCourtyardHeight() != null && Double.parseDouble(masterDataFromDB.getBackCourtyardHeight()) > 0 ? masterDataFromDB.getBackCourtyardHeight().toString() : DxfFileConstants.DATA_NOT_FOUND);
 		}else if(featureName.getCDGAConstantValue()
 				.equals(CDGAConstant.JOB_NUMBER.getCDGAConstantValue())) {
 			map.put(JOB_NUMBER, jobNumberProperties.getProperty(getBaseKeyCom(JOB_NUMBER, keyArrgument)));
