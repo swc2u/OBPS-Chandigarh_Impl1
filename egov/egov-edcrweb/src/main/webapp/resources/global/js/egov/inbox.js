@@ -26,12 +26,12 @@
  *
  *         1) All versions of this program, verbatim or modified must carry this
  *            Legal Notice.
- *            Further, all user interfaces, including but not limited to citizen facing interfaces,
- *            Urban Local Bodies interfaces, dashboards, mobile applications, of the program and any
+ *            Further, all user interfaces, including but not limited to citizen facing interfaces, 
+ *            Urban Local Bodies interfaces, dashboards, mobile applications, of the program and any 
  *            derived works should carry eGovernments Foundation logo on the top right corner.
  *
  *            For the logo, please refer http://egovernments.org/html/logo/egov_logo.png.
- *            For any further queries on attribution, including queries on brand guidelines,
+ *            For any further queries on attribution, including queries on brand guidelines, 
  *            please contact contact@egovernments.org
  *
  *         2) Any misrepresentation of the origin of the material is prohibited. It
@@ -46,37 +46,10 @@
  *
  */
 
-package org.egov.edcr.repository;
-
-
-import org.egov.edcr.entity.PlotMaster;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-
-
-import java.util.List;
-
-@Repository
-public interface PlotMasterRepository extends JpaRepository<PlotMaster,Long> {
-
-//    @QueryHints({@QueryHint(name = HINT_CACHEABLE, value = "true")})
-//    PlotMaster findByCode(String code);
-    
-    @Query("select pm from PlotMaster pm where pm.code = :occupancyCode AND pm.allowedsuboccupancy.id = :allowedsuboccupancyId")
-	PlotMaster findPlotMasterData(@Param("occupancyCode") String occupancyCode,
-							            @Param("allowedsuboccupancyId") Long allowedsuboccupancyId);
-   
-    @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.plot.name = :plotName")
-	PlotMaster findAllByPlotName(@Param("plotName") String plotName);
-    
-    @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.subOccupancy = :soId")
-    Page<PlotMaster> findBySubOccupancyId(@Param("soId") Long subOccupancyId, Pageable pageable);
-    
-    @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.subOccupancy = :soId")
-	List<PlotMaster> findAllBySubOccupancyId(@Param("soId") Long subOccupancyId);
-
-}
+jQuery(document).ready(function($){
+	
+	$(window).unload(function(){
+		parent.window.opener.inboxloadmethod();
+	});
+	
+});

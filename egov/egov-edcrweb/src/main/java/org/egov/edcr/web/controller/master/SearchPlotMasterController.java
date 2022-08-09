@@ -46,37 +46,64 @@
  *
  */
 
-package org.egov.edcr.repository;
+package org.egov.edcr.web.controller.master;
 
-
+import org.egov.common.entity.bpa.Occupancy;
+import org.egov.commons.service.OccupancyService;
+import org.egov.edcr.contract.PlotMasterSearchRequest;
 import org.egov.edcr.entity.PlotMaster;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-
+import org.egov.edcr.service.PlotMasterService;
+import org.egov.edcr.web.support.json.adapter.PlotMasterAdapter;
+import org.egov.edcr.web.support.json.adapter.PlotMasterDatatableAdapter;
+import org.egov.infra.web.support.ui.DataTable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-@Repository
-public interface PlotMasterRepository extends JpaRepository<PlotMaster,Long> {
+import static org.egov.infra.utils.JsonUtils.toJSON;
+import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
-//    @QueryHints({@QueryHint(name = HINT_CACHEABLE, value = "true")})
-//    PlotMaster findByCode(String code);
-    
-    @Query("select pm from PlotMaster pm where pm.code = :occupancyCode AND pm.allowedsuboccupancy.id = :allowedsuboccupancyId")
-	PlotMaster findPlotMasterData(@Param("occupancyCode") String occupancyCode,
-							            @Param("allowedsuboccupancyId") Long allowedsuboccupancyId);
-   
-    @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.plot.name = :plotName")
-	PlotMaster findAllByPlotName(@Param("plotName") String plotName);
-    
-    @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.subOccupancy = :soId")
-    Page<PlotMaster> findBySubOccupancyId(@Param("soId") Long subOccupancyId, Pageable pageable);
-    
-    @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.subOccupancy = :soId")
-	List<PlotMaster> findAllBySubOccupancyId(@Param("soId") Long subOccupancyId);
+@Controller
+@RequestMapping("plotMaster/search")
+public class SearchPlotMasterController {
 
+	 @Autowired
+	    OccupancyService occupancyService;
+
+    @Autowired
+    private PlotMasterService plotMasterService;
+
+    @ModelAttribute("occupancy")
+    public List<Occupancy> occupancy() {
+        return occupancyService.findAll();
+    }
+
+    @GetMapping
+    public String showPlotMasterSearchForm() {
+        return "plot-master-search";
+    }
+
+    @PostMapping(produces = TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String searchPlotMaster(PlotMasterSearchRequest searchRequest) {
+        return new DataTable<>(plotMasterService.getPageOfPlotMaster(searchRequest), searchRequest.draw())
+                .toJson(PlotMasterDatatableAdapter.class);
+
+    }
+
+    @GetMapping(value = "by-subOccupancyId", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String PlotMasterBySubOccupancyId(@RequestParam Long subOccupancyId) {
+        return toJSON(plotMasterService
+                .getPlotMasterBySubOccupancyId(subOccupancyId), PlotMaster.class, PlotMasterAdapter.class)
+                .toString();
+    }
 }

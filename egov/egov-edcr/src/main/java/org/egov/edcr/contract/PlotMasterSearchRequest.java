@@ -46,37 +46,21 @@
  *
  */
 
-package org.egov.edcr.repository;
+package org.egov.edcr.contract;
 
+import org.egov.infra.web.support.search.DataTableSearchRequest;
 
-import org.egov.edcr.entity.PlotMaster;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
+public class PlotMasterSearchRequest extends DataTableSearchRequest {
 
+    private Long subOccupancyId;
 
-import java.util.List;
+	public Long getSubOccupancyId() {
+		return subOccupancyId;
+	}
 
-@Repository
-public interface PlotMasterRepository extends JpaRepository<PlotMaster,Long> {
+	public void setSubOccupancyId(Long subOccupancyId) {
+		this.subOccupancyId = subOccupancyId;
+	}
 
-//    @QueryHints({@QueryHint(name = HINT_CACHEABLE, value = "true")})
-//    PlotMaster findByCode(String code);
     
-    @Query("select pm from PlotMaster pm where pm.code = :occupancyCode AND pm.allowedsuboccupancy.id = :allowedsuboccupancyId")
-	PlotMaster findPlotMasterData(@Param("occupancyCode") String occupancyCode,
-							            @Param("allowedsuboccupancyId") Long allowedsuboccupancyId);
-   
-    @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.plot.name = :plotName")
-	PlotMaster findAllByPlotName(@Param("plotName") String plotName);
-    
-    @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.subOccupancy = :soId")
-    Page<PlotMaster> findBySubOccupancyId(@Param("soId") Long subOccupancyId, Pageable pageable);
-    
-    @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.subOccupancy = :soId")
-	List<PlotMaster> findAllBySubOccupancyId(@Param("soId") Long subOccupancyId);
-
 }

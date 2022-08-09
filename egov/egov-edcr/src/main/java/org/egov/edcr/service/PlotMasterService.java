@@ -50,18 +50,20 @@ package org.egov.edcr.service;
 
 
 import java.math.BigDecimal;
+import java.util.List;
 
-import org.egov.edcr.entity.AllowedSubOccupancyPlot;
+import org.egov.edcr.contract.PlotMasterSearchRequest;
 import org.egov.edcr.entity.Plot;
 import org.egov.edcr.entity.PlotMaster;
 import org.egov.edcr.repository.PlotMasterRepository;
 import org.egov.infra.admin.master.entity.Boundary;
-import org.egov.infra.admin.master.entity.Department;
 import org.egov.infra.admin.master.repository.BoundaryRepository;
-import org.egov.infra.admin.master.service.BoundaryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,14 +76,10 @@ public class PlotMasterService {
     
     private final PlotMasterRepository plotMasterRepository;
     
-    @Autowired
-    private PlotService plotService;
     
     @Autowired
     private AllowedSubOccupancyPlotService allowedSubOccupancyPlotService;
     
-    @Autowired
-    private BoundaryService boundaryService;
     
     private final BoundaryRepository boundaryRepository;
 
@@ -93,9 +91,8 @@ public class PlotMasterService {
     }
 
 	public PlotMaster searchPlotMasterData(final String occupancyCode, final String sector, final String plotNumber, final String plotType) {
-		
-			Long allowedPlotId = allowedSubOccupancyPlotService.searchAllowedSOPlot(plotNumber);
-			return plotMasterRepository.findPlotMasterData(occupancyCode,allowedPlotId);
+		Long allowedPlotId = allowedSubOccupancyPlotService.searchAllowedSOPlot(plotNumber);
+		return plotMasterRepository.findPlotMasterData(occupancyCode,allowedPlotId);
 		
 	}
 
@@ -103,7 +100,7 @@ public class PlotMasterService {
 		return plotMasterRepository.findAllByPlotName(plotName);
 	}
 	
-	public Object getPlotMasterById(Long plotMasterId) {
+	public PlotMaster getPlotMasterById(Long plotMasterId) {
 		return plotMasterRepository.findOne(plotMasterId);
 	}	
 	
@@ -113,6 +110,21 @@ public class PlotMasterService {
 		plotMaster.getAllowedsuboccupancy().getPlot().setBoundary(boundary);
 		insertEnrichment(plotMaster);
 		return plotMasterRepository.save(plotMaster);
+		
+	}
+	
+	public Page<PlotMaster> getPageOfPlotMaster(PlotMasterSearchRequest searchRequest) {
+        Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(),
+                searchRequest.orderDir(), searchRequest.orderBy());
+        return plotMasterRepository.findBySubOccupancyId(searchRequest.getSubOccupancyId(), pageable);
+	}
+	
+	public List<PlotMaster> getPlotMasterBySubOccupancyId(Long subOccupancyId) {
+		return plotMasterRepository.findAllBySubOccupancyId(subOccupancyId);
+	}
+	
+	@Transactional
+	public void updatePlotMaster(PlotMaster plotMaster) {
 		
 	}
 
@@ -133,9 +145,11 @@ public class PlotMasterService {
 
 
 	private void enrichPlotData(Plot plot) {
-		String name= plot.getBoundary().getName()+"."+plot.getPlotNum();
-		plot.setName(name);
-		plot.setLocalName(name);
+		if(plot.getName()==null) {
+			String name= plot.getBoundary().getName()+"."+plot.getPlotNum();
+			plot.setName(name);
+			plot.setLocalName(name);
+		}
 	}
 
 	private String converFeetToMeter(String str) {
@@ -170,6 +184,5 @@ public class PlotMasterService {
 		result = BigDecimal.valueOf(inch * 0.0254);
 		return result.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
 	}
-
 	
 }

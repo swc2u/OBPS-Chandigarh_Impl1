@@ -46,37 +46,35 @@
  *
  */
 
-package org.egov.edcr.repository;
+.controls {
+	margin-top: 10px;
+	border: 1px solid transparent;
+	border-radius: 2px 0 0 2px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	height: 32px;
+	outline: none;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
 
+#pac-input {
+	position: absolute;
+	top: 60px;
+	background-color: #fff;
+	font-family: Roboto;
+	font-size: 15px;
+	font-weight: 300;
+	margin-left: 12px;
+	padding: 0 11px 0 13px;
+	text-overflow: ellipsis;
+	width: 300px;
+ }
 
-import org.egov.edcr.entity.PlotMaster;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
+#pac-input:focus {
+	border-color: #4d90fe;
+}
 
-
-import java.util.List;
-
-@Repository
-public interface PlotMasterRepository extends JpaRepository<PlotMaster,Long> {
-
-//    @QueryHints({@QueryHint(name = HINT_CACHEABLE, value = "true")})
-//    PlotMaster findByCode(String code);
-    
-    @Query("select pm from PlotMaster pm where pm.code = :occupancyCode AND pm.allowedsuboccupancy.id = :allowedsuboccupancyId")
-	PlotMaster findPlotMasterData(@Param("occupancyCode") String occupancyCode,
-							            @Param("allowedsuboccupancyId") Long allowedsuboccupancyId);
-   
-    @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.plot.name = :plotName")
-	PlotMaster findAllByPlotName(@Param("plotName") String plotName);
-    
-    @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.subOccupancy = :soId")
-    Page<PlotMaster> findBySubOccupancyId(@Param("soId") Long subOccupancyId, Pageable pageable);
-    
-    @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.subOccupancy = :soId")
-	List<PlotMaster> findAllBySubOccupancyId(@Param("soId") Long subOccupancyId);
-
+.pac-container {
+	font-family: Roboto;
+	z-index:10002;
 }

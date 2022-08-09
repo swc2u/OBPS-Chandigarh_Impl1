@@ -46,37 +46,42 @@
  *
  */
 
-package org.egov.edcr.repository;
+package org.egov.edcr.web.support.json.adapter;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 import org.egov.edcr.entity.PlotMaster;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
+
+import java.lang.reflect.Type;
 
 
-import java.util.List;
+public class PlotMasterAdapter implements JsonSerializer<PlotMaster> {
 
-@Repository
-public interface PlotMasterRepository extends JpaRepository<PlotMaster,Long> {
-
-//    @QueryHints({@QueryHint(name = HINT_CACHEABLE, value = "true")})
-//    PlotMaster findByCode(String code);
-    
-    @Query("select pm from PlotMaster pm where pm.code = :occupancyCode AND pm.allowedsuboccupancy.id = :allowedsuboccupancyId")
-	PlotMaster findPlotMasterData(@Param("occupancyCode") String occupancyCode,
-							            @Param("allowedsuboccupancyId") Long allowedsuboccupancyId);
-   
-    @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.plot.name = :plotName")
-	PlotMaster findAllByPlotName(@Param("plotName") String plotName);
-    
-    @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.subOccupancy = :soId")
-    Page<PlotMaster> findBySubOccupancyId(@Param("soId") Long subOccupancyId, Pageable pageable);
-    
-    @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.subOccupancy = :soId")
-	List<PlotMaster> findAllBySubOccupancyId(@Param("soId") Long subOccupancyId);
-
+    @Override
+    public JsonElement serialize(final PlotMaster plotMaster, final Type type, final JsonSerializationContext jsc) {
+        JsonObject plotMasterJson = new JsonObject();
+        plotMasterJson.addProperty("pmId", plotMaster.getId());
+        plotMasterJson.addProperty("code", plotMaster.getCode());
+        plotMasterJson.addProperty("phase", plotMaster.getAllowedsuboccupancy().getPlot().getPhase());
+        plotMasterJson.addProperty("sector", plotMaster.getAllowedsuboccupancy().getPlot().getBoundary().getName());
+        plotMasterJson.addProperty("plotNumber", plotMaster.getAllowedsuboccupancy().getPlot().getPlotNum());
+        plotMasterJson.addProperty("backCourtyardWidth", plotMaster.getBackCourtyardWidth());
+        plotMasterJson.addProperty("backCourtyardHeight", plotMaster.getBackCourtyardHeight());
+        plotMasterJson.addProperty("plotArea", plotMaster.getAllowedsuboccupancy().getPlot().getPlotArea());
+        plotMasterJson.addProperty("areaType", plotMaster.getAllowedsuboccupancy().getPlot().getAreaType());
+        plotMasterJson.addProperty("plotDepth", plotMaster.getAllowedsuboccupancy().getPlot().getPlotDepth());
+        plotMasterJson.addProperty("plotWidth", plotMaster.getAllowedsuboccupancy().getPlot().getPlotWidth());
+        plotMasterJson.addProperty("permissibleBuildingStories", plotMaster.getPermissibleBuildingStories());
+        plotMasterJson.addProperty("permissibleBuildingHeight", plotMaster.getPermissibleBuildingHeight());
+        plotMasterJson.addProperty("maxmimumPermissibleFAR", plotMaster.getMaxmimumPermissibleFAR());
+        plotMasterJson.addProperty("minimumPermissibleSetback_Front", plotMaster.getMinimumPermissibleSetback_Front());
+        plotMasterJson.addProperty("minimumPermissibleSetback_Rear", plotMaster.getMinimumPermissibleSetback_Rear());
+        plotMasterJson.addProperty("minimumPermissibleSetback_Left", plotMaster.getMinimumPermissibleSetback_Left());
+        plotMasterJson.addProperty("minimumPermissibleSetback_Right", plotMaster.getMinimumPermissibleSetback_Right());
+       
+        return plotMasterJson;
+    }
 }

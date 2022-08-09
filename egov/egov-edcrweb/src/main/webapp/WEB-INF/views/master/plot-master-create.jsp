@@ -296,9 +296,9 @@
                             <div class="row">
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary"><spring:message code="lbl.submit"/></button>
-<!--                                     <a href="javascript:void(0)" class="btn btn-default" id="backBtnId"> -->
-<%--                                         <spring:message code="lbl.create"/>&nbsp;<spring:message code="lbl.search"/> --%>
-<!--                                     </a> -->
+                                    <a href="javascript:void(0)" class="btn btn-default" id="backBtnId">
+                                        <spring:message code="lbl.create"/>&nbsp;<spring:message code="lbl.search"/>
+                                    </a>
                                     <a href="javascript:void(0)" class="btn btn-default" onclick="self.close()"><spring:message code="lbl.close"/></a>
                                 </div>
                             </div>
