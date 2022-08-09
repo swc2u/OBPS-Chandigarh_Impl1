@@ -102,6 +102,9 @@ public class SearchPlotMasterController {
     @GetMapping(value = "by-subOccupancyId", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String PlotMasterBySubOccupancyId(@RequestParam Long subOccupancyId) {
+    	System.out.println(toJSON(plotMasterService
+                .getPlotMasterBySubOccupancyId(subOccupancyId), PlotMaster.class, PlotMasterAdapter.class)
+                .toString());
         return toJSON(plotMasterService
                 .getPlotMasterBySubOccupancyId(subOccupancyId), PlotMaster.class, PlotMasterAdapter.class)
                 .toString();

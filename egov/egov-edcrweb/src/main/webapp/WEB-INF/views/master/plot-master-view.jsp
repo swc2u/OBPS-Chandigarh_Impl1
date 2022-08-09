@@ -70,7 +70,7 @@
                              </div>
                              <input type="hidden" name="subOccupancyId" value="<c:out value="${plotMaster.allowedsuboccupancy.subOccupancy}" />"/>
                                     
-                                    <div class="panel-body custom-form">
+                                    <div class="panel-body custom-form" height="100%">
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">
                                                 <spring:message code="lbl.code"/>

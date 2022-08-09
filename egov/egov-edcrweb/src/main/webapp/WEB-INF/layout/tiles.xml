@@ -129,5 +129,9 @@
         <put-attribute name="page-title" value="title.plotmaster.search" cascade="true"/>
         <put-attribute name="body" value="/WEB-INF/views/master/plot-master-search.jsp"/>
     </definition>
+    <definition name="plot-master-update" extends="base_layout">
+        <put-attribute name="page-title" value="title.plotmaster.update" cascade="true"/>
+        <put-attribute name="body" value="/WEB-INF/views/master/plot-master-update.jsp"/>
+    </definition>
     
 </tiles-definitions>

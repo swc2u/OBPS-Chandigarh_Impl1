@@ -64,6 +64,8 @@ public class PlotMasterAdapter implements JsonSerializer<PlotMaster> {
     public JsonElement serialize(final PlotMaster plotMaster, final Type type, final JsonSerializationContext jsc) {
         JsonObject plotMasterJson = new JsonObject();
         plotMasterJson.addProperty("pmId", plotMaster.getId());
+        plotMasterJson.addProperty("plotId", plotMaster.getAllowedsuboccupancy().getPlot().getId());
+        plotMasterJson.addProperty("plotNum", plotMaster.getAllowedsuboccupancy().getPlot().getPlotNum());
         plotMasterJson.addProperty("code", plotMaster.getCode());
         plotMasterJson.addProperty("phase", plotMaster.getAllowedsuboccupancy().getPlot().getPhase());
         plotMasterJson.addProperty("sector", plotMaster.getAllowedsuboccupancy().getPlot().getBoundary().getName());
