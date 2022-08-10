@@ -804,7 +804,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
     			OccupancyTypeHelper mostRestrictiveFarHelper = plan.getVirtualBuilding() != null
 						? plan.getVirtualBuilding().getMostRestrictiveFarHelper()
 						: null;
-						totalAmount.add(permitFeeCalculationService.getTotalSecurityFee(plan, mostRestrictiveFarHelper));
+						totalAmount.add(permitFeeCalculationService.getTotalSecurityFee(plan, mostRestrictiveFarHelper,null));
     		}
     	}
         return totalAmount;
