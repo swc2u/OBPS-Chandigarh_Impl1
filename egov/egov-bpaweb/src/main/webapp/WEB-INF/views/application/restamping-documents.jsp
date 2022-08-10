@@ -54,34 +54,45 @@
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn"%>
 
 <div class="panel-heading custom_form_panel_heading">
-	<div class="panel-title"></div>
+	<div class="panel-title"><strong><spring:message code="lbl.bpa.restamp"/></strong></div>
 </div>
 <div class="panel-body">
-	<div class="form-group">
-		<label class="col-sm-3 control-label text-right"><spring:message
-				code="lbl.bpa.restamp" /><span class="mandatory"></span></label>
-		
-	</div>
-	<form:form role="form" action="restamp-application" method="post" modelAttribute="bpaApplication" id="restamp" cssClass="form-horizontal form-groups-bordered">
+	<c:if test="${not empty message}">
+         <div class="alert alert-success" role="alert"><spring:message code="${message}"/></div>
+     </c:if>
+	<form:form  method="get" id="restamp" cssClass="form-horizontal form-groups-bordered">
 			<div class="form-group">
 				<div>
 					<label class="col-sm-3 control-label text-right"><spring:message
-							code="lbl.application.number" /> <span class="mandatory"></span></label>
+							code="lbl.app.num" /> <span class="mandatory"></span></label>
 					<div class="col-sm-3 add-margin">
-						<form:input type="text" cssClass="form-control addremoverequired"
+						<input type="text" path="applicationNumber" class="form-control addremoverequired"
 									 maxlength="100" id="applicationNumber"
 									required="required" />
-						<form:errors path="applicationNumber" cssClass="error-msg" />
+<%-- 						<form:errors path="applicationNumber" cssClass="error-msg" /> --%>
 					</div>
 					
 				</div>
 			</div>
 			<div align="center">
-				<form:button type="submit" id="buttonSubmit" class="btn btn-primary" 
-					value="Submit"><spring:message code='lbl.btn.submit' /></form:button>
+				<button type="submit" id="buttonSubmit" class="btn btn-primary" >
+				<spring:message code='lbl.btn.submit' /></button>
 					
 				<input type="button" name="button2" id="button2" value="Close"
 					class="btn btn-default" onclick="window.close();" />
 			</div>
 	</form:form>
 </div>
+
+<script>
+$('#buttonSubmit').click(function () {
+    if ($("#applicationNumber").val() === '') {
+        bootbox.alert("Please enter application number");
+        return;
+    }
+
+    $("#restamp").attr('action', 'reStamp/create/' + $("#applicationNumber").val());
+    $("#restamp").submit();
+});
+
+</script>
