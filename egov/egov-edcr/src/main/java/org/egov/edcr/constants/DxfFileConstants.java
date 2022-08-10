@@ -108,6 +108,8 @@ public class DxfFileConstants {
 	public static final String PLOT_WIDTH = "PLOT_WIDTH";
 	public static final String COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE = "COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE";
 
+	//Security fee
+	public static final String IS_SECRUITY_FEE_APPLICABLE = "IS_SECURITY_FEE_APPLICABLE";
 	// CGCL start
 	// occupancies code
 	public static final String A = "A"; // Residential --29

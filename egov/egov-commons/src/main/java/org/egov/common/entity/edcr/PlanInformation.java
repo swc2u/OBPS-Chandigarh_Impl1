@@ -60,6 +60,7 @@ public class PlanInformation implements Serializable {
     private static final String NA = "NA";
     public static final String SEQ_EDCR_PLANINFO = "SEQ_EDCR_PLANINFO";
     private static final long serialVersionUID = 4L;
+    private static final String Yes="Yes";
 
     @Id
     @GeneratedValue(generator = SEQ_EDCR_PLANINFO, strategy = GenerationType.SEQUENCE)
@@ -305,6 +306,9 @@ public class PlanInformation implements Serializable {
     
     //EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA
     private BigDecimal excessCoverageBeyondBuildUp = BigDecimal.ZERO;
+    
+  //YES/NO/NA.Extracted from Plan info. Is case of security fee condition
+    private String isSecurityFeeApplicable = Yes;
 
 	public BigDecimal getExcessCoverageBeyondBuildUp() {
 		return excessCoverageBeyondBuildUp;
@@ -1213,6 +1217,14 @@ public class PlanInformation implements Serializable {
 
 	public void setPresentCollectorRate(BigDecimal presentCollectorRate) {
 		this.presentCollectorRate = presentCollectorRate;
+	}
+
+	public String getIsSecurityFeeApplicable() {
+		return isSecurityFeeApplicable;
+	}
+
+	public void setIsSecurityFeeApplicable(String isSecurityFeeApplicable) {
+		this.isSecurityFeeApplicable = isSecurityFeeApplicable;
 	}
 
 	
