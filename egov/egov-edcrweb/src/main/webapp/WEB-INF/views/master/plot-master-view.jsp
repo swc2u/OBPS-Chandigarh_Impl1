@@ -212,7 +212,24 @@
                                             	<strong><c:out value="${plotMaster.minimumPermissibleSetback_Right}"/></strong>
                                             </div>
                                         </div>
-                                        
+                                        <div class="form-group">
+			                                <label class="col-sm-3 control-label">
+			                                    <spring:message code="lbl.fromDate"/>
+			                                </label>
+			                                <div class="col-sm-6" style="padding-top: 7px">
+			                                    <fmt:formatDate value="${plotMaster.fromDate}" pattern="dd/MM/yyyy" var="fromDate"/>
+			                                    <strong><c:out value="${fromDate}"/></strong>
+			                                </div>
+			                            </div>
+			                            <div class="form-group">
+			                                <label class="col-sm-3 control-label">
+			                                    <spring:message code="lbl.toDate"/>
+			                                </label>
+			                                <div class="col-sm-6" style="padding-top: 7px">
+			                                    <fmt:formatDate value="${plotMaster.toDate}" pattern="dd/MM/yyyy" var="toDate"/>
+			                                    <strong><c:out value="${toDate}" default="NA"/></strong>
+			                                </div>
+			                            </div>
                                     </div>
                                 </div>
                             </div>

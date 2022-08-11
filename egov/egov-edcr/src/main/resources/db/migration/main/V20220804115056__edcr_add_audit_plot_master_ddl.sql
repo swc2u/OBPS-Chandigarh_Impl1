@@ -18,6 +18,7 @@ CREATE TABLE eg_plot_aud(
     createddate timestamp without time zone DEFAULT now(),
     lastmodifiedby numeric DEFAULT 1,
     lastmodifieddate timestamp without time zone DEFAULT now(),
+    isActive boolean,
     version numeric DEFAULT 0,
     revtype numeric DEFAULT 0
 );
@@ -32,6 +33,7 @@ CREATE TABLE eg_plot_supoccupancy_allowed_aud
     lastmodifiedby numeric DEFAULT 1,
     lastmodifieddate timestamp without time zone DEFAULT now(),
 	version numeric DEFAULT 0,
+	isActive boolean,
 	revtype numeric DEFAULT 0
 );
 
@@ -45,16 +47,19 @@ CREATE TABLE eg_plot_master_data_aud
     backCourtyardHeight character varying(30),  
 	permissibleBuildingStories bigint,
 	permissibleBuildingHeight numeric(13,6),
-	maxmimumPermissibleFAR bigint,
+	maxmimumPermissibleFAR numeric(13,6),
 	minimumPermissibleSetback_Front character varying(30),
 	minimumPermissibleSetback_Rear character varying(30),
 	minimumPermissibleSetback_left character varying(30),
 	minimumPermissibleSetback_right character varying(30),
+	fromdate timestamp without time zone DEFAULT now(),
+	todate timestamp without time zone DEFAULT now(),
     createdby numeric DEFAULT 1,
     createddate timestamp without time zone DEFAULT now(),
     lastmodifiedby numeric DEFAULT 1,
     lastmodifieddate timestamp without time zone DEFAULT now(),
 	version numeric DEFAULT 0,
+	isActive boolean,
 	revtype numeric DEFAULT 0
 );
 

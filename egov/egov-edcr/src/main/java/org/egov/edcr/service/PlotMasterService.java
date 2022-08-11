@@ -124,8 +124,9 @@ public class PlotMasterService {
 	}
 	
 	@Transactional
-	public void updatePlotMaster(PlotMaster plotMaster) {
-		
+	public PlotMaster updatePlotMasterData(PlotMaster plotMaster) {
+		insertEnrichment(plotMaster);
+		return plotMasterRepository.save(plotMaster);
 	}
 
 	private void insertEnrichment(PlotMaster plotMaster) {

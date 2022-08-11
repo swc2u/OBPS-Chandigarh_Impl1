@@ -49,7 +49,9 @@
 package org.egov.edcr.web.controller.master;
 
 import org.egov.common.entity.bpa.Occupancy;
+import org.egov.common.entity.bpa.SubOccupancy;
 import org.egov.commons.service.OccupancyService;
+import org.egov.commons.service.SubOccupancyService;
 import org.egov.edcr.entity.PlotMaster;
 import org.egov.edcr.service.PlotMasterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +79,9 @@ public class UpdatePlotMasterController {
     
     @Autowired
     private OccupancyService occupancyService;
+    
+    @Autowired
+    SubOccupancyService subOccupancyService;
 
     @ModelAttribute
     public PlotMaster plotMaster(@PathVariable Optional<Long> id) {
@@ -96,7 +101,10 @@ public class UpdatePlotMasterController {
 
     @GetMapping("{id}")
     public String showUpdatePlotMasterForm(Model model) {
+//    	PlotMaster plotMaster = plotMasterService.getPlotMasterById(Long.parseLong(pmId));
+//    	 SubOccupancy subOccupancy =subOccupancyService.findById(plotMaster.getAllowedsuboccupancy().getSubOccupancy());
         model.addAttribute("search", false);
+//        model.addAttribute("subOccupancy", subOccupancy);
         return PLOTMASTER_UPDATE_VIEW;
     }
 
@@ -107,10 +115,10 @@ public class UpdatePlotMasterController {
             model.addAttribute("subOccupancy", plotMaster.getAllowedsuboccupancy().getSubOccupancy());
             return PLOTMASTER_UPDATE_VIEW;
         }
-        plotMasterService.updatePlotMaster(plotMaster);
+        PlotMaster modifiedPM=plotMasterService.updatePlotMasterData(plotMaster);
         redirectAttributes.addFlashAttribute("message", "msg.pltmstr.update.success");
         redirectAttributes.addFlashAttribute("edit", true);
-        return "redirect:/plotMaster/view/" + plotMaster.getId();
+        return "redirect:/plotMaster/view/" + modifiedPM.getId();
     }
 
 }

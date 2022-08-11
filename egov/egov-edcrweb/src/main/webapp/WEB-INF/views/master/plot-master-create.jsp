@@ -289,7 +289,24 @@
                                                 <form:errors path="minimumPermissibleSetback_Right" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
-                                        
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">
+                                                <spring:message code="lbl.fromDate"/><span class="mandatory"></span>
+                                            </label>
+                                            <div class="col-sm-6">
+                                                <form:input path="fromDate" id="pmFromDate" type="text" class="form-control low-width datepicker" data-inputmask="'mask': 'd/m/y'" placeholder="" autocomplete="off" required="required"/>
+                                                <form:errors path="fromDate" cssClass="add-margin error-msg"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">
+                                                <spring:message code="lbl.toDate"/>
+                                            </label>
+                                            <div class="col-sm-6">
+                                                <form:input path="toDate" id="pmToDate" type="text" class="form-control low-width datepicker" data-inputmask="'mask': 'd/m/y'" placeholder="" autocomplete="off"/>
+                                                <form:errors path="toDate" cssClass="add-margin error-msg"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
