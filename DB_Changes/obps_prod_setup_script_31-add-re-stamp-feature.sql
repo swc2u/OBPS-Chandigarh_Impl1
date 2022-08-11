@@ -1,5 +1,5 @@
 INSERT INTO chandigarh.eg_module (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) 
-VALUES (nextval('chandigarh.seq_eg_module'), 'Re-stamp', true, 'bpa', 444, 'Re-stamp BPA documents', 1);
+VALUES (nextval('chandigarh.seq_eg_module'), 'Re-stamp', true, 'bpa', (select id from chandigarh.eg_module where name='BPA'), 'Re-stamp BPA documents', 1);
 
 
 INSERT INTO chandigarh.eg_action (id, name, url, queryparams, parentmodule, ordernumber, displayname, enabled, contextroot, version, createdby, createddate, lastmodifiedby, lastmodifieddate, application) 
@@ -7,4 +7,4 @@ VALUES  (nextval('chandigarh.seq_eg_action'), 'Re-stamp BPA documents', '/reStam
 
 
 INSERT INTO chandigarh.eg_roleaction(roleid, actionid)
-VALUES (5, (select id from chandigarh.eg_action where name='Re-stamp BPA documents'));
+VALUES ((select id from state.eg_role where name='SYSTEM'), (select id from chandigarh.eg_action where name='Re-stamp BPA documents'));
