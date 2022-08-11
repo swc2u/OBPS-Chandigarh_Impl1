@@ -123,6 +123,10 @@ public class PlotMasterService {
 		return plotMasterRepository.findAllBySubOccupancyId(subOccupancyId);
 	}
 	
+	public PlotMaster getPlotMasterById(Long plotMasterId) {
+		return plotMasterRepository.findOne(plotMasterId);
+	}
+	
 	@Transactional
 	public PlotMaster updatePlotMasterData(PlotMaster plotMaster) {
 		insertEnrichment(plotMaster);
@@ -185,5 +189,7 @@ public class PlotMasterService {
 		result = BigDecimal.valueOf(inch * 0.0254);
 		return result.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
 	}
+
+	
 	
 }

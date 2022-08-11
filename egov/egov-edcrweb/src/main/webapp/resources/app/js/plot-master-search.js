@@ -155,6 +155,7 @@ $('#searchBtn').click(function () {
 
     $('#view-plot-master-data').on('click', 'tr', function () {
         var pmId = table.row(this).data().pmId;
+        alert(pmId);
         var url = '/edcr/plotMaster/view/' + pmId;
         window.open(url, pmId, 'width=900, height=700, top=300, left=260,scrollbars=yes');
     });

@@ -98,12 +98,9 @@ public class UpdatePlotMasterController {
         return PLOTMASTER_UPDATE_VIEW;
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{plotId}")
     public String showUpdatePlotMasterForm(Model model) {
-//    	PlotMaster plotMaster = plotMasterService.getPlotMasterById(Long.parseLong(pmId));
-//    	 SubOccupancy subOccupancy =subOccupancyService.findById(plotMaster.getAllowedsuboccupancy().getSubOccupancy());
         model.addAttribute("search", false);
-//        model.addAttribute("subOccupancy", subOccupancy);
         return PLOTMASTER_UPDATE_VIEW;
     }
 

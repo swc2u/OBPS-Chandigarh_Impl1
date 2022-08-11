@@ -174,8 +174,12 @@ $('#searchBtn').click(function () {
                 'sClass': "text-center",
                 "bSortable": false,
                 "target": -1,
-                "defaultContent": '<span class="add-padding"><i class="fa fa-pencil-square-o fa-lg edit"></i></span><span class="add-padding"><i class="fa fa-eye fa-lg view"></i></span></span><span class="add-padding"><i class="fa fa-trash fa-lg delete"></i></span>'
+                "defaultContent": '<span class="add-padding"><i class="fa fa-pencil-square-o fa-lg edit"></i></span><span class="add-padding"><i class="fa fa-eye fa-lg view"></i></span>'
             },{
+	            "mData": "plotId",
+	            "visible": false,
+	            "bSortable": false
+	        },{
 	            "mData": "pmId",
 	            "visible": false,
 	            "bSortable": false
@@ -187,7 +191,7 @@ $('#searchBtn').click(function () {
 
 
 $("#view-plot-master-data").on('click', 'tbody tr td span i.edit', function (event) {
-    var id = table.row($(this).closest('tr')).data().pmId;
+    var id = table.row($(this).closest('tr')).data().plotId;
     var url = '/edcr/plotMaster/update/' + id;
     window.open(url, id, 'width=900, height=700, top=300, left=260,scrollbars=yes');
 
@@ -200,12 +204,12 @@ $("#view-plot-master-data").on('click', 'tbody tr td span i.view', function (eve
 
 });
 
-$("#view-plot-master-data").on('click', 'tbody tr td span i.delete', function (event) {
-    var id = table.row($(this).closest('tr')).data().pmId;
+/*$("#view-plot-master-data").on('click', 'tbody tr td span i.delete', function (event) {
+    var id = table.row($(this).closest('tr')).data().plotId;
     var url = '/edcr/plotMaster/delete/' + id;
     window.open(url, id, 'width=900, height=700, top=300, left=260,scrollbars=yes');
 
-});
+});*/
 
 $('#backBtnId').click(function () {
     window.location = '/edcr/plotMaster/update/';

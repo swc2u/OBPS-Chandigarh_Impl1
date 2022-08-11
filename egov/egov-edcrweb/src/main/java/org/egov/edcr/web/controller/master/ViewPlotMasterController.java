@@ -77,6 +77,7 @@ public class ViewPlotMasterController {
     
     @GetMapping(value = "{plotMasterId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public String viewPlotMasterData(@PathVariable Long plotMasterId, Model model) {
+    	System.out.println(plotMasterId+"{{{{{{{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}]");
         model.addAttribute("plotMaster", plotMasterService.getPlotMasterById(plotMasterId));
         return PM_VIEW;
     }
