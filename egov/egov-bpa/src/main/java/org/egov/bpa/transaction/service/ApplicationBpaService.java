@@ -497,7 +497,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
 
     @Transactional
     public void saveAndFlushApplication(final BpaApplication application) {
- //        appendQrCodeWithDcrDocuments(application);
+        appendQrCodeWithDcrDocuments(application);
         persistBpaNocDocuments(application);
         buildPermitConditions(application);
         // persistPostalAddress(application);
