@@ -1437,4 +1437,8 @@
 		<put-attribute name="page-title" value="title.search.appln" cascade="true" />
 		<put-attribute name="body" value="/WEB-INF/views/application/search-bpa-pending-task-rural.jsp" />
 	</definition>
+	<definition name="restamping-documents" extends="base_layout">
+		<put-attribute name="page-title" value="title.restamp.appln" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/restamping-documents.jsp" />
+	</definition>
 </tiles-definitions>
