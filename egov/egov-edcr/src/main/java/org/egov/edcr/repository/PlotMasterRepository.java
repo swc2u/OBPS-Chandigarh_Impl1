@@ -78,5 +78,8 @@ public interface PlotMasterRepository extends JpaRepository<PlotMaster,Long> {
     
     @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.subOccupancy = :soId")
 	List<PlotMaster> findAllBySubOccupancyId(@Param("soId") Long subOccupancyId);
+    
+    @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.plot.id = :plotId")
+	PlotMaster findAllByPlotId(@Param("plotId") Long plotId);
 
 }

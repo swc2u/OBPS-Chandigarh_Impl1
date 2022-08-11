@@ -49,7 +49,6 @@
 package org.egov.edcr.web.controller.master;
 
 import org.egov.common.entity.bpa.Occupancy;
-import org.egov.common.entity.bpa.SubOccupancy;
 import org.egov.commons.service.OccupancyService;
 import org.egov.commons.service.SubOccupancyService;
 import org.egov.edcr.entity.PlotMaster;
@@ -84,8 +83,8 @@ public class UpdatePlotMasterController {
     SubOccupancyService subOccupancyService;
 
     @ModelAttribute
-    public PlotMaster plotMaster(@PathVariable Optional<Long> id) {
-        return id.isPresent() ? plotMasterService.getPlotMasterById(id.get()) : new PlotMaster();
+    public PlotMaster plotMaster(@PathVariable Optional<Long> plotId) {
+        return plotId.isPresent() ? plotMasterService.getPlotMasterByPlotId(plotId.get()) : new PlotMaster();
     }
 
     @ModelAttribute("occupancy")

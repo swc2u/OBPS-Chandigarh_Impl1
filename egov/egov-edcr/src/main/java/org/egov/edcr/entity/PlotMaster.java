@@ -247,6 +247,22 @@ public class PlotMaster extends AbstractAuditable {
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
+
+	public Date getFromDate() {
+		return fromDate;
+	}
+
+	public void setFromDate(Date fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public Date getToDate() {
+		return toDate;
+	}
+
+	public void setToDate(Date toDate) {
+		this.toDate = toDate;
+	}
     
 
 }

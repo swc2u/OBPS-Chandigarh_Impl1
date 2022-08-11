@@ -100,8 +100,8 @@ public class PlotMasterService {
 		return plotMasterRepository.findAllByPlotName(plotName);
 	}
 	
-	public PlotMaster getPlotMasterById(Long plotMasterId) {
-		return plotMasterRepository.findOne(plotMasterId);
+	public PlotMaster getPlotMasterByPlotId(Long plotId) {
+		return plotMasterRepository.findAllByPlotId(plotId);
 	}	
 	
 	@Transactional
