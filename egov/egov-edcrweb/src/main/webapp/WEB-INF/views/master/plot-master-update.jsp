@@ -140,7 +140,7 @@
 <%--                                             <input type="hidden" name="subOccupancyId" value="<c:out value="${subOccupancy.id}" />"/> --%>
 <!--                                         </div> -->
 <!--                                     </div> -->
-                                    
+                                    <input type="hidden" name="subOccupancyId" value="<c:out value="${subOccupancy.id}" />"/> 
                                     <div class="panel-body custom-form">
                                        
                                        

@@ -62,5 +62,7 @@ public interface AllowedSubOccupancyPlotRepository extends JpaRepository<Allowed
     
     @Query("select ap.id from AllowedSubOccupancyPlot ap where ap.plot.plotNum = :plotNumber")
 	Long findAllowedSubOccupancyPlotId(@Param("plotNumber") String plotNumber);
+    
+	AllowedSubOccupancyPlot findByPlot(Long plotId);
 
 }

@@ -69,6 +69,7 @@
                                 </div>
                              </div>
                              <input type="hidden" name="subOccupancyId" value="<c:out value="${plotMaster.allowedsuboccupancy.subOccupancy}" />"/>
+                              <input type="hidden" name="plotId" value="<c:out value="${plotMaster.allowedsuboccupancy.plot.id}" />"/>
                                     
                                     <div class="panel-body custom-form" height="100%">
                                         <div class="form-group">
@@ -271,7 +272,7 @@ $('#buttonCreateSearch').click(function () {
 });
 
 $('#buttonEdit').click(function () {
-    $('#plotMasterView').attr('action', '/edcr/plotMaster/update/' + $('#subOccupancyId').val());
+    $('#plotMasterView').attr('action', '/edcr/plotMaster/update/' + $('#plotId').val());
 });
 
 $('#buttonEditSearch').click(function () {

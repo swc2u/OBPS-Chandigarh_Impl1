@@ -53,9 +53,12 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.egov.edcr.contract.PlotMasterSearchRequest;
+import org.egov.edcr.entity.AllowedSubOccupancyPlot;
 import org.egov.edcr.entity.Plot;
 import org.egov.edcr.entity.PlotMaster;
+import org.egov.edcr.repository.AllowedSubOccupancyPlotRepository;
 import org.egov.edcr.repository.PlotMasterRepository;
+import org.egov.edcr.repository.PlotRepository;
 import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.admin.master.repository.BoundaryRepository;
 import org.slf4j.Logger;
@@ -82,12 +85,19 @@ public class PlotMasterService {
     
     
     private final BoundaryRepository boundaryRepository;
+    
+    private final PlotRepository plotRepository;
+    
+    private final AllowedSubOccupancyPlotRepository allowedSubOccupancyPlotRepository;
 
 
     @Autowired
-    public PlotMasterService(final PlotMasterRepository plotMasterRepository,final BoundaryRepository boundaryRepository) {
+    public PlotMasterService(final PlotMasterRepository plotMasterRepository,final BoundaryRepository boundaryRepository,final PlotRepository plotRepository,
+    		final AllowedSubOccupancyPlotRepository allowedSubOccupancyPlotRepository) {
         this.plotMasterRepository = plotMasterRepository;
 		this.boundaryRepository = boundaryRepository;
+		this.plotRepository= plotRepository;
+		this.allowedSubOccupancyPlotRepository = allowedSubOccupancyPlotRepository;
     }
 
 	public PlotMaster searchPlotMasterData(final String occupancyCode, final String sector, final String plotNumber, final String plotType) {
@@ -101,7 +111,15 @@ public class PlotMasterService {
 	}
 	
 	public PlotMaster getPlotMasterByPlotId(Long plotId) {
-		return plotMasterRepository.findAllByPlotId(plotId);
+		PlotMaster pm=plotMasterRepository.findAllByPlotId(plotId);
+		Plot plot=plotRepository.findOne(plotId);
+		AllowedSubOccupancyPlot allowedsuboccupancy = allowedSubOccupancyPlotRepository.findByPlot(plotId);
+		System.out.println("::::::::::::::::::::"+allowedsuboccupancy.getPlot().getId());
+		allowedsuboccupancy.setPlot(plot);
+		pm.setAllowedsuboccupancy(allowedsuboccupancy);
+		System.out.println("::::::::::::::::::::"+pm.getSavedAllowedSubOccupancyPlot().getPlot().getId());
+		return pm;
+//		return plotMasterRepository.findAllByPlotId(plotId);
 	}	
 	
 	@Transactional
@@ -124,11 +142,16 @@ public class PlotMasterService {
 	}
 	
 	public PlotMaster getPlotMasterById(Long plotMasterId) {
-		return plotMasterRepository.findOne(plotMasterId);
+		PlotMaster plotmstr=plotMasterRepository.findOne(plotMasterId);
+		Boundary boundary = boundaryRepository.findOne(plotmstr.getAllowedsuboccupancy().getPlot().getBoundary().getId());
+		plotmstr.getAllowedsuboccupancy().getPlot().setBoundary(boundary);
+		return plotmstr;
 	}
 	
 	@Transactional
 	public PlotMaster updatePlotMasterData(PlotMaster plotMaster) {
+		Boundary boundary =boundaryRepository.findByName(plotMaster.getAllowedsuboccupancy().getPlot().getBoundary().getName());
+		plotMaster.getAllowedsuboccupancy().getPlot().setBoundary(boundary);
 		insertEnrichment(plotMaster);
 		return plotMasterRepository.save(plotMaster);
 	}

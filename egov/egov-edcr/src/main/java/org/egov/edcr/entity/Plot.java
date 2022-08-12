@@ -55,9 +55,10 @@ import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.validator.constraints.SafeHtml;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -112,7 +113,7 @@ public class Plot extends AbstractAuditable {
     private int phase;
 
     @ManyToOne
-    @JoinColumn(name = "boundary")
+    @JoinColumn(name = "boundary",insertable=false, updatable=false)
     @NotAudited
     private Boundary boundary;
 

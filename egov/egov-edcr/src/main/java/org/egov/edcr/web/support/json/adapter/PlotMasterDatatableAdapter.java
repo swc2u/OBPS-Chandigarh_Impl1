@@ -71,6 +71,7 @@ public class PlotMasterDatatableAdapter implements DataTableJsonAdapter<PlotMast
         plotMasterData.forEach(plotMaster -> {
             JsonObject plotMasterJson = new JsonObject();
             plotMasterJson.addProperty("pmId", plotMaster.getId());
+            plotMasterJson.addProperty("plotId", plotMaster.getAllowedsuboccupancy().getPlot().getId());
             plotMasterJson.addProperty("code", plotMaster.getCode());
             plotMasterJson.addProperty("phase", plotMaster.getAllowedsuboccupancy().getPlot().getPhase());
             plotMasterJson.addProperty("sector", plotMaster.getAllowedsuboccupancy().getPlot().getBoundary().getName());

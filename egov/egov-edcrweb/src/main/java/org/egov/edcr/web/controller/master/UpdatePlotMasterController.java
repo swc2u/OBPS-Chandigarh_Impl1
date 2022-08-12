@@ -83,8 +83,8 @@ public class UpdatePlotMasterController {
     SubOccupancyService subOccupancyService;
 
     @ModelAttribute
-    public PlotMaster plotMaster(@PathVariable Optional<Long> plotId) {
-        return plotId.isPresent() ? plotMasterService.getPlotMasterByPlotId(plotId.get()) : new PlotMaster();
+    public PlotMaster plotMaster(@PathVariable Optional<String> plotId) {
+        return plotId.isPresent() ? plotMasterService.getPlotMasterByPlotId(Long.parseLong(plotId.get())) : new PlotMaster();
     }
 
     @ModelAttribute("occupancy")
@@ -114,7 +114,7 @@ public class UpdatePlotMasterController {
         PlotMaster modifiedPM=plotMasterService.updatePlotMasterData(plotMaster);
         redirectAttributes.addFlashAttribute("message", "msg.pltmstr.update.success");
         redirectAttributes.addFlashAttribute("edit", true);
-        return "redirect:/plotMaster/view/" + modifiedPM.getId();
+        return "redirect:/plotMaster/view/" + modifiedPM.getId().toString();
     }
 
 }
