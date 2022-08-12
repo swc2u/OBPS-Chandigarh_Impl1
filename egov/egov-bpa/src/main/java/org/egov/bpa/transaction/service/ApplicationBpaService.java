@@ -40,6 +40,7 @@
 package org.egov.bpa.transaction.service;
 
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_APPROVED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_ACCEPTED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_CREATED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DIGI_SIGNED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFIED;
@@ -676,7 +677,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         if (Boolean.valueOf(appConfigValuesService.getConfigValuesByModuleAndKey(MODULE_NAME,
                 PDF_QR_ENBLD).get(0).getValue())
                 && (application.getStatus().getCode().equals(APPLICATION_STATUS_APPROVED)
-                        || application.getStatus().getCode().equals(APPLICATION_STATUS_NOCUPDATED))
+                        || application.getStatus().getCode().equals(APPLICATION_STATUS_NOCUPDATED) || application.getStatus().getCode().equals(APPLICATION_STATUS_ACCEPTED))
                 && !bpaDemandService.checkAnyTaxIsPendingToCollect(application)) {
             List<PermitDcrDocument> dcrDocuments = dcrDocumentRepository.findByApplication(application);
             for (PermitDcrDocument dcrDocument : dcrDocuments) {
