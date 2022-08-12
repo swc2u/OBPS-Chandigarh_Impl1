@@ -57,8 +57,9 @@
 	<div class="panel-title"><strong><spring:message code="lbl.bpa.restamp"/></strong></div>
 </div>
 <div class="panel-body">
+
 	<c:if test="${not empty message}">
-         <div class="alert alert-success" role="alert"><spring:message code="${message}"/></div>
+         <div class="alert alert-success" role="alert"><c:out value="${message}"></c:out></div>
      </c:if>
 	<form:form  method="get" id="restamp" cssClass="form-horizontal form-groups-bordered">
 			<div class="form-group">

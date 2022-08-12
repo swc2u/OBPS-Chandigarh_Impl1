@@ -294,6 +294,7 @@ public class BpaConstants {
 	// application status constants
 	public static final String APPROVED = "Approved";
 	public static final String APPLICATION_STATUS_APPROVED = APPROVED;
+	public static final String APPLICATION_STATUS_ACCEPTED = "Accepted as Scrutinized";
 	public static final String PAYMENT_PENDING = "PAYMENT_PENDING";
 	public static final String APPLICATION_STATUS_PENDNING = PAYMENT_PENDING;
 	public static final String APPLICATION_STATUS_DOC_VERIFY_COMPLETED = "Document Verification Completed";
