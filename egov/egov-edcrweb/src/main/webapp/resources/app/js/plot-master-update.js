@@ -192,7 +192,6 @@ $('#searchBtn').click(function () {
 
 $("#view-plot-master-data").on('click', 'tbody tr td span i.edit', function (event) {
     var id = table.row($(this).closest('tr')).data().plotId;
-    alert(id+"edit plot Id");
     var url = '/edcr/plotMaster/update/' + id;
     window.open(url, id, 'width=900, height=700, top=300, left=260,scrollbars=yes');
 

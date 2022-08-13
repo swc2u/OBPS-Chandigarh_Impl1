@@ -53,6 +53,8 @@ import org.egov.commons.service.OccupancyService;
 import org.egov.commons.service.SubOccupancyService;
 import org.egov.edcr.entity.PlotMaster;
 import org.egov.edcr.service.PlotMasterService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,6 +66,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -71,7 +74,9 @@ import java.util.Optional;
 @Controller
 @RequestMapping("plotMaster/update")
 public class UpdatePlotMasterController {
-
+	
+	private static final Logger LOG = LoggerFactory.getLogger(UpdatePlotMasterController.class);
+	
     private static final String PLOTMASTER_UPDATE_VIEW = "plot-master-update";
     @Autowired
     private PlotMasterService plotMasterService;
@@ -106,11 +111,15 @@ public class UpdatePlotMasterController {
 
     @PostMapping("{id}")
     public String updatePlotMaster(@Valid @ModelAttribute PlotMaster plotMaster, BindingResult bindingResult,
-                                 RedirectAttributes redirectAttributes, Model model) {
+                                 RedirectAttributes redirectAttributes, Model model,HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("subOccupancy", plotMaster.getAllowedsuboccupancy().getSubOccupancy());
+            model.addAttribute("subOccupancy", Long.parseLong(request.getParameter("allowedSOId")));
             return PLOTMASTER_UPDATE_VIEW;
         }
+        plotMaster.setId(Long.parseLong(request.getParameter("pmId")));
+        plotMaster.getAllowedsuboccupancy().setId(Long.parseLong(request.getParameter("allowedSOId")));
+        plotMaster.getAllowedsuboccupancy().setSubOccupancy(Long.parseLong(request.getParameter("subOccupancyId")));
+        plotMaster.getAllowedsuboccupancy().getPlot().setId(Long.parseLong(request.getParameter("plotId")));
         PlotMaster modifiedPM=plotMasterService.updatePlotMasterData(plotMaster);
         redirectAttributes.addFlashAttribute("message", "msg.pltmstr.update.success");
         redirectAttributes.addFlashAttribute("edit", true);

@@ -140,7 +140,10 @@
 <%--                                             <input type="hidden" name="subOccupancyId" value="<c:out value="${subOccupancy.id}" />"/> --%>
 <!--                                         </div> -->
 <!--                                     </div> -->
-                                    <input type="hidden" name="subOccupancyId" value="<c:out value="${subOccupancy.id}" />"/> 
+                                    <input type="hidden" name="subOccupancyId" value="<c:out value="${plotMaster.allowedsuboccupancy.subOccupancy}" />"/> 
+                                    <input type="hidden" name="pmId" value="<c:out value="${plotMaster.id}"/>"/>
+                                    <input type="hidden" name="plotId" value="<c:out value="${plotMaster.allowedsuboccupancy.plot.id}"/>"/>
+                                    <input type="hidden" name="allowedSOId" value="<c:out value="${plotMaster.allowedsuboccupancy.id}"/>"/>
                                     <div class="panel-body custom-form">
                                        
                                        
@@ -306,6 +309,7 @@
                                                 <form:errors path="fromDate" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
+                                        
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">
                                                 <spring:message code="lbl.toDate"/>

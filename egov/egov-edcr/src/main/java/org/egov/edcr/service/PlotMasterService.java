@@ -111,19 +111,21 @@ public class PlotMasterService {
 	}
 	
 	public PlotMaster getPlotMasterByPlotId(Long plotId) {
-		PlotMaster pm=plotMasterRepository.findAllByPlotId(plotId);
-		Plot plot=plotRepository.findOne(plotId);
-		AllowedSubOccupancyPlot allowedsuboccupancy = allowedSubOccupancyPlotRepository.findByPlot(plotId);
-		System.out.println("::::::::::::::::::::"+allowedsuboccupancy.getPlot().getId());
-		allowedsuboccupancy.setPlot(plot);
-		pm.setAllowedsuboccupancy(allowedsuboccupancy);
-		System.out.println("::::::::::::::::::::"+pm.getSavedAllowedSubOccupancyPlot().getPlot().getId());
-		return pm;
+		Long pmId=plotMasterRepository.findPlotmasterByPlotId(plotId);
+		PlotMaster pmFromDB=plotMasterRepository.findOne(pmId);
+//		Plot plot=plotRepository.findOne(plotId);
+//		System.out.println("::::::::::::::::::::"+plot.getName());
+//		AllowedSubOccupancyPlot allowedsuboccupancy = allowedSubOccupancyPlotRepository.findByPlot(plotId);
+//		System.out.println("::::::::::::::::::::"+allowedsuboccupancy.getPlot().getName());
+//		allowedsuboccupancy.setPlot(plot);
+//		pm.setAllowedsuboccupancy(allowedsuboccupancy);
+		System.out.println("::::::::::::::::::::"+pmFromDB.getId()+"plot:"+pmFromDB.getAllowedsuboccupancy().getPlot().getId());
+		return pmFromDB;
 //		return plotMasterRepository.findAllByPlotId(plotId);
 	}	
 	
 	@Transactional
-	public PlotMaster createPlotMasterData(PlotMaster plotMaster) {
+	public PlotMaster createPlotMasterData(final PlotMaster plotMaster) {
 		Boundary boundary =boundaryRepository.findByName(plotMaster.getAllowedsuboccupancy().getPlot().getBoundary().getName());
 		plotMaster.getAllowedsuboccupancy().getPlot().setBoundary(boundary);
 		insertEnrichment(plotMaster);
@@ -141,7 +143,7 @@ public class PlotMasterService {
 		return plotMasterRepository.findAllBySubOccupancyId(subOccupancyId);
 	}
 	
-	public PlotMaster getPlotMasterById(Long plotMasterId) {
+	public PlotMaster getPlotMasterById(final Long plotMasterId) {
 		PlotMaster plotmstr=plotMasterRepository.findOne(plotMasterId);
 		Boundary boundary = boundaryRepository.findOne(plotmstr.getAllowedsuboccupancy().getPlot().getBoundary().getId());
 		plotmstr.getAllowedsuboccupancy().getPlot().setBoundary(boundary);
@@ -149,11 +151,28 @@ public class PlotMasterService {
 	}
 	
 	@Transactional
-	public PlotMaster updatePlotMasterData(PlotMaster plotMaster) {
-		Boundary boundary =boundaryRepository.findByName(plotMaster.getAllowedsuboccupancy().getPlot().getBoundary().getName());
-		plotMaster.getAllowedsuboccupancy().getPlot().setBoundary(boundary);
+	public PlotMaster updatePlotMasterData(final PlotMaster plotMaster) {
+//		AllowedSubOccupancyPlot allowedsuboccupancy = allowedSubOccupancyPlotRepository.findOne(plotMaster.getAllowedsuboccupancy().getId());
 		insertEnrichment(plotMaster);
-		return plotMasterRepository.save(plotMaster);
+		PlotMaster pmFromDB = plotMasterRepository.findOne(plotMaster.getId());
+		if(pmFromDB !=null) {
+			pmFromDB.setFromDate(plotMaster.getFromDate());
+			pmFromDB.setToDate(plotMaster.getToDate());
+		}
+		else 
+			pmFromDB=plotMaster;
+		
+		/*
+		 * if(allowedsuboccupancy!=null)
+		 * plotMaster.setAllowedsuboccupancy(allowedsuboccupancy);
+		 * 
+		 * Boundary boundary
+		 * =boundaryRepository.findByName(plotMaster.getAllowedsuboccupancy().getPlot().
+		 * getBoundary().getName());
+		 * plotMaster.getAllowedsuboccupancy().getPlot().setBoundary(boundary);
+		 */
+		
+		return plotMasterRepository.save(pmFromDB);
 	}
 
 	private void insertEnrichment(PlotMaster plotMaster) {

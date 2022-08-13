@@ -120,7 +120,6 @@ public class PlotMaster extends AbstractAuditable {
     private Date toDate;
     
     @OneToOne(fetch = LAZY, cascade = ALL)
-    @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = "allowedsuboccupancy")
     @NotAudited
     private AllowedSubOccupancyPlot allowedsuboccupancy;
