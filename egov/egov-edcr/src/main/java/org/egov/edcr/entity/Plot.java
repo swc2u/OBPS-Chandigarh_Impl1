@@ -50,6 +50,7 @@ package org.egov.edcr.entity;
 
 import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.egov.infra.persistence.validator.annotation.Unique;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
@@ -57,7 +58,6 @@ import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -68,6 +68,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
+@Unique(fields = "plotNum", enableDfltMsg = true)
 @Table(name = "eg_plot",schema="chandigarh")
 @SequenceGenerator(name = Plot.SEQ_PLOT, sequenceName = Plot.SEQ_PLOT, allocationSize = 1)
 @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
@@ -112,7 +113,7 @@ public class Plot extends AbstractAuditable {
     private int phase;
 
     @ManyToOne
-    @JoinColumn(name = "boundary")
+    @JoinColumn(name = "boundary", updatable=false)
     @NotAudited
     private Boundary boundary;
 

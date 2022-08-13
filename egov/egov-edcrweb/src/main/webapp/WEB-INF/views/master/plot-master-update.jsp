@@ -53,16 +53,14 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="egov" tagdir="/WEB-INF/tags" %>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
+<link rel="stylesheet" href="<cdn:url  value='/resources/global/js/jq/plugins/datatables/responsive/css/datatables.responsive.css'/>">
 <div class="row" id="page-content">
     <div class="col-md-12">
         <div class="panel" data-collapsed="0">
             <div class="panel-body">
-                <c:if test="${not empty warning}">
-                    <div class="alert alert-danger" role="alert"><spring:message code="${warning}"/></div>
-                </c:if>
                 <c:choose>
                     <c:when test="${search}">
-                        <form:form id="plotMasterCreateSearchForm" class="form-horizontal form-groups-bordered" method="get">
+                        <form id="plotMasterCreateSearchForm" class="form-horizontal form-groups-bordered" method="get">
                             <div class="panel panel-primary" data-collapsed="0">
                                 <div class="panel-heading">
                                     <div class="panel-title">
@@ -71,7 +69,7 @@
                                 </div>
 
                                 <div class="panel-body custom-form">
-                                    <div class="form-group">
+                                   <div class="form-group">
                                         <label class="col-sm-3 control-label">
                                             <spring:message code="lbl.occupancy"/>
                                             <span class="mandatory"></span>
@@ -96,6 +94,15 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"><spring:message
+                                                code="lbl.plot.number"/></label>
+                                        <div class="col-sm-6 add-margin">
+                                            <select id="plotNumber" class="form-control">
+                                                <option value=""><spring:message code="lbl.select"/></option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -105,40 +112,44 @@
                                 <a href="javascript:void(0)" class="btn btn-default" onclick="self.close()"><spring:message code="lbl.close"/></a>
                             </div>
 
-                        </form:form>
+                        </form>
                     </c:when>
                     <c:otherwise>
-                        <form:form method="post" action="/edcr/plotMaster/create" class="form-horizontal form-groups-bordered" commandName="plotMaster" id="plotMasterCreate">
+                        <form:form method="post" class="form-horizontal form-groups-bordered" commandName="plotMaster" id="plotMasterUpdate">
                             <div class="panel panel-primary" data-collapsed="0">
                                 <div class="panel-heading">
                                     <div class="panel-title">
-                                        <strong><spring:message code="lbl.hdr.createPlotMaster"/></strong>
+                                        <strong><spring:message code="lbl.hdr.updatePlotMaster"/></strong>
                                     </div>
                                 </div>
-							<div class="panel-body custom-form">
+
+                                <div class="panel-body custom-form">
                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label"><spring:message code="lbl.occupancy"/></label>
-                                        <div class="col-sm-6" style="padding-top: 7px">
-                                            <strong><c:out value="${subOccupancy.occupancy.name}"/></strong>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">
-                                            <spring:message code="lbl.subOccupancy"/>
-                                        </label>
-                                        <div class="col-sm-6" style="padding-top: 7px">
-<%--                                         <form:input path="allowedsuboccupancy.SubOccupancy.name" id="subOccupancy" type="text" class="form-control low-width patternvalidation" data-pattern="masterCode" value="${subOccupancy.name}" readonly="true" autocomplete="off"  maxlength="25"/> --%>
-                                           <strong><c:out value="${subOccupancy.name}"/></strong>
-                                            <input type="hidden" name="subOccupancyId" value="<c:out value="${subOccupancy.id}" />"/>
-                                        </div>
-                                    </div>
-                                    
+<%--                                         <label class="col-sm-3 control-label"><spring:message code="lbl.occupancy"/></label> --%>
+<!--                                         <div class="col-sm-6" style="padding-top: 7px"> -->
+<%--                                             <strong><c:out value="${subOccupancy.occupancy.name}"/></strong> --%>
+<!--                                         </div> -->
+<!--                                     </div> -->
+<!--                                     <div class="form-group"> -->
+<!--                                         <label class="col-sm-3 control-label"> -->
+<%--                                             <spring:message code="lbl.subOccupancy"/> --%>
+<!--                                         </label> -->
+<!--                                         <div class="col-sm-6" style="padding-top: 7px"> -->
+<%--                                          <form:input path="allowedsuboccupancy.SubOccupancy.name" id="subOccupancy" type="text" class="form-control low-width patternvalidation" data-pattern="masterCode" value="${subOccupancy.name}" readonly="true" autocomplete="off"  maxlength="25"/> --%> 
+<%--                                            <strong><c:out value="${subOccupancy.name}"/></strong> --%>
+<%--                                             <input type="hidden" name="subOccupancyId" value="<c:out value="${subOccupancy.id}" />"/> --%>
+<!--                                         </div> -->
+<!--                                     </div> -->
+                                    <input type="hidden" name="subOccupancyId" value="<c:out value="${plotMaster.allowedsuboccupancy.subOccupancy}" />"/> 
+                                    <input type="hidden" name="pmId" value="<c:out value="${plotMaster.id}"/>"/>
+                                    <input type="hidden" name="plotId" value="<c:out value="${plotMaster.allowedsuboccupancy.plot.id}"/>"/>
+                                    <input type="hidden" name="allowedSOId" value="<c:out value="${plotMaster.allowedsuboccupancy.id}"/>"/>
                                     <div class="panel-body custom-form">
                                        
                                        
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">
-                                                <spring:message code="lbl.code"/><span class="mandatory"></span>
+                                                <spring:message code="lbl.code"/>
                                             </label>
                                             <div class="col-sm-6">
                                                 <form:input path="code" id="code" type="text" class="form-control low-width patternvalidation" data-pattern="masterCode" value="${subOccupancy.code}" readonly="true" autocomplete="off"  maxlength="25"/>
@@ -149,7 +160,7 @@
                                                 <spring:message code="lbl.phase"/><span class="mandatory"></span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="allowedsuboccupancy.plot.phase" id="phase" type="number" class="form-control low-width patternvalidation" data-pattern="specialName" placeholder="" autocomplete="off" required="required"/>
+                                                <form:input path="allowedsuboccupancy.plot.phase" id="phase" type="number" class="form-control low-width patternvalidation" data-pattern="specialName" readonly="true" placeholder="" autocomplete="off" required="required"/>
                                                 <form:errors path="allowedsuboccupancy.plot.phase" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
@@ -158,7 +169,7 @@
                                                 <spring:message code="lbl.local.sector"/><span class="mandatory"></span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="allowedsuboccupancy.plot.boundary.name" id="sector" type="text" class="form-control low-width patternvalidation" data-pattern="specialName" placeholder="" autocomplete="off"/>
+                                                <form:input path="allowedsuboccupancy.plot.boundary.name" id="sector" type="text" class="form-control low-width patternvalidation" data-pattern="specialName" readonly="true" placeholder="" autocomplete="off"/>
                                                 <form:errors path="allowedsuboccupancy.plot.boundary.name" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
@@ -168,7 +179,7 @@
                                                 <spring:message code="lbl.plot.number"/><span class="mandatory"></span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="allowedsuboccupancy.plot.plotNum" id="plotNum" type="text" class="form-control low-width is_valid_number" placeholder="" autocomplete="off" required="required"/>
+                                                <form:input path="allowedsuboccupancy.plot.plotNum" id="plotNum" type="text" class="form-control low-width is_valid_number" readonly="true" placeholder="" autocomplete="off" required="required"/>
                                                 <form:errors path="allowedsuboccupancy.plot.plotNum" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
@@ -177,7 +188,7 @@
                                                 <spring:message code="lbl.plot.area"/><span class="mandatory"></span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="allowedsuboccupancy.plot.plotArea" id="plotArea" type="number" class="form-control low-width " step="0.01" placeholder="" autocomplete="off" required="required"/>
+                                                <form:input path="allowedsuboccupancy.plot.plotArea" id="plotArea" type="number" class="form-control low-width " readonly="true" step="0.01" placeholder="" autocomplete="off" required="required"/>
                                                 <form:errors path="allowedsuboccupancy.plot.plotArea" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
@@ -186,7 +197,7 @@
                                                 <spring:message code="lbl.plot.areatype"/><span class="mandatory"></span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="allowedsuboccupancy.plot.areaType" id="areaType" type="text" class="form-control low-width patternvalidation" data-pattern="specialName" placeholder="" autocomplete="off"/>
+                                                <form:input path="allowedsuboccupancy.plot.areaType" id="areaType" type="text" readonly="true" class="form-control low-width patternvalidation" data-pattern="specialName" placeholder="" autocomplete="off"/>
                                                 <form:errors path="allowedsuboccupancy.plot.areaType" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
@@ -195,7 +206,7 @@
                                                 <spring:message code="lbl.plot.depth"/><span class="mandatory"></span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="allowedsuboccupancy.plot.plotDepth" id="plotDepth" type="text" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" required="required"/>
+                                                <form:input path="allowedsuboccupancy.plot.plotDepth" id="plotDepth" type="text" readonly="true" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" required="required"/>
                                                 <form:errors path="allowedsuboccupancy.plot.plotDepth" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
@@ -204,7 +215,7 @@
                                                 <spring:message code="lbl.plot.width"/><span class="mandatory"></span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="allowedsuboccupancy.plot.plotWidth" id="plotWidth" type="text" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" required="required"/>
+                                                <form:input path="allowedsuboccupancy.plot.plotWidth" id="plotWidth" type="text" readonly="true" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" required="required"/>
                                                 <form:errors path="allowedsuboccupancy.plot.plotWidth" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
@@ -213,7 +224,7 @@
                                                 <spring:message code="lbl.bcy.width"/><span class="mandatory"></span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="backCourtyardWidth" id="bcyWidth" type="text" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" required="required"/>
+                                                <form:input path="backCourtyardWidth" id="bcyWidth" type="text" readonly="true" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" required="required"/>
                                                 <form:errors path="backCourtyardWidth" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
@@ -222,7 +233,7 @@
                                                 <spring:message code="lbl.bcy.height"/><span class="mandatory"></span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="backCourtyardHeight" id="bcyHeight" type="text" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" required="required"/>
+                                                <form:input path="backCourtyardHeight" id="bcyHeight" type="text" readonly="true" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" required="required"/>
                                                 <form:errors path="backCourtyardHeight" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
@@ -231,7 +242,7 @@
                                                 <spring:message code="lbl.perm.stories"/><span class="mandatory"></span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="permissibleBuildingStories" id="permStories" type="text" class="form-control low-width is_valid_number" placeholder="" autocomplete="off" required="required"/>
+                                                <form:input path="permissibleBuildingStories" id="permStories" type="text" readonly="true" class="form-control low-width is_valid_number" placeholder="" autocomplete="off" required="required"/>
                                                 <form:errors path="permissibleBuildingStories" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
@@ -240,7 +251,7 @@
                                                 <spring:message code="lbl.perm.height"/><span class="mandatory"></span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="permissibleBuildingHeight" id="permHeight" type="number"  step="0.01" class="form-control low-width " placeholder="" autocomplete="off" required="required"/>
+                                                <form:input path="permissibleBuildingHeight" id="permHeight" type="number"  readonly="true" step="0.01" class="form-control low-width " placeholder="" autocomplete="off" required="required"/>
                                                 <form:errors path="permissibleBuildingHeight" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
@@ -249,7 +260,7 @@
                                                 <spring:message code="lbl.perm.far"/><span class="mandatory"></span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="maxmimumPermissibleFAR" id="permFAR" type="text" class="form-control low-width is_valid_number" placeholder="" autocomplete="off" required="required"/>
+                                                <form:input path="maxmimumPermissibleFAR" id="permFAR" type="text" readonly="true" class="form-control low-width is_valid_number" placeholder="" autocomplete="off" required="required"/>
                                                 <form:errors path="maxmimumPermissibleFAR" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
@@ -258,7 +269,7 @@
                                                 <spring:message code="lbl.perm.setback.front"/><span class="mandatory"></span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="minimumPermissibleSetback_Front" id="setbackFront" type="text" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" required="required"/>
+                                                <form:input path="minimumPermissibleSetback_Front" id="setbackFront" type="text" readonly="true" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" required="required"/>
                                                 <form:errors path="minimumPermissibleSetback_Front" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
@@ -267,7 +278,7 @@
                                                 <spring:message code="lbl.perm.setback.rear"/><span class="mandatory"></span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="minimumPermissibleSetback_Rear" id="setbackRear" type="text" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" required="required"/>
+                                                <form:input path="minimumPermissibleSetback_Rear" id="setbackRear" type="text" readonly="true" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" required="required"/>
                                                 <form:errors path="minimumPermissibleSetback_Rear" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
@@ -276,7 +287,7 @@
                                                 <spring:message code="lbl.perm.setback.left"/><span class="mandatory"></span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="minimumPermissibleSetback_Left" id="setbackLeft" type="text" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" required="required"/>
+                                                <form:input path="minimumPermissibleSetback_Left" id="setbackLeft" type="text" readonly="true" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" required="required"/>
                                                 <form:errors path="minimumPermissibleSetback_Left" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
@@ -285,7 +296,7 @@
                                                 <spring:message code="lbl.perm.setback.right"/><span class="mandatory"></span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="minimumPermissibleSetback_Right" id="setbackRight" type="text" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" required="required"/>
+                                                <form:input path="minimumPermissibleSetback_Right" id="setbackRight" type="text" readonly="true" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" required="required"/>
                                                 <form:errors path="minimumPermissibleSetback_Right" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
@@ -298,6 +309,7 @@
                                                 <form:errors path="fromDate" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
+                                        
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">
                                                 <spring:message code="lbl.toDate"/>
@@ -312,14 +324,13 @@
                             </div>
                             <div class="row">
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-primary"><spring:message code="lbl.submit"/></button>
+                                    <button class="btn btn-primary"><spring:message code="lbl.submit"/></button>
                                     <a href="javascript:void(0)" class="btn btn-default" id="backBtnId">
-                                        <spring:message code="lbl.create"/>&nbsp;<spring:message code="lbl.search"/>
+                                        <spring:message code="lbl.edit"/>&nbsp;<spring:message code="lbl.search"/>
                                     </a>
                                     <a href="javascript:void(0)" class="btn btn-default" onclick="self.close()"><spring:message code="lbl.close"/></a>
                                 </div>
                             </div>
-                                
                         </form:form>
                     </c:otherwise>
                 </c:choose>
@@ -327,4 +338,11 @@
         </div>
     </div>
 </div>
-<script src="<cdn:url  value='/resources/app/js/plot-master-create.js?rnd=${app_release_no}'/>"></script>
+<table class="table table-bordered datatable" id="view-plot-master-data">
+</table>
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jq/plugins/datatables/jq.dataTables.min.css' context='/egi'/>"/>
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jq/plugins/datatables/dataTables.bts.min.css' context='/egi'/>">
+<script src="<cdn:url  value='/resources/global/js/jq/plugins/datatables/jq.dataTables.min.js'/>"></script>
+<script src="<cdn:url  value='/resources/global/js/jq/plugins/datatables/responsive/js/datatables.responsive.js'/>"></script>
+<script src="<cdn:url  value='/resources/global/js/jq/plugins/datatables/dataTables.bts.js'/>"></script>
+<script src="<cdn:url  value='/resources/app/js/plot-master-update.js?rnd=${app_release_no}'/>"></script>

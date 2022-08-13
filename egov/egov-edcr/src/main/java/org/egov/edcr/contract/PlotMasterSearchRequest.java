@@ -46,90 +46,21 @@
  *
  */
 
-package org.egov.edcr.entity;
+package org.egov.edcr.contract;
 
-import com.google.gson.annotations.Expose;
+import org.egov.infra.web.support.search.DataTableSearchRequest;
 
-import org.egov.infra.persistence.entity.AbstractAuditable;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.RelationTargetAuditMode;
+public class PlotMasterSearchRequest extends DataTableSearchRequest {
 
-import static javax.persistence.FetchType.LAZY;
+    private Long subOccupancyId;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+	public Long getSubOccupancyId() {
+		return subOccupancyId;
+	}
 
+	public void setSubOccupancyId(Long subOccupancyId) {
+		this.subOccupancyId = subOccupancyId;
+	}
 
-//import static org.egov.infra.admin.master.entity.Sector.SEQ_Sector;
-
-@Entity
-@Table(name = "eg_plot_supoccupancy_allowed",schema="chandigarh")
-@SequenceGenerator(name = AllowedSubOccupancyPlot.SEQ_PLOT_SO_ALLOWED, sequenceName = AllowedSubOccupancyPlot.SEQ_PLOT_SO_ALLOWED, allocationSize = 1)
-public class AllowedSubOccupancyPlot extends AbstractAuditable {
-    public static final String SEQ_PLOT_SO_ALLOWED = "seq_eg_plot_supoccupancy_allowed";
-    private static final long serialVersionUID = 3054956514161912026L;
-    @Expose
-    @Id
-    @GeneratedValue(generator = SEQ_PLOT_SO_ALLOWED, strategy = GenerationType.SEQUENCE)
-    private Long id;
     
-    @ManyToOne(fetch = LAZY)
-    @Cascade(CascadeType.ALL)
-    @JoinColumn(name = "plot")
-    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-    private Plot  plot;
-   
-   private Long subOccupancy;
-    
-    
-//    private transient Plot savedPlot;
-    
-    public AllowedSubOccupancyPlot() {
-    	this.plot = new Plot();
-    }
-    
-    public AllowedSubOccupancyPlot(Plot plot) {
-    	this.plot = plot;
-    }
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Plot getPlot() {
-		return plot;
-	}
-
-	public void setPlot(Plot plot) {
-		this.plot = plot;
-	}
-
-	public Long getSubOccupancy() {
-		return subOccupancy;
-	}
-
-	public void setSubOccupancy(Long subOccupancy) {
-		this.subOccupancy = subOccupancy;
-	}
-
-//	public Plot getSavedPlot() {
-//		return savedPlot;
-//	}
-//
-//	public void setSavedPlot(Plot savedPlot) {
-//		this.savedPlot = savedPlot;
-//	}
-
 }

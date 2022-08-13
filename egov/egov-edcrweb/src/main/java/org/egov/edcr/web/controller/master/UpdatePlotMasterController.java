@@ -48,35 +48,82 @@
 
 package org.egov.edcr.web.controller.master;
 
+import org.egov.common.entity.bpa.Occupancy;
+import org.egov.commons.service.OccupancyService;
+import org.egov.commons.service.SubOccupancyService;
 import org.egov.edcr.entity.PlotMaster;
 import org.egov.edcr.service.PlotMasterService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
-@RequestMapping(value = "/plotMaster/view")
-public class ViewPlotMasterController {
+@RequestMapping("plotMaster/update")
+public class UpdatePlotMasterController {
 	
-	@Autowired
+	private static final Logger LOG = LoggerFactory.getLogger(UpdatePlotMasterController.class);
+	
+    private static final String PLOTMASTER_UPDATE_VIEW = "plot-master-update";
+    @Autowired
     private PlotMasterService plotMasterService;
-	
-	private final String PM_VIEW="plot-master-view";
-   
-    @GetMapping
-    public String viewBoundarySearchForm() {
-        return PM_VIEW;
-    }
     
-    @GetMapping(value = "{plotMasterId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String viewPlotMasterData(@PathVariable String plotMasterId, Model model) {
-    	PlotMaster plotMaster=plotMasterService.getPlotMasterById(Long.parseLong(plotMasterId));
-        model.addAttribute("plotMaster", plotMaster);
-        return PM_VIEW;
+    @Autowired
+    private OccupancyService occupancyService;
+    
+    @Autowired
+    SubOccupancyService subOccupancyService;
+
+    @ModelAttribute
+    public PlotMaster plotMaster(@PathVariable Optional<String> plotId) {
+        return plotId.isPresent() ? plotMasterService.getPlotMasterByPlotId(Long.parseLong(plotId.get())) : new PlotMaster();
     }
+
+    @ModelAttribute("occupancy")
+    public List<Occupancy> occupancy() {
+        return occupancyService.findAll();
+    }
+
+    @GetMapping("/")
+    public String showUpdatePlotMasterSearchForm(Model model) {
+        model.addAttribute("search", true);
+        return PLOTMASTER_UPDATE_VIEW;
+    }
+
+    @GetMapping("{plotId}")
+    public String showUpdatePlotMasterForm(Model model) {
+        model.addAttribute("search", false);
+        return PLOTMASTER_UPDATE_VIEW;
+    }
+
+    @PostMapping("{id}")
+    public String updatePlotMaster(@Valid @ModelAttribute PlotMaster plotMaster, BindingResult bindingResult,
+                                 RedirectAttributes redirectAttributes, Model model,HttpServletRequest request) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("subOccupancy", Long.parseLong(request.getParameter("allowedSOId")));
+            return PLOTMASTER_UPDATE_VIEW;
+        }
+        plotMaster.setId(Long.parseLong(request.getParameter("pmId")));
+        plotMaster.getAllowedsuboccupancy().setId(Long.parseLong(request.getParameter("allowedSOId")));
+        plotMaster.getAllowedsuboccupancy().setSubOccupancy(Long.parseLong(request.getParameter("subOccupancyId")));
+        plotMaster.getAllowedsuboccupancy().getPlot().setId(Long.parseLong(request.getParameter("plotId")));
+        PlotMaster modifiedPM=plotMasterService.updatePlotMasterData(plotMaster);
+        redirectAttributes.addFlashAttribute("message", "msg.pltmstr.update.success");
+        redirectAttributes.addFlashAttribute("edit", true);
+        return "redirect:/plotMaster/view/" + modifiedPM.getId().toString();
+    }
+
 }

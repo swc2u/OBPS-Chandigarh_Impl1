@@ -46,90 +46,67 @@
  *
  */
 
-package org.egov.edcr.entity;
+package org.egov.edcr.web.controller.master;
 
-import com.google.gson.annotations.Expose;
+import org.egov.common.entity.bpa.Occupancy;
+import org.egov.commons.service.OccupancyService;
+import org.egov.edcr.contract.PlotMasterSearchRequest;
+import org.egov.edcr.entity.PlotMaster;
+import org.egov.edcr.service.PlotMasterService;
+import org.egov.edcr.web.support.json.adapter.PlotMasterAdapter;
+import org.egov.edcr.web.support.json.adapter.PlotMasterDatatableAdapter;
+import org.egov.infra.web.support.ui.DataTable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import org.egov.infra.persistence.entity.AbstractAuditable;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.RelationTargetAuditMode;
+import java.util.List;
 
-import static javax.persistence.FetchType.LAZY;
+import static org.egov.infra.utils.JsonUtils.toJSON;
+import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+@Controller
+@RequestMapping("plotMaster/search")
+public class SearchPlotMasterController {
 
+	 @Autowired
+	    OccupancyService occupancyService;
 
-//import static org.egov.infra.admin.master.entity.Sector.SEQ_Sector;
+    @Autowired
+    private PlotMasterService plotMasterService;
 
-@Entity
-@Table(name = "eg_plot_supoccupancy_allowed",schema="chandigarh")
-@SequenceGenerator(name = AllowedSubOccupancyPlot.SEQ_PLOT_SO_ALLOWED, sequenceName = AllowedSubOccupancyPlot.SEQ_PLOT_SO_ALLOWED, allocationSize = 1)
-public class AllowedSubOccupancyPlot extends AbstractAuditable {
-    public static final String SEQ_PLOT_SO_ALLOWED = "seq_eg_plot_supoccupancy_allowed";
-    private static final long serialVersionUID = 3054956514161912026L;
-    @Expose
-    @Id
-    @GeneratedValue(generator = SEQ_PLOT_SO_ALLOWED, strategy = GenerationType.SEQUENCE)
-    private Long id;
-    
-    @ManyToOne(fetch = LAZY)
-    @Cascade(CascadeType.ALL)
-    @JoinColumn(name = "plot")
-    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-    private Plot  plot;
-   
-   private Long subOccupancy;
-    
-    
-//    private transient Plot savedPlot;
-    
-    public AllowedSubOccupancyPlot() {
-    	this.plot = new Plot();
-    }
-    
-    public AllowedSubOccupancyPlot(Plot plot) {
-    	this.plot = plot;
+    @ModelAttribute("occupancy")
+    public List<Occupancy> occupancy() {
+        return occupancyService.findAll();
     }
 
-	public Long getId() {
-		return id;
-	}
+    @GetMapping
+    public String showPlotMasterSearchForm() {
+        return "plot-master-search";
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @PostMapping(produces = TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String searchPlotMaster(PlotMasterSearchRequest searchRequest) {
+        return new DataTable<>(plotMasterService.getPageOfPlotMaster(searchRequest), searchRequest.draw())
+                .toJson(PlotMasterDatatableAdapter.class);
 
-	public Plot getPlot() {
-		return plot;
-	}
+    }
 
-	public void setPlot(Plot plot) {
-		this.plot = plot;
-	}
-
-	public Long getSubOccupancy() {
-		return subOccupancy;
-	}
-
-	public void setSubOccupancy(Long subOccupancy) {
-		this.subOccupancy = subOccupancy;
-	}
-
-//	public Plot getSavedPlot() {
-//		return savedPlot;
-//	}
-//
-//	public void setSavedPlot(Plot savedPlot) {
-//		this.savedPlot = savedPlot;
-//	}
-
+    @GetMapping(value = "by-subOccupancyId", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String PlotMasterBySubOccupancyId(@RequestParam Long subOccupancyId) {
+    	System.out.println(toJSON(plotMasterService
+                .getPlotMasterBySubOccupancyId(subOccupancyId), PlotMaster.class, PlotMasterAdapter.class)
+                .toString());
+        return toJSON(plotMasterService
+                .getPlotMasterBySubOccupancyId(subOccupancyId), PlotMaster.class, PlotMasterAdapter.class)
+                .toString();
+    }
 }

@@ -49,6 +49,7 @@
 package org.egov.edcr.entity;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.egov.infra.persistence.validator.annotation.DateFormat;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.envers.Audited;
@@ -57,9 +58,12 @@ import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.SafeHtml;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
+
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -107,8 +111,15 @@ public class PlotMaster extends AbstractAuditable {
     
     private String minimumPermissibleSetback_Right;
     
+    private boolean isActive=true;
+    
+    @DateFormat
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    private Date fromDate;
+
+    private Date toDate;
+    
     @OneToOne(fetch = LAZY, cascade = ALL)
-    @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = "allowedsuboccupancy")
     @NotAudited
     private AllowedSubOccupancyPlot allowedsuboccupancy;
@@ -226,6 +237,30 @@ public class PlotMaster extends AbstractAuditable {
 
 	public void setSavedAllowedSubOccupancyPlot(AllowedSubOccupancyPlot savedAllowedSubOccupancyPlot) {
 		this.savedAllowedSubOccupancyPlot = savedAllowedSubOccupancyPlot;
+	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	public Date getFromDate() {
+		return fromDate;
+	}
+
+	public void setFromDate(Date fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public Date getToDate() {
+		return toDate;
+	}
+
+	public void setToDate(Date toDate) {
+		this.toDate = toDate;
 	}
     
 
