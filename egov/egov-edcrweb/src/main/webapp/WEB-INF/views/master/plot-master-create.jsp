@@ -168,7 +168,7 @@
                                                 <spring:message code="lbl.plot.number"/><span class="mandatory"></span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="allowedsuboccupancy.plot.plotNum" id="plotNum" type="text" class="form-control low-width is_valid_number" placeholder="" autocomplete="off" required="required"/>
+                                                <form:input path="allowedsuboccupancy.plot.plotNum" id="plotNum" type="text" class="form-control low-width" placeholder="" autocomplete="off" required="required"/>
                                                 <form:errors path="allowedsuboccupancy.plot.plotNum" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
