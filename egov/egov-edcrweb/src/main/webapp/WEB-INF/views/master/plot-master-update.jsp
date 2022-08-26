@@ -284,20 +284,56 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">
-                                                <spring:message code="lbl.perm.setback.left"/><span class="mandatory"></span>
+                                                <spring:message code="lbl.perm.setback.left"/>
                                             </label>
                                             <div class="col-sm-6">
                                                 <form:input path="minimumPermissibleSetback_Left" id="setbackLeft" type="text" readonly="true" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" required="required"/>
                                                 <form:errors path="minimumPermissibleSetback_Left" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
-                                        <div class="form-group">
+                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">
-                                                <spring:message code="lbl.perm.setback.right"/><span class="mandatory"></span>
+                                                <spring:message code="lbl.perm.setback.left.depth"/>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="minimumPermissibleSetback_Right" id="setbackRight" type="text" readonly="true" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" required="required"/>
+                                                <form:input path="minimumPermissibleSetback_Left_depth" id="setbackLeftDepth" type="text" readonly="true" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" value="0"/>
+                                                <form:errors path="minimumPermissibleSetback_Left_depth" cssClass="add-margin error-msg"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">
+                                                <spring:message code="lbl.perm.setback.left.width"/>
+                                            </label>
+                                            <div class="col-sm-6">
+                                                <form:input path="minimumPermissibleSetback_Left_width" id="setbackLeftWidth" type="text" readonly="true" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" value="0"/>
+                                                <form:errors path="minimumPermissibleSetback_Left_width" cssClass="add-margin error-msg"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">
+                                                <spring:message code="lbl.perm.setback.right"/>
+                                            </label>
+                                            <div class="col-sm-6">
+                                                <form:input path="minimumPermissibleSetback_Right" id="setbackRight" type="text" readonly="true" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off" />
                                                 <form:errors path="minimumPermissibleSetback_Right" cssClass="add-margin error-msg"/>
+                                            </div>
+                                        </div>
+                                         <div class="form-group">
+                                            <label class="col-sm-3 control-label">
+                                                <spring:message code="lbl.perm.setback.right.depth"/>
+                                            </label>
+                                            <div class="col-sm-6">
+                                                <form:input path="minimumPermissibleSetback_Right_depth" id="setbackRightDepth" type="text" readonly="true" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off"  />
+                                                <form:errors path="minimumPermissibleSetback_Right_depth" cssClass="add-margin error-msg"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">
+                                                <spring:message code="lbl.perm.setback.right.width"/>
+                                            </label>
+                                            <div class="col-sm-6">
+                                                <form:input path="minimumPermissibleSetback_Right_width" id="setbackRightWidth" type="text" readonly="true" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off"  />
+                                                <form:errors path="minimumPermissibleSetback_Right_width" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
                                         <div class="form-group">

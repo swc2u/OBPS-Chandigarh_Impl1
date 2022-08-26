@@ -100,8 +100,9 @@ public class PlotMasterService {
     }
 
 	public PlotMaster searchPlotMasterData(final String occupancyCode, final String sector, final String plotNumber, final String plotType) {
-		Long allowedPlotId = allowedSubOccupancyPlotService.searchAllowedSOPlot(plotNumber);
-		return plotMasterRepository.findPlotMasterData(occupancyCode,allowedPlotId);
+//		Long allowedPlotId = allowedSubOccupancyPlotService.searchAllowedSOPlot(plotNumber);
+		Boundary boundary = boundaryRepository.findByName(sector);
+		return plotMasterRepository.findPlotMasterData(occupancyCode,boundary.getId(),plotNumber);
 		
 	}
 

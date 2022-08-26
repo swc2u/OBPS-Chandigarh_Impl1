@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS eg_plot_master_data_aud;
-DROP TABLE IF EXISTS eg_plot_supoccupancy_allowed_aud;
+DROP TABLE IF EXISTS eg_plot_suboccupancy_allowed_aud;
 DROP TABLE IF EXISTS eg_plot_aud;
 
 CREATE TABLE eg_plot_aud(
@@ -22,7 +22,7 @@ CREATE TABLE eg_plot_aud(
     version numeric DEFAULT 0,
     revtype numeric DEFAULT 0
 );
-CREATE TABLE eg_plot_supoccupancy_allowed_aud
+CREATE TABLE eg_plot_suboccupancy_allowed_aud
 (
     id bigint NOT NULL,
      rev integer,
@@ -51,7 +51,11 @@ CREATE TABLE eg_plot_master_data_aud
 	minimumPermissibleSetback_Front character varying(30),
 	minimumPermissibleSetback_Rear character varying(30),
 	minimumPermissibleSetback_left character varying(30),
+	minimumPermissibleSetback_left_depth character varying(30),
+	minimumPermissibleSetback_left_width character varying(30),
 	minimumPermissibleSetback_right character varying(30),
+	minimumPermissibleSetback_right_depth character varying(30),
+	minimumPermissibleSetback_right_width character varying(30),
 	fromdate timestamp without time zone DEFAULT now(),
 	todate timestamp without time zone DEFAULT now(),
     createdby numeric DEFAULT 1,

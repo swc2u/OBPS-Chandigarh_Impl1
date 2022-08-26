@@ -71,7 +71,7 @@ import javax.persistence.Table;
 //import static org.egov.infra.admin.master.entity.Sector.SEQ_Sector;
 
 @Entity
-@Table(name = "eg_plot_supoccupancy_allowed",schema="chandigarh")
+@Table(name = "eg_plot_suboccupancy_allowed",schema="chandigarh")
 @SequenceGenerator(name = AllowedSubOccupancyPlot.SEQ_PLOT_SO_ALLOWED, sequenceName = AllowedSubOccupancyPlot.SEQ_PLOT_SO_ALLOWED, allocationSize = 1)
 public class AllowedSubOccupancyPlot extends AbstractAuditable {
     public static final String SEQ_PLOT_SO_ALLOWED = "seq_eg_plot_supoccupancy_allowed";

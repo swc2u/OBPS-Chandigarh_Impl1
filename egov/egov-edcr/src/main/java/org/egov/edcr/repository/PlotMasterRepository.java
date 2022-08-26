@@ -66,9 +66,9 @@ public interface PlotMasterRepository extends JpaRepository<PlotMaster,Long> {
 //    @QueryHints({@QueryHint(name = HINT_CACHEABLE, value = "true")})
 //    PlotMaster findByCode(String code);
     
-    @Query("select pm from PlotMaster pm where pm.code = :occupancyCode AND pm.allowedsuboccupancy.id = :allowedsuboccupancyId")
-	PlotMaster findPlotMasterData(@Param("occupancyCode") String occupancyCode,
-							            @Param("allowedsuboccupancyId") Long allowedsuboccupancyId);
+    @Query("select pm from PlotMaster pm where pm.code = :suboccupancyCode AND pm.allowedsuboccupancy.plot.boundary.id = :boundaryId and pm.allowedsuboccupancy.plot.plotNum=:plotNum")
+	PlotMaster findPlotMasterData(@Param("suboccupancyCode") String suboccupancyCode,@Param("boundaryId") Long boundaryId,
+							            @Param("plotNum") String plotNum);
    
     @Query("select pm from PlotMaster pm where pm.allowedsuboccupancy.plot.name = :plotName")
 	PlotMaster findAllByPlotName(@Param("plotName") String plotName);

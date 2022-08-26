@@ -50,8 +50,6 @@ package org.egov.edcr.entity;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.egov.infra.persistence.validator.annotation.DateFormat;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
@@ -101,7 +99,7 @@ public class PlotMaster extends AbstractAuditable {
     
     private Double permissibleBuildingHeight;
     
-    private Long maxmimumPermissibleFAR;
+    private Double maxmimumPermissibleFAR;
     
     private String minimumPermissibleSetback_Front;
     
@@ -110,6 +108,14 @@ public class PlotMaster extends AbstractAuditable {
     private String minimumPermissibleSetback_Left;
     
     private String minimumPermissibleSetback_Right;
+    
+    private String minimumPermissibleSetback_Left_depth;
+    
+    private String minimumPermissibleSetback_Left_width;
+    
+    private String minimumPermissibleSetback_Right_depth;
+    
+    private String minimumPermissibleSetback_Right_width;
     
     private boolean isActive=true;
     
@@ -183,11 +189,11 @@ public class PlotMaster extends AbstractAuditable {
 		this.permissibleBuildingHeight = permissibleBuildingHeight;
 	}
 
-	public Long getMaxmimumPermissibleFAR() {
+	public Double getMaxmimumPermissibleFAR() {
 		return maxmimumPermissibleFAR;
 	}
 
-	public void setMaxmimumPermissibleFAR(Long maxmimumPermissibleFAR) {
+	public void setMaxmimumPermissibleFAR(Double maxmimumPermissibleFAR) {
 		this.maxmimumPermissibleFAR = maxmimumPermissibleFAR;
 	}
 
@@ -261,6 +267,38 @@ public class PlotMaster extends AbstractAuditable {
 
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
+	}
+
+	public String getMinimumPermissibleSetback_Left_depth() {
+		return minimumPermissibleSetback_Left_depth;
+	}
+
+	public void setMinimumPermissibleSetback_Left_depth(String minimumPermissibleSetback_Left_depth) {
+		this.minimumPermissibleSetback_Left_depth = minimumPermissibleSetback_Left_depth;
+	}
+
+	public String getMinimumPermissibleSetback_Left_width() {
+		return minimumPermissibleSetback_Left_width;
+	}
+
+	public void setMinimumPermissibleSetback_Left_width(String minimumPermissibleSetback_Left_width) {
+		this.minimumPermissibleSetback_Left_width = minimumPermissibleSetback_Left_width;
+	}
+
+	public String getMinimumPermissibleSetback_Right_depth() {
+		return minimumPermissibleSetback_Right_depth;
+	}
+
+	public void setMinimumPermissibleSetback_Right_depth(String minimumPermissibleSetback_Right_depth) {
+		this.minimumPermissibleSetback_Right_depth = minimumPermissibleSetback_Right_depth;
+	}
+
+	public String getMinimumPermissibleSetback_Right_width() {
+		return minimumPermissibleSetback_Right_width;
+	}
+
+	public void setMinimumPermissibleSetback_Right_width(String minimumPermissibleSetback_Right_width) {
+		this.minimumPermissibleSetback_Right_width = minimumPermissibleSetback_Right_width;
 	}
     
 

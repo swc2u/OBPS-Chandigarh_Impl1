@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS eg_plot_master_data;
-DROP TABLE IF EXISTS eg_plot_supoccupancy_allowed;
+DROP TABLE IF EXISTS eg_plot_suboccupancy_allowed;
 DROP TABLE IF EXISTS eg_plot;
 
 CREATE TABLE eg_plot(
@@ -22,10 +22,11 @@ CREATE TABLE eg_plot(
 	
     CONSTRAINT eg_plot_pkey PRIMARY KEY (id),
     CONSTRAINT eg_plot_fkey FOREIGN KEY (boundary)
-        REFERENCES eg_boundary (id)
+        REFERENCES eg_boundary (id),
+     CONSTRAINT eg_plot_unique_pnum_bndry UNIQUE (plotnum,boundary)
 );
 
-CREATE TABLE eg_plot_supoccupancy_allowed
+CREATE TABLE eg_plot_suboccupancy_allowed
 (
     id bigint NOT NULL,
 	plot bigint,
@@ -56,7 +57,11 @@ CREATE TABLE eg_plot_master_data
 	minimumPermissibleSetback_Front character varying(30),
 	minimumPermissibleSetback_Rear character varying(30),
 	minimumPermissibleSetback_left character varying(30),
+	minimumPermissibleSetback_left_depth character varying(30),
+	minimumPermissibleSetback_left_width character varying(30),
 	minimumPermissibleSetback_right character varying(30),
+	minimumPermissibleSetback_right_depth character varying(30),
+	minimumPermissibleSetback_right_width character varying(30),
 	fromdate timestamp without time zone DEFAULT now(),
 	todate timestamp without time zone DEFAULT now(),
     createdby numeric DEFAULT 1,
@@ -68,7 +73,7 @@ CREATE TABLE eg_plot_master_data
 	
     CONSTRAINT eg_plot_master_data_pkey PRIMARY KEY (id),
     CONSTRAINT eg_plot_master_data_fkey FOREIGN KEY (allowedsuboccupancy)
-        REFERENCES eg_plot_supoccupancy_allowed (id)
+        REFERENCES eg_plot_suboccupancy_allowed (id)
 );
 
 CREATE SEQUENCE IF NOT EXISTS seq_eg_plot

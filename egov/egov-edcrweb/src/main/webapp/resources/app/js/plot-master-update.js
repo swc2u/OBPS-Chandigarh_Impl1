@@ -166,10 +166,26 @@ $('#searchBtn').click(function () {
 	            "name": "minimumPermissibleSetback_Right",
 	            "sTitle": "Minimum Permissible Setback Right"
 	        },{
+	            "mData": "minimumPermissibleSetback_Right_width",
+	            "name": "minimumPermissibleSetback_Right_width",
+	            "sTitle": "Minimum Permissible Setback Right Width"
+	        },{
+	            "mData": "minimumPermissibleSetback_Right_depth",
+	            "name": "minimumPermissibleSetback_Right_depth",
+	            "sTitle": "Minimum Permissible Setback Right Depth"
+	        },{
 	            "mData": "minimumPermissibleSetback_Left",
 	            "name": "minimumPermissibleSetback_Left",
 	            "sTitle": "Minimum Permissible Setback Left"
 	        },{
+            "mData": "minimumPermissibleSetback_Left_width",
+            "name": "minimumPermissibleSetback_Left_width",
+            "sTitle": "Minimum Permissible Setback Left Width"
+        },{
+            "mData": "minimumPermissibleSetback_Left_depth",
+            "name": "minimumPermissibleSetback_Left_depth",
+            "sTitle": "Minimum Permissible Setback Left Depth"
+        },{
                 "data": null,
                 'sClass': "text-center",
                 "bSortable": false,

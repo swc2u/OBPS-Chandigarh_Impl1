@@ -197,22 +197,62 @@
                                             	<strong><c:out value="${plotMaster.minimumPermissibleSetback_Rear}"/></strong>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">
-                                                <spring:message code="lbl.perm.setback.left"/>
-                                            </label>
-                                            <div class="col-sm-6" style="padding-top: 7px">
-                                           	 	<strong><c:out value="${plotMaster.minimumPermissibleSetback_Left}"/></strong>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">
-                                                <spring:message code="lbl.perm.setback.right"/>
-                                            </label>
-                                            <div class="col-sm-6" style="padding-top: 7px">
-                                            	<strong><c:out value="${plotMaster.minimumPermissibleSetback_Right}"/></strong>
-                                            </div>
-                                        </div>
+                                        <c:when test="${not empty plotMaster.minimumPermissibleSetback_Left}">
+	                                        <div class="form-group">
+	                                            <label class="col-sm-3 control-label">
+	                                                <spring:message code="lbl.perm.setback.left"/>
+	                                            </label>
+	                                            <div class="col-sm-6" style="padding-top: 7px">
+	                                           	 	<strong><c:out value="${plotMaster.minimumPermissibleSetback_Left}"/></strong>
+	                                            </div>
+	                                        </div>
+                                        </c:when>
+                                        <c:otherwise>
+                                        	 <div class="form-group">
+	                                            <label class="col-sm-3 control-label">
+	                                                <spring:message code="lbl.perm.setback.left.depth"/>
+	                                            </label>
+	                                            <div class="col-sm-6" style="padding-top: 7px">
+	                                           	 	<strong><c:out value="${plotMaster.minimumPermissibleSetback_Left_depth}"/></strong>
+	                                            </div>
+	                                        </div>
+                                        	 <div class="form-group">
+	                                            <label class="col-sm-3 control-label">
+	                                                <spring:message code="lbl.perm.setback.left.width"/>
+	                                            </label>
+	                                            <div class="col-sm-6" style="padding-top: 7px">
+	                                           	 	<strong><c:out value="${plotMaster.minimumPermissibleSetback_Left_width}"/></strong>
+	                                            </div>
+	                                        </div>
+                                        </c:otherwise>
+                                        <c:when test="${not empty plotMaster.minimumPermissibleSetback_Right}">
+	                                        <div class="form-group">
+	                                            <label class="col-sm-3 control-label">
+	                                                <spring:message code="lbl.perm.setback.right"/>
+	                                            </label>
+	                                            <div class="col-sm-6" style="padding-top: 7px">
+	                                            	<strong><c:out value="${plotMaster.minimumPermissibleSetback_Right}"/></strong>
+	                                            </div>
+	                                        </div>
+                                        </c:when>
+                                        <c:otherwise>
+	                                         <div class="form-group">
+		                                            <label class="col-sm-3 control-label">
+		                                                <spring:message code="lbl.perm.setback.right.width"/>
+		                                            </label>
+		                                            <div class="col-sm-6" style="padding-top: 7px">
+		                                            	<strong><c:out value="${plotMaster.minimumPermissibleSetback_Right_width}"/></strong>
+		                                            </div>
+		                                        </div>
+		                                         <div class="form-group">
+		                                            <label class="col-sm-3 control-label">
+		                                                <spring:message code="lbl.perm.setback.right.depth"/>
+		                                            </label>
+		                                            <div class="col-sm-6" style="padding-top: 7px">
+		                                            	<strong><c:out value="${plotMaster.minimumPermissibleSetback_Right_depth}"/></strong>
+		                                            </div>
+		                                        </div>
+                                        </c:otherwise>
                                         <div class="form-group">
 			                                <label class="col-sm-3 control-label">
 			                                    <spring:message code="lbl.fromDate"/>

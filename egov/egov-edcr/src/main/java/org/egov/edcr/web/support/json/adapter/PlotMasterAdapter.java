@@ -82,7 +82,11 @@ public class PlotMasterAdapter implements JsonSerializer<PlotMaster> {
         plotMasterJson.addProperty("minimumPermissibleSetback_Front", plotMaster.getMinimumPermissibleSetback_Front());
         plotMasterJson.addProperty("minimumPermissibleSetback_Rear", plotMaster.getMinimumPermissibleSetback_Rear());
         plotMasterJson.addProperty("minimumPermissibleSetback_Left", plotMaster.getMinimumPermissibleSetback_Left());
+        plotMasterJson.addProperty("minimumPermissibleSetback_Left_depth", plotMaster.getMinimumPermissibleSetback_Left_depth());
+        plotMasterJson.addProperty("minimumPermissibleSetback_Left_width", plotMaster.getMinimumPermissibleSetback_Left_width());
         plotMasterJson.addProperty("minimumPermissibleSetback_Right", plotMaster.getMinimumPermissibleSetback_Right());
+        plotMasterJson.addProperty("minimumPermissibleSetback_Right_depth", plotMaster.getMinimumPermissibleSetback_Right_depth());
+        plotMasterJson.addProperty("minimumPermissibleSetback_Right_width", plotMaster.getMinimumPermissibleSetback_Right_width());
        
         return plotMasterJson;
     }
