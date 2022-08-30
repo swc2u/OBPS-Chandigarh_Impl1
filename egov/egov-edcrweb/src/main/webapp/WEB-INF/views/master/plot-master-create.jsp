@@ -309,7 +309,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">
-                                                <spring:message code="lbl.perm.setback.right.depth"/><span class="mandatory"></span>
+                                                <spring:message code="lbl.perm.setback.right.depth"/>
                                             </label>
                                             <div class="col-sm-6">
                                                 <form:input path="minimumPermissibleSetback_Right_depth" id="setbackRightDepth" type="text" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off"  value="0"/>
@@ -318,7 +318,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">
-                                                <spring:message code="lbl.perm.setback.right.width"/><span class="mandatory"></span>
+                                                <spring:message code="lbl.perm.setback.right.width"/>
                                             </label>
                                             <div class="col-sm-6">
                                                 <form:input path="minimumPermissibleSetback_Right_width" id="setbackRightWidth" type="text" class="form-control low-width is_valid_alphanumeric" placeholder="" autocomplete="off"  value="0"/>
@@ -336,10 +336,10 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">
-                                                <spring:message code="lbl.toDate"/>
+                                                <spring:message code="lbl.toDate"/><span class="mandatory"></span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <form:input path="toDate" id="pmToDate" type="text" class="form-control low-width datepicker" data-inputmask="'mask': 'd/m/y'" placeholder="" autocomplete="off"/>
+                                                <form:input path="toDate" id="pmToDate" type="text" class="form-control low-width datepicker" data-inputmask="'mask': 'd/m/y'" placeholder="" autocomplete="off" required="required"/>
                                                 <form:errors path="toDate" cssClass="add-margin error-msg"/>
                                             </div>
                                         </div>
@@ -348,7 +348,7 @@
                             </div>
                             <div class="row">
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-primary"><spring:message code="lbl.submit"/></button>
+                                    <button type="submit" id="submitBtn" class="btn btn-primary"><spring:message code="lbl.submit"/></button>
                                     <a href="javascript:void(0)" class="btn btn-default" id="backBtnId">
                                         <spring:message code="lbl.create"/>&nbsp;<spring:message code="lbl.search"/>
                                     </a>

@@ -65,3 +65,20 @@ $('#searchBtn').click(function () {
 $('#backBtnId').click(function () {
     window.location = '/edcr/plotMaster/create';
 });
+
+
+$('#submitBtn').click(function () {
+    if ($("#setbackLeft").val()!='' || $("#setbackLeft").val() > 0){
+    	if($("#setbackLeftDepth").val()>0 && $("#setbackLeftWidth").val()>0){
+	        bootbox.alert("If left setback value present then it's width and depth values are not allowed.");
+	        return;
+        }
+    }
+
+    if ($("#setbackRight").val()!='' || $("#setbackRight").val() > 0){
+    	if($("#setbackRightDepth").val()>0 && $("#setbackRightWidth").val()>0){
+	        bootbox.alert("If Right setback value present then it's width and depth values are not allowed.");
+	        return;
+        }
+    }
+});
