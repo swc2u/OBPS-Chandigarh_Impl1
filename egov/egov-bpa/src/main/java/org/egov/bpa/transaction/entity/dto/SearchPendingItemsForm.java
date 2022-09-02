@@ -37,6 +37,11 @@ public class SearchPendingItemsForm extends DataTableSearchRequest {
     @SafeHtml
     private String currentOwnerDesg; 
     
+    private String sector;
+    private String plotNumber;
+    private String ownerName;
+    private String bPAApplicationType;
+    
     public SearchPendingItemsForm() {}
 
 	public SearchPendingItemsForm(BpaApplication application, String currentOwnerName, String currentOwnerDesg, String pendingAction, int ellapseDays) {
@@ -60,7 +65,7 @@ public class SearchPendingItemsForm extends DataTableSearchRequest {
         setApplicationNumber(occupancyCertificate.getApplicationNumber());
         setApplicantName(occupancyCertificate.getParent().getOwner().getName());
         setApplicationDate(occupancyCertificate.getApplicationDate());
-        setApplicationType(occupancyCertificate.getParent().getApplicantType());
+        setApplicationType(occupancyCertificate.getApplicationType());
         setOccupancy(occupancyCertificate.getParent().getOccupanciesName());
         setServiceType(occupancyCertificate.getParent().getServiceType().getDescription());
         setServiceCode(occupancyCertificate.getParent().getServiceType().getCode());
@@ -69,6 +74,9 @@ public class SearchPendingItemsForm extends DataTableSearchRequest {
         setCurrentOwnerDesg(currentOwnerDesg);
         setPendingAction(pendingAction);
         setEllapseTime(ellapseDays);
+        setSector(occupancyCertificate.getParent().getSector());
+        setPlotNumber(occupancyCertificate.getParent().getPlotNumber());
+        setBPAApplicationType(occupancyCertificate.getParent().getApplicationType().getDescription());
 	}
     
 	public Long getId() {
@@ -188,5 +196,37 @@ public class SearchPendingItemsForm extends DataTableSearchRequest {
 
 	public void setCurrentOwnerDesg(String currentOwnerDesg) {
 		this.currentOwnerDesg = currentOwnerDesg;
+	}
+
+	public String getSector() {
+		return sector;
+	}
+
+	public void setSector(String sector) {
+		this.sector = sector;
+	}
+
+	public String getPlotNumber() {
+		return plotNumber;
+	}
+
+	public void setPlotNumber(String plotNumber) {
+		this.plotNumber = plotNumber;
+	}
+
+	public String getOwnerName() {
+		return ownerName;
+	}
+
+	public void setOwnerName(String ownerName) {
+		this.ownerName = ownerName;
+	}
+
+	public String getBPAApplicationType() {
+		return bPAApplicationType;
+	}
+
+	public void setBPAApplicationType(String bPAApplicationType) {
+		this.bPAApplicationType = bPAApplicationType;
 	}	
 }

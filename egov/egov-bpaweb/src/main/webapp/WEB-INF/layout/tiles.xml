@@ -1441,4 +1441,8 @@
 		<put-attribute name="page-title" value="title.restamp.appln" cascade="true" />
 		<put-attribute name="body" value="/WEB-INF/views/application/restamping-documents.jsp" />
 	</definition>
+	<definition name="search-oc-pending-task-urban" extends="base_layout">
+		<put-attribute name="page-title" value="title.search.appln" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/search-oc-pending-task-urban.jsp" />
+	</definition>
 </tiles-definitions>

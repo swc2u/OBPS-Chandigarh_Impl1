@@ -40,16 +40,24 @@
 package org.egov.bpa.transaction.service.oc;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
+import org.egov.bpa.transaction.entity.dto.SearchPendingItemsForm;
 import org.egov.bpa.transaction.entity.oc.OCSlot;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.repository.OcSlotRepository;
 import org.egov.bpa.transaction.repository.oc.OccupancyCertificateRepository;
+import org.egov.bpa.transaction.repository.specs.SearchBpaApplnFormSpec;
 import org.egov.bpa.transaction.service.WorkflowHistoryService;
 import org.egov.bpa.utils.BpaUtils;
 import org.egov.infra.config.persistence.datasource.routing.annotation.ReadOnly;
+import org.egov.infra.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -124,5 +132,77 @@ public class SearchOCService {
         }
         return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
     }
+    
+    @ReadOnly
+    public Page<SearchPendingItemsForm> pagedSearchForPendingTask(SearchPendingItemsForm searchRequest) {
+
+        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+        Page<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchPendingOCTasks(searchRequest), pageable);
+        List<SearchPendingItemsForm> searchResults = new ArrayList<>();
+        for (OccupancyCertificate application : occupancyCertificate) {
+        	if(null!=application.getState()) {
+        		Date dateInfo = application.getState().getDateInfo();
+        		if(null!=application.getState()) {
+        			int days = DateUtils.daysBetween(dateInfo, new Date());
+        			if(days>0) {
+	            		String pendingAction = application.getState().getNextAction();
+	            		Map<String,String> map = getCurrentOwner(application);
+	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
+	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
+	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+	            			}
+	            		}else {
+	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+	            		}
+        			}
+        		}       		
+        	}
+        }
+        return new PageImpl<>(searchResults, pageable, occupancyCertificate.getTotalElements());
+    }
+    
+    private Map<String, String> getCurrentOwner(OccupancyCertificate application) {
+    	Map<String, String> map;
+        if (application.getState() != null && application.getState().getOwnerPosition() != null) {
+        	map = workflowHistoryService.getUserDesignationAndPositionByPositionAndDate(application.getState().getOwnerPosition().getId(),application.getState().getLastModifiedDate());
+        } else {
+        	map = new HashMap<String, String>();
+        	map.put("designation", "");
+        	map.put("name", application.getLastModifiedBy().getName());
+        }
+        return map;
+    }
+    
+    @ReadOnly
+    public Page<SearchPendingItemsForm> pagedSearchForPendingTaskGraph(SearchPendingItemsForm searchRequest) {
+
+       final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+
+        //Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
+        List<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchPendingOCTasks(searchRequest));
+        List<SearchPendingItemsForm> searchResults = new ArrayList<>();
+        for (OccupancyCertificate application : occupancyCertificate) {
+        	if(null!=application.getState()) {
+        		Date dateInfo = application.getState().getDateInfo();
+        		if(null!=application.getState()) {
+        			int days = DateUtils.daysBetween(dateInfo, new Date());
+        			if(days>0) {
+	            		String pendingAction = application.getState().getNextAction();
+	            		Map<String,String> map = getCurrentOwner(application);
+	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
+	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
+	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+	            			}
+	            		}else {
+	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+	            		}
+        			}
+        		}       		
+        	}
+        }
+        return new PageImpl<>(searchResults, pageable, occupancyCertificate.size());
+    }
+
+    
 
 }
