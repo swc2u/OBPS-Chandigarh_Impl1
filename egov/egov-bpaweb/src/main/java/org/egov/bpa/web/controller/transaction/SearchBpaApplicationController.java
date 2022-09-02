@@ -241,7 +241,7 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
     
     @PostMapping(value = "/searchPendingItems", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String showSearchPendingItemsRecords(@ModelAttribute final SearchPendingItemsForm searchPendingItemsForm) {
+    public String showSearchPendingItemsRecords(@ModelAttribute SearchPendingItemsForm searchPendingItemsForm) {
         return new DataTable<>(searchBpaApplicationService.pagedSearchForPendingTask(searchPendingItemsForm),
         		searchPendingItemsForm.draw())
                         .toJson(SearchBpaPendingTaskAdaptor.class);

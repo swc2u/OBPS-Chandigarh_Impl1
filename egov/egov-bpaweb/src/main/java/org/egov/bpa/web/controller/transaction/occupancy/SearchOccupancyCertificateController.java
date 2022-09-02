@@ -44,13 +44,16 @@ import static org.egov.bpa.utils.BpaConstants.BOUNDARY_TYPE_CITY;
 import static org.egov.bpa.utils.BpaConstants.REVENUE_HIERARCHY_TYPE;
 import static org.egov.bpa.utils.BpaConstants.WARD;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
+import org.egov.bpa.transaction.entity.dto.SearchPendingItemsForm;
 import org.egov.bpa.transaction.entity.oc.OCNocDocuments;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.entity.oc.OccupancyNocApplication;
@@ -59,7 +62,10 @@ import org.egov.bpa.transaction.service.oc.OcInspectionService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateNocService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
 import org.egov.bpa.transaction.service.oc.SearchOCService;
+import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.web.controller.adaptor.SearchBpaApplicationAdaptor;
+import org.egov.bpa.web.controller.adaptor.SearchBpaPendingTaskAdaptor;
+import org.egov.bpa.web.controller.adaptor.SearchOCPendingTaskAdaptor;
 import org.egov.bpa.web.controller.transaction.BpaGenericApplicationController;
 import org.egov.eis.entity.Employee;
 import org.egov.eis.entity.Jurisdiction;
@@ -71,6 +77,7 @@ import org.egov.infra.admin.master.service.CrossHierarchyService;
 import org.egov.infra.custom.CustomImplProvider;
 import org.egov.infra.web.support.ui.DataTable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -81,11 +88,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
+
 @Controller
 @RequestMapping(value = "/application")
 public class SearchOccupancyCertificateController extends BpaGenericApplicationController {
 
     private static final String APPLICATION_HISTORY = "applicationHistory";
+    private static final String SEARCH_OC_PENDING_ITEM_FORM = "searchOCPendingItemsForm";
+    private static final String SEARCH_OC_PENDING_ITEM_FORM_GRAPH = "searchOCPendingItemsFormG";
+    private static final Long RURAL_ID = 4L;
 
     @Autowired
     private EmployeeService employeeService;
@@ -119,6 +131,72 @@ public class SearchOccupancyCertificateController extends BpaGenericApplicationC
                 searchBpaApplicationForm.draw())
                         .toJson(SearchBpaApplicationAdaptor.class);
     }
+    
+    
+    @GetMapping("/searchOCPendingItems/d/u")
+    public String showSearchOCApprovedforFeeGrapUrban(final Model model) {
+    	prepareFormData(model);
+    	model.addAttribute("designations", BpaConstants.getAvailableDesignations());
+    	model.addAttribute(SEARCH_OC_PENDING_ITEM_FORM, new SearchPendingItemsForm());
+    	model.addAttribute(SEARCH_OC_PENDING_ITEM_FORM_GRAPH, new SearchPendingItemsForm());
+        return "search-oc-pending-task-urban";
+    }
+    
+    @GetMapping("/searchOCPendingItems/d/r")
+    public String showSearchOCApprovedforFeeGrapRural(final Model model) {
+    	prepareFormData(model);
+    	model.addAttribute("designations", BpaConstants.getAvailableDesignations());
+    	 model.addAttribute(SEARCH_OC_PENDING_ITEM_FORM, new SearchPendingItemsForm());
+    	 model.addAttribute(SEARCH_OC_PENDING_ITEM_FORM_GRAPH, new SearchPendingItemsForm());
+          return "search-oc-pending-task-rural";
+    }
+    
+    @PostMapping(value = "/searchOCPendingItems/d/u", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchOCPendingItemsRecordsUrban(@ModelAttribute final SearchPendingItemsForm searchPendingItemsFormG) {
+    	
+    	Map<String, Long> map=new HashMap<String, Long>(); 
+    	fillterData(searchOCService.pagedSearchForPendingTaskGraph(searchPendingItemsFormG), map);
+        
+        Gson gson = new Gson();  
+		String json = gson.toJson(map); 
+		return json;
+    }
+    
+    private void fillterData(Page<SearchPendingItemsForm> page,Map<String, Long> map) {
+    	for(SearchPendingItemsForm pendingItemsForm:page) {
+    		if(map.get(pendingItemsForm.getCurrentOwner())==null) {
+    			map.put(pendingItemsForm.getCurrentOwner(), 1l);
+    		}else {
+    			map.put(pendingItemsForm.getCurrentOwner(), map.get(pendingItemsForm.getCurrentOwner())+1);
+    		}
+    	}
+    }
+    
+    @PostMapping(value = "/searchOCPendingItems/d/r", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchOCPendingItemsRecordsRural(@ModelAttribute final SearchPendingItemsForm searchPendingItemsFormG) {
+
+    	Map<String, Long> map=new HashMap<String, Long>(); 
+    	
+    	fillterData(searchOCService.pagedSearchForPendingTaskGraph(searchPendingItemsFormG), map);
+        
+        Gson gson = new Gson();  
+		String json = gson.toJson(map); 
+		return json;
+    }
+
+    
+    @PostMapping(value = "/searchOCPendingItems", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchOCPendingItemsRecords(@ModelAttribute SearchPendingItemsForm searchPendingItemsForm) {
+        return new DataTable<>(searchOCService.pagedSearchForPendingTask(searchPendingItemsForm),
+        		searchPendingItemsForm.draw())
+                        .toJson(SearchOCPendingTaskAdaptor.class);
+    }
+    
+    
+    
 
     @GetMapping("/occupancycertificate/viewdetails/{applicationNumber}")
     public String editOccupancyCertificateApplication(@PathVariable final String applicationNumber, final Model model,
