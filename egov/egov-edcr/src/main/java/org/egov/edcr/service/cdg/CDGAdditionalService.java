@@ -7,6 +7,7 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import javax.swing.text.StyledEditorKit.BoldAction;
 
@@ -17,6 +18,7 @@ import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.commons.entity.cdg.ServiceAvailabilityCheckConstant;
 import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.entity.PlotMaster;
 import org.egov.edcr.feature.AccessoryBuildingService;
 import org.egov.edcr.feature.FireStair;
 import org.egov.edcr.feature.GeneralStair;
@@ -25,6 +27,7 @@ import org.egov.edcr.feature.OpenStairService;
 import org.egov.edcr.feature.PassageService;
 import org.egov.edcr.feature.SpiralStair;
 import org.egov.edcr.feature.Verandah;
+import org.egov.edcr.service.PlotMasterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -84,6 +87,9 @@ public class CDGAdditionalService {
 	private static Properties byLawsProperties;
 	private static Properties drawingNumberProperties;
 	private static Properties jobNumberProperties;
+	
+	@Autowired
+	private PlotMasterService plotMasterService;
 
 	@Autowired
 	public void PwcService(@Value("${pwc.properties.dir}") String featurePropertiesLocation) {
@@ -134,8 +140,43 @@ public class CDGAdditionalService {
 					+ FILE_NO_OF_STORY + ", " + FILE_PERMISSIBLE_BUILDING_HEIGHT);
 		}
 	}
-
 	public Map<String, String> getFeatureValue(CDGAConstant featureName, Map<String, String> keyArrgument) {
+		Map<String, String> map = new HashMap<String, String>();
+		PlotMaster masterDataFromDB = plotMasterService.searchPlotMasterData(keyArrgument.get(OCCUPENCY_CODE),keyArrgument.get(SECTOR),keyArrgument.get(PLOT_NO),keyArrgument.get(PLOT_TYPE));
+		if (featureName.getCDGAConstantValue().equals(SETBACKS)) {
+			map.put(SETBACK_RIGHT, masterDataFromDB.getMinimumPermissibleSetback_Right() != null && Double.parseDouble(masterDataFromDB.getMinimumPermissibleSetback_Right()) > 0 ? masterDataFromDB.getMinimumPermissibleSetback_Right() : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(SETBACK_LEFT, masterDataFromDB.getMinimumPermissibleSetback_Left() != null && Double.parseDouble(masterDataFromDB.getMinimumPermissibleSetback_Left()) > 0 ? masterDataFromDB.getMinimumPermissibleSetback_Left() : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(SETBACK_FRONT, masterDataFromDB.getMinimumPermissibleSetback_Front() != null && Double.parseDouble(masterDataFromDB.getMinimumPermissibleSetback_Front()) > 0 ? masterDataFromDB.getMinimumPermissibleSetback_Front() : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(SETBACK_REAR, masterDataFromDB.getMinimumPermissibleSetback_Rear() != null &&Double.parseDouble( masterDataFromDB.getMinimumPermissibleSetback_Rear()) > 0 ? masterDataFromDB.getMinimumPermissibleSetback_Rear() : DxfFileConstants.DATA_NOT_FOUND);
+			System.out.println("value from DB:"+map);
+		}
+		else if (featureName.getCDGAConstantValue().equals(CDGAConstant.FAR.getCDGAConstantValue())) {
+			map.put(MAXMIUM_PERMISSIBLE_FAR,
+					masterDataFromDB.getMaxmimumPermissibleFAR() != null && masterDataFromDB.getMaxmimumPermissibleFAR() > 0 ? masterDataFromDB.getMaxmimumPermissibleFAR().toString() : DxfFileConstants.DATA_NOT_FOUND);
+		} else if (featureName.getCDGAConstantValue()
+				.equals(CDGAConstant.PERMISSIBLE_BUILDING_HEIGHT.getCDGAConstantValue())) {
+			map.put(PERMISSIBLE_BUILDING_HEIGHT, masterDataFromDB.getPermissibleBuildingHeight() != null && masterDataFromDB.getPermissibleBuildingHeight()>0? masterDataFromDB.getPermissibleBuildingHeight().toString() : DxfFileConstants.DATA_NOT_FOUND);
+		} else if (featureName.getCDGAConstantValue().equals(CDGAConstant.NO_OF_STORY.getCDGAConstantValue())) {
+			map.put(PERMISSIBLE_BUILDING_STORIES,
+					masterDataFromDB.getPermissibleBuildingStories() != null && masterDataFromDB.getPermissibleBuildingStories() > 0 ? masterDataFromDB.getPermissibleBuildingStories().toString() : DxfFileConstants.DATA_NOT_FOUND);
+		} else if (featureName.getCDGAConstantValue()
+				.equals(CDGAConstant.BACK_YARD_CONSTRUCTION.getCDGAConstantValue())) {
+			map.put(BACK_COURTYARD_CONSTRUCTION_WIDTH,
+					masterDataFromDB.getBackCourtyardWidth() != null && Double.parseDouble(masterDataFromDB.getBackCourtyardWidth()) > 0 ? masterDataFromDB.getBackCourtyardWidth().toString() : DxfFileConstants.DATA_NOT_FOUND);
+			map.put(BACK_COURTYARD_CONSTRUCTION_HEIGHT,
+					masterDataFromDB.getBackCourtyardHeight() != null && Double.parseDouble(masterDataFromDB.getBackCourtyardHeight()) > 0 ? masterDataFromDB.getBackCourtyardHeight().toString() : DxfFileConstants.DATA_NOT_FOUND);
+		}else if(featureName.getCDGAConstantValue()
+				.equals(CDGAConstant.JOB_NUMBER.getCDGAConstantValue())) {
+			map.put(JOB_NUMBER, jobNumberProperties.getProperty(getBaseKeyCom(JOB_NUMBER, keyArrgument)));
+		}else if(featureName.getCDGAConstantValue()
+				.equals(CDGAConstant.DRAWING_NUMBER.getCDGAConstantValue())) {
+			map.put(DRAWING_NUMBER, drawingNumberProperties.getProperty(getBaseKeyCom(DRAWING_NUMBER, keyArrgument)));
+		}
+
+		return map;
+	
+	}
+	public Map<String, String> getFeatureValueFromProperty(CDGAConstant featureName, Map<String, String> keyArrgument) {
 
 		Map<String, String> map = new HashMap<String, String>();
 
