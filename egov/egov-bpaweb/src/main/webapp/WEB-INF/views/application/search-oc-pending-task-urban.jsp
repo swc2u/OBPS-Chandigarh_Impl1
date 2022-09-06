@@ -51,7 +51,7 @@
 	            <div class="panel-body">	
 	                <div class="form-group">
 	                    <label class="col-sm-3 control-label text-right"><spring:message
- 	                            code="lbl.applctn.type"/><span class="mandatory"></span></label> 
+ 	                            code="lbl.applctn.type"/></label> 
 	                    <div class="col-sm-3 add-margin">
 	                        <form:select path="applicationTypeId" data-first-option="false" 
  	                                     id="applicationTypeId" cssClass="form-control applicationType" required="required"> 
