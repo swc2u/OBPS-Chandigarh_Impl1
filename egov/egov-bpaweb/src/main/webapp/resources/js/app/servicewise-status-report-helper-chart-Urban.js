@@ -118,6 +118,9 @@ $(document)
 						var to = $('#toDate').val();
 						var applicantName = $('#applicantName').val();
 						var applicationNumber = $('#applicationNumber').val();
+						var applicationTypeId = $('#applicationTypeId').val();
+						var plotNumber = $('#plotNumber').val();
+						var sector = $('#sector').val();
 						var wardId = $('#ward').val();
 						var electionWardId = $('#electionBoundary').val();
 						var zoneId = $('#zone').val();
@@ -207,6 +210,10 @@ $(document)
 																	+ 'applicantName='+applicantName
 																	+ '&'
 																	+ 'applicationNumber='+applicationNumber
+																	+ '&'
+																	+ 'plotNumber='+plotNumber
+																	+ '&'
+																	+ 'sector='+sector
 																	+ '&'
 																	+ 'fromDate='+from
 																	+ '&'

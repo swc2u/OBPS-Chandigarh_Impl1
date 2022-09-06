@@ -143,6 +143,10 @@ public class BpaReportsController extends BpaGenericApplicationController {
 	private NocConfigurationService nocConfigService;
 	@Autowired
 	private BpaNocApplicationReportService nocReportService;
+	
+	private final String URBAN = "URBAN";
+	private final String RURAL = "RURAL";
+	
 
 	@RequestMapping(value = "/servicewise-statusreport", method = RequestMethod.GET)
 	public String searchStatusCountByServicetypeForm(final Model model) {
@@ -153,18 +157,31 @@ public class BpaReportsController extends BpaGenericApplicationController {
 	
 	@RequestMapping(value = "/servicewise-statusreport/d/r", method = RequestMethod.GET)
 	public String searchStatusCountByServicetypeFormForRural(final Model model) {
-		prepareFormData(model);
+		prepareReportFormData(model,RURAL);
 		model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
 		return "search-servicewise-status-report-Rural";
 	}
 	
 	@RequestMapping(value = "/servicewise-statusreport/d/u", method = RequestMethod.GET)
 	public String searchStatusCountByServicetypeFormForUrban(final Model model) {
-		prepareFormData(model);
+		prepareReportFormData(model,URBAN);
 		model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
 		return "search-servicewise-status-report-Urban";
 	}
 	
+	private void prepareReportFormData(Model model,String applicationType) {
+		List<ApplicationSubType> applicationTypes = applicationTypeService.getBPAApplicationTypes();
+    	if(applicationType.equals(URBAN))
+    		model.addAttribute("appTypes",applicationTypes.stream().filter(appType -> !appType.getName().equalsIgnoreCase("Medium Risk"))
+            .collect(Collectors.toList()));
+    	else
+    		model.addAttribute("appTypes",applicationTypes.stream().filter(appType -> appType.getName().equalsIgnoreCase("Medium Risk"))
+            .collect(Collectors.toList()));
+    	model.addAttribute("serviceTypeList", serviceTypeService.getAllActiveMainServiceTypes());
+//    	model.addAttribute("designations", BpaConstants.getAvailableDesignations());
+		
+	}
+
 	@RequestMapping(value = "/servicewise-statusreport/d/u", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
 	@ResponseBody
 	public String getStatusCountByServicetypeResultForUrban(final Model model) {
@@ -399,6 +416,36 @@ public class BpaReportsController extends BpaGenericApplicationController {
 		model.addAttribute("serviceType", serviceType);
 		model.addAttribute("serviceTypeEnum", serviceTypeEnum);
 		return "view-servicewise-appln-details";
+	}
+	
+	@RequestMapping(value = "/servicewise-statusreport/view/d/u", method = RequestMethod.GET)
+	public String viewUrbanStatusCountByServicetypeDetails(@RequestParam final String applicantName,
+													  @RequestParam final String applicationNumber,
+													  @RequestParam final Long ward, @RequestParam final Date fromDate,
+													  @RequestParam final Date toDate, @RequestParam final Long revenueWard, @RequestParam final Long electionWard,
+													  @RequestParam final Long zoneId, @RequestParam final String status, @RequestParam final String serviceType,
+													  @RequestParam final String zone, @RequestParam final String serviceTypeEnum, final Model model) {
+		model.addAttribute("applicantName", applicantName);
+		model.addAttribute("applicationNumber", applicationNumber);
+		model.addAttribute("ward", ward);
+		if (fromDate == null) {
+			model.addAttribute("fromDate", fromDate);
+		} else {
+			model.addAttribute("fromDate", DateUtils.toDefaultDateFormat(fromDate));
+		}
+		if (toDate == null) {
+			model.addAttribute("toDate", toDate);
+		} else {
+			model.addAttribute("toDate", DateUtils.toDefaultDateFormat(toDate));
+		}
+		model.addAttribute("revenueWard", revenueWard);
+		model.addAttribute("electionWard", electionWard);
+		model.addAttribute("zone", zone);
+		model.addAttribute("zoneId", zoneId);
+		model.addAttribute("status", status);
+		model.addAttribute("serviceType", serviceType);
+		model.addAttribute("serviceTypeEnum", serviceTypeEnum);
+		return "view-servicewise-appln-details-urban";
 	}
 
 	@RequestMapping(value = "/servicewise-statusreport/view", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)

@@ -356,4 +356,149 @@ public class CollectionReportService {
         }
         return queryResults;
     }
+
+	public Object getCollectionSummaryReportForUrban(Date fromDate, Date toDate, String paymentMode, String source,
+			Long serviceId, String serviceType,String rootBoundaryType) {
+		  final SimpleDateFormat fromDateFormatter = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+	        final SimpleDateFormat toDateFormatter = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+	        StringBuilder aggregateQuery = new StringBuilder();
+	        StringBuilder userwiseQuery = new StringBuilder();
+	        final StringBuilder finalUserwiseQuery = new StringBuilder();
+	        final StringBuilder finalAggregateQuery = new StringBuilder();
+	        final StringBuilder selectQuery = new StringBuilder(
+	                "SELECT (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='cash' THEN count(distinct(EGCL_COLLECTIONHEADER.ID)) END) AS cashCount,  "
+	                        +
+	                        "(CASE WHEN EGF_INSTRUMENTTYPE.TYPE='cheque' THEN count(distinct(EGCL_COLLECTIONHEADER.ID)) WHEN EGF_INSTRUMENTTYPE.TYPE='dd' THEN count(distinct(EGCL_COLLECTIONHEADER.ID)) END) AS chequeddCount, "
+	                        +
+	                        " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE= 'online' THEN count(distinct(EGCL_COLLECTIONHEADER.ID)) END) AS onlineCount, "
+	                        +
+	                        " EGCL_COLLECTIONHEADER.SOURCE AS source, SER.NAME AS serviceName," +
+	                        " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='cash' THEN SUM(EGF_INSTRUMENTHEADER.INSTRUMENTAMOUNT) END) AS cashAmount, "
+	                        +
+	                        " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='cheque' THEN SUM(EGF_INSTRUMENTHEADER.INSTRUMENTAMOUNT) WHEN EGF_INSTRUMENTTYPE.TYPE='dd' THEN SUM(EGF_INSTRUMENTHEADER.INSTRUMENTAMOUNT) END) AS chequeddAmount,"
+	                        +
+	                        " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE= 'online' THEN SUM(EGF_INSTRUMENTHEADER.INSTRUMENTAMOUNT) END) AS onlineAmount, "
+	                        +
+	                        " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='bankchallan' THEN count(distinct(EGCL_COLLECTIONHEADER.ID)) END) AS bankCount, "
+	                        +
+	                        " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='bankchallan' THEN SUM(EGF_INSTRUMENTHEADER.INSTRUMENTAMOUNT) END) AS bankAmount, "
+	                        +
+	                        " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='card' THEN count(distinct(EGCL_COLLECTIONHEADER.ID)) END) AS cardCount, "
+	                        +
+	                        " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='card' THEN SUM(EGF_INSTRUMENTHEADER.INSTRUMENTAMOUNT) END) AS cardAmount, "
+	                        +
+	                        " count(distinct(EGCL_COLLECTIONHEADER.ID)) as totalReceiptCount ");
+	        final StringBuilder fromQuery = new StringBuilder(
+	                " FROM EGCL_COLLECTIONHEADER EGCL_COLLECTIONHEADER INNER JOIN EGCL_COLLECTIONINSTRUMENT EGCL_COLLECTIONINSTRUMENT ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONINSTRUMENT.COLLECTIONHEADER"
+	                        +
+	                        " INNER JOIN EGF_INSTRUMENTHEADER EGF_INSTRUMENTHEADER ON EGCL_COLLECTIONINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENTHEADER.ID"
+	                        +
+	                        " INNER JOIN EGW_STATUS EGW_STATUS ON EGCL_COLLECTIONHEADER.STATUS = EGW_STATUS.ID" +
+	                        " INNER JOIN EGF_INSTRUMENTTYPE EGF_INSTRUMENTTYPE ON EGF_INSTRUMENTHEADER.INSTRUMENTTYPE = EGF_INSTRUMENTTYPE.ID"
+	                        +
+	                        " INNER JOIN EGCL_COLLECTIONMIS EGCL_COLLECTIONMIS ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONMIS.COLLECTIONHEADER"
+	                        +
+	                        " INNER JOIN EGCL_SERVICEDETAILS SER ON SER.ID = EGCL_COLLECTIONHEADER.SERVICEDETAILS ");
+	        
+	        final StringBuilder whereQuery = new StringBuilder(" WHERE EGW_STATUS.DESCRIPTION != 'Cancelled'");
+	        final StringBuilder groupQuery = new StringBuilder(" GROUP BY  source, counterName, employeeName, USERID,serviceName, "
+	                + "EGF_INSTRUMENTTYPE.TYPE");
+
+	        aggregateQuery.append(selectQuery)
+	                .append(" , '' AS counterName, '' AS employeeName, 0 AS USERID ")
+	                .append(fromQuery);
+
+	        userwiseQuery.append(selectQuery)
+	                .append(" , EG_LOCATION.NAME AS counterName, EG_USER.NAME AS employeeName, EG_USER.ID AS USERID")
+	                .append(fromQuery)
+	                .append(" LEFT JOIN EG_LOCATION EG_LOCATION ON EGCL_COLLECTIONHEADER.LOCATION = EG_LOCATION.ID "
+	                        + " INNER JOIN state.EG_USER EG_USER ON EGCL_COLLECTIONHEADER.CREATEDBY = EG_USER.ID ");
+
+	        if (fromDate != null && toDate != null) {
+	            whereQuery.append(" AND EGCL_COLLECTIONHEADER.RECEIPTDATE between to_timestamp('"
+	                    + fromDateFormatter.format(fromDate) + "', 'YYYY-MM-DD HH24:MI:SS') and " + " to_timestamp('"
+	                    + toDateFormatter.format(toDate) + "', 'YYYY-MM-DD HH24:MI:SS') ");
+	        }
+
+	        if (!source.isEmpty() && !source.equals(CollectionConstants.ALL)) {
+	            whereQuery.append(" AND EGCL_COLLECTIONHEADER.SOURCE=:source");
+	        } else {
+	            userwiseQuery.setLength(0);
+	            userwiseQuery.append(aggregateQuery);
+	        }
+	        
+	        if(rootBoundaryType!=null) {
+	        	 whereQuery.append(" AND EGCL_COLLECTIONHEADER.ROOT_BOUNDARY_TYPE =:rootBoundaryType");
+	        }
+	        
+	        if (serviceId != null && serviceId != -1)
+	            whereQuery.append(" AND EGCL_COLLECTIONHEADER.SERVICEDETAILS =:serviceId");
+//	        if (status != -1)
+//	            whereQuery.append(" AND EGCL_COLLECTIONHEADER.STATUS =:searchStatus");
+	        if (!serviceType.equals(CollectionConstants.ALL))
+	            whereQuery.append(" AND SER.SERVICETYPE =:serviceType");
+	        if (StringUtils.isNotBlank(paymentMode) && !paymentMode.equals(CollectionConstants.ALL)) {
+	            whereQuery.append(" AND EGF_INSTRUMENTTYPE.TYPE in (:paymentMode)");
+	            if (paymentMode.equals(CollectionConstants.INSTRUMENTTYPE_ONLINE)) {
+	                userwiseQuery.setLength(0);
+	                userwiseQuery.append(aggregateQuery);
+	            }
+	            userwiseQuery.append(whereQuery).append(groupQuery);
+	            aggregateQuery.append(whereQuery).append(groupQuery);
+	        } else {
+	            userwiseQuery.append(whereQuery);
+	            aggregateQuery.append(whereQuery);
+	            userwiseQuery = prepareQueryForAllPaymentMode(userwiseQuery, groupQuery);
+	            aggregateQuery = prepareQueryForAllPaymentMode(aggregateQuery, groupQuery);
+	        }
+
+	        final StringBuilder finalSelectQuery = new StringBuilder(
+	                "SELECT cast(sum(cashCount) AS NUMERIC) AS cashCount,cast(sum(chequeddCount) AS NUMERIC) AS chequeddCount,cast(sum(onlineCount) AS NUMERIC) AS onlineCount,source,counterName,employeeName,serviceName,cast(sum(cashAmount) AS NUMERIC) AS cashAmount, cast(sum(chequeddAmount) AS NUMERIC) AS chequeddAmount, cast(sum(onlineAmount) AS NUMERIC) AS onlineAmount ,USERID,cast(sum(bankCount) AS NUMERIC) AS bankCount, cast(sum(bankAmount) AS NUMERIC) AS bankAmount, "
+	                        + "  cast(sum(cardCount) AS NUMERIC) AS cardCount, cast(sum(cardAmount) AS NUMERIC) AS cardAmount, cast(sum(totalReceiptCount) AS NUMERIC) as totalReceiptCount  FROM (");
+	        final StringBuilder finalGroupQuery = new StringBuilder(
+	                " ) AS RESULT GROUP BY RESULT.source,RESULT.counterName,RESULT.employeeName,RESULT.USERID,RESULT.serviceName order by source,employeeName, serviceName ");
+
+	        finalUserwiseQuery.append(finalSelectQuery).append(userwiseQuery).append(finalGroupQuery);
+	        finalAggregateQuery.append(finalSelectQuery).append(aggregateQuery).append(finalGroupQuery);
+
+	        final SQLQuery userwiseSqluery = createSQLQuery(finalUserwiseQuery.toString());
+	        final SQLQuery aggregateSqlQuery = createSQLQuery(finalAggregateQuery.toString());
+
+	        if (!source.isEmpty() && !source.equals(CollectionConstants.ALL)) {
+	            userwiseSqluery.setString("source", source);
+	            aggregateSqlQuery.setString("source", source);
+	        }
+	        if (serviceId != null && serviceId != -1) {
+	            userwiseSqluery.setLong("serviceId", serviceId);
+	            aggregateSqlQuery.setLong("serviceId", serviceId);
+	        }
+	        if (rootBoundaryType != null ) {
+	            userwiseSqluery.setString("rootBoundaryType", rootBoundaryType);
+	            aggregateSqlQuery.setString("rootBoundaryType", rootBoundaryType);
+	        }
+//	        if (status != -1) {
+//	            userwiseSqluery.setLong("searchStatus", status);
+//	            aggregateSqlQuery.setLong("searchStatus", status);
+//	        }
+
+	        if (!serviceType.equals(CollectionConstants.ALL)) {
+	            userwiseSqluery.setString("serviceType", serviceType);
+	            aggregateSqlQuery.setString("serviceType", serviceType);
+	        }
+
+	        if (StringUtils.isNotBlank(paymentMode) && !paymentMode.equals(CollectionConstants.ALL))
+	            if (paymentMode.equals(CollectionConstants.INSTRUMENTTYPE_CHEQUEORDD)) {
+	                userwiseSqluery.setParameterList("paymentMode", new ArrayList<>(Arrays.asList("cheque", "dd")));
+	                aggregateSqlQuery.setParameterList("paymentMode", new ArrayList<>(Arrays.asList("cheque", "dd")));
+	            } else {
+	                userwiseSqluery.setString("paymentMode", paymentMode);
+	                aggregateSqlQuery.setString("paymentMode", paymentMode);
+	            }
+	        final List<CollectionSummaryReport> reportResults = populateQueryResults(userwiseSqluery.list());
+	        final List<CollectionSummaryReport> aggrReportResults = populateQueryResults(aggregateSqlQuery.list());
+	        final CollectionSummaryReportResult collResult = new CollectionSummaryReportResult();
+	        collResult.setCollectionSummaryReportList(reportResults);
+	        collResult.setAggrCollectionSummaryReportList(aggrReportResults);
+	        return collResult;
+	}
 }

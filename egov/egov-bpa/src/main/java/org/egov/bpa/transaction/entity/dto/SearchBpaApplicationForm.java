@@ -139,6 +139,8 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
     private Boolean wfEnded;
     private Boolean feeCollector;
 
+    private String plotNumber;
+    private String sector;
 
     public String getRevocationNumber() {
         return revocationNumber;
@@ -711,6 +713,22 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
 
 	public void setFeeCollector(Boolean feeCollector) {
 		this.feeCollector = feeCollector;
+	}
+
+	public String getPlotNumber() {
+		return plotNumber;
+	}
+
+	public void setPlotNumber(String plotNumber) {
+		this.plotNumber = plotNumber;
+	}
+
+	public String getSector() {
+		return sector;
+	}
+
+	public void setSector(String sector) {
+		this.sector = sector;
 	}
     
 }

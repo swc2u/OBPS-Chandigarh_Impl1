@@ -58,6 +58,8 @@ public class SearchPendingItemsForm extends DataTableSearchRequest {
         setCurrentOwnerDesg(currentOwnerDesg);
         setPendingAction(pendingAction);
         setEllapseTime(ellapseDays);
+        setSector(application.getSector());
+        setPlotNumber(application.getPlotNumber());
     }
 	
 	 public SearchPendingItemsForm(OccupancyCertificate occupancyCertificate, String currentOwnerName, String currentOwnerDesg, String pendingAction, int ellapseDays) {

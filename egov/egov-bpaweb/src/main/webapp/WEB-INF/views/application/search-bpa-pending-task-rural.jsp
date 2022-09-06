@@ -51,10 +51,10 @@
 	            <div class="panel-body">	
 	                <div class="form-group">
 	                    <label class="col-sm-3 control-label text-right"><spring:message
-	                            code="lbl.applctn.type"/></label>
+	                            code="lbl.applctn.type"/></label> 
 	                    <div class="col-sm-3 add-margin">
 	                        <form:select path="applicationTypeId" data-first-option="false"
-	                                     id="applicationTypeId" cssClass="form-control applicationType">
+	                                     id="applicationTypeId" cssClass="form-control applicationType" required="required">
 	                            <form:option value="">
 	                                <spring:message code="lbl.select"/>
 	                            </form:option>
@@ -79,12 +79,12 @@
 	                            code="lbl.designation"/></label>
 	                    <div class="col-sm-3 add-margin">
 	                        <form:select path="currentOwnerDesg" data-first-option="false"
-	                                     id="currentOwnerDesg" cssClass="form-control">
-	                            <form:option value="">
-	                                <spring:message code="lbl.select"/>
-	                            </form:option>
-	                            <form:options items="${designations}"/>
-	                        </form:select>
+	                                     id="currentOwnerDesg" cssClass="form-control"> 
+	                            <form:option value=""> 
+	                                <spring:message code="lbl.select"/> 
+ 	                            </form:option> 
+	                            <form:options items="${designations}"/> 
+ 	                        </form:select> 
 	                    </div>
 	                    <label class="col-sm-2 control-label text-right"><spring:message
 	                            code="lbl.application.no"/></label>
@@ -94,7 +94,40 @@
 	                        <form:errors path="applicationNumber" cssClass="add-margin error-msg"/>
 	                    </div>
 	                </div>
-	
+					<div class="form-group">
+ 						<label class="col-sm-3 control-label text-right"><spring:message
+	                            code="lbl.plot.no"/></label>
+	                    <div class="col-sm-3 add-margin">
+	                        <form:input class="form-control patternvalidation" maxlength="50"
+	                                    id="plotNumber" path="plotNumber"/>
+	                        <form:errors path="plotNumber" cssClass="add-margin error-msg"/>
+	                    </div>
+	                    <label class="col-sm-2 control-label text-right"><spring:message
+	                            code="lbl.applicant.name"/></label>
+	                    <div class="col-sm-3 add-margin">
+	                        <form:input class="form-control patternvalidation" maxlength="50"
+	                                    id="applicantName" path="applicantName"/>
+	                        <form:errors path="applicantName" cssClass="add-margin error-msg"/>
+	                    </div>
+	                </div>
+	                 <div class="form-group">
+	                   
+ 						<label class="col-sm-3 control-label text-right"><spring:message
+	                            code="lbl.sectors.villages"/></label>
+	                    <div class="col-sm-3 add-margin">
+<%-- 	                        <form:select path="sector" data-first-option="false" --%>
+<%-- 	                                     id="sector" cssClass="form-control"> --%>
+<%-- 	                            <form:option value=""> --%>
+<%-- 	                                <spring:message code="lbl.select"/> --%>
+<%-- 	                            </form:option> --%>
+<%-- 	                            <form:options items="${sectors}"/> --%>
+<%-- 	                        </form:select> --%>
+						 <form:input class="form-control patternvalidation" maxlength="50"
+	                                    id="sector" path="sector"/>
+	                        <form:errors path="sector" cssClass="add-margin error-msg"/>
+	                    </div>
+	                   
+	                </div>
 	                <div class="form-group">
 	                    <label class="col-sm-3 control-label text-right"><spring:message
 	                            code="lbl.fromDate"/></label>
@@ -142,6 +175,8 @@
 					<th><spring:message code="lbl.application.no" /></th>
 					<th><spring:message code="lbl.appln.date" /></th>
 					<th><spring:message code="lbl.service.type" /></th>
+					<th><spring:message code="lbl.sectors.villages" /></th>
+					<th><spring:message code="lbl.plot.no" /></th>
 					<th><spring:message code="lbl.occupancy" /></th>
 					<th><spring:message code="lbl.status" /></th>
 					<th><spring:message code="lbl.current.owner" /></th>

@@ -70,7 +70,6 @@ function showGraph(json) {
 function callAjaxSearch() {
 	var viewurl = '/bpa/application/occupancycertificate/viewdetails/';
 	$('.report-section').removeClass('display-hide');
-	alert($("#applicationTypeId").val());
 	$("#search_oc_pending_items_table").dataTable({
 		processing: true,
 		serverSide: true,
