@@ -532,4 +532,8 @@ public class BpaReportsService {
     public Position getUserPositionByUserId(Long userId) {
         return positionMasterService.getPositionByUserId(userId);
     }
+
+	public Object getReceiptRegisterReportDetailsForUrban(SearchBpaApplicationForm searchBpaApplicationForm) {
+		return null;
+	}
 }

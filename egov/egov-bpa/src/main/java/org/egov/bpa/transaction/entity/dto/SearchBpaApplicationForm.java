@@ -141,7 +141,8 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
 
     private String plotNumber;
     private String sector;
-
+    
+    private String paymentMode;
     public String getRevocationNumber() {
         return revocationNumber;
     }
@@ -735,6 +736,14 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
 
 	public void setSector(String sector) {
 		this.sector = sector;
+	}
+
+	public String getPaymentMode() {
+		return paymentMode;
+	}
+
+	public void setPaymentMode(String paymentMode) {
+		this.paymentMode = paymentMode;
 	}
     
 }

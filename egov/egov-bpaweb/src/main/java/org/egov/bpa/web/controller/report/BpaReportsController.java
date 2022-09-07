@@ -83,6 +83,7 @@ import org.egov.bpa.web.controller.adaptor.SearchBpaApplicationReportAdaptor;
 import org.egov.bpa.web.controller.adaptor.SearchPersonalRegisterAdaptor;
 import org.egov.bpa.web.controller.adaptor.SlotDetailsAdaptor;
 import org.egov.bpa.web.controller.transaction.BpaGenericApplicationController;
+import org.egov.collection.constants.CollectionConstants;
 import org.egov.commons.service.OccupancyService;
 import org.egov.eis.entity.Employee;
 import org.egov.eis.entity.Jurisdiction;
@@ -150,6 +151,17 @@ public class BpaReportsController extends BpaGenericApplicationController {
 	private final String URBAN = "URBAN";
 	private final String RURAL = "RURAL";
 	
+	private final Map<String, String> paymentModes = createPaymentModeList();
+	
+	 private Map<String, String> createPaymentModeList() {
+	        final Map<String, String> paymentModesMap = new HashMap<String, String>(0);
+	        paymentModesMap.put(CollectionConstants.INSTRUMENTTYPE_CASH, CollectionConstants.INSTRUMENTTYPE_CASH);
+	        paymentModesMap.put(CollectionConstants.INSTRUMENTTYPE_CHEQUEORDD, CollectionConstants.INSTRUMENTTYPE_CHEQUEORDD);
+	        paymentModesMap.put(CollectionConstants.INSTRUMENTTYPE_CARD, CollectionConstants.INSTRUMENTTYPE_CARD);
+	        paymentModesMap.put(CollectionConstants.INSTRUMENTTYPE_BANK, CollectionConstants.INSTRUMENTTYPE_BANK);
+	        paymentModesMap.put(CollectionConstants.INSTRUMENTTYPE_ONLINE, CollectionConstants.INSTRUMENTTYPE_ONLINE);
+	        return paymentModesMap;
+	    }
 
 	@RequestMapping(value = "/servicewise-statusreport", method = RequestMethod.GET)
 	public String searchStatusCountByServicetypeForm(final Model model) {
@@ -668,6 +680,25 @@ public class BpaReportsController extends BpaGenericApplicationController {
 		return new DataTable<>(bpaReportsService.getBpaRegisterReportDetails(searchBpaApplicationForm, userIds),
 				searchBpaApplicationForm.draw())
 				.toJson(BpaRegisterReportAdaptor.class);
+	}
+	
+	@RequestMapping(value = "/receiptRegister/d/u", method = RequestMethod.GET)
+	public String searchRegisteregisterForm(final Model model) {
+		prepareReportFormData(model,URBAN);
+		model.addAttribute("paymentModes", paymentModes);
+		model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
+		return "receipt-register-report-urban";
+	}
+
+	@RequestMapping(value = "/receiptRegister/d/u", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String getRegisterResultUrban(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+		List<Long> userIds = new ArrayList<>();
+		return new DataTable<>(bpaReportsService.getReceiptRegisterReportDetailsForUrban(searchBpaApplicationForm),
+				searchBpaApplicationForm.draw())
+				.toJson(BpaRegisterReportAdaptor.class);
+		
+		
 	}
 	
 	
