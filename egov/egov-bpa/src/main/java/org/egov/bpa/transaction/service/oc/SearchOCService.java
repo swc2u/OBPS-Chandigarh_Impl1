@@ -142,7 +142,7 @@ public class SearchOCService {
         		Date dateInfo = application.getState().getDateInfo();
         		if(null!=application.getState()) {
         			int days = DateUtils.daysBetween(dateInfo, new Date());
-        			if(days>0) {
+        			if(days>=0) {
 	            		String pendingAction = application.getState().getNextAction();
 	            		Map<String,String> map = getCurrentOwner(application);
 	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
@@ -184,7 +184,7 @@ public class SearchOCService {
         		Date dateInfo = application.getState().getDateInfo();
         		if(null!=application.getState()) {
         			int days = DateUtils.daysBetween(dateInfo, new Date());
-        			if(days>0) {
+        			if(days>=0) {
 	            		String pendingAction = application.getState().getNextAction();
 	            		Map<String,String> map = getCurrentOwner(application);
 	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
