@@ -190,7 +190,10 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
         if (!application.getPermitRevocation().isEmpty()) {
             Optional<PermitRevocation> revoke = application.getPermitRevocation().stream().reduce((revoke1, revoke2) -> revoke2);
             setRevocationNumber(revoke.isPresent() ? revoke.get().getRevocationNumber() : "");
-        }        
+        }     
+        setApplicationTypeId(application.getApplicationType().getId());
+        setPlotNumber(application.getPlotNumber());
+        setSector(application.getSector());
     }
 
     public SearchBpaApplicationForm(OccupancyCertificate occupancyCertificate, String currentOwner, String pendingAction,
@@ -225,6 +228,9 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
         setCurrentOwner(currentOwner);
         setPendingAction(pendingAction);
         setFeeCollected(isFeeCollected);
+        setPlotNumber(occupancyCertificate.getParent().getPlotNumber());
+        setSector(occupancyCertificate.getParent().getSector());
+        setApplicationTypeId(occupancyCertificate.getParent().getApplicationType().getId());
     }
     
     public SearchBpaApplicationForm(BpaApplication application, OccupancyCertificate occupancyCertificate) {

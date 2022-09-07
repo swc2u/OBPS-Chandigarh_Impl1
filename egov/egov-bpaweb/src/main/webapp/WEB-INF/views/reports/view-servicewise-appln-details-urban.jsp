@@ -65,6 +65,12 @@
 	value="${serviceType}" />
 <input type="hidden" name="serviceTypeEnum" id="serviceTypeEnum"
 		   value="${serviceTypeEnum}" />
+<input type="hidden" name="applicationTypeId" id="applicationTypeId"
+	value="${applicationTypeId}" />
+<input type="hidden" name="sector" id="sector"
+	value="${sector}" />
+	<input type="hidden" name="plotNumber" id="plotNumber"
+	value="${plotNumber}" />
 
 </form:form>
 <div class="row display-hide report-section" id="table_container">

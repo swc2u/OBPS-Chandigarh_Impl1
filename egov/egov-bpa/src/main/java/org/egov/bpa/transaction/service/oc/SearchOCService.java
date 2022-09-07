@@ -46,14 +46,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
 import org.egov.bpa.transaction.entity.dto.SearchPendingItemsForm;
 import org.egov.bpa.transaction.entity.oc.OCSlot;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.repository.OcSlotRepository;
 import org.egov.bpa.transaction.repository.oc.OccupancyCertificateRepository;
-import org.egov.bpa.transaction.repository.specs.SearchBpaApplnFormSpec;
 import org.egov.bpa.transaction.service.WorkflowHistoryService;
 import org.egov.bpa.utils.BpaUtils;
 import org.egov.infra.config.persistence.datasource.routing.annotation.ReadOnly;
@@ -202,6 +200,30 @@ public class SearchOCService {
         }
         return new PageImpl<>(searchResults, pageable, occupancyCertificate.size());
     }
+
+	public List<SearchBpaApplicationForm> search(SearchBpaApplicationForm searchRequest) {
+        List<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.search(searchRequest));
+        List<SearchBpaApplicationForm> searchBpaApplicationFormList = new ArrayList<>();
+        for (OccupancyCertificate application : occupancyCertificate) {
+        	String pendingAction = application.getState()== null ? "N/A" : application.getState().getNextAction();
+        	Boolean hasCollectionPending = bpaDemandService.checkAnyTaxIsPendingToCollect(application.getDemand());
+            searchBpaApplicationFormList.add(
+                    new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction, hasCollectionPending));
+        }
+        return searchBpaApplicationFormList;
+	}
+
+	public List<SearchBpaApplicationForm> searchForServicewiseStatus(SearchBpaApplicationForm searchRequest) {
+		 List<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchServiceWiseStatus(searchRequest));
+	        List<SearchBpaApplicationForm> searchBpaApplicationFormList = new ArrayList<>();
+	        for (OccupancyCertificate application : occupancyCertificate) {
+	        	String pendingAction = application.getState()== null ? "N/A" : application.getState().getNextAction();
+	        	Boolean hasCollectionPending = bpaDemandService.checkAnyTaxIsPendingToCollect(application.getDemand());
+	            searchBpaApplicationFormList.add(
+	                    new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction, hasCollectionPending));
+	        }
+	        return searchBpaApplicationFormList;
+	}
 
     
 

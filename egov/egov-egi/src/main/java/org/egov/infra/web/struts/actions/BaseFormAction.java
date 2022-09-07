@@ -82,6 +82,10 @@ public abstract class BaseFormAction extends ActionSupport
     public static final String NEW = "new";
     public static final String EDIT = "edit";
     public static final String VIEW = "view";
+    
+    public static final String INDEXURBAN = "index-urban";
+    
+    
     protected static final Logger LOG = LoggerFactory.getLogger(BaseFormAction.class);
     private static final long serialVersionUID = 1L;
     @Autowired

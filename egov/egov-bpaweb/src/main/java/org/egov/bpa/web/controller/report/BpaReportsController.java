@@ -116,6 +116,9 @@ public class BpaReportsController extends BpaGenericApplicationController {
 	private static final String FAILURE_IN_SCHEDULER_REPORT = "search-scheduler-failure-records-report";
 	private static final String PERSONAL_REGISTER_REPORT = "personal-register-report";
 	private static final String DATA = "{ \"data\":";
+	
+	public static final Long BTK_APPTYPE = 3L;
+    public static final Long ATK_APPTYPE = 5L;
 
 	@Autowired
 	private BpaReportsService bpaReportsService;
@@ -259,6 +262,17 @@ public class BpaReportsController extends BpaGenericApplicationController {
 	public String getStatusCountByServicetypeResult(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
 		final List<SearchBpaApplicationReport> searchResultList = bpaReportsService
 				.getResultsByServicetypeAndStatus(searchBpaApplicationForm);
+		return new StringBuilder(DATA)
+				.append(toJSON(searchResultList, SearchBpaApplicationReport.class, SearchBpaApplicationReportAdaptor.class))
+				.append("}")
+				.toString();
+	}
+	
+	@RequestMapping(value = "/servicewise-statusreport-urban", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String getStatusCountByServicetypeResultForUrban(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+		final List<SearchBpaApplicationReport> searchResultList = bpaReportsService
+				.getResultsByServicetypeAndStatusForUrban(searchBpaApplicationForm);
 		return new StringBuilder(DATA)
 				.append(toJSON(searchResultList, SearchBpaApplicationReport.class, SearchBpaApplicationReportAdaptor.class))
 				.append("}")
@@ -424,9 +438,12 @@ public class BpaReportsController extends BpaGenericApplicationController {
 													  @RequestParam final Long ward, @RequestParam final Date fromDate,
 													  @RequestParam final Date toDate, @RequestParam final Long revenueWard, @RequestParam final Long electionWard,
 													  @RequestParam final Long zoneId, @RequestParam final String status, @RequestParam final String serviceType,
-													  @RequestParam final String zone, @RequestParam final String serviceTypeEnum, final Model model) {
+													  @RequestParam final String zone, @RequestParam final String serviceTypeEnum,@RequestParam final String applicationTypeId,@RequestParam final String plotNumber,@RequestParam final String sector, final Model model) {
 		model.addAttribute("applicantName", applicantName);
 		model.addAttribute("applicationNumber", applicationNumber);
+		model.addAttribute("applicationTypeId", applicationTypeId);
+		model.addAttribute("plotNumber", plotNumber);
+		model.addAttribute("sector", sector);
 		model.addAttribute("ward", ward);
 		if (fromDate == null) {
 			model.addAttribute("fromDate", fromDate);
@@ -452,6 +469,27 @@ public class BpaReportsController extends BpaGenericApplicationController {
 	@ResponseBody
 	public String viewStatusCountByServicetypeDetails(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
 		final List<SearchBpaApplicationForm> searchResultList = searchBpaApplicationService.search(searchBpaApplicationForm);
+		return new StringBuilder(DATA)
+				.append(toJSON(searchResultList, SearchBpaApplicationForm.class, SearchBpaApplicationFormAdaptor.class))
+				.append("}")
+				.toString();
+	}
+	
+	@RequestMapping(value = "/servicewise-statusreport-urban/view", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String viewStatusCountByServicetypeDetailsForUrban(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+		List<SearchBpaApplicationForm> searchResultList=new ArrayList<>();
+		
+		if(searchBpaApplicationForm.getApplicationTypeId()==null) {
+	        	searchBpaApplicationForm.setApplicationTypeId(BTK_APPTYPE);
+	        	searchResultList = searchBpaApplicationService.search(searchBpaApplicationForm);
+	        	searchBpaApplicationForm.setApplicationTypeId(ATK_APPTYPE);
+	        	List<SearchBpaApplicationForm> searchATKApplnResultList = searchBpaApplicationService.search(searchBpaApplicationForm);
+	        	searchResultList.addAll(searchATKApplnResultList);
+	        }else {
+	        	searchResultList = searchBpaApplicationService.search(searchBpaApplicationForm);
+	        }
+//		final List<SearchBpaApplicationForm> searchResultList = searchBpaApplicationService.search(searchBpaApplicationForm);
 		return new StringBuilder(DATA)
 				.append(toJSON(searchResultList, SearchBpaApplicationForm.class, SearchBpaApplicationFormAdaptor.class))
 				.append("}")

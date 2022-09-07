@@ -108,6 +108,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class BpaReportsService {
 
     public static final String SECTION_CLERK = "SECTION CLERK";
+    public static final Long BTK_APPTYPE = 3L;
+    public static final Long ATK_APPTYPE = 5L;
     @Autowired
     private SearchBpaApplicationService searchBpaApplicationService;
     @PersistenceContext
@@ -193,6 +195,81 @@ public class BpaReportsService {
         }
         return searchBpaApplicationReportList;
     }
+    
+    
+    public List<SearchBpaApplicationReport> getResultsByServicetypeAndStatusForUrban(
+            final SearchBpaApplicationForm searchBpaApplicationForm) {
+        List<SearchBpaApplicationReport> searchBpaApplicationReportList = new ArrayList<>();
+        List<SearchBpaApplicationForm> searchBpaApplnResultList = new ArrayList<>();
+        if(searchBpaApplicationForm.getApplicationTypeId()==null) {
+        	searchBpaApplicationForm.setApplicationTypeId(BTK_APPTYPE);
+        	 searchBpaApplnResultList = searchBpaApplicationService.search(searchBpaApplicationForm);
+        	searchBpaApplicationForm.setApplicationTypeId(ATK_APPTYPE);
+        	List<SearchBpaApplicationForm> searchATKApplnResultList = searchBpaApplicationService.search(searchBpaApplicationForm);
+        	searchBpaApplnResultList.addAll(searchATKApplnResultList);
+        }else {
+        	searchBpaApplnResultList = searchBpaApplicationService.search(searchBpaApplicationForm);
+        }
+        
+       
+        Map<String, Map<String, Long>> resultMap = searchBpaApplnResultList.stream()
+                .collect(Collectors.groupingBy(SearchBpaApplicationForm::getStatus,
+                        Collectors.groupingBy(SearchBpaApplicationForm::getServiceType, Collectors.counting())));
+        for (final Entry<String, Map<String, Long>> statusCountResMap : resultMap.entrySet()) {
+            Long newConstruction = 0l;
+            Long demolition = 0l;
+            Long reConstruction = 0l;
+            Long alteration = 0l;
+            Long divisionOfPlot = 0l;
+            Long addingExtension = 0l;
+            Long changeInOccupancy = 0l;
+            Long amenities = 0l;
+            Long hut = 0l;
+            Long towerConstruction = 0l;
+            Long poleStructure = 0l;
+            SearchBpaApplicationReport bpaApplicationReport = new SearchBpaApplicationReport();
+            bpaApplicationReport.setStatus(statusCountResMap.getKey());
+            for (final Entry<String, Long> statusCountMap : statusCountResMap.getValue().entrySet()) {
+                if (NEW_CONSTRUCTION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    newConstruction = newConstruction + statusCountMap.getValue();
+                    bpaApplicationReport.setServiceType01(newConstruction);
+                } else if (DEMOLITION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    demolition = demolition + statusCountMap.getValue();
+                    bpaApplicationReport.setServiceType02(demolition);
+                } else if (RECONSTRUCTION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    reConstruction = reConstruction + statusCountMap.getValue();
+                    bpaApplicationReport.setServiceType03(reConstruction);
+                } else if (ALTERATION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    alteration = alteration + statusCountMap.getValue();
+                    bpaApplicationReport.setServiceType04(alteration);
+                } else if (DIVISION_OF_PLOT.equalsIgnoreCase(statusCountMap.getKey())) {
+                    divisionOfPlot = divisionOfPlot + statusCountMap.getValue();
+                    bpaApplicationReport.setServiceType05(divisionOfPlot);
+                } else if (ADDING_OF_EXTENSION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    addingExtension = addingExtension + statusCountMap.getValue();
+                    bpaApplicationReport.setServiceType06(addingExtension);
+                } else if (CHANGE_IN_OCCUPANCY.equalsIgnoreCase(statusCountMap.getKey())) {
+                    changeInOccupancy = changeInOccupancy + statusCountMap.getValue();
+                    bpaApplicationReport.setServiceType07(changeInOccupancy);
+                } else if (AMENITIES.equalsIgnoreCase(statusCountMap.getKey())) {
+                    amenities = amenities + statusCountMap.getValue();
+                    bpaApplicationReport.setServiceType08(amenities);
+                } else if (PERM_FOR_HUT_OR_SHED.equalsIgnoreCase(statusCountMap.getKey())) {
+                    hut = hut + statusCountMap.getValue();
+                    bpaApplicationReport.setServiceType09(hut);
+                } else if (TOWER_CONSTRUCTION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    towerConstruction = towerConstruction + statusCountMap.getValue();
+                    bpaApplicationReport.setServiceType14(towerConstruction);
+                } else if (POLE_STRUCTURES.equalsIgnoreCase(statusCountMap.getKey())) {
+                    poleStructure = poleStructure + statusCountMap.getValue();
+                    bpaApplicationReport.setServiceType15(poleStructure);
+                }
+            }
+            searchBpaApplicationReportList.add(bpaApplicationReport);
+        }
+        return searchBpaApplicationReportList;
+    }
+    
 
     public List<SearchBpaApplicationReport> getResultsForEachServicetypeByZone(
             final SearchBpaApplicationForm searchBpaApplicationForm) {

@@ -58,6 +58,7 @@ import org.egov.bpa.master.entity.enums.FeeSubType;
 import org.egov.bpa.transaction.entity.ApplicationFee;
 import org.egov.bpa.transaction.entity.ApplicationFeeDetail;
 import org.egov.bpa.transaction.entity.BpaApplication;
+import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.utils.BpaUtils;
 import org.egov.commons.Installment;
@@ -309,6 +310,22 @@ public class BpaDemandService {
                 }
         return pendingTaxCollection;
     }
+    /**
+     * 
+     * @param ocApplication
+     * @return
+     */
+   public Boolean checkAnyTaxIsPendingToCollect(final OccupancyCertificate ocApplication) {
+       Boolean pendingTaxCollection = false;
+
+       if (ocApplication != null && ocApplication.getDemand() != null)
+           for (final EgDemandDetails demandDtl : ocApplication.getDemand().getEgDemandDetails())
+               if (demandDtl.getAmount().subtract(demandDtl.getAmtCollected()).compareTo(BigDecimal.ZERO) > 0) {
+                   pendingTaxCollection = true;
+                   break;
+               }
+       return pendingTaxCollection;
+   }
 
     public Boolean checkIsReconciliationInProgressInOnline(final String applicationNumber) {
         return bpaUtills.checkIsReconciliationInProgress(applicationNumber);

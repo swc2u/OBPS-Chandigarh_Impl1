@@ -47,7 +47,7 @@ $(document)
 							.dataTable(
 									{
 										ajax : {
-											url : "/bpa/reports/servicewise-statusreport-urban/view",
+											url : "/bpa/reports/servicewise-statusreport-oc-urban/view",
 											type : "POST",
 											beforeSend : function() {
 												$('.loader-class')
