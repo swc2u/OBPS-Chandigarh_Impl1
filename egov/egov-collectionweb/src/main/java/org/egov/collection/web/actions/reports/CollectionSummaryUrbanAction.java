@@ -88,7 +88,7 @@ public class CollectionSummaryUrbanAction extends ReportFormAction {
     private static final String EGOV_FROM_DATE = "EGOV_FROM_DATE";
     private static final String EGOV_TO_DATE = "EGOV_TO_DATE";
     private static final String EGOV_PAYMENT_MODE = "EGOV_PAYMENT_MODE";
-    private static final String COLLECTION_SUMMARY_TEMPLATE = "collection_summary_urban";
+    private static final String COLLECTION_SUMMARY_TEMPLATE = "collection_summary";
     private static final String EGOV_SOURCE = "EGOV_SOURCE";
     private static final String EGOV_SERVICE_ID = "EGOV_SERVICE_ID";
     private static final String EGOV_SERVICE_NAME = "EGOV_SERVICE_NAME";

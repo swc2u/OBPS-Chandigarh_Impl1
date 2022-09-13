@@ -77,6 +77,7 @@ import org.egov.bpa.transaction.service.report.BpaReportsService;
 import org.egov.bpa.transaction.service.report.PersonalRegisterReportService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.web.controller.adaptor.BpaRegisterReportAdaptor;
+import org.egov.bpa.web.controller.adaptor.CollectionSummaryReportAdaptor;
 import org.egov.bpa.web.controller.adaptor.NocDetailsAdaptor;
 import org.egov.bpa.web.controller.adaptor.ReceiptRegisterReportAdaptor;
 import org.egov.bpa.web.controller.adaptor.SearchBpaApplicationFormAdaptor;
@@ -152,6 +153,7 @@ public class BpaReportsController extends BpaGenericApplicationController {
 	
 	private final String URBAN = "URBAN";
 	private final String RURAL = "RURAL";
+	private final String ALL = "ALL";
 	
 	private final Map<String, String> paymentModes = createPaymentModeList();
 	
@@ -708,6 +710,27 @@ public class BpaReportsController extends BpaGenericApplicationController {
 				.toJson(ReceiptRegisterReportAdaptor.class);
 	}
 	
+	@RequestMapping(value = "/collectionSummary/d/u", method = RequestMethod.GET)
+	public String searchCollectionSummaryForm(final Model model) {
+		prepareReportFormData(model,URBAN);
+		model.addAttribute("paymentModes", paymentModes);
+		model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
+		return "collection-summary-report-urban";
+	}
+	
+
+	@RequestMapping(value = "/collectionSummary/d/u", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String getCollectionSummaryUrban(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+		 List<Long> AppTypeList = new ArrayList<>();  
+			  AppTypeList.addAll(Arrays.asList(3L,5L));
+			  String source=ALL;
+			  searchBpaApplicationForm.setServiceType("ALL");
+		
+		return new DataTable<>(bpaReportsService.getCollectionSummaryReportDetailsForUrban(searchBpaApplicationForm,AppTypeList,source),
+				searchBpaApplicationForm.draw())
+				.toJson(CollectionSummaryReportAdaptor.class);
+	}
 	
 	@RequestMapping(value = "/nocclearance", method = RequestMethod.GET)
 	public String searchNocClearanceForm(final Model model) {

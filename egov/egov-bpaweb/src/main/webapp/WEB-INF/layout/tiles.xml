@@ -1480,5 +1480,12 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/reports/receipt-register-report-oc-urban.jsp" />
 	</definition>
+	<definition name="collection-summary-report-urban"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.view.collection.summary.receipt" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/reports/collection-summary-report-urban.jsp" />
+	</definition>
 	
 </tiles-definitions>
