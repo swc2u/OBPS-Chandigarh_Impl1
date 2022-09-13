@@ -1469,9 +1469,16 @@
 	<definition name="receipt-register-report-urban"
 		extends="base_layout">
 		<put-attribute name="page-title"
-			value="title.view.appln.details" cascade="true" />
+			value="title.view.bpa.receipt.register" cascade="true" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/reports/receipt-register-report-urban.jsp" />
+	</definition>
+	<definition name="receipt-register-report-oc-urban"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.view.oc.receipt.register" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/reports/receipt-register-report-oc-urban.jsp" />
 	</definition>
 	
 </tiles-definitions>

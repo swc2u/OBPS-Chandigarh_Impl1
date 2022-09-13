@@ -49,7 +49,7 @@ function showGraph(json) {
 		animationEnabled: true,
 		theme: "light2",
 		title: {
-			text: "Scrutiny Data"
+			text: "Occupancy Certificate Data -Urban"
 		},
 		axisY: {
 			title: "Units",

@@ -56,7 +56,9 @@ import static org.egov.bpa.utils.BpaConstants.TOWER_CONSTRUCTION;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -68,6 +70,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.egov.bpa.transaction.entity.ApplicationFeeDetail;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BpaAppointmentSchedule;
@@ -75,6 +78,7 @@ import org.egov.bpa.transaction.entity.PermitNocDocument;
 import org.egov.bpa.transaction.entity.SiteDetail;
 import org.egov.bpa.transaction.entity.SlotDetail;
 import org.egov.bpa.transaction.entity.dto.BpaRegisterReportHelper;
+import org.egov.bpa.transaction.entity.dto.ReceiptRegisterReportHelper;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationReport;
 import org.egov.bpa.transaction.entity.dto.SlotDetailsHelper;
@@ -88,13 +92,19 @@ import org.egov.bpa.transaction.service.ApplicationBpaService;
 import org.egov.bpa.transaction.service.BpaAppointmentScheduleService;
 import org.egov.bpa.transaction.service.SearchBpaApplicationService;
 import org.egov.bpa.transaction.workflow.BpaWorkFlowService;
+import org.egov.collection.constants.CollectionConstants;
+import org.egov.collection.entity.ReceiptHeader;
 import org.egov.eis.entity.Assignment;
 import org.egov.eis.service.PositionMasterService;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.workflow.entity.State;
 import org.egov.infra.workflow.entity.StateHistory;
 import org.egov.pims.commons.Position;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.transform.Transformers;
+import org.hibernate.type.DoubleType;
+import org.hibernate.type.LongType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -355,8 +365,77 @@ public class BpaReportsService {
         return new PageImpl<>(new ArrayList<>(buildBpaRegisterReportResponse(bpaApplications, userIds)), pageable,
                 bpaApplications.getTotalElements());
     }
+    
+    public Page<ReceiptRegisterReportHelper> getReceiptRegisterReportDetailsForUrban(SearchBpaApplicationForm searchRequest, List<Long> appTypeList) {
+    	 final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+                 searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
-    private Set<BpaRegisterReportHelper> buildBpaRegisterReportResponse(final Page<BpaApplication> bpaApplications,
+    	 final Page<ReceiptRegisterReportHelper> receiptRegisterReportList = getReceiptRegisterData(searchRequest,pageable,appTypeList);
+    	 
+    	 receiptRegisterReportList.forEach(receiptReport->{
+    		 List<ReceiptRegisterReportHelper> feeList = getFeeDetails(receiptReport.getId());
+    		 feeList.forEach(fee->{
+    			 if(fee.getSecurityFee()!=null && fee.getSecurityFee()!=0)
+    				 receiptReport.setSecurityFee(fee.getSecurityFee());
+    			 if(fee.getScrutinyFee()!=null && fee.getScrutinyFee()!=0)
+    				 receiptReport.setScrutinyFee(fee.getScrutinyFee());
+    			 if(fee.getGst()!=null && fee.getGst()!=0)
+    				 receiptReport.setGst(fee.getGst());
+    			 if(fee.getLabourCess()!=null && fee.getLabourCess()!=0)
+    				 receiptReport.setLabourCess(fee.getLabourCess());
+    			 if(fee.getAdditionFee()!=null && fee.getAdditionFee()!=0)
+    				 receiptReport.setAdditionFee(fee.getAdditionFee());
+    			 if(fee.getRule5()!=null && fee.getRule5()!=0)
+    				 receiptReport.setRule5(fee.getRule5());
+    		 });
+    		 receiptReport.setTotalWithoutLaboutCess(Double.sum(receiptReport.getScrutinyFee(),
+           Double.sum(receiptReport.getSecurityFee(),
+           		Double.sum(receiptReport.getRule5(),Double.sum(receiptReport.getAdditionFee(),receiptReport.getGst())))));
+    		 receiptReport.setTotal(Double.sum(receiptReport.getTotalWithoutLaboutCess(), receiptReport.getLabourCess()));
+
+    	 });
+//        return receiptRegisterReportList;
+        return new PageImpl<>(receiptRegisterReportList.getContent(), pageable,
+        		 receiptRegisterReportList.getTotalElements());
+	}
+    
+
+	public Page<ReceiptRegisterReportHelper> getReceiptRegisterReportDetailsForOC(SearchBpaApplicationForm searchRequest,
+			List<Long> appTypeList) {
+		final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+                searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+
+   	 final Page<ReceiptRegisterReportHelper> receiptRegisterReportList = getOCReceiptRegisterData(searchRequest,pageable,appTypeList);
+   	 
+   	 receiptRegisterReportList.forEach(receiptReport->{
+   		 List<ReceiptRegisterReportHelper> feeList = getFeeDetails(receiptReport.getId());
+   		 feeList.forEach(fee->{
+   			 if(fee.getSecurityFee()!=null && fee.getSecurityFee()!=0)
+   				 receiptReport.setSecurityFee(fee.getSecurityFee());
+   			 if(fee.getScrutinyFee()!=null && fee.getScrutinyFee()!=0)
+   				 receiptReport.setScrutinyFee(fee.getScrutinyFee());
+   			 if(fee.getGst()!=null && fee.getGst()!=0)
+   				 receiptReport.setGst(fee.getGst());
+   			 if(fee.getLabourCess()!=null && fee.getLabourCess()!=0)
+   				 receiptReport.setLabourCess(fee.getLabourCess());
+   			 if(fee.getAdditionFee()!=null && fee.getAdditionFee()!=0)
+   				 receiptReport.setAdditionFee(fee.getAdditionFee());
+   			 if(fee.getRule5()!=null && fee.getRule5()!=0)
+   				 receiptReport.setRule5(fee.getRule5());
+   		 });
+   		 receiptReport.setTotalWithoutLaboutCess(Double.sum(receiptReport.getScrutinyFee(),
+          Double.sum(receiptReport.getSecurityFee(),
+          		Double.sum(receiptReport.getRule5(),Double.sum(receiptReport.getAdditionFee(),receiptReport.getGst())))));
+   		 receiptReport.setTotal(Double.sum(receiptReport.getTotalWithoutLaboutCess(), receiptReport.getLabourCess()));
+
+   	 });
+//       return receiptRegisterReportList;
+       return new PageImpl<>(receiptRegisterReportList.getContent(), pageable,
+       		 receiptRegisterReportList.getTotalElements());
+	}
+	
+
+	private Set<BpaRegisterReportHelper> buildBpaRegisterReportResponse(final Page<BpaApplication> bpaApplications,
             final List<Long> userIds) {
         Set<BpaRegisterReportHelper> bpaRegisterReportHelperList = new HashSet<>();
         for (BpaApplication application : bpaApplications) {
@@ -532,8 +611,247 @@ public class BpaReportsService {
     public Position getUserPositionByUserId(Long userId) {
         return positionMasterService.getPositionByUserId(userId);
     }
+    
+    private  Page<ReceiptRegisterReportHelper> getReceiptRegisterData(SearchBpaApplicationForm searchRequest, Pageable pageable, List<Long> appTypeList) {
+    	final SimpleDateFormat fromDateFormatter = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+        final SimpleDateFormat toDateFormatter = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+        final StringBuilder defaultQueryStr = new StringBuilder(500);
 
-	public Object getReceiptRegisterReportDetailsForUrban(SearchBpaApplicationForm searchBpaApplicationForm) {
-		return null;
+//        final StringBuilder selectQueryStr = new StringBuilder(
+//        		"SELECT APPLICATIONNUMBER,RECEIPT_NUMBER,PAYMENTDATE,DESCRIPTION" 
+//        		);
+        final StringBuilder subSelectQueryStr = new StringBuilder("SELECT "
+        		+ "EGCL_COLLECTIONHEADER.ID as id, "
+        		+ "	EGBPA_APPLICATION.APPLICATIONNUMBER as applicationNumber,"
+        		+ "	EGBPA_APPLICATION.SECTOR as SECTOR,"
+        		+ "	EGBPA_APPLICATION.PLOTNUMBER as PLOTNUMBER,"
+        		+ "	 EGCL_COLLECTIONHEADER.RECEIPTNUMBER AS receiptNumber,"
+        		+ "     EGCL_COLLECTIONHEADER.RECEIPTDATE AS PAYMENTDATE ,"
+        		+ "	 EGBPA_APPLICATION.FILENUMBER as FILENUMBER"
+        		+ "	 FROM "
+        		+ "     EGCL_COLLECTIONHEADER EGCL_COLLECTIONHEADER "
+        		+ "	 INNER JOIN EGCL_COLLECTIONINSTRUMENT EGCL_COLLECTIONINSTRUMENT "
+        		+ "	 ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONINSTRUMENT.COLLECTIONHEADER"
+        		+ "     INNER JOIN EGF_INSTRUMENTHEADER EGF_INSTRUMENTHEADER ON EGCL_COLLECTIONINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENTHEADER.ID"
+        		+ "     INNER JOIN EGW_STATUS EGW_STATUS ON EGCL_COLLECTIONHEADER.STATUS = EGW_STATUS.ID"
+        		+ "     INNER JOIN EGF_INSTRUMENTTYPE EGF_INSTRUMENTTYPE ON EGF_INSTRUMENTHEADER.INSTRUMENTTYPE = EGF_INSTRUMENTTYPE.ID"
+        		+ "     INNER JOIN EGCL_COLLECTIONMIS EGCL_COLLECTIONMIS ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONMIS.COLLECTIONHEADER"
+        		+ "     INNER JOIN EG_DEPARTMENT EG_DEPARTMENT ON EG_DEPARTMENT.ID = EGCL_COLLECTIONMIS.DEPARTMENT"
+        		+ "     INNER JOIN EGCL_SERVICEDETAILS EGCL_SERVICEDETAILS ON EGCL_SERVICEDETAILS.ID = EGCL_COLLECTIONHEADER.SERVICEDETAILS"
+        		+ "     INNER JOIN state.EG_USER EG_USER ON EG_USER.ID = EGCL_COLLECTIONHEADER.CREATEDBY"
+        		+ "	 INNER JOIN EGBPA_APPLICATION EGBPA_APPLICATION on EGBPA_APPLICATION.APPLICATIONNUMBER = EGCL_COLLECTIONHEADER.CONSUMERCODE"
+        		);       	  
+		 
+        final StringBuilder whereQueryStr = new StringBuilder(" WHERE ");
+//        final StringBuilder whereQueryStr = new StringBuilder(" WHERE EGCL_COLLECTIONDETAILS.ISACTUALDEMAND = true ");
+        
+        final StringBuilder subOrderByQueryStr = new StringBuilder(" ORDER BY "+
+        	     " EGCL_COLLECTIONHEADER.RECEIPTDATE,"+
+        	     " EGCL_COLLECTIONHEADER.RECEIPTNUMBER,"+
+        	     " EG_DEPARTMENT.NAME");
+        
+        if(appTypeList!=null) {
+        	whereQueryStr.append("EGBPA_APPLICATION.APPLICATIONSUBTYPE in ( :appTypeList)");
+        }
+        if (searchRequest.getFromDate() != null && searchRequest.getToDate() != null) {
+            whereQueryStr.append(" AND EGCL_COLLECTIONHEADER.RECEIPTDATE between to_timestamp('"
+                    + fromDateFormatter.format(searchRequest.getFromDate()) + "', 'YYYY-MM-DD HH24:MI:SS') and " + " to_timestamp('"
+                    + toDateFormatter.format(searchRequest.getToDate()) + "', 'YYYY-MM-DD HH24:MI:SS') ");
+        }
+       
+        if (StringUtils.isNotBlank(searchRequest.getPaymentMode()) && !searchRequest.getPaymentMode().equals(CollectionConstants.ALL)) 
+            whereQueryStr.append(" AND EGF_INSTRUMENTTYPE.TYPE in ( :paymentMode )");
+
+        final StringBuilder finalQuery = new StringBuilder(subSelectQueryStr).append(whereQueryStr)
+                .append(subOrderByQueryStr);
+        
+        System.out.println("finalQuery::::"+finalQuery);
+        
+        final SQLQuery registerQuery = (SQLQuery) getCurrentSession().createSQLQuery(finalQuery.toString())
+                .addScalar("applicationNumber", org.hibernate.type.StringType.INSTANCE)
+                .addScalar("sector", org.hibernate.type.StringType.INSTANCE)
+                .addScalar("plotNumber", org.hibernate.type.StringType.INSTANCE)
+                .addScalar("receiptNumber", org.hibernate.type.StringType.INSTANCE)
+                .addScalar("paymentDate", org.hibernate.type.DateType.INSTANCE)
+                .addScalar("fileNumber", org.hibernate.type.StringType.INSTANCE)
+                .addScalar("id",LongType.INSTANCE)
+                .setResultTransformer(Transformers.aliasToBean(ReceiptRegisterReportHelper.class));
+
+//        if (searchRequest.getApplicationTypeId() != null && searchRequest.getApplicationTypeId() !=-1) {
+//        	registerQuery.setLong("applicationTypeId", searchRequest.getApplicationTypeId());
+//	     }
+
+
+        if (StringUtils.isNotBlank(searchRequest.getPaymentMode()) && !searchRequest.getPaymentMode().equals(CollectionConstants.ALL))
+        	registerQuery.setString("paymentMode", searchRequest.getPaymentMode());
+        
+        if(appTypeList!=null)
+        	registerQuery.setParameterList("appTypeList", appTypeList);
+        
+        List<ReceiptRegisterReportHelper> receiptReportResultList = populateQueryResults(registerQuery.list());
+////        final receiptRegisterReportHelperResult collResult = new receiptRegisterReportHelperResult();
+//        
+//        collResult.setAggrCollectionSummaryReportList(aggrReportResults);
+//        collResult.setRebateCollectionSummaryReportList(rebateReportResultList);
+        
+        
+        final int start = (int)pageable.getOffset();
+        final int end = Math.min((start + pageable.getPageSize()), receiptReportResultList.size());
+        final Page<ReceiptRegisterReportHelper> page = new PageImpl<>(receiptReportResultList.subList(start, end), pageable, receiptReportResultList.size());
+        
+        return page;
 	}
+    
+    private  Page<ReceiptRegisterReportHelper> getOCReceiptRegisterData(SearchBpaApplicationForm searchRequest, Pageable pageable, List<Long> appTypeList) {
+    	final SimpleDateFormat fromDateFormatter = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+        final SimpleDateFormat toDateFormatter = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+        final StringBuilder defaultQueryStr = new StringBuilder(500);
+
+//        final StringBuilder selectQueryStr = new StringBuilder(
+//        		"SELECT APPLICATIONNUMBER,RECEIPT_NUMBER,PAYMENTDATE,DESCRIPTION" 
+//        		);
+        final StringBuilder subSelectQueryStr = new StringBuilder("SELECT "
+        		+ "EGCL_COLLECTIONHEADER.ID as id, "
+        		+ "	EGBPA_APPLICATION.APPLICATIONNUMBER as applicationNumber,"
+        		+ "	EGBPA_APPLICATION.SECTOR as SECTOR,"
+        		+ "	EGBPA_APPLICATION.PLOTNUMBER as PLOTNUMBER,"
+        		+ "	 EGCL_COLLECTIONHEADER.RECEIPTNUMBER AS receiptNumber,"
+        		+ "     EGCL_COLLECTIONHEADER.RECEIPTDATE AS PAYMENTDATE ,"
+        		+ "	 EGBPA_APPLICATION.FILENUMBER as FILENUMBER"
+        		+ "	 FROM "
+        		+ "     EGCL_COLLECTIONHEADER EGCL_COLLECTIONHEADER "
+        		+ "	 INNER JOIN EGCL_COLLECTIONINSTRUMENT EGCL_COLLECTIONINSTRUMENT "
+        		+ "	 ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONINSTRUMENT.COLLECTIONHEADER"
+        		+ "     INNER JOIN EGF_INSTRUMENTHEADER EGF_INSTRUMENTHEADER ON EGCL_COLLECTIONINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENTHEADER.ID"
+        		+ "     INNER JOIN EGW_STATUS EGW_STATUS ON EGCL_COLLECTIONHEADER.STATUS = EGW_STATUS.ID"
+        		+ "     INNER JOIN EGF_INSTRUMENTTYPE EGF_INSTRUMENTTYPE ON EGF_INSTRUMENTHEADER.INSTRUMENTTYPE = EGF_INSTRUMENTTYPE.ID"
+        		+ "     INNER JOIN EGCL_COLLECTIONMIS EGCL_COLLECTIONMIS ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONMIS.COLLECTIONHEADER"
+        		+ "     INNER JOIN EG_DEPARTMENT EG_DEPARTMENT ON EG_DEPARTMENT.ID = EGCL_COLLECTIONMIS.DEPARTMENT"
+        		+ "     INNER JOIN EGCL_SERVICEDETAILS EGCL_SERVICEDETAILS ON EGCL_SERVICEDETAILS.ID = EGCL_COLLECTIONHEADER.SERVICEDETAILS"
+        		+ "     INNER JOIN state.EG_USER EG_USER ON EG_USER.ID = EGCL_COLLECTIONHEADER.CREATEDBY"
+        		+ "	 	INNER JOIN EGBPA_OCCUPANCY_CERTIFICATE EGBPA_OCCUPANCY_CERTIFICATE on EGBPA_OCCUPANCY_CERTIFICATE.APPLICATIONNUMBER = EGCL_COLLECTIONHEADER.CONSUMERCODE"
+        		+ " 	INNER JOIN EGBPA_APPLICATION EGBPA_APPLICATION ON EGBPA_APPLICATION.ID = EGBPA_OCCUPANCY_CERTIFICATE.PARENT ");       	  
+		 
+        final StringBuilder whereQueryStr = new StringBuilder(" WHERE ");
+//        final StringBuilder whereQueryStr = new StringBuilder(" WHERE EGCL_COLLECTIONDETAILS.ISACTUALDEMAND = true ");
+        
+        final StringBuilder subOrderByQueryStr = new StringBuilder(" ORDER BY "+
+        	     " EGCL_COLLECTIONHEADER.RECEIPTDATE,"+
+        	     " EGCL_COLLECTIONHEADER.RECEIPTNUMBER,"+
+        	     " EG_DEPARTMENT.NAME");
+        
+        if(appTypeList!=null) {
+        	whereQueryStr.append("EGBPA_APPLICATION.APPLICATIONSUBTYPE in ( :appTypeList)");
+        }
+        if (searchRequest.getFromDate() != null && searchRequest.getToDate() != null) {
+            whereQueryStr.append(" AND EGCL_COLLECTIONHEADER.RECEIPTDATE between to_timestamp('"
+                    + fromDateFormatter.format(searchRequest.getFromDate()) + "', 'YYYY-MM-DD HH24:MI:SS') and " + " to_timestamp('"
+                    + toDateFormatter.format(searchRequest.getToDate()) + "', 'YYYY-MM-DD HH24:MI:SS') ");
+        }
+       
+        if (StringUtils.isNotBlank(searchRequest.getPaymentMode()) && !searchRequest.getPaymentMode().equals(CollectionConstants.ALL)) 
+            whereQueryStr.append(" AND EGF_INSTRUMENTTYPE.TYPE in ( :paymentMode )");
+
+        final StringBuilder finalQuery = new StringBuilder(subSelectQueryStr).append(whereQueryStr)
+                .append(subOrderByQueryStr);
+        
+        System.out.println("finalQuery::::"+finalQuery);
+        
+        final SQLQuery registerQuery = (SQLQuery) getCurrentSession().createSQLQuery(finalQuery.toString())
+                .addScalar("applicationNumber", org.hibernate.type.StringType.INSTANCE)
+                .addScalar("sector", org.hibernate.type.StringType.INSTANCE)
+                .addScalar("plotNumber", org.hibernate.type.StringType.INSTANCE)
+                .addScalar("receiptNumber", org.hibernate.type.StringType.INSTANCE)
+                .addScalar("paymentDate", org.hibernate.type.DateType.INSTANCE)
+                .addScalar("fileNumber", org.hibernate.type.StringType.INSTANCE)
+                .addScalar("id",LongType.INSTANCE)
+                .setResultTransformer(Transformers.aliasToBean(ReceiptRegisterReportHelper.class));
+
+//        if (searchRequest.getApplicationTypeId() != null && searchRequest.getApplicationTypeId() !=-1) {
+//        	registerQuery.setLong("applicationTypeId", searchRequest.getApplicationTypeId());
+//	     }
+
+
+        if (StringUtils.isNotBlank(searchRequest.getPaymentMode()) && !searchRequest.getPaymentMode().equals(CollectionConstants.ALL))
+        	registerQuery.setString("paymentMode", searchRequest.getPaymentMode());
+        
+        if(appTypeList!=null)
+        	registerQuery.setParameterList("appTypeList", appTypeList);
+        
+        List<ReceiptRegisterReportHelper> receiptReportResultList = populateQueryResults(registerQuery.list());
+////        final receiptRegisterReportHelperResult collResult = new receiptRegisterReportHelperResult();
+//        
+//        collResult.setAggrCollectionSummaryReportList(aggrReportResults);
+//        collResult.setRebateCollectionSummaryReportList(rebateReportResultList);
+        
+        
+        final int start = (int)pageable.getOffset();
+        final int end = Math.min((start + pageable.getPageSize()), receiptReportResultList.size());
+        final Page<ReceiptRegisterReportHelper> page = new PageImpl<>(receiptReportResultList.subList(start, end), pageable, receiptReportResultList.size());
+        
+        return page;
+	}
+    
+    private List<ReceiptRegisterReportHelper> getFeeDetails(Long id) {
+        final StringBuilder defaultQueryStr = new StringBuilder(500);
+
+      final StringBuilder selectQueryStr = new StringBuilder(
+    		  "SELECT "+
+    			"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Security%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS SecurityFee,"+
+    			"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Scrutiny%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS ScrutinyFee,"+
+    			"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%GST%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS gst,"+
+    			"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Additional Coverage fee%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS AdditionFee,"+
+    			"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Labour cess%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS LabourCess,"+
+    			"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Rule 5%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS Rule5 "+
+
+    		" FROM EGCL_COLLECTIONDETAILS EGCL_COLLECTIONDETAILS "
+    		
+    		  );       	  
+      final StringBuilder whereQueryStr = new StringBuilder(" WHERE EGCL_COLLECTIONDETAILS.ISACTUALDEMAND = true and EGCL_COLLECTIONDETAILS.COLLECTIONHEADER="+id);
+      
+
+
+      final StringBuilder finalQuery = new StringBuilder(selectQueryStr).append(whereQueryStr);
+      
+      System.out.println("finalQuery::::"+finalQuery);
+      
+      final SQLQuery feeQuery = (SQLQuery) getCurrentSession().createSQLQuery(finalQuery.toString())
+    		  .addScalar("SecurityFee", DoubleType.INSTANCE)
+    		  .addScalar("ScrutinyFee", DoubleType.INSTANCE)
+    		  .addScalar("gst", DoubleType.INSTANCE)
+    		  .addScalar("AdditionFee", DoubleType.INSTANCE)
+              .addScalar("LabourCess", DoubleType.INSTANCE)
+              .addScalar("Rule5", DoubleType.INSTANCE)
+              
+              .setResultTransformer(Transformers.aliasToBean(ReceiptRegisterReportHelper.class));
+
+      List<ReceiptRegisterReportHelper> feeList = populateQueryResults(feeQuery.list());
+      
+      return feeList;
+	}
+
+    
+    public List<ReceiptRegisterReportHelper> populateQueryResults(final List<ReceiptRegisterReportHelper> queryResults) {
+        for (final ReceiptRegisterReportHelper receiptRegisterReportHelper : queryResults) {
+            if (receiptRegisterReportHelper.getScrutinyFee() == null)
+                receiptRegisterReportHelper.setScrutinyFee(0.0);
+                if (receiptRegisterReportHelper.getSecurityFee() == null)
+                	receiptRegisterReportHelper.setSecurityFee(0.0);
+                if (receiptRegisterReportHelper.getLabourCess() == null)
+                	receiptRegisterReportHelper.setLabourCess(0.0);
+                if (receiptRegisterReportHelper.getAdditionFee() == null)
+                	receiptRegisterReportHelper.setAdditionFee(0.0);
+                if (receiptRegisterReportHelper.getGst() == null)
+                	receiptRegisterReportHelper.setGst(0.0);
+                if (receiptRegisterReportHelper.getRule5() == null)
+                	receiptRegisterReportHelper.setRule5(0.0);
+            
+//            receiptRegisterReportHelper.setTotalWithoutLaboutCess(Double.sum(receiptRegisterReportHelper.getScrutinyFee(),
+//                    Double.sum(receiptRegisterReportHelper.getSecurityFee(),
+//                    		Double.sum(receiptRegisterReportHelper.getRule5(),Double.sum(receiptRegisterReportHelper.getAdditionFee(),receiptRegisterReportHelper.getGst())))));
+//            receiptRegisterReportHelper.setTotal(Double.sum(receiptRegisterReportHelper.getTotalWithoutLaboutCess(), receiptRegisterReportHelper.getLabourCess()));
+        }
+        return queryResults;
+    }
+
 }

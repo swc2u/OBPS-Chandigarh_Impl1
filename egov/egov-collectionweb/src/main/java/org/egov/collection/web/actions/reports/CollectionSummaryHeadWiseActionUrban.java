@@ -51,6 +51,7 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
+import org.egov.bpa.master.entity.ApplicationSubType;
 import org.egov.bpa.master.service.ApplicationSubTypeService;
 import org.egov.collection.constants.CollectionConstants;
 import org.egov.collection.service.CollectionReportHeadWiseService;
@@ -96,6 +97,8 @@ public class CollectionSummaryHeadWiseActionUrban extends ReportFormAction {
     private static final String EGOV_GLCODE_NAME = "EGOV_GLCODE_NAME";
     private static final String EGOV_GLCODE_ID = "EGOV_GLCODE_ID";
     private static final String EGOV_BRANCH_NAME = "EGOV_BRANCH_NAME";
+    private static final String EGOV_TITLE = "EGOV_TITLE";
+    private static final String EGOV_APPLICATION_TYPE = "EGOV_APPLICATION_TYPE";
 
     private Integer statusId;
     private Long revenueId;
@@ -170,6 +173,7 @@ public class CollectionSummaryHeadWiseActionUrban extends ReportFormAction {
         // Set default values of criteria fields
         setReportParam(EGOV_FROM_DATE, new Date());
         setReportParam(EGOV_TO_DATE, new Date());
+        setReportParam(EGOV_TITLE, "URBAN-BPA");
         addDropdownData("receiptStatuses",
                 getPersistenceService().findAllByNamedQuery(CollectionConstants.STATUS_OF_RECEIPTS));
         addDropdownData("revenueHeads",
@@ -191,8 +195,11 @@ public class CollectionSummaryHeadWiseActionUrban extends ReportFormAction {
 //         }
         if (getApplicationTypeId() != null) {
             setApplicationTypeId(getApplicationTypeId());
+            final ApplicationSubType applicationType = entityManager.find(ApplicationSubType.class, getApplicationTypeId());
+            setApplicationType(applicationType.getDescription());
         }else {
         	setAppTypeList(Arrays.asList(3L,5L));
+        	setApplicationType("ALL");
         }
         if (getSource() == null) {
             setSource("ALL");
@@ -347,6 +354,9 @@ public class CollectionSummaryHeadWiseActionUrban extends ReportFormAction {
 
     public void setBranchName(final String branchName) {
         setReportParam(EGOV_BRANCH_NAME, branchName);
+    }
+    public void setApplicationType(final String applicationType) {
+    	setReportParam(EGOV_APPLICATION_TYPE, applicationType);
     }
 
 	public Long getApplicationTypeId() {

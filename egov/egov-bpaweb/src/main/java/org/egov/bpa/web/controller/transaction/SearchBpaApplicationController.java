@@ -47,6 +47,7 @@
 package org.egov.bpa.web.controller.transaction;
 
 import static org.egov.bpa.utils.BpaConstants.BOUNDARY_TYPE_CITY;
+import static org.egov.bpa.utils.BpaConstants.BPASTATUS_MODULETYPE;
 import static org.egov.bpa.utils.BpaConstants.FILESTORE_MODULECODE;
 import static org.egov.bpa.utils.BpaConstants.IS_AUTO_CANCEL_UNATTENDED_DOCUMENT_SCRUTINY_APPLICATION;
 import static org.egov.bpa.utils.BpaConstants.OCCUPANCY_CERTIFICATE_NOTICE_TYPE;
@@ -97,9 +98,6 @@ import org.egov.infra.web.support.ui.DataTable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -277,6 +275,7 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
             .collect(Collectors.toList()));
     	model.addAttribute("serviceTypeList", serviceTypeService.getAllActiveMainServiceTypes());
     	model.addAttribute("designations", BpaConstants.getAvailableDesignations());
+    	model.addAttribute("applnStatusList", bpaStatusService.findAllByModuleType(BPASTATUS_MODULETYPE));
     }
 
     @GetMapping("/view/{applicationNumber}")

@@ -49,7 +49,7 @@ function showGraph(json) {
 		animationEnabled: true,
 		theme: "light2",
 		title: {
-			text: "Scrutiny Data"
+			text: "BPA application Data -Rural"
 		},
 		axisY: {
 			title: "Units",

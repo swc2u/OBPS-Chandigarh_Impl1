@@ -98,6 +98,7 @@ public class CollectionSummaryHeadWiseActionUrbanOC extends ReportFormAction {
     private static final String EGOV_GLCODE_ID = "EGOV_GLCODE_ID";
     private static final String EGOV_BRANCH_NAME = "EGOV_BRANCH_NAME";
     private static final String EGOV_APPLICATION_TYPE = "EGOV_APPLICATION_TYPE";
+    private static final String EGOV_TITLE = "EGOV_TITLE";
 
     private Integer statusId;
     private Long revenueId;
@@ -172,6 +173,7 @@ public class CollectionSummaryHeadWiseActionUrbanOC extends ReportFormAction {
         // Set default values of criteria fields
         setReportParam(EGOV_FROM_DATE, new Date());
         setReportParam(EGOV_TO_DATE, new Date());
+        setReportParam(EGOV_TITLE, "URBAN-Occupancy Certificate");
         addDropdownData("receiptStatuses",
                 getPersistenceService().findAllByNamedQuery(CollectionConstants.STATUS_OF_RECEIPTS));
         addDropdownData("revenueHeads",
@@ -198,7 +200,7 @@ public class CollectionSummaryHeadWiseActionUrbanOC extends ReportFormAction {
             setApplicationType(applicationTypeName);
         }else {
         	setAppTypeList(Arrays.asList(3L,5L));
-        	setApplicationType("URBAN");
+        	setApplicationType("ALL");
         }
         if (getSource() == null) {
             setSource("ALL");

@@ -79,16 +79,16 @@ import java.util.TreeMap;
  * Action class for the cash collection summary report
  */
 @ParentPackage("egov")
-@Results({ @Result(name = CollectionSummaryUrbanAction.INDEX, location = "collectionSummaryUrban-index.jsp"),
-        @Result(name = CollectionSummaryUrbanAction.REPORT, location = "collectionSummaryUrban-report.jsp") })
-public class CollectionSummaryUrbanAction extends ReportFormAction {
+@Results({ @Result(name = CollectionSummaryUrbanOCAction.INDEX, location = "collectionSummaryUrbanOC-index.jsp"),
+        @Result(name = CollectionSummaryUrbanOCAction.REPORT, location = "collectionSummaryUrbanOC-report.jsp") })
+public class CollectionSummaryUrbanOCAction extends ReportFormAction {
 
     private static final long serialVersionUID = 1L;
 
     private static final String EGOV_FROM_DATE = "EGOV_FROM_DATE";
     private static final String EGOV_TO_DATE = "EGOV_TO_DATE";
     private static final String EGOV_PAYMENT_MODE = "EGOV_PAYMENT_MODE";
-    private static final String COLLECTION_SUMMARY_TEMPLATE = "collection_summary_urban";
+    private static final String COLLECTION_SUMMARY_TEMPLATE = "collection_summary";
     private static final String EGOV_SOURCE = "EGOV_SOURCE";
     private static final String EGOV_SERVICE_ID = "EGOV_SERVICE_ID";
     private static final String EGOV_SERVICE_NAME = "EGOV_SERVICE_NAME";
@@ -151,7 +151,7 @@ public class CollectionSummaryUrbanAction extends ReportFormAction {
      * @return index
      */
     @Override
-    @Action(value = "/reports/collectionSummaryUrban-criteria")
+    @Action(value = "/reports/collectionSummaryUrbanOC-criteria")
     public String criteria() {
         // Setup drop down data for department list
         addRelatedEntity("department", Department.class, "name");
@@ -161,8 +161,7 @@ public class CollectionSummaryUrbanAction extends ReportFormAction {
         // Set default values of criteria fields
         setReportParam(EGOV_FROM_DATE, new Date());
         setReportParam(EGOV_TO_DATE, new Date());
-        setReportParam(EGOV_TITLE, "URBAN-BPA");
-        
+        setReportParam(EGOV_TITLE, "URBAN-Occupancy Certificate");
         addDropdownData("receiptStatuses",
                 getPersistenceService().findAllByNamedQuery(CollectionConstants.STATUS_OF_RECEIPTS));
         serviceTypeMap.putAll(CollectionConstants.SERVICE_TYPE_CLASSIFICATION);
@@ -171,7 +170,7 @@ public class CollectionSummaryUrbanAction extends ReportFormAction {
     }
 
     @Override
-    @Action(value = "/reports/collectionSummaryUrban-report")
+    @Action(value = "/reports/collectionSummaryUrbanOC-report")
     public String report() {
         if (getServiceId() != null && getServiceId() != -1) {
             ServiceDetails serviceDets = entityManager.find(ServiceDetails.class, getServiceId());
@@ -189,9 +188,9 @@ public class CollectionSummaryUrbanAction extends ReportFormAction {
         if (getServiceType() == null) {
         	setServiceType("ALL");
         }
+//        String rootBoundaryType="URBAN";
         List<Long> urbanApplicationTypeList = Arrays.asList(3L,5L);
-       
-        setReportData(reportService.getCollectionSummaryReportForUrban(getFromDate(), getToDate(), getPaymentMode(), getSource(),
+        setReportData(reportService.getCollectionSummaryReportForUrbanOC(getFromDate(), getToDate(), getPaymentMode(), getSource(),
                 getServiceId(), getServiceType(),urbanApplicationTypeList));
         setReportParam(CollectionConstants.LOGO_PATH, cityService.getCityLogoAsStream());
         return super.report();

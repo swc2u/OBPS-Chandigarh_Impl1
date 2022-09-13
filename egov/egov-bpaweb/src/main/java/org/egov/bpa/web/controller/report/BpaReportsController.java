@@ -78,6 +78,7 @@ import org.egov.bpa.transaction.service.report.PersonalRegisterReportService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.web.controller.adaptor.BpaRegisterReportAdaptor;
 import org.egov.bpa.web.controller.adaptor.NocDetailsAdaptor;
+import org.egov.bpa.web.controller.adaptor.ReceiptRegisterReportAdaptor;
 import org.egov.bpa.web.controller.adaptor.SearchBpaApplicationFormAdaptor;
 import org.egov.bpa.web.controller.adaptor.SearchBpaApplicationReportAdaptor;
 import org.egov.bpa.web.controller.adaptor.SearchPersonalRegisterAdaptor;
@@ -98,6 +99,7 @@ import org.egov.infra.security.utils.SecurityUtils;
 import org.egov.infra.utils.DateUtils;
 import org.egov.infra.web.support.ui.DataTable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -689,16 +691,21 @@ public class BpaReportsController extends BpaGenericApplicationController {
 		model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
 		return "receipt-register-report-urban";
 	}
+	
 
 	@RequestMapping(value = "/receiptRegister/d/u", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
 	@ResponseBody
 	public String getRegisterResultUrban(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
-		List<Long> userIds = new ArrayList<>();
-		return new DataTable<>(bpaReportsService.getReceiptRegisterReportDetailsForUrban(searchBpaApplicationForm),
+		 List<Long> AppTypeList = new ArrayList<>();  
+		if (searchBpaApplicationForm.getApplicationTypeId() == null) {
+			  AppTypeList.addAll(Arrays.asList(3L,5L));
+	        }else
+	        	AppTypeList.add(searchBpaApplicationForm.getApplicationTypeId());
+		
+		
+		return new DataTable<>(bpaReportsService.getReceiptRegisterReportDetailsForUrban(searchBpaApplicationForm,AppTypeList),
 				searchBpaApplicationForm.draw())
-				.toJson(BpaRegisterReportAdaptor.class);
-		
-		
+				.toJson(ReceiptRegisterReportAdaptor.class);
 	}
 	
 	

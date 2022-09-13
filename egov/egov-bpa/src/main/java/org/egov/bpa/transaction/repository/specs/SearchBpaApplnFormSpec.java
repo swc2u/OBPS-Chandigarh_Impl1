@@ -75,6 +75,7 @@ import org.egov.bpa.transaction.entity.SlotDetail;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
 import org.egov.bpa.transaction.entity.dto.SearchPendingItemsForm;
 import org.egov.bpa.utils.BpaConstants;
+import org.egov.collection.entity.ReceiptHeader;
 import org.egov.demand.model.EgDemand;
 import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.workflow.entity.State;
@@ -257,7 +258,22 @@ public final class SearchBpaApplnFormSpec {
             predicate.getExpressions().add(builder.equal(root.get("plotNumber"), requestForm.getPlotNumber()));
         if (requestForm.getSector() != null)
             predicate.getExpressions().add(builder.equal(root.get("sector"), requestForm.getSector()));
+        if (requestForm.getStatusId() != null)
+            predicate.getExpressions().add(builder.equal(root.get("status").get(ID), requestForm.getStatusId()));
     }
+    
+    private static void commonSpecForReceiptRegister(SearchBpaApplicationForm requestForm, Root<ReceiptHeader> root,
+			CriteriaBuilder builder, Predicate predicate) {
+//    	if (requestForm.getPaymentMode()!= null)
+//            predicate.getExpressions().add(builder.equal(root.get("").get(""), requestForm.getPaymentMode()));
+    	if (requestForm.getFromDate() != null)
+            predicate.getExpressions().add(builder.greaterThanOrEqualTo(root.get(APPLICATION_DATE), requestForm.getFromDate()));
+        if (requestForm.getToDate() != null)
+            predicate.getExpressions().add(builder.lessThanOrEqualTo(root.get(APPLICATION_DATE), requestForm.getToDate()));  
+        
+		
+	}
+
 
     private static void siteDetailSpec(SearchBpaApplicationForm requestForm, Root<BpaApplication> root, CriteriaBuilder builder,
             Predicate predicate) {
@@ -325,4 +341,18 @@ public final class SearchBpaApplnFormSpec {
         };
     }
 
+	public static Specification<ReceiptHeader> searchrRceiptRegisterSpecification(SearchBpaApplicationForm searchRequest) {
+		return (root, query, builder) -> {
+            final Predicate predicate = builder.conjunction();
+            commonSpecForReceiptRegister(searchRequest, root, builder, predicate);
+            query.distinct(true);
+//            if(searchRequest.getApplicationTypeId()==null) {
+//           	 predicate.getExpressions().add(builder.notEqual(root.get("applicationType").get(ID), RURAL_APPLICATION_ID));
+//            }
+            
+            return predicate;
+        };
+	}
+
+	
 }

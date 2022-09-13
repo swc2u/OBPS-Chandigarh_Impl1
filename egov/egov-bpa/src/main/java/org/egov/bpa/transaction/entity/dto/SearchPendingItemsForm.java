@@ -41,6 +41,7 @@ public class SearchPendingItemsForm extends DataTableSearchRequest {
     private String plotNumber;
     private String ownerName;
     private String bPAApplicationType;
+    private Long statusId;
     
     public SearchPendingItemsForm() {}
 
@@ -230,5 +231,13 @@ public class SearchPendingItemsForm extends DataTableSearchRequest {
 
 	public void setBPAApplicationType(String bPAApplicationType) {
 		this.bPAApplicationType = bPAApplicationType;
+	}
+
+	public Long getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Long statusId) {
+		this.statusId = statusId;
 	}	
 }

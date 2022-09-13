@@ -41,6 +41,7 @@ package org.egov.bpa.web.controller.transaction.occupancy;
 
 import static org.egov.bpa.utils.BpaConstants.AUTO_CANCEL_UNATTENDED_DOCUMENT_SCRUTINY_OC;
 import static org.egov.bpa.utils.BpaConstants.BOUNDARY_TYPE_CITY;
+import static org.egov.bpa.utils.BpaConstants.BPASTATUS_MODULETYPE;
 import static org.egov.bpa.utils.BpaConstants.REVENUE_HIERARCHY_TYPE;
 import static org.egov.bpa.utils.BpaConstants.WARD;
 
@@ -164,6 +165,7 @@ public class SearchOccupancyCertificateController extends BpaGenericApplicationC
     	else
     		model.addAttribute("appTypes",applicationTypes.stream().filter(appType -> appType.getName().equalsIgnoreCase("Medium Risk"))
             .collect(Collectors.toList()));
+    	model.addAttribute("applnStatusList", bpaStatusService.findAllByModuleType(BPASTATUS_MODULETYPE));
 	}
     
     @PostMapping(value = "/searchOCPendingItems/d/u", produces = MediaType.TEXT_PLAIN_VALUE)

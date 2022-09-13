@@ -42,6 +42,7 @@ package org.egov.bpa.web.controller.report;
 import static org.egov.infra.utils.JsonUtils.toJSON;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -55,12 +56,15 @@ import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationReport;
 import org.egov.bpa.transaction.service.SearchBpaApplicationService;
 import org.egov.bpa.transaction.service.oc.SearchOCService;
+import org.egov.bpa.transaction.service.report.BpaReportsService;
 import org.egov.bpa.transaction.service.report.OcReportsService;
+import org.egov.bpa.web.controller.adaptor.ReceiptRegisterReportAdaptor;
 import org.egov.bpa.web.controller.adaptor.SearchBpaApplicationFormAdaptor;
 import org.egov.bpa.web.controller.adaptor.SearchBpaApplicationReportAdaptor;
 import org.egov.bpa.web.controller.transaction.BpaGenericApplicationController;
+import org.egov.collection.constants.CollectionConstants;
 import org.egov.infra.utils.DateUtils;
-
+import org.egov.infra.web.support.ui.DataTable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -81,7 +85,10 @@ public class OcReportsController extends BpaGenericApplicationController {
 	
 	public static final Long BTK_APPTYPE = 3L;
     public static final Long ATK_APPTYPE = 5L;
-
+    
+    @Autowired
+	private BpaReportsService bpaReportsService;
+    
 	@Autowired
 	private OcReportsService ocReportsService;
 	@Autowired
@@ -93,6 +100,18 @@ public class OcReportsController extends BpaGenericApplicationController {
 	
 	private final String URBAN = "URBAN";
 	private final String RURAL = "RURAL";
+	
+	private final Map<String, String> paymentModes = createPaymentModeList();
+	
+	 private Map<String, String> createPaymentModeList() {
+	        final Map<String, String> paymentModesMap = new HashMap<String, String>(0);
+	        paymentModesMap.put(CollectionConstants.INSTRUMENTTYPE_CASH, CollectionConstants.INSTRUMENTTYPE_CASH);
+	        paymentModesMap.put(CollectionConstants.INSTRUMENTTYPE_CHEQUEORDD, CollectionConstants.INSTRUMENTTYPE_CHEQUEORDD);
+	        paymentModesMap.put(CollectionConstants.INSTRUMENTTYPE_CARD, CollectionConstants.INSTRUMENTTYPE_CARD);
+	        paymentModesMap.put(CollectionConstants.INSTRUMENTTYPE_BANK, CollectionConstants.INSTRUMENTTYPE_BANK);
+	        paymentModesMap.put(CollectionConstants.INSTRUMENTTYPE_ONLINE, CollectionConstants.INSTRUMENTTYPE_ONLINE);
+	        return paymentModesMap;
+	    }
 	
 
 	@RequestMapping(value = "/servicewise-statusreport-oc/d/r", method = RequestMethod.GET)
@@ -260,6 +279,31 @@ public class OcReportsController extends BpaGenericApplicationController {
 				.append(toJSON(searchResultList, SearchBpaApplicationForm.class, SearchBpaApplicationFormAdaptor.class))
 				.append("}")
 				.toString();
+	}
+	
+	
+	@RequestMapping(value = "/receiptRegister-oc/d/u", method = RequestMethod.GET)
+	public String searchOCRegisteregisterForm(final Model model) {
+		prepareReportFormData(model,URBAN);
+		model.addAttribute("paymentModes", paymentModes);
+		model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
+		return "receipt-register-report-oc-urban";
+	}
+	
+
+	@RequestMapping(value = "/receiptRegister-oc/d/u", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String getOCRegisterResultUrban(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+		 List<Long> AppTypeList = new ArrayList<>();  
+		if (searchBpaApplicationForm.getApplicationTypeId() == null) {
+			  AppTypeList.addAll(Arrays.asList(3L,5L));
+	        }else
+	        	AppTypeList.add(searchBpaApplicationForm.getApplicationTypeId());
+		
+		
+		return new DataTable<>(bpaReportsService.getReceiptRegisterReportDetailsForOC(searchBpaApplicationForm,AppTypeList),
+				searchBpaApplicationForm.draw())
+				.toJson(ReceiptRegisterReportAdaptor.class);
 	}
 
 	

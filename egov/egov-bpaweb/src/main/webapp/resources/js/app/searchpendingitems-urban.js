@@ -50,7 +50,7 @@ function showGraph(json) {
 		animationEnabled: true,
 		theme: "light2",
 		title: {
-			text: "Scrutiny Data"
+			text: "BPA application Data-Urban"
 		},
 		axisY: {
 			title: "Units",
@@ -98,7 +98,8 @@ function callAjaxSearch() {
 					"toDate": $("#toDate").val(),
 					"sector":$("#sector").val(),
 					"plotNumber":$("#plotNumber").val(),
-					"ownerName":$("#applicantName").val()
+					"ownerName":$("#applicantName").val(),
+					"statusId":$("#statusId").val()
 				};
 				console.log(formdata);
 				return formdata;
