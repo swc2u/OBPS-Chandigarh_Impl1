@@ -42,7 +42,11 @@
  
  $('#btnSearch').click(function() {
 		var isValid = false;
-		$('#receiptRegisterReport').find(':input', ':select', ':textarea').each(function() {
+		if($("#fromDate").val()=='' || $("#toDate").val()==''){
+			bootbox.alert("Please enter From and To date");
+			return false;
+		}
+		$('#collectionSummaryHeadwiseReport').find(':input', ':select', ':textarea').each(function() {
 			if ($(this).val()) {
 				isValid = true;
 				return false;
@@ -59,9 +63,9 @@
  });
  var formdata;
  function callAjaxSearch() {
-		var rrURL='/bpa/reports/receiptRegister/d/u';
-		$('.receipt-report').removeClass('display-hide');
-		$("#searchReceiptRegister").dataTable({
+		var rrURL='/bpa/reports/collectionSummaryHeadwise/d/u';
+		$('.collection-headwise-section').removeClass('display-hide');
+		$("#collectionSummaryHeadwiseTable").dataTable({
 		processing: true,
 		serverSide: true,
 		sort: true,
@@ -79,7 +83,6 @@
 			data: function(args) {
 				formdata=	 {
 					"args": JSON.stringify(args),
-					"applicationTypeId": $("#applicationTypeId").val(),
 					"fromDate": $("#fromDate").val(),
 					"toDate": $("#toDate").val(),
 					"paymentMode":$("#paymentMode").val()
@@ -98,8 +101,8 @@
         "<'col-md-2 col-xs-6 text-left'B><'col-md-5 col-xs-6 text-right'p>>",
         buttons: [{
             extend: 'pdf',
-            title: 'Receipt Register Report',
-            filename: 'Receipt_Register_Report',
+            title: 'Collection Summary Headwise Report For BPA Urban',
+            filename: 'Collection_Summary_Headwise_Report_BPA_URBAN',
             orientation: 'landscape',
             pageSize: 'A3',
             exportOptions: {
@@ -107,15 +110,15 @@
             }
         }, {
             extend: 'excel',
-            title: 'Receipt Register Report',
-            filename: 'Receipt_Register_Report',
+            title: 'Collection Summary Headwise Report For BPA Urban',
+            filename: 'Collection_Summary_Headwise_Report_BPA_URBAN',
             exportOptions: {
                 columns: ':visible'
             }
         }, {
             extend: 'print',
-            title: 'Receipt Register Report',
-            filename: 'Receipt_Register_Report',
+            title: 'Collection Summary Headwise Report For BPA Urban',
+            filename: 'Collection_Summary_Headwise_Report_BPA_URBAN',
             orientation: 'landscape',
             pageSize: 'A3',
             exportOptions: {
@@ -126,64 +129,97 @@
 		aaSorting: [],
 		columns: [
 			{
-				"data": "applicationNumber",
+				"data": "fromDate",
 				"sClass": "text-left"
 			},
 			{
-				"data": "sector",
+				"data": "toDate",
 				"sClass": "text-left"
 			},
 			{
-				"data": "plotNumber",
+				"data": "applicationType",
 				"sClass": "text-left"
 			},
 			{
-				"data": "receiptNumber",
+				"data": "paymentMode",
 				"sClass": "text-left"
 			},
 			{
-				"data": "paymentDate",
-				"sClass": "text-left"
-			},
-			
-			{
-				"data": "fileNumber",
+				"data": "source",
 				"sClass": "text-left"
 			},
 			{
-				"data": "additionFee",
+				"data": "revenueHead",
 				"sClass": "text-left"
 			},
 			{
-				"data": "labourCess",
-				"sClass": "text-left"
-			},
-			{
-				"data": "scrutinyFee",
-				"sClass": "text-left"
-			},
-			{
-				"data": "rule5",
-				"sClass": "text-left"
-			},
-			{
-				"data": "gst",
-				"sClass": "text-left"
-			},
-			{
-				"data": "securityFee",
+				"data": "cashReceipt",
 				"sClass": "text-left"
 			},
 			
 			{
-				"data": "totalWithoutLabourCess",
+				"data": "cashAmount",
 				"sClass": "text-left"
 			},
 			{
-				"data": "total",
+				"data": "chequeReceipt",
+				"sClass": "text-left"
+			},
+			{
+				"data": "chequeAmount",
+				"sClass": "text-left"
+			},
+			{
+				"data": "onlineReceipt",
+				"sClass": "text-left"
+			},
+			{
+				"data": "onlineAmount",
+				"sClass": "text-left"
+			},
+			{
+				"data": "cardReceipt",
+				"sClass": "text-left"
+			},
+			{
+				"data": "cardAmount",
+				"sClass": "text-left"
+			},
+			{
+				"data": "totalReceipt",
+				"sClass": "text-left"
+			},
+			{
+				"data": "totalAmount",
 				"sClass": "text-left"
 			}
-		]
+		],
+		"footerCallback" : function(row, data, start, end, display) {
+														var api = this.api(), data;
+														if (data.length == 0) {
+															jQuery('#report-footer').hide();
+														} else {
+															jQuery('#report-footer').show(); 
+														}
+														if (data.length > 0) {
+															updateTotalFooter(8, api);
+															updateTotalFooter(9, api);
+															updateTotalFooter(10, api);
+															updateTotalFooter(11, api);
+															updateTotalFooter(12, api);
+															updateTotalFooter(13, api);
+															updateTotalFooter(14, api);
+															updateTotalFooter(15, api);
+															updateTotalFooter(6, api);
+															updateTotalFooter(7, api);
+															}
+													},
+													"aoColumnDefs" : [ {
+														"aTargets" :[6,7,8,9,10,11,12,13,14,15],
+														"mRender" : function(data, type, full) {
+															return formatNumberInr(data);    
+														}
+													} ]	
 		
 	});
 		
@@ -211,4 +247,62 @@ function getFormData($form) {
 	});
 
 	return indexed_array;
+}
+
+function updateTotalFooter(colidx, api) {
+	// Remove the formatting to get integer data for summation
+	var intVal = function(i) {
+		return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1
+				: typeof i === 'number' ? i : 0;
+	};
+
+	// Total over all pages
+	
+	if (api.column(colidx).data().length){
+        var total = api
+        .column(colidx )
+        .data()
+        .reduce( function (a, b) {
+        return intVal(a) + intVal(b);
+        } ) }
+    else {
+        total = 0
+    }
+    // Total over this page
+	
+	if (api.column(colidx).data().length){
+        var pageTotal = api
+            .column( colidx, { page: 'current'} )
+            .data()
+            .reduce( function (a, b) {
+                return intVal(a) + intVal(b);
+            } ) }
+    else {
+        pageTotal = 0
+    }
+    // Update footer
+	jQuery(api.column(colidx).footer()).html(
+			formatNumberInr(pageTotal) + ' (' + formatNumberInr(total)
+					+ ')');
+}
+
+
+//inr formatting number
+function formatNumberInr(x) {
+	if (x) {
+		x = x.toString();
+		var afterPoint = '';
+		if (x.indexOf('.') > 0)
+			afterPoint = x.substring(x.indexOf('.'), x.length);
+		x = Math.floor(x);
+		x = x.toString();
+		var lastThree = x.substring(x.length - 3);
+		var otherNumbers = x.substring(0, x.length - 3);
+		if (otherNumbers != '')
+			lastThree = ',' + lastThree;
+		var res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",")
+				+ lastThree + afterPoint;
+		return res;
+	}
+	return x;
 }

@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 
+import org.egov.bpa.transaction.entity.dto.CollectionSummaryHeadwiseReportHelper;
 import org.egov.bpa.transaction.entity.dto.CollectionSummaryReportHelper;
 import org.egov.infra.utils.DateUtils;
 import org.egov.infra.web.support.json.adapter.DataTableJsonAdapter;
@@ -15,18 +16,18 @@ import java.util.List;
 
 import static org.egov.infra.utils.StringUtils.defaultIfBlank;
 
-public class CollectionSummaryReportAdaptor implements DataTableJsonAdapter<CollectionSummaryReportHelper> {
+public class CollectionSummaryHeadwiseReportAdaptor implements DataTableJsonAdapter<CollectionSummaryHeadwiseReportHelper> {
 	protected static final String N_A = "N/A";
 
 	@Override
-	public JsonElement serialize(DataTable<CollectionSummaryReportHelper> baseCollectionResponse, final Type type,
+	public JsonElement serialize(DataTable<CollectionSummaryHeadwiseReportHelper> baseCollectionResponse, final Type type,
             final JsonSerializationContext jsc) {
-		final List<CollectionSummaryReportHelper> baseCollectionResult = baseCollectionResponse.getData();
+		final List<CollectionSummaryHeadwiseReportHelper> baseCollectionResult = baseCollectionResponse.getData();
         final JsonArray baseCollectionResultData = new JsonArray();
         baseCollectionResult.forEach(baseForm -> {
             final JsonObject baseCollectionJson = new JsonObject();
             baseCollectionJson.addProperty("source", defaultIfBlank(baseForm.getSource()));
-            baseCollectionJson.addProperty("service", baseForm.getServiceName());
+            baseCollectionJson.addProperty("revenueHead", baseForm.getGlCode());
             baseCollectionJson.addProperty("cashReceipt", baseForm.getCashReceipt());
             baseCollectionJson.addProperty("cashAmount", baseForm.getCashAmount());
             baseCollectionJson.addProperty("chequeReceipt", baseForm.getChequeReceipt());
@@ -35,11 +36,10 @@ public class CollectionSummaryReportAdaptor implements DataTableJsonAdapter<Coll
             baseCollectionJson.addProperty("cardAmount", baseForm.getCardAmount());
             baseCollectionJson.addProperty("onlineReceipt", baseForm.getOnlineReceipt());
             baseCollectionJson.addProperty("onlineAmount", baseForm.getOnlineAmount());
-            baseCollectionJson.addProperty("bankReceipt", baseForm.getBankReceipt());
-            baseCollectionJson.addProperty("bankAmount", baseForm.getBankAmount());
             baseCollectionJson.addProperty("totalReceipt", baseForm.getTotalReceipt());
             baseCollectionJson.addProperty("totalAmount", baseForm.getTotalAmount());
             baseCollectionJson.addProperty("paymentMode", baseForm.getPaymentMode());
+            baseCollectionJson.addProperty("applicationType", baseForm.getApplicationType());
             baseCollectionJson.addProperty("fromDate", DateUtils.toDefaultDateFormat(baseForm.getFromDate()));
             baseCollectionJson.addProperty("toDate", DateUtils.toDefaultDateFormat(baseForm.getToDate()));
             

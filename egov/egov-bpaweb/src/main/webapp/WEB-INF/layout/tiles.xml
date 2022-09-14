@@ -1487,5 +1487,26 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/reports/collection-summary-report-urban.jsp" />
 	</definition>
+	<definition name="collection-summary-report-oc-urban"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.view.collection.summary.receipt.oc" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/reports/collection-summary-report-oc-urban.jsp" />
+	</definition>
+	<definition name="collection-summary-headwise-report-urban"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.view.collection.summary.headwise.receipt" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/reports/collection-summary-headwise-report-urban.jsp" />
+	</definition>
+	<definition name="collection-summary-headwise-report-oc-urban"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.view.collection.summary.headwise.oc.receipt" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/reports/collection-summary-headwise-report-oc-urban.jsp" />
+	</definition>
 	
 </tiles-definitions>

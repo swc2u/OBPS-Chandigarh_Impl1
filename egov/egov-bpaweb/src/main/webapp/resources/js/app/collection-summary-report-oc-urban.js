@@ -42,7 +42,11 @@
  
  $('#btnSearch').click(function() {
 		var isValid = false;
-		$('#receiptRegisterReport').find(':input', ':select', ':textarea').each(function() {
+		if($("#fromDate").val()=='' || $("#toDate").val()==''){
+			bootbox.alert("Please enter From and To date");
+			return false;
+		}
+		$('#collectionSummaryReportOC').find(':input', ':select', ':textarea').each(function() {
 			if ($(this).val()) {
 				isValid = true;
 				return false;
@@ -59,9 +63,9 @@
  });
  var formdata;
  function callAjaxSearch() {
-		var rrURL='/bpa/reports/receiptRegister/d/u';
-		$('.receipt-report').removeClass('display-hide');
-		$("#searchReceiptRegister").dataTable({
+		var rrURL='/bpa/reports/collectionSummaryOC/d/u';
+		$('.collection-section-oc').removeClass('display-hide');
+		$("#collectionSummaryOCTable").dataTable({
 		processing: true,
 		serverSide: true,
 		sort: true,
@@ -79,7 +83,6 @@
 			data: function(args) {
 				formdata=	 {
 					"args": JSON.stringify(args),
-					"applicationTypeId": $("#applicationTypeId").val(),
 					"fromDate": $("#fromDate").val(),
 					"toDate": $("#toDate").val(),
 					"paymentMode":$("#paymentMode").val()
@@ -98,8 +101,8 @@
         "<'col-md-2 col-xs-6 text-left'B><'col-md-5 col-xs-6 text-right'p>>",
         buttons: [{
             extend: 'pdf',
-            title: 'Receipt Register Report',
-            filename: 'Receipt_Register_Report',
+            title: 'Collection Summary Report For Occupancy Certificate Urban',
+            filename: 'Collection_Summary_Report_OC_URBAN',
             orientation: 'landscape',
             pageSize: 'A3',
             exportOptions: {
@@ -107,15 +110,15 @@
             }
         }, {
             extend: 'excel',
-            title: 'Receipt Register Report',
-            filename: 'Receipt_Register_Report',
+            title: 'Collection Summary Report For Occupancy Certificate Urban',
+            filename: 'Collection_Summary_Report_OC_URBAN',
             exportOptions: {
                 columns: ':visible'
             }
         }, {
             extend: 'print',
-            title: 'Receipt Register Report',
-            filename: 'Receipt_Register_Report',
+            title: 'Collection Summary Report For Occupancy Certificate Urban',
+            filename: 'Collection_Summary_Report_OC_URBAN',
             orientation: 'landscape',
             pageSize: 'A3',
             exportOptions: {
@@ -126,61 +129,73 @@
 		aaSorting: [],
 		columns: [
 			{
-				"data": "applicationNumber",
+				"data": "fromDate",
 				"sClass": "text-left"
 			},
 			{
-				"data": "sector",
+				"data": "toDate",
 				"sClass": "text-left"
 			},
 			{
-				"data": "plotNumber",
+				"data": "paymentMode",
 				"sClass": "text-left"
 			},
 			{
-				"data": "receiptNumber",
+				"data": "source",
 				"sClass": "text-left"
 			},
 			{
-				"data": "paymentDate",
-				"sClass": "text-left"
-			},
-			
-			{
-				"data": "fileNumber",
+				"data": "service",
 				"sClass": "text-left"
 			},
 			{
-				"data": "additionFee",
-				"sClass": "text-left"
-			},
-			{
-				"data": "labourCess",
-				"sClass": "text-left"
-			},
-			{
-				"data": "scrutinyFee",
-				"sClass": "text-left"
-			},
-			{
-				"data": "rule5",
-				"sClass": "text-left"
-			},
-			{
-				"data": "gst",
-				"sClass": "text-left"
-			},
-			{
-				"data": "securityFee",
+				"data": "cashReceipt",
 				"sClass": "text-left"
 			},
 			
 			{
-				"data": "totalWithoutLabourCess",
+				"data": "cashAmount",
 				"sClass": "text-left"
 			},
 			{
-				"data": "total",
+				"data": "chequeReceipt",
+				"sClass": "text-left"
+			},
+			{
+				"data": "chequeAmount",
+				"sClass": "text-left"
+			},
+			{
+				"data": "onlineReceipt",
+				"sClass": "text-left"
+			},
+			{
+				"data": "onlineAmount",
+				"sClass": "text-left"
+			},
+			{
+				"data": "bankReceipt",
+				"sClass": "text-left"
+			},
+			{
+				"data": "bankAmount",
+				"sClass": "text-left"
+			},
+			
+			{
+				"data": "cardReceipt",
+				"sClass": "text-left"
+			},
+			{
+				"data": "cardAmount",
+				"sClass": "text-left"
+			},
+			{
+				"data": "totalReceipt",
+				"sClass": "text-left"
+			},
+			{
+				"data": "totalAmount",
 				"sClass": "text-left"
 			}
 		]

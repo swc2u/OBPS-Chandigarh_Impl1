@@ -6,18 +6,16 @@ import java.util.Date;
 
 import org.egov.infra.web.support.search.DataTableSearchRequest;
 
-public class CollectionSummaryReportHelper extends DataTableSearchRequest {
+public class CollectionSummaryHeadwiseReportHelper extends DataTableSearchRequest {
     private Long id;
    private String source;
-   private String serviceName;
+   private String glCode;
    private String cashReceipt;
    private BigDecimal cashAmount;
    private String chequeReceipt;
    private BigDecimal chequeAmount;
    private String onlineReceipt;
    private BigDecimal onlineAmount;
-   private String bankReceipt;
-   private BigDecimal bankAmount;
    private String cardReceipt;
    private BigDecimal cardAmount;
    private String totalReceipt;
@@ -25,6 +23,14 @@ public class CollectionSummaryReportHelper extends DataTableSearchRequest {
    private Date fromDate;
    private Date toDate;
    private String paymentMode;
+   private String applicationType;
+   
+   private BigDecimal totalCashRebateAmount = BigDecimal.ZERO;
+   private BigDecimal totalChequeddRebateAmount = BigDecimal.ZERO;
+   private BigDecimal totalOnlineRebateAmount = BigDecimal.ZERO;
+   private BigDecimal totalCardRebateAmount = BigDecimal.ZERO;
+   private BigDecimal totalRebateAmount = BigDecimal.ZERO;
+   
    
 
    public Long getId() {
@@ -39,11 +45,11 @@ public String getSource() {
 public void setSource(String source) {
 	this.source = source;
 }
-public String getServiceName() {
-	return serviceName;
+public String getGlCode() {
+	return glCode;
 }
-public void setServiceName(String serviceName) {
-	this.serviceName = serviceName;
+public void setGlCode(String glCode) {
+	this.glCode = glCode;
 }
 
 public BigDecimal getTotalAmount() {
@@ -88,18 +94,6 @@ public BigDecimal getOnlineAmount() {
 public void setOnlineAmount(BigDecimal onlineAmount) {
 	this.onlineAmount = onlineAmount;
 }
-public String getBankReceipt() {
-	return bankReceipt;
-}
-public void setBankReceipt(String bankReceipt) {
-	this.bankReceipt = bankReceipt;
-}
-public BigDecimal getBankAmount() {
-	return bankAmount;
-}
-public void setBankAmount(BigDecimal bankAmount) {
-	this.bankAmount = bankAmount;
-}
 public String getCardReceipt() {
 	return cardReceipt;
 }
@@ -135,6 +129,42 @@ public String getPaymentMode() {
 }
 public void setPaymentMode(String paymentMode) {
 	this.paymentMode = paymentMode;
+}
+public String getApplicationType() {
+	return applicationType;
+}
+public void setApplicationType(String applicationType) {
+	this.applicationType = applicationType;
+}
+public BigDecimal getTotalCashRebateAmount() {
+	return totalCashRebateAmount;
+}
+public void setTotalCashRebateAmount(BigDecimal totalCashRebateAmount) {
+	this.totalCashRebateAmount = totalCashRebateAmount;
+}
+public BigDecimal getTotalChequeddRebateAmount() {
+	return totalChequeddRebateAmount;
+}
+public void setTotalChequeddRebateAmount(BigDecimal totalChequeddRebateAmount) {
+	this.totalChequeddRebateAmount = totalChequeddRebateAmount;
+}
+public BigDecimal getTotalOnlineRebateAmount() {
+	return totalOnlineRebateAmount;
+}
+public void setTotalOnlineRebateAmount(BigDecimal totalOnlineRebateAmount) {
+	this.totalOnlineRebateAmount = totalOnlineRebateAmount;
+}
+public BigDecimal getTotalCardRebateAmount() {
+	return totalCardRebateAmount;
+}
+public void setTotalCardRebateAmount(BigDecimal totalCardRebateAmount) {
+	this.totalCardRebateAmount = totalCardRebateAmount;
+}
+public BigDecimal getTotalRebateAmount() {
+	return totalRebateAmount;
+}
+public void setTotalRebateAmount(BigDecimal totalRebateAmount) {
+	this.totalRebateAmount = totalRebateAmount;
 }
    
    

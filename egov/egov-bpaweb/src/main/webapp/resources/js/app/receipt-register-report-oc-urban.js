@@ -60,8 +60,16 @@
  var formdata;
  function callAjaxSearch() {
 		var rrURL='/bpa/reports/receiptRegister-oc/d/u';
-		$('.report-section').removeClass('display-hide');
+		$('.receipt-report-oc').removeClass('display-hide');
 		$("#searchOCReceiptRegister").dataTable({
+		processing: true,
+		serverSide: true,
+		sort: true,
+		filter: true,
+		"searching": false,
+		responsive: true,
+		rowReorder: true,
+		"order": [[1, 'asc']],
 		"ajax": {
 			url: rrURL,
 			type: "POST",

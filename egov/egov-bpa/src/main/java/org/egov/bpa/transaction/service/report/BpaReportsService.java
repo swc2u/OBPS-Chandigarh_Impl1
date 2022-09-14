@@ -60,6 +60,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +72,9 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
+import org.egov.bpa.master.entity.ApplicationSubType;
 import org.egov.bpa.transaction.entity.ApplicationFeeDetail;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BpaAppointmentSchedule;
@@ -78,6 +82,7 @@ import org.egov.bpa.transaction.entity.PermitNocDocument;
 import org.egov.bpa.transaction.entity.SiteDetail;
 import org.egov.bpa.transaction.entity.SlotDetail;
 import org.egov.bpa.transaction.entity.dto.BpaRegisterReportHelper;
+import org.egov.bpa.transaction.entity.dto.CollectionSummaryHeadwiseReportHelper;
 import org.egov.bpa.transaction.entity.dto.CollectionSummaryReportHelper;
 import org.egov.bpa.transaction.entity.dto.ReceiptRegisterReportHelper;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
@@ -94,6 +99,8 @@ import org.egov.bpa.transaction.service.BpaAppointmentScheduleService;
 import org.egov.bpa.transaction.service.SearchBpaApplicationService;
 import org.egov.bpa.transaction.workflow.BpaWorkFlowService;
 import org.egov.collection.constants.CollectionConstants;
+import org.egov.collection.entity.CollectionSummaryHeadWiseReport;
+import org.egov.collection.entity.CollectionSummaryHeadWiseReportResult;
 import org.egov.collection.entity.CollectionSummaryReport;
 import org.egov.collection.entity.CollectionSummaryReportResult;
 import org.egov.collection.entity.ReceiptHeader;
@@ -868,12 +875,73 @@ public class BpaReportsService {
     	 collectionSummaryReportList.forEach(collectionSummary->{
     		 collectionSummary.setFromDate(searchRequest.getFromDate());
     		 collectionSummary.setToDate(searchRequest.getToDate());
+    		 collectionSummary.setPaymentMode(searchRequest.getPaymentMode()==null?"ALL":searchRequest.getPaymentMode());
     	 });
     	 return new PageImpl<>(collectionSummaryReportList.getContent(), pageable,
     			 collectionSummaryReportList.getTotalElements());
+	}
+	public Page<CollectionSummaryReportHelper> getCollectionSummaryReportDetailsForOCUrban(SearchBpaApplicationForm searchRequest,
+			List<Long> appTypeList, String source) {
+		final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+                searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+
+   	 final Page<CollectionSummaryReportHelper> collectionSummaryReportList = getCollectionSummaryData(searchRequest,pageable,appTypeList,source,"USERWISE");
+   	 collectionSummaryReportList.forEach(collectionSummary->{
+   		 collectionSummary.setFromDate(searchRequest.getFromDate());
+   		 collectionSummary.setToDate(searchRequest.getToDate());
+   		collectionSummary.setPaymentMode(searchRequest.getPaymentMode()==null?"ALL":searchRequest.getPaymentMode());
+   	 });
+   	 return new PageImpl<>(collectionSummaryReportList.getContent(), pageable,
+   			 collectionSummaryReportList.getTotalElements());
+	}
+	
+	
+	public Page<CollectionSummaryHeadwiseReportHelper> getCollectionSummaryHeadwiseReportDetailsForUrban(SearchBpaApplicationForm searchRequest,
+			List<Long> appTypeList,String source) {
+		
+		 final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+                 searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+
+    	 final Page<CollectionSummaryHeadwiseReportHelper> collectionSummaryHeadwiseReportList = getCollectionSummaryHeadwiseData(searchRequest,pageable,appTypeList,source,"AGGREGATE");
+    	 collectionSummaryHeadwiseReportList.forEach(collectionSummaryHeadwise->{
+    		 collectionSummaryHeadwise.setFromDate(searchRequest.getFromDate());
+    		 collectionSummaryHeadwise.setToDate(searchRequest.getToDate());
+    		 if(!collectionSummaryHeadwise.getGlCode().equalsIgnoreCase("Rebate Amount")) {
+    		 collectionSummaryHeadwise.setPaymentMode(searchRequest.getPaymentMode()==null?"ALL":searchRequest.getPaymentMode());
+    		 if(searchRequest.getApplicationTypeId()!=null) {
+    			 final ApplicationSubType applicationType = entityManager.find(ApplicationSubType.class,searchRequest.getApplicationTypeId());
+    			 collectionSummaryHeadwise.setApplicationType(applicationType.getDescription());
+    		 }else
+    			 collectionSummaryHeadwise.setApplicationType("ALL");
+    		 }
+    	 });
     	 
+    	 return new PageImpl<>(collectionSummaryHeadwiseReportList.getContent(), pageable,
+    			 collectionSummaryHeadwiseReportList.getTotalElements());
+	}
+	
+	public Page<CollectionSummaryHeadwiseReportHelper> getCollectionSummaryHeadwiseReportDetailsForOCUrban(SearchBpaApplicationForm searchRequest,
+			List<Long> appTypeList,String source) {
 		
-		
+		 final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+                 searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+
+    	 final Page<CollectionSummaryHeadwiseReportHelper> collectionSummaryHeadwiseReportList = getCollectionSummaryHeadwiseData(searchRequest,pageable,appTypeList,source,"AGGREGATE");
+    	 collectionSummaryHeadwiseReportList.forEach(collectionSummaryHeadwise->{
+    		 collectionSummaryHeadwise.setFromDate(searchRequest.getFromDate());
+    		 collectionSummaryHeadwise.setToDate(searchRequest.getToDate());
+    		 if(!collectionSummaryHeadwise.getGlCode().equalsIgnoreCase("Rebate Amount")) {
+    		 collectionSummaryHeadwise.setPaymentMode(searchRequest.getPaymentMode()==null?"ALL":searchRequest.getPaymentMode());
+    		 if(searchRequest.getApplicationTypeId()!=null) {
+    			 final ApplicationSubType applicationType = entityManager.find(ApplicationSubType.class,searchRequest.getApplicationTypeId());
+    			 collectionSummaryHeadwise.setApplicationType(applicationType.getDescription());
+    		 }else
+    			 collectionSummaryHeadwise.setApplicationType("ALL");
+    		 }
+    	 });
+    	 
+    	 return new PageImpl<>(collectionSummaryHeadwiseReportList.getContent(), pageable,
+    			 collectionSummaryHeadwiseReportList.getTotalElements());
 	}
 
 	private Page<CollectionSummaryReportHelper> getCollectionSummaryData(SearchBpaApplicationForm searchRequest,
@@ -914,18 +982,36 @@ public class BpaReportsService {
                         " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='card' THEN SUM(EGF_INSTRUMENTHEADER.INSTRUMENTAMOUNT) END) AS cardAmount, "
                         +
                         " count(distinct(EGCL_COLLECTIONHEADER.ID)) as totalReceipt ");
-        final StringBuilder fromQuery = new StringBuilder(
-                " FROM EGCL_COLLECTIONHEADER EGCL_COLLECTIONHEADER INNER JOIN EGCL_COLLECTIONINSTRUMENT EGCL_COLLECTIONINSTRUMENT ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONINSTRUMENT.COLLECTIONHEADER"
-                        +
-                        " INNER JOIN EGF_INSTRUMENTHEADER EGF_INSTRUMENTHEADER ON EGCL_COLLECTIONINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENTHEADER.ID"
-                        +
-                        " INNER JOIN EGW_STATUS EGW_STATUS ON EGCL_COLLECTIONHEADER.STATUS = EGW_STATUS.ID" +
-                        " INNER JOIN EGF_INSTRUMENTTYPE EGF_INSTRUMENTTYPE ON EGF_INSTRUMENTHEADER.INSTRUMENTTYPE = EGF_INSTRUMENTTYPE.ID"
-                        +
-                        " INNER JOIN EGCL_COLLECTIONMIS EGCL_COLLECTIONMIS ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONMIS.COLLECTIONHEADER"
-                        +
-                        " INNER JOIN EGCL_SERVICEDETAILS SER ON SER.ID = EGCL_COLLECTIONHEADER.SERVICEDETAILS "
-                        +" INNER JOIN EGBPA_APPLICATION EGBPA_APPLICATION ON EGBPA_APPLICATION.APPLICATIONNUMBER=EGCL_COLLECTIONHEADER.CONSUMERCODE ");
+        final StringBuilder fromQuery = new StringBuilder();
+        if(searchRequest.getServiceType().equalsIgnoreCase("BPA")) {
+        	fromQuery.append(" FROM EGCL_COLLECTIONHEADER EGCL_COLLECTIONHEADER INNER JOIN EGCL_COLLECTIONINSTRUMENT EGCL_COLLECTIONINSTRUMENT ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONINSTRUMENT.COLLECTIONHEADER"
+                            +
+                            " INNER JOIN EGF_INSTRUMENTHEADER EGF_INSTRUMENTHEADER ON EGCL_COLLECTIONINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENTHEADER.ID"
+                            +
+                            " INNER JOIN EGW_STATUS EGW_STATUS ON EGCL_COLLECTIONHEADER.STATUS = EGW_STATUS.ID" +
+                            " INNER JOIN EGF_INSTRUMENTTYPE EGF_INSTRUMENTTYPE ON EGF_INSTRUMENTHEADER.INSTRUMENTTYPE = EGF_INSTRUMENTTYPE.ID"
+                            +
+                            " INNER JOIN EGCL_COLLECTIONMIS EGCL_COLLECTIONMIS ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONMIS.COLLECTIONHEADER"
+                            +
+                            " INNER JOIN EGCL_SERVICEDETAILS SER ON SER.ID = EGCL_COLLECTIONHEADER.SERVICEDETAILS "
+                            +" INNER JOIN EGBPA_APPLICATION EGBPA_APPLICATION ON EGBPA_APPLICATION.APPLICATIONNUMBER=EGCL_COLLECTIONHEADER.CONSUMERCODE ");
+        }
+        else {
+        	fromQuery.append(
+        			 " FROM EGCL_COLLECTIONHEADER EGCL_COLLECTIONHEADER INNER JOIN EGCL_COLLECTIONINSTRUMENT EGCL_COLLECTIONINSTRUMENT ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONINSTRUMENT.COLLECTIONHEADER"
+                             +
+                             " INNER JOIN EGF_INSTRUMENTHEADER EGF_INSTRUMENTHEADER ON EGCL_COLLECTIONINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENTHEADER.ID"
+                             +
+                             " INNER JOIN EGW_STATUS EGW_STATUS ON EGCL_COLLECTIONHEADER.STATUS = EGW_STATUS.ID" +
+                             " INNER JOIN EGF_INSTRUMENTTYPE EGF_INSTRUMENTTYPE ON EGF_INSTRUMENTHEADER.INSTRUMENTTYPE = EGF_INSTRUMENTTYPE.ID"
+                             +
+                             " INNER JOIN EGCL_COLLECTIONMIS EGCL_COLLECTIONMIS ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONMIS.COLLECTIONHEADER"
+                             +
+                             " INNER JOIN EGCL_SERVICEDETAILS SER ON SER.ID = EGCL_COLLECTIONHEADER.SERVICEDETAILS "
+                             +" INNER JOIN EGBPA_OCCUPANCY_CERTIFICATE EGBPA_OCCUPANCY_CERTIFICATE ON EGBPA_OCCUPANCY_CERTIFICATE.APPLICATIONNUMBER = EGCL_COLLECTIONHEADER.CONSUMERCODE "
+                             +" INNER JOIN EGBPA_APPLICATION EGBPA_APPLICATION ON EGBPA_APPLICATION.ID=EGBPA_OCCUPANCY_CERTIFICATE.PARENT ");
+             
+        }
         
         final StringBuilder whereQuery = new StringBuilder(" WHERE EGW_STATUS.DESCRIPTION != 'Cancelled'");
         final StringBuilder groupQuery = new StringBuilder(" GROUP BY  EGCL_COLLECTIONHEADER.SOURCE , counterName, employeeName, USERID,serviceName, "
@@ -962,8 +1048,8 @@ public class BpaReportsService {
             whereQuery.append(" AND EGCL_COLLECTIONHEADER.SERVICEDETAILS =:serviceId");
 //        if (status != -1)
 //            whereQuery.append(" AND EGCL_COLLECTIONHEADER.STATUS =:searchStatus");
-        if (!searchRequest.getServiceType().equals(CollectionConstants.ALL))
-            whereQuery.append(" AND SER.SERVICETYPE =:serviceType");
+//        if (!searchRequest.getServiceType().equals(CollectionConstants.ALL))
+//            whereQuery.append(" AND SER.SERVICETYPE =:serviceType");
         if (StringUtils.isNotBlank(searchRequest.getPaymentMode()) && !searchRequest.getPaymentMode().equals(CollectionConstants.ALL)) {
             whereQuery.append(" AND EGF_INSTRUMENTTYPE.TYPE in (:paymentMode)");
             if (searchRequest.getPaymentMode().equals(CollectionConstants.INSTRUMENTTYPE_ONLINE)) {
@@ -1008,10 +1094,10 @@ public class BpaReportsService {
 //            aggregateSqlQuery.setLong("searchStatus", status);
 //        }
 
-        if (!searchRequest.getServiceType().equals(CollectionConstants.ALL)) {
-            userwiseSqluery.setString("serviceType", searchRequest.getServiceType());
-            aggregateSqlQuery.setString("serviceType", searchRequest.getServiceType());
-        }
+//        if (!searchRequest.getServiceType().equals(CollectionConstants.ALL)) {
+//            userwiseSqluery.setString("serviceType", searchRequest.getServiceType());
+//            aggregateSqlQuery.setString("serviceType", searchRequest.getServiceType());
+//        }
 
         if (StringUtils.isNotBlank(searchRequest.getPaymentMode()) && !searchRequest.getPaymentMode().equals(CollectionConstants.ALL))
             if (searchRequest.getPaymentMode().equals(CollectionConstants.INSTRUMENTTYPE_CHEQUEORDD)) {
@@ -1027,9 +1113,6 @@ public class BpaReportsService {
         }else {
         	reportResults = populateCollectionSummaryQueryResults(aggregateSqlQuery.list());
         }
-//        final CollectionSummaryReportResult collResult = new CollectionSummaryReportResult();
-//        collResult.setCollectionSummaryReportList(reportResults);
-//        collResult.setAggrCollectionSummaryReportList(aggrReportResults);
         
         final int start = (int)pageable.getOffset();
         final int end = Math.min((start + pageable.getPageSize()), reportResults.size());
@@ -1037,6 +1120,256 @@ public class BpaReportsService {
         
         return page;
 	}
+	
+	private Page<CollectionSummaryHeadwiseReportHelper> getCollectionSummaryHeadwiseData(SearchBpaApplicationForm searchRequest,
+			Pageable pageable, List<Long> appTypeList,String source,String queryType) {
+
+		final SimpleDateFormat fromDateFormatter = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+        final SimpleDateFormat toDateFormatter = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+        final StringBuilder defaultQueryStr = new StringBuilder(500);
+        final StringBuilder aggregateQueryStr = new StringBuilder();
+        StringBuilder rebateQueryStr = new StringBuilder("");
+        StringBuilder revenueHeadQueryStr = new StringBuilder("");
+
+        final StringBuilder selectQueryStr = new StringBuilder(
+                "SELECT  (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='cash' THEN count(distinct(EGCL_COLLECTIONHEADER.id)) END) AS cashReceipt,  "
+                        +
+                        " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='cheque' THEN count(distinct(EGCL_COLLECTIONHEADER.id)) WHEN EGF_INSTRUMENTTYPE.TYPE='dd' THEN count(distinct(EGCL_COLLECTIONHEADER.id)) END) AS chequeReceipt, "
+                        +
+                        " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE= 'online' THEN count(distinct(EGCL_COLLECTIONHEADER.id)) END) AS onlineReceipt, "
+                        +
+                        " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='card' THEN count(distinct(EGCL_COLLECTIONHEADER.id)) END) AS cardReceipt, "
+                        +
+                        " EGCL_COLLECTIONHEADER.SOURCE ,CAO.NAME || '-' || CAO.GLCODE AS glCode,");
+        final StringBuilder revSelectQueryStr = new StringBuilder(selectQueryStr).append(
+                " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='cash' THEN SUM(EGCL_COLLECTIONDETAILS.CRAMOUNT) END) AS cashAmount, " +
+                        " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='cheque' THEN SUM(EGCL_COLLECTIONDETAILS.CRAMOUNT) WHEN EGF_INSTRUMENTTYPE.TYPE='dd' THEN SUM(EGCL_COLLECTIONDETAILS.CRAMOUNT) END) AS chequeAmount,"
+                        +
+                        " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='card' THEN SUM(EGCL_COLLECTIONDETAILS.CRAMOUNT) END) AS cardAmount, "
+                        +
+                        " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE= 'online' THEN SUM(EGCL_COLLECTIONDETAILS.CRAMOUNT) END) AS onlineAmount");
+        final StringBuilder rebateSelectQueryStr = new StringBuilder(selectQueryStr).append(
+                " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='cash' THEN SUM(EGCL_COLLECTIONDETAILS.DRAMOUNT) END) AS cashAmount, " +
+                        " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='cheque' THEN SUM(EGCL_COLLECTIONDETAILS.DRAMOUNT) WHEN EGF_INSTRUMENTTYPE.TYPE='dd' THEN SUM(EGCL_COLLECTIONDETAILS.DRAMOUNT) END) AS chequeAmount,"
+                        +
+                        " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='card' THEN SUM(EGCL_COLLECTIONDETAILS.DRAMOUNT) END) AS cardAmount, "
+                        +
+                        " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE= 'online' THEN SUM(EGCL_COLLECTIONDETAILS.DRAMOUNT) END) AS onlineAmount");
+        final StringBuilder fromQueryStr = new StringBuilder();
+        if(searchRequest.getServiceType().equalsIgnoreCase("BPA")) {
+        	fromQueryStr.append(" FROM "
+                + " EGCL_COLLECTIONHEADER EGCL_COLLECTIONHEADER INNER JOIN EGCL_COLLECTIONINSTRUMENT EGCL_COLLECTIONINSTRUMENT ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONINSTRUMENT.COLLECTIONHEADER "
+                + " INNER JOIN EGF_INSTRUMENTHEADER EGF_INSTRUMENTHEADER ON EGCL_COLLECTIONINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENTHEADER.ID "
+                + " INNER JOIN EGW_STATUS EGW_STATUS ON EGCL_COLLECTIONHEADER.STATUS = EGW_STATUS.ID"
+                + " INNER JOIN EGF_INSTRUMENTTYPE EGF_INSTRUMENTTYPE ON EGF_INSTRUMENTHEADER.INSTRUMENTTYPE = EGF_INSTRUMENTTYPE.ID"
+                + " INNER JOIN EGCL_COLLECTIONMIS EGCL_COLLECTIONMIS ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONMIS.COLLECTIONHEADER "
+                + " INNER JOIN EGCL_COLLECTIONDETAILS EGCL_COLLECTIONDETAILS ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONDETAILS.COLLECTIONHEADER "
+                + " INNER JOIN CHARTOFACCOUNTS CAO ON CAO.ID = EGCL_COLLECTIONDETAILS.CHARTOFACCOUNT "
+                + " INNER JOIN EGBPA_APPLICATION EGBPA_APPLICATION ON EGBPA_APPLICATION.APPLICATIONNUMBER= EGCL_COLLECTIONHEADER.CONSUMERCODE");
+        }
+        else {
+        	fromQueryStr.append(" FROM "
+                     + " EGCL_COLLECTIONHEADER EGCL_COLLECTIONHEADER INNER JOIN EGCL_COLLECTIONINSTRUMENT EGCL_COLLECTIONINSTRUMENT ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONINSTRUMENT.COLLECTIONHEADER "
+                     + " INNER JOIN EGF_INSTRUMENTHEADER EGF_INSTRUMENTHEADER ON EGCL_COLLECTIONINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENTHEADER.ID "
+                     + " INNER JOIN EGW_STATUS EGW_STATUS ON EGCL_COLLECTIONHEADER.STATUS = EGW_STATUS.ID"
+                     + " INNER JOIN EGF_INSTRUMENTTYPE EGF_INSTRUMENTTYPE ON EGF_INSTRUMENTHEADER.INSTRUMENTTYPE = EGF_INSTRUMENTTYPE.ID"
+                     + " INNER JOIN EGCL_COLLECTIONMIS EGCL_COLLECTIONMIS ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONMIS.COLLECTIONHEADER "
+                     + " INNER JOIN EGCL_COLLECTIONDETAILS EGCL_COLLECTIONDETAILS ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONDETAILS.COLLECTIONHEADER "
+                     + " INNER JOIN CHARTOFACCOUNTS CAO ON CAO.ID = EGCL_COLLECTIONDETAILS.CHARTOFACCOUNT "
+                     + " INNER JOIN EGBPA_OCCUPANCY_CERTIFICATE EGBPA_OCCUPANCY_CERTIFICATE ON EGBPA_OCCUPANCY_CERTIFICATE.APPLICATIONNUMBER= EGCL_COLLECTIONHEADER.CONSUMERCODE"
+             		+ " INNER JOIN EGBPA_APPLICATION EGBPA_APPLICATION ON EGBPA_APPLICATION.id= EGBPA_OCCUPANCY_CERTIFICATE.PARENT");
+        }
+        StringBuilder whereQueryStr = new StringBuilder(" WHERE EGW_STATUS.DESCRIPTION != 'Cancelled' ");
+        StringBuilder creditWhereQueryStr = new StringBuilder("  AND EGCL_COLLECTIONDETAILS.CRAMOUNT>0 ");
+        StringBuilder debitWhereQueryStr = new StringBuilder(
+                "  AND EGCL_COLLECTIONDETAILS.DRAMOUNT>0 AND CAO.purposeid in (select id from EGF_ACCOUNTCODE_PURPOSE where name ='"
+                        + CollectionConstants.PURPOSE_NAME_REBATE+ "')");    
+        final StringBuilder queryStrGroup = new StringBuilder(" GROUP BY EGCL_COLLECTIONHEADER.SOURCE,CAO.NAME,CAO.GLCODE,EGF_INSTRUMENTTYPE.TYPE ");
+        final StringBuilder finalSelectQueryStr = new StringBuilder(
+                "SELECT sum(cashReceipt) AS cashReceipt,sum(chequeReceipt) AS chequeReceipt,sum(onlineReceipt) AS onlineReceipt,source,glCode,sum(cashAmount) AS cashAmount, sum(chequeAmount) AS chequeAmount,  "
+                        + "  sum(cardReceipt) AS cardReceipt, sum(cardAmount) AS cardAmount, sum(COALESCE(cashReceipt,0))+sum(COALESCE(chequeReceipt,0))+sum(COALESCE(onlineReceipt,0))+sum(COALESCE(cardReceipt,0)) as totalReceipt,sum(onlineAmount) AS onlineAmount  FROM (");
+        final StringBuilder finalGroupQuery = new StringBuilder(
+                " ) AS RESULT GROUP BY RESULT.SOURCE,RESULT.glCode order by RESULT.SOURCE,RESULT.glCode");
+
+        if (searchRequest.getFromDate() != null && searchRequest.getToDate() != null) {
+            whereQueryStr.append(" AND EGCL_COLLECTIONHEADER.RECEIPTDATE between to_timestamp('"
+                    + fromDateFormatter.format(searchRequest.getFromDate()) + "', 'YYYY-MM-DD HH24:MI:SS') and " + " to_timestamp('"
+                    + toDateFormatter.format(searchRequest.getToDate()) + "', 'YYYY-MM-DD HH24:MI:SS') ");
+        }
+        if (!source.isEmpty() && !source.equals(CollectionConstants.ALL)) {
+            whereQueryStr.append(" AND EGCL_COLLECTIONHEADER.SOURCE=:source");
+        }
+//        if (glCode != null) {
+//            whereQueryStr.append(" AND CAO.GLCODE =:glCode");
+//        }
+//        if (branchId != null && branchId != -1) {
+//            whereQueryStr.append(" AND EGCL_COLLECTIONMIS.DEPOSITEDBRANCH=:branchId");
+//        }
+//        if (status != -1) {
+//            whereQueryStr.append(" AND EGCL_COLLECTIONHEADER.STATUS =:searchStatus");
+//        }
+
+        if(appTypeList !=null && !appTypeList.isEmpty())  {
+        	whereQueryStr.append(" AND EGBPA_APPLICATION.APPLICATIONSUBTYPE in(:appTypeList)");
+        }
+       
+        if (StringUtils.isNotBlank(searchRequest.getPaymentMode()) && !searchRequest.getPaymentMode().equals(CollectionConstants.ALL)) {
+            whereQueryStr.append(" AND EGF_INSTRUMENTTYPE.TYPE in (:paymentMode)");
+            revenueHeadQueryStr.append(revSelectQueryStr).append(fromQueryStr).append(whereQueryStr)
+                    .append(creditWhereQueryStr).append(queryStrGroup);
+            rebateQueryStr.append(rebateSelectQueryStr).append(fromQueryStr).append(whereQueryStr)
+                    .append(debitWhereQueryStr).append(queryStrGroup);
+        } else {
+            revenueHeadQueryStr.append(revSelectQueryStr).append(fromQueryStr).append(whereQueryStr)
+                    .append(creditWhereQueryStr).append(" AND EGF_INSTRUMENTTYPE.TYPE = 'cash'").append(queryStrGroup);
+            revenueHeadQueryStr.append(" union ");
+            revenueHeadQueryStr.append(revSelectQueryStr).append(fromQueryStr).append(whereQueryStr)
+                    .append(creditWhereQueryStr).append(" AND EGF_INSTRUMENTTYPE.TYPE  in( 'cheque','dd') ")
+                    .append(queryStrGroup);
+            revenueHeadQueryStr.append(" union ");
+            revenueHeadQueryStr.append(revSelectQueryStr).append(fromQueryStr).append(whereQueryStr)
+                    .append(creditWhereQueryStr).append(" AND EGF_INSTRUMENTTYPE.TYPE = 'card'").append(queryStrGroup);
+            revenueHeadQueryStr.append(" union ");
+            revenueHeadQueryStr.append(revSelectQueryStr).append(fromQueryStr).append(whereQueryStr)
+                    .append(creditWhereQueryStr).append(" AND EGF_INSTRUMENTTYPE.TYPE = 'online'").append(queryStrGroup);
+
+            rebateQueryStr.append(rebateSelectQueryStr).append(fromQueryStr).append(whereQueryStr)
+                    .append(debitWhereQueryStr).append(" AND EGF_INSTRUMENTTYPE.TYPE = 'cash'").append(queryStrGroup);
+            rebateQueryStr.append(" union ");
+            rebateQueryStr.append(rebateSelectQueryStr).append(fromQueryStr).append(whereQueryStr)
+                    .append(debitWhereQueryStr).append(" AND EGF_INSTRUMENTTYPE.TYPE  in( 'cheque','dd') ").append(queryStrGroup);
+            rebateQueryStr.append(" union ");
+            rebateQueryStr.append(rebateSelectQueryStr).append(fromQueryStr).append(whereQueryStr)
+                    .append(debitWhereQueryStr).append(" AND EGF_INSTRUMENTTYPE.TYPE = 'card'").append(queryStrGroup);
+            rebateQueryStr.append(" union ");
+            rebateQueryStr.append(rebateSelectQueryStr).append(fromQueryStr).append(whereQueryStr)
+                    .append(debitWhereQueryStr).append(" AND EGF_INSTRUMENTTYPE.TYPE = 'online'").append(queryStrGroup);
+        }
+
+        final StringBuilder finalRevQueryStr = new StringBuilder(finalSelectQueryStr).append(revenueHeadQueryStr)
+                .append(finalGroupQuery);
+        final StringBuilder finalRebateQueryStr = new StringBuilder(finalSelectQueryStr).append(rebateQueryStr)
+                .append(finalGroupQuery);
+
+        final SQLQuery aggrQuery = (SQLQuery) getCurrentSession().createSQLQuery(finalRevQueryStr.toString())
+                .addScalar("cashReceipt", org.hibernate.type.StringType.INSTANCE).addScalar("cashAmount", BigDecimalType.INSTANCE)
+                .addScalar("chequeReceipt", org.hibernate.type.StringType.INSTANCE)
+                .addScalar("chequeAmount", BigDecimalType.INSTANCE)
+                .addScalar("onlineReceipt", org.hibernate.type.StringType.INSTANCE).addScalar("onlineAmount", BigDecimalType.INSTANCE)
+                .addScalar("source", org.hibernate.type.StringType.INSTANCE)
+                .addScalar("glCode", org.hibernate.type.StringType.INSTANCE)
+                .addScalar("cardAmount", BigDecimalType.INSTANCE).addScalar("cardReceipt", org.hibernate.type.StringType.INSTANCE)
+                .addScalar("totalReceipt", org.hibernate.type.StringType.INSTANCE)
+                .setResultTransformer(Transformers.aliasToBean(CollectionSummaryHeadwiseReportHelper.class));
+
+        final SQLQuery rebateQuery = (SQLQuery) getCurrentSession().createSQLQuery(finalRebateQueryStr.toString())
+                .addScalar("cashReceipt", org.hibernate.type.StringType.INSTANCE).addScalar("cashAmount", BigDecimalType.INSTANCE)
+                .addScalar("chequeReceipt", org.hibernate.type.StringType.INSTANCE)
+                .addScalar("chequeAmount", BigDecimalType.INSTANCE)
+                .addScalar("onlineReceipt", org.hibernate.type.StringType.INSTANCE).addScalar("onlineAmount", BigDecimalType.INSTANCE)
+                .addScalar("source", org.hibernate.type.StringType.INSTANCE)
+                .addScalar("glCode", org.hibernate.type.StringType.INSTANCE)
+                .addScalar("cardAmount", BigDecimalType.INSTANCE).addScalar("cardReceipt", org.hibernate.type.StringType.INSTANCE)
+                .addScalar("totalReceipt", org.hibernate.type.StringType.INSTANCE)
+                .setResultTransformer(Transformers.aliasToBean(CollectionSummaryHeadwiseReportHelper.class));
+        if (!source.isEmpty() && !source.equals(CollectionConstants.ALL)) {
+            aggrQuery.setString("source", source);
+            rebateQuery.setString("source", source);
+        }
+//        if (glCode != null) {
+//            aggrQuery.setString("glCode", glCode);
+//            rebateQuery.setString("glCode", glCode);
+//        }
+        if (appTypeList != null && !appTypeList.isEmpty()) {
+        	aggrQuery.setParameterList("appTypeList", appTypeList);
+        	rebateQuery.setParameterList("appTypeList", appTypeList);
+        }
+//        else {
+//	    	 aggrQuery.setString("rootBoundaryType", rootBoundaryType);
+//	            rebateQuery.setString("rootBoundaryType", rootBoundaryType);
+//	     }
+//        if (status != -1) {
+//            aggrQuery.setLong("searchStatus", status);
+//            rebateQuery.setLong("searchStatus", status);
+//        }
+
+        if (StringUtils.isNotBlank(searchRequest.getPaymentMode()) && !searchRequest.getPaymentMode().equals(CollectionConstants.ALL))
+            if (searchRequest.getPaymentMode().equals(CollectionConstants.INSTRUMENTTYPE_CHEQUEORDD)) {
+                aggrQuery.setParameterList("paymentMode", new ArrayList<>(Arrays.asList("cheque", "dd")));
+                rebateQuery.setParameterList("paymentMode", new ArrayList<>(Arrays.asList("cheque", "dd")));
+            } else {
+                aggrQuery.setString("paymentMode", searchRequest.getPaymentMode());
+                rebateQuery.setString("paymentMode", searchRequest.getPaymentMode());
+            }
+        List<CollectionSummaryHeadwiseReportHelper> finalReportList = new ArrayList<>();
+        if(queryType.equalsIgnoreCase("REBATE")) {
+        	finalReportList = populateCollectionSummaryHeadwiseQueryResults(rebateQuery.list());
+        	
+        }else {
+        	List<CollectionSummaryHeadwiseReportHelper> rebateResults = populateCollectionSummaryHeadwiseQueryResults(rebateQuery.list());
+        	List<CollectionSummaryHeadwiseReportHelper> reportResults = populateCollectionSummaryHeadwiseQueryResults(aggrQuery.list());
+        	 if (!reportResults.isEmpty()) {
+                 rebateTotal(reportResults.get(0), rebateResults);
+             }
+        	  finalReportList= addRebateDataInREportData(reportResults,rebateResults);
+        }
+//        final CollectionSummaryReportResult collResult = new CollectionSummaryReportResult();
+//        collResult.setCollectionSummaryReportList(reportResults);
+//        collResult.setAggrCollectionSummaryReportList(aggrReportResults);
+        
+        final int start = (int)pageable.getOffset();
+        final int end = Math.min((start + pageable.getPageSize()), finalReportList.size());
+        final Page<CollectionSummaryHeadwiseReportHelper> page = new PageImpl<>(finalReportList.subList(start, end), pageable, finalReportList.size());
+        
+        return page;
+	}
+	
+	private List<CollectionSummaryHeadwiseReportHelper> addRebateDataInREportData(List<CollectionSummaryHeadwiseReportHelper> reportResults,
+			List<CollectionSummaryHeadwiseReportHelper> rebateResults) {
+		if(rebateResults.isEmpty()){
+			CollectionSummaryHeadwiseReportHelper rebateData = new CollectionSummaryHeadwiseReportHelper();
+			rebateData.setGlCode("Rebate Amount");
+			rebateData.setCardAmount(BigDecimal.ZERO);
+			rebateData.setCashAmount(BigDecimal.ZERO);
+			rebateData.setOnlineAmount(BigDecimal.ZERO);
+			rebateData.setChequeAmount(BigDecimal.ZERO);
+			rebateData.setTotalAmount(BigDecimal.ZERO);
+			rebateData.setCardReceipt("");
+			rebateData.setCashReceipt("");
+			rebateData.setOnlineReceipt("");
+			rebateData.setChequeReceipt("");
+			rebateData.setTotalReceipt("");
+			rebateData.setSource(" ");
+			reportResults.add(rebateData);
+		}else {
+		rebateResults.forEach(rabate->{
+			rabate.setGlCode("Rebate Amount");
+		});
+		reportResults.addAll(rebateResults);
+		}
+		return reportResults;
+	}
+
+	public void rebateTotal(CollectionSummaryHeadwiseReportHelper collectionSummaryHeadWiseReport,
+            List<CollectionSummaryHeadwiseReportHelper> rebateResultList) {
+        for (final CollectionSummaryHeadwiseReportHelper rebate : rebateResultList) {
+            if (!rebate.getCashAmount().equals(BigDecimal.ZERO))
+                collectionSummaryHeadWiseReport.setTotalCashRebateAmount(
+                        collectionSummaryHeadWiseReport.getTotalCashRebateAmount().add(rebate.getCashAmount()));
+            if (!rebate.getChequeAmount().equals(BigDecimal.ZERO))
+                collectionSummaryHeadWiseReport.setTotalChequeddRebateAmount(
+                        collectionSummaryHeadWiseReport.getTotalChequeddRebateAmount().add(rebate.getChequeAmount()));
+            if (!rebate.getCardAmount().equals(BigDecimal.ZERO))
+                collectionSummaryHeadWiseReport.setTotalCardRebateAmount(
+                       collectionSummaryHeadWiseReport.getTotalCardRebateAmount().add(rebate.getCardAmount()));
+            if (!rebate.getOnlineAmount().equals(BigDecimal.ZERO))
+                collectionSummaryHeadWiseReport.setTotalOnlineRebateAmount(
+                        collectionSummaryHeadWiseReport.getTotalOnlineRebateAmount().add(rebate.getOnlineAmount()));
+            if (!rebate.getTotalAmount().equals(BigDecimal.ZERO))
+                collectionSummaryHeadWiseReport.setTotalRebateAmount(
+                        collectionSummaryHeadWiseReport.getTotalRebateAmount().add(rebate.getTotalAmount()));
+        }
+    }
 	 public StringBuilder prepareQueryForAllPaymentMode(StringBuilder query, StringBuilder groupQuery) {
 	        String unionString = " union ";
 	        StringBuilder queryString = new StringBuilder();
@@ -1113,5 +1446,34 @@ public class BpaReportsService {
 	        }
 	        return queryResults;
 	    }
+	    public List<CollectionSummaryHeadwiseReportHelper> populateCollectionSummaryHeadwiseQueryResults(final List<CollectionSummaryHeadwiseReportHelper> queryResults) {
+	        for (final CollectionSummaryHeadwiseReportHelper collectionSummaryHeadWiseReport : queryResults) {
+	            if (collectionSummaryHeadWiseReport.getCashReceipt() == null)
+	                collectionSummaryHeadWiseReport.setCashReceipt("");
+	            if (collectionSummaryHeadWiseReport.getChequeReceipt() == null)
+	                collectionSummaryHeadWiseReport.setChequeReceipt("");
+	            if (collectionSummaryHeadWiseReport.getOnlineReceipt() == null)
+	                collectionSummaryHeadWiseReport.setOnlineReceipt("");
+	            if (collectionSummaryHeadWiseReport.getCardReceipt() == null)
+	                collectionSummaryHeadWiseReport.setCardReceipt("");
+//	                collectionSummaryHeadWiseReport.setTotalReceipt("");
+	            if (collectionSummaryHeadWiseReport.getCashAmount() == null)
+	                collectionSummaryHeadWiseReport.setCashAmount(BigDecimal.ZERO);
+	            if (collectionSummaryHeadWiseReport.getChequeAmount() == null)
+	                collectionSummaryHeadWiseReport.setChequeAmount(BigDecimal.ZERO);
+	            if (collectionSummaryHeadWiseReport.getOnlineAmount() == null)
+	                collectionSummaryHeadWiseReport.setOnlineAmount(BigDecimal.ZERO);
+	            if (collectionSummaryHeadWiseReport.getCardAmount() == null)
+	                collectionSummaryHeadWiseReport.setCardAmount(BigDecimal.ZERO);
+	            collectionSummaryHeadWiseReport.getOnlineAmount();
+	            collectionSummaryHeadWiseReport.setTotalAmount(collectionSummaryHeadWiseReport.getCardAmount()
+	                    .add(collectionSummaryHeadWiseReport.getOnlineAmount())
+	                    .add(collectionSummaryHeadWiseReport.getChequeAmount()).add(collectionSummaryHeadWiseReport.getCashAmount()));
+	            
+	        
+	        }
+	        return queryResults;
+	    }
 
+		
 }

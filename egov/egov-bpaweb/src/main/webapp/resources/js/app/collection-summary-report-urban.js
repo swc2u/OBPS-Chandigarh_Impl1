@@ -42,6 +42,10 @@
  
  $('#btnSearch').click(function() {
 		var isValid = false;
+		if($("#fromDate").val()=='' || $("#toDate").val()==''){
+			bootbox.alert("Please enter From and To date");
+			return false;
+		}
 		$('#collectionSummaryReport').find(':input', ':select', ':textarea').each(function() {
 			if ($(this).val()) {
 				isValid = true;
@@ -130,6 +134,10 @@
 			},
 			{
 				"data": "toDate",
+				"sClass": "text-left"
+			},
+			{
+				"data": "paymentMode",
 				"sClass": "text-left"
 			},
 			{

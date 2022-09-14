@@ -77,6 +77,7 @@ import org.egov.bpa.transaction.service.report.BpaReportsService;
 import org.egov.bpa.transaction.service.report.PersonalRegisterReportService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.web.controller.adaptor.BpaRegisterReportAdaptor;
+import org.egov.bpa.web.controller.adaptor.CollectionSummaryHeadwiseReportAdaptor;
 import org.egov.bpa.web.controller.adaptor.CollectionSummaryReportAdaptor;
 import org.egov.bpa.web.controller.adaptor.NocDetailsAdaptor;
 import org.egov.bpa.web.controller.adaptor.ReceiptRegisterReportAdaptor;
@@ -725,11 +726,37 @@ public class BpaReportsController extends BpaGenericApplicationController {
 		 List<Long> AppTypeList = new ArrayList<>();  
 			  AppTypeList.addAll(Arrays.asList(3L,5L));
 			  String source=ALL;
-			  searchBpaApplicationForm.setServiceType("ALL");
+			  searchBpaApplicationForm.setServiceType("BPA");
 		
 		return new DataTable<>(bpaReportsService.getCollectionSummaryReportDetailsForUrban(searchBpaApplicationForm,AppTypeList,source),
 				searchBpaApplicationForm.draw())
 				.toJson(CollectionSummaryReportAdaptor.class);
+	}
+	
+	@RequestMapping(value = "/collectionSummaryHeadwise/d/u", method = RequestMethod.GET)
+	public String searchCollectionSummaryHeadwiseForm(final Model model) {
+		prepareReportFormData(model,URBAN);
+		model.addAttribute("paymentModes", paymentModes);
+		model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
+		return "collection-summary-headwise-report-urban";
+	}
+	
+
+	@RequestMapping(value = "/collectionSummaryHeadwise/d/u", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String getCollectionSummaryHeadwiseUrban(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+		 List<Long> AppTypeList = new ArrayList<>();  
+		 	if(searchBpaApplicationForm.getApplicationTypeId()!=null) 
+		 		AppTypeList.add(searchBpaApplicationForm.getApplicationTypeId());
+		 	else
+			  AppTypeList.addAll(Arrays.asList(3L,5L));
+		 	
+			  String source=ALL;
+			  searchBpaApplicationForm.setServiceType("BPA");
+		
+		return new DataTable<>(bpaReportsService.getCollectionSummaryHeadwiseReportDetailsForUrban(searchBpaApplicationForm,AppTypeList,source),
+				searchBpaApplicationForm.draw())
+				.toJson(CollectionSummaryHeadwiseReportAdaptor.class);
 	}
 	
 	@RequestMapping(value = "/nocclearance", method = RequestMethod.GET)

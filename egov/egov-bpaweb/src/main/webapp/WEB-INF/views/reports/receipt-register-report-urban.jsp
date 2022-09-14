@@ -113,7 +113,7 @@
 
 <!-- <div id="chartContainer" style="height: 360px; width: 100%;"></div> -->
 
-<div class="row display-hide report-section" id="table_container">
+<div class="row display-hide receipt-report" id="table_container">
 	<div class="col-md-12 form-group report-table-container">
 		<table class="table table-bordered table-hover multiheadertbl nowrap display"
                        id="searchReceiptRegister" style="overflow-x: auto;max-width: 100%;min-width: 100%;">

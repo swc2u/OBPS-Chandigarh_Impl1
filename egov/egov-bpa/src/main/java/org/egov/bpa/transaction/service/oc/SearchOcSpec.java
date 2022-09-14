@@ -170,6 +170,9 @@ public class SearchOcSpec {
                 predicate.getExpressions()
                         .add(builder.equal(bpaApplication.get("sector"), requestForm.getSector()));
             
+            if (requestForm.getStatusId() != null)
+                predicate.getExpressions().add(builder.equal(root.get("status").get("id"), requestForm.getStatusId()));
+            
 //            if (requestForm.getFromBuiltUpArea() != null)
 //                predicate.getExpressions()
 //                        .add(builder.greaterThanOrEqualTo(bpaApplication.get("totalBuiltUpArea"), requestForm.getFromBuiltUpArea()));

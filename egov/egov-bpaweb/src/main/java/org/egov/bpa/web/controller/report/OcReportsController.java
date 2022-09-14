@@ -58,6 +58,8 @@ import org.egov.bpa.transaction.service.SearchBpaApplicationService;
 import org.egov.bpa.transaction.service.oc.SearchOCService;
 import org.egov.bpa.transaction.service.report.BpaReportsService;
 import org.egov.bpa.transaction.service.report.OcReportsService;
+import org.egov.bpa.web.controller.adaptor.CollectionSummaryHeadwiseReportAdaptor;
+import org.egov.bpa.web.controller.adaptor.CollectionSummaryReportAdaptor;
 import org.egov.bpa.web.controller.adaptor.ReceiptRegisterReportAdaptor;
 import org.egov.bpa.web.controller.adaptor.SearchBpaApplicationFormAdaptor;
 import org.egov.bpa.web.controller.adaptor.SearchBpaApplicationReportAdaptor;
@@ -100,6 +102,7 @@ public class OcReportsController extends BpaGenericApplicationController {
 	
 	private final String URBAN = "URBAN";
 	private final String RURAL = "RURAL";
+	private final String ALL = "ALL";
 	
 	private final Map<String, String> paymentModes = createPaymentModeList();
 	
@@ -306,6 +309,52 @@ public class OcReportsController extends BpaGenericApplicationController {
 				.toJson(ReceiptRegisterReportAdaptor.class);
 	}
 
+	@RequestMapping(value = "/collectionSummaryOC/d/u", method = RequestMethod.GET)
+	public String searchCollectionSummaryForm(final Model model) {
+		prepareReportFormData(model,URBAN);
+		model.addAttribute("paymentModes", paymentModes);
+		model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
+		return "collection-summary-report-oc-urban";
+	}
 	
+
+	@RequestMapping(value = "/collectionSummaryOC/d/u", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String getCollectionSummaryUrban(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+		 List<Long> AppTypeList = new ArrayList<>();  
+			  AppTypeList.addAll(Arrays.asList(3L,5L));
+			  String source=ALL;
+			  searchBpaApplicationForm.setServiceType("OccupancyCertificate");
+		
+		return new DataTable<>(bpaReportsService.getCollectionSummaryReportDetailsForOCUrban(searchBpaApplicationForm,AppTypeList,source),
+				searchBpaApplicationForm.draw())
+				.toJson(CollectionSummaryReportAdaptor.class);
+	}
+	
+	@RequestMapping(value = "/collectionSummaryHeadwiseOC/d/u", method = RequestMethod.GET)
+	public String searchCollectionSummaryHeadwiseOCForm(final Model model) {
+		prepareReportFormData(model,URBAN);
+		model.addAttribute("paymentModes", paymentModes);
+		model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
+		return "collection-summary-headwise-report-oc-urban";
+	}
+	
+
+	@RequestMapping(value = "/collectionSummaryHeadwiseOC/d/u", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String getCollectionSummaryHeadwiseOCUrban(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+		 List<Long> AppTypeList = new ArrayList<>();  
+		 	if(searchBpaApplicationForm.getApplicationTypeId()!=null) 
+		 		AppTypeList.add(searchBpaApplicationForm.getApplicationTypeId());
+		 	else
+			  AppTypeList.addAll(Arrays.asList(3L,5L));
+		 	
+			  String source=ALL;
+			  searchBpaApplicationForm.setServiceType("OccupancyCertificate");
+		
+		return new DataTable<>(bpaReportsService.getCollectionSummaryHeadwiseReportDetailsForOCUrban(searchBpaApplicationForm,AppTypeList,source),
+				searchBpaApplicationForm.draw())
+				.toJson(CollectionSummaryHeadwiseReportAdaptor.class);
+	}
 }
 

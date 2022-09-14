@@ -95,7 +95,8 @@ function callAjaxSearch() {
 					"plotNumber": $("#plotNumber").val(),
 					"applicationNumber": $("#applicationNumber").val(),
 					"fromDate": $("#fromDate").val(),
-					"toDate": $("#toDate").val()
+					"toDate": $("#toDate").val(),
+					"statusId":$("#statusId").val()
 				};
 				console.log(formdata);
 				return formdata;
