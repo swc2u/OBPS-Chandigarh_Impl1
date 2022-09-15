@@ -49,7 +49,7 @@ function showGraph(json) {
 		animationEnabled: true,
 		theme: "light2",
 		title: {
-			text: "Scrutiny Data"
+			text: "Occupancy Certificate Data -Urban"
 		},
 		axisY: {
 			title: "Units",
@@ -70,7 +70,6 @@ function showGraph(json) {
 function callAjaxSearch() {
 	var viewurl = '/bpa/application/occupancycertificate/viewdetails/';
 	$('.report-section').removeClass('display-hide');
-	alert($("#applicationTypeId").val());
 	$("#search_oc_pending_items_table").dataTable({
 		processing: true,
 		serverSide: true,
@@ -96,7 +95,8 @@ function callAjaxSearch() {
 					"plotNumber": $("#plotNumber").val(),
 					"applicationNumber": $("#applicationNumber").val(),
 					"fromDate": $("#fromDate").val(),
-					"toDate": $("#toDate").val()
+					"toDate": $("#toDate").val(),
+					"statusId":$("#statusId").val()
 				};
 				console.log(formdata);
 				return formdata;

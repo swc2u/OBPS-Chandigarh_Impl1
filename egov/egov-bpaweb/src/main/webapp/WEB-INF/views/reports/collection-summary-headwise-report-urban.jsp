@@ -43,7 +43,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
 <form:form role="form" action=""
-	modelAttribute="searchBpaApplicationForm" id="serviceTypeWiseStatusReport" cssClass="form-horizontal form-groups-bordered" enctype="multipart/form-data">
+	modelAttribute="searchBpaApplicationForm" id="collectionSummaryHeadwiseReport" cssClass="form-horizontal form-groups-bordered" enctype="multipart/form-data">
 	<div class="col-md-12">
 	        <div class="panel panel-primary" data-collapsed="0">
 	            <div class="panel-heading">
@@ -51,10 +51,10 @@
 	            <div class="panel-body">	
 	                <div class="form-group">
 	                    <label class="col-sm-3 control-label text-right"><spring:message
-	                            code="lbl.applctn.type"/></label> 
+ 	                            code="lbl.applctn.type"/></label>  
 	                    <div class="col-sm-3 add-margin">
 	                        <form:select path="applicationTypeId" data-first-option="false"
-	                                     id="applicationTypeId" cssClass="form-control applicationType" required="required">
+ 	                                     id="applicationTypeId" cssClass="form-control applicationType" required="required"> 
 	                            <form:option value="">
 	                                <spring:message code="lbl.select"/>
 	                            </form:option>
@@ -62,55 +62,22 @@
 	                        </form:select>
 	                    </div>
 	                    <label class="col-sm-2 control-label text-right"><spring:message
-	                            code="lbl.service.type"/></label>
+	                            code="lbl.payment.mode"/></label>
 	                    <div class="col-sm-3 add-margin">
-	                        <form:select path="serviceTypeId" data-first-option="false"
-	                                     id="serviceTypeId" cssClass="form-control">
+	                        <form:select path="paymentMode" data-first-option="false"
+	                                     id="paymentMode" cssClass="form-control">
 	                            <form:option value="">
 	                                <spring:message code="lbl.select"/>
 	                            </form:option>
-	                            <form:options items="${serviceTypeList}" itemValue="id" itemLabel="description"/>
+	                            <c:forEach var="paymentmode" items="${paymentModes}">
+							        <option value="${paymentmode.key}"><c:out value="${paymentmode.value}"/></option>
+						      </c:forEach>
 	                        </form:select>
 	                    </div>
 	                </div>
-	
-	                <div class="form-group">
-	                       
- 						<label class="col-sm-3 control-label text-right"><spring:message
-	                            code="lbl.sectors.villages"/></label>
-	                    <div class="col-sm-3 add-margin">
-						 <form:input class="form-control patternvalidation" maxlength="50"
-	                                    id="sector" path="sector"/>
-	                        <form:errors path="sector" cssClass="add-margin error-msg"/>
-	                    </div>
-	                    <label class="col-sm-2 control-label text-right"><spring:message
-	                            code="lbl.application.no"/></label>
-	                    <div class="col-sm-3 add-margin">
-	                        <form:input class="form-control patternvalidation" maxlength="50"
-	                                    id="applicationNumber" path="applicationNumber"/>
-	                        <form:errors path="applicationNumber" cssClass="add-margin error-msg"/>
-	                    </div>
-	                </div>
 					<div class="form-group">
- 						<label class="col-sm-3 control-label text-right"><spring:message
-	                            code="lbl.plot.no"/></label>
-	                    <div class="col-sm-3 add-margin">
-	                        <form:input class="form-control patternvalidation" maxlength="50"
-	                                    id="plotNumber" path="plotNumber"/>
-	                        <form:errors path="plotNumber" cssClass="add-margin error-msg"/>
-	                    </div>
-	                    <label class="col-sm-2 control-label text-right"><spring:message
-	                            code="lbl.applicant.name"/></label>
-	                    <div class="col-sm-3 add-margin">
-	                        <form:input class="form-control patternvalidation" maxlength="50"
-	                                    id="applicantName" path="applicantName"/>
-	                        <form:errors path="applicantName" cssClass="add-margin error-msg"/>
-	                    </div>
-	                </div>
-	            
-	                <div class="form-group">
 	                    <label class="col-sm-3 control-label text-right"><spring:message
-	                            code="lbl.fromDate"/></label>
+	                            code="lbl.fromDate"/><span class="mandatory"></span></label>
 	                    <div class="col-sm-3 add-margin">
 	                        <form:input path="fromDate" class="form-control datepicker"
 	                                    data-date-end-date="0d" id="fromDate"
@@ -118,14 +85,16 @@
 	                        <form:errors path="fromDate" cssClass="add-margin error-msg"/>
 	                    </div>
 	                    <label class="col-sm-2 control-label text-right"><spring:message
-	                            code="lbl.toDate"/></label>
+	                            code="lbl.toDate"/><span class="mandatory"></span></label>
 	                    <div class="col-sm-3 add-margin">
 	                        <form:input path="toDate" class="form-control datepicker"
 	                                    data-date-end-date="0d" id="toDate"
 	                                    data-inputmask="'mask': 'd/m/y'"/>
 	                        <form:errors path="toDate" cssClass="add-margin error-msg"/>
 	                    </div>
-	                </div>                 
+	                </div>      
+	                            
+	                      
 	            </div>
 	        </div>
 	    </div>
@@ -142,50 +111,119 @@
 </form:form>
 <br>
 
-<div id="chartContainer" style="height: 360px; width: 100%;"></div>
+<div id="aa" style="height: 100px; width: 100%;"></div>
 
-<div class="row display-hide report-section" id="table_container">
+<div class="row display-hide collection-headwise-section" id="table_container">
 	<div class="col-md-12 form-group report-table-container">
-		<table class="table table-bordered table-hover multiheadertbl"
-			id="searchStatusByServiceTypeReportTable">
-			<thead>
+		<table class="table table-bordered table-hover multiheadertbl nowrap display"
+                       id="collectionSummaryHeadwiseTable" >
+                    <thead>
+<!--                     <tr> -->
+                        
+<!--                         <th colspan="1"></th> -->
+<!--                         <th colspan="1"></th> -->
+<!--                         <th colspan="1"></th> -->
+<!--                         <th colspan="1"></th> -->
+<!--                         <th colspan="1"></th> -->
+<!--                         <th colspan="1"></th> -->
+<%--                         <th colspan="8"><spring:message code="lbl.fee.details"/></th> --%>
+<!--                         <th colspan="1"></th> -->
+<!--                         <th colspan="1"></th> -->
+<!--                         <th colspan="1"></th> -->
+<!--                         <th colspan="1"></th> -->
+<!--                         <th colspan="1"></th> -->
+<!--                         <th colspan="1"></th> -->
+<!--                         <th colspan="1"></th> -->
+<!--                     </tr> -->
+                    <tr>
+<%--                         <th><spring:message code="lbl.slno"/></th> --%>
+						<th><spring:message code="lbl.fromDate"/></th>
+						<th><spring:message code="lbl.toDate"/></th>
+						<th><spring:message code="lbl.applctn.type"/></th>
+						<th><spring:message code="lbl.payment.mode"/></th>
+                        <th><spring:message code="lbl.source"/></th>
+                        <th><spring:message code="lbl.revenue.head"/></th>
+                        <th><spring:message code="lbl.cash.receipt"/></th>
+                        <th><spring:message code="lbl.cash.amount"/></th>
+                        <th><spring:message code="lbl.cheque.receipt"/></th>
+                        <th><spring:message code="lbl.cheque.amont"/></th>
+                        <th><spring:message code="lbl.online.receipt"/></th>
+                        <th><spring:message code="lbl.online.amount"/></th>                   
+                        <th><spring:message code="lbl.card.receipt"/></th>
+                        <th><spring:message code="lbl.card.amount"/></th>
+                        <th><spring:message code="lbl.total.receipt"/></th>
+                        <th><spring:message code="lbl.total.amount"/></th>
+                        
+                    </tr>
+                    </thead>
+                    <tfoot id="report-footer">
 				<tr>
-					<th><spring:message code="lbl.slno"/></th>
-					<th><spring:message code="lbl.status"/></th>
-					<th><spring:message code="lbl.newconstruction"/></th>
-					<%-- <th><spring:message code="lbl.demolition"/></th> --%>
-					<th><spring:message code="lbl.reconstruction"/></th>
-					<th><spring:message code="lbl.alteration"/></th>
-				<%-- 	<th><spring:message code="lbl.division.development.land"/></th> --%>
-					<th><spring:message code="lbl.addextension"/></th>
-					<th><spring:message code="lbl.change.occupancy"/></th>
-					<%-- <th><spring:message code="lbl.amenities"/></th>
-					<th><spring:message code="lbl.huts.sheds"/></th>
-					<th><spring:message code="lbl.tower.construction"/></th> --%>
-					<th><spring:message code="lbl.total"/></th>
-				</tr>
-			</thead>
-			<tfoot id="report-footer">
-				<tr>
-						<td></td>
-						<td><spring:message code="lbl.total"/></td>
-						<td></td>
-						<!-- <td></td> -->
+						<td colspan="6"><spring:message code="lbl.total.collection"/></td>
 						<td></td>
 						<td></td>
-						<!-- <td></td> -->
 						<td></td>
 						<td></td>
-						<!-- <td></td>
 						<td></td>
-						<td></td> -->
 						<td></td>
+						<td></td>
+						<td></td>
+-						<td></td>
+						<td></td>
+<!-- 						<td></td>  -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
 					</tr>
+<!-- 					<tr> -->
+<%-- 						<td colspan="6"><spring:message code="lbl.rebate.amount"/></td> --%>
+<!-- 						<td id="cashR"></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- -						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td>  -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 					</tr> -->
+<!-- 					<tr> -->
+<%-- 						<td colspan="6"><spring:message code="lbl.total.collection"/></td> --%>
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- -						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td>  -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 						<td></td> -->
+<!-- 					</tr> -->
 				</tfoot>
-		</table>
+                </table>
 	</div>
 	<input type="hidden" id="atleastOneInputReq" value="<spring:message code='msg.validate.atleast.oneinput.required'/>"/>
 </div>
+
+<script src="<cdn:url value='/resources/global/js/bts/bts-datepicker.js' context='/egi'/>"></script>	
 <link rel="stylesheet"
 	  href="<cdn:url value='/resources/global/css/jq/plugins/datatables/jq.dataTables.min.css' context='/egi'/>"/>
 <link rel="stylesheet"
@@ -216,13 +254,9 @@
 <script src="<cdn:url value='/resources/global/js/bts/bts-datepicker.js' context='/egi'/>"
 		type="text/javascript"></script>
 <script src="<c:url value='/resources/global/js/handlebars/handlebars.js?rnd=${app_release_no}' context='/egi'/>"></script>
-				
-<script src="<cdn:url value='/resources/js/app/servicewise-status-report-helper-chart-Urban.js?rnd=${app_release_no}'/> "></script>
+
 <script src="<cdn:url value='/resources/js/app/bpa-ajax-helper.js?rnd=${app_release_no}'/> "></script>
+<script src="<cdn:url value='/resources/js/app/collection-summary-headwise-report-urban.js?rnd=${app_release_no}'/> "></script>
+
 
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-	
-<script>
-
-
-</script>

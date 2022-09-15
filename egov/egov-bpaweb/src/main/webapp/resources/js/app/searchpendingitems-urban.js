@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	$('#btnSearch').click(function() {
+		
 		var isValid = false;
 		$('#searchPendingItemsForm').find(':input', ':select', ':textarea').each(function() {
 			if ($(this).val()) {
@@ -49,7 +50,7 @@ function showGraph(json) {
 		animationEnabled: true,
 		theme: "light2",
 		title: {
-			text: "Scrutiny Data"
+			text: "BPA application Data-Urban"
 		},
 		axisY: {
 			title: "Units",
@@ -80,7 +81,7 @@ function callAjaxSearch() {
 		rowReorder: true,
 		"order": [[1, 'asc']],
 		ajax: {
-			url: "/bpa/application/searchPendingItems",
+			url: "/bpa/application/searchPendingItems/u",
 			type: "POST",
 			beforeSend: function() {
 				$('.loader-class').modal('show', { backdrop: 'static' });
@@ -94,7 +95,11 @@ function callAjaxSearch() {
 					"applicantName": $("#applicantName").val(),
 					"applicationNumber": $("#applicationNumber").val(),
 					"fromDate": $("#fromDate").val(),
-					"toDate": $("#toDate").val()
+					"toDate": $("#toDate").val(),
+					"sector":$("#sector").val(),
+					"plotNumber":$("#plotNumber").val(),
+					"ownerName":$("#applicantName").val(),
+					"statusId":$("#statusId").val()
 				};
 				console.log(formdata);
 				return formdata;
@@ -134,6 +139,14 @@ function callAjaxSearch() {
 			},
 			{
 				"data": "serviceType",
+				"sClass": "text-left"
+			},
+			{
+				"data": "sector",
+				"sClass": "text-left"
+			},
+				{
+				"data": "plotNumber",
 				"sClass": "text-left"
 			},
 			{

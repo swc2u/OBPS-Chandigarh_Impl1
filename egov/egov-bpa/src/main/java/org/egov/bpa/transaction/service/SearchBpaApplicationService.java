@@ -97,6 +97,10 @@ import org.springframework.validation.BindingResult;
 public class SearchBpaApplicationService {
 
     private static final String APPLICATION_TYPE = "applicationType";
+    private static final Long BTC_APPLICATION_ID = 3L;
+    private static final Long ATC_APPLICATION_ID = 5L;
+    
+    
     @Autowired
     private WorkflowHistoryService workflowHistoryService;
     @Autowired
@@ -176,6 +180,36 @@ public class SearchBpaApplicationService {
 
         final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
+
+        List<SearchPendingItemsForm> searchResults = new ArrayList<>();
+        for (BpaApplication application : bpaApplications) {
+        	if(null!=application.getState()) {
+        		Date dateInfo = application.getState().getDateInfo();
+        		if(null!=application.getState()) {
+        			int days = DateUtils.daysBetween(dateInfo, new Date());
+        			if(days>0) {
+	            		String pendingAction = application.getState().getNextAction();
+	            		Map<String,String> map = getCurrentOwner(application);
+	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
+	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
+	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+	            			}
+	            		}else {
+	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+	            		}
+        			}
+        		}       		
+        	}
+        }
+        return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
+    }
+    
+    @ReadOnly
+    public Page<SearchPendingItemsForm> pagedSearchForUrbanPendingTask(SearchPendingItemsForm searchRequest) {
+
+        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+        Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItemsUrban(searchRequest), pageable);
+
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
         for (BpaApplication application : bpaApplications) {
         	if(null!=application.getState()) {
@@ -305,7 +339,14 @@ public class SearchBpaApplicationService {
 
     public Criteria buildSearchCriteria(final SearchBpaApplicationForm searchBpaApplicationForm) {
         final Criteria criteria = getCurrentSession().createCriteria(BpaApplication.class, "bpaApplication");
-
+        
+        if(searchBpaApplicationForm.getApplicationTypeId()!=null) {
+        	criteria.createAlias("bpaApplication.applicationType", "applicationType");
+            criteria.add(
+                    Restrictions.eq("applicationType.id", searchBpaApplicationForm.getApplicationTypeId()));
+        }
+        
+        
         if (searchBpaApplicationForm.getApplicantName() != null) {
             criteria.createAlias("bpaApplication.owner", "owner");
             criteria.add(
@@ -341,6 +382,15 @@ public class SearchBpaApplicationService {
             criteria.add(Restrictions.le("bpaApplication.applicationDate",
                     resetToDateTimeStamp(searchBpaApplicationForm.getToDate())));
         buildCommonSearchCriterias(searchBpaApplicationForm, criteria);
+        
+        if (searchBpaApplicationForm.getPlotNumber() != null) 
+            criteria.add(Restrictions.eq("bpaApplication.plotNumber",
+                    searchBpaApplicationForm.getPlotNumber()));
+        
+        if (searchBpaApplicationForm.getSector() != null) 
+            criteria.add(Restrictions.eq("bpaApplication.sector",
+                    searchBpaApplicationForm.getSector()));
+        
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return criteria;
     }

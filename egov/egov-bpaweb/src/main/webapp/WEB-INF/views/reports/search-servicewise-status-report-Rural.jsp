@@ -46,7 +46,91 @@
 	modelAttribute="searchBpaApplicationForm" id="serviceTypeWiseStatusReport"
 	cssClass="form-horizontal form-groups-bordered"
 	enctype="multipart/form-data">
-	<jsp:include page="../application/search-bpa-application-form.jsp"></jsp:include>
+	<div class="col-md-12">
+	        <div class="panel panel-primary" data-collapsed="0">
+	            <div class="panel-heading">
+	            </div>
+	            <div class="panel-body">	
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label text-right"><spring:message
+	                            code="lbl.applctn.type"/></label> 
+	                    <div class="col-sm-3 add-margin">
+	                        <form:select path="applicationTypeId" data-first-option="false"
+	                                     id="applicationTypeId" cssClass="form-control applicationType" required="required">
+	                            <form:option value="">
+	                                <spring:message code="lbl.select"/>
+	                            </form:option>
+	                            <form:options items="${appTypes}" itemLabel="description" itemValue="id"/>
+	                        </form:select>
+	                    </div>
+	                    <label class="col-sm-2 control-label text-right"><spring:message
+	                            code="lbl.service.type"/></label>
+	                    <div class="col-sm-3 add-margin">
+	                        <form:select path="serviceTypeId" data-first-option="false"
+	                                     id="serviceTypeId" cssClass="form-control">
+	                            <form:option value="">
+	                                <spring:message code="lbl.select"/>
+	                            </form:option>
+	                            <form:options items="${serviceTypeList}" itemValue="id" itemLabel="description"/>
+	                        </form:select>
+	                    </div>
+	                </div>
+	
+	                <div class="form-group">
+	                       
+ 						<label class="col-sm-3 control-label text-right"><spring:message
+	                            code="lbl.sectors.villages"/></label>
+	                    <div class="col-sm-3 add-margin">
+						 <form:input class="form-control patternvalidation" maxlength="50"
+	                                    id="sector" path="sector"/>
+	                        <form:errors path="sector" cssClass="add-margin error-msg"/>
+	                    </div>
+	                    <label class="col-sm-2 control-label text-right"><spring:message
+	                            code="lbl.application.no"/></label>
+	                    <div class="col-sm-3 add-margin">
+	                        <form:input class="form-control patternvalidation" maxlength="50"
+	                                    id="applicationNumber" path="applicationNumber"/>
+	                        <form:errors path="applicationNumber" cssClass="add-margin error-msg"/>
+	                    </div>
+	                </div>
+					<div class="form-group">
+ 						<label class="col-sm-3 control-label text-right"><spring:message
+	                            code="lbl.plot.no"/></label>
+	                    <div class="col-sm-3 add-margin">
+	                        <form:input class="form-control patternvalidation" maxlength="50"
+	                                    id="plotNumber" path="plotNumber"/>
+	                        <form:errors path="plotNumber" cssClass="add-margin error-msg"/>
+	                    </div>
+	                    <label class="col-sm-2 control-label text-right"><spring:message
+	                            code="lbl.applicant.name"/></label>
+	                    <div class="col-sm-3 add-margin">
+	                        <form:input class="form-control patternvalidation" maxlength="50"
+	                                    id="applicantName" path="applicantName"/>
+	                        <form:errors path="applicantName" cssClass="add-margin error-msg"/>
+	                    </div>
+	                </div>
+	            
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label text-right"><spring:message
+	                            code="lbl.fromDate"/></label>
+	                    <div class="col-sm-3 add-margin">
+	                        <form:input path="fromDate" class="form-control datepicker"
+	                                    data-date-end-date="0d" id="fromDate"
+	                                    data-inputmask="'mask': 'd/m/y'"/>
+	                        <form:errors path="fromDate" cssClass="add-margin error-msg"/>
+	                    </div>
+	                    <label class="col-sm-2 control-label text-right"><spring:message
+	                            code="lbl.toDate"/></label>
+	                    <div class="col-sm-3 add-margin">
+	                        <form:input path="toDate" class="form-control datepicker"
+	                                    data-date-end-date="0d" id="toDate"
+	                                    data-inputmask="'mask': 'd/m/y'"/>
+	                        <form:errors path="toDate" cssClass="add-margin error-msg"/>
+	                    </div>
+	                </div>                 
+	            </div>
+	        </div>
+	    </div>
 	<div class="text-center">
 		<button type='button' class='btn btn-primary' id="btnSearch">
 			<spring:message code='lbl.search' />

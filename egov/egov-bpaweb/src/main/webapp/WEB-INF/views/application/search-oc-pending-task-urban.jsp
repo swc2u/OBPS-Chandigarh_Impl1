@@ -51,7 +51,7 @@
 	            <div class="panel-body">	
 	                <div class="form-group">
 	                    <label class="col-sm-3 control-label text-right"><spring:message
- 	                            code="lbl.applctn.type"/><span class="mandatory"></span></label> 
+ 	                            code="lbl.applctn.type"/></label> 
 	                    <div class="col-sm-3 add-margin">
 	                        <form:select path="applicationTypeId" data-first-option="false" 
  	                                     id="applicationTypeId" cssClass="form-control applicationType" required="required"> 
@@ -75,17 +75,17 @@
 	                                    id="sector" path="sector"/>
 	                        <form:errors path="sector" cssClass="add-margin error-msg"/>
 	                    </div>
-<%-- 	                    <label class="col-sm-2 control-label text-right"><spring:message --%>
-<%-- 	                            code="lbl.service.type"/></label> --%>
-<!-- 	                    <div class="col-sm-3 add-margin"> -->
-<%-- 	                        <form:select path="serviceTypeId" data-first-option="false" --%>
-<%-- 	                                     id="serviceTypeId" cssClass="form-control"> --%>
-<%-- 	                            <form:option value=""> --%>
-<%-- 	                                <spring:message code="lbl.select"/> --%>
-<%-- 	                            </form:option> --%>
-<%-- 	                            <form:options items="${serviceTypeList}" itemValue="id" itemLabel="description"/> --%>
-<%-- 	                        </form:select> --%>
-<!-- 	                    </div> -->
+						<label class="col-sm-2 control-label text-right"><spring:message
+	                            code="lbl.appln.status"/></label>
+	                    <div class="col-sm-3 add-margin">
+	                        <form:select path="statusId" data-first-option="false"
+	                                     id="statusId" cssClass="form-control">
+	                            <form:option value="">
+	                                <spring:message code="lbl.select"/>
+	                            </form:option>
+	                            <form:options items="${applnStatusList}" itemValue="id" itemLabel="description"/>
+	                        </form:select>
+	                    </div>
 	                </div>
 	
 	                <div class="form-group">

@@ -49,7 +49,7 @@ function showGraph(json) {
 		animationEnabled: true,
 		theme: "light2",
 		title: {
-			text: "Scrutiny Data"
+			text: "BPA application Data -Rural"
 		},
 		axisY: {
 			title: "Units",
@@ -69,6 +69,10 @@ function showGraph(json) {
 
 function callAjaxSearch() {
 	var viewurl = '/bpa/application/view/';
+	
+	if($("#applicationTypeId").val()=="")
+		document.getElementById("applicationTypeId").value=4;
+		
 	$('.report-section').removeClass('display-hide');
 	$("#search_bpa_pending_items_table").dataTable({
 		processing: true,
@@ -94,7 +98,10 @@ function callAjaxSearch() {
 					"applicantName": $("#applicantName").val(),
 					"applicationNumber": $("#applicationNumber").val(),
 					"fromDate": $("#fromDate").val(),
-					"toDate": $("#toDate").val()
+					"toDate": $("#toDate").val(),
+					"sector":$("#sector").val(),
+					"plotNumber":$("#plotNumber").val(),
+					"ownerName":$("#applicantName").val()
 				};
 				console.log(formdata);
 				return formdata;
@@ -134,6 +141,14 @@ function callAjaxSearch() {
 			},
 			{
 				"data": "serviceType",
+				"sClass": "text-left"
+			},
+			{
+				"data": "sector",
+				"sClass": "text-left"
+			},
+				{
+				"data": "plotNumber",
 				"sClass": "text-left"
 			},
 			{

@@ -288,4 +288,6 @@ public class CollectionReportHeadWiseService {
         }
         return queryResults;
     }
+
+	
 }

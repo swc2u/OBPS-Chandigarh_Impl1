@@ -168,10 +168,10 @@ public class CollectionSummaryAction extends ReportFormAction {
             ServiceDetails serviceDets = entityManager.find(ServiceDetails.class, getServiceId());
             setServiceName(serviceDets.getName());
         }
-        if (getStatusId() != -1) {
-            EgwStatus statusObj = entityManager.find(EgwStatus.class, getStatusId());
-            setStatusName(statusObj.getDescription());
-        }
+//        if (getStatusId() != -1) {
+//            EgwStatus statusObj = entityManager.find(EgwStatus.class, getStatusId());
+//            setStatusName(statusObj.getDescription());
+//        }
         setClassification(getServiceType());
         setReportData(reportService.getCollectionSummaryReport(getFromDate(), getToDate(), getPaymentMode(), getSource(),
                 getServiceId(), getStatusId(), getServiceType()));

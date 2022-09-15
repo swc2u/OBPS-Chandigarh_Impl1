@@ -47,6 +47,7 @@
 package org.egov.bpa.web.controller.transaction;
 
 import static org.egov.bpa.utils.BpaConstants.BOUNDARY_TYPE_CITY;
+import static org.egov.bpa.utils.BpaConstants.BPASTATUS_MODULETYPE;
 import static org.egov.bpa.utils.BpaConstants.FILESTORE_MODULECODE;
 import static org.egov.bpa.utils.BpaConstants.IS_AUTO_CANCEL_UNATTENDED_DOCUMENT_SCRUTINY_APPLICATION;
 import static org.egov.bpa.utils.BpaConstants.OCCUPANCY_CERTIFICATE_NOTICE_TYPE;
@@ -59,6 +60,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -117,6 +119,9 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
     private static final String SEARCH_BPA_APPLICATION_FORM = "searchBpaApplicationForm";
     private static final String SEARCH_PENDING_ITEM_FORM = "searchPendingItemsForm";
     private static final String SEARCH_PENDING_ITEM_FORM_GRAPH = "searchPendingItemsFormG";
+    
+    private static final String URBAN ="URBAN";
+    private static final String RURAL ="RURAL";
 
     @Autowired
     private SearchBpaApplicationService searchBpaApplicationService;
@@ -161,7 +166,7 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
     
     @GetMapping("/searchPendingItems/d/u")
     public String showSearchApprovedforFeeGrapUrban(final Model model) {
-    	prepareFormDataForPendingItems(model);
+    	prepareFormDataForPendingItems(model,URBAN);
     	model.addAttribute(SEARCH_PENDING_ITEM_FORM, new SearchPendingItemsForm());
     	model.addAttribute(SEARCH_PENDING_ITEM_FORM_GRAPH, new SearchPendingItemsForm());
         return "search-bpa-pending-task-urban";
@@ -169,7 +174,7 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
     
     @GetMapping("/searchPendingItems/d/r")
     public String showSearchApprovedforFeeGrapRural(final Model model) {
-    	prepareFormDataForPendingItems(model);
+    	prepareFormDataForPendingItems(model,RURAL);
     	 model.addAttribute(SEARCH_PENDING_ITEM_FORM, new SearchPendingItemsForm());
     	 model.addAttribute(SEARCH_PENDING_ITEM_FORM_GRAPH, new SearchPendingItemsForm());
           return "search-bpa-pending-task-rural";
@@ -230,7 +235,14 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
 		String json = gson.toJson(map); 
 		return json;
     }
-
+    
+    @PostMapping(value = "/searchPendingItems/u", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchUrbanPendingItemsRecords(@ModelAttribute SearchPendingItemsForm searchPendingItemsForm) {
+    	return new DataTable<>(searchBpaApplicationService.pagedSearchForUrbanPendingTask(searchPendingItemsForm),
+        		searchPendingItemsForm.draw())
+                        .toJson(SearchBpaPendingTaskAdaptor.class);
+    }
     
     @GetMapping("/searchPendingItems")
     public String showSearchPendingItems(final Model model) {
@@ -251,6 +263,19 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
     	model.addAttribute("appTypes", applicationTypeService.getBPAApplicationTypes());
     	model.addAttribute("serviceTypeList", serviceTypeService.getAllActiveMainServiceTypes());
     	model.addAttribute("designations", BpaConstants.getAvailableDesignations());
+    }
+    
+    protected void prepareFormDataForPendingItems(Model model,String applicationType) {
+    	List<ApplicationSubType> applicationTypes = applicationTypeService.getBPAApplicationTypes();
+    	if(applicationType.equals(URBAN))
+    		model.addAttribute("appTypes",applicationTypes.stream().filter(appType -> !appType.getName().equalsIgnoreCase("Medium Risk"))
+            .collect(Collectors.toList()));
+    	else
+    		model.addAttribute("appTypes",applicationTypes.stream().filter(appType -> appType.getName().equalsIgnoreCase("Medium Risk"))
+            .collect(Collectors.toList()));
+    	model.addAttribute("serviceTypeList", serviceTypeService.getAllActiveMainServiceTypes());
+    	model.addAttribute("designations", BpaConstants.getAvailableDesignations());
+    	model.addAttribute("applnStatusList", bpaStatusService.findAllByModuleType(BPASTATUS_MODULETYPE));
     }
 
     @GetMapping("/view/{applicationNumber}")

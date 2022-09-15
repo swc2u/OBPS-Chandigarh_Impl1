@@ -41,6 +41,7 @@ package org.egov.bpa.web.controller.transaction.occupancy;
 
 import static org.egov.bpa.utils.BpaConstants.AUTO_CANCEL_UNATTENDED_DOCUMENT_SCRUTINY_OC;
 import static org.egov.bpa.utils.BpaConstants.BOUNDARY_TYPE_CITY;
+import static org.egov.bpa.utils.BpaConstants.BPASTATUS_MODULETYPE;
 import static org.egov.bpa.utils.BpaConstants.REVENUE_HIERARCHY_TYPE;
 import static org.egov.bpa.utils.BpaConstants.WARD;
 
@@ -49,9 +50,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.egov.bpa.master.entity.ApplicationSubType;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
 import org.egov.bpa.transaction.entity.dto.SearchPendingItemsForm;
 import org.egov.bpa.transaction.entity.oc.OCNocDocuments;
@@ -98,6 +101,8 @@ public class SearchOccupancyCertificateController extends BpaGenericApplicationC
     private static final String SEARCH_OC_PENDING_ITEM_FORM = "searchOCPendingItemsForm";
     private static final String SEARCH_OC_PENDING_ITEM_FORM_GRAPH = "searchOCPendingItemsFormG";
     private static final Long RURAL_ID = 4L;
+    private static final String URBAN ="URBAN";
+    private static final String RURAL ="RURAL";
 
     @Autowired
     private EmployeeService employeeService;
@@ -135,8 +140,7 @@ public class SearchOccupancyCertificateController extends BpaGenericApplicationC
     
     @GetMapping("/searchOCPendingItems/d/u")
     public String showSearchOCApprovedforFeeGrapUrban(final Model model) {
-    	prepareFormData(model);
-    	model.addAttribute("designations", BpaConstants.getAvailableDesignations());
+    	prepareOCReportFormData(model,URBAN);
     	model.addAttribute(SEARCH_OC_PENDING_ITEM_FORM, new SearchPendingItemsForm());
     	model.addAttribute(SEARCH_OC_PENDING_ITEM_FORM_GRAPH, new SearchPendingItemsForm());
         return "search-oc-pending-task-urban";
@@ -144,12 +148,25 @@ public class SearchOccupancyCertificateController extends BpaGenericApplicationC
     
     @GetMapping("/searchOCPendingItems/d/r")
     public String showSearchOCApprovedforFeeGrapRural(final Model model) {
-    	prepareFormData(model);
+    	prepareOCReportFormData(model,RURAL);
     	model.addAttribute("designations", BpaConstants.getAvailableDesignations());
     	 model.addAttribute(SEARCH_OC_PENDING_ITEM_FORM, new SearchPendingItemsForm());
     	 model.addAttribute(SEARCH_OC_PENDING_ITEM_FORM_GRAPH, new SearchPendingItemsForm());
           return "search-oc-pending-task-rural";
     }
+    
+    private void prepareOCReportFormData(Model model, String applicationType) {
+    	model.addAttribute("designations", BpaConstants.getAvailableDesignations());
+    	
+    	List<ApplicationSubType> applicationTypes = applicationTypeService.getBPAApplicationTypes();
+    	if(applicationType.equals(URBAN))
+    		model.addAttribute("appTypes",applicationTypes.stream().filter(appType -> !appType.getName().equalsIgnoreCase("Medium Risk"))
+            .collect(Collectors.toList()));
+    	else
+    		model.addAttribute("appTypes",applicationTypes.stream().filter(appType -> appType.getName().equalsIgnoreCase("Medium Risk"))
+            .collect(Collectors.toList()));
+    	model.addAttribute("applnStatusList", bpaStatusService.findAllByModuleType(BPASTATUS_MODULETYPE));
+	}
     
     @PostMapping(value = "/searchOCPendingItems/d/u", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody

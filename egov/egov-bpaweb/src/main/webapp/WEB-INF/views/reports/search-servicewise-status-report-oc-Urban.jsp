@@ -217,7 +217,7 @@
 		type="text/javascript"></script>
 <script src="<c:url value='/resources/global/js/handlebars/handlebars.js?rnd=${app_release_no}' context='/egi'/>"></script>
 				
-<script src="<cdn:url value='/resources/js/app/servicewise-status-report-helper-chart-Urban.js?rnd=${app_release_no}'/> "></script>
+<script src="<cdn:url value='/resources/js/app/servicewise-status-report-helper-chart-oc-Urban.js?rnd=${app_release_no}'/> "></script>
 <script src="<cdn:url value='/resources/js/app/bpa-ajax-helper.js?rnd=${app_release_no}'/> "></script>
 
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>

@@ -139,7 +139,10 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
     private Boolean wfEnded;
     private Boolean feeCollector;
 
-
+    private String plotNumber;
+    private String sector;
+    
+    private String paymentMode;
     public String getRevocationNumber() {
         return revocationNumber;
     }
@@ -188,7 +191,10 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
         if (!application.getPermitRevocation().isEmpty()) {
             Optional<PermitRevocation> revoke = application.getPermitRevocation().stream().reduce((revoke1, revoke2) -> revoke2);
             setRevocationNumber(revoke.isPresent() ? revoke.get().getRevocationNumber() : "");
-        }        
+        }     
+        setApplicationTypeId(application.getApplicationType().getId());
+        setPlotNumber(application.getPlotNumber());
+        setSector(application.getSector());
     }
 
     public SearchBpaApplicationForm(OccupancyCertificate occupancyCertificate, String currentOwner, String pendingAction,
@@ -223,6 +229,9 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
         setCurrentOwner(currentOwner);
         setPendingAction(pendingAction);
         setFeeCollected(isFeeCollected);
+        setPlotNumber(occupancyCertificate.getParent().getPlotNumber());
+        setSector(occupancyCertificate.getParent().getSector());
+        setApplicationTypeId(occupancyCertificate.getParent().getApplicationType().getId());
     }
     
     public SearchBpaApplicationForm(BpaApplication application, OccupancyCertificate occupancyCertificate) {
@@ -711,6 +720,30 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
 
 	public void setFeeCollector(Boolean feeCollector) {
 		this.feeCollector = feeCollector;
+	}
+
+	public String getPlotNumber() {
+		return plotNumber;
+	}
+
+	public void setPlotNumber(String plotNumber) {
+		this.plotNumber = plotNumber;
+	}
+
+	public String getSector() {
+		return sector;
+	}
+
+	public void setSector(String sector) {
+		this.sector = sector;
+	}
+
+	public String getPaymentMode() {
+		return paymentMode;
+	}
+
+	public void setPaymentMode(String paymentMode) {
+		this.paymentMode = paymentMode;
 	}
     
 }
