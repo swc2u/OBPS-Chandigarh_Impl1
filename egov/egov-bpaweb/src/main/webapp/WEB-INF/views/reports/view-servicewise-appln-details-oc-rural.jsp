@@ -73,11 +73,11 @@
 	value="${plotNumber}" />
 
 </form:form>
-<div class="row display-hide report-section" id="table_container">
+<div class="row display-hide oc-ss-report-section" id="table_container">
 	<div class="col-md-12 table-header text-left"></div>
 	<div class="col-md-12 form-group report-table-container">
 		<table class="table table-bordered table-hover multiheadertbl"
-			id="bpaServiceWiseApplnsDetails">
+			id="ocServiceWiseApplnsDetails">
 			<thead>
 				<tr>
 					<th><spring:message code="lbl.slno" /></th>
@@ -130,4 +130,4 @@
 <script src="<cdn:url value='/resources/global/js/bts/bts-datepicker.js' context='/egi'/>"
 		type="text/javascript"></script>
 
-<script src="<cdn:url value='/resources/js/app/view-servicewise-applns-report-urban.js?rnd=${app_release_no}'/> "></script>
+<script src="<cdn:url value='/resources/js/app/view-servicewise-applns-report-oc-rural.js?rnd=${app_release_no}'/> "></script>

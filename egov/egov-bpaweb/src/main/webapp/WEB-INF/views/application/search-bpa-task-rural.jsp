@@ -42,7 +42,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
-<form:form role="form" action="" modelAttribute="searchPendingItemsForm" id="searchPendingItemsRuralForm" cssClass="form-horizontal form-groups-bordered" enctype="multipart/form-data">
+<form:form role="form" action="" modelAttribute="searchPendingItemsForm" id="searchBPAItemsRuralForm" cssClass="form-horizontal form-groups-bordered" enctype="multipart/form-data">
 	<div class="row">
 	    <div class="col-md-12">
 	        <div class="panel panel-primary" data-collapsed="0">
@@ -126,8 +126,7 @@
 	                                    id="sector" path="sector"/>
 	                        <form:errors path="sector" cssClass="add-margin error-msg"/>
 	                    </div>
-	                    
-	                    <label class="col-sm-2 control-label text-right"><spring:message
+	                   <label class="col-sm-2 control-label text-right"><spring:message
 	                            code="lbl.appln.status"/></label>
 	                    <div class="col-sm-3 add-margin">
 	                        <form:select path="statusId" data-first-option="false"
@@ -138,7 +137,6 @@
 	                            <form:options items="${applnStatusList}" itemValue="id" itemLabel="description"/>
 	                        </form:select>
 	                    </div>
-	                   
 	                </div>
 	                <div class="form-group">
 	                    <label class="col-sm-3 control-label text-right"><spring:message
@@ -179,7 +177,7 @@
 	<div class="col-md-12 table-header text-left"><spring:message code="lbl.search.result" /></div>
 	<div class="col-md-12 form-group report-table-container">
 		<table class="table table-bordered table-hover multiheadertbl"
-			id="search_bpa_pending_items_rural_table">
+			id="search_bpa_items_rural_table">
 			<thead>
 				<tr>
 					<th><spring:message code="lbl.applctn.type" /></th>
@@ -215,6 +213,6 @@
 <script	src="<cdn:url value='/resources/global/js/jq/plugins/datatables/dataTables.bts.js' context='/egi'/>"></script>
 <script src="<c:url value='/resources/global/js/handlebars/handlebars.js?rnd=${app_release_no}' context='/egi'/>"></script>
 <script src="<cdn:url value='/resources/js/app/bpa-ajax-helper.js?rnd=${app_release_no}'/> "></script>
-<script src="<cdn:url value='/resources/js/app/searchpendingitems-rural.js?rnd=${app_release_no}'/> "></script>
+<script src="<cdn:url value='/resources/js/app/searchbpaitems-rural.js?rnd=${app_release_no}'/> "></script>
 
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>

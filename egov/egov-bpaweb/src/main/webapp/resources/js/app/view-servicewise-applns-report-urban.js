@@ -41,7 +41,7 @@
 $(document)
 		.ready(
 				function() {
-					
+					var viewurl = '/bpa/application/view/';
 					$('.report-section').removeClass('display-hide');
 					$("#bpaServiceWiseApplnsDetails")
 							.dataTable(
@@ -156,6 +156,14 @@ $(document)
 											{
 												"data" : "pendingAction",
 												"sClass" : "text-left"
+											},
+											{
+												"data": null,
+												"sClass": "text-left",
+												"render": function(data, type, row, meta) {
+													var commonOptions = '<option value="">---Select an Action----</option><option  value=' + viewurl + row.applicationNumber + '>View</option>';
+													return ('<select class="dropchange" style="width:160px;font-size: small">' + commonOptions + '></select>');
+												}
 											}]
 									});
 				});
@@ -169,4 +177,17 @@ function getFormData($form) {
 	});
 
 	return indexed_array;
+}
+
+$(document).on('change', '.dropchange', function() {
+	var url = $(this).val();
+	if (url) {
+		openPopup(url);
+	}
+	// reset dropdown value to default
+	$('.dropchange').val('');
+});
+
+function openPopup(url) {
+	window.open(url, 'window', 'scrollbars=yes,resizable=yes,height=700,width=800,status=yes');
 }

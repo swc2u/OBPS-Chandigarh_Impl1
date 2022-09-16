@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	$('#btnSearch').click(function() {
 		var isValid = false;
-		$('#searchPendingItemsRuralForm').find(':input', ':select', ':textarea').each(function() {
+		$('#searchBPAItemsRuralForm').find(':input', ':select', ':textarea').each(function() {
 			if ($(this).val()) {
 				isValid = true;
 				return false;
@@ -74,7 +74,7 @@ function callAjaxSearch() {
 		document.getElementById("applicationTypeId").value=4;
 		
 	$('.bpa-rural-report-section').removeClass('display-hide');
-	$("#search_bpa_pending_items_rural_table").dataTable({
+	$("#search_bpa_items_rural_table").dataTable({
 		processing: true,
 		serverSide: true,
 		sort: true,
@@ -84,7 +84,7 @@ function callAjaxSearch() {
 		rowReorder: true,
 		"order": [[1, 'asc']],
 		ajax: {
-			url: "/bpa/application/searchPendingItems/r",
+			url: "/bpa/application/searchBPAItems/r",
 			type: "POST",
 			beforeSend: function() {
 				$('.loader-class').modal('show', { backdrop: 'static' });

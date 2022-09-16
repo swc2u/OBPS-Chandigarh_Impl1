@@ -377,7 +377,7 @@ public class BpaReportsService {
                 bpaApplications.getTotalElements());
     }
     
-    public Page<ReceiptRegisterReportHelper> getReceiptRegisterReportDetailsForUrban(SearchBpaApplicationForm searchRequest, List<Long> appTypeList) {
+    public Page<ReceiptRegisterReportHelper> getReceiptRegisterReportDetails(SearchBpaApplicationForm searchRequest, List<Long> appTypeList) {
     	 final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
                  searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
@@ -865,7 +865,7 @@ public class BpaReportsService {
         return queryResults;
     }
 
-	public Page<CollectionSummaryReportHelper> getCollectionSummaryReportDetailsForUrban(SearchBpaApplicationForm searchRequest,
+	public Page<CollectionSummaryReportHelper> getCollectionSummaryReportDetails(SearchBpaApplicationForm searchRequest,
 			List<Long> appTypeList,String source) {
 		
 		 final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
@@ -896,7 +896,7 @@ public class BpaReportsService {
 	}
 	
 	
-	public Page<CollectionSummaryHeadwiseReportHelper> getCollectionSummaryHeadwiseReportDetailsForUrban(SearchBpaApplicationForm searchRequest,
+	public Page<CollectionSummaryHeadwiseReportHelper> getCollectionSummaryHeadwiseReportDetails(SearchBpaApplicationForm searchRequest,
 			List<Long> appTypeList,String source) {
 		
 		 final Pageable pageable = new PageRequest(searchRequest.pageNumber(),

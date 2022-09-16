@@ -94,6 +94,7 @@
 					<th><spring:message code="lbl.status" /></th>
 					<th><spring:message code="lbl.current.owner" /></th>
 					<th><spring:message code="lbl.pending.actions" /></th>
+					<th><spring:message code="lbl.action" /></th>
 				</tr>
 			</thead>
 		</table>

@@ -55,6 +55,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
 import org.egov.bpa.master.entity.ApplicationSubType;
+import org.egov.bpa.transaction.entity.BpaStatus;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
 import org.egov.bpa.transaction.entity.dto.SearchPendingItemsForm;
 import org.egov.bpa.transaction.entity.oc.OCNocDocuments;
@@ -103,7 +104,7 @@ public class SearchOccupancyCertificateController extends BpaGenericApplicationC
     private static final Long RURAL_ID = 4L;
     private static final String URBAN ="URBAN";
     private static final String RURAL ="RURAL";
-
+    final private static String OC_END_STATE = "Order Issued to Applicant";
     @Autowired
     private EmployeeService employeeService;
     @Autowired
@@ -140,7 +141,7 @@ public class SearchOccupancyCertificateController extends BpaGenericApplicationC
     
     @GetMapping("/searchOCPendingItems/d/u")
     public String showSearchOCApprovedforFeeGrapUrban(final Model model) {
-    	prepareOCReportFormData(model,URBAN);
+    	prepareOCPendingReportFormData(model,URBAN);
     	model.addAttribute(SEARCH_OC_PENDING_ITEM_FORM, new SearchPendingItemsForm());
     	model.addAttribute(SEARCH_OC_PENDING_ITEM_FORM_GRAPH, new SearchPendingItemsForm());
         return "search-oc-pending-task-urban";
@@ -148,11 +149,27 @@ public class SearchOccupancyCertificateController extends BpaGenericApplicationC
     
     @GetMapping("/searchOCPendingItems/d/r")
     public String showSearchOCApprovedforFeeGrapRural(final Model model) {
-    	prepareOCReportFormData(model,RURAL);
+    	prepareOCPendingReportFormData(model,RURAL);
     	model.addAttribute("designations", BpaConstants.getAvailableDesignations());
     	 model.addAttribute(SEARCH_OC_PENDING_ITEM_FORM, new SearchPendingItemsForm());
     	 model.addAttribute(SEARCH_OC_PENDING_ITEM_FORM_GRAPH, new SearchPendingItemsForm());
           return "search-oc-pending-task-rural";
+    }
+    
+    @GetMapping("/searchOCItems/d/u")
+    public String showSearchOCItemsGraphUrban(final Model model) {
+    	prepareOCReportFormData(model,URBAN);
+    	model.addAttribute(SEARCH_OC_PENDING_ITEM_FORM, new SearchPendingItemsForm());
+    	model.addAttribute(SEARCH_OC_PENDING_ITEM_FORM_GRAPH, new SearchPendingItemsForm());
+        return "search-oc-task-urban";
+    }
+    
+    @GetMapping("/searchOCItems/d/r")
+    public String showSearchOCItemsGraphRural(final Model model) {
+    	prepareOCReportFormData(model,RURAL);
+    	model.addAttribute(SEARCH_OC_PENDING_ITEM_FORM, new SearchPendingItemsForm());
+    	model.addAttribute(SEARCH_OC_PENDING_ITEM_FORM_GRAPH, new SearchPendingItemsForm());
+        return "search-oc-task-rural";
     }
     
     private void prepareOCReportFormData(Model model, String applicationType) {
@@ -168,12 +185,50 @@ public class SearchOccupancyCertificateController extends BpaGenericApplicationC
     	model.addAttribute("applnStatusList", bpaStatusService.findAllByModuleType(BPASTATUS_MODULETYPE));
 	}
     
+    private void prepareOCPendingReportFormData(Model model, String applicationType) {
+    	model.addAttribute("designations", BpaConstants.getAvailableDesignations());
+    	
+    	List<ApplicationSubType> applicationTypes = applicationTypeService.getBPAApplicationTypes();
+    	if(applicationType.equals(URBAN))
+    		model.addAttribute("appTypes",applicationTypes.stream().filter(appType -> !appType.getName().equalsIgnoreCase("Medium Risk"))
+            .collect(Collectors.toList()));
+    	else
+    		model.addAttribute("appTypes",applicationTypes.stream().filter(appType -> appType.getName().equalsIgnoreCase("Medium Risk"))
+            .collect(Collectors.toList()));
+    	List<BpaStatus> statusList = bpaStatusService.findAllByModuleType(BPASTATUS_MODULETYPE);
+    	model.addAttribute("applnStatusList", statusList.stream().filter(status->!status.getCode().equalsIgnoreCase(OC_END_STATE)).collect(Collectors.toList()));
+	}
+    
     @PostMapping(value = "/searchOCPendingItems/d/u", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String showSearchOCPendingItemsRecordsUrban(@ModelAttribute final SearchPendingItemsForm searchPendingItemsFormG) {
+    public String showSearchOCPendingItemsRecordsUrban(@ModelAttribute  SearchPendingItemsForm searchPendingItemsFormG) {
     	
     	Map<String, Long> map=new HashMap<String, Long>(); 
     	fillterData(searchOCService.pagedSearchForPendingTaskGraph(searchPendingItemsFormG), map);
+        
+        Gson gson = new Gson();  
+		String json = gson.toJson(map); 
+		return json;
+    }
+    
+    
+    @PostMapping(value = "/searchOCItems/d/u", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchOCItemsRecordsUrban(@ModelAttribute SearchPendingItemsForm searchPendingItemsFormG) {
+    	
+    	Map<String, Long> map=new HashMap<String, Long>(); 
+    	fillterData(searchOCService.pagedSearchForOCTaskGraph(searchPendingItemsFormG), map);
+        
+        Gson gson = new Gson();  
+		String json = gson.toJson(map); 
+		return json;
+    }
+    @PostMapping(value = "/searchOCItems/d/r", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchOCItemsRecordsRuralGraph(@ModelAttribute SearchPendingItemsForm searchPendingItemsFormG) {
+    	
+    	Map<String, Long> map=new HashMap<String, Long>(); 
+    	fillterData(searchOCService.pagedSearchForOCTaskRural(searchPendingItemsFormG), map);
         
         Gson gson = new Gson();  
 		String json = gson.toJson(map); 
@@ -212,7 +267,29 @@ public class SearchOccupancyCertificateController extends BpaGenericApplicationC
                         .toJson(SearchOCPendingTaskAdaptor.class);
     }
     
+    @PostMapping(value = "/searchOCItems", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchOCItemsRecords(@ModelAttribute SearchPendingItemsForm searchPendingItemsForm) {
+        return new DataTable<>(searchOCService.pagedSearchForOCTask(searchPendingItemsForm),
+        		searchPendingItemsForm.draw())
+                        .toJson(SearchOCPendingTaskAdaptor.class);
+    }
     
+    @PostMapping(value = "/searchOCPendingItems/r", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String searchOCPendingItemsRecordsRural(@ModelAttribute SearchPendingItemsForm searchPendingItemsForm) {
+        return new DataTable<>(searchOCService.pagedSearchForPendingTaskRural(searchPendingItemsForm),
+        		searchPendingItemsForm.draw())
+                        .toJson(SearchOCPendingTaskAdaptor.class);
+    }
+    
+    @PostMapping(value = "/searchOCItems/r", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchOCItemsRecordsRural(@ModelAttribute SearchPendingItemsForm searchPendingItemsForm) {
+        return new DataTable<>(searchOCService.pagedSearchForOCTaskRural(searchPendingItemsForm),
+        		searchPendingItemsForm.draw())
+                        .toJson(SearchOCPendingTaskAdaptor.class);
+    }
     
 
     @GetMapping("/occupancycertificate/viewdetails/{applicationNumber}")

@@ -41,13 +41,13 @@
 $(document)
 		.ready(
 				function() {
-					var viewurl = '/bpa/application/occupancycertificate/viewdetails/';
-					$('.report-section').removeClass('display-hide');
-					$("#bpaServiceWiseApplnsDetails")
+					var viewurl = '/bpa/application/view/';
+					$('.report-section-rural').removeClass('display-hide');
+					$("#bpaServiceWiseApplnsDetailsRural")
 							.dataTable(
 									{
 										ajax : {
-											url : "/bpa/reports/servicewise-statusreport-oc-urban/view",
+											url : "/bpa/reports/servicewise-statusreport-rural/view",
 											type : "POST",
 											beforeSend : function() {
 												$('.loader-class')
@@ -73,8 +73,8 @@ $(document)
                                         "<'col-md-2 col-xs-6 text-left'B><'col-md-5 col-xs-6 text-right'p>>",
                                         buttons: [{
                                             extend: 'pdf',
-                                            title: 'Building plan approval application details report',
-                                            filename: 'bpa_applications_report',
+                                            title: 'Building plan approval Servicewise status report',
+                                            filename: 'bpa_servicewise_status_report',
                                             orientation: 'landscape',
                                             pageSize: 'A3',
                                             exportOptions: {
@@ -82,15 +82,15 @@ $(document)
                                             }
                                         }, {
                                             extend: 'excel',
-                                            title: 'Building plan approval application details report',
-                                            filename: 'bpa_applications_report',
+                                            title: 'Building plan approval Servicewise status report',
+                                            filename: 'bpa_servicewise_status_report',
                                             exportOptions: {
                                                 columns: ':visible'
                                             }
                                         }, {
                                             extend: 'print',
-                                            title: 'Building plan approval application details report',
-                                            filename: 'bpa_applications_report',
+                                            title: 'Building plan approval Servicewise status report',
+                                            filename: 'bpa_servicewise_status_report',
                                             orientation: 'landscape',
                                             pageSize: 'A3',
                                             exportOptions: {

@@ -92,7 +92,9 @@ public final class SearchBpaApplnFormSpec {
     private static final String STATUS = "status";
     private static final String IS_ONE_DAY_PERMIT_APPLICATION = "isOneDayPermitApplication";
     private static final Long RURAL_APPLICATION_ID = 4L;
-
+    private static final String BPA_END_STATUS = "Accepted as Scrutinized";
+    private static final String RURAL_BPA_END_STATUS = "Order Issued to Applicant";
+    
     private SearchBpaApplnFormSpec() {
         // static methods only
     }
@@ -124,11 +126,55 @@ public final class SearchBpaApplnFormSpec {
              if(requestForm.getApplicationTypeId()==null) {
             	 predicate.getExpressions().add(builder.notEqual(root.get("applicationType").get(ID), RURAL_APPLICATION_ID));
              }
+             if(requestForm.getStatusId()==null) {
+            	 predicate.getExpressions().add(builder.notEqual(root.get("status").get("code"), BPA_END_STATUS));
+             }
              
              return predicate;
          };
 	}
-
+    
+    public static Specification<BpaApplication> searchSpecificationForPendingItemsRural(SearchPendingItemsForm requestForm) {
+   	 return (root, query, builder) -> {
+            final Predicate predicate = builder.conjunction();
+            commonSpecForPendingItems(requestForm, root, builder, predicate);
+            query.distinct(true);
+            if(requestForm.getApplicationTypeId()==null) {
+           	 predicate.getExpressions().add(builder.equal(root.get("applicationType").get(ID), RURAL_APPLICATION_ID));
+            }
+            if(requestForm.getStatusId()==null) {
+           	 predicate.getExpressions().add(builder.notEqual(root.get("status").get("code"), RURAL_BPA_END_STATUS));
+            }
+            
+            return predicate;
+        };
+	}
+    
+    public static Specification<BpaApplication> searchSpecificationForBPAItemsUrban(SearchPendingItemsForm requestForm) {
+   	 return (root, query, builder) -> {
+            final Predicate predicate = builder.conjunction();
+            commonSpecForPendingItems(requestForm, root, builder, predicate);
+            query.distinct(true);
+            if(requestForm.getApplicationTypeId()==null) {
+           	 predicate.getExpressions().add(builder.notEqual(root.get("applicationType").get(ID), RURAL_APPLICATION_ID));
+            }
+            
+            return predicate;
+        };
+	}
+    
+    public static Specification<BpaApplication> searchSpecificationForBPAItemsRural(SearchPendingItemsForm requestForm) {
+      	 return (root, query, builder) -> {
+               final Predicate predicate = builder.conjunction();
+               commonSpecForPendingItems(requestForm, root, builder, predicate);
+               query.distinct(true);
+               if(requestForm.getApplicationTypeId()==null) {
+              	 predicate.getExpressions().add(builder.equal(root.get("applicationType").get(ID), RURAL_APPLICATION_ID));
+               }
+               
+               return predicate;
+           };
+   	}
     public static Specification<BpaApplication> hasCollectionPendingSpecification(final SearchBpaApplicationForm requestForm) {
         return (root, query, builder) -> {
             final Predicate predicate = builder.conjunction();
