@@ -1570,4 +1570,20 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/reports/receipt-register-report-rural.jsp" />
 	</definition>
+	<definition name="search-pl-task-urban" extends="base_layout">
+		<put-attribute name="page-title" value="title.search.pl.appln" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/search-pl-task-urban.jsp" />
+	</definition>
+	<definition name="search-pl-pending-task-urban" extends="base_layout">
+		<put-attribute name="page-title" value="title.search.pl.appln" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/search-pl-pending-task-urban.jsp" />
+	</definition>
+	<definition name="search-pl-task-rural" extends="base_layout">
+		<put-attribute name="page-title" value="title.search.pl.appln" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/search-pl-task-rural.jsp" />
+	</definition>
+	<definition name="search-pl-pending-task-rural" extends="base_layout">
+		<put-attribute name="page-title" value="title.search.pl.appln" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/search-pl-pending-task-rural.jsp" />
+	</definition>
 </tiles-definitions>

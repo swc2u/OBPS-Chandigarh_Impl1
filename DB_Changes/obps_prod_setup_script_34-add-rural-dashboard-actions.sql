@@ -85,3 +85,32 @@ VALUES  (nextval('chandigarh.seq_eg_action'), 'Receipt Register Report-Rural', '
 
 INSERT INTO chandigarh.eg_roleaction(roleid, actionid)
 VALUES ((select id from state.eg_role where name='SYSTEM'), (select id from chandigarh.eg_action where name='Receipt Register Report-Rural'));
+
+
+--DPC/Plith level Application Search
+INSERT INTO chandigarh.eg_action (id, name, url, queryparams, parentmodule, ordernumber, displayname, enabled, contextroot, version, createdby, createddate, lastmodifiedby, lastmodifieddate, application) 
+VALUES  (nextval('chandigarh.seq_eg_action'), 'Urban Search PL Application Tasks', '/reports/searchPLItems/d/u', NULL, (select id from chandigarh.eg_module where name='Urban'), 1, 'Search DPC/ Plinth level Certificate Applications', true, 'bpa', 0, 1, now(), 1, now(), (select id from chandigarh.eg_module where name='Urban'));
+
+INSERT INTO chandigarh.eg_roleaction(roleid, actionid)
+VALUES ((select id from state.eg_role where name='SYSTEM'), (select id from chandigarh.eg_action where name='Urban Search PL Application Tasks'));
+
+--DPC/Plith level Application Pending Search
+INSERT INTO chandigarh.eg_action (id, name, url, queryparams, parentmodule, ordernumber, displayname, enabled, contextroot, version, createdby, createddate, lastmodifiedby, lastmodifieddate, application) 
+VALUES  (nextval('chandigarh.seq_eg_action'), 'Urban Search PL Application Pending Tasks', '/reports/searchPLPendingItems/d/u', NULL, (select id from chandigarh.eg_module where name='Urban'), 1, 'Search DPC/ Plinth level Certificate Pending Applications', true, 'bpa', 0, 1, now(), 1, now(), (select id from chandigarh.eg_module where name='Urban'));
+
+INSERT INTO chandigarh.eg_roleaction(roleid, actionid)
+VALUES ((select id from state.eg_role where name='SYSTEM'), (select id from chandigarh.eg_action where name='Urban Search PL Application Pending Tasks'));
+
+--DPC/Plith level Application Search Rural
+INSERT INTO chandigarh.eg_action (id, name, url, queryparams, parentmodule, ordernumber, displayname, enabled, contextroot, version, createdby, createddate, lastmodifiedby, lastmodifieddate, application) 
+VALUES  (nextval('chandigarh.seq_eg_action'), 'Rural Search PL Application Tasks', '/reports/searchPLItems/d/r', NULL, (select id from chandigarh.eg_module where name='Rural'), 1, 'Search DPC/ Plinth level Certificate Applications', true, 'bpa', 0, 1, now(), 1, now(), (select id from chandigarh.eg_module where name='Rural'));
+
+INSERT INTO chandigarh.eg_roleaction(roleid, actionid)
+VALUES ((select id from state.eg_role where name='SYSTEM'), (select id from chandigarh.eg_action where name='Rural Search PL Application Tasks'));
+
+--DPC/Plith level Application Pending Search Rural
+INSERT INTO chandigarh.eg_action (id, name, url, queryparams, parentmodule, ordernumber, displayname, enabled, contextroot, version, createdby, createddate, lastmodifiedby, lastmodifieddate, application) 
+VALUES  (nextval('chandigarh.seq_eg_action'), 'Rural Search PL Application Pending Tasks', '/reports/searchPLPendingItems/d/r', NULL, (select id from chandigarh.eg_module where name='Rural'), 1, 'Search DPC/ Plinth level Certificate Pending Applications', true, 'bpa', 0, 1, now(), 1, now(), (select id from chandigarh.eg_module where name='Rural'));
+
+INSERT INTO chandigarh.eg_roleaction(roleid, actionid)
+VALUES ((select id from state.eg_role where name='SYSTEM'), (select id from chandigarh.eg_action where name='Rural Search PL Application Pending Tasks'));

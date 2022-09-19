@@ -215,11 +215,11 @@ public class SearchOcSpec {
 //      Join<SiteDetail, Boundary> adminBoundaryJoin = siteDetailJoin.join("adminBoundary");
       if (requestForm.getApplicationNumber() != null)
           predicate.getExpressions()
-                           .add(builder.equal(root.get("applicationNumber"), requestForm.getApplicationNumber()));
+                           .add(builder.like(root.get("applicationNumber"), requestForm.getApplicationNumber()+"%"));
       if (requestForm.getApplicantName() != null)
           predicate.getExpressions()
-                  .add(builder.equal(bpaApplication.get("owner").get("name"),
-                          requestForm.getApplicantName()));
+                  .add(builder.like(bpaApplication.get("owner").get("name"),
+                          requestForm.getApplicantName()+"%"));
 //      if(requestForm.getStatusId() !=null)
 //      	predicate.getExpressions()
 //          .add(builder.equal(root.get("status").get("id"), requestForm.getStatusId()));

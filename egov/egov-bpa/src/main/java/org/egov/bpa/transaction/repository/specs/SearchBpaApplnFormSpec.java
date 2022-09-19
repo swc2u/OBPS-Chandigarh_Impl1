@@ -287,9 +287,9 @@ public final class SearchBpaApplnFormSpec {
     
     private static void commonSpecForPendingItems(SearchPendingItemsForm requestForm, Root<BpaApplication> root, CriteriaBuilder builder, Predicate predicate) {
         if (requestForm.getApplicantName() != null)
-            predicate.getExpressions().add(builder.equal(root.get("owner").get("name"), requestForm.getApplicantName()));
+            predicate.getExpressions().add(builder.like(root.get("owner").get("name"), requestForm.getApplicantName()+"%"));
         if (requestForm.getApplicationNumber() != null)
-            predicate.getExpressions().add(builder.equal(root.get("applicationNumber"), requestForm.getApplicationNumber()));
+            predicate.getExpressions().add(builder.like(root.get("applicationNumber"), requestForm.getApplicationNumber()+"%"));
         if (requestForm.getServiceTypeId() != null)
             predicate.getExpressions().add(builder.equal(root.get("serviceType").get(ID), requestForm.getServiceTypeId()));
         if (requestForm.getApplicationTypeId() != null)
