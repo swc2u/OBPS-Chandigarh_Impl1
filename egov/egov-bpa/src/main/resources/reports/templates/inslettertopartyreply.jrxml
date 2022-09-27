@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reply" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="19a6b87f-b0aa-4611-908a-14a81b44cdbb">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -30,27 +30,20 @@
 	<title>
 		<band height="190" splitType="Stretch">
 			<staticText>
-				<reportElement x="129" y="58" width="342" height="20" uuid="58e1974e-c738-46d8-8c58-f5f6a4e1b962"/>
+				<reportElement x="129" y="41" width="342" height="20" uuid="58e1974e-c738-46d8-8c58-f5f6a4e1b962"/>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Letter to Party Reply Acknowledgement]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="129" y="39" width="342" height="18" uuid="67ea5c35-8b79-4289-9647-3815a7b81375"/>
-				<textElement textAlignment="Center">
-					<font fontName="SansSerif" size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Town Planning Section-Works Department]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="129" y="18" width="342" height="20" uuid="fb0fe1f0-6a41-4333-b2e3-6af102647660"/>
 				<textElement textAlignment="Center" markup="none">
 					<font fontName="SansSerif" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ulbName}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement x="156" y="81" width="142" height="27" uuid="3ff18553-88a3-4498-9dd9-e015e00ed8da"/>
 				<box leftPadding="1" rightPadding="1">
 					<pen lineWidth="0.25"/>
@@ -65,7 +58,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{letterToParty}.getAcknowledgementNumber()]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="true">
 				<reportElement x="156" y="108" width="142" height="27" uuid="9cfd5e71-9d9f-4068-8591-6331a7944db6"/>
 				<box leftPadding="1" rightPadding="1">
 					<pen lineWidth="0.25"/>
@@ -80,7 +73,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{letterToParty}.getSentDate()]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement x="418" y="108" width="142" height="27" uuid="d6adf61d-6c64-470c-b6cb-ebc1fe0e28d3"/>
 				<box leftPadding="1" rightPadding="1">
 					<pen lineWidth="0.25"/>
@@ -95,7 +88,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{letterToParty}.getLpNumber()]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement x="156" y="135" width="404" height="27" isPrintWhenDetailOverflows="true" uuid="104a7d6b-303e-49a5-86ad-734af5d7d94c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -106,7 +99,7 @@
 				<textElement textAlignment="Justified"/>
 				<textFieldExpression><![CDATA[$P{ownerName}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="156" y="162" width="404" height="27" isPrintWhenDetailOverflows="true" uuid="5dc50064-3e71-4b95-86ba-99bcebfe8f0f"/>
 				<box topPadding="1" leftPadding="1" bottomPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -117,42 +110,42 @@
 				<textElement textAlignment="Justified"/>
 				<textFieldExpression><![CDATA[$P{lpReason}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField textAdjust="StretchHeight">
 				<reportElement x="14" y="81" width="142" height="27" uuid="8a96635a-65e9-48cc-974b-614b683b1bb7"/>
 				<textElement>
 					<font size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Acknowledgement No."]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField textAdjust="StretchHeight">
 				<reportElement x="14" y="108" width="142" height="27" uuid="300bb440-43c1-4638-819c-8fd046768198"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Letter to Party Date"]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField textAdjust="StretchHeight">
 				<reportElement x="14" y="135" width="142" height="27" uuid="b7e1e5be-c3dd-47b5-acde-c026d6a1750a"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Applicant Name"]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField textAdjust="StretchHeight">
 				<reportElement stretchType="RelativeToBandHeight" x="14" y="162" width="142" height="27" uuid="83a5b2ac-1351-404e-acca-5a2e1a6cc8f4"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Letter to Party Reason"]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField textAdjust="StretchHeight">
 				<reportElement x="298" y="81" width="120" height="27" uuid="fedf74d3-0f77-4d0a-8484-9f0c165bf96b"/>
 				<textElement>
 					<font size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Reply Date"]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement x="418" y="81" width="142" height="27" uuid="cdf2efad-7dc8-4ef4-8070-e32192e730cb"/>
 				<box leftPadding="1" rightPadding="1">
 					<pen lineWidth="0.25"/>
@@ -167,7 +160,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{letterToParty}.getReplyDate()]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField textAdjust="StretchHeight">
 				<reportElement x="298" y="108" width="120" height="27" uuid="d8e689eb-c180-4ddf-98a8-794bb217ed14"/>
 				<textElement>
 					<font size="10" isBold="true"/>
@@ -192,7 +185,7 @@
 	</title>
 	<detail>
 		<band height="28">
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="156" y="0" width="404" height="27" isPrintWhenDetailOverflows="true" uuid="168f5305-2f65-492f-8c21-4e6091aabe6f"/>
 				<box topPadding="1" leftPadding="1" bottomPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -203,7 +196,7 @@
 				<textElement textAlignment="Justified"/>
 				<textFieldExpression><![CDATA[$F{letterToParty}.getLpDesc()]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField textAdjust="StretchHeight">
 				<reportElement stretchType="RelativeToBandHeight" x="14" y="0" width="142" height="27" isPrintWhenDetailOverflows="true" uuid="c3f59be5-ff0e-4033-962c-c418e7487152"/>
 				<textElement>
 					<font isBold="true"/>
@@ -212,14 +205,14 @@
 			</textField>
 		</band>
 		<band height="29">
-			<textField isStretchWithOverflow="true">
+			<textField textAdjust="StretchHeight">
 				<reportElement stretchType="RelativeToBandHeight" x="14" y="0" width="142" height="27" isPrintWhenDetailOverflows="true" uuid="4f03d287-e3ed-4bfa-8f40-24bf8fef8132"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Letter To Party Reply Remarks"]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="156" y="0" width="404" height="27" isPrintWhenDetailOverflows="true" uuid="0c31f181-3859-40ed-8805-22d5044393f8"/>
 				<box topPadding="1" leftPadding="1" bottomPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
