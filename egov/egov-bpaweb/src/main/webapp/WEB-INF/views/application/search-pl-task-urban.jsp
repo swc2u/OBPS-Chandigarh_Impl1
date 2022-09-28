@@ -42,7 +42,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
-<form:form role="form" action="" modelAttribute="searchPendingItemsForm" id="searchPendingItemsRuralForm" cssClass="form-horizontal form-groups-bordered" enctype="multipart/form-data">
+<form:form role="form" action="" modelAttribute="searchPLPendingItemsForm" id="searchPLUrbanItemsForm" cssClass="form-horizontal form-groups-bordered" enctype="multipart/form-data">
 	<div class="row">
 	    <div class="col-md-12">
 	        <div class="panel panel-primary" data-collapsed="0">
@@ -51,25 +51,39 @@
 	            <div class="panel-body">	
 	                <div class="form-group">
 	                    <label class="col-sm-3 control-label text-right"><spring:message
-	                            code="lbl.applctn.type"/></label> 
+ 	                            code="lbl.applctn.type"/></label> 
 	                    <div class="col-sm-3 add-margin">
-	                        <form:select path="applicationTypeId" data-first-option="false"
-	                                     id="applicationTypeId" cssClass="form-control applicationType" required="required">
-	                            <form:option value="">
-	                                <spring:message code="lbl.select"/>
-	                            </form:option>
-	                            <form:options items="${appTypes}" itemLabel="description" itemValue="id"/>
-	                        </form:select>
+	                        <form:select path="applicationTypeId" data-first-option="false" 
+ 	                                     id="applicationTypeId" cssClass="form-control applicationType" required="required"> 
+ 	                            <form:option value=""> 
+ 	                                <spring:message code="lbl.select"/> 
+ 	                            </form:option> 
+<%--  	                             <c:forEach var="item" items="${appTypes}"> --%>
+<%--  	                             	<option <c:if test="${item.id == 3 || 5}">${item.description}</c:if> > --%>
+<%-- <%-- 							        <option value="${item.key}" ${item.key == 3 ? }>${item.value}</option> --%> --%>
+<%-- 							    </c:forEach> --%>
+ 	                            <form:options items="${appTypes}" itemLabel="description" itemValue="id" />
+ 	                        </form:select> 
+ 	                       
+	                    </div> 
+	                             
+ 						<label class="col-sm-2 control-label text-right"><spring:message
+	                            code="lbl.sectors.villages"/></label>
+	                    <div class="col-sm-3 add-margin">
+
+						 <form:input class="form-control patternvalidation" maxlength="50"
+	                                    id="sector" path="sector"/>
+	                        <form:errors path="sector" cssClass="add-margin error-msg"/>
 	                    </div>
-	                    <label class="col-sm-2 control-label text-right"><spring:message
-	                            code="lbl.service.type"/></label>
+						<label class="col-sm-3 control-label text-right"><spring:message
+	                            code="lbl.appln.status"/></label>
 	                    <div class="col-sm-3 add-margin">
-	                        <form:select path="serviceTypeId" data-first-option="false"
-	                                     id="serviceTypeId" cssClass="form-control">
+	                        <form:select path="statusId" data-first-option="false"
+	                                     id="statusId" cssClass="form-control">
 	                            <form:option value="">
 	                                <spring:message code="lbl.select"/>
 	                            </form:option>
-	                            <form:options items="${serviceTypeList}" itemValue="id" itemLabel="description"/>
+	                            <form:options items="${applnStatusList}" itemValue="id" itemLabel="description"/>
 	                        </form:select>
 	                    </div>
 	                </div>
@@ -110,36 +124,7 @@
 	                        <form:errors path="applicantName" cssClass="add-margin error-msg"/>
 	                    </div>
 	                </div>
-	                 <div class="form-group">
-	                   
- 						<label class="col-sm-3 control-label text-right"><spring:message
-	                            code="lbl.sectors.villages"/></label>
-	                    <div class="col-sm-3 add-margin">
-<%-- 	                        <form:select path="sector" data-first-option="false" --%>
-<%-- 	                                     id="sector" cssClass="form-control"> --%>
-<%-- 	                            <form:option value=""> --%>
-<%-- 	                                <spring:message code="lbl.select"/> --%>
-<%-- 	                            </form:option> --%>
-<%-- 	                            <form:options items="${sectors}"/> --%>
-<%-- 	                        </form:select> --%>
-						 <form:input class="form-control patternvalidation" maxlength="50"
-	                                    id="sector" path="sector"/>
-	                        <form:errors path="sector" cssClass="add-margin error-msg"/>
-	                    </div>
-	                    
-	                    <label class="col-sm-2 control-label text-right"><spring:message
-	                            code="lbl.appln.status"/></label>
-	                    <div class="col-sm-3 add-margin">
-	                        <form:select path="statusId" data-first-option="false"
-	                                     id="statusId" cssClass="form-control">
-	                            <form:option value="">
-	                                <spring:message code="lbl.select"/>
-	                            </form:option>
-	                            <form:options items="${applnStatusList}" itemValue="id" itemLabel="description"/>
-	                        </form:select>
-	                    </div>
-	                   
-	                </div>
+	                
 	                <div class="form-group">
 	                    <label class="col-sm-3 control-label text-right"><spring:message
 	                            code="lbl.fromDate"/></label>
@@ -175,21 +160,22 @@
 
 <div id="chartContainer" style="height: 360px; width: 100%;"></div>
 
-<div class="row display-hide bpa-rural-report-section" id="table_container">
+<div class="row display-hide pl-task-report-section" id="table_container">
 	<div class="col-md-12 table-header text-left"><spring:message code="lbl.search.result" /></div>
 	<div class="col-md-12 form-group report-table-container">
 		<table class="table table-bordered table-hover multiheadertbl"
-			id="search_bpa_pending_items_rural_table">
+			id="search_pl_urban_items_table">
 			<thead>
 				<tr>
+					<th><spring:message code="lbl.bpa.applctn.type" /></th>
 					<th><spring:message code="lbl.applctn.type" /></th>
 					<th><spring:message code="lbl.applicant.name" /></th>
 					<th><spring:message code="lbl.application.no" /></th>
 					<th><spring:message code="lbl.appln.date" /></th>
-					<th><spring:message code="lbl.service.type" /></th>
+<%-- 					<th><spring:message code="lbl.service.type" /></th> --%>
+<%-- 					<th><spring:message code="lbl.occupancy" /></th> --%>
 					<th><spring:message code="lbl.sectors.villages" /></th>
 					<th><spring:message code="lbl.plot.no" /></th>
-					<th><spring:message code="lbl.occupancy" /></th>
 					<th><spring:message code="lbl.status" /></th>
 					<th><spring:message code="lbl.current.owner" /></th>
 					<th><spring:message code="lbl.owner.designation" /></th>
@@ -215,6 +201,6 @@
 <script	src="<cdn:url value='/resources/global/js/jq/plugins/datatables/dataTables.bts.js' context='/egi'/>"></script>
 <script src="<c:url value='/resources/global/js/handlebars/handlebars.js?rnd=${app_release_no}' context='/egi'/>"></script>
 <script src="<cdn:url value='/resources/js/app/bpa-ajax-helper.js?rnd=${app_release_no}'/> "></script>
-<script src="<cdn:url value='/resources/js/app/searchpendingitems-rural.js?rnd=${app_release_no}'/> "></script>
+<script src="<cdn:url value='/resources/js/app/searchplitems-urban.js?rnd=${app_release_no}'/> "></script>
 
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>

@@ -1,7 +1,8 @@
 $(document).ready(function() {
 	$('#btnSearch').click(function() {
+		
 		var isValid = false;
-		$('#searchPendingItemsRuralForm').find(':input', ':select', ':textarea').each(function() {
+		$('#searchBPAUrbanItemsForm').find(':input', ':select', ':textarea').each(function() {
 			if ($(this).val()) {
 				isValid = true;
 				return false;
@@ -23,7 +24,7 @@ var formdata;
 function graph() {
 	$.ajax({
 		type: "POST",
-		url: "/bpa/application/searchPendingItems/d/r",
+		url: "/bpa/application/searchBPAItems/d/u",
 		data: formdata
 		,
 		success: function(data) {
@@ -49,7 +50,7 @@ function showGraph(json) {
 		animationEnabled: true,
 		theme: "light2",
 		title: {
-			text: "BPA application Data -Rural"
+			text: "BPA application Data-Urban"
 		},
 		axisY: {
 			title: "Units",
@@ -69,12 +70,8 @@ function showGraph(json) {
 
 function callAjaxSearch() {
 	var viewurl = '/bpa/application/view/';
-	
-	if($("#applicationTypeId").val()=="")
-		document.getElementById("applicationTypeId").value=4;
-		
-	$('.bpa-rural-report-section').removeClass('display-hide');
-	$("#search_bpa_pending_items_rural_table").dataTable({
+	$('.bpa-urban-report-section').removeClass('display-hide');
+	$("#search_bpa_urban_items_table").dataTable({
 		processing: true,
 		serverSide: true,
 		sort: true,
@@ -84,7 +81,7 @@ function callAjaxSearch() {
 		rowReorder: true,
 		"order": [[1, 'asc']],
 		ajax: {
-			url: "/bpa/application/searchPendingItems/r",
+			url: "/bpa/application/searchBPAItems/u",
 			type: "POST",
 			beforeSend: function() {
 				$('.loader-class').modal('show', { backdrop: 'static' });
@@ -102,7 +99,7 @@ function callAjaxSearch() {
 					"sector":$("#sector").val(),
 					"plotNumber":$("#plotNumber").val(),
 					"ownerName":$("#applicantName").val(),
-					"statusId" :$("#statusId").val()
+					"statusId":$("#statusId").val()
 				};
 				console.log(formdata);
 				return formdata;

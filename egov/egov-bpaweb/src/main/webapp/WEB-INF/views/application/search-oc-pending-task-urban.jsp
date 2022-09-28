@@ -75,7 +75,7 @@
 	                                    id="sector" path="sector"/>
 	                        <form:errors path="sector" cssClass="add-margin error-msg"/>
 	                    </div>
-						<label class="col-sm-2 control-label text-right"><spring:message
+						<label class="col-sm-3 control-label text-right"><spring:message
 	                            code="lbl.appln.status"/></label>
 	                    <div class="col-sm-3 add-margin">
 	                        <form:select path="statusId" data-first-option="false"

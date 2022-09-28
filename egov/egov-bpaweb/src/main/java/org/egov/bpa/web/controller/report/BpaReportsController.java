@@ -155,6 +155,7 @@ public class BpaReportsController extends BpaGenericApplicationController {
 	private final String URBAN = "URBAN";
 	private final String RURAL = "RURAL";
 	private final String ALL = "ALL";
+	private final Long RURAL_APP_ID = 4L;
 	
 	private final Map<String, String> paymentModes = createPaymentModeList();
 	
@@ -290,6 +291,21 @@ public class BpaReportsController extends BpaGenericApplicationController {
 	public String getStatusCountByServicetypeResultForUrban(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
 		final List<SearchBpaApplicationReport> searchResultList = bpaReportsService
 				.getResultsByServicetypeAndStatusForUrban(searchBpaApplicationForm);
+		return new StringBuilder(DATA)
+				.append(toJSON(searchResultList, SearchBpaApplicationReport.class, SearchBpaApplicationReportAdaptor.class))
+				.append("}")
+				.toString();
+	}
+	
+	@RequestMapping(value = "/servicewise-statusreport-rural", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String getStatusCountByServicetypeResultForRrual(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+		if(searchBpaApplicationForm.getApplicationTypeId()==null) {
+			searchBpaApplicationForm.setApplicationTypeId(RURAL_APP_ID);
+		}
+		
+		final List<SearchBpaApplicationReport> searchResultList = bpaReportsService
+				.getResultsByServicetypeAndStatus(searchBpaApplicationForm);
 		return new StringBuilder(DATA)
 				.append(toJSON(searchResultList, SearchBpaApplicationReport.class, SearchBpaApplicationReportAdaptor.class))
 				.append("}")
@@ -481,6 +497,39 @@ public class BpaReportsController extends BpaGenericApplicationController {
 		model.addAttribute("serviceTypeEnum", serviceTypeEnum);
 		return "view-servicewise-appln-details-urban";
 	}
+	
+	@RequestMapping(value = "/servicewise-statusreport/view/d/r", method = RequestMethod.GET)
+	public String viewRrualStatusCountByServicetypeDetails(@RequestParam final String applicantName,
+													  @RequestParam final String applicationNumber,
+													  @RequestParam final Long ward, @RequestParam final Date fromDate,
+													  @RequestParam final Date toDate, @RequestParam final Long revenueWard, @RequestParam final Long electionWard,
+													  @RequestParam final Long zoneId, @RequestParam final String status, @RequestParam final String serviceType,
+													  @RequestParam final String zone, @RequestParam final String serviceTypeEnum,@RequestParam final String applicationTypeId,@RequestParam final String plotNumber,@RequestParam final String sector, final Model model) {
+		model.addAttribute("applicantName", applicantName);
+		model.addAttribute("applicationNumber", applicationNumber);
+		model.addAttribute("applicationTypeId", applicationTypeId);
+		model.addAttribute("plotNumber", plotNumber);
+		model.addAttribute("sector", sector);
+		model.addAttribute("ward", ward);
+		if (fromDate == null) {
+			model.addAttribute("fromDate", fromDate);
+		} else {
+			model.addAttribute("fromDate", DateUtils.toDefaultDateFormat(fromDate));
+		}
+		if (toDate == null) {
+			model.addAttribute("toDate", toDate);
+		} else {
+			model.addAttribute("toDate", DateUtils.toDefaultDateFormat(toDate));
+		}
+		model.addAttribute("revenueWard", revenueWard);
+		model.addAttribute("electionWard", electionWard);
+		model.addAttribute("zone", zone);
+		model.addAttribute("zoneId", zoneId);
+		model.addAttribute("status", status);
+		model.addAttribute("serviceType", serviceType);
+		model.addAttribute("serviceTypeEnum", serviceTypeEnum);
+		return "view-servicewise-appln-details-rural";
+	}
 
 	@RequestMapping(value = "/servicewise-statusreport/view", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
 	@ResponseBody
@@ -507,6 +556,21 @@ public class BpaReportsController extends BpaGenericApplicationController {
 	        	searchResultList = searchBpaApplicationService.search(searchBpaApplicationForm);
 	        }
 //		final List<SearchBpaApplicationForm> searchResultList = searchBpaApplicationService.search(searchBpaApplicationForm);
+		return new StringBuilder(DATA)
+				.append(toJSON(searchResultList, SearchBpaApplicationForm.class, SearchBpaApplicationFormAdaptor.class))
+				.append("}")
+				.toString();
+	}
+	
+	@RequestMapping(value = "/servicewise-statusreport-rural/view", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String viewStatusCountByServicetypeDetailsForRural(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+		
+		if(searchBpaApplicationForm.getApplicationTypeId()==null) 
+			searchBpaApplicationForm.setApplicationTypeId(RURAL_APP_ID);
+	        	
+		final List<SearchBpaApplicationForm> searchResultList = searchBpaApplicationService.search(searchBpaApplicationForm);
+		
 		return new StringBuilder(DATA)
 				.append(toJSON(searchResultList, SearchBpaApplicationForm.class, SearchBpaApplicationFormAdaptor.class))
 				.append("}")
@@ -706,10 +770,33 @@ public class BpaReportsController extends BpaGenericApplicationController {
 	        	AppTypeList.add(searchBpaApplicationForm.getApplicationTypeId());
 		
 		
-		return new DataTable<>(bpaReportsService.getReceiptRegisterReportDetailsForUrban(searchBpaApplicationForm,AppTypeList),
+		return new DataTable<>(bpaReportsService.getReceiptRegisterReportDetails(searchBpaApplicationForm,AppTypeList),
 				searchBpaApplicationForm.draw())
 				.toJson(ReceiptRegisterReportAdaptor.class);
 	}
+	
+	@RequestMapping(value = "/receiptRegister/d/r", method = RequestMethod.GET)
+	public String searchRegisteregisterRuralForm(final Model model) {
+		prepareReportFormData(model,RURAL);
+		model.addAttribute("paymentModes", paymentModes);
+		model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
+		return "receipt-register-report-rural";
+	}
+	
+	@RequestMapping(value = "/receiptRegister/d/r", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String getRegisterResultRural(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+		 List<Long> AppTypeList = new ArrayList<>();  
+		if (searchBpaApplicationForm.getApplicationTypeId() == null) 
+			AppTypeList.addAll(Arrays.asList(RURAL_APP_ID));
+	    else
+	        AppTypeList.add(searchBpaApplicationForm.getApplicationTypeId());
+		
+		return new DataTable<>(bpaReportsService.getReceiptRegisterReportDetails(searchBpaApplicationForm,AppTypeList),
+				searchBpaApplicationForm.draw())
+				.toJson(ReceiptRegisterReportAdaptor.class);
+	}
+	
 	
 	@RequestMapping(value = "/collectionSummary/d/u", method = RequestMethod.GET)
 	public String searchCollectionSummaryForm(final Model model) {
@@ -717,8 +804,7 @@ public class BpaReportsController extends BpaGenericApplicationController {
 		model.addAttribute("paymentModes", paymentModes);
 		model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
 		return "collection-summary-report-urban";
-	}
-	
+	}	
 
 	@RequestMapping(value = "/collectionSummary/d/u", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
 	@ResponseBody
@@ -728,7 +814,29 @@ public class BpaReportsController extends BpaGenericApplicationController {
 			  String source=ALL;
 			  searchBpaApplicationForm.setServiceType("BPA");
 		
-		return new DataTable<>(bpaReportsService.getCollectionSummaryReportDetailsForUrban(searchBpaApplicationForm,AppTypeList,source),
+		return new DataTable<>(bpaReportsService.getCollectionSummaryReportDetails(searchBpaApplicationForm,AppTypeList,source),
+				searchBpaApplicationForm.draw())
+				.toJson(CollectionSummaryReportAdaptor.class);
+	}
+	
+	@RequestMapping(value = "/collectionSummary/d/r", method = RequestMethod.GET)
+	public String searchCollectionSummaryRuralForm(final Model model) {
+		prepareReportFormData(model,RURAL);
+		model.addAttribute("paymentModes", paymentModes);
+		model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
+		return "collection-summary-report-rural";
+	}
+	
+
+	@RequestMapping(value = "/collectionSummary/d/r", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String getCollectionSummaryRural(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+		 List<Long> AppTypeList = new ArrayList<>();  
+			  AppTypeList.addAll(Arrays.asList(RURAL_APP_ID));
+			  String source=ALL;
+			  searchBpaApplicationForm.setServiceType("BPA");
+		
+		return new DataTable<>(bpaReportsService.getCollectionSummaryReportDetails(searchBpaApplicationForm,AppTypeList,source),
 				searchBpaApplicationForm.draw())
 				.toJson(CollectionSummaryReportAdaptor.class);
 	}
@@ -754,7 +862,33 @@ public class BpaReportsController extends BpaGenericApplicationController {
 			  String source=ALL;
 			  searchBpaApplicationForm.setServiceType("BPA");
 		
-		return new DataTable<>(bpaReportsService.getCollectionSummaryHeadwiseReportDetailsForUrban(searchBpaApplicationForm,AppTypeList,source),
+		return new DataTable<>(bpaReportsService.getCollectionSummaryHeadwiseReportDetails(searchBpaApplicationForm,AppTypeList,source),
+				searchBpaApplicationForm.draw())
+				.toJson(CollectionSummaryHeadwiseReportAdaptor.class);
+	}
+	
+	@RequestMapping(value = "/collectionSummaryHeadwise/d/r", method = RequestMethod.GET)
+	public String searchCollectionSummaryHeadwiseRuralForm(final Model model) {
+		prepareReportFormData(model,RURAL);
+		model.addAttribute("paymentModes", paymentModes);
+		model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
+		return "collection-summary-headwise-report-rural";
+	}
+	
+
+	@RequestMapping(value = "/collectionSummaryHeadwise/d/r", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String getCollectionSummaryHeadwiseRural(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+		 List<Long> AppTypeList = new ArrayList<>();  
+		 	if(searchBpaApplicationForm.getApplicationTypeId()!=null) 
+		 		AppTypeList.add(searchBpaApplicationForm.getApplicationTypeId());
+		 	else
+			  AppTypeList.addAll(Arrays.asList(4L));
+		 	
+			  String source=ALL;
+			  searchBpaApplicationForm.setServiceType("BPA");
+		
+		return new DataTable<>(bpaReportsService.getCollectionSummaryHeadwiseReportDetails(searchBpaApplicationForm,AppTypeList,source),
 				searchBpaApplicationForm.draw())
 				.toJson(CollectionSummaryHeadwiseReportAdaptor.class);
 	}

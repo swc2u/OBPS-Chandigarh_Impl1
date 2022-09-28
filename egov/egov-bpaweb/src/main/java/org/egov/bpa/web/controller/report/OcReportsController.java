@@ -103,6 +103,7 @@ public class OcReportsController extends BpaGenericApplicationController {
 	private final String URBAN = "URBAN";
 	private final String RURAL = "RURAL";
 	private final String ALL = "ALL";
+	private final Long RURAL_APP_ID = 4L;
 	
 	private final Map<String, String> paymentModes = createPaymentModeList();
 	
@@ -263,6 +264,67 @@ public class OcReportsController extends BpaGenericApplicationController {
 	}
 
 	
+	@RequestMapping(value = "/servicewise-statusreport-oc-rural/view", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String viewStatusCountByServicetypeDetailsForRural(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+		
+		if(searchBpaApplicationForm.getApplicationTypeId()==null) 
+	        	searchBpaApplicationForm.setApplicationTypeId(RURAL_APP_ID);
+		final List<SearchBpaApplicationForm> searchResultList = searchOCService.searchForServicewiseStatus(searchBpaApplicationForm);
+		return new StringBuilder(DATA)
+				.append(toJSON(searchResultList, SearchBpaApplicationForm.class, SearchBpaApplicationFormAdaptor.class))
+				.append("}")
+				.toString();
+	}
+	
+	
+	
+	@RequestMapping(value = "/servicewise-statusreport-oc-rural", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String getStatusCountByServicetypeResultForRural(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+		final List<SearchBpaApplicationReport> searchResultList = ocReportsService
+				.getResultsByServicetypeAndStatusForUrban(searchBpaApplicationForm);
+		return new StringBuilder(DATA)
+				.append(toJSON(searchResultList, SearchBpaApplicationReport.class, SearchBpaApplicationReportAdaptor.class))
+				.append("}")
+				.toString();
+	}
+
+	
+	@RequestMapping(value = "/servicewise-statusreport-oc/view/d/r", method = RequestMethod.GET)
+	public String viewRuralStatusCountByServicetypeDetails(@RequestParam final String applicantName,
+													  @RequestParam final String applicationNumber,
+													  @RequestParam final Long ward, @RequestParam final Date fromDate,
+													  @RequestParam final Date toDate, @RequestParam final Long revenueWard, @RequestParam final Long electionWard,
+													  @RequestParam final Long zoneId, @RequestParam final String status, @RequestParam final String serviceType,
+													  @RequestParam final String zone, @RequestParam final String serviceTypeEnum,@RequestParam final String applicationTypeId,@RequestParam final String plotNumber,@RequestParam final String sector, final Model model) {
+		model.addAttribute("applicantName", applicantName);
+		model.addAttribute("applicationNumber", applicationNumber);
+		model.addAttribute("applicationTypeId", applicationTypeId);
+		model.addAttribute("plotNumber", plotNumber);
+		model.addAttribute("sector", sector);
+		model.addAttribute("ward", ward);
+		if (fromDate == null) {
+			model.addAttribute("fromDate", fromDate);
+		} else {
+			model.addAttribute("fromDate", DateUtils.toDefaultDateFormat(fromDate));
+		}
+		if (toDate == null) {
+			model.addAttribute("toDate", toDate);
+		} else {
+			model.addAttribute("toDate", DateUtils.toDefaultDateFormat(toDate));
+		}
+		model.addAttribute("revenueWard", revenueWard);
+		model.addAttribute("electionWard", electionWard);
+		model.addAttribute("zone", zone);
+		model.addAttribute("zoneId", zoneId);
+		model.addAttribute("status", status);
+		model.addAttribute("serviceType", serviceType);
+		model.addAttribute("serviceTypeEnum", serviceTypeEnum);
+		return "view-servicewise-appln-details-oc-urban";
+	}
+
+	
 	@RequestMapping(value = "/servicewise-statusreport-oc-urban/view", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
 	@ResponseBody
 	public String viewStatusCountByServicetypeDetailsForUrban(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
@@ -283,6 +345,7 @@ public class OcReportsController extends BpaGenericApplicationController {
 				.append("}")
 				.toString();
 	}
+	
 	
 	
 	@RequestMapping(value = "/receiptRegister-oc/d/u", method = RequestMethod.GET)

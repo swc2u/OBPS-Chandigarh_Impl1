@@ -3,6 +3,7 @@ package org.egov.bpa.transaction.entity.dto;
 import java.util.Date;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
+import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
 import org.egov.infra.web.support.search.DataTableSearchRequest;
 import org.hibernate.validator.constraints.SafeHtml;
 
@@ -81,6 +82,25 @@ public class SearchPendingItemsForm extends DataTableSearchRequest {
         setPlotNumber(occupancyCertificate.getParent().getPlotNumber());
         setBPAApplicationType(occupancyCertificate.getParent().getApplicationType().getDescription());
 	}
+	 
+	 public SearchPendingItemsForm(PlinthLevelCertificate plCertificate, String currentOwnerName, String currentOwnerDesg, String pendingAction, int ellapseDays) {
+	        setId(plCertificate.getId());
+	        setApplicationNumber(plCertificate.getApplicationNumber());
+	        setApplicantName(plCertificate.getParent().getOwner().getName());
+	        setApplicationDate(plCertificate.getApplicationDate());
+	        setApplicationType(plCertificate.getApplicationType());
+	        setOccupancy(plCertificate.getParent().getOccupanciesName());
+	        setServiceType(plCertificate.getParent().getServiceType().getDescription());
+	        setServiceCode(plCertificate.getParent().getServiceType().getCode());
+	        setStatus(plCertificate.getStatus().getCode());
+	        setCurrentOwner(currentOwnerName);
+	        setCurrentOwnerDesg(currentOwnerDesg);
+	        setPendingAction(pendingAction);
+	        setEllapseTime(ellapseDays);
+	        setSector(plCertificate.getParent().getSector());
+	        setPlotNumber(plCertificate.getParent().getPlotNumber());
+	        setBPAApplicationType(plCertificate.getParent().getApplicationType().getDescription());
+		}
     
 	public Long getId() {
 		return id;

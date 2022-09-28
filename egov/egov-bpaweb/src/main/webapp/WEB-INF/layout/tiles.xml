@@ -1508,5 +1508,82 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/reports/collection-summary-headwise-report-oc-urban.jsp" />
 	</definition>
-	
+	<definition name="search-bpa-task-urban" extends="base_layout">
+		<put-attribute name="page-title" value="title.search.appln" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/search-bpa-task-urban.jsp" />
+	</definition>
+	<definition name="search-oc-task-urban" extends="base_layout">
+		<put-attribute name="page-title" value="title.search.oc.appln" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/search-oc-task-urban.jsp" />
+	</definition>
+	<definition name="search-bpa-task-rural" extends="base_layout">
+		<put-attribute name="page-title" value="title.search.appln.rural" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/search-bpa-task-rural.jsp" />
+	</definition>
+	<definition name="search-oc-task-rural" extends="base_layout">
+		<put-attribute name="page-title" value="title.search.appln.oc.rural" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/search-oc-task-rural.jsp" />
+	</definition>
+	<definition name="search-oc-pending-task-rural" extends="base_layout">
+		<put-attribute name="page-title" value="title.search.appln.oc.rural" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/search-oc-pending-task-rural.jsp" />
+	</definition>
+	<definition name="view-servicewise-appln-details-rural"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.view.service.wise.details" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/reports/view-servicewise-appln-details-rural.jsp" />
+	</definition>
+	<definition name="search-servicewise-status-report-oc-Rural"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.view.service.wise.details.oc" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/reports/search-servicewise-status-report-oc-Rural.jsp" />
+	</definition>
+	<definition name="view-servicewise-appln-details-oc-rural"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.view.service.wise.details.oc" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/reports/view-servicewise-appln-details-oc-rural.jsp" />
+	</definition>
+	<definition name="collection-summary-headwise-report-rural"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.view.collection.summary.headwise.receipt" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/reports/collection-summary-headwise-report-rural.jsp" />
+	</definition>
+	<definition name="collection-summary-report-rural"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.view.collection.summary.receipt" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/reports/collection-summary-report-rural.jsp" />
+	</definition>
+	<definition name="receipt-register-report-rural"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.view.bpa.receipt.register" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/reports/receipt-register-report-rural.jsp" />
+	</definition>
+	<definition name="search-pl-task-urban" extends="base_layout">
+		<put-attribute name="page-title" value="title.search.pl.appln" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/search-pl-task-urban.jsp" />
+	</definition>
+	<definition name="search-pl-pending-task-urban" extends="base_layout">
+		<put-attribute name="page-title" value="title.search.pl.appln" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/search-pl-pending-task-urban.jsp" />
+	</definition>
+	<definition name="search-pl-task-rural" extends="base_layout">
+		<put-attribute name="page-title" value="title.search.pl.appln" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/search-pl-task-rural.jsp" />
+	</definition>
+	<definition name="search-pl-pending-task-rural" extends="base_layout">
+		<put-attribute name="page-title" value="title.search.pl.appln" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/search-pl-pending-task-rural.jsp" />
+	</definition>
 </tiles-definitions>

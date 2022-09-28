@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	$('#btnSearch').click(function() {
 		var isValid = false;
-		$('#searchPendingItemsRuralForm').find(':input', ':select', ':textarea').each(function() {
+		$('#searchOCUrbanItemsForm').find(':input', ':select', ':textarea').each(function() {
 			if ($(this).val()) {
 				isValid = true;
 				return false;
@@ -23,7 +23,7 @@ var formdata;
 function graph() {
 	$.ajax({
 		type: "POST",
-		url: "/bpa/application/searchPendingItems/d/r",
+		url: "/bpa/application/searchOCItems/d/u",
 		data: formdata
 		,
 		success: function(data) {
@@ -49,7 +49,7 @@ function showGraph(json) {
 		animationEnabled: true,
 		theme: "light2",
 		title: {
-			text: "BPA application Data -Rural"
+			text: "Occupancy Certificate Data -Urban"
 		},
 		axisY: {
 			title: "Units",
@@ -68,13 +68,9 @@ function showGraph(json) {
 
 
 function callAjaxSearch() {
-	var viewurl = '/bpa/application/view/';
-	
-	if($("#applicationTypeId").val()=="")
-		document.getElementById("applicationTypeId").value=4;
-		
-	$('.bpa-rural-report-section').removeClass('display-hide');
-	$("#search_bpa_pending_items_rural_table").dataTable({
+	var viewurl = '/bpa/application/occupancycertificate/viewdetails/';
+	$('.oc-task-report-section').removeClass('display-hide');
+	$("#search_oc_urban_items_table").dataTable({
 		processing: true,
 		serverSide: true,
 		sort: true,
@@ -84,7 +80,7 @@ function callAjaxSearch() {
 		rowReorder: true,
 		"order": [[1, 'asc']],
 		ajax: {
-			url: "/bpa/application/searchPendingItems/r",
+			url: "/bpa/application/searchOCItems",
 			type: "POST",
 			beforeSend: function() {
 				$('.loader-class').modal('show', { backdrop: 'static' });
@@ -92,17 +88,15 @@ function callAjaxSearch() {
 			data: function(args) {
 				formdata=	 {
 					"args": JSON.stringify(args),
-					"serviceTypeId": $("#serviceTypeId").val(),
 					"applicationTypeId": $("#applicationTypeId").val(),
 					"currentOwnerDesg": $("#currentOwnerDesg").val(),
 					"applicantName": $("#applicantName").val(),
+					"sector": $("#sector").val(),
+					"plotNumber": $("#plotNumber").val(),
 					"applicationNumber": $("#applicationNumber").val(),
 					"fromDate": $("#fromDate").val(),
 					"toDate": $("#toDate").val(),
-					"sector":$("#sector").val(),
-					"plotNumber":$("#plotNumber").val(),
-					"ownerName":$("#applicantName").val(),
-					"statusId" :$("#statusId").val()
+					"statusId":$("#statusId").val()
 				};
 				console.log(formdata);
 				return formdata;
@@ -120,6 +114,10 @@ function callAjaxSearch() {
 		},
 		aaSorting: [],
 		columns: [
+			{
+				"data": "bpaApplicationType",
+				"sClass": "text-left"
+			},
 			{
 				"data": "applicationType",
 				"sClass": "text-left"
@@ -141,19 +139,11 @@ function callAjaxSearch() {
 				}
 			},
 			{
-				"data": "serviceType",
-				"sClass": "text-left"
-			},
-			{
 				"data": "sector",
 				"sClass": "text-left"
 			},
-				{
-				"data": "plotNumber",
-				"sClass": "text-left"
-			},
 			{
-				"data": "occupancy",
+				"data": "plotNumber",
 				"sClass": "text-left"
 			},
 			{
