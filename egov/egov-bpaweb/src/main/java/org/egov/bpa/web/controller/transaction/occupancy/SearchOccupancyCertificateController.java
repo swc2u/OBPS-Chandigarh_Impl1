@@ -196,7 +196,7 @@ public class SearchOccupancyCertificateController extends BpaGenericApplicationC
     		model.addAttribute("appTypes",applicationTypes.stream().filter(appType -> appType.getName().equalsIgnoreCase("Medium Risk"))
             .collect(Collectors.toList()));
     	List<BpaStatus> statusList = bpaStatusService.findAllByModuleType(BPASTATUS_MODULETYPE);
-    	model.addAttribute("applnStatusList", statusList.stream().filter(status->!status.getCode().equalsIgnoreCase(OC_END_STATE)).collect(Collectors.toList()));
+    	model.addAttribute("applnStatusList", statusList.stream().filter(status->!status.getCode().matches(OC_END_STATE+"|Cancelled")).collect(Collectors.toList()));
 	}
     
     @PostMapping(value = "/searchOCPendingItems/d/u", produces = MediaType.TEXT_PLAIN_VALUE)
