@@ -91,6 +91,7 @@ public class HomeController {
     public static final String ELECNOCROLE = "BPA_ELECTRICAL_NOC_ROLE";
     public static final String POLNOCROLE = "BPA_POL_CONTROL_NOC_ROLE";
     public static final String MANINOCROLE = "BPA_MANIMAJARA_NOC_ROLE";
+    public static final String PLANNINGNOCROLE = "BPA_PLANNING_NOC_ROLE";
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -209,7 +210,8 @@ public class HomeController {
 				|| STRCNOCROLE.equals(r.getName())					
 				|| ELECNOCROLE.equals(r.getName()) 
 				|| POLNOCROLE.equals(r.getName())
-				|| MANINOCROLE.equals(r.getName())) {
+				|| MANINOCROLE.equals(r.getName())
+				|| PLANNINGNOCROLE.equals(r.getName())) {
 				check = true;
 			}
 		}
