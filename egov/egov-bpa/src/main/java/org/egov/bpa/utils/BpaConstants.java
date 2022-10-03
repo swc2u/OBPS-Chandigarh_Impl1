@@ -472,6 +472,7 @@ public class BpaConstants {
 	public static final String ELECNOCTYPE = "ELECTRICAL NOC";
 	public static final String POLNOCTYPE = "POL CONTROL NOC";
 	public static final String ACTAXNOCTYPE = "AC TAX NOC";
+	public static final String PLANNINGNOCTYPE = "PLANNING NOC";
 
 	public static final String NOC_INITIATED = "Initiated";
 	public static final String NOC_APPROVED = "Approved";
@@ -868,6 +869,7 @@ public class BpaConstants {
 		NOCTYPE.put(ELECNOCTYPE, ELECNOCROLE);
 		NOCTYPE.put(POLNOCTYPE, POLNOCROLE);
 		NOCTYPE.put(ACTAXNOCTYPE, ACTAXNOCROLE);
+		NOCTYPE.put(PLANNINGNOCTYPE, PLANNINGNOCTYPE);
 	}
 	
 	private static final Map<String, String> NOCTYPERURAL = new ConcurrentHashMap<>();
@@ -883,6 +885,7 @@ public class BpaConstants {
 		NOCTYPERURAL.put(ELECNOCTYPE, ELECNOCRURALROLE);
 		NOCTYPERURAL.put(POLNOCTYPE, POLNOCRURALROLE);
 		NOCTYPERURAL.put(ACTAXNOCTYPE, ACTAXNOCRURALROLE);
+		NOCTYPERURAL.put(PLANNINGNOCTYPE, PLANNINGNOCTYPE);
 	}
 
 	private static final Map<String, String> OCNOCTYPE = new ConcurrentHashMap<>();
@@ -891,6 +894,7 @@ public class BpaConstants {
 		OCNOCTYPE.put(PACNOCTYPE, PACNOCROLE);
 		OCNOCTYPE.put(POLNOCTYPE, POLNOCROLE);
 		OCNOCTYPE.put(ACTAXNOCTYPE, ACTAXNOCROLE);
+		OCNOCTYPE.put(PLANNINGNOCTYPE, PLANNINGNOCTYPE);
 	}
 	
 	private static final Map<String, String> OCNOCTYPERURAL = new ConcurrentHashMap<>();
@@ -899,6 +903,7 @@ public class BpaConstants {
 		OCNOCTYPERURAL.put(PACNOCTYPE, PACNOCRURALROLE);
 		OCNOCTYPERURAL.put(POLNOCTYPE, POLNOCRURALROLE);
 		OCNOCTYPERURAL.put(ACTAXNOCTYPE, ACTAXNOCRURALROLE);
+		OCNOCTYPERURAL.put(PLANNINGNOCTYPE, PLANNINGNOCTYPE);
 	}
 
 	// Update and use this code if DCR integration require to particular service

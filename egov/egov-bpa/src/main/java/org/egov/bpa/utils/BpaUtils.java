@@ -577,6 +577,24 @@ public class BpaUtils {
 
 		buildWorkFlow(approvalPosition, application, currentState, remarks, workFlowAction, amountRule);
 	}
+	
+	@Transactional
+	public void redirectToBpaNOCWorkFlow(Long approvalPosition, final PermitNocApplication permitNocApplication,
+			final String currentState, final String remarks, final String workFlowAction, final BigDecimal amountRule) {
+
+		buildBpaNOCWorkFlow(approvalPosition, permitNocApplication, currentState, remarks, workFlowAction, amountRule);
+	}
+	
+	private void buildBpaNOCWorkFlow(Long approvalPosition, final PermitNocApplication permitNocApplication, final String currentState,
+			final String remarks, final String workFlowAction, final BigDecimal amountRule) {
+		final WorkFlowMatrix wfMatrix = getWfMatrixByCurrentState(null,
+				"BPA_NOC", currentState, permitNocApplication.getBpaApplication().getApplicationType().getName());
+		final BpaApplicationWorkflowCustomDefaultImpl applicationWorkflowCustomDefaultImpl = getInitialisedWorkFlowBean();
+		Long approvalPositionId = approvalPosition;
+		
+					applicationWorkflowCustomDefaultImpl.createCommonWorkflowTransitionFotBpaNOC(permitNocApplication, approvalPositionId,
+							remarks, permitNocApplication.getBpaApplication().getApplicationType().getName(), workFlowAction, amountRule);
+	}
 
 	@Transactional
 	public void redirectToOccupancyCertificateWorkFlow(Long approvalPosition, final BpaApplication application,
