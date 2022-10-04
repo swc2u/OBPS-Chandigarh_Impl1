@@ -43,6 +43,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BpaStatus;
 import org.egov.bpa.transaction.entity.PermitLetterToParty;
+import org.egov.bpa.transaction.entity.PermitNocApplication;
 import org.egov.bpa.transaction.entity.SiteDetail;
 import org.egov.bpa.transaction.entity.dto.BpaStateInfo;
 import org.egov.bpa.transaction.service.BpaStatusService;
@@ -512,6 +513,55 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 		if (code != null && !"".equals(code))
 			return bpaStatusService.findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE, code);
 		return null;
+	}
+
+	public void createCommonWorkflowTransitionForNOC(PermitNocApplication permitNocApplication, Long approvalPosition,
+			String remarks, String additionalRule, String workFlowAction, BigDecimal amountRule) {
+		WorkFlowMatrix wfmatrix;
+		if (LOG.isDebugEnabled())
+			LOG.debug(" Create NOC WorkFlow Transition Started  ...");
+		final User user = securityUtils.getCurrentUser();
+		final DateTime currentDate = new DateTime();
+		Position pos = null;
+		Assignment wfInitiator = null;
+		if (permitNocApplication.getCreatedBy() != null)
+			wfInitiator = bpaWorkFlowService.getWorkFlowInitiator(permitNocApplication.getBpaNocApplication().getState(), permitNocApplication.getCreatedBy());
+		User ownerUser = null;
+		if (approvalPosition != null && approvalPosition > 0)
+			pos = positionMasterService.getPositionById(approvalPosition);
+		if (pos != null)
+			ownerUser = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(), new Date()).get(0)
+					.getEmployee();
+		
+		wfmatrix =bpaApplicationWorkflowService.
+				 getWfMatrix("BPA_NOC", null, null, permitNocApplication.getBpaApplication().getApplicationType().getName(), "WF_NEW_STATE",
+					null);
+		
+		if (wfmatrix != null) {
+//			if (pos == null) {
+//				SiteDetail siteDetail = permitNocApplication.getSiteDetail().get(0);
+//				pos = bpaUtils.getUserPositionByZone(wfmatrix.getNextDesignation(),
+//						bpaUtils.getBoundaryForWorkflow(siteDetail).getId());
+//				List<Assignment> assignments = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(),
+//						new Date());
+//				if (!assignments.isEmpty())
+//					ownerUser = assignments.get(0).getEmployee();
+//			}
+//			BpaStateInfo bpaStateInfo = bpaWorkFlowService.getBpaStateInfo(permitNocApplication.getCurrentState(),
+//					permitNocApplication.getStateHistory(), permitNocApplication.getTownSurveyorInspectionRequire(),
+//					new BpaStateInfo(), wfmatrix, workFlowAction);
+
+			permitNocApplication.getBpaNocApplication().setStatus(getStatusByCurrentMatrxiStatus(wfmatrix));
+			permitNocApplication.getBpaNocApplication().transition().start()
+					.withSLA(bpaWorkFlowService.calculateDueDate(bpaAppConfigUtil.getSlaBpaApplication()))
+					.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+					.withComments(remarks).withRefFileId(permitNocApplication.getBpaNocApplication().getWfFileRefId())
+					.withInitiator(wfInitiator != null ? wfInitiator.getPosition() : null)
+					.withStateValue(wfmatrix.getNextState()).withDateInfo(new Date()).withOwner(pos)
+					.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
+					.withNatureOfTask(BpaConstants.NATURE_OF_WORK).withExtraInfo("");
+		}
+		
 	}
 
 }
