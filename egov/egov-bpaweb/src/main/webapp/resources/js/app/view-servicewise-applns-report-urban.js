@@ -121,6 +121,10 @@ $(document)
 												"data" : "plotNumber",
 												"sClass" : "text-left"
 										   },
+										     {
+												"data" : "occupancy",
+												"sClass" : "text-left"
+										   },
 										   {
 												"data" : "applicationDate",
 												"sClass" : "text-left"

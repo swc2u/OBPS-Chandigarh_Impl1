@@ -261,7 +261,7 @@ public class SearchOCService {
        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
         //Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
-        List<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchPendingOCTasks(searchRequest));
+        List<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchPendingOCTasksRural(searchRequest));
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
         for (OccupancyCertificate application : occupancyCertificate) {
         	if(null!=application.getState()) {

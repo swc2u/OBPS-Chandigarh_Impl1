@@ -42,6 +42,7 @@ $(document)
 		.ready(
 				function() {
 					var viewurl = '/bpa/application/view/';
+					
 					$('.report-section-rural').removeClass('display-hide');
 					$("#bpaServiceWiseApplnsDetailsRural")
 							.dataTable(
@@ -119,6 +120,10 @@ $(document)
 										   },
 										    {
 												"data" : "plotNumber",
+												"sClass" : "text-left"
+										   },
+										   {
+												"data" : "occupancy",
 												"sClass" : "text-left"
 										   },
 										   {
