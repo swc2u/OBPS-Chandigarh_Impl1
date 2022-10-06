@@ -559,8 +559,10 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 					.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
 					.withComments(remarks).withRefFileId(permitNocApplication.getBpaNocApplication().getWfFileRefId())
 					.withInitiator(wfInitiator != null ? wfInitiator.getPosition() : null)
-					.withStateValue(wfmatrix.getNextState()).withDateInfo(new Date()).withOwner(pos)
-					.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
+					.withStateValue(wfmatrix.getNextState()).withDateInfo(new Date())
+					.withOwner(pos)
+					.withOwner(ownerUser)
+					.withNextAction(wfmatrix.getNextAction())
 					.withNatureOfTask(BpaConstants.NATURE_OF_WORK).withExtraInfo("");
 		}
 		

@@ -149,13 +149,11 @@ public class PermitNocApplicationService {
         	if(nocDocument.getNocDocument().getNocSupportDocs().isEmpty()) {
 	            PermitNocApplication permitNoc = new PermitNocApplication();
 	            BpaNocApplication nocApplication = new BpaNocApplication();
-	            System.out.println("nocDocument::::::::::::::"+nocDocument);
 	            List<User> nocUser = new ArrayList<>();
 	            List<User> userList = new ArrayList<>();
 	            NocConfiguration nocConfig = nocConfigurationService
 	                    .findByDepartmentAndType(nocDocument.getNocDocument().getServiceChecklist().getChecklist().getCode(),
 	                            BpaConstants.PERMIT);
-	            System.out.println("nocConfig::::::::::"+nocConfig.getDepartment());
 	            if (nocConfig != null && nocConfig.getApplicationType().trim().equalsIgnoreCase(BpaConstants.PERMIT)
 	                    && nocConfig.getIntegrationType().equalsIgnoreCase(NocIntegrationTypeEnum.INTERNAL.toString())
 	                    && nocConfig.getIntegrationInitiation().equalsIgnoreCase(NocIntegrationInitiationEnum.AUTO.toString())
@@ -180,6 +178,24 @@ public class PermitNocApplicationService {
 	                permitNoc.setBpaNocApplication(nocApplication);
 	                permitNoc = createNocApplication(permitNoc, nocConfig);
 	                bpaUtils.createNocPortalUserinbox(permitNoc, nocUser, permitNoc.getBpaNocApplication().getStatus().getCode());
+	               
+	                if(nocConfig.getDepartment().equalsIgnoreCase("STRUCTURE NOC")) {
+			                //Workflow initiated for NOC
+				            Long approvalPosition = null;
+				            final WorkFlowMatrix wfMatrixNOC =bpaUtils.getWfMatrixByCurrentState(
+				                   false, BPA_NOC, WF_NEW_STATE,
+				                   application.getApplicationType().getName());
+				           if (wfMatrixNOC != null) {
+				           	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrixNOC.getNextDesignation(),
+				           			application.getSiteDetail().get(0) != null
+				                               && application.getSiteDetail().get(0).getAdminBoundary() != null
+				                                       ? application.getSiteDetail().get(0).getAdminBoundary().getId()
+				                                       : null);
+				           }
+				           bpaUtils.redirectToBpaNOCWorkFlow(approvalPosition, permitNoc, "Initiated",
+				           		"COMMENTS", "Forwarded", null);
+	                }
+		           
 	            }else if (nocConfig != null && nocConfig.getApplicationType().trim().equalsIgnoreCase(BpaConstants.PERMIT)
 	                    && nocConfig.getIntegrationType().equalsIgnoreCase(NocIntegrationTypeEnum.THIRD_PARTY.toString())
 	                    && nocConfig.getIntegrationInitiation().equalsIgnoreCase(NocIntegrationInitiationEnum.AUTO.toString())
@@ -190,22 +206,6 @@ public class PermitNocApplicationService {
 	                nocUser.add(permitNoc.getBpaApplication().getOwner().getUser());
 	                bpaUtils.createNocPortalUserinbox(permitNoc, nocUser, permitNoc.getBpaNocApplication().getStatus().getCode());
 	            }
-	            
-	            //Workflow initiated for NOC
-	            Long approvalPosition = null;
-	            
-	            final WorkFlowMatrix wfMatrixNOC =bpaUtils.getWfMatrixByCurrentState(
-	                   false, BPA_NOC, WF_NEW_STATE,
-	                   application.getApplicationType().getName());
-	           if (wfMatrixNOC != null) {
-	           	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrixNOC.getNextDesignation(),
-	           			application.getSiteDetail().get(0) != null
-	                               && application.getSiteDetail().get(0).getAdminBoundary() != null
-	                                       ? application.getSiteDetail().get(0).getAdminBoundary().getId()
-	                                       : null);
-	           }
-	           bpaUtils.redirectToBpaNOCWorkFlow(approvalPosition, permitNoc, "Initiated",
-	           		"COMMENTS", "Forwarded", null);
 	            
 	        }
         }
