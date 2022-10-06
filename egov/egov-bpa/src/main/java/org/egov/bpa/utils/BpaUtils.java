@@ -521,8 +521,6 @@ public class BpaUtils {
 		final Boundary boundaryObj = getBoundaryById(boundary);
 		final String[] designationarr = designation.split(",");
 		List<Assignment> assignment = new ArrayList<>();
-		System.out.println("designation::::::::::::"+designation);
-		System.out.println("boundary:::::::::"+boundary);
 		for (final String desg : designationarr) {
 			assignment = assignmentService.findAssignmentByDepartmentDesignationAndBoundary(null,
 					designationService.getDesignationByName(desg).getId(), boundaryObj.getId());
@@ -585,12 +583,12 @@ public class BpaUtils {
 	@Transactional
 	public void redirectToBpaNOCWorkFlow(Long approvalPosition, final PermitNocApplication permitNocApplication,
 			final String currentState, final String remarks, final String workFlowAction, final BigDecimal amountRule) {
-
 		buildBpaNOCWorkFlow(approvalPosition, permitNocApplication, currentState, remarks, workFlowAction, amountRule);
 	}
 	
 	private void buildBpaNOCWorkFlow(Long approvalPosition, final PermitNocApplication permitNocApplication, final String currentState,
 			final String remarks, final String workFlowAction, final BigDecimal amountRule) {
+		System.out.println("permitNocApplicationDDDDDDDD:::::::::"+permitNocApplication.getBpaApplication().getApplicationType());
 		final WorkFlowMatrix wfMatrix = getWfMatrixByCurrentState(false,
 				BPA_NOC, currentState, permitNocApplication.getBpaApplication().getApplicationType().getName());
 		final BpaApplicationWorkflowCustomDefaultImpl applicationWorkflowCustomDefaultImpl = getInitialisedWorkFlowBean();

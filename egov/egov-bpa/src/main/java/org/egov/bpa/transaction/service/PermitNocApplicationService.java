@@ -149,12 +149,13 @@ public class PermitNocApplicationService {
         	if(nocDocument.getNocDocument().getNocSupportDocs().isEmpty()) {
 	            PermitNocApplication permitNoc = new PermitNocApplication();
 	            BpaNocApplication nocApplication = new BpaNocApplication();
-	
+	            System.out.println("nocDocument::::::::::::::"+nocDocument);
 	            List<User> nocUser = new ArrayList<>();
 	            List<User> userList = new ArrayList<>();
 	            NocConfiguration nocConfig = nocConfigurationService
 	                    .findByDepartmentAndType(nocDocument.getNocDocument().getServiceChecklist().getChecklist().getCode(),
 	                            BpaConstants.PERMIT);
+	            System.out.println("nocConfig::::::::::"+nocConfig.getDepartment());
 	            if (nocConfig != null && nocConfig.getApplicationType().trim().equalsIgnoreCase(BpaConstants.PERMIT)
 	                    && nocConfig.getIntegrationType().equalsIgnoreCase(NocIntegrationTypeEnum.INTERNAL.toString())
 	                    && nocConfig.getIntegrationInitiation().equalsIgnoreCase(NocIntegrationInitiationEnum.AUTO.toString())
@@ -174,7 +175,6 @@ public class PermitNocApplicationService {
 	                                            .equals(getNocRoles(application, nocConfig))))
 	                            .collect(Collectors.toList());
 	                }
-	                System.out.println("userList.get(0):::::::::::::::"+userList.get(0));
 	                nocUser.add(userList.get(0));
 	                permitNoc.setBpaApplication(application);
 	                permitNoc.setBpaNocApplication(nocApplication);
