@@ -85,6 +85,7 @@
 					<th><spring:message code="lbl.application.no" /></th>
 					<th><spring:message code="lbl.sectors.villages" /></th>
 					<th><spring:message code="lbl.plot.no" /></th>
+					<th><spring:message code="lbl.occupancy" /></th>
 					<th><spring:message code="lbl.appln.date" /></th>
 					<th><spring:message code="lbl.owner.address" /></th>
 					<th><spring:message code="lbl.service.type" /></th>
