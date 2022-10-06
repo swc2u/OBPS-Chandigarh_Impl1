@@ -39,6 +39,8 @@
  */
 package org.egov.bpa.transaction.service;
 
+import static org.egov.bpa.utils.BpaConstants.WF_NEW_STATE;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -70,6 +72,7 @@ import org.egov.infra.admin.master.service.UserService;
 import org.egov.infra.config.core.ApplicationThreadLocals;
 import org.egov.infra.persistence.entity.enums.UserType;
 import org.egov.infra.utils.ApplicationConstant;
+import org.egov.infra.workflow.matrix.entity.WorkFlowMatrix;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,7 +82,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Service
 @Transactional(readOnly = true)
 public class PermitNocApplicationService {
-
+	
+	private static final String BPA_NOC = "BpaNOC";
+	private static final String WORK_FLOW_ACTION = "workFlowAction";
+	
     @Autowired
     private PermitNocApplicationRepository permitNocRepository;
     @Autowired
@@ -184,6 +190,23 @@ public class PermitNocApplicationService {
 	                nocUser.add(permitNoc.getBpaApplication().getOwner().getUser());
 	                bpaUtils.createNocPortalUserinbox(permitNoc, nocUser, permitNoc.getBpaNocApplication().getStatus().getCode());
 	            }
+	            
+	            //Workflow initiated for NOC
+	            Long approvalPosition = null;
+	            
+	            final WorkFlowMatrix wfMatrixNOC =bpaUtils.getWfMatrixByCurrentState(
+	                   false, BPA_NOC, WF_NEW_STATE,
+	                   application.getApplicationType().getName());
+	           if (wfMatrixNOC != null) {
+	           	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrixNOC.getNextDesignation(),
+	           			application.getSiteDetail().get(0) != null
+	                               && application.getSiteDetail().get(0).getAdminBoundary() != null
+	                                       ? application.getSiteDetail().get(0).getAdminBoundary().getId()
+	                                       : null);
+	           }
+	           bpaUtils.redirectToBpaNOCWorkFlow(approvalPosition, permitNoc, "Initiated",
+	           		"COMMENTS", "Forwarded", null);
+	            
 	        }
         }
     }
@@ -301,7 +324,7 @@ public class PermitNocApplicationService {
 							|| BpaConstants.A_P.equalsIgnoreCase(occupancyTypeHelper.getSubtype().getCode())){
 							edcrPlanInfo.getPlan().getPlanInformation().setNocPACDept("YES");
 							edcrPlanInfo.getPlan().getPlanInformation().setNocStructureDept("YES");
-							edcrPlanInfo.getPlan().getPlanInformation().setNocPlanningDept("YES");
+//							edcrPlanInfo.getPlan().getPlanInformation().setNocPlanningDept("YES");
 						}else {
 							edcrPlanInfo.getPlan().getPlanInformation().setNocPACDept("YES");
 							edcrPlanInfo.getPlan().getPlanInformation().setNocFireDept("YES");
@@ -309,7 +332,7 @@ public class PermitNocApplicationService {
 							edcrPlanInfo.getPlan().getPlanInformation().setNocElectricalDept("YES");
 							edcrPlanInfo.getPlan().getPlanInformation().setNocPollutionDept("YES");
 							edcrPlanInfo.getPlan().getPlanInformation().setNocPH7Dept("YES");
-							edcrPlanInfo.getPlan().getPlanInformation().setNocPlanningDept("YES");
+//							edcrPlanInfo.getPlan().getPlanInformation().setNocPlanningDept("YES");
 						}
 					}
 				}else if(boundaryType.equalsIgnoreCase(BpaConstants.RURAL)){

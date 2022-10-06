@@ -72,7 +72,8 @@ public class OccupancyCertificateValidationService {
     private BpaUtils bpaUtils;
 
     public Boolean validateOcApplnWithPermittedBpaAppln(final Model model, final OccupancyCertificate occupancyCertificate) {
-        return validateOcApplnWithPermittedAppln(model, occupancyCertificate) ||
+    	System.out.println("occupancyCertificate.getParent():::"+occupancyCertificate.getParent().getBuildingDetail().size());
+    	return validateOcApplnWithPermittedAppln(model, occupancyCertificate) ||
                 validateBuildingHeightAndFloorArea(occupancyCertificate.getParent().getBuildingDetail(),
                         occupancyCertificate.getBuildings(), model);
     }
@@ -218,6 +219,8 @@ public class OccupancyCertificateValidationService {
             BigDecimal permitBldgHgt = BigDecimal.ZERO;
             for (BuildingDetail bpa : permitBuildings) {
                 permitBldgHgt = bpa.getHeightFromGroundWithOutStairRoom().setScale(SCALING_FACTOR, BigDecimal.ROUND_HALF_UP);
+                System.out.println("permitBldgHgt&&&&&&&&&&&&&&&:"+permitBldgHgt);
+                System.out.println("OC:::::***********"+oc.getHeightFromGroundWithOutStairRoom().setScale(SCALING_FACTOR, BigDecimal.ROUND_HALF_UP));
                 if (oc.getHeightFromGroundWithOutStairRoom().setScale(SCALING_FACTOR, BigDecimal.ROUND_HALF_UP)
                         .doubleValue() <= permitBldgHgt.doubleValue())
                     isHeightSame = true;

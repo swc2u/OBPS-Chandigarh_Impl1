@@ -121,6 +121,8 @@ public class BpaUtils {
 
 	private static final String CLOSED = "Closed";
 	private static final String WF_END_ACTION = "END";
+	
+	private static final String BPA_NOC = "BpaNOC";
 	@Autowired
 	private ApplicationContext context;
 
@@ -519,6 +521,8 @@ public class BpaUtils {
 		final Boundary boundaryObj = getBoundaryById(boundary);
 		final String[] designationarr = designation.split(",");
 		List<Assignment> assignment = new ArrayList<>();
+		System.out.println("designation::::::::::::"+designation);
+		System.out.println("boundary:::::::::"+boundary);
 		for (final String desg : designationarr) {
 			assignment = assignmentService.findAssignmentByDepartmentDesignationAndBoundary(null,
 					designationService.getDesignationByName(desg).getId(), boundaryObj.getId());
@@ -587,8 +591,8 @@ public class BpaUtils {
 	
 	private void buildBpaNOCWorkFlow(Long approvalPosition, final PermitNocApplication permitNocApplication, final String currentState,
 			final String remarks, final String workFlowAction, final BigDecimal amountRule) {
-		final WorkFlowMatrix wfMatrix = getWfMatrixByCurrentState(null,
-				"BPA_NOC", currentState, permitNocApplication.getBpaApplication().getApplicationType().getName());
+		final WorkFlowMatrix wfMatrix = getWfMatrixByCurrentState(false,
+				BPA_NOC, currentState, permitNocApplication.getBpaApplication().getApplicationType().getName());
 		final BpaApplicationWorkflowCustomDefaultImpl applicationWorkflowCustomDefaultImpl = getInitialisedWorkFlowBean();
 		Long approvalPositionId = approvalPosition;
 		

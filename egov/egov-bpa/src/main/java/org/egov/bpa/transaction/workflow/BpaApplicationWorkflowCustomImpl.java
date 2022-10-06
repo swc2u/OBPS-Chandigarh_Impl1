@@ -85,7 +85,9 @@ import static org.egov.bpa.utils.BpaConstants.FWD_TO_OVERSEER_AFTER_TS_INSPN;
  */
 public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplicationWorkflowCustom {
 	private static final Logger LOG = LoggerFactory.getLogger(BpaApplicationWorkflowCustomImpl.class);
-
+	
+	private static final String BPA_NOC = "BpaNOC";
+	
 	@Autowired
 	private SecurityUtils securityUtils;
 
@@ -534,7 +536,7 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 					.getEmployee();
 		
 		wfmatrix =bpaApplicationWorkflowService.
-				 getWfMatrix("BPA_NOC", null, null, permitNocApplication.getBpaApplication().getApplicationType().getName(), "WF_NEW_STATE",
+				 getWfMatrix(BPA_NOC, null, null, permitNocApplication.getBpaApplication().getApplicationType().getName(), "WF_NEW_STATE",
 					null);
 		
 		if (wfmatrix != null) {

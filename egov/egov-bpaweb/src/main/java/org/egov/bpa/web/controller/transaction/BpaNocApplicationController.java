@@ -100,7 +100,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping(value = "/nocapplication")
 public class BpaNocApplicationController {
 	private static final String WORK_FLOW_ACTION = "workFlowAction";
-	private static final String BPA_NOC = "BPA_NOC";
+	private static final String BPA_NOC = "BpaNOC";
 	private static final String WF_NEW_STATE = "WF_NEW_STATE";
 
 	@Autowired
@@ -231,11 +231,12 @@ public class BpaNocApplicationController {
 //                    .getAssignmentsByPositionAndDate(permitNocApplication.getBpaNocApplication().getCurrentState().getOwnerPosition().getId(), new Date());
 //        else
             assignments = bpaWorkFlowService.getAssignmentsByPositionAndDate(approvalPosition, new Date());
-        if (pos == null)
-            pos = assignments.get(0).getPosition();
-        User user = assignments.get(0).getEmployee();
+//        if (pos == null)
+//            pos = assignments.get(0).getPosition();
+//        User user = assignments.get(0).getEmployee();
         
-        
+       System.out.println("approvalPosition********"+approvalPosition); 
+       System.out.println("assignments*********"+assignments.size());
         
         ///////////////Sunitha end	
 		BpaStatus status = statusService.findByModuleTypeAndCode(BpaConstants.NOCMODULE, workFlowAction);
