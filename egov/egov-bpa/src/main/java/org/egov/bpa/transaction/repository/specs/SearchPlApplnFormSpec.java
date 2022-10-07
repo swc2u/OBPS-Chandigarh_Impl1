@@ -55,8 +55,10 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.egov.bpa.transaction.entity.BpaApplication;
+import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
 import org.egov.bpa.transaction.entity.dto.SearchPendingItemsForm;
 import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 public final class SearchPlApplnFormSpec {
@@ -198,4 +200,5 @@ public final class SearchPlApplnFormSpec {
 	            return predicate;
 	        };
 	}
+
 }
