@@ -219,8 +219,6 @@ public class OccupancyCertificateValidationService {
             BigDecimal permitBldgHgt = BigDecimal.ZERO;
             for (BuildingDetail bpa : permitBuildings) {
                 permitBldgHgt = bpa.getHeightFromGroundWithOutStairRoom().setScale(SCALING_FACTOR, BigDecimal.ROUND_HALF_UP);
-                System.out.println("permitBldgHgt&&&&&&&&&&&&&&&:"+permitBldgHgt);
-                System.out.println("OC:::::***********"+oc.getHeightFromGroundWithOutStairRoom().setScale(SCALING_FACTOR, BigDecimal.ROUND_HALF_UP));
                 if (oc.getHeightFromGroundWithOutStairRoom().setScale(SCALING_FACTOR, BigDecimal.ROUND_HALF_UP)
                         .doubleValue() <= permitBldgHgt.doubleValue())
                     isHeightSame = true;
