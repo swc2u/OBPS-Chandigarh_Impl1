@@ -522,6 +522,8 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 		WorkFlowMatrix wfmatrix;
 		if (LOG.isDebugEnabled())
 			LOG.debug(" Create NOC WorkFlow Transition Started  ...");
+		
+		System.out.println("Create NOC WorkFlow Transition Started  ...");
 		final User user = securityUtils.getCurrentUser();
 		final DateTime currentDate = new DateTime();
 		Position pos = null;

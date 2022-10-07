@@ -588,9 +588,6 @@ public class BpaUtils {
 	
 	private void buildBpaNOCWorkFlow(Long approvalPosition, final PermitNocApplication permitNocApplication, final String currentState,
 			final String remarks, final String workFlowAction, final BigDecimal amountRule) {
-		System.out.println("permitNocApplicationDDDDDDDD:::::::::"+permitNocApplication.getBpaApplication().getApplicationType());
-		final WorkFlowMatrix wfMatrix = getWfMatrixByCurrentState(false,
-				BPA_NOC, currentState, permitNocApplication.getBpaApplication().getApplicationType().getName());
 		final BpaApplicationWorkflowCustomDefaultImpl applicationWorkflowCustomDefaultImpl = getInitialisedWorkFlowBean();
 		Long approvalPositionId = approvalPosition;
 		
@@ -1082,5 +1079,15 @@ public class BpaUtils {
 		}
 		
 		return flage;
+	}
+
+	public Long getNOCUserPositionId(String nextDesignation) {
+		final String[] designationarr = nextDesignation.split(",");
+		List<Assignment> assignment = new ArrayList<>();
+		for (final String desg : designationarr) {
+			assignment = assignmentService.getAllActiveAssignments(
+					designationService.getDesignationByName(desg).getId());
+		}
+		return assignment.isEmpty() ? 0 : assignment.get(0).getPosition().getId();
 	}
 }

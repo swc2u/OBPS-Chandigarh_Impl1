@@ -176,25 +176,31 @@ public class PermitNocApplicationService {
 	                nocUser.add(userList.get(0));
 	                permitNoc.setBpaApplication(application);
 	                permitNoc.setBpaNocApplication(nocApplication);
+	                
+	                if(nocConfig.getDepartment().equalsIgnoreCase("STRUCTURE NOC")) {
+		                //Workflow initiated for NOC
+			            Long approvalPosition = null;
+			            final WorkFlowMatrix wfMatrixNOC =bpaUtils.getWfMatrixByCurrentState(
+			                   false, BPA_NOC, WF_NEW_STATE,
+			                   application.getApplicationType().getName());
+			           if (wfMatrixNOC != null) {
+//			           	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrixNOC.getNextDesignation(),
+//			           			application.getSiteDetail().get(0) != null
+//			                               && application.getSiteDetail().get(0).getAdminBoundary() != null
+//			                                       ? application.getSiteDetail().get(0).getAdminBoundary().getId()
+//			                                       : null);
+			        	   approvalPosition= bpaUtils.getNOCUserPositionId(wfMatrixNOC.getNextDesignation());
+			           }
+			           System.out.println("approvalPosition:::*********:"+approvalPosition);
+			           bpaUtils.redirectToBpaNOCWorkFlow(approvalPosition, permitNoc, "NEW",
+			           		"COMMENTS", "Forward", null);
+                }
+	                
+	                
 	                permitNoc = createNocApplication(permitNoc, nocConfig);
 	                bpaUtils.createNocPortalUserinbox(permitNoc, nocUser, permitNoc.getBpaNocApplication().getStatus().getCode());
 	               
-	                if(nocConfig.getDepartment().equalsIgnoreCase("STRUCTURE NOC")) {
-			                //Workflow initiated for NOC
-				            Long approvalPosition = null;
-				            final WorkFlowMatrix wfMatrixNOC =bpaUtils.getWfMatrixByCurrentState(
-				                   false, BPA_NOC, WF_NEW_STATE,
-				                   application.getApplicationType().getName());
-				           if (wfMatrixNOC != null) {
-				           	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrixNOC.getNextDesignation(),
-				           			application.getSiteDetail().get(0) != null
-				                               && application.getSiteDetail().get(0).getAdminBoundary() != null
-				                                       ? application.getSiteDetail().get(0).getAdminBoundary().getId()
-				                                       : null);
-				           }
-				           bpaUtils.redirectToBpaNOCWorkFlow(approvalPosition, permitNoc, "Initiated",
-				           		"COMMENTS", "Forwarded", null);
-	                }
+	              
 		           
 	            }else if (nocConfig != null && nocConfig.getApplicationType().trim().equalsIgnoreCase(BpaConstants.PERMIT)
 	                    && nocConfig.getIntegrationType().equalsIgnoreCase(NocIntegrationTypeEnum.THIRD_PARTY.toString())
