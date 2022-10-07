@@ -95,6 +95,7 @@ public final class SearchBpaApplnFormSpec {
     private static final String BPA_END_STATUS = "Accepted as Scrutinized";
     private static final String RURAL_BPA_END_STATUS = "Order Issued to Applicant";
     private static final String CANCELLED = "Cancelled";
+    private static final String REJECTED = "Rejected";
     
     private SearchBpaApplnFormSpec() {
         // static methods only
@@ -128,7 +129,8 @@ public final class SearchBpaApplnFormSpec {
             	 predicate.getExpressions().add(builder.notEqual(root.get("applicationType").get(ID), RURAL_APPLICATION_ID));
              }
              if(requestForm.getStatusId()==null) {
-            	 predicate.getExpressions().add(builder.not(root.get("status").get("code").in(BPA_END_STATUS,RURAL_BPA_END_STATUS,CANCELLED)));
+            	 predicate.getExpressions().add(builder.not(root.get("status").get("code").in(BPA_END_STATUS,RURAL_BPA_END_STATUS,CANCELLED,REJECTED)));
+            	 
              }
              
              return predicate;
@@ -144,7 +146,7 @@ public final class SearchBpaApplnFormSpec {
            	 predicate.getExpressions().add(builder.equal(root.get("applicationType").get(ID), RURAL_APPLICATION_ID));
             }
             if(requestForm.getStatusId()==null) {
-           	 predicate.getExpressions().add(builder.not(root.get("status").get("code").in(RURAL_BPA_END_STATUS,CANCELLED)));
+           	 predicate.getExpressions().add(builder.not(root.get("status").get("code").in(RURAL_BPA_END_STATUS,CANCELLED,REJECTED)));
             }
             
             return predicate;
