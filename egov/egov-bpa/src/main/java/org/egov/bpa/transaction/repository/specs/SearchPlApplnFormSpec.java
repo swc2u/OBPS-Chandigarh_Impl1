@@ -55,9 +55,12 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.egov.bpa.transaction.entity.BpaApplication;
+import org.egov.bpa.transaction.entity.SiteDetail;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
 import org.egov.bpa.transaction.entity.dto.SearchPendingItemsForm;
+import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
+import org.egov.infra.admin.master.entity.Boundary;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -65,6 +68,8 @@ public final class SearchPlApplnFormSpec {
 
     private static final Long RURAL_APPLICATION_ID = 4L;
     private static final String PL_END_STATUS = "Order Issued to Applicant";
+    private static final String CANCELLED = "Cancelled";
+    private static final String REJECTED = "Rejected";
     
     private SearchPlApplnFormSpec() {
         // static methods only
@@ -126,7 +131,73 @@ public final class SearchPlApplnFormSpec {
             return predicate;
         };
     }
+	
+	public static Specification<PlinthLevelCertificate> search(final SearchBpaApplicationForm requestForm) {
+        return (root, query, builder) -> {
+            final Predicate predicate = builder.conjunction();
+            Join<OccupancyCertificate, BpaApplication> bpaApplication = root.join("parent");
+            Join<BpaApplication, SiteDetail> siteDetailJoin = bpaApplication.join("siteDetail");
+            Join<SiteDetail, Boundary> adminBoundaryJoin = siteDetailJoin.join("adminBoundary");
+            if (requestForm.getApplicationNumber() != null)
+                predicate.getExpressions()
+                                 .add(builder.equal(root.get("applicationNumber"), requestForm.getApplicationNumber()));
+            if (requestForm.getApplicantName() != null)
+                predicate.getExpressions()
+                        .add(builder.equal(bpaApplication.get("owner").get("name"),
+                                requestForm.getApplicantName()));
+            if(requestForm.getStatusId() !=null)
+            	predicate.getExpressions()
+                .add(builder.equal(root.get("status").get("id"), requestForm.getStatusId()));
+            
+            if(requestForm.getStatus() !=null)
+            	predicate.getExpressions()
+                .add(builder.equal(root.get("status").get("description"), requestForm.getStatus()));
+            
+            if (requestForm.getServiceTypeId() != null)
+                predicate.getExpressions()
+                        .add(builder.equal(bpaApplication.get("serviceType").get("id"), requestForm.getServiceTypeId()));
+            if (requestForm.getServiceType() != null)
+                predicate.getExpressions()
+                        .add(builder.equal(bpaApplication.get("serviceType").get("description"),
+                                requestForm.getServiceType()));
 
+            if (requestForm.getOccupancyId() != null)
+                predicate.getExpressions()
+                        .add(builder.equal(bpaApplication.get("occupancy").get("id"), requestForm.getOccupancyId()));
+            if(requestForm.getRevenueBoundary()!=null)
+                predicate.getExpressions()
+                .add(builder.equal(siteDetailJoin.get("adminBoundary").get("id"), requestForm.getRevenueBoundary()));
+            if(requestForm.getAdminBoundary()!=null)
+                predicate.getExpressions()
+                .add(builder.equal(siteDetailJoin.get("electionBoundary").get("id"), requestForm.getAdminBoundary()));
+            if(requestForm.getLocationBoundary()!=null)
+                predicate.getExpressions()
+                .add(builder.equal(siteDetailJoin.get("locationBoundary").get("id"), requestForm.getLocationBoundary()));
+            
+            if (requestForm.getFromDate() != null)
+                predicate.getExpressions()
+                        .add(builder.greaterThanOrEqualTo(root.get("applicationDate"), requestForm.getFromDate()));
+            if (requestForm.getToDate() != null)
+                predicate.getExpressions()
+                        .add(builder.lessThanOrEqualTo(root.get("applicationDate"), requestForm.getToDate()));
+            if (requestForm.getFromBuiltUpArea() != null)
+                predicate.getExpressions()
+                        .add(builder.greaterThanOrEqualTo(bpaApplication.get("totalBuiltUpArea"), requestForm.getFromBuiltUpArea()));
+            if (requestForm.getToBuiltUpArea() != null)
+                predicate.getExpressions()
+                        .add(builder.lessThanOrEqualTo(bpaApplication.get("totalBuiltUpArea"), requestForm.getToBuiltUpArea()));
+            if (requestForm.getApplicationTypeId() != null)
+                predicate.getExpressions()
+                        .add(builder.equal(bpaApplication.get("applicationType").get("id"), requestForm.getApplicationTypeId()));
+            else
+            	predicate.getExpressions()
+                .add(builder.notEqual(bpaApplication.get("applicationType").get("id"), RURAL_APPLICATION_ID));
+            
+            query.distinct(true);
+            return predicate;
+        };
+    }
+	
 	public static Specification<PlinthLevelCertificate> searchSpecificationForPlPendingItems(
 			SearchPendingItemsForm requestForm) {
 		 return (root, query, builder) -> {
@@ -146,7 +217,7 @@ public final class SearchPlApplnFormSpec {
 	                predicate.getExpressions().add(builder.equal(root.get("status").get("id"), requestForm.getStatusId()));
 	            
 	            else 
-	                predicate.getExpressions().add(builder.notEqual(root.get("status").get("code"), PL_END_STATUS));
+	            	predicate.getExpressions().add(builder.not(root.get("status").get("code").in(PL_END_STATUS,CANCELLED,REJECTED)));
 	            
 	            query.distinct(true);
 	            return predicate;
@@ -194,7 +265,8 @@ public final class SearchPlApplnFormSpec {
 	                predicate.getExpressions().add(builder.equal(root.get("status").get("id"), requestForm.getStatusId()));
 	            
 	            else 
-	                predicate.getExpressions().add(builder.notEqual(root.get("status").get("code"), PL_END_STATUS));
+	               	predicate.getExpressions().add(builder.not(root.get("status").get("code").in(PL_END_STATUS,CANCELLED,REJECTED)));
+	               	 
 	            
 	            query.distinct(true);
 	            return predicate;

@@ -89,6 +89,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PlReportsService {
 
     public static final String SECTION_CLERK = "SECTION CLERK";
+    public static final String WF_ACTION_END = "END";
     public static final Long BTK_APPTYPE = 3L;
     public static final Long ATK_APPTYPE = 5L;
     @Autowired
@@ -240,7 +241,7 @@ public class PlReportsService {
 		  final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
 	        //Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
-	        List<PlinthLevelCertificate> plApplications = plinthLevelCertificateRepository.findAll(SearchPlApplnFormSpec.searchSpecificationForPlPendingItemsRural(searchRequest));
+	        List<PlinthLevelCertificate> plApplications = plinthLevelCertificateRepository.findAll(SearchPlApplnFormSpec.searchSpecificationForPlPendingItems(searchRequest));
 	        List<SearchPendingItemsForm> searchResults = new ArrayList<>();
 	        for (PlinthLevelCertificate application : plApplications) {
 	        	if(null!=application.getState()) {
@@ -261,6 +262,7 @@ public class PlReportsService {
 	        		}       		
 	        	}
 	        }
+	        searchResults = searchResults.stream().filter(plApplication->!plApplication.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
 	        return new PageImpl<>(searchResults, pageable, plApplications.size());
 	}
     
@@ -291,6 +293,7 @@ public class PlReportsService {
   	        		}       		
   	        	}
   	        }
+  	        searchResults = searchResults.stream().filter(plApplication->!plApplication.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
   	        return new PageImpl<>(searchResults, pageable, plApplications.size());
   	}
 
@@ -320,6 +323,7 @@ public Page<SearchPendingItemsForm> pagedSearchForUrbanPLPendingItem(SearchPendi
     		}       		
     	}
     }
+    searchResults = searchResults.stream().filter(plApplication->!plApplication.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
     return new PageImpl<>(searchResults, pageable, plApplications.getTotalElements());
 }
 
@@ -349,16 +353,17 @@ public Page<SearchPendingItemsForm> pagedSearchForRuralPLPendingItem(SearchPendi
     		}       		
     	}
     }
+    searchResults = searchResults.stream().filter(plApplication->!plApplication.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
     return new PageImpl<>(searchResults, pageable, plApplications.getTotalElements());
 }
 
-public List<SearchPendingItemsForm> search(SearchPendingItemsForm searchRequest) {
-    List<PlinthLevelCertificate> plCertificate = plinthLevelCertificateRepository.findAll(SearchPlApplnFormSpec.searchSpecificationForPlItems(searchRequest));
-    List<SearchPendingItemsForm> searchResults = new ArrayList<>();
+public List<SearchBpaApplicationForm> search(SearchBpaApplicationForm searchPLApplicationForm) {
+    List<PlinthLevelCertificate> plCertificate = plinthLevelCertificateRepository.findAll(SearchPlApplnFormSpec.search(searchPLApplicationForm));
+    List<SearchBpaApplicationForm> searchResults = new ArrayList<>();
     for (PlinthLevelCertificate application : plCertificate) {
     	String pendingAction = application.getState()== null ? "N/A" : application.getState().getNextAction();
     	searchResults.add(
-                new SearchPendingItemsForm(application, getProcessOwner(application), pendingAction));
+                new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction));
     }
     return searchResults;
 }
@@ -376,12 +381,12 @@ private String getProcessOwner(PlinthLevelCertificate plinthLevelCertificate) {
 }
 
  public List<SearchBpaApplicationReport> getResultsByServicetypeAndStatus(
-            final SearchPendingItemsForm searchPLApplicationForm) {
+            final SearchBpaApplicationForm searchPLApplicationForm) {
         List<SearchBpaApplicationReport> searchOcApplicationReportList = new ArrayList<>();
-        List<SearchPendingItemsForm> searchPLApplnResultList = search(searchPLApplicationForm);
+        List<SearchBpaApplicationForm> searchPLApplnResultList = search(searchPLApplicationForm);
         Map<String, Map<String, Long>> resultMap = searchPLApplnResultList.stream()
-                .collect(Collectors.groupingBy(SearchPendingItemsForm::getStatus,
-                        Collectors.groupingBy(SearchPendingItemsForm::getServiceType, Collectors.counting())));
+                .collect(Collectors.groupingBy(SearchBpaApplicationForm::getStatus,
+                        Collectors.groupingBy(SearchBpaApplicationForm::getServiceType, Collectors.counting())));
         for (final Entry<String, Map<String, Long>> statusCountResMap : resultMap.entrySet()) {
             Long newConstruction = 0l;
             Long demolition = 0l;
@@ -439,22 +444,22 @@ private String getProcessOwner(PlinthLevelCertificate plinthLevelCertificate) {
     
     
     public List<SearchBpaApplicationReport> getResultsByServicetypeAndStatusForUrban(
-            final SearchPendingItemsForm searchPLApplicationForm) {
+            final SearchBpaApplicationForm searchPLApplicationForm) {
     	 List<SearchBpaApplicationReport> searchPLApplicationReportList = new ArrayList<>();
-    	 List<SearchPendingItemsForm> searchPLApplnResultList = new ArrayList<>();
+    	 List<SearchBpaApplicationForm> searchPLApplnResultList = new ArrayList<>();
         if(searchPLApplicationForm.getApplicationTypeId()==null) {
         	searchPLApplicationForm.setApplicationTypeId(BTK_APPTYPE);
         	searchPLApplnResultList = searchForServicewiseStatus(searchPLApplicationForm);
         	searchPLApplicationForm.setApplicationTypeId(ATK_APPTYPE);
-        	List<SearchPendingItemsForm> searchATKApplnResultList = searchForServicewiseStatus(searchPLApplicationForm);
+        	List<SearchBpaApplicationForm> searchATKApplnResultList = searchForServicewiseStatus(searchPLApplicationForm);
         	searchPLApplnResultList.addAll(searchATKApplnResultList);
         }else {
         	searchPLApplnResultList = searchForServicewiseStatus(searchPLApplicationForm);
         }
        
         Map<String, Map<String, Long>> resultMap = searchPLApplnResultList.stream()
-                .collect(Collectors.groupingBy(SearchPendingItemsForm::getStatus,
-                        Collectors.groupingBy(SearchPendingItemsForm::getServiceType, Collectors.counting())));
+                .collect(Collectors.groupingBy(SearchBpaApplicationForm::getStatus,
+                        Collectors.groupingBy(SearchBpaApplicationForm::getServiceType, Collectors.counting())));
         for (final Entry<String, Map<String, Long>> statusCountResMap : resultMap.entrySet()) {
             Long newConstruction = 0l;
             Long demolition = 0l;
@@ -510,13 +515,13 @@ private String getProcessOwner(PlinthLevelCertificate plinthLevelCertificate) {
         return searchPLApplicationReportList;
     }
     
-    public List<SearchPendingItemsForm> searchForServicewiseStatus(SearchPendingItemsForm searchRequest) {
-		 List<PlinthLevelCertificate> plCertificate = plinthLevelCertificateRepository.findAll(SearchPlApplnFormSpec.searchSpecificationForPlItems(searchRequest));
-	        List<SearchPendingItemsForm> SearchPendingItemsFormList = new ArrayList<>();
+    public List<SearchBpaApplicationForm> searchForServicewiseStatus(SearchBpaApplicationForm searchRequest) {
+		 List<PlinthLevelCertificate> plCertificate = plinthLevelCertificateRepository.findAll(SearchPlApplnFormSpec.search(searchRequest));
+	        List<SearchBpaApplicationForm> SearchPendingItemsFormList = new ArrayList<>();
 	        for (PlinthLevelCertificate application : plCertificate) {
 	        	String pendingAction = application.getState()== null ? "N/A" : application.getState().getNextAction();
 	        	SearchPendingItemsFormList.add(
-	                    new SearchPendingItemsForm(application, getProcessOwner(application), pendingAction));
+	                    new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction));
 	        }
 	        return SearchPendingItemsFormList;
 	}
