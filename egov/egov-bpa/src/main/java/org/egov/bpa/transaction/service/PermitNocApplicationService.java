@@ -39,7 +39,9 @@
  */
 package org.egov.bpa.transaction.service;
 
+import static org.egov.bpa.utils.BpaConstants.BPASTATUS_MODULETYPE;
 import static org.egov.bpa.utils.BpaConstants.WF_NEW_STATE;
+import static org.egov.bpa.utils.BpaConstants.NOCMODULE;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -85,6 +87,8 @@ public class PermitNocApplicationService {
 	
 	private static final String BPA_NOC = "BpaNOC";
 	private static final String WORK_FLOW_ACTION = "workFlowAction";
+	private static final String WORK_FLOW_NOC_INITIATE_ACTION = "Initiated";
+	private static final String WORK_FLOW_NOC_FORWARDER_ACTION = "Forwarded";
 	
     @Autowired
     private PermitNocApplicationRepository permitNocRepository;
@@ -104,6 +108,9 @@ public class PermitNocApplicationService {
     private DcrRestService drcRestService;
     @Autowired
     private BPASmsAndEmailService bpaSmsAndEmailService;
+    
+    @Autowired
+    private BpaStatusService bpaStatusService;
 
     @Transactional
     public PermitNocApplication save(final PermitNocApplication permitNoc) {
@@ -179,6 +186,7 @@ public class PermitNocApplicationService {
 	                
 	                if(nocConfig.getDepartment().equalsIgnoreCase("STRUCTURE NOC")) {
 		                //Workflow initiated for NOC
+	                	String workFlowAction = WORK_FLOW_NOC_INITIATE_ACTION;
 			            Long approvalPosition = null;
 			            final WorkFlowMatrix wfMatrixNOC =bpaUtils.getWfMatrixByCurrentState(
 			                   false, BPA_NOC, WF_NEW_STATE,
@@ -194,8 +202,16 @@ public class PermitNocApplicationService {
 			           System.out.println("approvalPosition:::*********:"+approvalPosition);
 			           bpaUtils.redirectToBpaNOCWorkFlow(approvalPosition, permitNoc, "NEW",
 			           		"COMMENTS", "Forward", null);
+			           
+			           if (workFlowAction != null && workFlowAction.equals(WORK_FLOW_NOC_INITIATE_ACTION)) {
+		                    final BpaStatus bpaStatus = getStatusByCodeAndModuleType(WORK_FLOW_NOC_INITIATE_ACTION);
+		                    permitNoc.getBpaNocApplication().setStatus(bpaStatus);
+		                } else {
+		                    final BpaStatus bpaStatus = getStatusByCodeAndModuleType(WORK_FLOW_NOC_FORWARDER_ACTION);
+		                    permitNoc.getBpaNocApplication().setStatus(bpaStatus);
+		                }
+		                
                 }
-	                
 	                
 	                permitNoc = createNocApplication(permitNoc, nocConfig);
 	                bpaUtils.createNocPortalUserinbox(permitNoc, nocUser, permitNoc.getBpaNocApplication().getStatus().getCode());
@@ -217,6 +233,10 @@ public class PermitNocApplicationService {
         }
     }
 
+    public BpaStatus getStatusByCodeAndModuleType(final String code) {
+        return bpaStatusService.findByModuleTypeAndCode(NOCMODULE, code);
+    }
+    
     public PermitNocApplication createNoc(BpaApplication application, String nocType) {
         PermitNocApplication permitNoc = new PermitNocApplication();
         BpaNocApplication nocApplication = new BpaNocApplication();
