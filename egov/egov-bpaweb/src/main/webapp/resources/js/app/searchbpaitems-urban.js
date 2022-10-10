@@ -108,13 +108,36 @@ function callAjaxSearch() {
 				$('.loader-class').modal('hide');
 			}
 		},
-		"bDestroy": true,
-		"sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-xs-3'i><'col-xs-3 col-right'l><'col-xs-3 col-right'<'export-data'T>><'col-xs-3 text-right'p>>",
-		"oTableTools": {
-			"sSwfPath": "../../../../../../egi/resources/global/swf/copy_csv_xls_pdf.swf",
-			"aButtons": ["xls", "pdf",
-				"print"]
-		},
+		"bDestroy" : true,
+        "aLengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+        dom: "<'row'<'col-xs-4 pull-right'f>r>t<'row add-margin'<'col-md-3 col-xs-6'i><'col-md-2 col-xs-6'l>" +
+        "<'col-md-2 col-xs-6 text-left'B><'col-md-5 col-xs-6 text-right'p>>",
+        buttons: [{
+            extend: 'pdf',
+            title: 'ServiceType wise status report',
+            filename: 'Servicetype_wise_status_report',
+            orientation: 'landscape',
+            pageSize: 'A3',
+            exportOptions: {
+                columns: ':visible'
+            }
+        }, {
+            extend: 'excel',
+            title: 'ServiceType wise status report',
+            filename: 'Servicetype_wise_status_report',
+            exportOptions: {
+                columns: ':visible'
+            }
+        }, {
+            extend: 'print',
+            title: 'ServiceType wise status report',
+            filename: 'Servicetype_wise_status_report',
+            orientation: 'landscape',
+            pageSize: 'A3',
+            exportOptions: {
+                columns: ':visible'
+            }
+        }],
 		aaSorting: [],
 		columns: [
 			{

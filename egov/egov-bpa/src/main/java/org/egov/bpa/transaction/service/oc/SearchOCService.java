@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
@@ -67,7 +68,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class SearchOCService {
-
+	private static final String WF_ACTION_END = "END";
+	
     @Autowired
     private OcSlotRepository ocSlotRepository;
 
@@ -156,6 +158,7 @@ public class SearchOCService {
         		}       		
         	}
         }
+        searchResults = searchResults.stream().filter(oc->!oc.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
         return new PageImpl<>(searchResults, pageable, occupancyCertificate.getTotalElements());
     }
     
@@ -184,6 +187,7 @@ public class SearchOCService {
         		}       		
         	}
         }
+        searchResults = searchResults.stream().filter(bpa->!bpa.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
         return new PageImpl<>(searchResults, pageable, occupancyCertificate.getTotalElements());
     }
     
@@ -261,7 +265,7 @@ public class SearchOCService {
        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
         //Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
-        List<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchPendingOCTasks(searchRequest));
+        List<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchPendingOCTasksRural(searchRequest));
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
         for (OccupancyCertificate application : occupancyCertificate) {
         	if(null!=application.getState()) {
@@ -282,6 +286,7 @@ public class SearchOCService {
         		}       		
         	}
         }
+        searchResults = searchResults.stream().filter(bpa->!bpa.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
         return new PageImpl<>(searchResults, pageable, occupancyCertificate.size());
     }
     

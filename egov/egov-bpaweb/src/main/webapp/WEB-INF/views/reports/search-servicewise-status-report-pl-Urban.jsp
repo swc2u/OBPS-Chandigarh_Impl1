@@ -2,7 +2,7 @@
   ~ eGov suite of products aim to improve the internal efficiency,transparency,
   ~    accountability and the service delivery of the government  organizations.
   ~
-  ~     Copyright (C) <2015>  eGovernments Foundation
+  ~     Copyright (C) <2017>  eGovernments Foundation
   ~
   ~     The updated version of eGov suite of products as by eGovernments Foundation
   ~     is available at http://www.egovernments.org
@@ -42,9 +42,9 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
-<form:form role="form" action="" modelAttribute="searchPendingItemsForm" id="searchPendingItemsForm" cssClass="form-horizontal form-groups-bordered" enctype="multipart/form-data">
-	<div class="row">
-	    <div class="col-md-12">
+<form:form role="form" action=""
+	modelAttribute="searchBpaApplicationForm" id="serviceTypeWiseStatusReportPlUrban" cssClass="form-horizontal form-groups-bordered" enctype="multipart/form-data">
+	<div class="col-md-12">
 	        <div class="panel panel-primary" data-collapsed="0">
 	            <div class="panel-heading">
 	            </div>
@@ -75,16 +75,13 @@
 	                </div>
 	
 	                <div class="form-group">
-	                    <label class="col-sm-3 control-label text-right"><spring:message
-	                            code="lbl.designation"/></label>
+	                       
+ 						<label class="col-sm-3 control-label text-right"><spring:message
+	                            code="lbl.sectors.villages"/></label>
 	                    <div class="col-sm-3 add-margin">
-	                        <form:select path="currentOwnerDesg" data-first-option="false"
-	                                     id="currentOwnerDesg" cssClass="form-control"> 
-	                            <form:option value=""> 
-	                                <spring:message code="lbl.select"/> 
- 	                            </form:option> 
-	                            <form:options items="${designations}"/> 
- 	                        </form:select> 
+						 <form:input class="form-control patternvalidation" maxlength="50"
+	                                    id="sector" path="sector"/>
+	                        <form:errors path="sector" cssClass="add-margin error-msg"/>
 	                    </div>
 	                    <label class="col-sm-2 control-label text-right"><spring:message
 	                            code="lbl.application.no"/></label>
@@ -110,35 +107,7 @@
 	                        <form:errors path="applicantName" cssClass="add-margin error-msg"/>
 	                    </div>
 	                </div>
-	                 <div class="form-group">
-	                   
- 						<label class="col-sm-3 control-label text-right"><spring:message
-	                            code="lbl.sectors.villages"/></label>
-	                    <div class="col-sm-3 add-margin">
-<%-- 	                        <form:select path="sector" data-first-option="false" --%>
-<%-- 	                                     id="sector" cssClass="form-control"> --%>
-<%-- 	                            <form:option value=""> --%>
-<%-- 	                                <spring:message code="lbl.select"/> --%>
-<%-- 	                            </form:option> --%>
-<%-- 	                            <form:options items="${sectors}"/> --%>
-<%-- 	                        </form:select> --%>
-						 <form:input class="form-control patternvalidation" maxlength="50"
-	                                    id="sector" path="sector"/>
-	                        <form:errors path="sector" cssClass="add-margin error-msg"/>
-	                    </div>
-	                     <label class="col-sm-2 control-label text-right"><spring:message
-	                            code="lbl.appln.status"/></label>
-	                    <div class="col-sm-3 add-margin">
-	                        <form:select path="statusId" data-first-option="false"
-	                                     id="statusId" cssClass="form-control">
-	                            <form:option value="">
-	                                <spring:message code="lbl.select"/>
-	                            </form:option>
-	                            <form:options items="${applnStatusList}" itemValue="id" itemLabel="description"/>
-	                        </form:select>
-	                    </div>
-	                   
-	                </div>
+	            
 	                <div class="form-group">
 	                    <label class="col-sm-3 control-label text-right"><spring:message
 	                            code="lbl.fromDate"/></label>
@@ -171,39 +140,52 @@
 		<a href='javascript:void(0)' class='btn btn-default' onclick='self.close()'><spring:message code='lbl.close' /></a>
 	</div>
 </form:form>
+<br>
 
 <div id="chartContainer" style="height: 360px; width: 100%;"></div>
 
 <div class="row display-hide report-section" id="table_container">
-	<div class="col-md-12 table-header text-left"><spring:message code="lbl.search.result" /></div>
 	<div class="col-md-12 form-group report-table-container">
 		<table class="table table-bordered table-hover multiheadertbl"
-			id="search_bpa_pending_items_table">
+			id="searchStatusByServiceTypeReportTablePL">
 			<thead>
 				<tr>
-					<th><spring:message code="lbl.applctn.type" /></th>
-					<th><spring:message code="lbl.applicant.name" /></th>
-					<th><spring:message code="lbl.application.no" /></th>
-					<th><spring:message code="lbl.appln.date" /></th>
-					<th><spring:message code="lbl.service.type" /></th>
-					<th><spring:message code="lbl.sectors.villages" /></th>
-					<th><spring:message code="lbl.plot.no" /></th>
-					<th><spring:message code="lbl.occupancy" /></th>
-					<th><spring:message code="lbl.status" /></th>
-					<th><spring:message code="lbl.current.owner" /></th>
-					<th><spring:message code="lbl.owner.designation" /></th>
-					<th><spring:message code="lbl.pending.actions" /></th>
-					<th><spring:message code="lbl.elapsed.time" /></th>
-					<th><spring:message code="lbl.action" /></th>
+					<th><spring:message code="lbl.slno"/></th>
+					<th><spring:message code="lbl.status"/></th>
+					<th><spring:message code="lbl.newconstruction"/></th>
+					<%-- <th><spring:message code="lbl.demolition"/></th> --%>
+					<th><spring:message code="lbl.reconstruction"/></th>
+					<th><spring:message code="lbl.alteration"/></th>
+				<%-- 	<th><spring:message code="lbl.division.development.land"/></th> --%>
+					<th><spring:message code="lbl.addextension"/></th>
+					<th><spring:message code="lbl.change.occupancy"/></th>
+					<%-- <th><spring:message code="lbl.amenities"/></th>
+					<th><spring:message code="lbl.huts.sheds"/></th>
+					<th><spring:message code="lbl.tower.construction"/></th> --%>
+					<th><spring:message code="lbl.total"/></th>
 				</tr>
 			</thead>
+			<tfoot id="report-footer">
+				<tr>
+						<td></td>
+						<td><spring:message code="lbl.total"/></td>
+						<td></td>
+						<!-- <td></td> -->
+						<td></td>
+						<td></td>
+						<!-- <td></td> -->
+						<td></td>
+						<td></td>
+						<!-- <td></td>
+						<td></td>
+						<td></td> -->
+						<td></td>
+					</tr>
+				</tfoot>
 		</table>
 	</div>
 	<input type="hidden" id="atleastOneInputReq" value="<spring:message code='msg.validate.atleast.oneinput.required'/>"/>
 </div>
-
-
-<script src="<cdn:url value='/resources/global/js/bts/bts-datepicker.js' context='/egi'/>"></script>	
 <link rel="stylesheet"
 	  href="<cdn:url value='/resources/global/css/jq/plugins/datatables/jq.dataTables.min.css' context='/egi'/>"/>
 <link rel="stylesheet"
@@ -234,7 +216,13 @@
 <script src="<cdn:url value='/resources/global/js/bts/bts-datepicker.js' context='/egi'/>"
 		type="text/javascript"></script>
 <script src="<c:url value='/resources/global/js/handlebars/handlebars.js?rnd=${app_release_no}' context='/egi'/>"></script>
+				
+<script src="<cdn:url value='/resources/js/app/servicewise-status-report-helper-chart-pl-Urban.js?rnd=${app_release_no}'/> "></script>
 <script src="<cdn:url value='/resources/js/app/bpa-ajax-helper.js?rnd=${app_release_no}'/> "></script>
-<script src="<cdn:url value='/resources/js/app/searchpendingitems-urban.js?rnd=${app_release_no}'/> "></script>
 
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+	
+<script>
+
+
+</script>

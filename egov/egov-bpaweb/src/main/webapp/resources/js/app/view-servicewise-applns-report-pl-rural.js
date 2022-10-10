@@ -41,14 +41,13 @@
 $(document)
 		.ready(
 				function() {
-					var viewurl = '/bpa/application/view/';
-					
-					$('.report-section-rural').removeClass('display-hide');
-					$("#bpaServiceWiseApplnsDetailsRural")
+					var viewurl = '/bpa/application/plinthlevelcertificate/viewdetails/';
+					$('.pl-ss-report-section').removeClass('display-hide');
+					$("#ocServiceWiseApplnsDetails")
 							.dataTable(
 									{
 										ajax : {
-											url : "/bpa/reports/servicewise-statusreport-rural/view",
+											url : "/bpa/reports/servicewise-statusreport-pl-rural/view",
 											type : "POST",
 											beforeSend : function() {
 												$('.loader-class')
@@ -74,8 +73,8 @@ $(document)
                                         "<'col-md-2 col-xs-6 text-left'B><'col-md-5 col-xs-6 text-right'p>>",
                                         buttons: [{
                                             extend: 'pdf',
-                                            title: 'Building plan approval Servicewise status report',
-                                            filename: 'bpa_servicewise_status_report',
+                                            title: 'Plinth level Certificate Servicewise status  report Rural',
+                                            filename: 'pl_servicewise_status_report',
                                             orientation: 'landscape',
                                             pageSize: 'A3',
                                             exportOptions: {
@@ -83,15 +82,15 @@ $(document)
                                             }
                                         }, {
                                             extend: 'excel',
-                                            title: 'Building plan approval Servicewise status report',
-                                            filename: 'bpa_servicewise_status_report',
+                                            title: 'Plinth level Certificate Servicewise status  report Rural',
+                                            filename: 'pl_servicewise_status_report',
                                             exportOptions: {
                                                 columns: ':visible'
                                             }
                                         }, {
                                             extend: 'print',
-                                            title: 'Building plan approval Servicewise status report',
-                                            filename: 'bpa_servicewise_status_report',
+                                            title: 'Plinth level Certificate Servicewise status report Rural',
+                                            filename: 'pl_servicewise_status_report',
                                             orientation: 'landscape',
                                             pageSize: 'A3',
                                             exportOptions: {
@@ -120,10 +119,6 @@ $(document)
 										   },
 										    {
 												"data" : "plotNumber",
-												"sClass" : "text-left"
-										   },
-										   {
-												"data" : "occupancy",
 												"sClass" : "text-left"
 										   },
 										   {
@@ -161,15 +156,8 @@ $(document)
 											{
 												"data" : "pendingAction",
 												"sClass" : "text-left"
-											},
-											{
-												"data": null,
-												"sClass": "text-left",
-												"render": function(data, type, row, meta) {
-													var commonOptions = '<option value="">---Select an Action----</option><option  value=' + viewurl + row.applicationNumber + '>View</option>';
-													return ('<select class="dropchange" style="width:160px;font-size: small">' + commonOptions + '></select>');
-												}
-											}]
+											}
+											]
 									});
 				});
 
@@ -183,7 +171,6 @@ function getFormData($form) {
 
 	return indexed_array;
 }
-
 $(document).on('change', '.dropchange', function() {
 	var url = $(this).val();
 	if (url) {

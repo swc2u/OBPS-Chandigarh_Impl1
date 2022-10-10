@@ -61,6 +61,7 @@ import java.util.Date;
 public class SearchOcSpec {
 	final private static Long RURAL_APPLICATION_NUMBER = 4L;
 	final private static String OC_END_STATE = "Order Issued to Applicant";
+	final private static String CANCELLED = "Cancelled";
     public static Specification<OccupancyCertificate> search(final SearchBpaApplicationForm requestForm) {
         return (root, query, builder) -> {
             final Predicate predicate = builder.conjunction();
@@ -134,7 +135,7 @@ public class SearchOcSpec {
                 predicate.getExpressions().add(builder.equal(root.get("status").get("id"), requestForm.getStatusId()));
             
             else
-            	predicate.getExpressions().add(builder.notEqual(root.get("status").get("code"), OC_END_STATE));
+            	predicate.getExpressions().add(builder.not(root.get("status").get("code").in(OC_END_STATE,CANCELLED)));
             
             query.distinct(true);
             return predicate;
@@ -159,7 +160,7 @@ public class SearchOcSpec {
                 predicate.getExpressions().add(builder.equal(root.get("status").get("id"), requestForm.getStatusId()));
             
             else
-            	predicate.getExpressions().add(builder.notEqual(root.get("status").get("code"), OC_END_STATE));
+            	predicate.getExpressions().add(builder.not(root.get("status").get("code").in(OC_END_STATE,CANCELLED)));
             
             query.distinct(true);
             return predicate;

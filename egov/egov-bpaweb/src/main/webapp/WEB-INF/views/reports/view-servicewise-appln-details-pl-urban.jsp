@@ -73,11 +73,11 @@
 	value="${plotNumber}" />
 
 </form:form>
-<div class="row display-hide report-section-rural" id="table_container">
+<div class="row display-hide report-section" id="table_container">
 	<div class="col-md-12 table-header text-left"></div>
 	<div class="col-md-12 form-group report-table-container">
 		<table class="table table-bordered table-hover multiheadertbl"
-			id="bpaServiceWiseApplnsDetailsRural">
+			id="plServiceWiseApplnsDetails">
 			<thead>
 				<tr>
 					<th><spring:message code="lbl.slno" /></th>
@@ -85,7 +85,6 @@
 					<th><spring:message code="lbl.application.no" /></th>
 					<th><spring:message code="lbl.sectors.villages" /></th>
 					<th><spring:message code="lbl.plot.no" /></th>
-					<th><spring:message code="lbl.occupancy" /></th>
 					<th><spring:message code="lbl.appln.date" /></th>
 					<th><spring:message code="lbl.owner.address" /></th>
 					<th><spring:message code="lbl.service.type" /></th>
@@ -131,4 +130,4 @@
 <script src="<cdn:url value='/resources/global/js/bts/bts-datepicker.js' context='/egi'/>"
 		type="text/javascript"></script>
 
-<script src="<cdn:url value='/resources/js/app/view-servicewise-applns-report-rural.js?rnd=${app_release_no}'/> "></script>
+<script src="<cdn:url value='/resources/js/app/view-servicewise-applns-report-pl-urban.js?rnd=${app_release_no}'/> "></script>

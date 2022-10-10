@@ -57,6 +57,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -97,6 +98,8 @@ import org.springframework.validation.BindingResult;
 public class SearchBpaApplicationService {
 
     private static final String APPLICATION_TYPE = "applicationType";
+    private static final String WF_ACTION_END = "END";
+    private static final String WF_APPROVE_STATUS = "Approved";
     private static final Long BTC_APPLICATION_ID = 3L;
     private static final Long ATC_APPLICATION_ID = 5L;
     
@@ -230,7 +233,9 @@ public class SearchBpaApplicationService {
         		}       		
         	}
         }
-        return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
+    	searchResults = searchResults.stream().filter(bpa->!bpa.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
+        
+    	return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
     }
     
     @ReadOnly
@@ -259,6 +264,8 @@ public class SearchBpaApplicationService {
         		}       		
         	}
         }
+        searchResults = searchResults.stream().filter(bpa->!bpa.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
+        
         return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
     }
 
@@ -290,6 +297,8 @@ public class SearchBpaApplicationService {
         		}       		
         	}
         }
+        searchResults = searchResults.stream().filter(bpa->!bpa.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
+        
         return new PageImpl<>(searchResults, pageable, bpaApplications.size());
     }
 

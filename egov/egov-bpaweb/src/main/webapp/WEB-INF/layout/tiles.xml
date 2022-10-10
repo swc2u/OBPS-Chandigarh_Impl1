@@ -1455,14 +1455,14 @@
 	<definition name="search-servicewise-status-report-oc-Urban"
 		extends="base_layout">
 		<put-attribute name="page-title"
-			value="title.report.appln.status" cascade="true" />
+			value="title.view.service.wise.details.oc" cascade="true" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/reports/search-servicewise-status-report-oc-Urban.jsp" />
 	</definition>
 	<definition name="view-servicewise-appln-details-oc-urban"
 		extends="base_layout">
 		<put-attribute name="page-title"
-			value="title.view.appln.details" cascade="true" />
+			value="title.view.service.wise.details.oc" cascade="true" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/reports/view-servicewise-appln-details-oc-urban.jsp" />
 	</definition>
@@ -1585,5 +1585,33 @@
 	<definition name="search-pl-pending-task-rural" extends="base_layout">
 		<put-attribute name="page-title" value="title.search.pl.appln" cascade="true" />
 		<put-attribute name="body" value="/WEB-INF/views/application/search-pl-pending-task-rural.jsp" />
+	</definition>
+	<definition name="search-servicewise-status-report-pl-Rural"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.view.service.wise.details.pl" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/reports/search-servicewise-status-report-pl-Rural.jsp" />
+	</definition>
+	<definition name="view-servicewise-appln-details-pl-rural"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.view.service.wise.details.pl" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/reports/view-servicewise-appln-details-pl-rural.jsp" />
+	</definition>
+	<definition name="search-servicewise-status-report-pl-Urban"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.view.service.wise.details.pl" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/reports/search-servicewise-status-report-pl-Urban.jsp" />
+	</definition>
+	<definition name="view-servicewise-appln-details-pl-urban"
+		extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.view.service.wise.details.pl" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/reports/view-servicewise-appln-details-pl-urban.jsp" />
 	</definition>
 </tiles-definitions>

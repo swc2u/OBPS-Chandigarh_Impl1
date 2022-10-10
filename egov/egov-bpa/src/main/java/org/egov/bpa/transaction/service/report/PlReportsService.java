@@ -40,21 +40,39 @@
 package org.egov.bpa.transaction.service.report;
 
 
+import static org.egov.bpa.utils.BpaConstants.ADDING_OF_EXTENSION;
+import static org.egov.bpa.utils.BpaConstants.ALTERATION;
+import static org.egov.bpa.utils.BpaConstants.AMENITIES;
+import static org.egov.bpa.utils.BpaConstants.CHANGE_IN_OCCUPANCY;
+import static org.egov.bpa.utils.BpaConstants.DEMOLITION;
+import static org.egov.bpa.utils.BpaConstants.DIVISION_OF_PLOT;
+import static org.egov.bpa.utils.BpaConstants.NEW_CONSTRUCTION;
+import static org.egov.bpa.utils.BpaConstants.PERM_FOR_HUT_OR_SHED;
+import static org.egov.bpa.utils.BpaConstants.POLE_STRUCTURES;
+import static org.egov.bpa.utils.BpaConstants.RECONSTRUCTION;
+import static org.egov.bpa.utils.BpaConstants.TOWER_CONSTRUCTION;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.apache.commons.lang.StringUtils;
+import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
+import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationReport;
 import org.egov.bpa.transaction.entity.dto.SearchPendingItemsForm;
+import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
 import org.egov.bpa.transaction.repository.pl.PlinthLevelCertificateRepository;
 import org.egov.bpa.transaction.repository.specs.SearchPlApplnFormSpec;
 import org.egov.bpa.transaction.service.WorkflowHistoryService;
+import org.egov.bpa.transaction.service.oc.SearchOcSpec;
 import org.egov.infra.config.persistence.datasource.routing.annotation.ReadOnly;
 import org.egov.infra.utils.DateUtils;
 import org.hibernate.Session;
@@ -71,6 +89,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PlReportsService {
 
     public static final String SECTION_CLERK = "SECTION CLERK";
+    public static final String WF_ACTION_END = "END";
     public static final Long BTK_APPTYPE = 3L;
     public static final Long ATK_APPTYPE = 5L;
     @Autowired
@@ -222,7 +241,7 @@ public class PlReportsService {
 		  final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
 	        //Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
-	        List<PlinthLevelCertificate> plApplications = plinthLevelCertificateRepository.findAll(SearchPlApplnFormSpec.searchSpecificationForPlPendingItemsRural(searchRequest));
+	        List<PlinthLevelCertificate> plApplications = plinthLevelCertificateRepository.findAll(SearchPlApplnFormSpec.searchSpecificationForPlPendingItems(searchRequest));
 	        List<SearchPendingItemsForm> searchResults = new ArrayList<>();
 	        for (PlinthLevelCertificate application : plApplications) {
 	        	if(null!=application.getState()) {
@@ -243,6 +262,7 @@ public class PlReportsService {
 	        		}       		
 	        	}
 	        }
+	        searchResults = searchResults.stream().filter(plApplication->!plApplication.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
 	        return new PageImpl<>(searchResults, pageable, plApplications.size());
 	}
     
@@ -273,6 +293,7 @@ public class PlReportsService {
   	        		}       		
   	        	}
   	        }
+  	        searchResults = searchResults.stream().filter(plApplication->!plApplication.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
   	        return new PageImpl<>(searchResults, pageable, plApplications.size());
   	}
 
@@ -302,6 +323,7 @@ public Page<SearchPendingItemsForm> pagedSearchForUrbanPLPendingItem(SearchPendi
     		}       		
     	}
     }
+    searchResults = searchResults.stream().filter(plApplication->!plApplication.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
     return new PageImpl<>(searchResults, pageable, plApplications.getTotalElements());
 }
 
@@ -331,8 +353,178 @@ public Page<SearchPendingItemsForm> pagedSearchForRuralPLPendingItem(SearchPendi
     		}       		
     	}
     }
+    searchResults = searchResults.stream().filter(plApplication->!plApplication.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
     return new PageImpl<>(searchResults, pageable, plApplications.getTotalElements());
 }
+
+public List<SearchBpaApplicationForm> search(SearchBpaApplicationForm searchPLApplicationForm) {
+    List<PlinthLevelCertificate> plCertificate = plinthLevelCertificateRepository.findAll(SearchPlApplnFormSpec.search(searchPLApplicationForm));
+    List<SearchBpaApplicationForm> searchResults = new ArrayList<>();
+    for (PlinthLevelCertificate application : plCertificate) {
+    	String pendingAction = application.getState()== null ? "N/A" : application.getState().getNextAction();
+    	searchResults.add(
+                new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction));
+    }
+    return searchResults;
+}
+
+private String getProcessOwner(PlinthLevelCertificate plinthLevelCertificate) {
+    String processOwner;
+    if (plinthLevelCertificate.getState() != null && plinthLevelCertificate.getState().getOwnerPosition() != null)
+        processOwner = workflowHistoryService
+                .getUserPositionByPositionAndDate(plinthLevelCertificate.getState().getOwnerPosition().getId(),
+                		plinthLevelCertificate.getState().getLastModifiedDate())
+                .getName();
+    else
+        processOwner = plinthLevelCertificate.getLastModifiedBy().getName();
+    return processOwner;
+}
+
+ public List<SearchBpaApplicationReport> getResultsByServicetypeAndStatus(
+            final SearchBpaApplicationForm searchPLApplicationForm) {
+        List<SearchBpaApplicationReport> searchOcApplicationReportList = new ArrayList<>();
+        List<SearchBpaApplicationForm> searchPLApplnResultList = search(searchPLApplicationForm);
+        Map<String, Map<String, Long>> resultMap = searchPLApplnResultList.stream()
+                .collect(Collectors.groupingBy(SearchBpaApplicationForm::getStatus,
+                        Collectors.groupingBy(SearchBpaApplicationForm::getServiceType, Collectors.counting())));
+        for (final Entry<String, Map<String, Long>> statusCountResMap : resultMap.entrySet()) {
+            Long newConstruction = 0l;
+            Long demolition = 0l;
+            Long reConstruction = 0l;
+            Long alteration = 0l;
+            Long divisionOfPlot = 0l;
+            Long addingExtension = 0l;
+            Long changeInOccupancy = 0l;
+            Long amenities = 0l;
+            Long hut = 0l;
+            Long towerConstruction = 0l;
+            Long poleStructure = 0l;
+            SearchBpaApplicationReport ocApplicationReport = new SearchBpaApplicationReport();
+            ocApplicationReport.setStatus(statusCountResMap.getKey());
+            for (final Entry<String, Long> statusCountMap : statusCountResMap.getValue().entrySet()) {
+                if (NEW_CONSTRUCTION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    newConstruction = newConstruction + statusCountMap.getValue();
+                    ocApplicationReport.setServiceType01(newConstruction);
+                } else if (DEMOLITION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    demolition = demolition + statusCountMap.getValue();
+                    ocApplicationReport.setServiceType02(demolition);
+                } else if (RECONSTRUCTION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    reConstruction = reConstruction + statusCountMap.getValue();
+                    ocApplicationReport.setServiceType03(reConstruction);
+                } else if (ALTERATION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    alteration = alteration + statusCountMap.getValue();
+                    ocApplicationReport.setServiceType04(alteration);
+                } else if (DIVISION_OF_PLOT.equalsIgnoreCase(statusCountMap.getKey())) {
+                    divisionOfPlot = divisionOfPlot + statusCountMap.getValue();
+                    ocApplicationReport.setServiceType05(divisionOfPlot);
+                } else if (ADDING_OF_EXTENSION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    addingExtension = addingExtension + statusCountMap.getValue();
+                    ocApplicationReport.setServiceType06(addingExtension);
+                } else if (CHANGE_IN_OCCUPANCY.equalsIgnoreCase(statusCountMap.getKey())) {
+                    changeInOccupancy = changeInOccupancy + statusCountMap.getValue();
+                    ocApplicationReport.setServiceType07(changeInOccupancy);
+                } else if (AMENITIES.equalsIgnoreCase(statusCountMap.getKey())) {
+                    amenities = amenities + statusCountMap.getValue();
+                    ocApplicationReport.setServiceType08(amenities);
+                } else if (PERM_FOR_HUT_OR_SHED.equalsIgnoreCase(statusCountMap.getKey())) {
+                    hut = hut + statusCountMap.getValue();
+                    ocApplicationReport.setServiceType09(hut);
+                } else if (TOWER_CONSTRUCTION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    towerConstruction = towerConstruction + statusCountMap.getValue();
+                    ocApplicationReport.setServiceType14(towerConstruction);
+                } else if (POLE_STRUCTURES.equalsIgnoreCase(statusCountMap.getKey())) {
+                    poleStructure = poleStructure + statusCountMap.getValue();
+                    ocApplicationReport.setServiceType15(poleStructure);
+                }
+            }
+            searchOcApplicationReportList.add(ocApplicationReport);
+        }
+        return searchOcApplicationReportList;
+    }
+    
+    
+    public List<SearchBpaApplicationReport> getResultsByServicetypeAndStatusForUrban(
+            final SearchBpaApplicationForm searchPLApplicationForm) {
+    	 List<SearchBpaApplicationReport> searchPLApplicationReportList = new ArrayList<>();
+    	 List<SearchBpaApplicationForm> searchPLApplnResultList = new ArrayList<>();
+        if(searchPLApplicationForm.getApplicationTypeId()==null) {
+        	searchPLApplicationForm.setApplicationTypeId(BTK_APPTYPE);
+        	searchPLApplnResultList = searchForServicewiseStatus(searchPLApplicationForm);
+        	searchPLApplicationForm.setApplicationTypeId(ATK_APPTYPE);
+        	List<SearchBpaApplicationForm> searchATKApplnResultList = searchForServicewiseStatus(searchPLApplicationForm);
+        	searchPLApplnResultList.addAll(searchATKApplnResultList);
+        }else {
+        	searchPLApplnResultList = searchForServicewiseStatus(searchPLApplicationForm);
+        }
+       
+        Map<String, Map<String, Long>> resultMap = searchPLApplnResultList.stream()
+                .collect(Collectors.groupingBy(SearchBpaApplicationForm::getStatus,
+                        Collectors.groupingBy(SearchBpaApplicationForm::getServiceType, Collectors.counting())));
+        for (final Entry<String, Map<String, Long>> statusCountResMap : resultMap.entrySet()) {
+            Long newConstruction = 0l;
+            Long demolition = 0l;
+            Long reConstruction = 0l;
+            Long alteration = 0l;
+            Long divisionOfPlot = 0l;
+            Long addingExtension = 0l;
+            Long changeInOccupancy = 0l;
+            Long amenities = 0l;
+            Long hut = 0l;
+            Long towerConstruction = 0l;
+            Long poleStructure = 0l;
+            SearchBpaApplicationReport plApplicationReport = new SearchBpaApplicationReport();
+            plApplicationReport.setStatus(statusCountResMap.getKey());
+            for (final Entry<String, Long> statusCountMap : statusCountResMap.getValue().entrySet()) {
+                if (NEW_CONSTRUCTION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    newConstruction = newConstruction + statusCountMap.getValue();
+                    plApplicationReport.setServiceType01(newConstruction);
+                } else if (DEMOLITION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    demolition = demolition + statusCountMap.getValue();
+                    plApplicationReport.setServiceType02(demolition);
+                } else if (RECONSTRUCTION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    reConstruction = reConstruction + statusCountMap.getValue();
+                    plApplicationReport.setServiceType03(reConstruction);
+                } else if (ALTERATION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    alteration = alteration + statusCountMap.getValue();
+                    plApplicationReport.setServiceType04(alteration);
+                } else if (DIVISION_OF_PLOT.equalsIgnoreCase(statusCountMap.getKey())) {
+                    divisionOfPlot = divisionOfPlot + statusCountMap.getValue();
+                    plApplicationReport.setServiceType05(divisionOfPlot);
+                } else if (ADDING_OF_EXTENSION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    addingExtension = addingExtension + statusCountMap.getValue();
+                    plApplicationReport.setServiceType06(addingExtension);
+                } else if (CHANGE_IN_OCCUPANCY.equalsIgnoreCase(statusCountMap.getKey())) {
+                    changeInOccupancy = changeInOccupancy + statusCountMap.getValue();
+                    plApplicationReport.setServiceType07(changeInOccupancy);
+                } else if (AMENITIES.equalsIgnoreCase(statusCountMap.getKey())) {
+                    amenities = amenities + statusCountMap.getValue();
+                    plApplicationReport.setServiceType08(amenities);
+                } else if (PERM_FOR_HUT_OR_SHED.equalsIgnoreCase(statusCountMap.getKey())) {
+                    hut = hut + statusCountMap.getValue();
+                    plApplicationReport.setServiceType09(hut);
+                } else if (TOWER_CONSTRUCTION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    towerConstruction = towerConstruction + statusCountMap.getValue();
+                    plApplicationReport.setServiceType14(towerConstruction);
+                } else if (POLE_STRUCTURES.equalsIgnoreCase(statusCountMap.getKey())) {
+                    poleStructure = poleStructure + statusCountMap.getValue();
+                    plApplicationReport.setServiceType15(poleStructure);
+                }
+            }
+            searchPLApplicationReportList.add(plApplicationReport);
+        }
+        return searchPLApplicationReportList;
+    }
+    
+    public List<SearchBpaApplicationForm> searchForServicewiseStatus(SearchBpaApplicationForm searchRequest) {
+		 List<PlinthLevelCertificate> plCertificate = plinthLevelCertificateRepository.findAll(SearchPlApplnFormSpec.search(searchRequest));
+	        List<SearchBpaApplicationForm> SearchPendingItemsFormList = new ArrayList<>();
+	        for (PlinthLevelCertificate application : plCertificate) {
+	        	String pendingAction = application.getState()== null ? "N/A" : application.getState().getNextAction();
+	        	SearchPendingItemsFormList.add(
+	                    new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction));
+	        }
+	        return SearchPendingItemsFormList;
+	}
 }
     
 
