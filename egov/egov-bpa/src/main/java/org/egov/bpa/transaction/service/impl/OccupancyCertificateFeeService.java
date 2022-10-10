@@ -303,7 +303,7 @@ public class OccupancyCertificateFeeService {
 		} else {
 			totalAmount = multiplier;
 		}
-		totalAmount = totalAmount.divide(GST);
+		totalAmount = totalAmount.divide(GST,2, RoundingMode.HALF_UP);
 		return totalAmount;
 	}
 
@@ -723,7 +723,7 @@ public class OccupancyCertificateFeeService {
 		
 		if(BpaConstants.F_B.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode()) 
 				|| BpaConstants.F_SCO.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode()) ){
-			totalAmount = totalAmount.divide(GST);
+			totalAmount = totalAmount.divide(GST,2, RoundingMode.HALF_UP);
 		}
 		return totalAmount;
 	}
