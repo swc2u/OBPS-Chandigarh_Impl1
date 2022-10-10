@@ -417,7 +417,7 @@ public class PlReportsController extends BpaGenericApplicationController {
 	@ResponseBody
 	public String getStatusCountByServicetypeResultForRural(@ModelAttribute final SearchBpaApplicationForm searchPLApplicationForm) {
 		final List<SearchBpaApplicationReport> searchResultList = plReportsService
-				.getResultsByServicetypeAndStatusForUrban(searchPLApplicationForm);
+				.getResultsByServicetypeAndStatusForRural(searchPLApplicationForm);
 		return new StringBuilder(DATA)
 				.append(toJSON(searchResultList, SearchBpaApplicationReport.class, SearchBpaApplicationReportAdaptor.class))
 				.append("}")

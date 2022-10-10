@@ -67,6 +67,10 @@
 				<security:filter-chain pattern="/ajax/getFeeDetailsDuringRegisterForOC" filters="none"/>
 				<security:filter-chain pattern="/reports/statusreport-api" filters="none" />
 				<security:filter-chain pattern="/reports/servicewise-summary-api" filters="none" />
+				<security:filter-chain pattern="/reports/searchPLPendingItemsRural" filters="none" />
+				<security:filter-chain pattern="/reports/searchPLItems" filters="none" />
+				<security:filter-chain pattern="/reports/searchPLPendingItems" filters="none" />
+				<security:filter-chain pattern="/reports/searchPLItemsRural" filters="none" />
 				<security:filter-chain pattern="/rest/**" filters="anonymousAuthenticationFilter"/>
 				<security:filter-chain pattern="/application/citizen/check-status/**" filters="anonymousAuthenticationFilter"/>
 				<security:filter-chain pattern="/**"  filters="concurrentSessionFilter,securityContextPersistenceFilter,
