@@ -50,6 +50,7 @@ import org.egov.bpa.transaction.entity.PermitRenewal;
 import org.egov.bpa.transaction.entity.SiteDetail;
 import org.egov.bpa.transaction.entity.SlotDetail;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
+import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
 import org.egov.infra.web.support.search.DataTableSearchRequest;
 import org.hibernate.validator.constraints.SafeHtml;
 
@@ -136,6 +137,7 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
     private Date planPermissionDate;
     @SafeHtml
     private String occupancyCertificateNumber;
+    private String plinthLevelCertificateNumber;
     private Boolean wfEnded;
     private Boolean feeCollector;
 
@@ -232,6 +234,42 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
         setPlotNumber(occupancyCertificate.getParent().getPlotNumber());
         setSector(occupancyCertificate.getParent().getSector());
         setApplicationTypeId(occupancyCertificate.getParent().getApplicationType().getId());
+    }
+    
+    public SearchBpaApplicationForm(PlinthLevelCertificate plCertificate, String currentOwner, String pendingAction) {
+        setId(plCertificate.getId());
+        setApplicationNumber(plCertificate.getApplicationNumber());
+        setApplicantName(plCertificate.getParent().getOwner().getName());
+        setApplicationDate(plCertificate.getApplicationDate());
+        if (!plCertificate.getPlSlots().isEmpty()) {
+            SlotDetail slotDetail = plCertificate.getPlSlots().get(0).getSlotDetail();
+            setAppointmentTime(slotDetail.getAppointmentTime());
+            setAppointmentDate(slotDetail.getSlot().getAppointmentDate());
+        }
+        setAddress(plCertificate.getParent().getOwner().getAddress());
+//        setRescheduledByEmployee(plCertificate.getRescheduledByEmployee());
+        setApplicationType(plCertificate.getParent().getApplicantType());
+        setOccupancy(plCertificate.getParent().getOccupanciesName());
+        setServiceType(plCertificate.getParent().getServiceType().getDescription());
+        setServiceCode(plCertificate.getParent().getServiceType().getCode());
+        setPlanPermissionNumber(plCertificate.getParent().getPlanPermissionNumber());
+        setStakeHolderName(plCertificate.getParent().getStakeHolder().get(0).getStakeHolder().getName());
+        setPlinthLevelCertificateNumber(plCertificate.getPlinthLevelCertificateNumber());
+        if (!plCertificate.getParent().getSiteDetail().isEmpty()) {
+            SiteDetail site = plCertificate.getParent().getSiteDetail().get(0);
+            setReSurveyNumber(site.getReSurveyNumber());
+            setZone(site.getAdminBoundary() == null ? "" : site.getAdminBoundary().getParent().getName());
+            setWard(site.getAdminBoundary() == null ? "" : site.getAdminBoundary().getName());
+            setElectionWard(site.getElectionBoundary() == null ? "" : site.getElectionBoundary().getName());
+            setLocality(site.getLocationBoundary() == null ? "" : site.getLocationBoundary().getName());
+        }
+        setStatus(plCertificate.getStatus().getCode());
+        setCurrentOwner(currentOwner);
+        setPendingAction(pendingAction);
+        setFeeCollected(isFeeCollected);
+        setPlotNumber(plCertificate.getParent().getPlotNumber());
+        setSector(plCertificate.getParent().getSector());
+        setApplicationTypeId(plCertificate.getParent().getApplicationType().getId());
     }
     
     public SearchBpaApplicationForm(BpaApplication application, OccupancyCertificate occupancyCertificate) {
@@ -744,6 +782,14 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
 
 	public void setPaymentMode(String paymentMode) {
 		this.paymentMode = paymentMode;
+	}
+
+	public String getPlinthLevelCertificateNumber() {
+		return plinthLevelCertificateNumber;
+	}
+
+	public void setPlinthLevelCertificateNumber(String plinthLevelCertificateNumber) {
+		this.plinthLevelCertificateNumber = plinthLevelCertificateNumber;
 	}
     
 }

@@ -101,6 +101,24 @@ public class SearchPendingItemsForm extends DataTableSearchRequest {
 	        setPlotNumber(plCertificate.getParent().getPlotNumber());
 	        setBPAApplicationType(plCertificate.getParent().getApplicationType().getDescription());
 		}
+	 
+	 public SearchPendingItemsForm(PlinthLevelCertificate plCertificate, String currentOwnerName,String pendingAction) {
+	        setId(plCertificate.getId());
+	        setApplicationNumber(plCertificate.getApplicationNumber());
+	        setApplicantName(plCertificate.getParent().getOwner().getName());
+	        setApplicationDate(plCertificate.getApplicationDate());
+	        setApplicationType(plCertificate.getApplicationType());
+	        setOccupancy(plCertificate.getParent().getOccupanciesName());
+	        setServiceType(plCertificate.getParent().getServiceType().getDescription());
+	        setServiceCode(plCertificate.getParent().getServiceType().getCode());
+	        setStatus(plCertificate.getStatus().getCode());
+	        setCurrentOwner(currentOwnerName);
+	        setCurrentOwnerDesg(currentOwnerDesg);
+	        setPendingAction(pendingAction);
+	        setSector(plCertificate.getParent().getSector());
+	        setPlotNumber(plCertificate.getParent().getPlotNumber());
+	        setBPAApplicationType(plCertificate.getParent().getApplicationType().getDescription());
+		}
     
 	public Long getId() {
 		return id;
