@@ -92,6 +92,7 @@ public class PlReportsService {
     public static final String WF_ACTION_END = "END";
     public static final Long BTK_APPTYPE = 3L;
     public static final Long ATK_APPTYPE = 5L;
+    public static final Long RURAL_APPTYPE = 4L;
     @Autowired
 	private PlinthLevelCertificateRepository plinthLevelCertificateRepository;
     @PersistenceContext
@@ -456,6 +457,73 @@ private String getProcessOwner(PlinthLevelCertificate plinthLevelCertificate) {
         }else {
         	searchPLApplnResultList = searchForServicewiseStatus(searchPLApplicationForm);
         }
+       
+        Map<String, Map<String, Long>> resultMap = searchPLApplnResultList.stream()
+                .collect(Collectors.groupingBy(SearchBpaApplicationForm::getStatus,
+                        Collectors.groupingBy(SearchBpaApplicationForm::getServiceType, Collectors.counting())));
+        for (final Entry<String, Map<String, Long>> statusCountResMap : resultMap.entrySet()) {
+            Long newConstruction = 0l;
+            Long demolition = 0l;
+            Long reConstruction = 0l;
+            Long alteration = 0l;
+            Long divisionOfPlot = 0l;
+            Long addingExtension = 0l;
+            Long changeInOccupancy = 0l;
+            Long amenities = 0l;
+            Long hut = 0l;
+            Long towerConstruction = 0l;
+            Long poleStructure = 0l;
+            SearchBpaApplicationReport plApplicationReport = new SearchBpaApplicationReport();
+            plApplicationReport.setStatus(statusCountResMap.getKey());
+            for (final Entry<String, Long> statusCountMap : statusCountResMap.getValue().entrySet()) {
+                if (NEW_CONSTRUCTION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    newConstruction = newConstruction + statusCountMap.getValue();
+                    plApplicationReport.setServiceType01(newConstruction);
+                } else if (DEMOLITION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    demolition = demolition + statusCountMap.getValue();
+                    plApplicationReport.setServiceType02(demolition);
+                } else if (RECONSTRUCTION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    reConstruction = reConstruction + statusCountMap.getValue();
+                    plApplicationReport.setServiceType03(reConstruction);
+                } else if (ALTERATION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    alteration = alteration + statusCountMap.getValue();
+                    plApplicationReport.setServiceType04(alteration);
+                } else if (DIVISION_OF_PLOT.equalsIgnoreCase(statusCountMap.getKey())) {
+                    divisionOfPlot = divisionOfPlot + statusCountMap.getValue();
+                    plApplicationReport.setServiceType05(divisionOfPlot);
+                } else if (ADDING_OF_EXTENSION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    addingExtension = addingExtension + statusCountMap.getValue();
+                    plApplicationReport.setServiceType06(addingExtension);
+                } else if (CHANGE_IN_OCCUPANCY.equalsIgnoreCase(statusCountMap.getKey())) {
+                    changeInOccupancy = changeInOccupancy + statusCountMap.getValue();
+                    plApplicationReport.setServiceType07(changeInOccupancy);
+                } else if (AMENITIES.equalsIgnoreCase(statusCountMap.getKey())) {
+                    amenities = amenities + statusCountMap.getValue();
+                    plApplicationReport.setServiceType08(amenities);
+                } else if (PERM_FOR_HUT_OR_SHED.equalsIgnoreCase(statusCountMap.getKey())) {
+                    hut = hut + statusCountMap.getValue();
+                    plApplicationReport.setServiceType09(hut);
+                } else if (TOWER_CONSTRUCTION.equalsIgnoreCase(statusCountMap.getKey())) {
+                    towerConstruction = towerConstruction + statusCountMap.getValue();
+                    plApplicationReport.setServiceType14(towerConstruction);
+                } else if (POLE_STRUCTURES.equalsIgnoreCase(statusCountMap.getKey())) {
+                    poleStructure = poleStructure + statusCountMap.getValue();
+                    plApplicationReport.setServiceType15(poleStructure);
+                }
+            }
+            searchPLApplicationReportList.add(plApplicationReport);
+        }
+        return searchPLApplicationReportList;
+    }
+    
+    public List<SearchBpaApplicationReport> getResultsByServicetypeAndStatusForRural(
+            final SearchBpaApplicationForm searchPLApplicationForm) {
+    	 List<SearchBpaApplicationReport> searchPLApplicationReportList = new ArrayList<>();
+    	 List<SearchBpaApplicationForm> searchPLApplnResultList = new ArrayList<>();
+        if(searchPLApplicationForm.getApplicationTypeId()==null) {
+        	searchPLApplicationForm.setApplicationTypeId(RURAL_APPTYPE);
+        }
+        	searchPLApplnResultList = searchForServicewiseStatus(searchPLApplicationForm);
        
         Map<String, Map<String, Long>> resultMap = searchPLApplnResultList.stream()
                 .collect(Collectors.groupingBy(SearchBpaApplicationForm::getStatus,
