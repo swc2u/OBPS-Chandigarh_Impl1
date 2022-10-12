@@ -235,6 +235,7 @@ public class BpaConstants {
 	public static final String NATURE_OF_WORK = "Building Plan Approval";
 	public static final String NATURE_OF_WORK_OC = "Building Plan Approval::Occupancy Certificate";
 	public static final String NATURE_OF_WORK_PL = "Building Plan Approval::Plinth Level Certificate";
+	public static final String NATURE_OF_WORK_NOC = "Building Plan Approval::NOC";
 	public static final String NATURE_OF_WORK_INSPECTION = "Inspection Application";
 	public static final String WF_NEW_STATE = "NEW";
 	public static final String WF_CREATED_STATE = "Created";

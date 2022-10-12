@@ -223,7 +223,7 @@ public class BpaNocApplicationController {
                                     : null);
         }
         
-        bpaUtils.redirectToBpaNOCWorkFlow(approvalPosition, permitNocApplication, "Initiated",
+        bpaUtils.redirectToBpaNOCWorkFlow(approvalPosition, permitNocApplication, "NEW",
         		"COMMENTS", workFlowAction, null);
         
 //        if (null == approvalPosition)

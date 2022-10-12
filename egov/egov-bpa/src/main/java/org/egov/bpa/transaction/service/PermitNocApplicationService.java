@@ -142,7 +142,9 @@ public class PermitNocApplicationService {
         BpaStatus status = statusService.findByModuleTypeAndCode(BpaConstants.CHECKLIST_TYPE_NOC, BpaConstants.NOC_INITIATED);
         permitNoc.getBpaNocApplication().setNocApplicationNumber(nocNumberGenerator.generateNocNumber(nocConfig.getDepartment()));
         permitNoc.getBpaNocApplication().setNocType(nocConfig.getDepartment());
-        permitNoc.getBpaNocApplication().setStatus(status);
+        if(!nocConfig.getDepartment().equalsIgnoreCase("STRUCTURE NOC")) {
+        	permitNoc.getBpaNocApplication().setStatus(status);
+        }
         addSlaEndDate(permitNoc.getBpaNocApplication(), nocConfig);
         PermitNocApplication nocApp = permitNocRepository.save(permitNoc);
         bpaSmsAndEmailService.sendSMSAndEmailForNocProcess(BpaConstants.NOC_INITIATED, nocApp);

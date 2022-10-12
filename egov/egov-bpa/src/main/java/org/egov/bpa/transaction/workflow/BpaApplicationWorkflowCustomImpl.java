@@ -510,6 +510,13 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 					wfmatrix.getNextStatus());
 		return null;
 	}
+	
+	private BpaStatus getNOCStatusByCurrentMatrxiStatus(final WorkFlowMatrix wfmatrix) {
+		if (wfmatrix != null && wfmatrix.getNextStatus() != null && !"".equals(wfmatrix.getNextStatus()))
+			return bpaStatusService.findByModuleTypeAndCode(BpaConstants.NOCMODULE,
+					wfmatrix.getNextStatus());
+		return null;
+	}
 
 	private BpaStatus getStatusByPassingCode(final String code) {
 		if (code != null && !"".equals(code))
@@ -538,8 +545,8 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 					.getEmployee();
 		
 		wfmatrix =bpaApplicationWorkflowService.
-				 getWfMatrix(BPA_NOC, null, null, permitNocApplication.getBpaApplication().getApplicationType().getName(), "WF_NEW_STATE",
-					null);
+				 getWfMatrix(BPA_NOC, null, null, permitNocApplication.getBpaApplication().getApplicationType().getName(), "NEW",
+					"Forward to Structure noc is pending");
 		
 		if (wfmatrix != null) {
 //			if (pos == null) {
@@ -555,7 +562,8 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 //					permitNocApplication.getStateHistory(), permitNocApplication.getTownSurveyorInspectionRequire(),
 //					new BpaStateInfo(), wfmatrix, workFlowAction);
 
-			permitNocApplication.getBpaNocApplication().setStatus(getStatusByCurrentMatrxiStatus(wfmatrix));
+			permitNocApplication.getBpaNocApplication()
+			.setStatus(getNOCStatusByCurrentMatrxiStatus(wfmatrix));
 			permitNocApplication.getBpaNocApplication().transition().start()
 					.withSLA(bpaWorkFlowService.calculateDueDate(bpaAppConfigUtil.getSlaBpaApplication()))
 					.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
@@ -565,7 +573,7 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 					.withOwner(pos)
 					.withOwner(ownerUser)
 					.withNextAction(wfmatrix.getNextAction())
-					.withNatureOfTask(BpaConstants.NATURE_OF_WORK).withExtraInfo("");
+					.withNatureOfTask(BpaConstants.NATURE_OF_WORK_NOC).withExtraInfo("");
 		}
 		
 	}
