@@ -235,12 +235,19 @@ public class BpaNocApplicationController {
 //            pos = assignments.get(0).getPosition();
 //        User user = assignments.get(0).getEmployee();
         
-       System.out.println("approvalPosition********"+approvalPosition); 
-       System.out.println("assignments*********"+assignments.size());
+            if (workFlowAction != null && workFlowAction.equals("Initiated")) {
+                final BpaStatus bpaStatus = permitNocService.getStatusByCodeAndModuleType("Initiated");
+                permitNocApplication.getBpaNocApplication().setStatus(bpaStatus);
+            } else {
+                final BpaStatus bpaStatus =  permitNocService.getStatusByCodeAndModuleType("Forwarded");
+                permitNocApplication.getBpaNocApplication().setStatus(bpaStatus);
+            }
         
+        if(!"STRUCTURE NOC".equalsIgnoreCase(permitNocApplication.getBpaNocApplication().getNocType())) {
+			BpaStatus status = statusService.findByModuleTypeAndCode(BpaConstants.NOCMODULE, workFlowAction);
+			permitNocApplication.getBpaNocApplication().setStatus(status);
+		}
         ///////////////Sunitha end	
-		BpaStatus status = statusService.findByModuleTypeAndCode(BpaConstants.NOCMODULE, workFlowAction);
-		permitNocApplication.getBpaNocApplication().setStatus(status);
 		buildNocFiles(permitNocApplication.getBpaNocApplication());
 		permitNocRepository.save(permitNocApplication);
 		bpaUtils.updateNocPortalUserinbox(permitNocApplication, null);
