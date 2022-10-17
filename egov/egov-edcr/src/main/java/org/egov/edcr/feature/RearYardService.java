@@ -831,25 +831,53 @@ public class RearYardService extends GeneralRule {
 		if(DxfFileConstants.F.equals(mostRestrictiveOccupancyType.getType().getCode()))
 			return;
 		
-		for (Block block : pl.getBlocks()) {
-			if (!block.getCompletelyExisting()) {
-				Boolean rearYardDefined = false;
-				for (SetBack setback : block.getSetBacks()) {
-					if (setback.getRearYard() != null
-							&& setback.getRearYard().getMinimumDistance().compareTo(BigDecimal.valueOf(0)) > 0) {
-						rearYardDefined = true;
+		Map<String, String> map=getSetBack(pl, mostRestrictiveOccupancyType);
+		
+		if(DxfFileConstants.DATA_NOT_FOUND.equals(map.get(CDGAdditionalService.SETBACK_REAR))) {
+			pl.addError(OBJECTNOTDEFINED+CDGAdditionalService.SETBACK_REAR, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_REAR");
+			return;
+		}
+		
+		Double rearSetback=Double.valueOf(map.get(CDGAdditionalService.SETBACK_REAR)!=null && !map.get(CDGAdditionalService.SETBACK_REAR).equals(DxfFileConstants.NA)?map.get(CDGAdditionalService.SETBACK_REAR):"0");
+		
+		if(rearSetback>0) {
+			for (Block block : pl.getBlocks()) {
+				if (!block.getCompletelyExisting()) {
+					Boolean rearYardDefined = false;
+					for (SetBack setback : block.getSetBacks()) {
+						if (setback.getRearYard() != null
+								&& setback.getRearYard().getMinimumDistance().compareTo(BigDecimal.valueOf(0)) > 0) {
+							rearYardDefined = true;
+						}
+					}
+					if (!rearYardDefined ) {
+						//if (!rearYardDefined && !pl.getPlanInformation().getNocToAbutRearDesc().equalsIgnoreCase(YES)) {
+								HashMap<String, String> errors = new HashMap<>();
+						errors.put(REAR_YARD_DESC,
+								prepareMessage(OBJECTNOTDEFINED, REAR_YARD_DESC + " for Block " + block.getName()));
+						pl.addErrors(errors);
 					}
 				}
-				if (!rearYardDefined ) {
-					//if (!rearYardDefined && !pl.getPlanInformation().getNocToAbutRearDesc().equalsIgnoreCase(YES)) {
-							HashMap<String, String> errors = new HashMap<>();
-					errors.put(REAR_YARD_DESC,
-							prepareMessage(OBJECTNOTDEFINED, REAR_YARD_DESC + " for Block " + block.getName()));
-					pl.addErrors(errors);
-				}
+	
 			}
-
 		}
+	}
+
+	private Map<String, String> getSetBack(Plan pl, OccupancyTypeHelper occupancy) {
+
+		String plotAreaType = pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE);
+		String sector = pl.getPlanInfoProperties().get(DxfFileConstants.SECTOR_NUMBER);
+		String plotNo = pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_NO);
+
+		Map<String, String> input = new HashMap<String, String>();
+		input.put(CDGAdditionalService.OCCUPENCY_CODE, occupancy.getSubtype().getCode());
+		input.put(CDGAdditionalService.SECTOR, sector);
+		input.put(CDGAdditionalService.PLOT_NO, plotNo);
+		input.put(CDGAdditionalService.PLOT_TYPE, plotAreaType);
+
+		Map<String, String> result = cdgAdditionalService.getFeatureValue(CDGAConstant.SETBACKS, input);
+
+		return result;
 
 	}
 
