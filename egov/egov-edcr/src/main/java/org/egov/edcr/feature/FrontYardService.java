@@ -424,7 +424,7 @@ public class FrontYardService extends GeneralRule {
 					return;
 				}
 				
-				Double frontSetback=Double.valueOf(map.get(CDGAdditionalService.SETBACK_FRONT)!=null?map.get(CDGAdditionalService.SETBACK_FRONT):"0");
+				Double frontSetback=Double.valueOf(map.get(CDGAdditionalService.SETBACK_FRONT)!=null && !map.get(CDGAdditionalService.SETBACK_FRONT).equals(DxfFileConstants.NA)?map.get(CDGAdditionalService.SETBACK_FRONT):"0");
 				
 				if(frontSetback>0) {
 					Boolean frontYardDefined = false;
