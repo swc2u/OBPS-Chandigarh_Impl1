@@ -95,13 +95,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import static org.egov.bpa.utils.BpaConstants.WF_FORWARD_BUTTON;
 @Controller
 @RequestMapping(value = "/nocapplication")
 public class BpaNocApplicationController {
 	private static final String WORK_FLOW_ACTION = "workFlowAction";
 	private static final String BPA_NOC = "BpaNOC";
-	private static final String WF_NEW_STATE = "WF_NEW_STATE";
+	private static final String WF_NEW_STATE = "NEW";
 
 	@Autowired
 	private OccupancyService occupancyService;
@@ -166,7 +166,7 @@ public class BpaNocApplicationController {
 		model.addAttribute("permitNocApplication", permitNoc);
 		List<Checklist> checklists = getListOfEvaluation(permitNoc);
 		model.addAttribute("checklists", checklists);
-		if (!permitNoc.getBpaNocApplication().getStatus().getCode().equals(BpaConstants.NOC_INITIATED))
+		if (permitNoc.getBpaNocApplication().getStatus().getCode().equals(BpaConstants.NOC_APPROVED))
 			return "redirect:/nocapplication/view/" + permitNoc.getBpaNocApplication().getNocApplicationNumber();
 		else
 			return "noc-details";
@@ -206,59 +206,88 @@ public class BpaNocApplicationController {
 		}
 
 		permitNocApplication.getBpaNocApplication().setNocEvaluations(evaluations);
-		/////////////Sunitha
-		Long approvalPosition = null;
-		List<Assignment> assignments;
-		Position pos = null;
-		 WorkflowBean wfBean = new WorkflowBean();
-		 wfBean.setWorkFlowAction(request.getParameter(WORK_FLOW_ACTION));
-		 final WorkFlowMatrix wfMatrix =bpaApplicationWorkflowService.
-				 getWfMatrix(BPA_NOC, null, null, permitNocApplication.getBpaApplication().getApplicationType().getName(), WF_NEW_STATE,
-					null);
-        if (wfMatrix != null) {
-        	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
-        			permitNocApplication.getBpaApplication().getSiteDetail().get(0) != null
-                            && permitNocApplication.getBpaApplication().getSiteDetail().get(0).getAdminBoundary() != null
-                                    ? permitNocApplication.getBpaApplication().getSiteDetail().get(0).getAdminBoundary().getId()
-                                    : null);
-        }
-        
-        bpaUtils.redirectToBpaNOCWorkFlow(approvalPosition, permitNocApplication, "NEW",
-        		"COMMENTS", workFlowAction, null);
-        
-//        if (null == approvalPosition)
-//            assignments = bpaWorkFlowService
-//                    .getAssignmentsByPositionAndDate(permitNocApplication.getBpaNocApplication().getCurrentState().getOwnerPosition().getId(), new Date());
-//        else
-            assignments = bpaWorkFlowService.getAssignmentsByPositionAndDate(approvalPosition, new Date());
-//        if (pos == null)
-//            pos = assignments.get(0).getPosition();
-//        User user = assignments.get(0).getEmployee();
-        
-            if (workFlowAction != null && workFlowAction.equals("Initiated")) {
-                final BpaStatus bpaStatus = permitNocService.getStatusByCodeAndModuleType("Initiated");
-                permitNocApplication.getBpaNocApplication().setStatus(bpaStatus);
-            } else {
-                final BpaStatus bpaStatus =  permitNocService.getStatusByCodeAndModuleType("Forwarded");
-                permitNocApplication.getBpaNocApplication().setStatus(bpaStatus);
-            }
-        
-        if(!"STRUCTURE NOC".equalsIgnoreCase(permitNocApplication.getBpaNocApplication().getNocType())) {
-			BpaStatus status = statusService.findByModuleTypeAndCode(BpaConstants.NOCMODULE, workFlowAction);
-			permitNocApplication.getBpaNocApplication().setStatus(status);
+		if(permitNocApplication.getBpaNocApplication().getState()!=null) {
+			Long approvalPosition = null;
+			if("Forwarded to structure noc verification".equalsIgnoreCase(permitNocApplication.getBpaNocApplication().getState().getNextAction())) {
+				final WorkFlowMatrix wfMatrix =bpaApplicationWorkflowService.
+						 getWfMatrix(BPA_NOC, null, null, permitNocApplication.getBpaApplication().getApplicationType().getName(), WF_NEW_STATE,
+							null);
+		        if (wfMatrix != null) {
+		        	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
+		        			permitNocApplication.getBpaApplication().getSiteDetail().get(0) != null
+		                            && permitNocApplication.getBpaApplication().getSiteDetail().get(0).getAdminBoundary() != null
+		                                    ? permitNocApplication.getBpaApplication().getSiteDetail().get(0).getAdminBoundary().getId()
+		                                    : null);
+		        }
+			}
+			else if("Application is forwarded to approve".equalsIgnoreCase(permitNocApplication.getBpaNocApplication().getState().getNextAction())) {
+				final WorkFlowMatrix wfMatrix =bpaApplicationWorkflowService.
+						 getWfMatrix(BPA_NOC, null, null, permitNocApplication.getBpaApplication().getApplicationType().getName(), "Noc verification pending",
+							null);
+		        if (wfMatrix != null) {
+		        	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
+		        			permitNocApplication.getBpaApplication().getSiteDetail().get(0) != null
+		                            && permitNocApplication.getBpaApplication().getSiteDetail().get(0).getAdminBoundary() != null
+		                                    ? permitNocApplication.getBpaApplication().getSiteDetail().get(0).getAdminBoundary().getId()
+		                                    : null);
+		        }
+			}
+			else if("Approved".equalsIgnoreCase(workFlowAction)) {
+				final WorkFlowMatrix wfMatrix =bpaApplicationWorkflowService.
+						 getWfMatrix(BPA_NOC, null, null, permitNocApplication.getBpaApplication().getApplicationType().getName(), "Pending Approve",
+							null);
+		        if (wfMatrix != null) {
+		        	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
+		        			permitNocApplication.getBpaApplication().getSiteDetail().get(0) != null
+		                            && permitNocApplication.getBpaApplication().getSiteDetail().get(0).getAdminBoundary() != null
+		                                    ? permitNocApplication.getBpaApplication().getSiteDetail().get(0).getAdminBoundary().getId()
+		                                    : null);
+		        }
+			}
+	        
+	        bpaUtils.redirectToBpaNOCWorkFlow(approvalPosition, permitNocApplication, permitNocApplication.getBpaNocApplication().getCurrentState().getValue(),
+	        		"COMMENTS", workFlowAction, null);
+	        
+//	            List<Assignment> assignments = bpaWorkFlowService.getAssignmentsByPositionAndDate(approvalPosition, new Date());
 		}
-        ///////////////Sunitha end	
+//            if (workFlowAction != null && workFlowAction.equals("Initiated")) {
+//                final BpaStatus bpaStatus = permitNocService.getStatusByCodeAndModuleType("Initiated");
+//                permitNocApplication.getBpaNocApplication().setStatus(bpaStatus);
+//            } 
+//            else if (workFlowAction != null && workFlowAction.equals("Approved")) {
+//                final BpaStatus bpaStatus = permitNocService.getStatusByCodeAndModuleType("Approved");
+//                permitNocApplication.getBpaNocApplication().setStatus(bpaStatus);
+//            } 
+//            
+//            else {
+//                final BpaStatus bpaStatus =  permitNocService.getStatusByCodeAndModuleType("Forwarded");
+//                permitNocApplication.getBpaNocApplication().setStatus(bpaStatus);
+//            }
+        
+//        if(!"STRUCTURE NOC".equalsIgnoreCase(permitNocApplication.getBpaNocApplication().getNocType())) {
+		BpaStatus status=null;	
+		if(workFlowAction=="")
+			 status = statusService.findByModuleTypeAndCode(BpaConstants.NOCMODULE, "Forwarded");
+		else
+			status = statusService.findByModuleTypeAndCode(BpaConstants.NOCMODULE, workFlowAction);
+			
+			permitNocApplication.getBpaNocApplication().setStatus(status);
+//		}
 		buildNocFiles(permitNocApplication.getBpaNocApplication());
 		permitNocRepository.save(permitNocApplication);
-		bpaUtils.updateNocPortalUserinbox(permitNocApplication, null);
+		bpaUtils.updateNocPortalUserinbox(permitNocApplication, null,workFlowAction);
 		if (workFlowAction.equalsIgnoreCase(BpaConstants.NOC_APPROVED)) {
 			redirectAttributes.addFlashAttribute("message", "Noc Application is approved with application number "
 					+ permitNocApplication.getBpaNocApplication().getNocApplicationNumber() + ".");
 			bpaSmsAndEmailService.sendSMSAndEmailForNocProcess(BpaConstants.NOC_APPROVED, permitNocApplication);
-		} else {
+		}else if(workFlowAction.equalsIgnoreCase(BpaConstants.NOC_REJECTED)){
 			redirectAttributes.addFlashAttribute("message", "Noc Application is rejected with "
 					+ permitNocApplication.getBpaNocApplication().getNocApplicationNumber() + ".");
 			bpaSmsAndEmailService.sendSMSAndEmailForNocProcess(BpaConstants.NOC_REJECTED, permitNocApplication);
+		}else {
+			redirectAttributes.addFlashAttribute("message", "Noc Application is forwarded with "
+					+ permitNocApplication.getBpaNocApplication().getNocApplicationNumber() + ".");
+			bpaSmsAndEmailService.sendSMSAndEmailForNocProcess(BpaConstants.NOC_FORWARDED, permitNocApplication);
 		}
 		return "redirect:/nocapplication/success/"
 				+ permitNocApplication.getBpaNocApplication().getNocApplicationNumber();

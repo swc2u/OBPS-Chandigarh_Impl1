@@ -83,7 +83,6 @@
 							code='title.documentdetail' /></a></li>
 				<li><a data-toggle="tab" href="#evaluation" data-tabidx=2>Evaluation</a></li>
 			</ul>
-
 			<div class="tab-content">
 
 				<div id="document-info" class="tab-pane fade">
@@ -297,7 +296,17 @@
 								<spring:message code='lbl.reject' />
 							</form:button>
 						</c:when>
-						<c:when test="${permitNocApplication.bpaNocApplication.status.code eq 'Initiated'}">
+						<c:when test="${permitNocApplication.bpaNocApplication.state eq null}">
+							<form:button type="submit" id="buttonApprove"
+								class="btn btn-primary" value="submit">
+								<spring:message code='lbl.approve' />
+							</form:button>
+							<form:button type="submit" id="buttonReject"
+								class="btn btn-primary" value="reject">
+								<spring:message code='lbl.reject' />
+							</form:button>
+						</c:when>
+						<c:otherwise>
 							<form:button type="submit" id="buttonForward"
 								class="btn btn-primary" value="submit">
 								<spring:message code='lbl.btn.forward' />
@@ -306,9 +315,6 @@
 								class="btn btn-primary" value="reject">
 								<spring:message code='lbl.reject' />
 							</form:button>
-						</c:when>
-						<c:otherwise>
-
 						</c:otherwise>
 					
 					</c:choose>

@@ -465,14 +465,31 @@ public class BpaUtils {
 		final PortalInbox portalInbox = portalInboxBuilder.build();
 		portalInboxService.pushInboxMessage(portalInbox);
 	}
-
+	
 	@Transactional
 	public void updateNocPortalUserinbox(final PermitNocApplication permitNoc, final User additionalPortalInboxUser) {
 		Module module = moduleService.getModuleByName(BpaConstants.NOCMODULE);
 		String status = permitNoc.getBpaNocApplication().getStatus().getCode();
+		
 		String url = "/bpa/nocapplication/update/" + permitNoc.getBpaNocApplication().getNocApplicationNumber();
 		portalInboxService.updateInboxMessage(permitNoc.getBpaNocApplication().getNocApplicationNumber(),
-				module.getId(), status, true, new Date(), null, additionalPortalInboxUser,
+				module.getId(), status, true, new Date(), permitNoc.getBpaNocApplication().getState(), additionalPortalInboxUser,
+				permitNoc.getBpaApplication().getPlanPermissionNumber(), url);
+	}
+	
+	@Transactional
+	public void updateNocPortalUserinbox(final PermitNocApplication permitNoc, final User additionalPortalInboxUser,final String workFlowAction) {
+		Module module = moduleService.getModuleByName(BpaConstants.NOCMODULE);
+		String status = permitNoc.getBpaNocApplication().getStatus().getCode();
+		
+		boolean isResolved = false;
+		
+		if(workFlowAction.equalsIgnoreCase(BpaConstants.APPROVED)|| workFlowAction.equalsIgnoreCase(BpaConstants.NOC_REJECTED)) {
+			isResolved=true;
+		}
+		String url = "/bpa/nocapplication/update/" + permitNoc.getBpaNocApplication().getNocApplicationNumber();
+		portalInboxService.updateInboxMessage(permitNoc.getBpaNocApplication().getNocApplicationNumber(),
+				module.getId(), status, isResolved, new Date(), permitNoc.getBpaNocApplication().getState(), additionalPortalInboxUser,
 				permitNoc.getBpaApplication().getPlanPermissionNumber(), url);
 	}
 

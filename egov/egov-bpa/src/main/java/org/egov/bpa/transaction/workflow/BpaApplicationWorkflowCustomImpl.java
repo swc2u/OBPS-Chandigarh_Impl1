@@ -565,24 +565,26 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 		}
 
 
-		else if (workFlowAction.equalsIgnoreCase(BpaConstants.WF_APPROVE_BUTTON)) {
+		else if (workFlowAction.equalsIgnoreCase(BpaConstants.APPROVED)) {
 			wfmatrix =bpaApplicationWorkflowService.
-					getWfMatrix(BPA_NOC, null, null, permitNocApplication.getBpaApplication().getApplicationType().getName(), "Approved",
+					getWfMatrix(BPA_NOC, null, null, permitNocApplication.getBpaApplication().getApplicationType().getName(), "Pending Approve",
 							"Application is forwarded to approve");
-			if(wfmatrix.getNextAction().contains("END")) {
-				permitNocApplication.getBpaNocApplication().transition().end()
-				.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-				.withComments(remarks).withRefFileId(permitNocApplication.getBpaNocApplication().getWfFileRefId())
-				.withDateInfo(currentDate.toDate()).withNextAction(wfmatrix.getNextAction())
-				.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
-			}
-			else {
-				permitNocApplication.getBpaNocApplication().transition().progressWithStateCopy()
-				.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-				.withComments(remarks).withRefFileId(permitNocApplication.getBpaNocApplication().getWfFileRefId())
-				.withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos)
-				.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
-				.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+			if(wfmatrix!=null) {
+				if(wfmatrix.getNextAction().contains("END")) {
+					permitNocApplication.getBpaNocApplication().transition().end()
+					.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+					.withComments(remarks).withRefFileId(permitNocApplication.getBpaNocApplication().getWfFileRefId())
+					.withDateInfo(currentDate.toDate()).withNextAction(wfmatrix.getNextAction())
+					.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+				}
+				else {
+					permitNocApplication.getBpaNocApplication().transition().progressWithStateCopy()
+					.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+					.withComments(remarks).withRefFileId(permitNocApplication.getBpaNocApplication().getWfFileRefId())
+					.withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos)
+					.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
+					.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+				}
 			}
 		}else if (workFlowAction.toUpperCase().equalsIgnoreCase(BpaConstants.WF_REJECT_BUTTON)) {
 			wfmatrix =bpaApplicationWorkflowService.
@@ -600,7 +602,7 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 		}
 		else {
 			wfmatrix =bpaApplicationWorkflowService.
-					getWfMatrix(BPA_NOC, null, null, permitNocApplication.getBpaApplication().getApplicationType().getName(), "structure noc verification pending",
+					getWfMatrix(BPA_NOC, null, null, permitNocApplication.getBpaApplication().getApplicationType().getName(), "Noc verification pending",
 							"Forwarded to structure noc verification");
 			if (wfmatrix != null) {
 				permitNocApplication.getBpaNocApplication().transition().progressWithStateCopy()

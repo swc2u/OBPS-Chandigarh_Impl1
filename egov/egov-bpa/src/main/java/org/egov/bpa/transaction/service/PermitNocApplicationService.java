@@ -320,7 +320,6 @@ public class PermitNocApplicationService {
 		nocTypeMap.put(BpaConstants.STRCNOCTYPE, "NO");
 		nocTypeMap.put(BpaConstants.ELECNOCTYPE, "NO");
 		nocTypeMap.put(BpaConstants.POLNOCTYPE, "NO");
-		nocTypeMap.put(BpaConstants.PLANNINGNOCTYPE, "NO");
 		if(edcrPlanInfo.getPlan()!=null){ 
 			edcrPlanInfo.getPlan().getPlanInformation().setNocPACDept("NO");
 			edcrPlanInfo.getPlan().getPlanInformation().setNocStructureDept("NO");
@@ -352,7 +351,6 @@ public class PermitNocApplicationService {
 							|| BpaConstants.A_P.equalsIgnoreCase(occupancyTypeHelper.getSubtype().getCode())){
 							edcrPlanInfo.getPlan().getPlanInformation().setNocPACDept("YES");
 							edcrPlanInfo.getPlan().getPlanInformation().setNocStructureDept("YES");
-//							edcrPlanInfo.getPlan().getPlanInformation().setNocPlanningDept("YES");
 						}else {
 							edcrPlanInfo.getPlan().getPlanInformation().setNocPACDept("YES");
 							edcrPlanInfo.getPlan().getPlanInformation().setNocFireDept("YES");
@@ -360,7 +358,6 @@ public class PermitNocApplicationService {
 							edcrPlanInfo.getPlan().getPlanInformation().setNocElectricalDept("YES");
 							edcrPlanInfo.getPlan().getPlanInformation().setNocPollutionDept("YES");
 							edcrPlanInfo.getPlan().getPlanInformation().setNocPH7Dept("YES");
-//							edcrPlanInfo.getPlan().getPlanInformation().setNocPlanningDept("YES");
 						}
 					}
 				}else if(boundaryType.equalsIgnoreCase(BpaConstants.RURAL)){
@@ -388,7 +385,6 @@ public class PermitNocApplicationService {
 			nocTypeMap.put(BpaConstants.STRCNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocStructureDept());
 			nocTypeMap.put(BpaConstants.ELECNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocElectricalDept());
 			nocTypeMap.put(BpaConstants.POLNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPollutionDept());
-			nocTypeMap.put(BpaConstants.PLANNINGNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPlanningDept());
 		}		 
         return nocTypeMap;
     }
