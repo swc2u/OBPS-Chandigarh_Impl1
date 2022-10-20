@@ -84,12 +84,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Service
 @Transactional(readOnly = true)
 public class PermitNocApplicationService {
-	
-	private static final String BPA_NOC = "BpaNOC";
-	private static final String WORK_FLOW_ACTION = "workFlowAction";
-	private static final String WORK_FLOW_NOC_INITIATE_ACTION = "Initiated";
-	private static final String WORK_FLOW_NOC_FORWARDER_ACTION = "Forwarded";
-	
     @Autowired
     private PermitNocApplicationRepository permitNocRepository;
     @Autowired
@@ -188,10 +182,10 @@ public class PermitNocApplicationService {
 	                
 	                if(nocConfig.getDepartment().equalsIgnoreCase("STRUCTURE NOC")) {
 		                //Workflow initiated for NOC
-	                	String workFlowAction = WORK_FLOW_NOC_INITIATE_ACTION;
+	                	String workFlowAction = BpaConstants.NOC_INITIATED;
 			            Long approvalPosition = null;
 			            final WorkFlowMatrix wfMatrixNOC =bpaUtils.getWfMatrixByCurrentState(
-			                   false, BPA_NOC, WF_NEW_STATE,
+			                   false, BpaConstants.BPA_NOC, WF_NEW_STATE,
 			                   application.getApplicationType().getName());
 			           if (wfMatrixNOC != null) {
 			        	   approvalPosition= bpaUtils.getNOCUserPositionId(wfMatrixNOC.getNextDesignation());
@@ -199,11 +193,11 @@ public class PermitNocApplicationService {
 			           bpaUtils.redirectToBpaNOCWorkFlow(approvalPosition, permitNoc, BpaConstants.WF_NEW_STATE,
 			           		"NOC workflow initiated thorugh BPA service", BpaConstants.WF_FORWARD_BUTTON, null);
 			           
-			           if (workFlowAction != null && workFlowAction.equals(WORK_FLOW_NOC_INITIATE_ACTION)) {
-		                    final BpaStatus bpaStatus = getStatusByCodeAndModuleType(WORK_FLOW_NOC_INITIATE_ACTION);
+			           if (workFlowAction != null && workFlowAction.equals(BpaConstants.NOC_INITIATED)) {
+		                    final BpaStatus bpaStatus = getStatusByCodeAndModuleType(BpaConstants.NOC_INITIATED);
 		                    permitNoc.getBpaNocApplication().setStatus(bpaStatus);
 		                } else {
-		                    final BpaStatus bpaStatus = getStatusByCodeAndModuleType(WORK_FLOW_NOC_FORWARDER_ACTION);
+		                    final BpaStatus bpaStatus = getStatusByCodeAndModuleType(BpaConstants.NOC_FORWARDED);
 		                    permitNoc.getBpaNocApplication().setStatus(bpaStatus);
 		                }
 		                
