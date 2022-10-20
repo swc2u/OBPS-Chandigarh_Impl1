@@ -198,6 +198,8 @@ public class PlanInformation implements Serializable {
     private transient String nocPollutionDept = NA;
     //YES/NO/NA.Extracted from Plan info. Permitted with AC tax department NOC
     private transient String nocAcTaxDept = NA;
+  //YES/NO/NA.Extracted from Plan info. Permitted with Planning department NOC
+    private transient String nocPlanningDept = NA;
     
     //ROOT_BOUNDARY_TYPE
     private transient String rootBoundaryType =NA; 
@@ -1225,6 +1227,14 @@ public class PlanInformation implements Serializable {
 
 	public void setIsSecurityFeeApplicable(String isSecurityFeeApplicable) {
 		this.isSecurityFeeApplicable = isSecurityFeeApplicable;
+	}
+
+	public String getNocPlanningDept() {
+		return nocPlanningDept;
+	}
+
+	public void setNocPlanningDept(String nocPlanningDept) {
+		this.nocPlanningDept = nocPlanningDept;
 	}
 
 	
