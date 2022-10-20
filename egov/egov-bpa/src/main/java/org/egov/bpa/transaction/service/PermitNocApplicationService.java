@@ -194,16 +194,10 @@ public class PermitNocApplicationService {
 			                   false, BPA_NOC, WF_NEW_STATE,
 			                   application.getApplicationType().getName());
 			           if (wfMatrixNOC != null) {
-//			           	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrixNOC.getNextDesignation(),
-//			           			application.getSiteDetail().get(0) != null
-//			                               && application.getSiteDetail().get(0).getAdminBoundary() != null
-//			                                       ? application.getSiteDetail().get(0).getAdminBoundary().getId()
-//			                                       : null);
 			        	   approvalPosition= bpaUtils.getNOCUserPositionId(wfMatrixNOC.getNextDesignation());
 			           }
-			           System.out.println("approvalPosition:::*********:"+approvalPosition);
-			           bpaUtils.redirectToBpaNOCWorkFlow(approvalPosition, permitNoc, "NEW",
-			           		"COMMENTS", "Forward", null);
+			           bpaUtils.redirectToBpaNOCWorkFlow(approvalPosition, permitNoc, BpaConstants.WF_NEW_STATE,
+			           		"NOC workflow initiated thorugh BPA service", BpaConstants.WF_FORWARD_BUTTON, null);
 			           
 			           if (workFlowAction != null && workFlowAction.equals(WORK_FLOW_NOC_INITIATE_ACTION)) {
 		                    final BpaStatus bpaStatus = getStatusByCodeAndModuleType(WORK_FLOW_NOC_INITIATE_ACTION);

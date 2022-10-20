@@ -690,6 +690,13 @@ public class BpaConstants {
 
 	public static final String PLINTH_LEVEL_CERTIFICATE = "Plinth Level Certificate";
 	public static final String RURAL_ULB_NAME = "Chandigarh Municipal Corporation";
+	
+	//NOC workflow
+	public static final String BPA_NOC = "BpaNOC";
+	public static final String BPA_NOC_WF_ACTION_FORWARDED_TO_VERIFICATION = "Forwarded to noc verification";
+	public static final String BPA_NOC_WF_ACTION_FORWARDED_TO_APPROVE = "Application is forwarded to approve";
+	public static final String BPA_NOC_WF_STATE_VERIFICZTION_PENDING = "Noc verification pending";
+	public static final String BPA_NOC_WF_STATE_PENDING_APPROVE = "Pending Approve";
 
 	private static final List<String> AVAILABLE_DESIGNATIONS = new ArrayList<>();
 	static {
