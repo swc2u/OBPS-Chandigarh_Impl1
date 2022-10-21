@@ -198,7 +198,7 @@ public class PlanInformation implements Serializable {
     private transient String nocPollutionDept = NA;
     //YES/NO/NA.Extracted from Plan info. Permitted with AC tax department NOC
     private transient String nocAcTaxDept = NA;
-    //YES/NO/NA.Extracted from Plan info. Permitted with AC tax department NOC
+  //YES/NO/NA.Extracted from Plan info. Permitted with Planning department NOC
     private transient String nocPlanningDept = NA;
     
     //ROOT_BOUNDARY_TYPE

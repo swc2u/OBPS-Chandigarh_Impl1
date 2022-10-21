@@ -49,10 +49,17 @@ import java.util.stream.Collectors;
 
 import org.egov.bpa.transaction.entity.ApplicationFloorDetail;
 import org.egov.bpa.transaction.entity.BuildingDetail;
+import org.egov.bpa.transaction.entity.ExistingBuildingFloorDetail;
 import org.egov.bpa.transaction.entity.oc.OCBuilding;
 import org.egov.bpa.transaction.entity.oc.OCFloor;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
+import org.egov.bpa.transaction.service.ApplicationBpaService;
+import org.egov.bpa.transaction.workflow.BpaApplicationWorkflowCustomImpl;
 import org.egov.bpa.utils.BpaUtils;
+import org.egov.common.entity.edcr.Block;
+import org.egov.common.entity.edcr.Plan;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
@@ -62,7 +69,7 @@ import org.springframework.ui.Model;
 
 @Service
 public class OccupancyCertificateValidationService {
-
+	private static final Logger LOG = LoggerFactory.getLogger(OccupancyCertificateValidationService.class);
     private static final String OC_COMPARISON_VALIDATION = "OcComparisonValidation";
 
     @Autowired
@@ -70,15 +77,27 @@ public class OccupancyCertificateValidationService {
     private MessageSource bpaMessageSource;
     @Autowired
     private BpaUtils bpaUtils;
+    @Autowired
+	protected ApplicationBpaService applicationBpaService;
 
     public Boolean validateOcApplnWithPermittedBpaAppln(final Model model, final OccupancyCertificate occupancyCertificate) {
-    	System.out.println("occupancyCertificate.getParent():::"+occupancyCertificate.getParent().getBuildingDetail().size());
-    	return validateOcApplnWithPermittedAppln(model, occupancyCertificate) ||
+       
+    	if(occupancyCertificate.getParent().getBuildingDetail().isEmpty()) {
+    		Plan bpaPlan = applicationBpaService.getPlanInfo(occupancyCertificate.getParent().geteDcrNumber());
+    		BigDecimal existingFloorArea =getBpaExistingTotalFloorArea( occupancyCertificate.getParent().getExistingBuildingDetails().get(0).getExistingBuildingFloorDetails());
+        	LOG.info(" existingFloorArea from Plan :::::::"+existingFloorArea);
+    		return validateOcApplnWithPermittedAppln(model, occupancyCertificate) ||
+        			validateBuildingHeightAndFloorAreaFromPlan(bpaPlan.getBlocks(),
+                    occupancyCertificate.getBuildings(),existingFloorArea, model);
+    	}
+    	else
+    		return validateOcApplnWithPermittedAppln(model, occupancyCertificate) ||
                 validateBuildingHeightAndFloorArea(occupancyCertificate.getParent().getBuildingDetail(),
                         occupancyCertificate.getBuildings(), model);
     }
 
-    public Boolean validateOcApplnWithPermittedAppln(final Model model, final OccupancyCertificate occupancyCertificate) {
+
+	public Boolean validateOcApplnWithPermittedAppln(final Model model, final OccupancyCertificate occupancyCertificate) {
 
         List<OCBuilding> ocBuildings = occupancyCertificate.getBuildings();
         List<BuildingDetail> permitBuildings = occupancyCertificate.getParent().getBuildingDetail();
@@ -236,6 +255,64 @@ public class OccupancyCertificateValidationService {
         }
         return true;
     }
+    
+  //If BPA building details are empty  
+    private Boolean validateBuildingHeightAndFloorAreaFromPlan(List<Block> permitBuildingsBlock, List<OCBuilding> ocBuildings,
+            BigDecimal existingFloorArea, final Model model) {
+    	LOG.info("Validation method if BPA building details are empty");
+        BigDecimal hundred = new BigDecimal(100);
+        BigDecimal percent = new BigDecimal(bpaUtils.getAppConfigForOcAllowDeviation());
+        BigDecimal limitSqurMtrs = new BigDecimal(40);
+        for (OCBuilding oc : ocBuildings) {
+            for (Block bpa : permitBuildingsBlock) {
+                if (oc.getBuildingNumber().equals(Integer.parseInt(bpa.getNumber()))) {
+                    BigDecimal totalOcFloor = getOcTotalFloorArea(oc.getFloorDetailsForUpdate());
+                    BigDecimal totalBpaFloor = existingFloorArea;
+                    BigDecimal allowDeviation = totalBpaFloor.multiply(percent).divide(hundred);
+                    BigDecimal totalBpaWithAllowDeviation = totalBpaFloor.add(allowDeviation);
+                    if (totalBpaWithAllowDeviation.compareTo(totalOcFloor) < 0) {
+                        model.addAttribute(OC_COMPARISON_VALIDATION,
+                                bpaMessageSource.getMessage("msg.oc.comp.blk.area.not.match1",
+                                        new String[] { String.valueOf(oc.getBuildingNumber()), String.valueOf(totalOcFloor),
+                                                String.valueOf(bpa.getNumber()), String.valueOf(totalBpaFloor) },
+                                        LocaleContextHolder.getLocale()));
+                        return false;
+                    }
+                    if (totalOcFloor.subtract(totalBpaFloor).compareTo(limitSqurMtrs) > 0) {
+                        model.addAttribute(OC_COMPARISON_VALIDATION,
+                                bpaMessageSource.getMessage("msg.oc.comp.blk.area.not.match2",
+                                        new String[] { String.valueOf(oc.getBuildingNumber()), String.valueOf(totalOcFloor),
+                                                String.valueOf(bpa.getNumber()), String.valueOf(totalBpaFloor) },
+                                        LocaleContextHolder.getLocale()));
+                        return false;
+                    }
+                }
+            }
+        }
+
+        for (OCBuilding oc : ocBuildings) {
+            boolean isHeightSame = false;
+            BigDecimal permitBldgHgt = BigDecimal.ZERO;
+            for (Block bpa : permitBuildingsBlock) {
+            	LOG.info("building height from Plan ::"+permitBldgHgt);
+                permitBldgHgt = bpa.getBuilding().getBuildingHeight().setScale(SCALING_FACTOR, BigDecimal.ROUND_HALF_UP);
+                if (oc.getHeightFromGroundWithOutStairRoom().setScale(SCALING_FACTOR, BigDecimal.ROUND_HALF_UP)
+                        .doubleValue() <= permitBldgHgt.doubleValue())
+                    isHeightSame = true;
+            }
+            if (!isHeightSame) {
+                model.addAttribute(OC_COMPARISON_VALIDATION,
+                        bpaMessageSource.getMessage("msg.oc.comp.blk.hgt.not.match",
+                                new String[] {
+                                        String.valueOf(oc.getHeightFromGroundWithOutStairRoom().setScale(SCALING_FACTOR,
+                                                BigDecimal.ROUND_HALF_UP)),
+                                        String.valueOf(permitBldgHgt) },
+                                LocaleContextHolder.getLocale()));
+                return false;
+            }
+        }
+        return true;
+    }
 
     private BigDecimal getOcTotalFloorArea(List<OCFloor> floorList) {
         BigDecimal totalFloorArea = BigDecimal.ZERO;
@@ -250,4 +327,11 @@ public class OccupancyCertificateValidationService {
             totalFloorArea = totalFloorArea.add(floorDetail.getFloorArea());
         return totalFloorArea;
     }
+    
+    private BigDecimal getBpaExistingTotalFloorArea(List<ExistingBuildingFloorDetail> existingBuildingFloorDetails) {
+    	  BigDecimal totalFloorArea = BigDecimal.ZERO;
+          for (ExistingBuildingFloorDetail floorDetail : existingBuildingFloorDetails)
+              totalFloorArea = totalFloorArea.add(floorDetail.getFloorArea());
+          return totalFloorArea;
+	}
 }

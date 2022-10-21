@@ -1054,8 +1054,8 @@ if(pl.getDrawingPreference().getInFeets()) {
 	private void checkRowHousing(Plan plan,OccupancyTypeHelper mostRestrictiveOccupancyType,Map<String, String> map) {
 		
 		try {
-			Double left=Double.parseDouble(map.get(CDGAdditionalService.LEFT)!=null && !DxfFileConstants.DATA_NOT_FOUND.equals(map.get(CDGAdditionalService.LEFT))?map.get(CDGAdditionalService.LEFT):"0");
-			Double right=Double.parseDouble(map.get(CDGAdditionalService.RIGHT)!=null && !DxfFileConstants.DATA_NOT_FOUND.equals(map.get(CDGAdditionalService.RIGHT))?map.get(CDGAdditionalService.RIGHT):"0");
+			Double left=Double.parseDouble(map.get(CDGAdditionalService.LEFT)!=null && !DxfFileConstants.DATA_NOT_FOUND.equals(map.get(CDGAdditionalService.LEFT)) && DxfFileConstants.NA.equals(map.get(CDGAdditionalService.LEFT))?map.get(CDGAdditionalService.LEFT):"0");
+			Double right=Double.parseDouble(map.get(CDGAdditionalService.RIGHT)!=null && !DxfFileConstants.DATA_NOT_FOUND.equals(map.get(CDGAdditionalService.RIGHT))&& DxfFileConstants.NA.equals(map.get(CDGAdditionalService.RIGHT))?map.get(CDGAdditionalService.RIGHT):"0");
 			
 			if(left==0 && right==0) {
 				plan.setIsRowHouse(true);
@@ -1089,7 +1089,7 @@ if(pl.getDrawingPreference().getInFeets()) {
 				
 				checkRowHousing(pl,mostRestrictiveOccupancyType,map);//it's for Terrace Utility
 				
-				Double frontSetback = Double.valueOf(map.get(CDGAdditionalService.SETBACK_FRONT) != null
+				Double frontSetback = Double.valueOf(map.get(CDGAdditionalService.SETBACK_FRONT) != null && !map.get(CDGAdditionalService.SETBACK_FRONT).equals(DxfFileConstants.NA)
 						? map.get(CDGAdditionalService.SETBACK_FRONT)
 						: "0");
 

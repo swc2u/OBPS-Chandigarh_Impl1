@@ -473,6 +473,7 @@ public class BpaConstants {
 	public static final String ELECNOCTYPE = "ELECTRICAL NOC";
 	public static final String POLNOCTYPE = "POL CONTROL NOC";
 	public static final String ACTAXNOCTYPE = "AC TAX NOC";
+	public static final String PLANNINGNOCTYPE = "PLANNING NOC";
 
 	public static final String NOC_INITIATED = "Initiated";
 	public static final String NOC_APPROVED = "Approved";
@@ -495,6 +496,7 @@ public class BpaConstants {
 	public static final String POLNOCROLE = "BPA_POL_CONTROL_NOC_ROLE";
 	public static final String MANINOCROLE = "BPA_MANIMAJARA_NOC_ROLE";
 	public static final String ACTAXNOCROLE = "BPA_AC_TAX_NOC_ROLE";
+	public static final String PLANNINGNOCROLE = "BPA_PLANNING_NOC_ROLE";
 	public static final String FIRENOCRURALROLE = "BPA_FIRE_NOC_RURAL_ROLE";
 	public static final String PHNOCRURALROLE = "BPA_PUB_HEALTH_NOC_RURAL_ROLE";
 	public static final String TEHNOCRURALROLE = "BPA_TEHSILDAR_NOC_RURAL_ROLE";
@@ -878,6 +880,7 @@ public class BpaConstants {
 		NOCTYPE.put(ELECNOCTYPE, ELECNOCROLE);
 		NOCTYPE.put(POLNOCTYPE, POLNOCROLE);
 		NOCTYPE.put(ACTAXNOCTYPE, ACTAXNOCROLE);
+		NOCTYPE.put(PLANNINGNOCTYPE, PLANNINGNOCROLE);
 	}
 	
 	private static final Map<String, String> NOCTYPERURAL = new ConcurrentHashMap<>();
@@ -901,6 +904,7 @@ public class BpaConstants {
 		OCNOCTYPE.put(PACNOCTYPE, PACNOCROLE);
 		OCNOCTYPE.put(POLNOCTYPE, POLNOCROLE);
 		OCNOCTYPE.put(ACTAXNOCTYPE, ACTAXNOCROLE);
+		OCNOCTYPE.put(PLANNINGNOCTYPE, PLANNINGNOCROLE);
 	}
 	
 	private static final Map<String, String> OCNOCTYPERURAL = new ConcurrentHashMap<>();
