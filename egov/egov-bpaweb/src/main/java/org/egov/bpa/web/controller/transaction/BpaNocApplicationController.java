@@ -255,9 +255,17 @@ public class BpaNocApplicationController {
 	        bpaUtils.redirectToBpaNOCWorkFlow(approvalPosition, permitNocApplication, permitNocApplication.getBpaNocApplication().getCurrentState().getValue(),
 	        		permitNocApplication.getBpaNocApplication().getRemarks(), workFlowAction, null);
 	        
+//	        List<Assignment> assignments;
+//	        if (null == approvalPosition)
+//                assignments = bpaWorkFlowService.getAssignmentsByPositionAndDate(
+//                		permitNocApplication.getBpaNocApplication().getCurrentState().getOwnerPosition().getId(), new Date());
+//            else
+//                assignments = bpaWorkFlowService.getAssignmentsByPositionAndDate(approvalPosition, new Date());
+//             pos = assignments.get(0).getPosition();
+//             wfUser = assignments.get(0).getEmployee();
+		
 		}
         
-//        if(!"STRUCTURE NOC".equalsIgnoreCase(permitNocApplication.getBpaNocApplication().getNocType())) {
 		BpaStatus status=null;	
 		if(workFlowAction!=null && workFlowAction.equals(""))
 			 status = statusService.findByModuleTypeAndCode(BpaConstants.NOCMODULE, BpaConstants.NOC_FORWARDED);
@@ -265,7 +273,6 @@ public class BpaNocApplicationController {
 			status = statusService.findByModuleTypeAndCode(BpaConstants.NOCMODULE, workFlowAction);
 			
 			permitNocApplication.getBpaNocApplication().setStatus(status);
-//		}
 			
 		buildNocFiles(permitNocApplication.getBpaNocApplication());
 		permitNocRepository.save(permitNocApplication);
