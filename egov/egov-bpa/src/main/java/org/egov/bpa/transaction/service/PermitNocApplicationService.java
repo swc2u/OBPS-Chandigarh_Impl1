@@ -280,6 +280,7 @@ public class PermitNocApplicationService {
 			edcrPlanInfo.getPlan().getPlanInformation().setNocPH7Dept("NO");
 			edcrPlanInfo.getPlan().getPlanInformation().setNocPHDept("NO");
 			edcrPlanInfo.getPlan().getPlanInformation().setNocRoad2Dept("NO");	
+			edcrPlanInfo.getPlan().getPlanInformation().setNocPlanningDept("NO");
 			if(null!=edcrPlanInfo.getPlan()) {
 				OccupancyTypeHelper occupancyTypeHelper = edcrPlanInfo.getPlan().getVirtualBuilding() != null
 						? edcrPlanInfo.getPlan().getVirtualBuilding().getMostRestrictiveFarHelper()
