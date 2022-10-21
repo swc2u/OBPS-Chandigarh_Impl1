@@ -83,7 +83,6 @@
 							code='title.documentdetail' /></a></li>
 				<li><a data-toggle="tab" href="#evaluation" data-tabidx=2>Evaluation</a></li>
 			</ul>
-
 			<div class="tab-content">
 
 				<div id="document-info" class="tab-pane fade">
@@ -286,18 +285,51 @@
 					</div>
 				</div>  </div>
 				<div align="center">
-					<c:if
-						test="${permitNocApplication.bpaNocApplication.status.code eq 'Initiated'}">
+					<c:choose>
+						<c:when test="${permitNocApplication.bpaNocApplication.status.code eq 'Forwarded'}">
+							<form:button type="submit" id="buttonApprove"
+								class="btn btn-primary" value="submit">
+								<spring:message code='lbl.approve' />
+							</form:button>
+							<form:button type="submit" id="buttonReject"
+								class="btn btn-primary" value="reject">
+								<spring:message code='lbl.reject' />
+							</form:button>
+						</c:when>
+						<c:when test="${permitNocApplication.bpaNocApplication.state eq null}">
+							<form:button type="submit" id="buttonApprove"
+								class="btn btn-primary" value="submit">
+								<spring:message code='lbl.approve' />
+							</form:button>
+							<form:button type="submit" id="buttonReject"
+								class="btn btn-primary" value="reject">
+								<spring:message code='lbl.reject' />
+							</form:button>
+						</c:when>
+						<c:otherwise>
+							<form:button type="submit" id="buttonForward"
+								class="btn btn-primary" value="submit">
+								<spring:message code='lbl.btn.forward' />
+							</form:button>
+							<form:button type="submit" id="buttonReject"
+								class="btn btn-primary" value="reject">
+								<spring:message code='lbl.reject' />
+							</form:button>
+						</c:otherwise>
+					
+					</c:choose>
+<%-- 					<c:if --%>
+<%-- 						test="${permitNocApplication.bpaNocApplication.status.code eq 'Initiated'}"> --%>
 
-						<form:button type="submit" id="buttonApprove"
-							class="btn btn-primary" value="submit">
-							<spring:message code='lbl.approve' />
-						</form:button>
-						<form:button type="submit" id="buttonReject"
-							class="btn btn-primary" value="reject">
-							<spring:message code='lbl.reject' />
-						</form:button>
-					</c:if>
+<%-- 						<form:button type="submit" id="buttonApprove" --%>
+<%-- 							class="btn btn-primary" value="submit"> --%>
+<%-- 							<spring:message code='lbl.approve' /> --%>
+<%-- 						</form:button> --%>
+<%-- 						<form:button type="submit" id="buttonReject" --%>
+<%-- 							class="btn btn-primary" value="reject"> --%>
+<%-- 							<spring:message code='lbl.reject' /> --%>
+<%-- 						</form:button> --%>
+<%-- 					</c:if> --%>
 					<input type="button" name="button2" id="button2" value="Close"
 						class="btn btn-default" onclick="window.close();" />
 				</div>  

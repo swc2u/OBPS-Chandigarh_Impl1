@@ -121,6 +121,8 @@ public class BpaUtils {
 
 	private static final String CLOSED = "Closed";
 	private static final String WF_END_ACTION = "END";
+	
+	private static final String BPA_NOC = "BpaNOC";
 	@Autowired
 	private ApplicationContext context;
 
@@ -463,14 +465,31 @@ public class BpaUtils {
 		final PortalInbox portalInbox = portalInboxBuilder.build();
 		portalInboxService.pushInboxMessage(portalInbox);
 	}
-
+	
 	@Transactional
 	public void updateNocPortalUserinbox(final PermitNocApplication permitNoc, final User additionalPortalInboxUser) {
 		Module module = moduleService.getModuleByName(BpaConstants.NOCMODULE);
 		String status = permitNoc.getBpaNocApplication().getStatus().getCode();
+		
 		String url = "/bpa/nocapplication/update/" + permitNoc.getBpaNocApplication().getNocApplicationNumber();
 		portalInboxService.updateInboxMessage(permitNoc.getBpaNocApplication().getNocApplicationNumber(),
-				module.getId(), status, true, new Date(), null, additionalPortalInboxUser,
+				module.getId(), status, true, new Date(), permitNoc.getBpaNocApplication().getState(), additionalPortalInboxUser,
+				permitNoc.getBpaApplication().getPlanPermissionNumber(), url);
+	}
+	
+	@Transactional
+	public void updateNocPortalUserinbox(final PermitNocApplication permitNoc, final User additionalPortalInboxUser,final String workFlowAction) {
+		Module module = moduleService.getModuleByName(BpaConstants.NOCMODULE);
+		String status = permitNoc.getBpaNocApplication().getStatus().getCode();
+		
+		boolean isResolved = false;
+		
+		if(workFlowAction.equalsIgnoreCase(BpaConstants.APPROVED)|| workFlowAction.equalsIgnoreCase(BpaConstants.NOC_REJECTED)) {
+			isResolved=true;
+		}
+		String url = "/bpa/nocapplication/update/" + permitNoc.getBpaNocApplication().getNocApplicationNumber();
+		portalInboxService.updateInboxMessage(permitNoc.getBpaNocApplication().getNocApplicationNumber(),
+				module.getId(), status, isResolved, new Date(), permitNoc.getBpaNocApplication().getState(), additionalPortalInboxUser,
 				permitNoc.getBpaApplication().getPlanPermissionNumber(), url);
 	}
 
@@ -576,6 +595,21 @@ public class BpaUtils {
 			final String currentState, final String remarks, final String workFlowAction, final BigDecimal amountRule) {
 
 		buildWorkFlow(approvalPosition, application, currentState, remarks, workFlowAction, amountRule);
+	}
+	
+	@Transactional
+	public void redirectToBpaNOCWorkFlow(Long approvalPosition, final PermitNocApplication permitNocApplication,
+			final String currentState, final String remarks, final String workFlowAction, final BigDecimal amountRule) {
+		buildBpaNOCWorkFlow(approvalPosition, permitNocApplication, currentState, remarks, workFlowAction, amountRule);
+	}
+	
+	private void buildBpaNOCWorkFlow(Long approvalPosition, final PermitNocApplication permitNocApplication, final String currentState,
+			final String remarks, final String workFlowAction, final BigDecimal amountRule) {
+		final BpaApplicationWorkflowCustomDefaultImpl applicationWorkflowCustomDefaultImpl = getInitialisedWorkFlowBean();
+		Long approvalPositionId = approvalPosition;
+		
+					applicationWorkflowCustomDefaultImpl.createCommonWorkflowTransitionFotBpaNOC(permitNocApplication, approvalPositionId,
+							remarks, permitNocApplication.getBpaApplication().getApplicationType().getName(), workFlowAction, amountRule);
 	}
 
 	@Transactional
@@ -1062,5 +1096,15 @@ public class BpaUtils {
 		}
 		
 		return flage;
+	}
+
+	public Long getNOCUserPositionId(String nextDesignation) {
+		final String[] designationarr = nextDesignation.split(",");
+		List<Assignment> assignment = new ArrayList<>();
+		for (final String desg : designationarr) {
+			assignment = assignmentService.getAllActiveAssignments(
+					designationService.getDesignationByName(desg).getId());
+		}
+		return assignment.isEmpty() ? 0 : assignment.get(0).getPosition().getId();
 	}
 }

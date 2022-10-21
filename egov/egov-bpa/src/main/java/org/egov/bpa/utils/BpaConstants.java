@@ -235,6 +235,7 @@ public class BpaConstants {
 	public static final String NATURE_OF_WORK = "Building Plan Approval";
 	public static final String NATURE_OF_WORK_OC = "Building Plan Approval::Occupancy Certificate";
 	public static final String NATURE_OF_WORK_PL = "Building Plan Approval::Plinth Level Certificate";
+	public static final String NATURE_OF_WORK_NOC = "Building Plan Approval::NOC";
 	public static final String NATURE_OF_WORK_INSPECTION = "Inspection Application";
 	public static final String WF_NEW_STATE = "NEW";
 	public static final String WF_CREATED_STATE = "Created";
@@ -477,6 +478,7 @@ public class BpaConstants {
 	public static final String NOC_INITIATED = "Initiated";
 	public static final String NOC_APPROVED = "Approved";
 	public static final String NOC_REJECTED = "Rejected";
+	public static final String NOC_FORWARDED = "Forwarded";
 	public static final String NOC_DEEMED_APPROVED = "Deemed Approved";
 	public static final String NOC_APPL_REJECTED = "Permit Application Rejected";
 	public static final String PERMIT = "Permit";
@@ -690,6 +692,14 @@ public class BpaConstants {
 
 	public static final String PLINTH_LEVEL_CERTIFICATE = "Plinth Level Certificate";
 	public static final String RURAL_ULB_NAME = "Chandigarh Municipal Corporation";
+	
+	//NOC workflow
+	public static final String BPA_NOC = "BpaNOC";
+	public static final String BPA_NOC_WF_ACTION_FORWARDED_TO_VERIFICATION = "Forwarded to noc verification";
+	public static final String BPA_NOC_WF_ACTION_FORWARDED_TO_APPROVE = "Application is forwarded to approve";
+	public static final String BPA_NOC_WF_STATE_VERIFICATION_PENDING = "Noc verification pending";
+	public static final String BPA_NOC_WF_STATE_PENDING_APPROVE = "Pending Approve";
+	public static final String BPA_NOC_WF_ACTION_FORWARD_PENDING = "Forward to noc is pending";
 
 	private static final List<String> AVAILABLE_DESIGNATIONS = new ArrayList<>();
 	static {

@@ -42,6 +42,7 @@ package org.egov.bpa.transaction.workflow;
 import java.math.BigDecimal;
 
 import org.egov.bpa.transaction.entity.BpaApplication;
+import org.egov.bpa.transaction.entity.PermitNocApplication;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -61,5 +62,12 @@ public class BpaApplicationWorkflowCustomDefaultImpl extends BpaApplicationWorkf
         super.createCommonWorkflowTransition(application, approvalPosition, approvalComent, additionalRule,
                 workFlowAction, amountRule);
     }
+
+	public void createCommonWorkflowTransitionFotBpaNOC(PermitNocApplication permitNocApplication,
+			Long approvalPosition, String remarks, String additionalRule, String workFlowAction, BigDecimal amountRule) {
+		super.createCommonWorkflowTransitionForNOC(permitNocApplication, approvalPosition, remarks, additionalRule,
+                workFlowAction, amountRule);
+		
+	}
 
 }

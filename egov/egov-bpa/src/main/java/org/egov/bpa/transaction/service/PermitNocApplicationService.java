@@ -39,6 +39,10 @@
  */
 package org.egov.bpa.transaction.service;
 
+import static org.egov.bpa.utils.BpaConstants.BPASTATUS_MODULETYPE;
+import static org.egov.bpa.utils.BpaConstants.WF_NEW_STATE;
+import static org.egov.bpa.utils.BpaConstants.NOCMODULE;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -70,6 +74,7 @@ import org.egov.infra.admin.master.service.UserService;
 import org.egov.infra.config.core.ApplicationThreadLocals;
 import org.egov.infra.persistence.entity.enums.UserType;
 import org.egov.infra.utils.ApplicationConstant;
+import org.egov.infra.workflow.matrix.entity.WorkFlowMatrix;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,7 +84,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Service
 @Transactional(readOnly = true)
 public class PermitNocApplicationService {
-
     @Autowired
     private PermitNocApplicationRepository permitNocRepository;
     @Autowired
@@ -98,6 +102,9 @@ public class PermitNocApplicationService {
     private DcrRestService drcRestService;
     @Autowired
     private BPASmsAndEmailService bpaSmsAndEmailService;
+    
+    @Autowired
+    private BpaStatusService bpaStatusService;
 
     @Transactional
     public PermitNocApplication save(final PermitNocApplication permitNoc) {
@@ -129,7 +136,9 @@ public class PermitNocApplicationService {
         BpaStatus status = statusService.findByModuleTypeAndCode(BpaConstants.CHECKLIST_TYPE_NOC, BpaConstants.NOC_INITIATED);
         permitNoc.getBpaNocApplication().setNocApplicationNumber(nocNumberGenerator.generateNocNumber(nocConfig.getDepartment()));
         permitNoc.getBpaNocApplication().setNocType(nocConfig.getDepartment());
-        permitNoc.getBpaNocApplication().setStatus(status);
+        if(!nocConfig.getDepartment().equalsIgnoreCase("STRUCTURE NOC")) {
+        	permitNoc.getBpaNocApplication().setStatus(status);
+        }
         addSlaEndDate(permitNoc.getBpaNocApplication(), nocConfig);
         PermitNocApplication nocApp = permitNocRepository.save(permitNoc);
         bpaSmsAndEmailService.sendSMSAndEmailForNocProcess(BpaConstants.NOC_INITIATED, nocApp);
@@ -143,7 +152,6 @@ public class PermitNocApplicationService {
         	if(nocDocument.getNocDocument().getNocSupportDocs().isEmpty()) {
 	            PermitNocApplication permitNoc = new PermitNocApplication();
 	            BpaNocApplication nocApplication = new BpaNocApplication();
-	
 	            List<User> nocUser = new ArrayList<>();
 	            List<User> userList = new ArrayList<>();
 	            NocConfiguration nocConfig = nocConfigurationService
@@ -171,8 +179,35 @@ public class PermitNocApplicationService {
 	                nocUser.add(userList.get(0));
 	                permitNoc.setBpaApplication(application);
 	                permitNoc.setBpaNocApplication(nocApplication);
+	                
+	                if(nocConfig.getDepartment().equalsIgnoreCase("STRUCTURE NOC")) {
+		                //Workflow initiated for NOC
+	                	String workFlowAction = BpaConstants.NOC_INITIATED;
+			            Long approvalPosition = null;
+			            final WorkFlowMatrix wfMatrixNOC =bpaUtils.getWfMatrixByCurrentState(
+			                   false, BpaConstants.BPA_NOC, WF_NEW_STATE,
+			                   application.getApplicationType().getName());
+			           if (wfMatrixNOC != null) {
+			        	   approvalPosition= bpaUtils.getNOCUserPositionId(wfMatrixNOC.getNextDesignation());
+			           }
+			           bpaUtils.redirectToBpaNOCWorkFlow(approvalPosition, permitNoc, BpaConstants.WF_NEW_STATE,
+			           		"NOC workflow initiated thorugh BPA service", BpaConstants.WF_FORWARD_BUTTON, null);
+			           
+			           if (workFlowAction != null && workFlowAction.equals(BpaConstants.NOC_INITIATED)) {
+		                    final BpaStatus bpaStatus = getStatusByCodeAndModuleType(BpaConstants.NOC_INITIATED);
+		                    permitNoc.getBpaNocApplication().setStatus(bpaStatus);
+		                } else {
+		                    final BpaStatus bpaStatus = getStatusByCodeAndModuleType(BpaConstants.NOC_FORWARDED);
+		                    permitNoc.getBpaNocApplication().setStatus(bpaStatus);
+		                }
+		                
+                }
+	                
 	                permitNoc = createNocApplication(permitNoc, nocConfig);
 	                bpaUtils.createNocPortalUserinbox(permitNoc, nocUser, permitNoc.getBpaNocApplication().getStatus().getCode());
+	               
+	              
+		           
 	            }else if (nocConfig != null && nocConfig.getApplicationType().trim().equalsIgnoreCase(BpaConstants.PERMIT)
 	                    && nocConfig.getIntegrationType().equalsIgnoreCase(NocIntegrationTypeEnum.THIRD_PARTY.toString())
 	                    && nocConfig.getIntegrationInitiation().equalsIgnoreCase(NocIntegrationInitiationEnum.AUTO.toString())
@@ -183,10 +218,15 @@ public class PermitNocApplicationService {
 	                nocUser.add(permitNoc.getBpaApplication().getOwner().getUser());
 	                bpaUtils.createNocPortalUserinbox(permitNoc, nocUser, permitNoc.getBpaNocApplication().getStatus().getCode());
 	            }
+	            
 	        }
         }
     }
 
+    public BpaStatus getStatusByCodeAndModuleType(final String code) {
+        return bpaStatusService.findByModuleTypeAndCode(NOCMODULE, code);
+    }
+    
     public PermitNocApplication createNoc(BpaApplication application, String nocType) {
         PermitNocApplication permitNoc = new PermitNocApplication();
         BpaNocApplication nocApplication = new BpaNocApplication();
@@ -280,6 +320,8 @@ public class PermitNocApplicationService {
 			edcrPlanInfo.getPlan().getPlanInformation().setNocPH7Dept("NO");
 			edcrPlanInfo.getPlan().getPlanInformation().setNocPHDept("NO");
 			edcrPlanInfo.getPlan().getPlanInformation().setNocRoad2Dept("NO");	
+			edcrPlanInfo.getPlan().getPlanInformation().setNocPlanningDept("NO");	
+			
 			if(null!=edcrPlanInfo.getPlan()) {
 				OccupancyTypeHelper occupancyTypeHelper = edcrPlanInfo.getPlan().getVirtualBuilding() != null
 						? edcrPlanInfo.getPlan().getVirtualBuilding().getMostRestrictiveFarHelper()

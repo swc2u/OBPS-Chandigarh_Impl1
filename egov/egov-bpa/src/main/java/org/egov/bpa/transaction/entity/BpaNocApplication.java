@@ -70,6 +70,8 @@ import javax.validation.constraints.NotNull;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.egov.infra.workflow.entity.StateAware;
+import org.egov.pims.commons.Position;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
@@ -77,7 +79,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Entity
 @Table(name = "EGBPA_NOCAPPLICATION")
 @SequenceGenerator(name = BpaNocApplication.SEQ_NOCAPPLICATION, sequenceName = BpaNocApplication.SEQ_NOCAPPLICATION, allocationSize = 1)
-public class BpaNocApplication extends AbstractAuditable {
+public class BpaNocApplication extends StateAware<Position> {
 
     public static final String SEQ_NOCAPPLICATION = "SEQ_EGBPA_NOCAPPLICATION";
     public static final String ORDER_BY_ID_ASC = "id ASC";
@@ -116,6 +118,8 @@ public class BpaNocApplication extends AbstractAuditable {
    // @JoinTable(name="eg_noc_evaluation",joinColumns =@JoinColumn(name= "nocapplication"))
     @JoinColumn(name= "nocapplication")
 	private List<NocEvaluation> nocEvaluations;
+    
+    private transient String wfFileRefId;
 	
     public Long getId() {
 		return id;
@@ -189,6 +193,17 @@ public class BpaNocApplication extends AbstractAuditable {
 	}
 	public void setNocEvaluations(List<NocEvaluation> nocEvaluations) {
 		this.nocEvaluations = nocEvaluations;
+	}
+	@Override
+	public String getStateDetails() {
+		 return String.format("NOC Type: %s",
+	                nocType == null ? "NOC" : nocType);
+	}
+	public String getWfFileRefId() {
+		return wfFileRefId;
+	}
+	public void setWfFileRefId(String wfFileRefId) {
+		this.wfFileRefId = wfFileRefId;
 	}
 	
 	
