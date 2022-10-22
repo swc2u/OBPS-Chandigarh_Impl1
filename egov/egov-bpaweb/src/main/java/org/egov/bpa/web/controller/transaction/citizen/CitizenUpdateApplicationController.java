@@ -103,6 +103,7 @@ import org.egov.bpa.transaction.service.LettertoPartyService;
 import org.egov.bpa.transaction.service.PermitFeeCalculationService;
 import org.egov.bpa.transaction.service.PermitNocApplicationService;
 import org.egov.bpa.transaction.service.collection.GenericBillGeneratorService;
+import org.egov.bpa.transaction.service.oc.OccupancyCertificateValidationService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.web.controller.transaction.BpaGenericApplicationController;
 import org.egov.common.entity.bpa.Occupancy;
@@ -118,6 +119,9 @@ import org.egov.infra.persistence.entity.enums.UserType;
 import org.egov.infra.utils.DateUtils;
 import org.egov.infra.workflow.matrix.entity.WorkFlowMatrix;
 import org.egov.pims.commons.Position;
+import org.jfree.util.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
@@ -135,6 +139,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping(value = "/application")
 public class CitizenUpdateApplicationController extends BpaGenericApplicationController {
+	private static final Logger LOG = LoggerFactory.getLogger(CitizenUpdateApplicationController.class);
     private static final String COLLECT_FEE_VALIDATE = "collectFeeValidate";
     private static final String IS_CITIZEN = "isCitizen";
     private static final String CITIZEN_VIEW = "citizen-view";
@@ -247,7 +252,8 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
             String code = nocDocument.getNocDocument().getServiceChecklist().getChecklist().getCode();
             NocConfiguration nocConfig = nocConfigurationService
                     .findByDepartmentAndType(code, BpaConstants.PERMIT);
-
+            LOG.info(nocConfig==null?" nocConfig value is null":nocConfig.getDepartment());
+            
             if (permitNocService.findByApplicationNumberAndType(application.getApplicationNumber(), code) != null)
                 nocTypeApplMap.put(code, "initiated");
             if(null != edcrNocMandatory && !edcrNocMandatory.isEmpty()) {
