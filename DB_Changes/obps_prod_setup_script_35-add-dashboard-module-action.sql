@@ -15,3 +15,9 @@ VALUES  (nextval('chandigarh.seq_eg_action'), 'Architects statistical', '/report
 
 INSERT INTO chandigarh.eg_roleaction(roleid, actionid)
 VALUES ((select id from state.eg_role where name='SYSTEM'), (select id from chandigarh.eg_action where name='Architects statistical'));
+
+INSERT INTO chandigarh.eg_roleaction(roleid, actionid)
+VALUES ((select id from state.eg_role where name='Urban Dashboard'), (select id from chandigarh.eg_action where name='Architects statistical'));
+
+INSERT INTO chandigarh.eg_roleaction(roleid, actionid)
+VALUES ((select id from state.eg_role where name='Rural Dashboard'), (select id from chandigarh.eg_action where name='Architects statistical'));
