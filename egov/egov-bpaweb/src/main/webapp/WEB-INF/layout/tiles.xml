@@ -1614,4 +1614,8 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/reports/view-servicewise-appln-details-pl-urban.jsp" />
 	</definition>
+	<definition name="previous-plan-service-selection" extends="base_layout">
+		<put-attribute name="page-title" value="title.select-service" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/previous-plan-service-selection.jsp" />
+	</definition>
 </tiles-definitions>
