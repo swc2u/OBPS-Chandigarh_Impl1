@@ -59,6 +59,7 @@ import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SCHEDULED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SUBMITTED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_TYPE_ONEDAYPERMIT;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_TYPE_REGULAR;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_PREV_PLAN_UPDATED;
 
 import java.util.List;
 
@@ -129,7 +130,7 @@ public final class SearchBpaApplnFormSpec {
             	 predicate.getExpressions().add(builder.notEqual(root.get("applicationType").get(ID), RURAL_APPLICATION_ID));
              }
              if(requestForm.getStatusId()==null) {
-            	 predicate.getExpressions().add(builder.not(root.get("status").get("code").in(BPA_END_STATUS,RURAL_BPA_END_STATUS,CANCELLED,REJECTED)));
+            	 predicate.getExpressions().add(builder.not(root.get("status").get("code").in(BPA_END_STATUS,RURAL_BPA_END_STATUS,CANCELLED,REJECTED,APPLICATION_STATUS_PREV_PLAN_UPDATED)));
             	 
              }
              

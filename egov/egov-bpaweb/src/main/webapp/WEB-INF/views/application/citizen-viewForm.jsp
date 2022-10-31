@@ -93,7 +93,7 @@
 								code='lbl.document.scrutiny' /></a></li>
 				</c:if>
 
-				<c:if test="${not empty bpaApplication.permitInspections}">
+				<c:if test="${not empty bpaApplication.permitInspections && !bpaApplication.isPreviousPlan}">
 					<li><a data-toggle="tab" href="#view-inspection" data-tabidx=3><spring:message
 								code='lbl.inspection.appln' /></a></li>
 				</c:if>
@@ -101,11 +101,11 @@
 					<li><a data-toggle="tab" href="#noc-info" data-tabidx=4><spring:message
 								code='lbl.noc.details' /></a></li>
 				</c:if>
-				<c:if test="${not empty bpaApplication.permitFee || bpaApplication.admissionfeeAmount > 0}">
+				<c:if test="${(not empty bpaApplication.permitFee || bpaApplication.admissionfeeAmount > 0 ) && !bpaApplication.isPreviousPlan}">
 					<li><a data-toggle="tab" href="#view-fee" data-tabidx=5><spring:message
 								code='lbl.fees.details' /></a></li>
 				</c:if>
-				<c:if test="${not empty tempFees && empty bpaApplication.permitFee}">
+				<c:if test="${not empty tempFees && empty bpaApplication.permitFee && !bpaApplication.isPreviousPlan}">
 					<li><a data-toggle="tab" href="#view-fee" data-tabidx=5>
 							<spring:message code='lbl.fees.details' />
 						</a>
@@ -123,7 +123,7 @@
 			</ul>
 			<div class="tab-content">
 				<div id="document-info" class="tab-pane fade">
-					<c:if test="${not empty  bpaApplication.permitNocDocuments}">
+					<c:if test="${not empty  bpaApplication.permitNocDocuments || bpaApplication.isPreviousPlan}">
 						<div class="panel panel-primary dcrDocuments" data-collapsed="0">
 							<jsp:include page="view-dcr-documentdetails.jsp"></jsp:include>
 						</div>

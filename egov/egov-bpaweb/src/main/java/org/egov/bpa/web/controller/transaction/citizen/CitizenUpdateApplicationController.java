@@ -345,7 +345,9 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
                 usages.addAll(subOcc.getUsages());
             model.addAttribute("usageList", usages);
         }
-
+        
+        model.addAttribute("permitDcrDocuments", application.getPermitDcrDocuments());
+        
         Boolean isCitizen = (Boolean) model.asMap().get(IS_CITIZEN);
         if (APPLICATION_STATUS_SUBMITTED.equals(application.getStatus().getCode())
                 || APPLICATION_STATUS_APPROVED.equals(application.getStatus().getCode())) {
@@ -363,9 +365,8 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
         if (!BpaConstants.APPROVED.equalsIgnoreCase(application.getStatus().getCode())) {
         	model.addAttribute("tempFees", feeCalculation.calculateAllFees(application));
         }
-
         if (application.getStatus() != null && application.getStatus().getCode().equals(APPLICATION_STATUS_CREATED)
-                && !isCitizen) {
+                && !isCitizen && !application.getIsPreviousPlan()) {
             getDcrDocumentsUploadMode(model);
             return BPAAPP_CITIZEN_FORM;
         } else {

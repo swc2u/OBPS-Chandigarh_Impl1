@@ -348,7 +348,9 @@ public class BpaApplication extends StateAware<Position> {
 	@SafeHtml
 	@Column(name="sector")
 	private String sector;
-
+	
+	private Boolean isPreviousPlan = false;
+	
     @Override
     public Long getId() {
         return id;
@@ -1284,5 +1286,13 @@ public class BpaApplication extends StateAware<Position> {
 
 	public void setWfFileRefId(String wfFileRefId) {
 		this.wfFileRefId = wfFileRefId;
+	}
+
+	public Boolean getIsPreviousPlan() {
+		return isPreviousPlan;
+	}
+
+	public void setIsPreviousPlan(Boolean isPreviousPlan) {
+		this.isPreviousPlan = isPreviousPlan;
 	}
 }

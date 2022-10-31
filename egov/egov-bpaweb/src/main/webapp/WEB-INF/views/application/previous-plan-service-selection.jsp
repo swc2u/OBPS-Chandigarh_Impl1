@@ -58,19 +58,25 @@
 </div>
 <div class="panel-body">
 
-	<form:form   method="get" id="serviceSelectForPreviousPlan" cssClass="form-horizontal form-groups-bordered">
+	<form:form method="get" id="serviceSelectForPreviousPlan" cssClass="form-horizontal form-groups-bordered">
 			<div class="form-group">
 				<div>
 				 <label class="col-sm-3 control-label text-right"><spring:message
 	                            code="lbl.service.type"/></label>
 	                    <div class="col-sm-3 add-margin">
-	                        <form:select path="serviceTypeId" data-first-option="false"
-	                                     id="serviceTypeId" cssClass="form-control">
-	                            <form:option value="">
-	                                <spring:message code="lbl.select"/>
-	                            </form:option>
-	                            <form:options items="${serviceTypeList}" itemValue="id" itemLabel="description"/>
-	                        </form:select>
+<%-- 	                        <form:select path="serviceTypeId" data-first-option="false" --%>
+<%-- 	                                     id="serviceTypeId" cssClass="form-control"> --%>
+<%-- 	                            <form:option value=""> --%>
+<%-- 	                                <spring:message code="lbl.select"/> --%>
+<%-- 	                            </form:option> --%>
+<%-- 	                            <form:options items="${serviceTypeList}" itemValue="id" itemLabel="description"/> --%>
+<%-- 	                        </form:select> --%>
+								<select name="serviceTypeId" id="serviceTypeId">
+									<option value=""></option>
+								    <c:forEach items="${serviceTypeList}" var="serviceType" >
+								        <option value="${serviceType.id}">${serviceType.description}</option>
+								    </c:forEach>
+								</select>
 	                    </div>
 					
 				</div>
@@ -92,7 +98,7 @@ $('#buttonSubmit').click(function () {
         return;
     }
 
-    $("#serviceSelectForPreviousPlan").attr('action', 'bpa/application/citizen/previous-sanction-form-with-service-type/' + $("#serviceTypeId").val());
+    $("#serviceSelectForPreviousPlan").attr('action', 'previous-sanction-form-with-service-type/' + $("#serviceTypeId").val());
     $("#serviceSelectForPreviousPlan").submit();
 });
 

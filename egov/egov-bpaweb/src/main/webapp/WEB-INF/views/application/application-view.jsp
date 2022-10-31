@@ -132,11 +132,11 @@
 					<li><a data-toggle="tab" href="#noc-info" data-tabidx=5><spring:message
 							code='lbl.noc.details' /></a></li>
 				</c:if>
-				<c:if test="${not empty bpaApplication.permitFee || bpaApplication.admissionfeeAmount > 0}">
+				<c:if test="${(not empty bpaApplication.permitFee || bpaApplication.admissionfeeAmount > 0) && !bpaApplication.isPreviousPlan}">
 					<li><a data-toggle="tab" href="#view-fee" data-tabidx=6><spring:message
 							code='lbl.fees.details' /></a></li>
 				</c:if>
-				<c:if test="${not empty tempFees && empty bpaApplication.permitFee}">
+				<c:if test="${not empty tempFees && empty bpaApplication.permitFee && !bpaApplication.isPreviousPlan}">
 					<li><a data-toggle="tab" href="#view-fee" data-tabidx=6>
 							<spring:message code='lbl.fees.details' />
 						</a>

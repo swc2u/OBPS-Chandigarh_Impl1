@@ -77,6 +77,7 @@ import org.egov.bpa.transaction.repository.SlotApplicationRepository;
 import org.egov.bpa.transaction.repository.specs.SearchBpaApplnFormSpec;
 import org.egov.bpa.transaction.service.collection.BpaDemandService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
+import org.egov.bpa.utils.BpaConstants;
 import org.egov.infra.config.persistence.datasource.routing.annotation.ReadOnly;
 import org.egov.infra.utils.DateUtils;
 import org.hibernate.Criteria;
@@ -202,8 +203,11 @@ public class SearchBpaApplicationService {
 	            		}
         			}
         		}       		
-        	}
+        	}else if (application.getIsPreviousPlan()!=null && application.getIsPreviousPlan()) {
+    			searchResults.add(new SearchPendingItemsForm(application,BpaConstants.NA, BpaConstants.NA,BpaConstants.NA, 0));
+    		}
         }
+        searchResults = searchResults.stream().filter(bpa->!(bpa.getPendingAction().equalsIgnoreCase(WF_ACTION_END))|| !bpa.getIsPreviousPlan()).collect(Collectors.toList());
         return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
     }
     
@@ -220,20 +224,23 @@ public class SearchBpaApplicationService {
         		if(null!=application.getState()) {
         			int days = DateUtils.daysBetween(dateInfo, new Date());
         			if(days>=0) {
-	            		String pendingAction = application.getState().getNextAction();
-	            		Map<String,String> map = getCurrentOwner(application);
-	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
-	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            			}
-	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            		}
+		            		String pendingAction = application.getState().getNextAction();
+		            		Map<String,String> map = getCurrentOwner(application);
+		            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
+		            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
+		            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+		            			}
+		            		}else {
+		            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+		            		}
+	            	
         			}
         		}       		
-        	}
+        	}else if (application.getIsPreviousPlan()!=null && application.getIsPreviousPlan()) {
+    			searchResults.add(new SearchPendingItemsForm(application,BpaConstants.NA, BpaConstants.NA,BpaConstants.NA, 0));
+    		}
         }
-    	searchResults = searchResults.stream().filter(bpa->!bpa.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
+    	searchResults = searchResults.stream().filter(bpa->!(bpa.getPendingAction().equalsIgnoreCase(WF_ACTION_END))|| !bpa.getIsPreviousPlan()).collect(Collectors.toList());
         
     	return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
     }
@@ -251,20 +258,22 @@ public class SearchBpaApplicationService {
         		if(null!=application.getState()) {
         			int days = DateUtils.daysBetween(dateInfo, new Date());
         			if(days>=0) {
-	            		String pendingAction = application.getState().getNextAction();
-	            		Map<String,String> map = getCurrentOwner(application);
-	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
-	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            			}
-	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            		}
+		            		String pendingAction = application.getState().getNextAction();
+		            		Map<String,String> map = getCurrentOwner(application);
+		            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
+		            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
+		            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+		            			}
+		            		}else {
+		            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+		            		}
         			}
         		}       		
-        	}
+        	}else if (application.getIsPreviousPlan()!=null && application.getIsPreviousPlan()) {
+    			searchResults.add(new SearchPendingItemsForm(application,BpaConstants.NA, BpaConstants.NA,BpaConstants.NA, 0));
+    		}
         }
-        searchResults = searchResults.stream().filter(bpa->!bpa.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
+        searchResults = searchResults.stream().filter(bpa->!bpa.getPendingAction().equalsIgnoreCase(WF_ACTION_END)|| !bpa.getIsPreviousPlan()).collect(Collectors.toList());
         
         return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
     }
@@ -276,7 +285,7 @@ public class SearchBpaApplicationService {
        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
         //Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
-        List<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest));
+        List<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItemsUrban(searchRequest));
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
         for (BpaApplication application : bpaApplications) {
         	if(null!=application.getState()) {
@@ -284,20 +293,22 @@ public class SearchBpaApplicationService {
         		if(null!=application.getState()) {
         			int days = DateUtils.daysBetween(dateInfo, new Date());
         			if(days>=0) {
-	            		String pendingAction = application.getState().getNextAction();
-	            		Map<String,String> map = getCurrentOwner(application);
-	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
-	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            			}
-	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            		}
+		            		String pendingAction = application.getState().getNextAction();
+		            		Map<String,String> map = getCurrentOwner(application);
+		            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
+		            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
+		            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+		            			}
+		            		}else {
+		            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+		            		}
         			}
         		}       		
-        	}
+        	}else if (application.getIsPreviousPlan()!=null && application.getIsPreviousPlan()) {
+    			searchResults.add(new SearchPendingItemsForm(application,BpaConstants.NA, BpaConstants.NA,BpaConstants.NA, 0));
+    		}
         }
-        searchResults = searchResults.stream().filter(bpa->!bpa.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
+        searchResults = searchResults.stream().filter(bpa->!bpa.getPendingAction().equalsIgnoreCase(WF_ACTION_END)|| !bpa.getIsPreviousPlan()).collect(Collectors.toList());
         
         return new PageImpl<>(searchResults, pageable, bpaApplications.size());
     }
@@ -307,27 +318,27 @@ public class SearchBpaApplicationService {
 
         final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForBPAItemsUrban(searchRequest), pageable);
-
+        
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
         for (BpaApplication application : bpaApplications) {
         	if(null!=application.getState()) {
         		Date dateInfo = application.getState().getDateInfo();
-        		if(null!=application.getState()) {
         			int days = DateUtils.daysBetween(dateInfo, new Date());
         			if(days>=0) {
-	            		String pendingAction = application.getState().getNextAction();
-	            		Map<String,String> map = getCurrentOwner(application);
-	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
-	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            			}
-	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            		}
+		            		String pendingAction = application.getState().getNextAction();
+		            		Map<String,String> map = getCurrentOwner(application);
+		            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
+		            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
+		            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+		            			}
+		            		}else {
+		            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+		            		}
         			}
-        		}       		
+        		}else if (application.getIsPreviousPlan()!=null && application.getIsPreviousPlan()) {
+        			searchResults.add(new SearchPendingItemsForm(application,BpaConstants.NA, BpaConstants.NA,BpaConstants.NA, 0));
+        		}
         	}
-        }
         return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
     }
     
@@ -345,17 +356,19 @@ public class SearchBpaApplicationService {
         			int days = DateUtils.daysBetween(dateInfo, new Date());
         			if(days>=0) {
 	            		String pendingAction = application.getState().getNextAction();
-	            		Map<String,String> map = getCurrentOwner(application);
-	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
-	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            			}
-	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            		}
+		            		Map<String,String> map = getCurrentOwner(application);
+		            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
+		            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
+		            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+		            			}
+		            		}else {
+		            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+		            		}
         			}
         		}       		
-        	}
+        	}else if (application.getIsPreviousPlan()!=null && application.getIsPreviousPlan()) {
+    			searchResults.add(new SearchPendingItemsForm(application,BpaConstants.NA, BpaConstants.NA,BpaConstants.NA, 0));
+    		}
         }
         return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
     }
@@ -374,18 +387,20 @@ public class SearchBpaApplicationService {
         		if(null!=application.getState()) {
         			int days = DateUtils.daysBetween(dateInfo, new Date());
         			if(days>=0) {
-	            		String pendingAction = application.getState().getNextAction();
-	            		Map<String,String> map = getCurrentOwner(application);
-	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
-	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            			}
-	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            		}
+		            		String pendingAction = application.getState().getNextAction();
+		            		Map<String,String> map = getCurrentOwner(application);
+		            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
+		            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
+		            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+		            			}
+		            		}else {
+		            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+		            		}
         			}
         		}       		
-        	}
+        	}else if (application.getIsPreviousPlan()!=null && application.getIsPreviousPlan()) {
+    			searchResults.add(new SearchPendingItemsForm(application,BpaConstants.NA, BpaConstants.NA,BpaConstants.NA, 0));
+    		}
         }
         return new PageImpl<>(searchResults, pageable, bpaApplications.size());
     }
@@ -404,18 +419,20 @@ public class SearchBpaApplicationService {
         		if(null!=application.getState()) {
         			int days = DateUtils.daysBetween(dateInfo, new Date());
         			if(days>=0) {
-	            		String pendingAction = application.getState().getNextAction();
-	            		Map<String,String> map = getCurrentOwner(application);
-	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
-	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            			}
-	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            		}
+		            		String pendingAction = application.getState().getNextAction();
+		            		Map<String,String> map = getCurrentOwner(application);
+		            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
+		            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
+		            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+		            			}
+		            		}else {
+		            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+		            		}
         			}
         		}       		
-        	}
+        	}else if (application.getIsPreviousPlan()!=null && application.getIsPreviousPlan()) {
+    			searchResults.add(new SearchPendingItemsForm(application,BpaConstants.NA, BpaConstants.NA,BpaConstants.NA, 0));
+    		}
         }
         return new PageImpl<>(searchResults, pageable, bpaApplications.size());
     }

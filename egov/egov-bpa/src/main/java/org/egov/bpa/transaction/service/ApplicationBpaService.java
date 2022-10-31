@@ -72,6 +72,7 @@ import static org.egov.bpa.utils.BpaConstants.WF_NEW_STATE;
 import static org.egov.bpa.utils.BpaConstants.WF_REJECT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_SAVE_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_PREV_PLAN_UPDATED;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.ByteArrayInputStream;
@@ -317,7 +318,10 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         if (workFlowAction != null && workFlowAction.equals(WF_LBE_SUBMIT_BUTTON)) {
             final BpaStatus bpaStatus = getStatusByCodeAndModuleType(APPLICATION_STATUS_SUBMITTED);
             application.setStatus(bpaStatus);
-        } else {
+        }else if(workFlowAction !=null && workFlowAction.equals(APPLICATION_STATUS_PREV_PLAN_UPDATED)) { 
+        	 final BpaStatus bpaStatus = getStatusByCodeAndModuleType(APPLICATION_STATUS_PREV_PLAN_UPDATED);
+             application.setStatus(bpaStatus);
+    	}else {
             final BpaStatus bpaStatus = getStatusByCodeAndModuleType(APPLICATION_STATUS_CREATED);
             application.setStatus(bpaStatus);
         }

@@ -569,7 +569,7 @@ public class BpaAjaxController {
             jsonObj.addProperty("planPermissionNumber", application.getPlanPermissionNumber());
             jsonObj.addProperty("planPermissionDate", DateUtils.toDefaultDateFormat(application.getPlanPermissionDate()));
             jsonObj.addProperty("permitExpiryDate", bpaNoticeUtil.calculateCertExpryDate(new DateTime(application.getPlanPermissionDate()), application.getServiceType().getValidity()));
-            jsonObj.addProperty("applicationWF", application.getState().isEnded());
+            jsonObj.addProperty("applicationWF", application.getIsPreviousPlan()?true:application.getState().isEnded());
             jsonObj.addProperty("applicationRevoke",
                     (application.getStatus().getCode().equalsIgnoreCase(BpaConstants.APPLICATION_STATUS_REVOKED)
                             || application.getStatus().getCode().equalsIgnoreCase(BpaConstants.APPLICATION_STATUS_INIT_REVOKE)));
