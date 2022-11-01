@@ -63,7 +63,7 @@ public class SearchPendingItemsForm extends DataTableSearchRequest {
         setEllapseTime(ellapseDays);
         setSector(application.getSector());
         setPlotNumber(application.getPlotNumber());
-        setIsPreviousPlan(application.getIsPreviousPlan());
+        setIsPreviousPlan(application.getIsPreviousPlan()==null?false:application.getIsPreviousPlan());
     }
 	
 	 public SearchPendingItemsForm(OccupancyCertificate occupancyCertificate, String currentOwnerName, String currentOwnerDesg, String pendingAction, int ellapseDays) {
