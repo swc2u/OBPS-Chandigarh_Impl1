@@ -52,7 +52,8 @@ public class ExcelReaderCommercial {
 //	public static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\12-10-2022 Master data-commercial.xlsx";
 //	public static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\master data 18-10-2022-commercial.xlsx";
 //	public static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\master data-25-10-commercial.xlsx";
-	public static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Master data 27-10-2022-commercial.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Master data 27-10-2022-commercial.xlsx";
+	public static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Parking master data-commercial.xlsx";
 	
 	public static void main(String[] args) throws IOException, InvalidFormatException {
 		System.out.println("==================Start===================");
