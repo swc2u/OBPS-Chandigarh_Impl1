@@ -320,21 +320,6 @@ public class CitizenPreviousSanctionPlanApplicationController extends BpaGeneric
                 && request.getParameter(IS_CITIZEN).equalsIgnoreCase(TRUE) ? Boolean.TRUE : Boolean.FALSE;
         Boolean citizenOrBusinessUser = request.getParameter(CITIZEN_OR_BUSINESS_USER) != null
                 && request.getParameter(CITIZEN_OR_BUSINESS_USER).equalsIgnoreCase(TRUE) ? Boolean.TRUE : Boolean.FALSE;
-        Boolean onlinePaymentEnable = request.getParameter(ONLINE_PAYMENT_ENABLE) != null
-                && request.getParameter(ONLINE_PAYMENT_ENABLE).equalsIgnoreCase(TRUE) ? Boolean.TRUE : Boolean.FALSE;
-//        final WorkFlowMatrix wfMatrix = bpaUtils.getWfMatrixByCurrentState(
-//                bpaApplication.getIsOneDayPermitApplication(), bpaApplication.getStateType(), WF_NEW_STATE,
-//                bpaApplication.getApplicationType().getName());
-//        if (wfMatrix != null)
-//            approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
-//                    bpaUtils.getBoundaryForWorkflow(bpaApplication.getSiteDetail().get(0)).getId());
-//        if (citizenOrBusinessUser && workFlowAction != null && workFlowAction.equals(WF_LBE_SUBMIT_BUTTON)
-//                && (approvalPosition == 0 || approvalPosition == null)) {
-//            applicationBpaService.buildExistingAndProposedBuildingDetails(bpaApplication);
-//            model.addAttribute("noJAORSAMessage", messageSource.getMessage("msg.official.not.exist",
-//                    new String[] { ApplicationThreadLocals.getMunicipalityName() }, LocaleContextHolder.getLocale()));
-//            return loadNewForm(bpaApplication, model, bpaApplication.getServiceType().getCode());
-//        }
         if (citizenOrBusinessUser) {
             if (isCitizen) {
                 List<ApplicationStakeHolder> applicationStakeHolders = new ArrayList<>();
@@ -363,10 +348,6 @@ public class CitizenPreviousSanctionPlanApplicationController extends BpaGeneric
                     }
             }
         } 
-        
-//        ApplicationBpaFeeCalculation feeCalculation = (ApplicationBpaFeeCalculation) specificNoticeService
-//                .find(PermitFeeCalculationService.class, specificNoticeService.getCityDetails());
-//        bpaApplication.setAdmissionfeeAmount(feeCalculation.setAdmissionFeeAmount(bpaApplication, new ArrayList<>()));
         
         bpaApplication.setAdmissionfeeAmount(BigDecimal.ZERO);
         
@@ -397,50 +378,6 @@ public class CitizenPreviousSanctionPlanApplicationController extends BpaGeneric
             }
         }
 
-//        if (workFlowAction != null && workFlowAction.equals(WF_LBE_SUBMIT_BUTTON))
-//            bpaSmsAndEmailService.sendSMSAndEmail(bpaApplicationRes, null, null);
-//        
-        // Will redirect to collection, then after collection success will
-        // forward to official
-//        if (workFlowAction != null && workFlowAction.equals(WF_LBE_SUBMIT_BUTTON) && onlinePaymentEnable
-//                && bpaUtils.checkAnyTaxIsPendingToCollect(bpaApplicationRes.getDemand()))
-//            return genericBillGeneratorService.generateBillAndRedirectToCollection(bpaApplication, model);
-        // When fee collection not require then directly will forward to
-        // official
-//        else if (workFlowAction != null && workFlowAction.equals(WF_LBE_SUBMIT_BUTTON)
-//                && !bpaUtils.checkAnyTaxIsPendingToCollect(bpaApplication.getDemand())) {
-//            String remarks = null;
-//            if (bpaApplication.getAuthorizedToSubmitPlan())
-//                remarks = AUTH_TO_SUBMIT_PLAN;
-//            if (isEdcrIntegrationRequire)
-//                permitNocService.initiateNoc(bpaApplication);
-//            bpaUtils.redirectToBpaWorkFlow(approvalPosition, bpaApplication, WF_NEW_STATE,
-//                    remarks == null ? bpaApplication.getApprovalComent() : remarks, null, null);
-//            bpaUtils.sendSmsEmailOnCitizenSubmit(bpaApplication);
-//            List<Assignment> assignments;
-//            if (null == approvalPosition)
-//                assignments = bpaWorkFlowService.getAssignmentsByPositionAndDate(
-//                        bpaApplication.getCurrentState().getOwnerPosition().getId(), new Date());
-//            else
-//                assignments = bpaWorkFlowService.getAssignmentsByPositionAndDate(approvalPosition, new Date());
-//            Position pos = assignments.get(0).getPosition();
-//            User wfUser = assignments.get(0).getEmployee();
-//            String message = messageSource.getMessage(MSG_PORTAL_FORWARD_REGISTRATION,
-//                    new String[] {
-//                            wfUser == null ? ""
-//                                    : wfUser.getUsername().concat("~").concat(getDesinationNameByPosition(pos)),
-//                            bpaApplication.getApplicationNumber() },
-//                    LocaleContextHolder.getLocale());
-//            if (bpaApplication.getIsOneDayPermitApplication()) {
-//                message = message.concat(DISCLIMER_MESSAGE_ONEDAYPERMIT_ONSAVE);
-//                getAppointmentMsgForOnedayPermit(bpaApplication, model);
-//            } else
-//                message = message.concat(DISCLIMER_MESSAGE_ONSAVE);
-//
-//            redirectAttributes.addFlashAttribute(MESSAGE, message);
-//        }
-        
-//        else if (workFlowAction != null && workFlowAction.equals(WF_SAVE_BUTTON))
             redirectAttributes.addFlashAttribute(MESSAGE,
                     "Successfully saved with application number " + bpaApplicationRes.getApplicationNumber() + " and Plan permission number "+bpaApplicationRes.getPlanPermissionNumber()+".");
         
