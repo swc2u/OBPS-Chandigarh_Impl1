@@ -1,5 +1,21 @@
 --Old dashboard search BPA report**************************************************************************************************************************
 
+
+insert into state.eg_role values(nextval('state.seq_eg_role'),'Urban Dashboard','One who can see urban dashboard',current_date,1,1,current_date,0);
+
+insert into state.eg_role values(nextval('state.seq_eg_role'),'Rural Dashboard','One who can see urban dashboard',current_date,1,1,current_date,0);
+
+
+------eg_module
+
+--467
+INSERT INTO eg_module (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_eg_module'), 'Rural', true, 'collection', 428, 'Rural', 1);
+
+--468
+INSERT INTO eg_module (id, name, enabled, contextroot, parentmodule, displayname, ordernumber) VALUES (nextval('seq_eg_module'), 'Urban', true, 'collection', 428 ,'Urban', 2);
+
+---
+
 INSERT INTO chandigarh.eg_action (id, name, url, queryparams, parentmodule, ordernumber, displayname, enabled, contextroot, version, createdby, createddate, lastmodifiedby, lastmodifieddate, application) 
 VALUES  (nextval('chandigarh.seq_eg_action'), 'Urban Search Application', '/application/searchBPAItems/d/u', NULL, (select id from chandigarh.eg_module where name='Urban'), 1, 'Search BPA Applications', true, 'bpa', 0, 1, now(), 1, now(), (select id from chandigarh.eg_module where name='Urban'));
 
@@ -322,6 +338,20 @@ INSERT INTO chandigarh.eg_roleaction(roleid, actionid)
 VALUES ((select id from state.eg_role where name='Rural Dashboard'), (select id from chandigarh.eg_action where name='Rural Search Application'));
 
 
+--To add action to dashboard Module
+
+INSERT INTO chandigarh.eg_action (id, name, url, queryparams, parentmodule, ordernumber, displayname, enabled, contextroot, version, createdby, createddate, lastmodifiedby, lastmodifieddate, application) 
+VALUES  (nextval('chandigarh.seq_eg_action'), 'Architects statistical', '/reports/architects-statistical', NULL, (select id from chandigarh.eg_module where name='Dashboard'), 1, 'Architects Statistical', true, 'edcr', 0, 1, now(), 1, now(), (select id from chandigarh.eg_module where name='Dashboard'));
+
+INSERT INTO chandigarh.eg_roleaction(roleid, actionid)
+VALUES ((select id from state.eg_role where name='SYSTEM'), (select id from chandigarh.eg_action where name='Architects statistical'));
+
+INSERT INTO chandigarh.eg_roleaction(roleid, actionid)
+VALUES ((select id from state.eg_role where name='Urban Dashboard'), (select id from chandigarh.eg_action where name='Architects statistical'));
+
+INSERT INTO chandigarh.eg_roleaction(roleid, actionid)
+VALUES ((select id from state.eg_role where name='Rural Dashboard'), (select id from chandigarh.eg_action where name='Architects statistical'));
+
 DELETE FROM chandigarh.eg_roleaction
 	WHERE roleid=(select id from state.eg_role where name='Urban Dashboard') 
 	and actionid=(select id from chandigarh.eg_action where name='Rural Search Application');
@@ -347,3 +377,5 @@ DELETE FROM chandigarh.eg_roleaction
 DELETE FROM chandigarh.eg_roleaction
 	WHERE roleid=(select id from state.eg_role where name='Rural Dashboard') 
 	and actionid=(select id from chandigarh.eg_action where name='Rural Scrutiny Report');
+	
+	
