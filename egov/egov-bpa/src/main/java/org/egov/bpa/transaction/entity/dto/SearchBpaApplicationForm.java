@@ -145,6 +145,7 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
     private String sector;
     
     private String paymentMode;
+    private String riskType;
     public String getRevocationNumber() {
         return revocationNumber;
     }
@@ -790,6 +791,14 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
 
 	public void setPlinthLevelCertificateNumber(String plinthLevelCertificateNumber) {
 		this.plinthLevelCertificateNumber = plinthLevelCertificateNumber;
+	}
+
+	public String getRiskType() {
+		return riskType;
+	}
+
+	public void setRiskType(String riskType) {
+		this.riskType = riskType;
 	}
     
 }
