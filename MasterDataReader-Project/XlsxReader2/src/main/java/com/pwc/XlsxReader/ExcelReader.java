@@ -62,7 +62,9 @@ public class ExcelReader {
 //	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\master data 18-10-2022-residential.xlsx";
 //	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\master data 20-10-2022-residential.xlsx";
 //	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\master data-25-10-commercial.xlsx";
-	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Master data 27-10-2022-residential.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Master data 27-10-2022-residential.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Parking master data-residetial.xlsx";
+	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Booth master data 2-11-2022-residential.xlsx";
 	
 	public static void main(String[] args) throws IOException, InvalidFormatException {
 		System.out.println("==================Start===================");
