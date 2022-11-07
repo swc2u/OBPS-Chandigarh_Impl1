@@ -1,7 +1,7 @@
 --To add service to portal
 INSERT INTO chandigarh.egp_portalservice(
 	id, module, code, sla, version, url, isactive, name, userservice, businessuserservice, helpdoclink, createdby, createddate, lastmodifieddate, lastmodifiedby, moduleorder, serviceorder)
-	VALUES (nextval('seq_egp_portalservice'),(select id from eg_module where name='BPA'), 'Offline BPA application', 15, 0, '/bpa/application/citizen/previous-sanction-form',true,'Previous sanction plan application', false, true,'/bpa/application/citizen/previous-sanction-form', 1, now(), now(), 1, 2, null);
+	VALUES (nextval('chandigarh.seq_egp_portalservice'),(select id from chandigarh.eg_module where name='BPA'), 'Offline BPA application', 15, 0, '/bpa/application/citizen/previous-sanction-form',true,'Previous sanction plan application', false, true,'/bpa/application/citizen/previous-sanction-form', 1, now(), now(), 1, 2, null);
 
 --New status for previous plan	
 INSERT INTO chandigarh.egbpa_status(
