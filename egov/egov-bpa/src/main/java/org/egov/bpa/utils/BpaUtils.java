@@ -296,6 +296,22 @@ public class BpaUtils {
 					isResolved, new Date(), application.getState(), additionalPortalInboxUser,
 					application.getPlanPermissionNumber(), url);
 	}
+	
+	@Transactional
+	public void createPreviousPlanPortalUserinbox(final BpaApplication application, final List<User> additionalPortalInboxUser) {
+		Module module = moduleService.getModuleByName(EGMODULE_NAME);
+		boolean isResolved = true;
+//		String status="Accepted As Scrutinized";
+		
+		String url = "/bpa/application/citizen/update/" + application.getApplicationNumber();
+		final PortalInboxBuilder portalInboxBuilder = new PortalInboxBuilder(module, application.getOwner().getName(),
+				application.getServiceType().getDescription(), application.getApplicationNumber(),
+				application.getPlanPermissionNumber(), application.getId(), SUCCESS, SUCCESS, url, isResolved, application.getStatus().getDescription(),
+				new Date(), application.getState(), additionalPortalInboxUser);
+
+		final PortalInbox portalInbox = portalInboxBuilder.build();
+		portalInboxService.pushInboxMessage(portalInbox);
+	}
 
 	@Transactional
 	public void createPortalUserinbox(final BpaApplication application, final List<User> portalInboxUser,
@@ -367,6 +383,8 @@ public class BpaUtils {
 			portalInboxService.updateInboxMessage(oc.getApplicationNumber(), module.getId(), status, isResolved,
 					new Date(), oc.getState(), additionalPortalInboxUser, oc.getOccupancyCertificateNumber(), url);
 	}
+	
+	
 	
 	@Transactional
 	public void createPortalUserinbox(final PlinthLevelCertificate pl, final List<User> portalInboxUser,

@@ -43,6 +43,7 @@ public class SearchPendingItemsForm extends DataTableSearchRequest {
     private String ownerName;
     private String bPAApplicationType;
     private Long statusId;
+    private boolean isPreviousPlan;
     
     public SearchPendingItemsForm() {}
 
@@ -62,6 +63,7 @@ public class SearchPendingItemsForm extends DataTableSearchRequest {
         setEllapseTime(ellapseDays);
         setSector(application.getSector());
         setPlotNumber(application.getPlotNumber());
+        setIsPreviousPlan(application.getIsPreviousPlan()==null?false:application.getIsPreviousPlan());
     }
 	
 	 public SearchPendingItemsForm(OccupancyCertificate occupancyCertificate, String currentOwnerName, String currentOwnerDesg, String pendingAction, int ellapseDays) {
@@ -277,5 +279,13 @@ public class SearchPendingItemsForm extends DataTableSearchRequest {
 
 	public void setStatusId(Long statusId) {
 		this.statusId = statusId;
+	}
+
+	public boolean getIsPreviousPlan() {
+		return isPreviousPlan;
+	}
+
+	public void setIsPreviousPlan(boolean isPreviousPlan) {
+		this.isPreviousPlan = isPreviousPlan;
 	}	
 }
