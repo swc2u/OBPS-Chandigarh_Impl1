@@ -53,6 +53,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collector;
 
+import javax.validation.Valid;
+
 import org.egov.bpa.entitiy.national.dashboard.GroupBy;
 import org.egov.bpa.entitiy.national.dashboard.NationalDashboardResponse;
 import org.egov.bpa.service.rest.NocRestService;
@@ -62,13 +64,17 @@ import org.egov.bpa.transaction.service.PermitNocApplicationService;
 import org.egov.bpa.transaction.service.SearchBpaApplicationService;
 import org.egov.bpa.transaction.service.report.NationalDashboardService;
 import org.egov.bpa.utils.BpaConstants;
+import org.egov.infra.microservice.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -92,15 +98,36 @@ public class BpaCollectionRestController {
 		return "test string response";
 	}
 	
-	@GetMapping("/_obpas")
-	public ResponseEntity<NationalDashboardResponse> collection() {
-		SearchBpaApplicationForm  bpaApplicationForm = new SearchBpaApplicationForm();
-		NationalDashboardResponse response = new NationalDashboardResponse();
-		
-		response=nationalDashboardService.getDashboardData(response,bpaApplicationForm);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-		
-	}
+//	@GetMapping("/_obpas")
+//	public ResponseEntity<NationalDashboardResponse> collection() {
+//		SearchBpaApplicationForm  bpaApplicationForm = new SearchBpaApplicationForm();
+//		NationalDashboardResponse response = new NationalDashboardResponse();
+//		
+//		response=nationalDashboardService.getDashboardData(response,bpaApplicationForm);
+//		return new ResponseEntity<>(response, HttpStatus.OK);
+//		
+//	}
+//	
 	
+	 @PostMapping(value = "/_obpas", produces = MediaType.APPLICATION_JSON_VALUE)
+	 public ResponseEntity<?> dashboardData(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper) {
+		 System.out.println("controller");
+		 nationalDashboardService.validateUser(requestInfoWrapper);
+		 SearchBpaApplicationForm  bpaApplicationForm = new SearchBpaApplicationForm();
+			NationalDashboardResponse response = new NationalDashboardResponse();
+			
+			response=nationalDashboardService.getDashboardData(response,bpaApplicationForm);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+	    }   
+	 
+//	 @GetMapping("/_obpas")
+//		public ResponseEntity<NationalDashboardResponse> collection() {
+//			SearchBpaApplicationForm  bpaApplicationForm = new SearchBpaApplicationForm();
+//			NationalDashboardResponse response = new NationalDashboardResponse();
+//			
+//			response=nationalDashboardService.getDashboardData(response,bpaApplicationForm);
+//			return new ResponseEntity<>(response, HttpStatus.OK);
+//			
+//		}
 
 }

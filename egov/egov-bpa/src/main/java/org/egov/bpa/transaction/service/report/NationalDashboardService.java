@@ -1,5 +1,9 @@
 package org.egov.bpa.transaction.service.report;
 
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_APPROVED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SUBMITTED;
+
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.egov.bpa.entitiy.national.dashboard.ApplicationData;
 import org.egov.bpa.entitiy.national.dashboard.GroupBy;
 import org.egov.bpa.entitiy.national.dashboard.NationalDashboardResponse;
 import org.egov.bpa.transaction.entity.BpaApplication;
@@ -25,20 +30,21 @@ import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.commons.service.OccupancyService;
 import org.egov.commons.service.SubOccupancyService;
-import org.hibernate.Criteria;
+import org.egov.infra.microservice.contract.RequestInfoWrapper;
+import org.egov.infra.microservice.models.UserInfo;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.BigDecimalType;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class NationalDashboardService {
+	private static final Logger LOG = LoggerFactory.getLogger(NationalDashboardService.class);
 	@Autowired
 	SearchBpaApplicationService searchBpaApplicationService;
 	@Autowired
@@ -55,32 +61,28 @@ public class NationalDashboardService {
 	}
 	
 	public NationalDashboardResponse getDashboardData(NationalDashboardResponse response,SearchBpaApplicationForm bpaApplicationForm) {
-//		bpaApplicationForm.setStatus("Accepted as Scrutinized");
-		List<String> statusList = new ArrayList<>();
-		statusList.addAll(Arrays.asList(BpaConstants.APPLICATION_STATUS_ACCEPTED,BpaConstants.APPLICATION_STATUS_ORDER_ISSUED, BpaConstants.APPROVED,"Previous Plan Data Updated"));
-		final Criteria criteria = buildSearchCriteria(bpaApplicationForm,statusList);
-		List<JSONObject> buckets = new ArrayList<>();
-        List<BpaApplication> bpaApplications = criteria.list();
+//		List<String> statusList = new ArrayList<>();
+//		statusList.addAll(Arrays.asList(BpaConstants.APPLICATION_STATUS_ACCEPTED,BpaConstants.APPLICATION_STATUS_ORDER_ISSUED, BpaConstants.APPROVED,"Previous Plan Data Updated"));
+		
+		List<ApplicationData> bpaApplications=fetchApplications();
         
-//        SearchBpaApplicationForm  searchForm = new SearchBpaApplicationForm();
-//		searchForm.setStatus("Accepted as Scrutinized");
 		response.setTotalPermitsIssued(bpaApplications.size());
 		
         
 		GroupBy groupBy = new GroupBy();
 		groupBy.setGroupBy("RiskType");
-		groupBy.setBuckets(getApplicationsByRiskType(bpaApplicationForm,bpaApplications));
+		groupBy.setBuckets(getApplicationsByRiskType(bpaApplications));
 		response.setPermitsIssuedByRiskType(Arrays.asList(groupBy));
 		
 		groupBy = new GroupBy();
 		groupBy.setGroupBy("OccupancyType");
-		groupBy.setBuckets(getApplicationsByOccupancyType(bpaApplicationForm,bpaApplications));
+		groupBy.setBuckets(getApplicationsByOccupancyType(bpaApplications));
 		response.setPermitsIssuedByOccupancyType(Arrays.asList(groupBy));
 		
-		groupBy = new GroupBy();
-		groupBy.setGroupBy("SubOccupancyType");
-		groupBy.setBuckets(getApplicationsBySubOccupancyType(bpaApplicationForm,bpaApplications));
-		response.setPermitsIssuedBySubOccupancyType(Arrays.asList(groupBy));
+//		groupBy = new GroupBy();
+//		groupBy.setGroupBy("SubOccupancyType");
+//		groupBy.setBuckets(getApplicationsBySubOccupancyType(bpaApplicationForm,bpaApplications));
+//		response.setPermitsIssuedBySubOccupancyType(Arrays.asList(groupBy));
 		
 		List<GroupBy> paymentList = new ArrayList<GroupBy>();
 		groupBy = new GroupBy();
@@ -98,43 +100,67 @@ public class NationalDashboardService {
 	
 	
 	
-	public List<JSONObject> getApplicationsByRiskType(SearchBpaApplicationForm bpaApplicationForm, List<BpaApplication> bpaApplications) {
-//		final Criteria criteria = buildSearchCriteria(bpaApplicationForm);
+	private List<ApplicationData> fetchApplications() {
+		String query ="select ea.applicationnumber applicationNumber, ema.name as applicationSubType,ea.edcrnumber edcrNumber  from chandigarh.egbpa_application ea "
+				+ "inner join chandigarh.egbpa_mstr_applicationsubtype ema on ema.id = ea.applicationsubtype "
+				+ "where ea.applicationnumber in (select applicationnumber from state.egp_inbox where pendingaction ='END')  "
+				+ "and ea.status not in (select id from chandigarh.egbpa_status x "
+				+ "WHERE code in ('Rejected','Cancelled'))";
+		 
+		final SQLQuery sqlQuery = createApplicationQuery(query.toString());
+		 List<ApplicationData> reportResults = sqlQuery.list();
+		 return reportResults;
+	}
+	public SQLQuery createApplicationQuery(String query) {
+	    return (SQLQuery) getCurrentSession().createSQLQuery(query)
+	            .addScalar("applicationNumber", org.hibernate.type.StringType.INSTANCE)
+	            .addScalar("applicationSubType", org.hibernate.type.StringType.INSTANCE)
+	            .addScalar("edcrNumber", org.hibernate.type.StringType.INSTANCE)
+	            .setResultTransformer(Transformers.aliasToBean(ApplicationData.class));
+	}
+
+	public List<JSONObject> getApplicationsByRiskType(List<ApplicationData> bpaApplications) {
 		List<JSONObject> buckets = new ArrayList<>();
-//        List<BpaApplication> bpaApplications = criteria.list();
-        if(bpaApplicationForm.getRiskType()==null) {
         	JSONObject lowRisk = new JSONObject();
         	lowRisk.put("name", BpaConstants.APPLICATION_TYPE_LOWRISK);
-        	lowRisk.put("value",  bpaApplications.stream().filter(bpa->bpa.getApplicationType().getName().equalsIgnoreCase(BpaConstants.APPLICATION_TYPE_LOWRISK)).count());
+        	lowRisk.put("value",  bpaApplications.stream().filter(bpa->bpa.getApplicationSubType().equalsIgnoreCase(BpaConstants.APPLICATION_TYPE_LOWRISK)).count());
         	buckets.add(lowRisk);
         	
         	JSONObject midRisk = new JSONObject();
         	midRisk.put("name", BpaConstants.APPLICATION_TYPE_MEDIUMRISK);
-        	midRisk.put("value",  bpaApplications.stream().filter(bpa->bpa.getApplicationType().getName().equalsIgnoreCase(BpaConstants.APPLICATION_TYPE_MEDIUMRISK)).count());
+        	midRisk.put("value",  bpaApplications.stream().filter(bpa->bpa.getApplicationSubType().equalsIgnoreCase(BpaConstants.APPLICATION_TYPE_MEDIUMRISK)).count());
         	buckets.add(midRisk);
         	
         	JSONObject highRisk = new JSONObject();
         	highRisk.put("name", BpaConstants.APPLICATION_TYPE_HIGHRISK);
-        	highRisk.put("value",  bpaApplications.stream().filter(bpa->bpa.getApplicationType().getName().equalsIgnoreCase(BpaConstants.APPLICATION_TYPE_HIGHRISK)).count());
+        	highRisk.put("value",  bpaApplications.stream().filter(bpa->bpa.getApplicationSubType().equalsIgnoreCase(BpaConstants.APPLICATION_TYPE_HIGHRISK)).count());
         	buckets.add(highRisk);
-        }else {
-        	JSONObject riskType = new JSONObject();
-        	riskType.put("name", bpaApplicationForm.getRiskType());
-        	riskType.put("value",  bpaApplications.stream().filter(bpa->bpa.getApplicationType().getName().equalsIgnoreCase(bpaApplicationForm.getRiskType())).count());
-        	buckets.add(riskType);
-        }
         	
         return buckets;
 }
 
-public List<JSONObject> getApplicationsByOccupancyType(SearchBpaApplicationForm bpaApplicationForm, List<BpaApplication> bpaApplications) {
+public List<JSONObject> getApplicationsByOccupancyType(List<ApplicationData> bpaApplications) {
 	List<JSONObject> buckets = new ArrayList<JSONObject>();
 	 List<Occupancy> occupancyList = occupancyService.findAllOrderByOrderNumber();
-	
 	 occupancyList.forEach(occupancy->{
+		 AtomicInteger counter = new AtomicInteger();
+		 bpaApplications.forEach(bpa->{
+			Plan plan = applicationBpaService.getPlanInfo(bpa.getEdcrNumber());
+			if(plan!=null) {
+				OccupancyTypeHelper mostRestrictiveFarHelper = plan.getVirtualBuilding() != null
+						? plan.getVirtualBuilding().getMostRestrictiveFarHelper()
+						: null;
+						
+						if(mostRestrictiveFarHelper!=null && mostRestrictiveFarHelper.getType().getCode().equalsIgnoreCase(occupancy.getCode())) {
+							counter.getAndIncrement();
+						}
+			}else
+				LOG.info("Plan is null for application: "+bpa.getApplicationNumber());
+		 });
+		 
 		 JSONObject occupancyType = new JSONObject();
 		 occupancyType.put("name", occupancy.getName());
-		 occupancyType.put("value",  bpaApplications.stream().filter(bpa->bpa.getOccupanciesName().equalsIgnoreCase(occupancy.getName())).count());
+		 occupancyType.put("value",  counter);
 		 buckets.add(occupancyType);
 	 });
 	
@@ -142,11 +168,11 @@ public List<JSONObject> getApplicationsByOccupancyType(SearchBpaApplicationForm 
 	return buckets;
 }
 
-public List<JSONObject> getApplicationsBySubOccupancyType(SearchBpaApplicationForm bpaApplicationForm,
+public List<JSONObject> getApplicationsBySubOccupancyType(
 		List<BpaApplication> bpaApplications) {
 
     List<JSONObject> buckets = new ArrayList<JSONObject>();
-	 List<SubOccupancy> subOccupancyList = subOccupancyService.findAllByActive();
+	 List<SubOccupancy> subOccupancyList = subOccupancyService.findAll();
 	 
 //	List<BpaApplication> subOccupancyBPA;
 	 subOccupancyList.forEach(subOccupancy->{
@@ -158,7 +184,7 @@ public List<JSONObject> getApplicationsBySubOccupancyType(SearchBpaApplicationFo
 						? plan.getVirtualBuilding().getMostRestrictiveFarHelper()
 						: null;
 						
-						if(mostRestrictiveFarHelper!=null && mostRestrictiveFarHelper.getSubtype().getCode().equalsIgnoreCase(subOccupancy.getCode())	) {
+						if(mostRestrictiveFarHelper!=null && mostRestrictiveFarHelper.getSubtype().getCode().equalsIgnoreCase(subOccupancy.getCode())) {
 							counter.getAndIncrement();
 						}
 			}
@@ -175,7 +201,7 @@ public List<JSONObject> getApplicationsBySubOccupancyType(SearchBpaApplicationFo
 }
 
 public List<JSONObject> getApplicationsCollectionDetails(SearchBpaApplicationForm bpaApplicationForm,
-		List<BpaApplication> bpaApplications) {
+		List<ApplicationData> bpaApplications) {
 	List<JSONObject> buckets = new ArrayList<JSONObject>();
 	bpaApplicationForm.setServiceType("BPA");
 	 List<CollectionSummaryReportHelper> bpaCollectionData = getCollectionData(bpaApplicationForm,"USERWISE");
@@ -184,7 +210,7 @@ public List<JSONObject> getApplicationsCollectionDetails(SearchBpaApplicationFor
 }
 
 public List<JSONObject> getOCApplicationsCollectionDetails(SearchBpaApplicationForm bpaApplicationForm,
-		List<BpaApplication> bpaApplications) {
+		List<ApplicationData> bpaApplications) {
 	List<JSONObject> buckets = new ArrayList<JSONObject>();
 	bpaApplicationForm.setServiceType("OC");
 	 List<CollectionSummaryReportHelper> bpaCollectionData = getCollectionData(bpaApplicationForm,"USERWISE");
@@ -429,64 +455,12 @@ public SQLQuery createSQLQuery(String query) {
             .setResultTransformer(Transformers.aliasToBean(CollectionSummaryReportHelper.class));
 }
 
-public Criteria buildSearchCriteria(final SearchBpaApplicationForm searchBpaApplicationForm, List<String> statusList) {
-	final Criteria criteria = getCurrentSession().createCriteria(BpaApplication.class, "bpaApplication");
 
-	if (searchBpaApplicationForm.getApplicationTypeId() != null) {
-		criteria.createAlias("bpaApplication.applicationType", "applicationType");
-		criteria.add(Restrictions.eq("applicationType.id", searchBpaApplicationForm.getApplicationTypeId()));
-	}
 
-	if (searchBpaApplicationForm.getApplicantName() != null) {
-		criteria.createAlias("bpaApplication.owner", "owner");
-		criteria.add(
-				Restrictions.ilike("owner.name", searchBpaApplicationForm.getApplicantName(), MatchMode.ANYWHERE));
-	}
-
-	if (searchBpaApplicationForm.getApplicationNumber() != null) {
-		criteria.add(Restrictions.eq("bpaApplication.applicationNumber",
-				searchBpaApplicationForm.getApplicationNumber()));
-	}
-	if (searchBpaApplicationForm.getServiceTypeId() != null) {
-		criteria.add(Restrictions.eq("bpaApplication.serviceType.id", searchBpaApplicationForm.getServiceTypeId()));
-	}
-	if (searchBpaApplicationForm.getServiceType() != null) {
-		criteria.createAlias("bpaApplication.serviceType", "serviceType")
-				.add(Restrictions.eq("serviceType.description", searchBpaApplicationForm.getServiceType()));
-	}
-	if (searchBpaApplicationForm.getStatusId() != null) {
-		criteria.add(Restrictions.eq("bpaApplication.status.id", searchBpaApplicationForm.getStatusId()));
-	}
-	if (statusList != null) {
-		criteria.createAlias("bpaApplication.status", "status")
-				.add(Restrictions.in("status.code", statusList));
-	}
-	if (searchBpaApplicationForm.getOccupancyId() != null) {
-		criteria.createAlias("bpaApplication.occupancy", "occupancy")
-				.add(Restrictions.eq("occupancy.id", searchBpaApplicationForm.getOccupancyId()));
-	}
-	if (searchBpaApplicationForm.getFromDate() != null)
-		criteria.add(Restrictions.ge("bpaApplication.applicationDate",
-				searchBpaApplicationService.resetFromDateTimeStamp(searchBpaApplicationForm.getFromDate())));
-	if (searchBpaApplicationForm.getToDate() != null)
-		criteria.add(Restrictions.le("bpaApplication.applicationDate",
-				searchBpaApplicationService.resetToDateTimeStamp(searchBpaApplicationForm.getToDate())));
-	searchBpaApplicationService.buildCommonSearchCriterias(searchBpaApplicationForm, criteria);
-
-	if (searchBpaApplicationForm.getPlotNumber() != null)
-		criteria.add(Restrictions.eq("bpaApplication.plotNumber", searchBpaApplicationForm.getPlotNumber()));
-
-	if (searchBpaApplicationForm.getSector() != null)
-		criteria.add(Restrictions.eq("bpaApplication.sector", searchBpaApplicationForm.getSector()));
+public void validateUser(RequestInfoWrapper requestInfoWrapper) {
+	UserInfo userInfo = requestInfoWrapper.getRequestInfo().getUserInfo();
+	System.out.println(userInfo+"@@@@@@@@@FDDDFFFDFDFD####"+requestInfoWrapper.getRequestInfo());
 	
-	if (searchBpaApplicationForm.getRiskType() != null) {
-		criteria.createAlias("bpaApplication.applicationType", "applicationType");
-		criteria.add(Restrictions.eq("applicationType.name", searchBpaApplicationForm.getRiskType()));
-	}
-	
-
-	criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-	return criteria;
 }
 
 }

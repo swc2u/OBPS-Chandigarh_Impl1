@@ -25,8 +25,8 @@ public class NationalDashboardResponse {
 	@JsonProperty("permitsIssuedByOccupancyType")
 	private List<GroupBy> permitsIssuedByOccupancyType;
 	
-	@JsonProperty("permitsIssuedBySubOccupancyType")
-	private List<GroupBy> permitsIssuedBySubOccupancyType;
+//	@JsonProperty("permitsIssuedBySubOccupancyType")
+//	private List<GroupBy> permitsIssuedBySubOccupancyType;
 
 	public String getState() {
 		return state;
@@ -60,13 +60,13 @@ public class NationalDashboardResponse {
 		this.permitsIssuedByRiskType = permitsIssuedByRiskType;
 	}
 
-	public List<GroupBy> getPermitsIssuedBySubOccupancyType() {
-		return permitsIssuedBySubOccupancyType;
-	}
-
-	public void setPermitsIssuedBySubOccupancyType(List<GroupBy> permitsIssuedBySubOccupancyType) {
-		this.permitsIssuedBySubOccupancyType = permitsIssuedBySubOccupancyType;
-	}
+//	public List<GroupBy> getPermitsIssuedBySubOccupancyType() {
+//		return permitsIssuedBySubOccupancyType;
+//	}
+//
+//	public void setPermitsIssuedBySubOccupancyType(List<GroupBy> permitsIssuedBySubOccupancyType) {
+//		this.permitsIssuedBySubOccupancyType = permitsIssuedBySubOccupancyType;
+//	}
 
 	public List<GroupBy> getPermitsIssuedByOccupancyType() {
 		return permitsIssuedByOccupancyType;

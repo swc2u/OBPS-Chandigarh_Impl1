@@ -51,12 +51,16 @@ import static org.egov.bpa.utils.BpaConstants.MEDIUMRISK;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -68,6 +72,7 @@ import org.egov.bpa.master.service.ApplicationSubTypeService;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BuildingDetail;
 import org.egov.bpa.transaction.entity.SlotApplication;
+import org.egov.bpa.transaction.entity.dto.CollectionSummaryReportHelper;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
 import org.egov.bpa.transaction.entity.dto.SearchPendingItemsForm;
 import org.egov.bpa.transaction.entity.enums.ScheduleAppointmentType;
@@ -77,13 +82,26 @@ import org.egov.bpa.transaction.repository.SlotApplicationRepository;
 import org.egov.bpa.transaction.repository.specs.SearchBpaApplnFormSpec;
 import org.egov.bpa.transaction.service.collection.BpaDemandService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
+import org.egov.bpa.utils.BpaConstants;
+import org.egov.collection.constants.CollectionConstants;
+import org.egov.common.entity.bpa.Occupancy;
+import org.egov.common.entity.bpa.SubOccupancy;
+import org.egov.common.entity.edcr.OccupancyTypeHelper;
+import org.egov.common.entity.edcr.Plan;
+import org.egov.commons.service.OccupancyService;
+import org.egov.commons.service.SubOccupancyService;
 import org.egov.infra.config.persistence.datasource.routing.annotation.ReadOnly;
 import org.egov.infra.utils.DateUtils;
 import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
+import org.hibernate.type.BigDecimalType;
+import org.json.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -97,615 +115,665 @@ import org.springframework.validation.BindingResult;
 @Transactional(readOnly = true)
 public class SearchBpaApplicationService {
 
-    private static final String APPLICATION_TYPE = "applicationType";
-    private static final String WF_ACTION_END = "END";
-    private static final String WF_APPROVE_STATUS = "Approved";
-    private static final Long BTC_APPLICATION_ID = 3L;
-    private static final Long ATC_APPLICATION_ID = 5L;
-    
-    
-    @Autowired
-    private WorkflowHistoryService workflowHistoryService;
-    @Autowired
-    private BpaDemandService bpaDemandService;
-    @Autowired
-    private ApplicationBpaRepository applicationBpaRepository;
-    @Autowired
-    private SlotApplicationRepository slotApplicationRepository;
-    @Autowired
-    private ApplicationBpaService bpaCalculationService;
-    @Autowired
-    private ApplicationSubTypeService applicationTypeService;
-    @PersistenceContext
-    private EntityManager entityManager;
-    @Autowired
-    private OccupancyCertificateService occupancyCertificateService;
+	private static final String APPLICATION_TYPE = "applicationType";
+	private static final String WF_ACTION_END = "END";
+	private static final String WF_APPROVE_STATUS = "Approved";
+	private static final Long BTC_APPLICATION_ID = 3L;
+	private static final Long ATC_APPLICATION_ID = 5L;
 
-    public Session getCurrentSession() {
-        return entityManager.unwrap(Session.class);
-    }
+	@Autowired
+	private WorkflowHistoryService workflowHistoryService;
+	@Autowired
+	private BpaDemandService bpaDemandService;
+	@Autowired
+	private ApplicationBpaRepository applicationBpaRepository;
+	@Autowired
+	private SlotApplicationRepository slotApplicationRepository;
+	@Autowired
+	private ApplicationBpaService bpaCalculationService;
+	@Autowired
+	private ApplicationSubTypeService applicationTypeService;
+	@PersistenceContext
+	private EntityManager entityManager;
+	@Autowired
+	private OccupancyCertificateService occupancyCertificateService;
 
-    public Date resetFromDateTimeStamp(final Date date) {
-        final Calendar cal1 = Calendar.getInstance();
-        cal1.setTime(date);
-        cal1.set(Calendar.HOUR_OF_DAY, 0);
-        cal1.set(Calendar.MINUTE, 0);
-        cal1.set(Calendar.SECOND, 0);
-        cal1.set(Calendar.MILLISECOND, 0);
-        return cal1.getTime();
-    }
+	public Session getCurrentSession() {
+		return entityManager.unwrap(Session.class);
+	}
 
-    public Date resetToDateTimeStamp(final Date date) {
-        final Calendar cal1 = Calendar.getInstance();
-        cal1.setTime(date);
-        cal1.set(Calendar.HOUR_OF_DAY, 23);
-        cal1.set(Calendar.MINUTE, 59);
-        cal1.set(Calendar.SECOND, 59);
-        cal1.set(Calendar.MILLISECOND, 999);
-        return cal1.getTime();
-    }
+	public Date resetFromDateTimeStamp(final Date date) {
+		final Calendar cal1 = Calendar.getInstance();
+		cal1.setTime(date);
+		cal1.set(Calendar.HOUR_OF_DAY, 0);
+		cal1.set(Calendar.MINUTE, 0);
+		cal1.set(Calendar.SECOND, 0);
+		cal1.set(Calendar.MILLISECOND, 0);
+		return cal1.getTime();
+	}
 
-    @SuppressWarnings("unchecked")
-    @ReadOnly
-    public List<SearchBpaApplicationForm> search(final SearchBpaApplicationForm bpaApplicationForm) {
-        final Criteria criteria = buildSearchCriteria(bpaApplicationForm);
-        List<SearchBpaApplicationForm> searchBpaApplicationFormList = new ArrayList<>();
-        List<BpaApplication> bpaApplications = criteria.list();
-        for (BpaApplication application : bpaApplications) {
-            String pendingAction = application.getState() == null ? "N/A" : application.getState().getNextAction();
-            Boolean hasCollectionPending = bpaDemandService.checkAnyTaxIsPendingToCollect(application);
-            searchBpaApplicationFormList.add(
-                    new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction, hasCollectionPending));
-        }
-        return searchBpaApplicationFormList;
-    }
+	public Date resetToDateTimeStamp(final Date date) {
+		final Calendar cal1 = Calendar.getInstance();
+		cal1.setTime(date);
+		cal1.set(Calendar.HOUR_OF_DAY, 23);
+		cal1.set(Calendar.MINUTE, 59);
+		cal1.set(Calendar.SECOND, 59);
+		cal1.set(Calendar.MILLISECOND, 999);
+		return cal1.getTime();
+	}
 
-    @ReadOnly
-    public Page<SearchBpaApplicationForm> pagedSearch(SearchBpaApplicationForm searchRequest) {
+	@SuppressWarnings("unchecked")
+	@ReadOnly
+	public List<SearchBpaApplicationForm> search(final SearchBpaApplicationForm bpaApplicationForm) {
+		final Criteria criteria = buildSearchCriteria(bpaApplicationForm);
+		List<SearchBpaApplicationForm> searchBpaApplicationFormList = new ArrayList<>();
+		List<BpaApplication> bpaApplications = criteria.list();
+		for (BpaApplication application : bpaApplications) {
+			String pendingAction = application.getState() == null ? "N/A" : application.getState().getNextAction();
+			Boolean hasCollectionPending = bpaDemandService.checkAnyTaxIsPendingToCollect(application);
+			searchBpaApplicationFormList.add(new SearchBpaApplicationForm(application, getProcessOwner(application),
+					pendingAction, hasCollectionPending));
+		}
+		return searchBpaApplicationFormList;
+	}
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
-                searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+	@ReadOnly
+	public Page<SearchBpaApplicationForm> pagedSearch(SearchBpaApplicationForm searchRequest) {
 
-        Page<BpaApplication> bpaApplications = applicationBpaRepository
-                .findAll(SearchBpaApplnFormSpec.searchSpecification(searchRequest), pageable);
-        List<SearchBpaApplicationForm> searchResults = new ArrayList<>();
-        for (BpaApplication application : bpaApplications) {
-            String pendingAction = application.getState() == null ? "N/A" : application.getState().getNextAction();
-            Boolean hasCollectionPending = bpaDemandService.checkAnyTaxIsPendingToCollect(application);
-            searchResults.add(
-                    new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction, hasCollectionPending));
-        }
-        return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
-    }
-    
-    @ReadOnly
-    public Page<SearchPendingItemsForm> pagedSearchForPendingTask(SearchPendingItemsForm searchRequest) {
+		final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(),
+				searchRequest.orderDir(), searchRequest.orderBy());
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
-        Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
+		Page<BpaApplication> bpaApplications = applicationBpaRepository
+				.findAll(SearchBpaApplnFormSpec.searchSpecification(searchRequest), pageable);
+		List<SearchBpaApplicationForm> searchResults = new ArrayList<>();
+		for (BpaApplication application : bpaApplications) {
+			String pendingAction = application.getState() == null ? "N/A" : application.getState().getNextAction();
+			Boolean hasCollectionPending = bpaDemandService.checkAnyTaxIsPendingToCollect(application);
+			searchResults.add(new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction,
+					hasCollectionPending));
+		}
+		return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
+	}
 
-        List<SearchPendingItemsForm> searchResults = new ArrayList<>();
-        for (BpaApplication application : bpaApplications) {
-        	if(null!=application.getState()) {
-        		Date dateInfo = application.getState().getDateInfo();
-        		if(null!=application.getState()) {
-        			int days = DateUtils.daysBetween(dateInfo, new Date());
-        			if(days>0) {
-	            		String pendingAction = application.getState().getNextAction();
-	            		Map<String,String> map = getCurrentOwner(application);
-	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
-	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            			}
-	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            		}
-        			}
-        		}       		
-        	}
-        }
-        return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
-    }
-    
-    @ReadOnly
-    public Page<SearchPendingItemsForm> pagedSearchForUrbanPendingTask(SearchPendingItemsForm searchRequest) {
+	@ReadOnly
+	public Page<SearchPendingItemsForm> pagedSearchForPendingTask(SearchPendingItemsForm searchRequest) {
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
-        Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItemsUrban(searchRequest), pageable);
+		final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(),
+				searchRequest.orderDir(), searchRequest.orderBy());
+		Page<BpaApplication> bpaApplications = applicationBpaRepository
+				.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
 
-        List<SearchPendingItemsForm> searchResults = new ArrayList<>();
-        for (BpaApplication application : bpaApplications) {
-        	if(null!=application.getState()) {
-        		Date dateInfo = application.getState().getDateInfo();
-        		if(null!=application.getState()) {
-        			int days = DateUtils.daysBetween(dateInfo, new Date());
-        			if(days>=0) {
-	            		String pendingAction = application.getState().getNextAction();
-	            		Map<String,String> map = getCurrentOwner(application);
-	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
-	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            			}
-	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            		}
-        			}
-        		}       		
-        	}
-        }
-    	searchResults = searchResults.stream().filter(bpa->!bpa.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
-        
-    	return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
-    }
-    
-    @ReadOnly
-    public Page<SearchPendingItemsForm> pagedSearchForRuralPendingTask(SearchPendingItemsForm searchRequest) {
+		List<SearchPendingItemsForm> searchResults = new ArrayList<>();
+		for (BpaApplication application : bpaApplications) {
+			if (null != application.getState()) {
+				Date dateInfo = application.getState().getDateInfo();
+				if (null != application.getState()) {
+					int days = DateUtils.daysBetween(dateInfo, new Date());
+					if (days > 0) {
+						String pendingAction = application.getState().getNextAction();
+						Map<String, String> map = getCurrentOwner(application);
+						if (!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
+							if (null != map.get("designation")
+									&& searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
+								searchResults.add(new SearchPendingItemsForm(application, map.get("name"),
+										map.get("designation"), pendingAction, days));
+							}
+						} else {
+							searchResults.add(new SearchPendingItemsForm(application, map.get("name"),
+									map.get("designation"), pendingAction, days));
+						}
+					}
+				}
+			}
+		}
+		return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
+	}
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
-        Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItemsRural(searchRequest), pageable);
+	@ReadOnly
+	public Page<SearchPendingItemsForm> pagedSearchForUrbanPendingTask(SearchPendingItemsForm searchRequest) {
 
-        List<SearchPendingItemsForm> searchResults = new ArrayList<>();
-        for (BpaApplication application : bpaApplications) {
-        	if(null!=application.getState()) {
-        		Date dateInfo = application.getState().getDateInfo();
-        		if(null!=application.getState()) {
-        			int days = DateUtils.daysBetween(dateInfo, new Date());
-        			if(days>=0) {
-	            		String pendingAction = application.getState().getNextAction();
-	            		Map<String,String> map = getCurrentOwner(application);
-	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
-	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            			}
-	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            		}
-        			}
-        		}       		
-        	}
-        }
-        searchResults = searchResults.stream().filter(bpa->!bpa.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
-        
-        return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
-    }
+		final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(),
+				searchRequest.orderDir(), searchRequest.orderBy());
+		Page<BpaApplication> bpaApplications = applicationBpaRepository
+				.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItemsUrban(searchRequest), pageable);
 
+		List<SearchPendingItemsForm> searchResults = new ArrayList<>();
+		for (BpaApplication application : bpaApplications) {
+			if (null != application.getState()) {
+				Date dateInfo = application.getState().getDateInfo();
+				if (null != application.getState()) {
+					int days = DateUtils.daysBetween(dateInfo, new Date());
+					if (days >= 0) {
+						String pendingAction = application.getState().getNextAction();
+						Map<String, String> map = getCurrentOwner(application);
+						if (!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
+							if (null != map.get("designation")
+									&& searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
+								searchResults.add(new SearchPendingItemsForm(application, map.get("name"),
+										map.get("designation"), pendingAction, days));
+							}
+						} else {
+							searchResults.add(new SearchPendingItemsForm(application, map.get("name"),
+									map.get("designation"), pendingAction, days));
+						}
+					}
+				}
+			}
+		}
+		searchResults = searchResults.stream().filter(bpa -> !bpa.getPendingAction().equalsIgnoreCase(WF_ACTION_END))
+				.collect(Collectors.toList());
 
-    @ReadOnly
-    public Page<SearchPendingItemsForm> pagedSearchForPendingTaskGraph(SearchPendingItemsForm searchRequest) {
+		return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
+	}
 
-       final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+	@ReadOnly
+	public Page<SearchPendingItemsForm> pagedSearchForRuralPendingTask(SearchPendingItemsForm searchRequest) {
 
-        //Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
-        List<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest));
-        List<SearchPendingItemsForm> searchResults = new ArrayList<>();
-        for (BpaApplication application : bpaApplications) {
-        	if(null!=application.getState()) {
-        		Date dateInfo = application.getState().getDateInfo();
-        		if(null!=application.getState()) {
-        			int days = DateUtils.daysBetween(dateInfo, new Date());
-        			if(days>=0) {
-	            		String pendingAction = application.getState().getNextAction();
-	            		Map<String,String> map = getCurrentOwner(application);
-	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
-	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            			}
-	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            		}
-        			}
-        		}       		
-        	}
-        }
-        searchResults = searchResults.stream().filter(bpa->!bpa.getPendingAction().equalsIgnoreCase(WF_ACTION_END)).collect(Collectors.toList());
-        
-        return new PageImpl<>(searchResults, pageable, bpaApplications.size());
-    }
+		final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(),
+				searchRequest.orderDir(), searchRequest.orderBy());
+		Page<BpaApplication> bpaApplications = applicationBpaRepository
+				.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItemsRural(searchRequest), pageable);
 
-    @ReadOnly
-    public Page<SearchPendingItemsForm> pagedSearchForUrbanBPATask(SearchPendingItemsForm searchRequest) {
+		List<SearchPendingItemsForm> searchResults = new ArrayList<>();
+		for (BpaApplication application : bpaApplications) {
+			if (null != application.getState()) {
+				Date dateInfo = application.getState().getDateInfo();
+				if (null != application.getState()) {
+					int days = DateUtils.daysBetween(dateInfo, new Date());
+					if (days >= 0) {
+						String pendingAction = application.getState().getNextAction();
+						Map<String, String> map = getCurrentOwner(application);
+						if (!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
+							if (null != map.get("designation")
+									&& searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
+								searchResults.add(new SearchPendingItemsForm(application, map.get("name"),
+										map.get("designation"), pendingAction, days));
+							}
+						} else {
+							searchResults.add(new SearchPendingItemsForm(application, map.get("name"),
+									map.get("designation"), pendingAction, days));
+						}
+					}
+				}
+			}
+		}
+		searchResults = searchResults.stream().filter(bpa -> !bpa.getPendingAction().equalsIgnoreCase(WF_ACTION_END))
+				.collect(Collectors.toList());
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
-        Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForBPAItemsUrban(searchRequest), pageable);
+		return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
+	}
 
-        List<SearchPendingItemsForm> searchResults = new ArrayList<>();
-        for (BpaApplication application : bpaApplications) {
-        	if(null!=application.getState()) {
-        		Date dateInfo = application.getState().getDateInfo();
-        		if(null!=application.getState()) {
-        			int days = DateUtils.daysBetween(dateInfo, new Date());
-        			if(days>=0) {
-	            		String pendingAction = application.getState().getNextAction();
-	            		Map<String,String> map = getCurrentOwner(application);
-	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
-	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            			}
-	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            		}
-        			}
-        		}       		
-        	}
-        }
-        return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
-    }
-    
-    @ReadOnly
-    public Page<SearchPendingItemsForm> pagedSearchForRuralBPATask(SearchPendingItemsForm searchRequest) {
+	@ReadOnly
+	public Page<SearchPendingItemsForm> pagedSearchForPendingTaskGraph(SearchPendingItemsForm searchRequest) {
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
-        Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForBPAItemsRural(searchRequest), pageable);
+		final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(),
+				searchRequest.orderDir(), searchRequest.orderBy());
 
-        List<SearchPendingItemsForm> searchResults = new ArrayList<>();
-        for (BpaApplication application : bpaApplications) {
-        	if(null!=application.getState()) {
-        		Date dateInfo = application.getState().getDateInfo();
-        		if(null!=application.getState()) {
-        			int days = DateUtils.daysBetween(dateInfo, new Date());
-        			if(days>=0) {
-	            		String pendingAction = application.getState().getNextAction();
-	            		Map<String,String> map = getCurrentOwner(application);
-	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
-	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            			}
-	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            		}
-        			}
-        		}       		
-        	}
-        }
-        return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
-    }
-    
-    @ReadOnly
-    public Page<SearchPendingItemsForm> pagedSearchForBPATaskGraph(SearchPendingItemsForm searchRequest) {
+		// Page<BpaApplication> bpaApplications =
+		// applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest),
+		// pageable);
+		List<BpaApplication> bpaApplications = applicationBpaRepository
+				.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest));
+		List<SearchPendingItemsForm> searchResults = new ArrayList<>();
+		for (BpaApplication application : bpaApplications) {
+			if (null != application.getState()) {
+				Date dateInfo = application.getState().getDateInfo();
+				if (null != application.getState()) {
+					int days = DateUtils.daysBetween(dateInfo, new Date());
+					if (days >= 0) {
+						String pendingAction = application.getState().getNextAction();
+						Map<String, String> map = getCurrentOwner(application);
+						if (!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
+							if (null != map.get("designation")
+									&& searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
+								searchResults.add(new SearchPendingItemsForm(application, map.get("name"),
+										map.get("designation"), pendingAction, days));
+							}
+						} else {
+							searchResults.add(new SearchPendingItemsForm(application, map.get("name"),
+									map.get("designation"), pendingAction, days));
+						}
+					}
+				}
+			}
+		}
+		searchResults = searchResults.stream().filter(bpa -> !bpa.getPendingAction().equalsIgnoreCase(WF_ACTION_END))
+				.collect(Collectors.toList());
 
-       final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+		return new PageImpl<>(searchResults, pageable, bpaApplications.size());
+	}
 
-        //Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
-        List<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForBPAItemsUrban(searchRequest));
-        List<SearchPendingItemsForm> searchResults = new ArrayList<>();
-        for (BpaApplication application : bpaApplications) {
-        	if(null!=application.getState()) {
-        		Date dateInfo = application.getState().getDateInfo();
-        		if(null!=application.getState()) {
-        			int days = DateUtils.daysBetween(dateInfo, new Date());
-        			if(days>=0) {
-	            		String pendingAction = application.getState().getNextAction();
-	            		Map<String,String> map = getCurrentOwner(application);
-	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
-	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            			}
-	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            		}
-        			}
-        		}       		
-        	}
-        }
-        return new PageImpl<>(searchResults, pageable, bpaApplications.size());
-    }
-    
-    @ReadOnly
-    public Page<SearchPendingItemsForm> pagedSearchForBPATaskRuralGraph(SearchPendingItemsForm searchRequest) {
+	@ReadOnly
+	public Page<SearchPendingItemsForm> pagedSearchForUrbanBPATask(SearchPendingItemsForm searchRequest) {
 
-       final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+		final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(),
+				searchRequest.orderDir(), searchRequest.orderBy());
+		Page<BpaApplication> bpaApplications = applicationBpaRepository
+				.findAll(SearchBpaApplnFormSpec.searchSpecificationForBPAItemsUrban(searchRequest), pageable);
 
-        //Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
-        List<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForBPAItemsRural(searchRequest));
-        List<SearchPendingItemsForm> searchResults = new ArrayList<>();
-        for (BpaApplication application : bpaApplications) {
-        	if(null!=application.getState()) {
-        		Date dateInfo = application.getState().getDateInfo();
-        		if(null!=application.getState()) {
-        			int days = DateUtils.daysBetween(dateInfo, new Date());
-        			if(days>=0) {
-	            		String pendingAction = application.getState().getNextAction();
-	            		Map<String,String> map = getCurrentOwner(application);
-	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
-	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            			}
-	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
-	            		}
-        			}
-        		}       		
-        	}
-        }
-        return new PageImpl<>(searchResults, pageable, bpaApplications.size());
-    }
-    
-    @ReadOnly
-    public Page<SearchBpaApplicationForm> hasFeeCollectionPending(
-            final SearchBpaApplicationForm searchRequest) {
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
-                searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+		List<SearchPendingItemsForm> searchResults = new ArrayList<>();
+		for (BpaApplication application : bpaApplications) {
+			if (null != application.getState()) {
+				Date dateInfo = application.getState().getDateInfo();
+				if (null != application.getState()) {
+					int days = DateUtils.daysBetween(dateInfo, new Date());
+					if (days >= 0) {
+						String pendingAction = application.getState().getNextAction();
+						Map<String, String> map = getCurrentOwner(application);
+						if (!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
+							if (null != map.get("designation")
+									&& searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
+								searchResults.add(new SearchPendingItemsForm(application, map.get("name"),
+										map.get("designation"), pendingAction, days));
+							}
+						} else {
+							searchResults.add(new SearchPendingItemsForm(application, map.get("name"),
+									map.get("designation"), pendingAction, days));
+						}
+					}
+				}
+			}
+		}
+		return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
+	}
 
-        Page<BpaApplication> bpaApplications = applicationBpaRepository
-                .findAll(SearchBpaApplnFormSpec.hasCollectionPendingSpecification(searchRequest), pageable);
-        List<SearchBpaApplicationForm> searchResults = new ArrayList<>();
-        for (BpaApplication application : bpaApplications) {
-            String pendingAction = application.getState() == null ? "N/A" : application.getState().getNextAction();
-            Boolean hasCollectionPending = bpaDemandService.checkAnyTaxIsPendingToCollect(application);
-            searchResults.add(
-                    new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction, hasCollectionPending));
-        }
-        return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
-    }
+	@ReadOnly
+	public Page<SearchPendingItemsForm> pagedSearchForRuralBPATask(SearchPendingItemsForm searchRequest) {
 
-    @ReadOnly
-    public Page<SearchBpaApplicationForm> searchForDocumentScrutinyPending(final SearchBpaApplicationForm searchRequest) {
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
-                searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+		final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(),
+				searchRequest.orderDir(), searchRequest.orderBy());
+		Page<BpaApplication> bpaApplications = applicationBpaRepository
+				.findAll(SearchBpaApplnFormSpec.searchSpecificationForBPAItemsRural(searchRequest), pageable);
 
-        Page<SlotApplication> slotApplications = slotApplicationRepository
-                .findAll(SearchBpaApplnFormSpec.hasDocumentScrutinyPendingSpecification(searchRequest), pageable);
-        List<SearchBpaApplicationForm> searchResults = new ArrayList<>();
-        for (SlotApplication slotApplication : slotApplications) {
-            String processOwner = "N/A";
-            String pendingAction = "N/A";
-            if (slotApplication.getApplication().getState() != null
-                    && slotApplication.getApplication().getState().getOwnerPosition() != null) {
-                processOwner = getProcessOwner(slotApplication.getApplication());
-                pendingAction = slotApplication.getApplication().getState().getNextAction();
-            }
-            Boolean hasCollectionPending = bpaDemandService.checkAnyTaxIsPendingToCollect(slotApplication.getApplication());
-            searchResults.add(new SearchBpaApplicationForm(slotApplication.getApplication(), processOwner, pendingAction,
-                    hasCollectionPending));
-        }
-        return new PageImpl<>(searchResults, pageable, slotApplications.getTotalElements());
-    }
+		List<SearchPendingItemsForm> searchResults = new ArrayList<>();
+		for (BpaApplication application : bpaApplications) {
+			if (null != application.getState()) {
+				Date dateInfo = application.getState().getDateInfo();
+				if (null != application.getState()) {
+					int days = DateUtils.daysBetween(dateInfo, new Date());
+					if (days >= 0) {
+						String pendingAction = application.getState().getNextAction();
+						Map<String, String> map = getCurrentOwner(application);
+						if (!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
+							if (null != map.get("designation")
+									&& searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
+								searchResults.add(new SearchPendingItemsForm(application, map.get("name"),
+										map.get("designation"), pendingAction, days));
+							}
+						} else {
+							searchResults.add(new SearchPendingItemsForm(application, map.get("name"),
+									map.get("designation"), pendingAction, days));
+						}
+					}
+				}
+			}
+		}
+		return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
+	}
 
-    private String getProcessOwner(BpaApplication application) {
-        String processOwner;
-        if (application.getState() != null && application.getState().getOwnerPosition() != null)
-            processOwner = workflowHistoryService
-                    .getUserPositionByPositionAndDate(application.getState().getOwnerPosition().getId(),
-                            application.getState().getLastModifiedDate())
-                    .getName();
-        else
-            processOwner = application.getLastModifiedBy().getName();
-        return processOwner;
-    }
-    
-    private Map<String, String> getCurrentOwner(BpaApplication application) {
-    	Map<String, String> map;
-        if (application.getState() != null && application.getState().getOwnerPosition() != null) {
-        	map = workflowHistoryService.getUserDesignationAndPositionByPositionAndDate(application.getState().getOwnerPosition().getId(),application.getState().getLastModifiedDate());
-        } else {
-        	map = new HashMap<String, String>();
-        	map.put("designation", "");
-        	map.put("name", application.getLastModifiedBy().getName());
-        }
-        return map;
-    }
-    
-    public Criteria searchApplicationsForPRReport(final SearchBpaApplicationForm searchBpaApplicationForm) {
-        Criteria criteria = buildSearchCriteria(searchBpaApplicationForm);
-        criteria.createAlias("bpaApplication.status", "status")
-                .add(Restrictions.not(Restrictions.in("status.code", APPLICATION_STATUS_CREATED, APPLICATION_STATUS_REGISTERED,
-                        APPLICATION_STATUS_SCHEDULED, APPLICATION_STATUS_RESCHEDULED)));
-        return criteria;
-    }
+	@ReadOnly
+	public Page<SearchPendingItemsForm> pagedSearchForBPATaskGraph(SearchPendingItemsForm searchRequest) {
 
-    public Criteria buildSearchCriteria(final SearchBpaApplicationForm searchBpaApplicationForm) {
-        final Criteria criteria = getCurrentSession().createCriteria(BpaApplication.class, "bpaApplication");
-        
-        if(searchBpaApplicationForm.getApplicationTypeId()!=null) {
-        	criteria.createAlias("bpaApplication.applicationType", "applicationType");
-            criteria.add(
-                    Restrictions.eq("applicationType.id", searchBpaApplicationForm.getApplicationTypeId()));
-        }
-        
-        
-        if (searchBpaApplicationForm.getApplicantName() != null) {
-            criteria.createAlias("bpaApplication.owner", "owner");
-            criteria.add(
-                    Restrictions.ilike("owner.name", searchBpaApplicationForm.getApplicantName(), MatchMode.ANYWHERE));
-        }
+		final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(),
+				searchRequest.orderDir(), searchRequest.orderBy());
 
-        if (searchBpaApplicationForm.getApplicationNumber() != null) {
-            criteria.add(Restrictions.eq("bpaApplication.applicationNumber",
-                    searchBpaApplicationForm.getApplicationNumber()));
-        }
-        if (searchBpaApplicationForm.getServiceTypeId() != null) {
-            criteria.add(Restrictions.eq("bpaApplication.serviceType.id", searchBpaApplicationForm.getServiceTypeId()));
-        }
-        if (searchBpaApplicationForm.getServiceType() != null) {
-            criteria.createAlias("bpaApplication.serviceType", "serviceType")
-                    .add(Restrictions.eq("serviceType.description", searchBpaApplicationForm.getServiceType()));
-        }
-        if (searchBpaApplicationForm.getStatusId() != null) {
-            criteria.add(Restrictions.eq("bpaApplication.status.id", searchBpaApplicationForm.getStatusId()));
-        }
-        if (searchBpaApplicationForm.getStatus() != null) {
-            criteria.createAlias("bpaApplication.status", "status")
-                    .add(Restrictions.eq("status.code", searchBpaApplicationForm.getStatus()));
-        }
-        if (searchBpaApplicationForm.getOccupancyId() != null) {
-            criteria.createAlias("bpaApplication.occupancy", "occupancy")
-                    .add(Restrictions.eq("occupancy.id", searchBpaApplicationForm.getOccupancyId()));
-        }
-        if (searchBpaApplicationForm.getFromDate() != null)
-            criteria.add(Restrictions.ge("bpaApplication.applicationDate",
-                    resetFromDateTimeStamp(searchBpaApplicationForm.getFromDate())));
-        if (searchBpaApplicationForm.getToDate() != null)
-            criteria.add(Restrictions.le("bpaApplication.applicationDate",
-                    resetToDateTimeStamp(searchBpaApplicationForm.getToDate())));
-        buildCommonSearchCriterias(searchBpaApplicationForm, criteria);
-        
-        if (searchBpaApplicationForm.getPlotNumber() != null) 
-            criteria.add(Restrictions.eq("bpaApplication.plotNumber",
-                    searchBpaApplicationForm.getPlotNumber()));
-        
-        if (searchBpaApplicationForm.getSector() != null) 
-            criteria.add(Restrictions.eq("bpaApplication.sector",
-                    searchBpaApplicationForm.getSector()));
-        
-        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-        return criteria;
-    }
+		// Page<BpaApplication> bpaApplications =
+		// applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest),
+		// pageable);
+		List<BpaApplication> bpaApplications = applicationBpaRepository
+				.findAll(SearchBpaApplnFormSpec.searchSpecificationForBPAItemsUrban(searchRequest));
+		List<SearchPendingItemsForm> searchResults = new ArrayList<>();
+		for (BpaApplication application : bpaApplications) {
+			if (null != application.getState()) {
+				Date dateInfo = application.getState().getDateInfo();
+				if (null != application.getState()) {
+					int days = DateUtils.daysBetween(dateInfo, new Date());
+					if (days >= 0) {
+						String pendingAction = application.getState().getNextAction();
+						Map<String, String> map = getCurrentOwner(application);
+						if (!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
+							if (null != map.get("designation")
+									&& searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
+								searchResults.add(new SearchPendingItemsForm(application, map.get("name"),
+										map.get("designation"), pendingAction, days));
+							}
+						} else {
+							searchResults.add(new SearchPendingItemsForm(application, map.get("name"),
+									map.get("designation"), pendingAction, days));
+						}
+					}
+				}
+			}
+		}
+		return new PageImpl<>(searchResults, pageable, bpaApplications.size());
+	}
 
-    public void buildCommonSearchCriterias(SearchBpaApplicationForm searchBpaApplicationForm, Criteria criteria) {
-        if (searchBpaApplicationForm.getServiceTypeEnum() != null
-                && !searchBpaApplicationForm.getServiceTypeEnum().isEmpty()) {
-            if (searchBpaApplicationForm.getServiceTypeEnum()
-                    .equalsIgnoreCase(APPLICATION_TYPE_REGULAR)) {
-                criteria.add(Restrictions.eq("bpaApplication.isOneDayPermitApplication", false));
-                searchBpaApplicationForm.setToDate(new Date());
-            } else if (searchBpaApplicationForm.getServiceTypeEnum()
-                    .equalsIgnoreCase(APPLICATION_TYPE_ONEDAYPERMIT))
-                criteria.add(Restrictions.eq("bpaApplication.isOneDayPermitApplication", true));
-        }
-        if (searchBpaApplicationForm.getApplicationTypeId() != null) {
-            ApplicationSubType appType = applicationTypeService.findById(searchBpaApplicationForm.getApplicationTypeId());
-            if (!appType.getName().equals(APPLICATION_TYPE_ONEDAYPERMIT))
-                searchBpaApplicationForm.setToDate(new Date());
-            criteria.add(Restrictions.eq("bpaApplication.applicationType.id", searchBpaApplicationForm.getApplicationTypeId()));
-        }
+	@ReadOnly
+	public Page<SearchPendingItemsForm> pagedSearchForBPATaskRuralGraph(SearchPendingItemsForm searchRequest) {
 
-        if (searchBpaApplicationForm.getApplicationTypeId() == null && searchBpaApplicationForm.getApplicationType() != null) {
-            if (!searchBpaApplicationForm.getApplicationType().equals(APPLICATION_TYPE_ONEDAYPERMIT))
-                searchBpaApplicationForm.setToDate(new Date());
-            criteria.createAlias("bpaApplication.applicationType", APPLICATION_TYPE)
-                    .add(Restrictions.eq("applicationType.name", searchBpaApplicationForm.getApplicationType()));
-        }
-        if (searchBpaApplicationForm.getElectionWardId() != null || searchBpaApplicationForm.getWardId() != null
-                || searchBpaApplicationForm.getZoneId() != null || searchBpaApplicationForm.getZone() != null ||
-                searchBpaApplicationForm.getFromPlotArea() != null || searchBpaApplicationForm.getToPlotArea() != null)
-            criteria.createAlias("bpaApplication.siteDetail", "siteDetail");
-        if (searchBpaApplicationForm.getFromPlotArea() != null)
-            criteria.add(Restrictions.ge("siteDetail.extentinsqmts", searchBpaApplicationForm.getFromPlotArea()));
-        if (searchBpaApplicationForm.getToPlotArea() != null)
-            criteria.add(Restrictions.le("siteDetail.extentinsqmts", searchBpaApplicationForm.getToPlotArea()));
-        if (searchBpaApplicationForm.getWardId() != null || searchBpaApplicationForm.getZoneId() != null
-                || searchBpaApplicationForm.getZone() != null)
-            criteria.createAlias("siteDetail.adminBoundary", "adminBoundary");
-        if (searchBpaApplicationForm.getElectionWardId() != null)
-            criteria.createAlias("siteDetail.electionBoundary", "electionBoundary")
-                    .add(Restrictions.eq("electionBoundary.id", searchBpaApplicationForm.getElectionWardId()));
-        if (searchBpaApplicationForm.getWardId() != null)
-            criteria.add(Restrictions.eq("adminBoundary.id", searchBpaApplicationForm.getWardId()));
-        if (searchBpaApplicationForm.getZoneId() != null)
-            criteria.add(Restrictions.eq("adminBoundary.parent.id", searchBpaApplicationForm.getZoneId()));
-        if (searchBpaApplicationForm.getZoneId() == null && searchBpaApplicationForm.getZone() != null)
-            criteria.createAlias("adminBoundary.parent", "parent")
-                    .add(Restrictions.eq("parent.name", searchBpaApplicationForm.getZone()));
-    }
+		final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(),
+				searchRequest.orderDir(), searchRequest.orderBy());
 
-    @SuppressWarnings("unchecked")
-    public List<SearchBpaApplicationForm> buildSlotApplicationDetails(final SearchBpaApplicationForm searchBpaApplicationForm) {
-        final Criteria criteria = getCurrentSession().createCriteria(SlotApplication.class, "slotApplication");
-        criteria.createAlias("slotApplication.slotDetail", "slotDetail");
-        if (searchBpaApplicationForm.getAppointmentTime() != null)
-            criteria.add(Restrictions.eq("slotDetail.appointmentTime",
-                    searchBpaApplicationForm.getAppointmentTime()));
-        if (searchBpaApplicationForm.getZoneId() != null || searchBpaApplicationForm.getAppointmentDate() != null
-                || searchBpaApplicationForm.getServiceType() != null)
-            criteria.createAlias("slotDetail.slot", "slot");
-        if (searchBpaApplicationForm.getZoneId() != null) {
-            criteria.createAlias("slot.zone", "zone");
-            criteria.add(Restrictions.eq("zone.id", searchBpaApplicationForm.getZoneId()));
-        }
-        if (searchBpaApplicationForm.getAppointmentDate() != null) {
-            criteria.add(Restrictions.eq("slot.appointmentDate",
-                    resetToDateTimeStamp(searchBpaApplicationForm.getAppointmentDate())));
-        }
-        if ("SCHEDULE".equals(searchBpaApplicationForm.getScheduleType())) {
-            criteria.add(Restrictions.eq("slotApplication.scheduleAppointmentType", ScheduleAppointmentType.SCHEDULE));
-        } else if ("RESCHEDULE".equals(searchBpaApplicationForm.getScheduleType())) {
-            criteria.add(Restrictions.eq("slotApplication.scheduleAppointmentType", ScheduleAppointmentType.RESCHEDULE));
-        }
+		// Page<BpaApplication> bpaApplications =
+		// applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest),
+		// pageable);
+		List<BpaApplication> bpaApplications = applicationBpaRepository
+				.findAll(SearchBpaApplnFormSpec.searchSpecificationForBPAItemsRural(searchRequest));
+		List<SearchPendingItemsForm> searchResults = new ArrayList<>();
+		for (BpaApplication application : bpaApplications) {
+			if (null != application.getState()) {
+				Date dateInfo = application.getState().getDateInfo();
+				if (null != application.getState()) {
+					int days = DateUtils.daysBetween(dateInfo, new Date());
+					if (days >= 0) {
+						String pendingAction = application.getState().getNextAction();
+						Map<String, String> map = getCurrentOwner(application);
+						if (!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
+							if (null != map.get("designation")
+									&& searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
+								searchResults.add(new SearchPendingItemsForm(application, map.get("name"),
+										map.get("designation"), pendingAction, days));
+							}
+						} else {
+							searchResults.add(new SearchPendingItemsForm(application, map.get("name"),
+									map.get("designation"), pendingAction, days));
+						}
+					}
+				}
+			}
+		}
+		return new PageImpl<>(searchResults, pageable, bpaApplications.size());
+	}
 
-        if ("onedaypermit".equals(searchBpaApplicationForm.getApplicationType())) {
-            criteria.add(Restrictions.isNotNull("slot.electionWard"));
-        } else
-            criteria.add(Restrictions.isNull("slot.electionWard"));
+	@ReadOnly
+	public Page<SearchBpaApplicationForm> hasFeeCollectionPending(final SearchBpaApplicationForm searchRequest) {
+		final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(),
+				searchRequest.orderDir(), searchRequest.orderBy());
 
-        List<SearchBpaApplicationForm> searchBpaApplicationFormList = new ArrayList<>();
-        for (SlotApplication slotApplication : (List<SlotApplication>) criteria.list()) {
-            String pendingAction = slotApplication.getApplication().getState() == null ? "N/A"
-                    : slotApplication.getApplication().getState().getNextAction();
-            Boolean hasCollectionPending = bpaDemandService.checkAnyTaxIsPendingToCollect(slotApplication.getApplication());
-            searchBpaApplicationFormList.add(new SearchBpaApplicationForm(slotApplication.getApplication(),
-                    getProcessOwner(slotApplication.getApplication()), pendingAction, hasCollectionPending));
-        }
-        return searchBpaApplicationFormList;
-    }
+		Page<BpaApplication> bpaApplications = applicationBpaRepository
+				.findAll(SearchBpaApplnFormSpec.hasCollectionPendingSpecification(searchRequest), pageable);
+		List<SearchBpaApplicationForm> searchResults = new ArrayList<>();
+		for (BpaApplication application : bpaApplications) {
+			String pendingAction = application.getState() == null ? "N/A" : application.getState().getNextAction();
+			Boolean hasCollectionPending = bpaDemandService.checkAnyTaxIsPendingToCollect(application);
+			searchResults.add(new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction,
+					hasCollectionPending));
+		}
+		return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
+	}
 
-    public BigDecimal getFar(BpaApplication application) {
-        BigDecimal plotArea = application.getSiteDetail().get(0).getExtentinsqmts();
-        BigDecimal far = BigDecimal.ZERO;
-        if (!application.getBuildingDetail().isEmpty()) {
-            BigDecimal totalFloorArea = bpaCalculationService.getTotalFloorArea(application);
-            BigDecimal existBldgFloorArea = bpaCalculationService.getExistBldgTotalFloorArea(application);
-            totalFloorArea = totalFloorArea.add(existBldgFloorArea);
-            if (totalFloorArea != null)
-                far = totalFloorArea.divide(plotArea, 3, RoundingMode.HALF_UP);
-        }
-        return far.setScale(3, RoundingMode.HALF_UP);
-    }
+	@ReadOnly
+	public Page<SearchBpaApplicationForm> searchForDocumentScrutinyPending(
+			final SearchBpaApplicationForm searchRequest) {
+		final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(),
+				searchRequest.orderDir(), searchRequest.orderBy());
 
-    public void validateApplicationTypeAndHeight(final BpaApplication application, final BindingResult errors) {
-        if (application.getApplicationType() != null) {
-            String appType = application.getApplicationType().getName();
-            for (BuildingDetail buildingDetail : application.getBuildingDetail()) {
-                BigDecimal buildingHeight = buildingDetail.getHeightFromGroundWithOutStairRoom();
-                if (buildingHeight != null) {
-                    if (appType.equals(LOWRISK) && buildingHeight.compareTo(BigDecimal.valueOf(10)) > 0)
-                        errors.rejectValue(APPLICATION_TYPE, "msg.validation.lowrisk");
-                    else if (appType.equals(MEDIUMRISK) && (buildingHeight.compareTo(BigDecimal.valueOf(10)) < 0 ||
-                            buildingHeight.compareTo(BigDecimal.valueOf(15)) > 0))
-                        errors.rejectValue(APPLICATION_TYPE, "msg.validation.mediumrisk");
-                    else if (appType.equals(HIGHRISK) && buildingHeight.compareTo(BigDecimal.valueOf(15)) < 0)
-                        errors.rejectValue(APPLICATION_TYPE, "msg.validation.highrisk");
-                }
-            }
-        } else if (!application.getIsOneDayPermitApplication())
-            errors.rejectValue(APPLICATION_TYPE, "msg.validation.applicationtype");
+		Page<SlotApplication> slotApplications = slotApplicationRepository
+				.findAll(SearchBpaApplnFormSpec.hasDocumentScrutinyPendingSpecification(searchRequest), pageable);
+		List<SearchBpaApplicationForm> searchResults = new ArrayList<>();
+		for (SlotApplication slotApplication : slotApplications) {
+			String processOwner = "N/A";
+			String pendingAction = "N/A";
+			if (slotApplication.getApplication().getState() != null
+					&& slotApplication.getApplication().getState().getOwnerPosition() != null) {
+				processOwner = getProcessOwner(slotApplication.getApplication());
+				pendingAction = slotApplication.getApplication().getState().getNextAction();
+			}
+			Boolean hasCollectionPending = bpaDemandService
+					.checkAnyTaxIsPendingToCollect(slotApplication.getApplication());
+			searchResults.add(new SearchBpaApplicationForm(slotApplication.getApplication(), processOwner,
+					pendingAction, hasCollectionPending));
+		}
+		return new PageImpl<>(searchResults, pageable, slotApplications.getTotalElements());
+	}
 
-    }
+	private String getProcessOwner(BpaApplication application) {
+		String processOwner;
+		if (application.getState() != null && application.getState().getOwnerPosition() != null)
+			processOwner = workflowHistoryService
+					.getUserPositionByPositionAndDate(application.getState().getOwnerPosition().getId(),
+							application.getState().getLastModifiedDate())
+					.getName();
+		else
+			processOwner = application.getLastModifiedBy().getName();
+		return processOwner;
+	}
 
-    @ReadOnly
-    public Page<SearchBpaApplicationForm> searchForRevocation(final SearchBpaApplicationForm searchRequest,
-            final List<Long> userIds) {
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
-                searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
-        Page<BpaApplication> bpaApplications = applicationBpaRepository
-                .findAll(SearchBpaApplnFormSpec.searchPermitRevocationSpecification(searchRequest), pageable);
-        List<SearchBpaApplicationForm> searchResults = new ArrayList<>();
-        for (BpaApplication application : bpaApplications) {
-            searchResults.add(
-                    new SearchBpaApplicationForm(application, "", "", false));
-        }
-        return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
-    }
-    
-    
-    @ReadOnly
-    public Page<SearchBpaApplicationForm> searchInspection(final SearchBpaApplicationForm searchRequest,
-            final List<Long> userIds) {
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
-                searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
-        
-        Page<BpaApplication> bpaApplications = applicationBpaRepository
-                .findAll(SearchBpaApplnFormSpec.searchInspectionSpecification(searchRequest), pageable);
-        
-        List<SearchBpaApplicationForm> searchResults = new ArrayList<>();
-        for (BpaApplication application : bpaApplications) {
-        	List<OccupancyCertificate> occupancyCertificate = occupancyCertificateService.findByPermitNumber(application.getPlanPermissionNumber());
-            if(occupancyCertificate.isEmpty())
-        	 searchResults.add(
-                    new SearchBpaApplicationForm(application, null));
-            else
-            	searchResults.add(
-                        new SearchBpaApplicationForm(application, occupancyCertificate.get(0)));
-        }
-        return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
-    }
+	private Map<String, String> getCurrentOwner(BpaApplication application) {
+		Map<String, String> map;
+		if (application.getState() != null && application.getState().getOwnerPosition() != null) {
+			map = workflowHistoryService.getUserDesignationAndPositionByPositionAndDate(
+					application.getState().getOwnerPosition().getId(), application.getState().getLastModifiedDate());
+		} else {
+			map = new HashMap<String, String>();
+			map.put("designation", "");
+			map.put("name", application.getLastModifiedBy().getName());
+		}
+		return map;
+	}
+
+	public Criteria searchApplicationsForPRReport(final SearchBpaApplicationForm searchBpaApplicationForm) {
+		Criteria criteria = buildSearchCriteria(searchBpaApplicationForm);
+		criteria.createAlias("bpaApplication.status", "status")
+				.add(Restrictions.not(Restrictions.in("status.code", APPLICATION_STATUS_CREATED,
+						APPLICATION_STATUS_REGISTERED, APPLICATION_STATUS_SCHEDULED, APPLICATION_STATUS_RESCHEDULED)));
+		return criteria;
+	}
+
+	public Criteria buildSearchCriteria(final SearchBpaApplicationForm searchBpaApplicationForm) {
+		final Criteria criteria = getCurrentSession().createCriteria(BpaApplication.class, "bpaApplication");
+
+		if (searchBpaApplicationForm.getApplicationTypeId() != null) {
+			criteria.createAlias("bpaApplication.applicationType", "applicationType");
+			criteria.add(Restrictions.eq("applicationType.id", searchBpaApplicationForm.getApplicationTypeId()));
+		}
+
+		if (searchBpaApplicationForm.getApplicantName() != null) {
+			criteria.createAlias("bpaApplication.owner", "owner");
+			criteria.add(
+					Restrictions.ilike("owner.name", searchBpaApplicationForm.getApplicantName(), MatchMode.ANYWHERE));
+		}
+
+		if (searchBpaApplicationForm.getApplicationNumber() != null) {
+			criteria.add(Restrictions.eq("bpaApplication.applicationNumber",
+					searchBpaApplicationForm.getApplicationNumber()));
+		}
+		if (searchBpaApplicationForm.getServiceTypeId() != null) {
+			criteria.add(Restrictions.eq("bpaApplication.serviceType.id", searchBpaApplicationForm.getServiceTypeId()));
+		}
+		if (searchBpaApplicationForm.getServiceType() != null) {
+			criteria.createAlias("bpaApplication.serviceType", "serviceType")
+					.add(Restrictions.eq("serviceType.description", searchBpaApplicationForm.getServiceType()));
+		}
+		if (searchBpaApplicationForm.getStatusId() != null) {
+			criteria.add(Restrictions.eq("bpaApplication.status.id", searchBpaApplicationForm.getStatusId()));
+		}
+		if (searchBpaApplicationForm.getStatus() != null) {
+			criteria.createAlias("bpaApplication.status", "status")
+					.add(Restrictions.eq("status.code", searchBpaApplicationForm.getStatus()));
+		}
+		if (searchBpaApplicationForm.getOccupancyId() != null) {
+			criteria.createAlias("bpaApplication.occupancy", "occupancy")
+					.add(Restrictions.eq("occupancy.id", searchBpaApplicationForm.getOccupancyId()));
+		}
+		if (searchBpaApplicationForm.getFromDate() != null)
+			criteria.add(Restrictions.ge("bpaApplication.applicationDate",
+					resetFromDateTimeStamp(searchBpaApplicationForm.getFromDate())));
+		if (searchBpaApplicationForm.getToDate() != null)
+			criteria.add(Restrictions.le("bpaApplication.applicationDate",
+					resetToDateTimeStamp(searchBpaApplicationForm.getToDate())));
+		buildCommonSearchCriterias(searchBpaApplicationForm, criteria);
+
+		if (searchBpaApplicationForm.getPlotNumber() != null)
+			criteria.add(Restrictions.eq("bpaApplication.plotNumber", searchBpaApplicationForm.getPlotNumber()));
+
+		if (searchBpaApplicationForm.getSector() != null)
+			criteria.add(Restrictions.eq("bpaApplication.sector", searchBpaApplicationForm.getSector()));
+			
+
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		return criteria;
+	}
+
+	public void buildCommonSearchCriterias(SearchBpaApplicationForm searchBpaApplicationForm, Criteria criteria) {
+		if (searchBpaApplicationForm.getServiceTypeEnum() != null
+				&& !searchBpaApplicationForm.getServiceTypeEnum().isEmpty()) {
+			if (searchBpaApplicationForm.getServiceTypeEnum().equalsIgnoreCase(APPLICATION_TYPE_REGULAR)) {
+				criteria.add(Restrictions.eq("bpaApplication.isOneDayPermitApplication", false));
+				searchBpaApplicationForm.setToDate(new Date());
+			} else if (searchBpaApplicationForm.getServiceTypeEnum().equalsIgnoreCase(APPLICATION_TYPE_ONEDAYPERMIT))
+				criteria.add(Restrictions.eq("bpaApplication.isOneDayPermitApplication", true));
+		}
+		if (searchBpaApplicationForm.getApplicationTypeId() != null) {
+			ApplicationSubType appType = applicationTypeService
+					.findById(searchBpaApplicationForm.getApplicationTypeId());
+			if (!appType.getName().equals(APPLICATION_TYPE_ONEDAYPERMIT))
+				searchBpaApplicationForm.setToDate(new Date());
+			criteria.add(Restrictions.eq("bpaApplication.applicationType.id",
+					searchBpaApplicationForm.getApplicationTypeId()));
+		}
+
+		if (searchBpaApplicationForm.getApplicationTypeId() == null
+				&& searchBpaApplicationForm.getApplicationType() != null) {
+			if (!searchBpaApplicationForm.getApplicationType().equals(APPLICATION_TYPE_ONEDAYPERMIT))
+				searchBpaApplicationForm.setToDate(new Date());
+			criteria.createAlias("bpaApplication.applicationType", APPLICATION_TYPE)
+					.add(Restrictions.eq("applicationType.name", searchBpaApplicationForm.getApplicationType()));
+		}
+		if (searchBpaApplicationForm.getElectionWardId() != null || searchBpaApplicationForm.getWardId() != null
+				|| searchBpaApplicationForm.getZoneId() != null || searchBpaApplicationForm.getZone() != null
+				|| searchBpaApplicationForm.getFromPlotArea() != null
+				|| searchBpaApplicationForm.getToPlotArea() != null)
+			criteria.createAlias("bpaApplication.siteDetail", "siteDetail");
+		if (searchBpaApplicationForm.getFromPlotArea() != null)
+			criteria.add(Restrictions.ge("siteDetail.extentinsqmts", searchBpaApplicationForm.getFromPlotArea()));
+		if (searchBpaApplicationForm.getToPlotArea() != null)
+			criteria.add(Restrictions.le("siteDetail.extentinsqmts", searchBpaApplicationForm.getToPlotArea()));
+		if (searchBpaApplicationForm.getWardId() != null || searchBpaApplicationForm.getZoneId() != null
+				|| searchBpaApplicationForm.getZone() != null)
+			criteria.createAlias("siteDetail.adminBoundary", "adminBoundary");
+		if (searchBpaApplicationForm.getElectionWardId() != null)
+			criteria.createAlias("siteDetail.electionBoundary", "electionBoundary")
+					.add(Restrictions.eq("electionBoundary.id", searchBpaApplicationForm.getElectionWardId()));
+		if (searchBpaApplicationForm.getWardId() != null)
+			criteria.add(Restrictions.eq("adminBoundary.id", searchBpaApplicationForm.getWardId()));
+		if (searchBpaApplicationForm.getZoneId() != null)
+			criteria.add(Restrictions.eq("adminBoundary.parent.id", searchBpaApplicationForm.getZoneId()));
+		if (searchBpaApplicationForm.getZoneId() == null && searchBpaApplicationForm.getZone() != null)
+			criteria.createAlias("adminBoundary.parent", "parent")
+					.add(Restrictions.eq("parent.name", searchBpaApplicationForm.getZone()));
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<SearchBpaApplicationForm> buildSlotApplicationDetails(
+			final SearchBpaApplicationForm searchBpaApplicationForm) {
+		final Criteria criteria = getCurrentSession().createCriteria(SlotApplication.class, "slotApplication");
+		criteria.createAlias("slotApplication.slotDetail", "slotDetail");
+		if (searchBpaApplicationForm.getAppointmentTime() != null)
+			criteria.add(Restrictions.eq("slotDetail.appointmentTime", searchBpaApplicationForm.getAppointmentTime()));
+		if (searchBpaApplicationForm.getZoneId() != null || searchBpaApplicationForm.getAppointmentDate() != null
+				|| searchBpaApplicationForm.getServiceType() != null)
+			criteria.createAlias("slotDetail.slot", "slot");
+		if (searchBpaApplicationForm.getZoneId() != null) {
+			criteria.createAlias("slot.zone", "zone");
+			criteria.add(Restrictions.eq("zone.id", searchBpaApplicationForm.getZoneId()));
+		}
+		if (searchBpaApplicationForm.getAppointmentDate() != null) {
+			criteria.add(Restrictions.eq("slot.appointmentDate",
+					resetToDateTimeStamp(searchBpaApplicationForm.getAppointmentDate())));
+		}
+		if ("SCHEDULE".equals(searchBpaApplicationForm.getScheduleType())) {
+			criteria.add(Restrictions.eq("slotApplication.scheduleAppointmentType", ScheduleAppointmentType.SCHEDULE));
+		} else if ("RESCHEDULE".equals(searchBpaApplicationForm.getScheduleType())) {
+			criteria.add(
+					Restrictions.eq("slotApplication.scheduleAppointmentType", ScheduleAppointmentType.RESCHEDULE));
+		}
+
+		if ("onedaypermit".equals(searchBpaApplicationForm.getApplicationType())) {
+			criteria.add(Restrictions.isNotNull("slot.electionWard"));
+		} else
+			criteria.add(Restrictions.isNull("slot.electionWard"));
+
+		List<SearchBpaApplicationForm> searchBpaApplicationFormList = new ArrayList<>();
+		for (SlotApplication slotApplication : (List<SlotApplication>) criteria.list()) {
+			String pendingAction = slotApplication.getApplication().getState() == null ? "N/A"
+					: slotApplication.getApplication().getState().getNextAction();
+			Boolean hasCollectionPending = bpaDemandService
+					.checkAnyTaxIsPendingToCollect(slotApplication.getApplication());
+			searchBpaApplicationFormList.add(new SearchBpaApplicationForm(slotApplication.getApplication(),
+					getProcessOwner(slotApplication.getApplication()), pendingAction, hasCollectionPending));
+		}
+		return searchBpaApplicationFormList;
+	}
+
+	public BigDecimal getFar(BpaApplication application) {
+		BigDecimal plotArea = application.getSiteDetail().get(0).getExtentinsqmts();
+		BigDecimal far = BigDecimal.ZERO;
+		if (!application.getBuildingDetail().isEmpty()) {
+			BigDecimal totalFloorArea = bpaCalculationService.getTotalFloorArea(application);
+			BigDecimal existBldgFloorArea = bpaCalculationService.getExistBldgTotalFloorArea(application);
+			totalFloorArea = totalFloorArea.add(existBldgFloorArea);
+			if (totalFloorArea != null)
+				far = totalFloorArea.divide(plotArea, 3, RoundingMode.HALF_UP);
+		}
+		return far.setScale(3, RoundingMode.HALF_UP);
+	}
+
+	public void validateApplicationTypeAndHeight(final BpaApplication application, final BindingResult errors) {
+		if (application.getApplicationType() != null) {
+			String appType = application.getApplicationType().getName();
+			for (BuildingDetail buildingDetail : application.getBuildingDetail()) {
+				BigDecimal buildingHeight = buildingDetail.getHeightFromGroundWithOutStairRoom();
+				if (buildingHeight != null) {
+					if (appType.equals(LOWRISK) && buildingHeight.compareTo(BigDecimal.valueOf(10)) > 0)
+						errors.rejectValue(APPLICATION_TYPE, "msg.validation.lowrisk");
+					else if (appType.equals(MEDIUMRISK) && (buildingHeight.compareTo(BigDecimal.valueOf(10)) < 0
+							|| buildingHeight.compareTo(BigDecimal.valueOf(15)) > 0))
+						errors.rejectValue(APPLICATION_TYPE, "msg.validation.mediumrisk");
+					else if (appType.equals(HIGHRISK) && buildingHeight.compareTo(BigDecimal.valueOf(15)) < 0)
+						errors.rejectValue(APPLICATION_TYPE, "msg.validation.highrisk");
+				}
+			}
+		} else if (!application.getIsOneDayPermitApplication())
+			errors.rejectValue(APPLICATION_TYPE, "msg.validation.applicationtype");
+
+	}
+
+	@ReadOnly
+	public Page<SearchBpaApplicationForm> searchForRevocation(final SearchBpaApplicationForm searchRequest,
+			final List<Long> userIds) {
+		final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(),
+				searchRequest.orderDir(), searchRequest.orderBy());
+		Page<BpaApplication> bpaApplications = applicationBpaRepository
+				.findAll(SearchBpaApplnFormSpec.searchPermitRevocationSpecification(searchRequest), pageable);
+		List<SearchBpaApplicationForm> searchResults = new ArrayList<>();
+		for (BpaApplication application : bpaApplications) {
+			searchResults.add(new SearchBpaApplicationForm(application, "", "", false));
+		}
+		return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
+	}
+
+	@ReadOnly
+	public Page<SearchBpaApplicationForm> searchInspection(final SearchBpaApplicationForm searchRequest,
+			final List<Long> userIds) {
+		final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(),
+				searchRequest.orderDir(), searchRequest.orderBy());
+
+		Page<BpaApplication> bpaApplications = applicationBpaRepository
+				.findAll(SearchBpaApplnFormSpec.searchInspectionSpecification(searchRequest), pageable);
+
+		List<SearchBpaApplicationForm> searchResults = new ArrayList<>();
+		for (BpaApplication application : bpaApplications) {
+			List<OccupancyCertificate> occupancyCertificate = occupancyCertificateService
+					.findByPermitNumber(application.getPlanPermissionNumber());
+			if (occupancyCertificate.isEmpty())
+				searchResults.add(new SearchBpaApplicationForm(application, null));
+			else
+				searchResults.add(new SearchBpaApplicationForm(application, occupancyCertificate.get(0)));
+		}
+		return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
+	}
+
+	
+
 }
