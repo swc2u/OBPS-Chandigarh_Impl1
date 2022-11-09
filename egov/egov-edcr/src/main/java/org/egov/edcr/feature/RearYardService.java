@@ -831,16 +831,18 @@ public class RearYardService extends GeneralRule {
 		if(DxfFileConstants.F.equals(mostRestrictiveOccupancyType.getType().getCode()))
 			return;
 		
-		Map<String, String> map=getSetBack(pl, mostRestrictiveOccupancyType);
-		
-		if(DxfFileConstants.DATA_NOT_FOUND.equals(map.get(CDGAdditionalService.SETBACK_REAR))) {
-			pl.addError(OBJECTNOTDEFINED+CDGAdditionalService.SETBACK_REAR, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_REAR");
-			return;
+		Double rearSetback=Double.valueOf(0);
+		if(!pl.isRural()) {
+			Map<String, String> map=getSetBack(pl, mostRestrictiveOccupancyType);
+			
+			if(DxfFileConstants.DATA_NOT_FOUND.equals(map.get(CDGAdditionalService.SETBACK_REAR))) {
+				pl.addError(OBJECTNOTDEFINED+CDGAdditionalService.SETBACK_REAR, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_REAR");
+				return;
+			}
+			
+			 rearSetback=Double.valueOf(map.get(CDGAdditionalService.SETBACK_REAR)!=null && !map.get(CDGAdditionalService.SETBACK_REAR).equals(DxfFileConstants.NA)?map.get(CDGAdditionalService.SETBACK_REAR):"0");
 		}
-		
-		Double rearSetback=Double.valueOf(map.get(CDGAdditionalService.SETBACK_REAR)!=null && !map.get(CDGAdditionalService.SETBACK_REAR).equals(DxfFileConstants.NA)?map.get(CDGAdditionalService.SETBACK_REAR):"0");
-		
-		if(rearSetback>0) {
+		if(rearSetback>0 || pl.isRural()) {
 			for (Block block : pl.getBlocks()) {
 				if (!block.getCompletelyExisting()) {
 					Boolean rearYardDefined = false;
