@@ -94,7 +94,12 @@ public class PortalInboxService {
     @Transactional
     public void pushInboxMessage(final PortalInbox portalInbox) {
         portalInbox.setTenantId(ApplicationThreadLocals.getTenantID());
-        portalInbox.setPendingAction(portalInbox.getState() == null ? NA : portalInbox.getState().getNextAction());
+        
+        if(portalInbox.getStatus().equalsIgnoreCase("Previous Plan Data Updated"))
+        	portalInbox.setPendingAction("END");
+        else	
+        	portalInbox.setPendingAction(portalInbox.getState() == null ? NA : portalInbox.getState().getNextAction());
+       
         if (portalInbox.getTempPortalInboxUser().isEmpty()) {
             final User user = getLoggedInUser();
             if (user != null
