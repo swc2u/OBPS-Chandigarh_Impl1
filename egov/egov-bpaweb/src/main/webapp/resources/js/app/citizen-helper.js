@@ -300,6 +300,12 @@ jQuery(document).ready(function ($) {
             e.preventDefault();
         }
         return false;
+
+//	if ($('#isPreviousPlan').val()=='true')
+//	 	$("#newCitizenApplicationform").attr('action', 'previous-sanction-form-with-service-type');
+//	 else
+//	 	$("#newCitizenApplicationform").attr('action', 'application-create');
+//    $("#newCitizenApplicationform").submit();
     });
 
     $('.applicantname').hide();

@@ -343,11 +343,11 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
     	if(applicationType.equals(URBAN)) {
     		model.addAttribute("appTypes",applicationTypes.stream().filter(appType -> !appType.getName().equalsIgnoreCase("Medium Risk"))
             .collect(Collectors.toList()));
-    		model.addAttribute("applnStatusList", statusList.stream().filter(status->!status.getCode().matches("Accepted as Scrutinized|Order Issued to Applicant|Cancelled|Rejected")).collect(Collectors.toList()));
+    		model.addAttribute("applnStatusList", statusList.stream().filter(status->!status.getCode().matches("Accepted as Scrutinized|Order Issued to Applicant|Cancelled|Rejected|Previous Plan Data Updated")).collect(Collectors.toList()));
     	}else {
     		model.addAttribute("appTypes",applicationTypes.stream().filter(appType -> appType.getName().equalsIgnoreCase("Medium Risk"))
             .collect(Collectors.toList()));
-    		model.addAttribute("applnStatusList", statusList.stream().filter(status->!status.getCode().matches(RURAL_BPA_END_STATUS+"|Cancelled|Rejected")).collect(Collectors.toList()));
+    		model.addAttribute("applnStatusList", statusList.stream().filter(status->!status.getCode().matches(RURAL_BPA_END_STATUS+"|Cancelled|Rejected|Previous Plan Data Updated")).collect(Collectors.toList()));
     	}
     	model.addAttribute("serviceTypeList", serviceTypeService.getAllActiveMainServiceTypes());
     	model.addAttribute("designations", BpaConstants.getAvailableDesignations());

@@ -65,7 +65,7 @@
 			<fmt:formatDate pattern="dd/MM/yyyy"
 				value="${bpaApplication.applicationDate}" />
 		</div> --%>
-		<form:form role="form" action="application-create" method="post"
+		<form:form role="form"  action="application-create" method="post"
 			modelAttribute="bpaApplication" id="newCitizenApplicationform"
 			cssClass="form-horizontal form-groups-bordered"
 			enctype="multipart/form-data">
@@ -103,6 +103,8 @@
 			<input type="hidden" id="stakeHolderType" value="${stakeHolderType}" />
 			<input type="hidden" id="permitApplnFeeRequired"
 				value="${permitApplnFeeRequired}" />
+			<input type="hidden" id="isPreviousPlan" name="isPreviousPlan"
+				value="${isPreviousPlan}" />
 			<form:hidden path="drawingPreference" id="drawingPreference" name="drawingPreference" />
 			<div class="text-right text-info view-content col-sm-12" style="font-size: 14px;color: #e4841b;">
 			    <span id="drawPref"></span>
@@ -115,9 +117,11 @@
 							code='title.documentdetail' /></a></li>
 				<li id="noc-document-tab-link" style="display: none;"><a data-toggle="tab" href="#noc-document-info"
 					data-tabidx=3><spring:message code='lbl.noc.doc.details' /></a></li>
-				<li>
-				<a id="fee-tab-link" data-toggle="tab" href="#view-fee"
-					data-tabidx=2><spring:message code='lbl.fees.details' /></a></li>
+				<c:if test="${(!isPreviousPlan) }">
+					<li>
+					<a id="fee-tab-link" data-toggle="tab" href="#view-fee"
+						data-tabidx=2><spring:message code='lbl.fees.details' /></a></li>
+				</c:if>
 				
 			</ul>
 			<div class="tab-content">
@@ -215,10 +219,10 @@
 					<c:when test="${validateCitizenAcceptance}">
 						<c:choose>
 							<c:when test="${citizenDisclaimerAccepted }">
-								<form:button type="submit" id="bpaCreate"
-									class="btn btn-primary" value="Submit">
+								<button type="submit" id="bpaCreate"
+									class="btn btn-primary">
 									<spring:message code="lbl.submit" />
-								</form:button>
+								</button>
 							</c:when>
 							<c:otherwise>
 								<form:button type="submit" id="bpaSave" class="btn btn-primary"
@@ -237,10 +241,9 @@
 							value="Save">
 							<spring:message code="lbl.save" />
 						</form:button> --%>
-						<form:button type="submit" id="bpaCreate" class="btn btn-primary"
-							value="Submit">
+						<button type="submit" id="bpaCreate" class="btn btn-primary">
 							<spring:message code="lbl.submit" />
-						</form:button>
+						</button>
 					</c:otherwise>
 				</c:choose>
 				<input type="button" name="button2" id="button2" value="Close"

@@ -342,6 +342,7 @@ public class BpaConstants {
 	public static final String SMSEMAILTYPENEWBPAREGISTERED = "newbparegistered";
 	public static final String APPLICATION_STATUS_CREATED = "Created";
 	public static final String APPLICATION_STATUS_SUBMITTED = "Submitted";
+	public static final String APPLICATION_STATUS_PREV_PLAN_UPDATED = "Previous Plan Data Updated";
 	public static final String SMSEMAILTYPELETTERTOPARTY = "Letter To Party";
 	// Letter to party related constants
 	public static final String LETTERTOPARTY_NUMBER_SEQ = "SEQ_BPA_LP_";
