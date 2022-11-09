@@ -67,7 +67,6 @@ public class NationalDashboardService {
 		List<ApplicationData> bpaApplications=fetchApplications();
         
 		response.setTotalPermitsIssued(bpaApplications.size());
-		
         
 		GroupBy groupBy = new GroupBy();
 		groupBy.setGroupBy("RiskType");
@@ -89,10 +88,10 @@ public class NationalDashboardService {
 		groupBy.setGroupBy("paymentMode");
 		groupBy.setBuckets(getApplicationsCollectionDetails(bpaApplicationForm,bpaApplications));
 		paymentList.add(groupBy);
-		groupBy = new GroupBy();
-		groupBy.setGroupBy("paymentMode");
-		groupBy.setBuckets(getOCApplicationsCollectionDetails(bpaApplicationForm,bpaApplications));
-		paymentList.add(groupBy);
+//		groupBy = new GroupBy();
+//		groupBy.setGroupBy("paymentMode");
+//		groupBy.setBuckets(getOCApplicationsCollectionDetails(bpaApplicationForm,bpaApplications));
+//		paymentList.add(groupBy);
 		response.setTodaysCollection(paymentList);
 
 		return response;
@@ -268,32 +267,18 @@ private List<CollectionSummaryReportHelper> getCollectionData(SearchBpaApplicati
     final StringBuilder finalUserwiseQuery = new StringBuilder();
     final StringBuilder finalAggregateQuery = new StringBuilder();
     
-//    final StringBuilder selectQueryStr = new StringBuilder(
-//    		"SELECT APPLICATIONNUMBER,RECEIPT_NUMBER,PAYMENTDATE,DESCRIPTION" 
-//    		);
     final StringBuilder selectQuery = new StringBuilder(
-            "SELECT (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='cash' THEN count(distinct(EGCL_COLLECTIONHEADER.ID)) END) AS cashReceipt,  "
-                    +
-                    "(CASE WHEN EGF_INSTRUMENTTYPE.TYPE='cheque' THEN count(distinct(EGCL_COLLECTIONHEADER.ID)) WHEN EGF_INSTRUMENTTYPE.TYPE='dd' THEN count(distinct(EGCL_COLLECTIONHEADER.ID)) END) AS chequeReceipt, "
-                    +
-                    " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE= 'online' THEN count(distinct(EGCL_COLLECTIONHEADER.ID)) END) AS onlineReceipt, "
-                    +
-                    " EGCL_COLLECTIONHEADER.SOURCE , SER.NAME AS serviceName," +
-                    " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='cash' THEN SUM(EGF_INSTRUMENTHEADER.INSTRUMENTAMOUNT) END) AS cashAmount, "
+            "SELECT  EGCL_COLLECTIONHEADER.SOURCE , SER.NAME AS serviceName,"
+            		+ "(CASE WHEN EGF_INSTRUMENTTYPE.TYPE='cash' THEN SUM(EGF_INSTRUMENTHEADER.INSTRUMENTAMOUNT) END) AS cashAmount, "
                     +
                     " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='cheque' THEN SUM(EGF_INSTRUMENTHEADER.INSTRUMENTAMOUNT) WHEN EGF_INSTRUMENTTYPE.TYPE='dd' THEN SUM(EGF_INSTRUMENTHEADER.INSTRUMENTAMOUNT) END) AS chequeAmount,"
                     +
                     " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE= 'online' THEN SUM(EGF_INSTRUMENTHEADER.INSTRUMENTAMOUNT) END) AS onlineAmount, "
                     +
-                    " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='bankchallan' THEN count(distinct(EGCL_COLLECTIONHEADER.ID)) END) AS bankReceipt, "
-                    +
                     " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='bankchallan' THEN SUM(EGF_INSTRUMENTHEADER.INSTRUMENTAMOUNT) END) AS bankAmount, "
                     +
-                    " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='card' THEN count(distinct(EGCL_COLLECTIONHEADER.ID)) END) AS cardReceipt, "
-                    +
-                    " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='card' THEN SUM(EGF_INSTRUMENTHEADER.INSTRUMENTAMOUNT) END) AS cardAmount, "
-                    +
-                    " count(distinct(EGCL_COLLECTIONHEADER.ID)) as totalReceipt ");
+                    " (CASE WHEN EGF_INSTRUMENTTYPE.TYPE='card' THEN SUM(EGF_INSTRUMENTHEADER.INSTRUMENTAMOUNT) END) AS cardAmount "
+                    );
     final StringBuilder fromQuery = new StringBuilder();
     if(searchRequest.getServiceType().equalsIgnoreCase("BPA")) {
     	fromQuery.append(" FROM EGCL_COLLECTIONHEADER EGCL_COLLECTIONHEADER INNER JOIN EGCL_COLLECTIONINSTRUMENT EGCL_COLLECTIONINSTRUMENT ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONINSTRUMENT.COLLECTIONHEADER"
@@ -306,7 +291,8 @@ private List<CollectionSummaryReportHelper> getCollectionData(SearchBpaApplicati
                         " INNER JOIN EGCL_COLLECTIONMIS EGCL_COLLECTIONMIS ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONMIS.COLLECTIONHEADER"
                         +
                         " INNER JOIN EGCL_SERVICEDETAILS SER ON SER.ID = EGCL_COLLECTIONHEADER.SERVICEDETAILS "
-                        +" INNER JOIN EGBPA_APPLICATION EGBPA_APPLICATION ON EGBPA_APPLICATION.APPLICATIONNUMBER=EGCL_COLLECTIONHEADER.CONSUMERCODE ");
+                        +
+                        " INNER JOIN EGBPA_APPLICATION EGBPA_APPLICATION ON EGBPA_APPLICATION.APPLICATIONNUMBER=EGCL_COLLECTIONHEADER.CONSUMERCODE ");
     }
     else {
     	fromQuery.append(
@@ -320,8 +306,10 @@ private List<CollectionSummaryReportHelper> getCollectionData(SearchBpaApplicati
                          " INNER JOIN EGCL_COLLECTIONMIS EGCL_COLLECTIONMIS ON EGCL_COLLECTIONHEADER.ID = EGCL_COLLECTIONMIS.COLLECTIONHEADER"
                          +
                          " INNER JOIN EGCL_SERVICEDETAILS SER ON SER.ID = EGCL_COLLECTIONHEADER.SERVICEDETAILS "
-                         +" INNER JOIN EGBPA_OCCUPANCY_CERTIFICATE EGBPA_OCCUPANCY_CERTIFICATE ON EGBPA_OCCUPANCY_CERTIFICATE.APPLICATIONNUMBER = EGCL_COLLECTIONHEADER.CONSUMERCODE "
-                         +" INNER JOIN EGBPA_APPLICATION EGBPA_APPLICATION ON EGBPA_APPLICATION.ID=EGBPA_OCCUPANCY_CERTIFICATE.PARENT ");
+                         +
+                         " INNER JOIN EGBPA_OCCUPANCY_CERTIFICATE EGBPA_OCCUPANCY_CERTIFICATE ON EGBPA_OCCUPANCY_CERTIFICATE.APPLICATIONNUMBER = EGCL_COLLECTIONHEADER.CONSUMERCODE "
+                         +
+                         " INNER JOIN EGBPA_APPLICATION EGBPA_APPLICATION ON EGBPA_APPLICATION.ID=EGBPA_OCCUPANCY_CERTIFICATE.PARENT ");
          
     }
     
@@ -355,14 +343,14 @@ private List<CollectionSummaryReportHelper> getCollectionData(SearchBpaApplicati
         aggregateQuery = prepareQueryForAllPaymentMode(aggregateQuery, groupQuery);
 
     final StringBuilder finalSelectQuery = new StringBuilder(
-            "SELECT cast(sum(cashReceipt) AS NUMERIC) AS cashReceipt,cast(sum(chequeReceipt) AS NUMERIC) AS chequeReceipt,cast(sum(onlineReceipt) AS NUMERIC) AS onlineReceipt,source,counterName,employeeName,serviceName,cast(sum(cashAmount) AS NUMERIC) AS cashAmount, cast(sum(chequeAmount) AS NUMERIC) AS chequeAmount, cast(sum(onlineAmount) AS NUMERIC) AS onlineAmount ,USERID,cast(sum(bankReceipt) AS NUMERIC) AS bankReceipt, cast(sum(bankAmount) AS NUMERIC) AS bankAmount, "
-                    + "  cast(sum(cardReceipt) AS NUMERIC) AS cardReceipt, cast(sum(cardAmount) AS NUMERIC) AS cardAmount, cast(sum(totalReceipt) AS NUMERIC) as totalReceipt  FROM (");
+            "SELECT source,counterName,employeeName,serviceName,cast(sum(cashAmount) AS NUMERIC) AS cashAmount, cast(sum(chequeAmount) AS NUMERIC) AS chequeAmount, cast(sum(onlineAmount) AS NUMERIC) AS onlineAmount ,USERID, cast(sum(bankAmount) AS NUMERIC) AS bankAmount, "
+                    + "  cast(sum(cardAmount) AS NUMERIC) AS cardAmount  FROM (");
     final StringBuilder finalGroupQuery = new StringBuilder(
             " ) AS RESULT GROUP BY RESULT.source,RESULT.counterName,RESULT.employeeName,RESULT.USERID,RESULT.serviceName order by RESULT.source,employeeName, serviceName ");
 
     finalUserwiseQuery.append(finalSelectQuery).append(userwiseQuery).append(finalGroupQuery);
     finalAggregateQuery.append(finalSelectQuery).append(aggregateQuery).append(finalGroupQuery);
-
+    
     final SQLQuery userwiseSqluery = createSQLQuery(finalUserwiseQuery.toString());
     final SQLQuery aggregateSqlQuery = createSQLQuery(finalAggregateQuery.toString());
 
@@ -405,18 +393,6 @@ public StringBuilder prepareQueryForAllPaymentMode(StringBuilder query, StringBu
 
 public List<CollectionSummaryReportHelper> populateCollectionSummaryQueryResults(final List<CollectionSummaryReportHelper> queryResults) {
     for (final CollectionSummaryReportHelper collectionSummaryReport : queryResults) {
-        if (collectionSummaryReport.getCashReceipt() == null)
-            collectionSummaryReport.setCashReceipt("");
-        if (collectionSummaryReport.getChequeReceipt() == null)
-            collectionSummaryReport.setChequeReceipt("");
-        if (collectionSummaryReport.getOnlineReceipt() == null)
-            collectionSummaryReport.setOnlineReceipt("");
-        if (collectionSummaryReport.getBankReceipt() == null)
-            collectionSummaryReport.setBankReceipt("");
-        if (collectionSummaryReport.getCardReceipt() == null)
-            collectionSummaryReport.setCardReceipt("");
-        if (collectionSummaryReport.getTotalReceipt() == null)
-            collectionSummaryReport.setTotalReceipt("");
         if (collectionSummaryReport.getCashAmount() == null)
             collectionSummaryReport.setCashAmount(BigDecimal.ZERO);
         if (collectionSummaryReport.getChequeAmount() == null)
@@ -437,30 +413,22 @@ public List<CollectionSummaryReportHelper> populateCollectionSummaryQueryResults
 
 public SQLQuery createSQLQuery(String query) {
     return (SQLQuery) getCurrentSession().createSQLQuery(query)
-            .addScalar("cashReceipt", org.hibernate.type.StringType.INSTANCE)
             .addScalar("cashAmount", BigDecimalType.INSTANCE)
-            .addScalar("chequeReceipt", org.hibernate.type.StringType.INSTANCE)
             .addScalar("chequeAmount", BigDecimalType.INSTANCE)
-            .addScalar("onlineReceipt", org.hibernate.type.StringType.INSTANCE)
             .addScalar("onlineAmount", BigDecimalType.INSTANCE)
             .addScalar("source", org.hibernate.type.StringType.INSTANCE)
             .addScalar("serviceName", org.hibernate.type.StringType.INSTANCE)
 //            .addScalar("counterName", org.hibernate.type.StringType.INSTANCE)
 //            .addScalar("employeeName", org.hibernate.type.StringType.INSTANCE)
-            .addScalar("bankReceipt", org.hibernate.type.StringType.INSTANCE)
             .addScalar("bankAmount", BigDecimalType.INSTANCE)
             .addScalar("cardAmount", BigDecimalType.INSTANCE)
-            .addScalar("cardReceipt", org.hibernate.type.StringType.INSTANCE)
-            .addScalar("totalReceipt", org.hibernate.type.StringType.INSTANCE)
             .setResultTransformer(Transformers.aliasToBean(CollectionSummaryReportHelper.class));
 }
 
 
 
 public void validateUser(RequestInfoWrapper requestInfoWrapper) {
-	UserInfo userInfo = requestInfoWrapper.getRequestInfo().getUserInfo();
-	System.out.println(userInfo+"@@@@@@@@@FDDDFFFDFDFD####"+requestInfoWrapper.getRequestInfo());
-	
+	System.out.println("getRequestInfo : "+requestInfoWrapper.getRequestInfo());
 }
 
 }
