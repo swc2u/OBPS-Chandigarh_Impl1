@@ -127,13 +127,7 @@
                         <th colspan="1"></th>
                         <th colspan="1"></th>
                         <th colspan="8"><spring:message code="lbl.fee.details"/></th>
-                        <th colspan="1"></th>
-                        <th colspan="1"></th>
-                        <th colspan="1"></th>
-                        <th colspan="1"></th>
-                        <th colspan="1"></th>
-                        <th colspan="1"></th>
-                        <th colspan="1"></th>
+                       
                     </tr>
                     <tr>
 <%--                         <th><spring:message code="lbl.slno"/></th> --%>

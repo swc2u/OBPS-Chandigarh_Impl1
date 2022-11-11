@@ -220,7 +220,7 @@
 						<c:choose>
 							<c:when test="${citizenDisclaimerAccepted }">
 								<button type="submit" id="bpaCreate"
-									class="btn btn-primary">
+									class="btn btn-primary" value="Submit">
 									<spring:message code="lbl.submit" />
 								</button>
 							</c:when>
@@ -241,7 +241,7 @@
 							value="Save">
 							<spring:message code="lbl.save" />
 						</form:button> --%>
-						<button type="submit" id="bpaCreate" class="btn btn-primary">
+						<button type="submit" id="bpaCreate" class="btn btn-primary" value="Submit">
 							<spring:message code="lbl.submit" />
 						</button>
 					</c:otherwise>
