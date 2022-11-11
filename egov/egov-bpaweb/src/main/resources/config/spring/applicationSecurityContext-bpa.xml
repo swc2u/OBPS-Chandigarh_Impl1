@@ -72,6 +72,7 @@
 				<security:filter-chain pattern="/reports/searchPLPendingItems" filters="none" />
 				<security:filter-chain pattern="/reports/searchPLItemsRural" filters="none" />
 				<security:filter-chain pattern="/rest/**" filters="anonymousAuthenticationFilter"/>
+				<security:filter-chain pattern="/national-dashboard/_obpas" filters="none"/>
 				<security:filter-chain pattern="/application/citizen/check-status/**" filters="anonymousAuthenticationFilter"/>
 				<security:filter-chain pattern="/**"  filters="concurrentSessionFilter,securityContextPersistenceFilter,
 													 logoutFilter,authenticationProcessingFilter,headerWriterFilter,
