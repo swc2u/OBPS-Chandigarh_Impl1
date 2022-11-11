@@ -13,11 +13,11 @@ function featchArchitectsData(){
  				$.ajax({
                     async: false,
                     crossDomain: true,
-                    url: '/bpa/rest/getStakeHolderNameAndIdByType/Architect',
+                    url: '/bpa/rest/getApplicationStakeHolder/Architect',
                     type: "GET",
                     contentType: 'application/json; charset=utf-8',
                     success: function (response) {
-                    console.log(response);
+                       console.log(response);
                        architectsData= response;
                     },
                     error: function (response) {
@@ -58,7 +58,7 @@ var chart = new CanvasJS.Chart("chartContainer", {
 		indexLabel: "{name} - {y}",
 		dataPoints: [
 			{ y: architectsData.length, name: "Registered Architects", exploded: true },
-			{ y: 1, name: "Architects using Application" }
+			{ y: architectsData[0].appStkhldr, name: "Architects using Application" }
 		]
 	}]
 });

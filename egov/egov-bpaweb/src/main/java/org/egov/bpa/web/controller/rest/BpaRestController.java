@@ -63,6 +63,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.egov.bpa.master.entity.ServiceType;
 import org.egov.bpa.master.entity.StakeHolder;
 import org.egov.bpa.master.entity.StakeHolderType;
+import org.egov.bpa.master.repository.ApplicationStakeHolderRepository;
 import org.egov.bpa.master.service.ServiceTypeService;
 import org.egov.bpa.master.service.StakeHolderService;
 import org.egov.bpa.master.service.StakeholderTypeService;
@@ -106,6 +107,9 @@ public class BpaRestController {
 
     @Autowired
     private StakeholderTypeService stakeholderTypeService;
+    
+    @Autowired
+    private ApplicationStakeHolderRepository applicationStakeHolderRepository;
 
     @GetMapping(value = "/getstakeholder/{id}", produces = APPLICATION_JSON_VALUE)
     public StakeHolder getStakeHolderById(@PathVariable final String id) {
@@ -182,7 +186,31 @@ public class BpaRestController {
         }
         return stkHldrDataList;
     }
+    
+    @GetMapping(value = "/getApplicationStakeHolder/{type}", produces = APPLICATION_JSON_VALUE)
+    public List<Map<String, Object>> getApplicationStakeHolderNameAndIdByType(@PathVariable final String type) {
+        List<Map<String, Object>> applicationStakeHolderData = new ArrayList<>();
+        StakeHolderType stkHldrType = null;
+        List<StakeHolderType> stakeholderTypeList = stakeholderTypeService.findAllIsActive();
+        for (StakeHolderType stkType : stakeholderTypeList) {
+            if ((stkType.getName()).equals(type)) {
+                stkHldrType = stkType;
+                break;
+            }
+        }
+        List<StakeHolder> stakeHolderList = stakeHolderService.getStakeHoldersByType(stkHldrType);
+        List<Long>appStkhldr=applicationStakeHolderRepository.findApplicationStakeHolderGroupByStakeholder();
+        for (StakeHolder stakeHolder : stakeHolderList) {
+            Map<String, Object> mapOfIdAndName = new HashMap<>();
+            mapOfIdAndName.put("id", stakeHolder.getId());
+            mapOfIdAndName.put("name", stakeHolder.getName());
+            mapOfIdAndName.put("appStkhldr", appStkhldr.size());
+            applicationStakeHolderData.add(mapOfIdAndName);
+        }
+        return applicationStakeHolderData;
+    }
 
+    
     @GetMapping(value = "/stakeholder/check/demand-pending/{userId}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Boolean> isDemandPending(@PathVariable final Long userId, HttpServletResponse response) {
