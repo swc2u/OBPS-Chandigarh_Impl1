@@ -72,7 +72,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[AUTOMATED BUILDING PERMIT APPROVAL SYSTEM]]></text>
+				<text><![CDATA[Online Building plan approval System]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="89" y="46" width="366" height="20" uuid="3ba843d8-ad7c-4b74-a541-a2d6b99fa9b9"/>
