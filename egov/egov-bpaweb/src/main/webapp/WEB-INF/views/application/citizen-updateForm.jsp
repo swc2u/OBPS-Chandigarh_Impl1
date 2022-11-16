@@ -163,12 +163,12 @@
 							</div>
 						</c:otherwise>
 					</c:choose>
-					<c:if
-						test="${(isCitizen && validateCitizenAcceptance) || (!isCitizen)}">
+<%-- 					<c:if --%>
+<%-- 						test="${(isCitizen && validateCitizenAcceptance) || (!isCitizen)}"> --%>
 						<div class="panel panel-primary" data-collapsed="0">
 							<jsp:include page="disclaimer.jsp" />
 						</div>
-					</c:if>
+<%-- 					</c:if> --%>
 				</div>
 				<div id="noc-document-info" class="tab-pane fade">
 					<div class="panel panel-primary" data-collapsed="0">

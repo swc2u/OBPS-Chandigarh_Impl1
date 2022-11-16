@@ -113,6 +113,9 @@
 					</div>
 						</c:otherwise>
 					</c:choose>
+					<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="disclaimer-oc.jsp" />
+						</div>
 				</div> </div>
 				<div id="document-info" class="tab-pane fade">
 					<div class="panel panel-primary" data-collapsed="0">

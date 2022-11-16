@@ -114,6 +114,9 @@
 					<div class="panel panel-primary" data-collapsed="0">
 						<jsp:include page="applicationhistory-view.jsp"></jsp:include>
 					</div>
+					<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="disclaimer.jsp" />
+					</div>
 				</div>
 			</div>
 			<c:if test="${wfstateDesc !='NEW'}">

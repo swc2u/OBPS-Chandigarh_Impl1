@@ -120,6 +120,9 @@
 					<div class="panel panel-primary" data-collapsed="0">
 						<jsp:include page="applicationhistory-view.jsp"></jsp:include>
 					</div>
+					<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="disclaimer.jsp" />
+					</div>
 				</div>
 				<div id="document-info" class="tab-pane fade">
 					<c:if test="${not empty  bpaApplication.permitDcrDocuments}">
