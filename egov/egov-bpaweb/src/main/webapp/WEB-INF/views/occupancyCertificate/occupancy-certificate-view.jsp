@@ -180,6 +180,9 @@
 					<div class="panel panel-primary" data-collapsed="0">
 						<jsp:include page="../application/applicationhistory-view.jsp"></jsp:include>
 					</div>
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="citizen/disclaimer-oc.jsp" />
+					</div>
 					<c:if test="${showRejectionReasons}">
 						<div class="panel panel-primary" data-collapsed="0">
 							<jsp:include page="oc-rejection-reasons.jsp"></jsp:include>

@@ -124,12 +124,12 @@
 					<div class="panel panel-primary" data-collapsed="0">
 						<jsp:include page="../oc-edcr-building-details.jsp"></jsp:include>
 					</div>
-					<c:if
-						test="${(isCitizen && validateCitizenAcceptance) || (!isCitizen)}">
+<%-- 					<c:if --%>
+<%-- 						test="${(isCitizen && validateCitizenAcceptance) || (!isCitizen)}"> --%>
 						<div class="panel panel-primary" data-collapsed="0">
 							<jsp:include page="disclaimer-oc.jsp" />
 						</div>
-					</c:if>
+<%-- 					</c:if> --%>
 				</div>
 				<div id="document-info" class="tab-pane fade">
 					<div class="panel panel-primary" data-collapsed="0">

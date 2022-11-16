@@ -55,7 +55,14 @@
 				<!-- for citizen user login -->
 				<div class="col-sm-9 col-sm-offset-2 text-justify">
 					<div class="checkbox view-content">
-						<form:checkbox path="citizenAccepted" id="citizenAccepted" />
+						<c:choose>
+							<c:when test="${occupancyCertificate.parent.citizenAccepted}">
+								<form:checkbox path="citizenAccepted" id="citizenAccepted" disabled="true"/>						
+							</c:when>
+							<c:otherwise>
+								<form:checkbox path="citizenAccepted" id="citizenAccepted"/>	
+							</c:otherwise>
+						</c:choose>
 						<span class="mandatory"></span>&nbsp;<spring:message code="lbl.ack.accpt" />
 						<ul style="list-style-type: none; padding-left: 10px">
 							<li></li> 
@@ -68,7 +75,14 @@
 				<!-- for business user login -->
 				<div class="col-sm-9 col-sm-offset-2 text-justify">
 					<div class="checkbox view-content">
-						<form:checkbox path="architectAccepted" id="architectAccepted" />						
+					<c:choose>
+						<c:when test="${occupancyCertificate.parent.architectAccepted}">
+							<form:checkbox path="architectAccepted" id="architectAccepted" disabled="true" />
+						</c:when>
+						<c:otherwise>
+							<form:checkbox path="architectAccepted" id="architectAccepted"/>	
+						</c:otherwise>
+					</c:choose>						
 						<span class="mandatory"></span>&nbsp;<spring:message code="lbl.ack.accpt" />
 						<ul style="list-style-type: none; padding-left: 10px">
 							<li></li> 
