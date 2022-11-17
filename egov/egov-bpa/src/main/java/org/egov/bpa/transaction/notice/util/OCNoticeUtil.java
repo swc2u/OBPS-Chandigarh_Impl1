@@ -326,7 +326,7 @@ public class OCNoticeUtil {
         
         String maxFloorCount = ""; 
         if (!oc.getBuildings().isEmpty()) {
-        	maxFloorCount = ordinal(oc.getBuildings().get(0).getFloorCount());
+        	maxFloorCount = ordinal(oc.getBuildings().get(0).getFloorCount()-1);
         }
         reportParams.put("maxFloorNumber", maxFloorCount);
 
