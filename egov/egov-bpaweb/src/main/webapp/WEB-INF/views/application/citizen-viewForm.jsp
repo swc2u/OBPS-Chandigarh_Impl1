@@ -176,12 +176,12 @@
 					<div class="panel panel-primary buildingdetails" data-collapsed="0">
 						<jsp:include page="view-building-details.jsp" />
 					</div>
-					<c:if
-						test="${(isCitizen && validateCitizenAcceptance && (bpaApplication.status.code ne 'Cancelled') && !citizenDisclaimerAccepted && bpaApplication.sentToCitizen)}">
+<%-- 					<c:if --%>
+<%-- 						test="${(isCitizen && validateCitizenAcceptance && (bpaApplication.status.code ne 'Cancelled') && bpaApplication.sentToCitizen)}"> --%>
 						<div class="panel panel-primary" data-collapsed="0">
 							<jsp:include page="disclaimer.jsp" />
 						</div>
-					</c:if>
+<%-- 					</c:if> --%>
 					<c:if test="${not empty  bpaApplication.receipts}">
 						<c:set var="receipts" scope="request" value="${bpaApplication.receipts}"></c:set>
 						<c:set var="applicationNumber" scope="request" value="${bpaApplication.applicationNumber}"></c:set>

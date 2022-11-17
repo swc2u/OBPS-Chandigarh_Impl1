@@ -121,6 +121,9 @@
 				<div class="panel panel-primary" data-collapsed="0">
 					<jsp:include page="../application/applicationhistory-view.jsp"></jsp:include>
 				</div>
+<!-- 				<div class="panel panel-primary" data-collapsed="0"> -->
+<%-- 					<jsp:include page="citizen/disclaimer-oc.jsp" /> --%>
+<!-- 				</div> -->
 			</div>
 			<div id="document-info" class="tab-pane fade">
 				<div class="panel panel-primary" data-collapsed="0">
