@@ -95,6 +95,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BpaStatus;
 import org.egov.bpa.transaction.entity.OwnershipTransfer;
 import org.egov.bpa.transaction.entity.WorkflowBean;
@@ -136,9 +137,12 @@ import org.egov.infra.reporting.engine.ReportOutput;
 import org.egov.infra.utils.DateUtils;
 import org.egov.infra.workflow.entity.State;
 import org.egov.infra.workflow.entity.StateHistory;
+import org.egov.infra.workflow.matrix.entity.WorkFlowMatrix;
+import org.egov.infra.workflow.service.SimpleWorkflowService;
 import org.egov.pims.commons.Designation;
 import org.egov.pims.commons.Position;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -197,6 +201,10 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
     private BpaStatusService statusService;
     @Autowired
     private OwnershipTransferService ownershipTransferService;
+    
+    @Autowired
+	@Qualifier("workflowService")
+	private SimpleWorkflowService<OccupancyCertificate> ocApplicationWorkflowService;
 
     @GetMapping("/update/{applicationNumber}")
     public String editOccupancyCertificateApplication(@PathVariable final String applicationNumber, final Model model,
@@ -615,7 +623,17 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
         } else if (WF_REVERT_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
             pos = occupancyCertificate.getCurrentState().getPreviousOwner();
             approvalPosition = occupancyCertificate.getCurrentState().getPreviousOwner().getId();
-        } else if (FWDINGTOLPINITIATORPENDING.equalsIgnoreCase(occupancyCertificate.getState().getNextAction())) {
+        }else if ("Revert to BA".equalsIgnoreCase(wfBean.getWorkFlowAction())) {
+        	WorkFlowMatrix wfMatrix = ocApplicationWorkflowService.getWfMatrix(occupancyCertificate.getStateType(), null, amountRule,
+        			occupancyCertificate.getOccupancyCertificateType(), "NEW",
+                    null);
+        	pos= bpaUtils.getUserPositionByZone(wfMatrix.getNextDesignation(),
+        			bpaUtils.getBoundaryForWorkflow(occupancyCertificate.getParent().getSiteDetail().get(0)).getId());
+        	approvalPosition = pos.getId();
+        }
+        
+        
+        else if (FWDINGTOLPINITIATORPENDING.equalsIgnoreCase(occupancyCertificate.getState().getNextAction())) {
             List<OCLetterToParty> letterToParties = ocLetterToPartyService.findAllByOC(occupancyCertificate);
             StateHistory<Position> stateHistory = bpaWorkFlowService.getStateHistoryToGetLPInitiator(
                     occupancyCertificate.getStateHistory(),
