@@ -366,7 +366,7 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
         	model.addAttribute("tempFees", feeCalculation.calculateAllFees(application));
         }
         if (application.getStatus() != null && application.getStatus().getCode().equals(APPLICATION_STATUS_CREATED)
-                && !isCitizen && !application.getIsPreviousPlan()) {
+                && !isCitizen && !(application.getIsPreviousPlan()!=null && application.getIsPreviousPlan())) {
             getDcrDocumentsUploadMode(model);
             return BPAAPP_CITIZEN_FORM;
         } else {
