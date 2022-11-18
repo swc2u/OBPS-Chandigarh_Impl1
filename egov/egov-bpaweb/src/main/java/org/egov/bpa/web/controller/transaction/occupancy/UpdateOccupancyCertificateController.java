@@ -630,9 +630,7 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
         	pos= bpaUtils.getUserPositionByZone(wfMatrix.getNextDesignation(),
         			bpaUtils.getBoundaryForWorkflow(occupancyCertificate.getParent().getSiteDetail().get(0)).getId());
         	approvalPosition = pos.getId();
-        }
-        
-        
+        }       
         else if (FWDINGTOLPINITIATORPENDING.equalsIgnoreCase(occupancyCertificate.getState().getNextAction())) {
             List<OCLetterToParty> letterToParties = ocLetterToPartyService.findAllByOC(occupancyCertificate);
             StateHistory<Position> stateHistory = bpaWorkFlowService.getStateHistoryToGetLPInitiator(
