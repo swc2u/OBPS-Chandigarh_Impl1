@@ -354,14 +354,14 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
                 if (status != null)
                     oc.setStatus(getStatusByCurrentMatrixStatus(wfMatrix));
 
-//                if (BpaConstants.GENERATE_OCCUPANCY_CERTIFICATE.equalsIgnoreCase(wfBean.getWorkFlowAction()))
-//                    oc.transition().end()
-//                            .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
-//                            .withComments(wfBean.getApproverComments())
-//                            .withRefFileId(oc.getWfFileRefId())
-//                            .withDateInfo(currentDate.toDate())
-//                            .withNextAction(wfMatrix.getNextAction()).withNatureOfTask(NATURE_OF_WORK_OC);
-//                else
+                if (BpaConstants.GENERATE_OCCUPANCY_CERTIFICATE.equalsIgnoreCase(wfBean.getWorkFlowAction()))
+                    oc.transition().end()
+                            .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+                            .withComments(wfBean.getApproverComments())
+                            .withRefFileId(oc.getWfFileRefId())
+                            .withDateInfo(currentDate.toDate())
+                            .withNextAction(wfMatrix.getNextAction()).withNatureOfTask(NATURE_OF_WORK_OC);
+                else
                     oc.transition().progressWithStateCopy()
                             .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                             .withComments(wfBean.getApproverComments())
