@@ -62,10 +62,12 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.WordUtils;
@@ -79,6 +81,7 @@ import org.egov.bpa.transaction.entity.Response;
 import org.egov.bpa.transaction.entity.common.NoticeCommon;
 import org.egov.bpa.transaction.entity.dto.PermitFeeHelper;
 import org.egov.bpa.transaction.entity.enums.ConditionType;
+import org.egov.bpa.transaction.entity.oc.OCFloor;
 import org.egov.bpa.transaction.entity.oc.OCNotice;
 import org.egov.bpa.transaction.entity.oc.OCNoticeConditions;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
@@ -326,7 +329,15 @@ public class OCNoticeUtil {
         
         String maxFloorCount = ""; 
         if (!oc.getBuildings().isEmpty()) {
-        	maxFloorCount = ordinal(oc.getBuildings().get(0).getFloorCount());
+        	List<OCFloor> floorDtls = oc.getBuildings().get(0).getFloorDetails();
+        	Optional<OCFloor> maxFloorNumber = floorDtls.stream().max(Comparator.comparing(OCFloor::getFloorNumber));
+        	OCFloor basement = oc.getBuildings().get(0).getFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
+        		    .orElse(null);      	
+        	
+        	if(basement != null)
+        		maxFloorCount = ordinal(maxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
+        	else
+        		maxFloorCount = ordinal(maxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
         }
         reportParams.put("maxFloorNumber", maxFloorCount);
 
