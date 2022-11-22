@@ -1,6 +1,7 @@
 package org.egov.bpa.transaction.service.report;
 
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_APPROVED;
+import static org.egov.infra.utils.DateUtils.currentDateToDefaultDateFormat;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SUBMITTED;
 
@@ -16,6 +17,7 @@ import javax.persistence.PersistenceContext;
 
 import org.egov.bpa.entitiy.national.dashboard.ApplicationData;
 import org.egov.bpa.entitiy.national.dashboard.GroupBy;
+import org.egov.bpa.entitiy.national.dashboard.Metrics;
 import org.egov.bpa.entitiy.national.dashboard.NationalDashboardResponse;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.dto.CollectionSummaryReportHelper;
@@ -63,25 +65,32 @@ public class NationalDashboardService {
 	public NationalDashboardResponse getDashboardData(NationalDashboardResponse response,SearchBpaApplicationForm bpaApplicationForm) {
 //		List<String> statusList = new ArrayList<>();
 //		statusList.addAll(Arrays.asList(BpaConstants.APPLICATION_STATUS_ACCEPTED,BpaConstants.APPLICATION_STATUS_ORDER_ISSUED, BpaConstants.APPROVED,"Previous Plan Data Updated"));
+		String today = currentDateToDefaultDateFormat();
+		response.setDate(today);
 		
-		List<ApplicationData> bpaApplications=fetchApplications();
+		List<ApplicationData> bpaApplications=fetchApplications(today);
         
-		response.setTotalPermitsIssued(bpaApplications.size());
+//		response.setTotalPermitsIssued(bpaApplications.size());
+        Metrics metrics = new Metrics();
+        List<GroupBy> permitIssued = new ArrayList<>();
         
 		GroupBy groupBy = new GroupBy();
 		groupBy.setGroupBy("RiskType");
 		groupBy.setBuckets(getApplicationsByRiskType(bpaApplications));
-		response.setPermitsIssuedByRiskType(Arrays.asList(groupBy));
+		
+		permitIssued.add(groupBy);
 		
 		groupBy = new GroupBy();
 		groupBy.setGroupBy("OccupancyType");
 		groupBy.setBuckets(getApplicationsByOccupancyType(bpaApplications));
-		response.setPermitsIssuedByOccupancyType(Arrays.asList(groupBy));
+		permitIssued.add(groupBy);
 		
-//		groupBy = new GroupBy();
-//		groupBy.setGroupBy("SubOccupancyType");
-//		groupBy.setBuckets(getApplicationsBySubOccupancyType(bpaApplicationForm,bpaApplications));
-//		response.setPermitsIssuedBySubOccupancyType(Arrays.asList(groupBy));
+		groupBy = new GroupBy();
+		groupBy.setGroupBy("SubOccupancyType");
+		groupBy.setBuckets(getApplicationsBySubOccupancyType(bpaApplications));
+		permitIssued.add(groupBy);
+		
+		metrics.setPermitsIssued(permitIssued);
 		
 		List<GroupBy> paymentList = new ArrayList<GroupBy>();
 		groupBy = new GroupBy();
@@ -92,19 +101,23 @@ public class NationalDashboardService {
 //		groupBy.setGroupBy("paymentMode");
 //		groupBy.setBuckets(getOCApplicationsCollectionDetails(bpaApplicationForm,bpaApplications));
 //		paymentList.add(groupBy);
-		response.setTodaysCollection(paymentList);
-
+		metrics.setTodaysCollection(paymentList);
+		
+		response.setMetrics(metrics);
 		return response;
 	}
 	
 	
 	
-	private List<ApplicationData> fetchApplications() {
-		String query ="select ea.applicationnumber applicationNumber, ema.name as applicationSubType,ea.edcrnumber edcrNumber  from chandigarh.egbpa_application ea "
+	private List<ApplicationData> fetchApplications(String today) {
+		StringBuilder query =new StringBuilder("select ea.applicationnumber applicationNumber, ema.name as applicationSubType,ea.edcrnumber edcrNumber  from chandigarh.egbpa_application ea "
 				+ "inner join chandigarh.egbpa_mstr_applicationsubtype ema on ema.id = ea.applicationsubtype "
 				+ "where ea.applicationnumber in (select applicationnumber from state.egp_inbox where pendingaction ='END')  "
 				+ "and ea.status not in (select id from chandigarh.egbpa_status x "
-				+ "WHERE code in ('Rejected','Cancelled'))";
+				+ "WHERE code in ('Rejected','Cancelled')) ");
+		
+		if (today!=null)
+			query.append(" and ea.lastmodifieddate>= '"+today+"'");
 		 
 		final SQLQuery sqlQuery = createApplicationQuery(query.toString());
 		 List<ApplicationData> reportResults = sqlQuery.list();
@@ -168,7 +181,7 @@ public List<JSONObject> getApplicationsByOccupancyType(List<ApplicationData> bpa
 }
 
 public List<JSONObject> getApplicationsBySubOccupancyType(
-		List<BpaApplication> bpaApplications) {
+		List<ApplicationData> bpaApplications) {
 
     List<JSONObject> buckets = new ArrayList<JSONObject>();
 	 List<SubOccupancy> subOccupancyList = subOccupancyService.findAll();
@@ -177,7 +190,7 @@ public List<JSONObject> getApplicationsBySubOccupancyType(
 	 subOccupancyList.forEach(subOccupancy->{
 		 AtomicInteger counter = new AtomicInteger();
 		 bpaApplications.forEach(bpa->{
-			Plan plan = applicationBpaService.getPlanInfo(bpa.geteDcrNumber());
+			Plan plan = applicationBpaService.getPlanInfo(bpa.getEdcrNumber());
 			if(plan!=null) {
 				OccupancyTypeHelper mostRestrictiveFarHelper = plan.getVirtualBuilding() != null
 						? plan.getVirtualBuilding().getMostRestrictiveFarHelper()
