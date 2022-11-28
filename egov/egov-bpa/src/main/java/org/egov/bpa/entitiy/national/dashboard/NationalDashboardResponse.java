@@ -1,12 +1,8 @@
 package org.egov.bpa.entitiy.national.dashboard;
 
 
-import java.util.List;
-
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.JsonObject;
 
 public class NationalDashboardResponse {
 	@JsonProperty("date")

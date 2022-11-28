@@ -39,6 +39,7 @@
  */
 package org.egov.bpa.transaction.repository.oc;
 
+import java.util.Date;
 import java.util.List;
 
 import org.egov.bpa.transaction.entity.BpaStatus;
@@ -66,5 +67,17 @@ public interface OccupancyCertificateRepository
 	
 	@Query("select occupancycertificate from OccupancyCertificate occupancycertificate where occupancycertificate.parent.planPermissionNumber =:permitNumber order by occupancycertificate.createdDate desc")
 	List<OccupancyCertificate> findByPermitNumber(@Param("permitNumber") String permitNumber);
+	
+	@Query("select occupancycertificate from OccupancyCertificate oc where oc.createdDate between :fromDate and :toDate")
+	List<OccupancyCertificate> findAllByCreatedDate(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
+	
+	@Query("select occupancycertificate from OccupancyCertificate oc where oc.createdDate >=:todayDate")
+	List<OccupancyCertificate> findAllByCreatedDate(@Param("todayDate") Date todayDate);
+
+	@Query("select count(app.applicationnumber) from OccupancyCertificate app where app.status.code=:status and app.createdDate between :fromDate and :toDate")
+	int findAllByRejectedStatusWithToDate(@Param("status") String status,@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
+    
+    @Query("select count(app.applicationnumber) from OccupancyCertificate app where where app.status.code=:status and app.createdDate>=:today")
+    int findAllByRejectedStatusWithToday(@Param("status") String status, @Param("today") Date today);
 
 }

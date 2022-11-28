@@ -6,9 +6,11 @@ import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SUBMITTED;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -19,9 +21,13 @@ import org.egov.bpa.entitiy.national.dashboard.ApplicationData;
 import org.egov.bpa.entitiy.national.dashboard.GroupBy;
 import org.egov.bpa.entitiy.national.dashboard.Metrics;
 import org.egov.bpa.entitiy.national.dashboard.NationalDashboardResponse;
+import org.egov.bpa.entitiy.national.dashboard.SearchCriteria;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.dto.CollectionSummaryReportHelper;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
+import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
+import org.egov.bpa.transaction.repository.ApplicationBpaRepository;
+import org.egov.bpa.transaction.repository.oc.OccupancyCertificateRepository;
 import org.egov.bpa.transaction.service.ApplicationBpaService;
 import org.egov.bpa.transaction.service.SearchBpaApplicationService;
 import org.egov.bpa.utils.BpaConstants;
@@ -58,20 +64,53 @@ public class NationalDashboardService {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
+	@Autowired
+	private ApplicationBpaRepository applicationBpaRepository;
+	
+	@Autowired
+	private OccupancyCertificateRepository occupancyCertificateRepository;
+	
+	
+	private String BPA="BPA";
+	
 	public Session getCurrentSession() {
 		return entityManager.unwrap(Session.class);
 	}
 	
-	public NationalDashboardResponse getDashboardData(NationalDashboardResponse response,SearchBpaApplicationForm bpaApplicationForm) {
+	public NationalDashboardResponse getDashboardData(NationalDashboardResponse response,SearchBpaApplicationForm bpaApplicationForm) throws ParseException {
 //		List<String> statusList = new ArrayList<>();
 //		statusList.addAll(Arrays.asList(BpaConstants.APPLICATION_STATUS_ACCEPTED,BpaConstants.APPLICATION_STATUS_ORDER_ISSUED, BpaConstants.APPROVED,"Previous Plan Data Updated"));
+		 Metrics metrics = new Metrics();
 		String today = currentDateToDefaultDateFormat();
+		Date todayDate = new SimpleDateFormat("dd/MM/yyyy").parse(today);
 		response.setDate(today);
 		
-		List<ApplicationData> bpaApplications=fetchApplications(today);
-        
+		List<BpaApplication> submittedApplications;
+		List<OccupancyCertificate> ocSubmitted;
+		//fetch created data
+		if(bpaApplicationForm.getFromDate()!=null && bpaApplicationForm.getToDate()!=null) {
+			submittedApplications = applicationBpaRepository.findAllByCreatedDate(bpaApplicationForm.getFromDate(),bpaApplicationForm.getToDate());
+			ocSubmitted = occupancyCertificateRepository.findAllByCreatedDate(bpaApplicationForm.getFromDate(),bpaApplicationForm.getToDate());
+			metrics.setApplicationsWithDeviation(applicationBpaRepository.findAllByRejectedStatusWithToDate(BpaConstants.APPLICATION_STATUS_REJECTED,bpaApplicationForm.getFromDate(),bpaApplicationForm.getToDate()));
+			metrics.setOcWithDeviation(occupancyCertificateRepository.findAllByRejectedStatusWithToDate(BpaConstants.APPLICATION_STATUS_REJECTED,bpaApplicationForm.getFromDate(),bpaApplicationForm.getToDate()));
+		
+		}else {
+			submittedApplications = applicationBpaRepository.findAllByCreatedDate(todayDate);
+			ocSubmitted = occupancyCertificateRepository.findAllByCreatedDate(todayDate);
+			metrics.setApplicationsWithDeviation(applicationBpaRepository.findAllByRejectedStatusWithToday(BpaConstants.APPLICATION_STATUS_REJECTED,todayDate));
+			metrics.setOcWithDeviation(occupancyCertificateRepository.findAllByRejectedStatusWithToday(BpaConstants.APPLICATION_STATUS_REJECTED,todayDate));
+		}
+		metrics.setApplicationsSubmitted(submittedApplications.size());
+		metrics.setOcSubmitted(ocSubmitted.size());
+		
+		List<ApplicationData> ocApplications=fetchOCApplications(bpaApplicationForm,today);
+		metrics.setOcIssued(ocApplications.size());
+		metrics.setTodaysClosedApplicationsOC(ocApplications.size());
+		
+		List<ApplicationData> bpaApplications=fetchApplications(bpaApplicationForm,today);
+        metrics.setTodaysClosedApplicationsPermit(bpaApplications.size());
 //		response.setTotalPermitsIssued(bpaApplications.size());
-        Metrics metrics = new Metrics();
+       
         List<GroupBy> permitIssued = new ArrayList<>();
         
 		GroupBy groupBy = new GroupBy();
@@ -95,11 +134,11 @@ public class NationalDashboardService {
 		List<GroupBy> paymentList = new ArrayList<GroupBy>();
 		groupBy = new GroupBy();
 		groupBy.setGroupBy("paymentMode");
-		groupBy.setBuckets(getApplicationsCollectionDetails(bpaApplicationForm,bpaApplications));
+		groupBy.setBuckets(getApplicationsCollectionDetails(bpaApplicationForm,bpaApplications,todayDate));
 		paymentList.add(groupBy);
 //		groupBy = new GroupBy();
 //		groupBy.setGroupBy("paymentMode");
-//		groupBy.setBuckets(getOCApplicationsCollectionDetails(bpaApplicationForm,bpaApplications));
+//		groupBy.setBuckets(getOCApplicationsCollectionDetails(bpaApplicationForm,bpaApplications,todayDate));
 //		paymentList.add(groupBy);
 		metrics.setTodaysCollection(paymentList);
 		
@@ -109,16 +148,59 @@ public class NationalDashboardService {
 	
 	
 	
-	private List<ApplicationData> fetchApplications(String today) {
+
+
+//	private int fetchSubmittedApplicationsCount(SearchBpaApplicationForm bpaApplicationForm, String today, String applicationType) {
+//		StringBuilder query =new StringBuilder("select disctict(ea.applicationnumber) applicationNumber ");
+//		
+//		if (applicationType.equalsIgnoreCase(anotherString))
+//		
+//		if(bpaApplicationForm.getFromDate()!=null && bpaApplicationForm.getToDate()!=null) {
+//			query.append(" and ea.createddate between '"+bpaApplicationForm.getFromDate() +"' and '"+bpaApplicationForm.getToDate()+" '");
+//		}
+//		else if (today!=null)
+//			query.append(" and ea.createddate>= '"+today+"'");
+//		
+//		System.out.println("query:fetchSubmittedApplicationsCount:::"+query);
+//		final SQLQuery sqlQuery = createApplicationQuery(query.toString());
+//		 int reportResults = sqlQuery.list().size();
+//		 return reportResults;
+//	}
+	
+	private List<ApplicationData> fetchOCApplications(SearchBpaApplicationForm bpaApplicationForm, String today) {
+		StringBuilder query =new StringBuilder("select eoc.applicationnumber applicationNumber, ema.name as applicationSubType  from chandigarh.egbpa_occupancy_certificate eoc "
+				+ "inner join chandigarh.egbpa_mstr_applicationsubtype ema on ema.id = ea.applicationsubtype "
+				+ "where eoc.applicationnumber in (select applicationnumber from state.egp_inbox where pendingaction ='END')  "
+				+ "and eoc.status not in (select id from chandigarh.egbpa_status x "
+				+ "WHERE code in ('Rejected','Cancelled')) ");
+		
+		if(bpaApplicationForm.getFromDate()!=null && bpaApplicationForm.getToDate()!=null) {
+			query.append(" and ea.lastmodifieddate between '"+bpaApplicationForm.getFromDate() +"' and '"+bpaApplicationForm.getToDate()+" '");
+		}
+		else if (today!=null)
+			query.append(" and ea.lastmodifieddate>= '"+today+"'");
+		 
+		
+		final SQLQuery sqlQuery = createApplicationQuery(query.toString());
+		 List<ApplicationData> reportResults = sqlQuery.list();
+		 return reportResults;
+	}
+	
+	
+	private List<ApplicationData> fetchApplications(SearchBpaApplicationForm bpaApplicationForm, String today) {
 		StringBuilder query =new StringBuilder("select ea.applicationnumber applicationNumber, ema.name as applicationSubType,ea.edcrnumber edcrNumber  from chandigarh.egbpa_application ea "
 				+ "inner join chandigarh.egbpa_mstr_applicationsubtype ema on ema.id = ea.applicationsubtype "
 				+ "where ea.applicationnumber in (select applicationnumber from state.egp_inbox where pendingaction ='END')  "
 				+ "and ea.status not in (select id from chandigarh.egbpa_status x "
 				+ "WHERE code in ('Rejected','Cancelled')) ");
 		
-		if (today!=null)
+		if(bpaApplicationForm.getFromDate()!=null && bpaApplicationForm.getToDate()!=null) {
+			query.append(" and ea.lastmodifieddate between '"+bpaApplicationForm.getFromDate() +"' and '"+bpaApplicationForm.getToDate()+" '");
+		}
+		else if (today!=null)
 			query.append(" and ea.lastmodifieddate>= '"+today+"'");
 		 
+		
 		final SQLQuery sqlQuery = createApplicationQuery(query.toString());
 		 List<ApplicationData> reportResults = sqlQuery.list();
 		 return reportResults;
@@ -213,19 +295,22 @@ public List<JSONObject> getApplicationsBySubOccupancyType(
 }
 
 public List<JSONObject> getApplicationsCollectionDetails(SearchBpaApplicationForm bpaApplicationForm,
-		List<ApplicationData> bpaApplications) {
+		List<ApplicationData> bpaApplications, Date todayDate) {
 	List<JSONObject> buckets = new ArrayList<JSONObject>();
 	bpaApplicationForm.setServiceType("BPA");
-	 List<CollectionSummaryReportHelper> bpaCollectionData = getCollectionData(bpaApplicationForm,"USERWISE");
-	 return sortedCollectionData(bpaCollectionData,buckets);
+	 List<CollectionSummaryReportHelper> bpaCollectionData = getCollectionData(bpaApplicationForm,"USERWISE",todayDate);
+	 if (!bpaCollectionData.isEmpty())
+		 return sortedCollectionData(bpaCollectionData,buckets);
+	 else
+		 return buckets;
 		
 }
 
 public List<JSONObject> getOCApplicationsCollectionDetails(SearchBpaApplicationForm bpaApplicationForm,
-		List<ApplicationData> bpaApplications) {
+		List<ApplicationData> bpaApplications,Date  todayDate) {
 	List<JSONObject> buckets = new ArrayList<JSONObject>();
 	bpaApplicationForm.setServiceType("OC");
-	 List<CollectionSummaryReportHelper> bpaCollectionData = getCollectionData(bpaApplicationForm,"USERWISE");
+	 List<CollectionSummaryReportHelper> bpaCollectionData = getCollectionData(bpaApplicationForm,"USERWISE",todayDate);
 	 return sortedCollectionData(bpaCollectionData,buckets);
 }
 
@@ -269,7 +354,7 @@ return buckets;
 //        return paymentModes;
 //    }
 
-private List<CollectionSummaryReportHelper> getCollectionData(SearchBpaApplicationForm searchRequest,String queryType) {
+private List<CollectionSummaryReportHelper> getCollectionData(SearchBpaApplicationForm searchRequest,String queryType, Date todayDate) {
 
 	final SimpleDateFormat fromDateFormatter = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
     final SimpleDateFormat toDateFormatter = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
@@ -344,6 +429,9 @@ private List<CollectionSummaryReportHelper> getCollectionData(SearchBpaApplicati
         whereQuery.append(" AND EGCL_COLLECTIONHEADER.RECEIPTDATE between to_timestamp('"
                 + fromDateFormatter.format(searchRequest.getFromDate()) + "', 'YYYY-MM-DD HH24:MI:SS') and " + " to_timestamp('"
                 + toDateFormatter.format(searchRequest.getToDate()) + "', 'YYYY-MM-DD HH24:MI:SS') ");
+    }else if (todayDate!=null) {
+    	 whereQuery.append(" AND EGCL_COLLECTIONHEADER.RECEIPTDATE >= to_timestamp('"
+                 + fromDateFormatter.format(todayDate) + "', 'YYYY-MM-DD HH24:MI:SS')");
     }
 
         userwiseQuery.setLength(0);
@@ -366,7 +454,8 @@ private List<CollectionSummaryReportHelper> getCollectionData(SearchBpaApplicati
     
     final SQLQuery userwiseSqluery = createSQLQuery(finalUserwiseQuery.toString());
     final SQLQuery aggregateSqlQuery = createSQLQuery(finalAggregateQuery.toString());
-
+    
+    System.out.println("FFFFFfinalUserwiseQuery:::"+finalUserwiseQuery);
 
     List<CollectionSummaryReportHelper> reportResults = new ArrayList<>();
     if(queryType.equalsIgnoreCase("USERWISE")) {

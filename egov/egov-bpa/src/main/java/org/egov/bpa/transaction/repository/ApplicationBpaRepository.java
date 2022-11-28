@@ -48,6 +48,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -67,4 +68,16 @@ public interface ApplicationBpaRepository extends JpaRepository<BpaApplication, 
 	List<BpaApplication> findByStatusListOrderByCreatedDateAsc(@Param("status") List<BpaStatus> listOfBpaStatus);
 
     List<BpaApplication> findApplicationByPlotNumberAndSectorOrderByIdDesc(String plotNumber,String sector);
+    
+    @Query("select app from BpaApplication app where app.createdDate between :fromDate and :toDate")
+    List<BpaApplication> findAllByCreatedDate(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
+
+    @Query("select app from BpaApplication app where app.createdDate>=:today")
+	List<BpaApplication> findAllByCreatedDate(@Param("today") Date today);
+    
+    @Query("select count(app.applicationnumber) from BpaApplication app where app.status.code=:status and app.createdDate between :fromDate and :toDate")
+	int findAllByRejectedStatusWithToDate(@Param("status") String status,@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
+    
+    @Query("select count(app.applicationnumber) from BpaApplication app where where app.status.code=:status and app.createdDate>=:today")
+    int findAllByRejectedStatusWithToday(@Param("status") String status, @Param("today") Date today);
 }
