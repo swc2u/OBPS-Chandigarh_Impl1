@@ -75,9 +75,9 @@ public interface ApplicationBpaRepository extends JpaRepository<BpaApplication, 
     @Query("select app from BpaApplication app where app.createdDate>=:today")
 	List<BpaApplication> findAllByCreatedDate(@Param("today") Date today);
     
-    @Query("select count(app.applicationnumber) from BpaApplication app where app.status.code=:status and app.createdDate between :fromDate and :toDate")
-	int findAllByRejectedStatusWithToDate(@Param("status") String status,@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
+    @Query("select app from BpaApplication app where app.status.code=:status and app.createdDate between :fromDate and :toDate")
+    List<BpaApplication> findAllByRejectedStatusWithToDate(@Param("status") String status,@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
     
-    @Query("select count(app.applicationnumber) from BpaApplication app where where app.status.code=:status and app.createdDate>=:today")
-    int findAllByRejectedStatusWithToday(@Param("status") String status, @Param("today") Date today);
+    @Query("select app from BpaApplication app where app.status.code=:status and app.createdDate>=:today")
+    List<BpaApplication> findAllByRejectedStatusWithToday(@Param("status") String status, @Param("today") Date today);
 }

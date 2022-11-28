@@ -8,10 +8,13 @@ import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SUBMITTED;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.persistence.EntityManager;
@@ -87,21 +90,32 @@ public class NationalDashboardService {
 		
 		List<BpaApplication> submittedApplications;
 		List<OccupancyCertificate> ocSubmitted;
+		List<BpaApplication> bpaWithDeviation;
 		//fetch created data
 		if(bpaApplicationForm.getFromDate()!=null && bpaApplicationForm.getToDate()!=null) {
 			submittedApplications = applicationBpaRepository.findAllByCreatedDate(bpaApplicationForm.getFromDate(),bpaApplicationForm.getToDate());
 			ocSubmitted = occupancyCertificateRepository.findAllByCreatedDate(bpaApplicationForm.getFromDate(),bpaApplicationForm.getToDate());
-			metrics.setApplicationsWithDeviation(applicationBpaRepository.findAllByRejectedStatusWithToDate(BpaConstants.APPLICATION_STATUS_REJECTED,bpaApplicationForm.getFromDate(),bpaApplicationForm.getToDate()));
+			bpaWithDeviation = applicationBpaRepository.findAllByRejectedStatusWithToDate(BpaConstants.APPLICATION_STATUS_REJECTED,bpaApplicationForm.getFromDate(),bpaApplicationForm.getToDate());
 			metrics.setOcWithDeviation(occupancyCertificateRepository.findAllByRejectedStatusWithToDate(BpaConstants.APPLICATION_STATUS_REJECTED,bpaApplicationForm.getFromDate(),bpaApplicationForm.getToDate()));
 		
 		}else {
 			submittedApplications = applicationBpaRepository.findAllByCreatedDate(todayDate);
 			ocSubmitted = occupancyCertificateRepository.findAllByCreatedDate(todayDate);
-			metrics.setApplicationsWithDeviation(applicationBpaRepository.findAllByRejectedStatusWithToday(BpaConstants.APPLICATION_STATUS_REJECTED,todayDate));
+			bpaWithDeviation = applicationBpaRepository.findAllByRejectedStatusWithToday(BpaConstants.APPLICATION_STATUS_REJECTED,todayDate);
 			metrics.setOcWithDeviation(occupancyCertificateRepository.findAllByRejectedStatusWithToday(BpaConstants.APPLICATION_STATUS_REJECTED,todayDate));
 		}
+		
+		metrics.setApplicationsWithDeviation(bpaWithDeviation.size());
+		metrics.setAverageDeviation(findAvgDeviation(bpaWithDeviation));
 		metrics.setApplicationsSubmitted(submittedApplications.size());
 		metrics.setOcSubmitted(ocSubmitted.size());
+		
+		BigDecimal plotArea = BigDecimal.ZERO;
+		for(BpaApplication bpa : submittedApplications) {
+			plotArea=plotArea.add(bpa.getSiteDetail().get(0).getExtentinsqmts());
+		}
+		
+		metrics.setLandAreaAppliedInSystemForBPA(plotArea);
 		
 		List<ApplicationData> ocApplications=fetchOCApplications(bpaApplicationForm,today);
 		metrics.setOcIssued(ocApplications.size());
@@ -111,6 +125,10 @@ public class NationalDashboardService {
         metrics.setTodaysClosedApplicationsPermit(bpaApplications.size());
 //		response.setTotalPermitsIssued(bpaApplications.size());
        
+        metrics.setAverageDaysToIssuePermit(findAverageApprovalDays(bpaApplications));
+        
+        metrics.setAverageDaysToIssueOC(findAverageApprovalDays(ocApplications));
+        
         List<GroupBy> permitIssued = new ArrayList<>();
         
 		GroupBy groupBy = new GroupBy();
@@ -150,6 +168,27 @@ public class NationalDashboardService {
 	
 
 
+private long findAvgDeviation(List<BpaApplication> bpaWithDeviation) {
+	long daysToPermit = 0;
+	for(BpaApplication bpa : bpaWithDeviation) {
+		long diffInMillies = Math.abs(bpa.getApplicationDate().getTime() - bpa.getLastModifiedDate().getTime());
+		long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+		daysToPermit=daysToPermit+diff;
+	}
+		return  (daysToPermit/ bpaWithDeviation.size());
+	}
+
+private long findAverageApprovalDays(List<ApplicationData> bpaApplications) {
+	long daysToPermit = 0;
+	for(ApplicationData bpa : bpaApplications) {
+		long diffInMillies = Math.abs(bpa.getApplicationDate().getTime() - bpa.getPlanPermissionDate().getTime());
+		long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+		daysToPermit=daysToPermit+diff;
+	}
+	System.out.println("daysToPermitdaysToPermitdaysToPermitFFF::"+daysToPermit);
+		return  (daysToPermit/ bpaApplications.size());
+	}
+
 //	private int fetchSubmittedApplicationsCount(SearchBpaApplicationForm bpaApplicationForm, String today, String applicationType) {
 //		StringBuilder query =new StringBuilder("select disctict(ea.applicationnumber) applicationNumber ");
 //		
@@ -168,27 +207,34 @@ public class NationalDashboardService {
 //	}
 	
 	private List<ApplicationData> fetchOCApplications(SearchBpaApplicationForm bpaApplicationForm, String today) {
-		StringBuilder query =new StringBuilder("select eoc.applicationnumber applicationNumber, ema.name as applicationSubType  from chandigarh.egbpa_occupancy_certificate eoc "
-				+ "inner join chandigarh.egbpa_mstr_applicationsubtype ema on ema.id = ea.applicationsubtype "
+		StringBuilder query =new StringBuilder("select eoc.applicationnumber applicationNumber, ema.name as applicationSubType,eoc.applicationdate applicationDate,eoc.approvaldate planPermissionDate  from chandigarh.egbpa_occupancy_certificate eoc "
+				+ "inner join chandigarh.egbpa_mstr_applicationsubtype ema on ema.name = eoc.applicationtype "
 				+ "where eoc.applicationnumber in (select applicationnumber from state.egp_inbox where pendingaction ='END')  "
 				+ "and eoc.status not in (select id from chandigarh.egbpa_status x "
 				+ "WHERE code in ('Rejected','Cancelled')) ");
 		
 		if(bpaApplicationForm.getFromDate()!=null && bpaApplicationForm.getToDate()!=null) {
-			query.append(" and ea.lastmodifieddate between '"+bpaApplicationForm.getFromDate() +"' and '"+bpaApplicationForm.getToDate()+" '");
+			query.append(" and eoc.lastmodifieddate between '"+bpaApplicationForm.getFromDate() +"' and '"+bpaApplicationForm.getToDate()+" '");
 		}
 		else if (today!=null)
-			query.append(" and ea.lastmodifieddate>= '"+today+"'");
+			query.append(" and eoc.lastmodifieddate>= '"+today+"'");
 		 
 		
-		final SQLQuery sqlQuery = createApplicationQuery(query.toString());
+		final SQLQuery sqlQuery = createOCApplicationQuery(query.toString());
 		 List<ApplicationData> reportResults = sqlQuery.list();
 		 return reportResults;
 	}
 	
-	
+	public SQLQuery createOCApplicationQuery(String query) {
+	    return (SQLQuery) getCurrentSession().createSQLQuery(query)
+	            .addScalar("applicationNumber", org.hibernate.type.StringType.INSTANCE)
+	            .addScalar("applicationSubType", org.hibernate.type.StringType.INSTANCE)
+	            .addScalar("applicationDate", org.hibernate.type.DateType.INSTANCE)
+	            .addScalar("planPermissionDate", org.hibernate.type.DateType.INSTANCE)
+	            .setResultTransformer(Transformers.aliasToBean(ApplicationData.class));
+	}
 	private List<ApplicationData> fetchApplications(SearchBpaApplicationForm bpaApplicationForm, String today) {
-		StringBuilder query =new StringBuilder("select ea.applicationnumber applicationNumber, ema.name as applicationSubType,ea.edcrnumber edcrNumber  from chandigarh.egbpa_application ea "
+		StringBuilder query =new StringBuilder("select ea.applicationnumber applicationNumber, ema.name as applicationSubType,ea.edcrnumber edcrNumber,ea.applicationdate applicationDate, ea.planpermissiondate planPermissionDate  from chandigarh.egbpa_application ea "
 				+ "inner join chandigarh.egbpa_mstr_applicationsubtype ema on ema.id = ea.applicationsubtype "
 				+ "where ea.applicationnumber in (select applicationnumber from state.egp_inbox where pendingaction ='END')  "
 				+ "and ea.status not in (select id from chandigarh.egbpa_status x "
@@ -210,6 +256,8 @@ public class NationalDashboardService {
 	            .addScalar("applicationNumber", org.hibernate.type.StringType.INSTANCE)
 	            .addScalar("applicationSubType", org.hibernate.type.StringType.INSTANCE)
 	            .addScalar("edcrNumber", org.hibernate.type.StringType.INSTANCE)
+	            .addScalar("applicationDate", org.hibernate.type.DateType.INSTANCE)
+	            .addScalar("planPermissionDate", org.hibernate.type.DateType.INSTANCE)
 	            .setResultTransformer(Transformers.aliasToBean(ApplicationData.class));
 	}
 

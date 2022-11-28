@@ -1,5 +1,6 @@
 package org.egov.bpa.entitiy.national.dashboard;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -22,26 +23,38 @@ public class Metrics {
 	@JsonProperty("ocIssued")
 	private int ocIssued;
 	
+	@JsonProperty("landAreaAppliedInSystemForBPA")
+	private BigDecimal landAreaAppliedInSystemForBPA;
+	
+	@JsonProperty("averageDaysToIssuePermit")
+	private long averageDaysToIssuePermit;
+	
+	@JsonProperty("averageDaysToIssueOC")
+	private long averageDaysToIssueOC;
+	
 	@JsonProperty("todaysClosedApplicationsOC")
 	private int todaysClosedApplicationsOC;
 	
 	@JsonProperty("todaysCompletedApplicationsWithinSLAOC")
-	private int todaysCompletedApplicationsWithinSLAOC;
+	private String todaysCompletedApplicationsWithinSLAOC = "NA";
 	
 	@JsonProperty("todaysClosedApplicationsPermit")
 	private int todaysClosedApplicationsPermit;
 	
 	@JsonProperty("todaysCompletedApplicationsWithinSLAPermit")
-	private int todaysCompletedApplicationsWithinSLAPermit;
+	private String todaysCompletedApplicationsWithinSLAPermit = "NA";
 	
 	@JsonProperty("slaComplianceOC")
-	private int slaComplianceOC;
+	private String slaComplianceOC = "NA";
 	
 	@JsonProperty("slaCompliancePermit")
-	private int slaCompliancePermit;
+	private String slaCompliancePermit = "NA";
 	
 	@JsonProperty("applicationsWithDeviation")
 	private int applicationsWithDeviation;
+	
+	@JsonProperty("averageDeviation")
+	private long averageDeviation;
 	
 	@JsonProperty("ocWithDeviation")
 	private int ocWithDeviation;
@@ -126,36 +139,68 @@ public class Metrics {
 		this.ocWithDeviation = ocWithDeviation;
 	}
 
-	public int getTodaysCompletedApplicationsWithinSLAOC() {
+	public String getTodaysCompletedApplicationsWithinSLAOC() {
 		return todaysCompletedApplicationsWithinSLAOC;
 	}
 
-	public void setTodaysCompletedApplicationsWithinSLAOC(int todaysCompletedApplicationsWithinSLAOC) {
+	public void setTodaysCompletedApplicationsWithinSLAOC(String todaysCompletedApplicationsWithinSLAOC) {
 		this.todaysCompletedApplicationsWithinSLAOC = todaysCompletedApplicationsWithinSLAOC;
 	}
 
-	public int getTodaysCompletedApplicationsWithinSLAPermit() {
+	public String getTodaysCompletedApplicationsWithinSLAPermit() {
 		return todaysCompletedApplicationsWithinSLAPermit;
 	}
 
-	public void setTodaysCompletedApplicationsWithinSLAPermit(int todaysCompletedApplicationsWithinSLAPermit) {
+	public void setTodaysCompletedApplicationsWithinSLAPermit(String todaysCompletedApplicationsWithinSLAPermit) {
 		this.todaysCompletedApplicationsWithinSLAPermit = todaysCompletedApplicationsWithinSLAPermit;
 	}
 
-	public int getSlaComplianceOC() {
+	public String getSlaComplianceOC() {
 		return slaComplianceOC;
 	}
 
-	public void setSlaComplianceOC(int slaComplianceOC) {
+	public void setSlaComplianceOC(String slaComplianceOC) {
 		this.slaComplianceOC = slaComplianceOC;
 	}
 
-	public int getSlaCompliancePermit() {
+	public String getSlaCompliancePermit() {
 		return slaCompliancePermit;
 	}
 
-	public void setSlaCompliancePermit(int slaCompliancePermit) {
+	public void setSlaCompliancePermit(String slaCompliancePermit) {
 		this.slaCompliancePermit = slaCompliancePermit;
+	}
+
+	public BigDecimal getLandAreaAppliedInSystemForBPA() {
+		return landAreaAppliedInSystemForBPA;
+	}
+
+	public void setLandAreaAppliedInSystemForBPA(BigDecimal landAreaAppliedInSystemForBPA) {
+		this.landAreaAppliedInSystemForBPA = landAreaAppliedInSystemForBPA;
+	}
+
+	public long getAverageDaysToIssuePermit() {
+		return averageDaysToIssuePermit;
+	}
+
+	public void setAverageDaysToIssuePermit(long averageDaysToIssuePermit) {
+		this.averageDaysToIssuePermit = averageDaysToIssuePermit;
+	}
+
+	public long getAverageDaysToIssueOC() {
+		return averageDaysToIssueOC;
+	}
+
+	public void setAverageDaysToIssueOC(long averageDaysToIssueOC) {
+		this.averageDaysToIssueOC = averageDaysToIssueOC;
+	}
+
+	public long getAverageDeviation() {
+		return averageDeviation;
+	}
+
+	public void setAverageDeviation(long averageDeviation) {
+		this.averageDeviation = averageDeviation;
 	}
 
 }
