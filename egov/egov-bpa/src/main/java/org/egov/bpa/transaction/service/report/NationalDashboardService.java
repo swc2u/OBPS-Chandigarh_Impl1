@@ -117,6 +117,9 @@ public class NationalDashboardService {
 		
 		metrics.setLandAreaAppliedInSystemForBPA(plotArea);
 		
+		metrics.setPlansScrutinized(fetchScrutinizedCount(bpaApplicationForm,today,BpaConstants.PERMIT.toUpperCase()));
+		metrics.setOcPlansScrutinized(fetchScrutinizedCount(bpaApplicationForm,today,"OCCUPANCY_CERTIFICATE"));
+		
 		List<ApplicationData> ocApplications=fetchOCApplications(bpaApplicationForm,today);
 		metrics.setOcIssued(ocApplications.size());
 		metrics.setTodaysClosedApplicationsOC(ocApplications.size());
@@ -168,6 +171,30 @@ public class NationalDashboardService {
 	
 
 
+private int fetchScrutinizedCount(SearchBpaApplicationForm bpaApplicationForm, String today,String appType) {
+	StringBuilder query =new StringBuilder("select edcr.applicationnumber applicationNumber  from chandigarh.edcr_application edcr "
+			+ "where edcr.status='Accepted' ");
+	if(appType!=null)
+		query.append(" and edcr.applicationType = '"+appType+"' ");
+	
+	if(bpaApplicationForm.getFromDate()!=null && bpaApplicationForm.getToDate()!=null) {
+		query.append(" and edcr.lastmodifieddate between '"+bpaApplicationForm.getFromDate() +"' and '"+bpaApplicationForm.getToDate()+" '");
+	}
+	else if (today!=null)
+		query.append(" and edcr.lastmodifieddate>= '"+today+"'");
+	 
+	
+	final SQLQuery sqlQuery = createEdcrApplicationQuery(query.toString());
+	 List<ApplicationData> reportResults = sqlQuery.list();
+	 return reportResults.size();
+	}
+
+private SQLQuery createEdcrApplicationQuery(String query) {
+	 return (SQLQuery) getCurrentSession().createSQLQuery(query)
+	            .addScalar("applicationNumber", org.hibernate.type.StringType.INSTANCE)
+	            .setResultTransformer(Transformers.aliasToBean(ApplicationData.class));
+}
+
 private long findAvgDeviation(List<BpaApplication> bpaWithDeviation) {
 	long daysToPermit = 0;
 	for(BpaApplication bpa : bpaWithDeviation) {
@@ -194,22 +221,6 @@ private long findAverageApprovalDays(List<ApplicationData> bpaApplications) {
 		return 0;
 	}
 
-//	private int fetchSubmittedApplicationsCount(SearchBpaApplicationForm bpaApplicationForm, String today, String applicationType) {
-//		StringBuilder query =new StringBuilder("select disctict(ea.applicationnumber) applicationNumber ");
-//		
-//		if (applicationType.equalsIgnoreCase(anotherString))
-//		
-//		if(bpaApplicationForm.getFromDate()!=null && bpaApplicationForm.getToDate()!=null) {
-//			query.append(" and ea.createddate between '"+bpaApplicationForm.getFromDate() +"' and '"+bpaApplicationForm.getToDate()+" '");
-//		}
-//		else if (today!=null)
-//			query.append(" and ea.createddate>= '"+today+"'");
-//		
-//		System.out.println("query:fetchSubmittedApplicationsCount:::"+query);
-//		final SQLQuery sqlQuery = createApplicationQuery(query.toString());
-//		 int reportResults = sqlQuery.list().size();
-//		 return reportResults;
-//	}
 	
 	private List<ApplicationData> fetchOCApplications(SearchBpaApplicationForm bpaApplicationForm, String today) {
 		StringBuilder query =new StringBuilder("select eoc.applicationnumber applicationNumber, ema.name as applicationSubType,eoc.applicationdate applicationDate,eoc.approvaldate planPermissionDate  from chandigarh.egbpa_occupancy_certificate eoc "
