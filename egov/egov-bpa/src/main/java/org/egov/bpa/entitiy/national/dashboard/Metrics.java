@@ -14,6 +14,13 @@ public class Metrics {
 //	@JsonProperty("totalPermitsIssued")
 //	private long totalPermitsIssued;
 
+	@JsonProperty("ocPlansScrutinized")
+	private int ocPlansScrutinized;
+	
+	@JsonProperty("plansScrutinized")
+	private int plansScrutinized;
+	
+	
 	@JsonProperty("applicationsSubmitted")
 	private int applicationsSubmitted;
 	
@@ -201,6 +208,22 @@ public class Metrics {
 
 	public void setAverageDeviation(long averageDeviation) {
 		this.averageDeviation = averageDeviation;
+	}
+
+	public int getOcPlansScrutinized() {
+		return ocPlansScrutinized;
+	}
+
+	public void setOcPlansScrutinized(int ocPlansScrutinized) {
+		this.ocPlansScrutinized = ocPlansScrutinized;
+	}
+
+	public int getPlansScrutinized() {
+		return plansScrutinized;
+	}
+
+	public void setPlansScrutinized(int plansScrutinized) {
+		this.plansScrutinized = plansScrutinized;
 	}
 
 }

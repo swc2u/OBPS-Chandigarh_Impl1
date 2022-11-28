@@ -175,7 +175,10 @@ private long findAvgDeviation(List<BpaApplication> bpaWithDeviation) {
 		long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 		daysToPermit=daysToPermit+diff;
 	}
-		return  (daysToPermit/ bpaWithDeviation.size());
+		if(daysToPermit>0 && bpaWithDeviation.size()>0)
+			return  (daysToPermit/ bpaWithDeviation.size());
+		else
+			return 0;
 	}
 
 private long findAverageApprovalDays(List<ApplicationData> bpaApplications) {
@@ -185,8 +188,10 @@ private long findAverageApprovalDays(List<ApplicationData> bpaApplications) {
 		long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 		daysToPermit=daysToPermit+diff;
 	}
-	System.out.println("daysToPermitdaysToPermitdaysToPermitFFF::"+daysToPermit);
+	if(daysToPermit>0 && bpaApplications.size()>0)
 		return  (daysToPermit/ bpaApplications.size());
+	else
+		return 0;
 	}
 
 //	private int fetchSubmittedApplicationsCount(SearchBpaApplicationForm bpaApplicationForm, String today, String applicationType) {
@@ -503,7 +508,6 @@ private List<CollectionSummaryReportHelper> getCollectionData(SearchBpaApplicati
     final SQLQuery userwiseSqluery = createSQLQuery(finalUserwiseQuery.toString());
     final SQLQuery aggregateSqlQuery = createSQLQuery(finalAggregateQuery.toString());
     
-    System.out.println("FFFFFfinalUserwiseQuery:::"+finalUserwiseQuery);
 
     List<CollectionSummaryReportHelper> reportResults = new ArrayList<>();
     if(queryType.equalsIgnoreCase("USERWISE")) {
