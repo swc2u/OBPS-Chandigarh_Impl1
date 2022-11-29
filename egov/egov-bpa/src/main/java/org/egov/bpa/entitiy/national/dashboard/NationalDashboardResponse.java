@@ -1,32 +1,31 @@
 package org.egov.bpa.entitiy.national.dashboard;
 
-import java.util.List;
 
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class NationalDashboardResponse {
+	@JsonProperty("date")
+	private String date;
+	
+	@JsonProperty("module")
+	private String module="OBPS";
+	
+	@JsonProperty("ward")
+	private String ward="Chandigarh";	
+	
+	@JsonProperty("ulb")
+	private String ulb="Chandigarh";	
+	
+	@JsonProperty("region")
+	private String region="Chandigarh";	
+	
 	@JsonProperty("state")
-	private String state="Chandigarh";	
+	private String state="Chandigarh";
 	
-//	@JsonProperty("plansScrutinized")
-//	private long plansScrutinized;	
+	@JsonProperty("metrics")
+	private Metrics metrics;
 	
-	@JsonProperty("totalPermitsIssued")
-	private long totalPermitsIssued;
-	
-	@JsonProperty("todaysCollection")
-	private List<GroupBy> todaysCollection;
-	
-	@JsonProperty("permitsIssuedByRiskType")
-	private List<GroupBy> permitsIssuedByRiskType;
-	
-	@JsonProperty("permitsIssuedByOccupancyType")
-	private List<GroupBy> permitsIssuedByOccupancyType;
-	
-//	@JsonProperty("permitsIssuedBySubOccupancyType")
-//	private List<GroupBy> permitsIssuedBySubOccupancyType;
 
 	public String getState() {
 		return state;
@@ -36,52 +35,52 @@ public class NationalDashboardResponse {
 		this.state = state;
 	}
 
-//	public long getPlansScrutinized() {
-//		return plansScrutinized;
-//	}
-//
-//	public void setPlansScrutinized(long plansScrutinized) {
-//		this.plansScrutinized = plansScrutinized;
-//	}
-
-	public List<GroupBy> getTodaysCollection() {
-		return todaysCollection;
+	public String getDate() {
+		return date;
 	}
 
-	public void setTodaysCollection(List<GroupBy> todaysCollection) {
-		this.todaysCollection = todaysCollection;
+	public void setDate(String date) {
+		this.date = date;
 	}
 
-	public List<GroupBy> getPermitsIssuedByRiskType() {
-		return permitsIssuedByRiskType;
+	public String getModule() {
+		return module;
 	}
 
-	public void setPermitsIssuedByRiskType(List<GroupBy> permitsIssuedByRiskType) {
-		this.permitsIssuedByRiskType = permitsIssuedByRiskType;
+	public void setModule(String module) {
+		this.module = module;
 	}
 
-//	public List<GroupBy> getPermitsIssuedBySubOccupancyType() {
-//		return permitsIssuedBySubOccupancyType;
-//	}
-//
-//	public void setPermitsIssuedBySubOccupancyType(List<GroupBy> permitsIssuedBySubOccupancyType) {
-//		this.permitsIssuedBySubOccupancyType = permitsIssuedBySubOccupancyType;
-//	}
-
-	public List<GroupBy> getPermitsIssuedByOccupancyType() {
-		return permitsIssuedByOccupancyType;
+	public String getWard() {
+		return ward;
 	}
 
-	public void setPermitsIssuedByOccupancyType(List<GroupBy> permitsIssuedByOccupancyType) {
-		this.permitsIssuedByOccupancyType = permitsIssuedByOccupancyType;
+	public void setWard(String ward) {
+		this.ward = ward;
 	}
 
-	public long getTotalPermitsIssued() {
-		return totalPermitsIssued;
+	public String getUlb() {
+		return ulb;
 	}
 
-	public void setTotalPermitsIssued(long totalPermitsIssued) {
-		this.totalPermitsIssued = totalPermitsIssued;
+	public void setUlb(String ulb) {
+		this.ulb = ulb;
+	}
+
+	public String getRegion() {
+		return region;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
+	}
+
+	public Metrics getMetrics() {
+		return metrics;
+	}
+
+	public void setMetrics(Metrics metrics) {
+		this.metrics = metrics;
 	}
 
 }

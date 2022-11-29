@@ -49,18 +49,26 @@
 package org.egov.bpa.web.controller.rest;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import java.util.Date;  
 import javax.validation.Valid;
 
 import org.egov.bpa.entitiy.national.dashboard.NationalDashboardResponse;
+import org.egov.bpa.entitiy.national.dashboard.SearchCriteria;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
 import org.egov.bpa.transaction.service.SearchBpaApplicationService;
 import org.egov.bpa.transaction.service.report.NationalDashboardService;
 import org.egov.infra.microservice.contract.RequestInfoWrapper;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -99,12 +107,34 @@ public class BpaCollectionRestController {
 //	
 	//API :http://ulb.chandigarh.local.org:8080/bpa/national-dashboard/_obpas
 	 @PostMapping(value = "/_obpas", produces = MediaType.APPLICATION_JSON_VALUE)
-	 public ResponseEntity<?> dashboardData(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper) {
+	 public ResponseEntity<?> dashboardData(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,@Valid @ModelAttribute SearchCriteria searchCriteria) {
 //		 nationalDashboardService.validateUser(requestInfoWrapper);
 		 SearchBpaApplicationForm  bpaApplicationForm = new SearchBpaApplicationForm();
 			NationalDashboardResponse response = new NationalDashboardResponse();
 			
-			response=nationalDashboardService.getDashboardData(response,bpaApplicationForm);
+			Date fromDate = null;
+			Date toDate = null;
+			if(searchCriteria.getFromDate()!=null)
+				try {
+					fromDate = new SimpleDateFormat("dd/MM/yyyy").parse(searchCriteria.getFromDate());
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}  
+				bpaApplicationForm.setFromDate(fromDate);
+				
+			if(searchCriteria.getToDate()!=null)
+				try {
+					toDate = new SimpleDateFormat("dd/MM/yyyy").parse(searchCriteria.getToDate());
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}  
+				bpaApplicationForm.setToDate(toDate);
+			
+			try {
+				response=nationalDashboardService.getDashboardData(response,bpaApplicationForm);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 			return new ResponseEntity<>(response, HttpStatus.OK);
 	    }   
 	 
