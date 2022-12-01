@@ -79,5 +79,8 @@ public interface OccupancyCertificateRepository
     
     @Query("select count(app.applicationNumber) from OccupancyCertificate app where app.status.code=:status and app.createdDate>=:today")
     int findAllByRejectedStatusWithToday(@Param("status") String status, @Param("today") Date today);
+    
+    @Query("select oc from OccupancyCertificate oc where (:todayDate - DATE(oc.lastModifiedDate))>=60 and oc.status.code in ('Approved','Order Issued to Applicant')")
+	List<OccupancyCertificate> findFinalOCGenerationApplications(@Param("todayDate") Date todayDate);
 
 }

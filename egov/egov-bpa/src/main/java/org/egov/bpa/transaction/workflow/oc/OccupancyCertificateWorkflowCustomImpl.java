@@ -354,7 +354,7 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
                 if (status != null)
                     oc.setStatus(getStatusByCurrentMatrixStatus(wfMatrix));
 
-                if (BpaConstants.GENERATE_OCCUPANCY_CERTIFICATE.equalsIgnoreCase(wfBean.getWorkFlowAction()))
+                if (BpaConstants.WF_VERIFY_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction()))
                     oc.transition().end()
                             .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                             .withComments(wfBean.getApproverComments())

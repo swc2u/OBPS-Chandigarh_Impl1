@@ -42,6 +42,7 @@ package org.egov.bpa.config;
 import org.egov.bpa.config.conditions.BpaSchedulerConfigCondition;
 import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.scheduler.oc.OcCancelAppointmentJob;
+import org.egov.bpa.scheduler.oc.OcFinalCertificateJob;
 import org.egov.bpa.scheduler.oc.OcOpenSlotsJob;
 import org.egov.bpa.scheduler.oc.OcScheduleAppointmentJob;
 import org.egov.infra.config.scheduling.QuartzSchedulerConfiguration;
@@ -84,6 +85,8 @@ public class OccupancyCertificateSchedulerConfiguration extends QuartzSchedulerC
             triggers.add(ocScheduleAppointmentCronTrigger().getObject());
         if (bpaApplicationSettings.cancelApplicationsSchedulerEnabledForOC())
             triggers.add(ocCancelAppointmentCronTrigger().getObject());
+        if (bpaApplicationSettings.finalCertificateSchedulerEnabledForOC())
+        	triggers.add(ocFinalOCCertificateGenerationCronTrigger().getObject());
         bpaOcScheduler.setTriggers(triggers.toArray(new Trigger[triggers.size()]));
         return bpaOcScheduler;
     }
@@ -120,8 +123,20 @@ public class OccupancyCertificateSchedulerConfiguration extends QuartzSchedulerC
         cancelAppointmentCron.setMisfireInstruction(MISFIRE_INSTRUCTION_DO_NOTHING);
         return cancelAppointmentCron;
     }
+    
+    @Bean
+    public CronTriggerFactoryBean ocFinalOCCertificateGenerationCronTrigger() {
+        CronTriggerFactoryBean finalOCCertificateGenerationCron = new CronTriggerFactoryBean();
+        finalOCCertificateGenerationCron.setJobDetail(ocFinalCertificateJobDetail().getObject());
+        finalOCCertificateGenerationCron.setGroup("BPA_OC_TRIGGER_GROUP");
+        finalOCCertificateGenerationCron.setName("BPA_OC_FINAL_CERTIFICATE_TRIGGER");
+        finalOCCertificateGenerationCron.setCronExpression(bpaApplicationSettings.getValue("bpa.oc.final.certificate.job.cron"));
+        finalOCCertificateGenerationCron.setMisfireInstruction(MISFIRE_INSTRUCTION_DO_NOTHING);
+        return finalOCCertificateGenerationCron;
+    }
 
-    @Bean("ocOpenSlotsJob")
+
+	@Bean("ocOpenSlotsJob")
     public OcOpenSlotsJob openSlotsJob() {
         return new OcOpenSlotsJob();
     }
@@ -134,6 +149,11 @@ public class OccupancyCertificateSchedulerConfiguration extends QuartzSchedulerC
     @Bean("ocCancelAppointmentJob")
     public OcCancelAppointmentJob scheduleDocumentScrutinyJob() {
         return new OcCancelAppointmentJob();
+    }
+    
+    @Bean("ocFinalCertificateJob")
+    public OcFinalCertificateJob scheduleCertificateGenerationJob() {
+        return new OcFinalCertificateJob();
     }
 
     @Bean
@@ -186,4 +206,22 @@ public class OccupancyCertificateSchedulerConfiguration extends QuartzSchedulerC
         cancelAppointmentJobDetail.setJobDataAsMap(jobDetailMap);
         return cancelAppointmentJobDetail;
     }
+    
+    
+    @Bean
+    public JobDetailFactoryBean ocFinalCertificateJobDetail() {
+    	JobDetailFactoryBean finalOCCertificateJobDetail = new JobDetailFactoryBean();
+    	finalOCCertificateJobDetail.setGroup("BPA_OC_JOB_GROUP");
+    	finalOCCertificateJobDetail.setName("BPA_OC_FIAL_CERTIFICATE_JOB");
+    	finalOCCertificateJobDetail.setDurability(true);
+    	finalOCCertificateJobDetail.setJobClass(OcFinalCertificateJob.class);
+    	finalOCCertificateJobDetail.setRequestsRecovery(true);
+        Map<String, String> jobDetailMap = new HashMap<>();
+        jobDetailMap.put("jobBeanName", "ocFinalCertificateJob");
+        jobDetailMap.put("userName", "system");
+        jobDetailMap.put("cityDataRequired", "true");
+        jobDetailMap.put("moduleName", "bpa");
+        finalOCCertificateJobDetail.setJobDataAsMap(jobDetailMap);
+        return finalOCCertificateJobDetail;
+	}
 }

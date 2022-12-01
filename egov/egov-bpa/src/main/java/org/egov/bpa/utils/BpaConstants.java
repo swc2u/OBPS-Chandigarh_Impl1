@@ -593,6 +593,7 @@ public class BpaConstants {
 	public static final String WF_GENERATE_RENEWAL_ORDER = "Generate Permit Renewal Order";
 	public static final String WF_GENERATE_OWNERSHIP_ORDER = "Generate Ownership Transfer Order";
 	public static final String WF_FORWARD_BUTTON = "Forward";
+	public static final String WF_VERIFY_BUTTON = "Verify";
 	// building details related constants
 	public static final String TOTAL_PLINT_AREA = "totalPlintArea";
 	public static final String BUILDINGHEIGHT_GROUND = "buildingheightGround";
@@ -659,6 +660,7 @@ public class BpaConstants {
 
 	// Occupancy certificate notice types
 	public static final String OCCUPANCY_CERTIFICATE_NOTICE_TYPE = "Occupancy Certificate";
+	public static final String FINAL_OCCUPANCY_CERTIFICATE_NOTICE_TYPE = "Final Occupancy Certificate";
 	public static final String PL_CERTIFICATE_NOTICE_TYPE = "Plinth Level Certificate";
 	public static final String NATURE_OF_WORK_STAKEHOLDER = "Stake Holder Registration";
 	public static final String PERMIT_APPLICATION_NOTICE_TYPE = "Permit Application";

@@ -231,11 +231,24 @@
 									Print Demand Notice </a>&nbsp;</td>
 						</c:if>
 						<c:if
+							test="${occupancyCertificate.status.code eq 'Approved'  && occupancyCertificate.state.value eq 'JE inspection'}">
+							<td><a
+								href="/bpa/application/occupancy-certificate/generate-occupancy-certificate/${occupancyCertificate.applicationNumber}"
+								target="popup" class="btn btn-primary"
+								onclick="window.open('/bpa/application/occupancy-certificate/generate-occupancy-certificate/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;">
+									Print Provisional Occupancy Certificate </a>&nbsp;</td>
+						</c:if>
+						<c:if
 							test="${occupancyCertificate.status.code eq 'Order Issued to Applicant' }">
 							<td><a
 								href="/bpa/application/occupancy-certificate/generate-occupancy-certificate/${occupancyCertificate.applicationNumber}"
 								target="popup" class="btn btn-primary"
 								onclick="window.open('/bpa/application/occupancy-certificate/generate-occupancy-certificate/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;">
+									Print Provisional Occupancy Certificate </a>&nbsp;</td>
+							<td><a
+								href="/bpa/application/occupancy-certificate/generate-final-occupancy-certificate/${occupancyCertificate.applicationNumber}"
+								target="popup" class="btn btn-primary"
+								onclick="window.open('/bpa/application/occupancy-certificate/generate-final-occupancy-certificate/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;">
 									Print Occupancy Certificate </a>&nbsp;</td>
 						</c:if>
 						<c:if

@@ -65,6 +65,7 @@ import org.egov.bpa.transaction.notice.PermitApplicationNoticesFormat;
 import org.egov.bpa.transaction.notice.PlinthLevelCertificateNoticesFormat;
 import org.egov.bpa.transaction.notice.impl.DemandDetailsFormatImpl;
 import org.egov.bpa.transaction.notice.impl.OccupancyCertificateDemandFormatImpl;
+import org.egov.bpa.transaction.notice.impl.OccupancyCertificateFinalFormatImpl;
 import org.egov.bpa.transaction.notice.impl.OccupancyCertificateFormatImpl;
 import org.egov.bpa.transaction.notice.impl.OccupancyRejectionFormatImpl;
 import org.egov.bpa.transaction.notice.impl.OwnershipTransferNoticeService;
@@ -150,6 +151,16 @@ public class BpaNoticeController {
     public ResponseEntity<InputStreamResource> generateOccupancyCertificate(@PathVariable final String applicationNumber) {
         OccupancyCertificateNoticesFormat ocNoticeFeature = (OccupancyCertificateNoticesFormat) specificNoticeService
                 .find(OccupancyCertificateFormatImpl.class, specificNoticeService.getCityDetails());
+        ReportOutput reportOutput = ocNoticeFeature
+                .generateNotice(occupancyCertificateService.findByApplicationNumber(applicationNumber));
+        return getFileAsResponseEntity(applicationNumber, reportOutput, REPORT_FILE_NAME);
+    }
+    
+    @GetMapping(value = "/application/occupancy-certificate/generate-final-occupancy-certificate/{applicationNumber}", produces = APPLICATION_PDF_VALUE)
+    @ResponseBody
+    public ResponseEntity<InputStreamResource> generateFinalOccupancyCertificate(@PathVariable final String applicationNumber) {
+        OccupancyCertificateNoticesFormat ocNoticeFeature = (OccupancyCertificateNoticesFormat) specificNoticeService
+                .find(OccupancyCertificateFinalFormatImpl.class, specificNoticeService.getCityDetails());
         ReportOutput reportOutput = ocNoticeFeature
                 .generateNotice(occupancyCertificateService.findByApplicationNumber(applicationNumber));
         return getFileAsResponseEntity(applicationNumber, reportOutput, REPORT_FILE_NAME);

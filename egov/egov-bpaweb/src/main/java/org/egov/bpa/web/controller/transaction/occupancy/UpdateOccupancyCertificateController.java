@@ -82,6 +82,7 @@ import static org.egov.bpa.utils.BpaConstants.WF_BA_CHECK_NOC_UPDATION;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_FORWARD_TO_SDO_BUILDING;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_AEE_APPLICATION_APPROVAL_PENDING;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_FINAL_APPROVAL_PROCESS_INITIATED;
+import static org.egov.bpa.utils.BpaConstants.WF_VERIFY_BUTTON;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -702,7 +703,21 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
 
             return "redirect:/application/occupancy-certificate/generate-occupancy-certificate/"
                     + occupancyCertificate.getApplicationNumber();
-        } else if (isNotBlank(wfBean.getWorkFlowAction()) && GENERATEREJECTNOTICE.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
+        }
+        else if (isNotBlank(wfBean.getWorkFlowAction())
+                && WF_VERIFY_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
+            OccupancyCertificateNoticesFormat ocNoticeFeature = (OccupancyCertificateNoticesFormat) specificNoticeService
+                    .find(OccupancyCertificateFormatImpl.class, specificNoticeService.getCityDetails());
+            ReportOutput reportOutput = ocNoticeFeature
+                    .generateNotice(
+                            occupancyCertificateService.findByApplicationNumber(occupancyCertificate.getApplicationNumber()));
+            ocSmsAndEmailService.sendSmsAndEmailOnPermitOrderGeneration(occupancyCertificate, reportOutput);
+
+            return "redirect:/application/occupancy-certificate/generate-final-occupancy-certificate/"
+                    + occupancyCertificate.getApplicationNumber();
+        } 
+        
+        else if (isNotBlank(wfBean.getWorkFlowAction()) && GENERATEREJECTNOTICE.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
             OccupancyCertificateNoticesFormat ocNoticeFeature = (OccupancyCertificateNoticesFormat) specificNoticeService
                     .find(OccupancyRejectionFormatImpl.class, specificNoticeService.getCityDetails());
             ReportOutput reportOutput = ocNoticeFeature

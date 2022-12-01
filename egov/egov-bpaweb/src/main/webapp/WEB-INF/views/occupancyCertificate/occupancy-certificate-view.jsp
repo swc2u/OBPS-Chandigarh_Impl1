@@ -331,7 +331,7 @@
 					</div>
 				</div>
 			</c:if> --%>
-			<c:if test="${occupancyCertificate.status.code eq 'Approved'}">
+			<c:if test="${occupancyCertificate.status.code eq 'Approved' && occupancyCertificate.state.value ne 'JE inspection'}">
 				<div class="row">
 	                <label class="col-sm-3 control-label text-right"><spring:message code="lbl.comments"/></label>
 	                <div class="col-sm-8 add-margin">
@@ -352,6 +352,14 @@
 						<a href="/bpa/application/occupancy-certificate/generate-occupancy-certificate/${occupancyCertificate.applicationNumber}"
 						   target="popup" class="btn btn-primary" 
 						   onclick="window.open('/bpa/application/occupancy-certificate/generate-occupancy-certificate/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;">
+								Print Provisional Occupancy Certificate 
+						</a>
+						<input type="button" name="button2" value="Close" class="btn btn-default" onclick="window.close();" />
+					</div>
+					<div class="buttonbottom" align="center">
+						<a href="/bpa/application/occupancy-certificate/generate-final-occupancy-certificate/${occupancyCertificate.applicationNumber}"
+						   target="popup" class="btn btn-primary" 
+						   onclick="window.open('/bpa/application/occupancy-certificate/generate-final-occupancy-certificate/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;">
 								Print Occupancy Certificate 
 						</a>
 						<input type="button" name="button2" value="Close" class="btn btn-default" onclick="window.close();" />
