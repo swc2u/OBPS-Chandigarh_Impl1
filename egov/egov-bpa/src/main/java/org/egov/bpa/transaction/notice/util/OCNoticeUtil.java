@@ -81,6 +81,7 @@ import org.egov.bpa.transaction.entity.Response;
 import org.egov.bpa.transaction.entity.common.NoticeCommon;
 import org.egov.bpa.transaction.entity.dto.PermitFeeHelper;
 import org.egov.bpa.transaction.entity.enums.ConditionType;
+import org.egov.bpa.transaction.entity.oc.OCExistingBuildingFloor;
 import org.egov.bpa.transaction.entity.oc.OCFloor;
 import org.egov.bpa.transaction.entity.oc.OCNotice;
 import org.egov.bpa.transaction.entity.oc.OCNoticeConditions;
@@ -327,18 +328,48 @@ public class OCNoticeUtil {
         if (!oc.getOccupancyFee().isEmpty())
             reportParams.put("ocFeeDetails", getPermitFeeDetails(oc));
         
-        String maxFloorCount = ""; 
+        String maxFloorCount = "";
+        Optional<OCFloor> proposedBldgMaxFloorNumber = null;
+        Optional<OCExistingBuildingFloor> exisitingBldgMaxFloorNumber = null;
+        
         if (!oc.getBuildings().isEmpty()) {
         	List<OCFloor> floorDtls = oc.getBuildings().get(0).getFloorDetails();
-        	Optional<OCFloor> maxFloorNumber = floorDtls.stream().max(Comparator.comparing(OCFloor::getFloorNumber));
-        	OCFloor basement = oc.getBuildings().get(0).getFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
+        	 proposedBldgMaxFloorNumber = floorDtls.stream().max(Comparator.comparing(OCFloor::getFloorNumber));
+        }
+         if (!oc.getExistingBuildings().isEmpty()) {
+        	List<OCExistingBuildingFloor> floorDtls = oc.getExistingBuildings().get(0).getExistingBuildingFloorDetails();
+        	exisitingBldgMaxFloorNumber = floorDtls.stream().max(Comparator.comparing(OCExistingBuildingFloor::getFloorNumber));
+        }
+        
+        if(proposedBldgMaxFloorNumber!=null && exisitingBldgMaxFloorNumber!=null) {
+       
+        	if(proposedBldgMaxFloorNumber.get().getFloorNumber()>exisitingBldgMaxFloorNumber.get().getFloorNumber()) {
+	            	OCFloor basement = oc.getBuildings().get(0).getFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
+	    		    .orElse(null);      	
+	    	
+			    	if(basement != null)
+			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
+			    	else
+			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
+        	}else {
+        		OCExistingBuildingFloor basement = oc.getExistingBuildings().get(0).getExistingBuildingFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
+            		    .orElse(null);      	
+            	
+            	if(basement != null)
+            		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
+            	else
+            		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
+        	}
+        }else if(exisitingBldgMaxFloorNumber!=null) {
+        	OCExistingBuildingFloor basement = oc.getExistingBuildings().get(0).getExistingBuildingFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
         		    .orElse(null);      	
         	
         	if(basement != null)
-        		maxFloorCount = ordinal(maxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
+        		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
         	else
-        		maxFloorCount = ordinal(maxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
+        		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
         }
+        
         reportParams.put("maxFloorNumber", maxFloorCount);
 
         return reportParams;
