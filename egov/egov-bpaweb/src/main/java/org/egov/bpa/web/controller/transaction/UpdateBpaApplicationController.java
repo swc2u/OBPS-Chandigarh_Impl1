@@ -48,6 +48,7 @@ package org.egov.bpa.web.controller.transaction;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_APPROVED;
+import static org.egov.bpa.utils.BpaConstants.WF_BA_CHIEF_ENG_CHECK_NOC_UPDATION;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_CANCELLED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DIGI_SIGNED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFIED;
@@ -864,33 +865,52 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         model.addAttribute("nocInitiated", false);
         
         boolean isAllNOCApproved = false;
+        boolean isAllCENOCApproved = false;
         String nextAction="";
-        if (WF_BA_CHECK_NOC_UPDATION.equalsIgnoreCase(application.getState().getNextAction())) {
-        	nextAction=WF_BA_CHECK_NOC_UPDATION;
+        if (WF_BA_CHECK_NOC_UPDATION.equalsIgnoreCase(application.getState().getNextAction()) || WF_BA_CHIEF_ENG_CHECK_NOC_UPDATION.equalsIgnoreCase(application.getState().getNextAction())) {
+        	nextAction=application.getState().getNextAction();
+        	int chiefEngineerVeficationNOCs = 0;
+        	
         	List<PermitNocApplication> permitNocApplied = permitNocService.findByPermitApplicationNumber(application.getApplicationNumber());
-            if (!permitNocApplied.isEmpty()) {
+        	for(PermitNocApplication nocApplication:permitNocApplied) {
+        		if(nocApplication.getBpaNocApplication().getNocType().matches(BpaConstants.STRCNOCTYPE+"|"+BpaConstants.ELECNOCTYPE+"|"+BpaConstants.PH7NOCTYPE))
+        			chiefEngineerVeficationNOCs++;
+        	}
+        	
+        	if (!permitNocApplied.isEmpty()) {
             	int nocApplicationCount = permitNocApplied.size();
             	int nocApprovedCount = 0;
+            	int ceVerificationNOCApprovedCount = 0;
     	    	for(PermitNocApplication nocApplication:permitNocApplied) {
     	    		if(APPROVED.equalsIgnoreCase(nocApplication.getBpaNocApplication().getStatus().getCode())) {
     	    			nocApprovedCount++;
+    	    		}
+    	    		if(nocApplication.getBpaNocApplication().getNocType().matches(BpaConstants.STRCNOCTYPE+"|"+BpaConstants.ELECNOCTYPE+"|"+BpaConstants.PH7NOCTYPE) && (APPROVED.equalsIgnoreCase(nocApplication.getBpaNocApplication().getStatus().getCode()))) {
+    	    			ceVerificationNOCApprovedCount++;
     	    		}
     	    	}    	    	
     	    	if(nocApprovedCount==nocApplicationCount) {
     	    		isAllNOCApproved=true;    	    		
     	    	}
+    	    	if(ceVerificationNOCApprovedCount==chiefEngineerVeficationNOCs) {
+    	    		isAllCENOCApproved=true;    	    		
+    	    	}
             }else {
             	isAllNOCApproved = true;
+            	isAllCENOCApproved=true;  
             }
         }else {
         	isAllNOCApproved = true;
+        	isAllCENOCApproved=true;  
         }
         model.addAttribute("isAllNOCApproved", isAllNOCApproved);
+        model.addAttribute("isAllCENOCApproved", isAllNOCApproved);
         model.addAttribute("nextAction", nextAction);
         
         if (!application.getIsOneDayPermitApplication()
                 && ("Forwarded to SDO Building for Approval".equalsIgnoreCase(application.getState().getNextAction())
                 	|| "Forwarded to check NOC updation".equalsIgnoreCase(application.getState().getNextAction())
+                	|| "Forwarded to Chief engineer to check NOC updation".equalsIgnoreCase(application.getState().getNextAction())
                 	|| "Permit Fee Collection Pending".equalsIgnoreCase(application.getState().getNextAction())
                 	|| "Forwarded to E- Assistant Estate Officer for Approval".equalsIgnoreCase(application.getState().getNextAction())
                     ) && !("Approved".equalsIgnoreCase(application.getStatus().getCode()))) {
