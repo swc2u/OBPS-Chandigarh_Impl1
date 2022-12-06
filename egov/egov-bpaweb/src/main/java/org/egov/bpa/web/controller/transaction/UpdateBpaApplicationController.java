@@ -904,13 +904,12 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         	isAllCENOCApproved=true;  
         }
         model.addAttribute("isAllNOCApproved", isAllNOCApproved);
-        model.addAttribute("isAllCENOCApproved", isAllNOCApproved);
+        model.addAttribute("isAllCENOCApproved", isAllCENOCApproved);
         model.addAttribute("nextAction", nextAction);
         
         if (!application.getIsOneDayPermitApplication()
                 && ("Forwarded to SDO Building for Approval".equalsIgnoreCase(application.getState().getNextAction())
                 	|| "Forwarded to check NOC updation".equalsIgnoreCase(application.getState().getNextAction())
-                	|| "Forwarded to Chief engineer to check NOC updation".equalsIgnoreCase(application.getState().getNextAction())
                 	|| "Permit Fee Collection Pending".equalsIgnoreCase(application.getState().getNextAction())
                 	|| "Forwarded to E- Assistant Estate Officer for Approval".equalsIgnoreCase(application.getState().getNextAction())
                     ) && !("Approved".equalsIgnoreCase(application.getStatus().getCode()))) {
