@@ -113,6 +113,7 @@ import org.egov.bpa.transaction.entity.oc.OccupancyFee;
 import org.egov.bpa.transaction.entity.oc.OccupancyNocApplication;
 import org.egov.bpa.transaction.notice.OccupancyCertificateNoticesFormat;
 import org.egov.bpa.transaction.notice.PermitApplicationNoticesFormat;
+import org.egov.bpa.transaction.notice.impl.OccupancyCertificateFinalFormatImpl;
 import org.egov.bpa.transaction.notice.impl.OccupancyCertificateFormatImpl;
 import org.egov.bpa.transaction.notice.impl.OccupancyRejectionFormatImpl;
 import org.egov.bpa.transaction.notice.impl.PermitRejectionFormatImpl;
@@ -707,11 +708,11 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
         else if (isNotBlank(wfBean.getWorkFlowAction())
                 && WF_VERIFY_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
             OccupancyCertificateNoticesFormat ocNoticeFeature = (OccupancyCertificateNoticesFormat) specificNoticeService
-                    .find(OccupancyCertificateFormatImpl.class, specificNoticeService.getCityDetails());
+                    .find(OccupancyCertificateFinalFormatImpl.class, specificNoticeService.getCityDetails());
             ReportOutput reportOutput = ocNoticeFeature
                     .generateNotice(
                             occupancyCertificateService.findByApplicationNumber(occupancyCertificate.getApplicationNumber()));
-            ocSmsAndEmailService.sendSmsAndEmailOnPermitOrderGeneration(occupancyCertificate, reportOutput);
+            ocSmsAndEmailService.sendSmsAndEmailOnFinalCertificateGeneration(occupancyCertificate, reportOutput);
 
             return "redirect:/application/occupancy-certificate/generate-final-occupancy-certificate/"
                     + occupancyCertificate.getApplicationNumber();

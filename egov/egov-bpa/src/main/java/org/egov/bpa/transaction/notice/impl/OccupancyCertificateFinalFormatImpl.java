@@ -84,8 +84,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class OccupancyCertificateFinalFormatImpl implements OccupancyCertificateNoticesFormat {
 
-//    private static final String REPORT_FILE_NAME = "final_occupancycertificate";
-    private static final String REPORT_FILE_NAME = "occupancycertificate";
+    private static final String REPORT_FILE_NAME = "final_occupancycertificate";
+//    private static final String REPORT_FILE_NAME = "occupancycertificate";
 
     @Autowired
     @Qualifier("fileStoreService")

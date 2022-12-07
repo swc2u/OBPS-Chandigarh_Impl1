@@ -231,7 +231,7 @@
 									Print Demand Notice </a>&nbsp;</td>
 						</c:if>
 						<c:if
-							test="${occupancyCertificate.status.code eq 'Approved'  && occupancyCertificate.state.value eq 'JE inspection'}">
+							test="${occupancyCertificate.status.code eq 'Approved'  && occupancyCertificate.state.value eq 'JE inspection' && !isFinalOCGenerated }">
 							<td><a
 								href="/bpa/application/occupancy-certificate/generate-occupancy-certificate/${occupancyCertificate.applicationNumber}"
 								target="popup" class="btn btn-primary"
@@ -239,7 +239,7 @@
 									Print Provisional Occupancy Certificate </a>&nbsp;</td>
 						</c:if>
 						<c:if
-							test="${occupancyCertificate.status.code eq 'Order Issued to Applicant' }">
+							test="${(occupancyCertificate.status.code eq 'Order Issued to Applicant') || (occupancyCertificate.status.code eq 'Approved'  && occupancyCertificate.state.value eq 'JE inspection' && isFinalOCGenerated)}">
 							<td><a
 								href="/bpa/application/occupancy-certificate/generate-occupancy-certificate/${occupancyCertificate.applicationNumber}"
 								target="popup" class="btn btn-primary"

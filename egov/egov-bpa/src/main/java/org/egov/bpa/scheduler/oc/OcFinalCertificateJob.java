@@ -39,7 +39,6 @@
  */
 package org.egov.bpa.scheduler.oc;
 
-
 import org.apache.log4j.Logger;
 import org.egov.bpa.transaction.service.oc.FinalCertificateGenerationService;
 import org.egov.infra.scheduler.quartz.AbstractQuartzJob;
@@ -48,23 +47,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @DisallowConcurrentExecution
 public class OcFinalCertificateJob extends AbstractQuartzJob {
+	private static final long serialVersionUID = 1L;
 
-    private static final long serialVersionUID = 9L;
-    private static final Logger LOGGER = Logger.getLogger(OcFinalCertificateJob.class);
+	private static final Logger LOGGER = Logger.getLogger(OcFinalCertificateJob.class);
 
-
-	@Autowired
+    @Autowired
     private transient FinalCertificateGenerationService finalCertificateGenerationService;
 
     @Override
     public void executeJob() {
-        LOGGER.debug("Entered into OcFinalCertificateJob.execute");
         LOGGER.info("******inside oc final certificate scheduler*******");
         
         finalCertificateGenerationService.generateFinalOCCertificate();
         
         LOGGER.info("******exit oc final certificate scheduler*******");
-        LOGGER.debug("Exting from OcFinalCertificateJob.execute");
     }
-
 }

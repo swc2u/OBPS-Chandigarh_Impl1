@@ -46,6 +46,7 @@ import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.notice.OccupancyCertificateNoticesFormat;
 import org.egov.bpa.transaction.notice.impl.OccupancyCertificateFinalFormatImpl;
 import org.egov.bpa.transaction.service.messaging.oc.OcSmsAndEmailService;
+import org.egov.bpa.utils.BpaConstants;
 import org.egov.infra.custom.CustomImplProvider;
 import org.egov.infra.reporting.engine.ReportOutput;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,30 +73,24 @@ public class FinalCertificateGenerationService {
     @Autowired
     private OcSmsAndEmailService ocSmsAndEmailService;
 
-
-
     @Transactional
     public void generateFinalOCCertificate() {
-    	final String REPORT_FILE_NAME = "occupancycertificate";
     	String today = currentDateToDefaultDateFormat();
 		Date todayDate = null;
 		try {
-			todayDate = new SimpleDateFormat("dd-MM-yyyy").parse(today);
+			todayDate = new SimpleDateFormat("dd/MM/yyyy").parse(today);
 		} catch (ParseException e) {
 			logger.info("***************date parse exception**************");
 		}
-        List<OccupancyCertificate> occupancyCertificateList = occupancyCertificateService
-                .findFinalOCGenerationApplications(todayDate);
-        for (OccupancyCertificate occupancyCertificate : occupancyCertificateList) {
-        	 List<OCNotice> finalOCApp = occupancyCertificate.getOcNotices().stream().filter(notice->notice.getNoticeCommon().getNoticeType().equalsIgnoreCase("Final Occupancy Certificate")).collect(Collectors.toList());
+        List<Long> ocIdList = occupancyCertificateService.findFinalOCGenerationApplications(todayDate);
+        for (Long ocId : ocIdList) {
+        	OccupancyCertificate occupancyCertificate= occupancyCertificateService.findById(ocId);
+        	 List<OCNotice> finalOCApp = occupancyCertificate.getOcNotices().stream().filter(notice->notice.getNoticeCommon().getNoticeType().equalsIgnoreCase(BpaConstants.FINAL_OCCUPANCY_CERTIFICATE_NOTICE_TYPE)).collect(Collectors.toList());
         	 if(finalOCApp.isEmpty()) {
         		 OccupancyCertificateNoticesFormat ocNoticeFeature = (OccupancyCertificateNoticesFormat) specificNoticeService
                          .find(OccupancyCertificateFinalFormatImpl.class, specificNoticeService.getCityDetails());
-                 ReportOutput reportOutput = ocNoticeFeature
-                         .generateNotice(
-                                 occupancyCertificateService.findByApplicationNumber(occupancyCertificate.getApplicationNumber()));
-                 ocSmsAndEmailService.sendSmsAndEmailOnPermitOrderGeneration(occupancyCertificate, reportOutput);
-//                 return getFileAsResponseEntity(occupancyCertificate.getApplicationNumber(), reportOutput, REPORT_FILE_NAME);
+                 ReportOutput reportOutput = ocNoticeFeature.generateNotice( occupancyCertificate);
+                 ocSmsAndEmailService.sendSmsAndEmailOnFinalCertificateGeneration(occupancyCertificate, reportOutput);
         	 }
         		 
         }
