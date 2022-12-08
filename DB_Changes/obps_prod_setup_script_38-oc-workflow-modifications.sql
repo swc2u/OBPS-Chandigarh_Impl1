@@ -49,7 +49,7 @@ WHERE objecttype='OccupancyCertificate' and additionalrule='Low Risk' and pendin
 	
 
 INSERT INTO chandigarh.eg_wf_matrix (id,department,objecttype,currentstate,currentstatus,pendingactions,currentdesignation,additionalrule,nextstate,nextaction,nextdesignation,nextstatus,validactions,fromqty,toqty,fromdate,todate,"version",enablefields,forwardenabled,smsemailenabled,nextref,rejectenabled) VALUES 
-(nextval('chandigarh.seq_eg_wf_matrix'),'ANY','OccupancyCertificate','JE inspection','','Forwarded to JE inspection','','Low Risk','END','END','Junior Engineer Urban','Order Issued to Applicant','Verify,Reject',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL);
+(nextval('chandigarh.seq_eg_wf_matrix'),'ANY','OccupancyCertificate','JE inspection','','Forwarded to JE inspection','','Low Risk','END','END','Junior Engineer Urban','Order Issued to Applicant','Inspection Approved,Reject',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL);
 
 
 UPDATE chandigarh.eg_wf_matrix
@@ -58,7 +58,7 @@ WHERE objecttype='OccupancyCertificate' and additionalrule='High Risk' and pendi
 	
 
 INSERT INTO chandigarh.eg_wf_matrix (id,department,objecttype,currentstate,currentstatus,pendingactions,currentdesignation,additionalrule,nextstate,nextaction,nextdesignation,nextstatus,validactions,fromqty,toqty,fromdate,todate,"version",enablefields,forwardenabled,smsemailenabled,nextref,rejectenabled) VALUES 
-(nextval('chandigarh.seq_eg_wf_matrix'),'ANY','OccupancyCertificate','JE inspection','','Forwarded to JE inspection','','High Risk','END','END','Junior Engineer Urban','Order Issued to Applicant','Verify,Reject',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL);
+(nextval('chandigarh.seq_eg_wf_matrix'),'ANY','OccupancyCertificate','JE inspection','','Forwarded to JE inspection','','High Risk','END','END','Junior Engineer Urban','Order Issued to Applicant','Inspection Approved,Reject',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL);
 
 
 --Adding role action to generate final OC certificate API

@@ -82,7 +82,7 @@ import static org.egov.bpa.utils.BpaConstants.WF_BA_CHECK_NOC_UPDATION;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_FORWARD_TO_SDO_BUILDING;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_AEE_APPLICATION_APPROVAL_PENDING;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_FINAL_APPROVAL_PROCESS_INITIATED;
-import static org.egov.bpa.utils.BpaConstants.WF_VERIFY_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.WF_INSPECTION_APPROVED_BUTTON;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -111,6 +111,8 @@ import org.egov.bpa.transaction.entity.oc.OCSlot;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.entity.oc.OccupancyFee;
 import org.egov.bpa.transaction.entity.oc.OccupancyNocApplication;
+import org.egov.bpa.transaction.entity.pl.PLAppointmentSchedule;
+import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
 import org.egov.bpa.transaction.notice.OccupancyCertificateNoticesFormat;
 import org.egov.bpa.transaction.notice.PermitApplicationNoticesFormat;
 import org.egov.bpa.transaction.notice.impl.OccupancyCertificateFinalFormatImpl;
@@ -121,6 +123,7 @@ import org.egov.bpa.transaction.service.BpaDcrService;
 import org.egov.bpa.transaction.service.BpaStatusService;
 import org.egov.bpa.transaction.service.NocStatusService;
 import org.egov.bpa.transaction.service.OwnershipTransferService;
+import org.egov.bpa.transaction.service.oc.OCAppointmentScheduleService;
 import org.egov.bpa.transaction.service.oc.OCLetterToPartyService;
 import org.egov.bpa.transaction.service.oc.OCNoticeConditionsService;
 import org.egov.bpa.transaction.service.oc.OcInspectionService;
@@ -178,6 +181,7 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
     private static final String APPRIVALPOSITION = "approvalPosition";
     private static final String PDFEXTN = ".pdf";
     private static final String MSG_APPROVE_FORWARD_REGISTRATION = "msg.approve.success";
+    private static final String FORWARDED_TO_JE_INSPECTION = "Forwarded to JE inspection";
 
     @Autowired
     private PositionMasterService positionMasterService;
@@ -203,6 +207,10 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
     private BpaStatusService statusService;
     @Autowired
     private OwnershipTransferService ownershipTransferService;
+    @Autowired
+    private OCAppointmentScheduleService ocAppointmentScheduleService;
+    
+    private static final String APPOINTMENT_SCHEDULED_LIST = "appointmentScheduledList";
     
     @Autowired
 	@Qualifier("workflowService")
@@ -224,8 +232,15 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
                 || oc.getState().getNextAction().equalsIgnoreCase(WF_DOC_VERIFY_PEND)
                 || oc.getState().getNextAction().equalsIgnoreCase(WF_INIT_AUTO_RESCHDLE))
             return "oc-document-scrutiny-form";
-
+        
+        buildAppointmentDetailsOfScrutinyAndInspection(model, oc);
+        
         return OCCUPANCY_CERTIFICATE_VIEW;
+    }
+    
+    private void buildAppointmentDetailsOfScrutinyAndInspection(Model model, OccupancyCertificate oc) {
+    	List<OCAppointmentSchedule> appointmentScheduledList = ocAppointmentScheduleService.findByApplication(oc, AppointmentSchedulePurpose.INSPECTION);
+    	model.addAttribute(APPOINTMENT_SCHEDULED_LIST, appointmentScheduledList);
     }
 
     @GetMapping("/document-scrutiny/{applicationNumber}")
@@ -289,7 +304,7 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
                     .getAssignmentsByPositionAndDate(currentState.getOwnerPosition().getId(), new Date()).get(0);
 
         boolean hasInspectionStatus = hasInspectionStatus(currentStatus);
-        boolean hasInspectionPendingAction = FORWARDED_TO_REVIEW_APPLICATION_DOCUMENTS.equalsIgnoreCase(pendingAction);
+        boolean hasInspectionPendingAction = FORWARDED_TO_REVIEW_APPLICATION_DOCUMENTS.equalsIgnoreCase(pendingAction) || FORWARDED_TO_JE_INSPECTION.equalsIgnoreCase(pendingAction);
 
         if (occupancyCertificateUtils.isOCInspectionSchedulingIntegrationRequired()
                 && hasInspectionStatus && hasInspectionPendingAction && purposeInsList.isEmpty())
@@ -320,7 +335,7 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
 
     private boolean hasInspectionStatus(final String status) {
         return APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(status)
-                || APPLICATION_STATUS_REGISTERED.equalsIgnoreCase(status);
+                || APPLICATION_STATUS_REGISTERED.equalsIgnoreCase(status) ||BpaConstants.APPLICATION_STATUS_APPROVED.equalsIgnoreCase(status);
     }
 
     private void loadData(OccupancyCertificate oc, Model model) {
@@ -706,7 +721,7 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
                     + occupancyCertificate.getApplicationNumber();
         }
         else if (isNotBlank(wfBean.getWorkFlowAction())
-                && WF_VERIFY_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
+                && WF_INSPECTION_APPROVED_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
             OccupancyCertificateNoticesFormat ocNoticeFeature = (OccupancyCertificateNoticesFormat) specificNoticeService
                     .find(OccupancyCertificateFinalFormatImpl.class, specificNoticeService.getCityDetails());
             ReportOutput reportOutput = ocNoticeFeature

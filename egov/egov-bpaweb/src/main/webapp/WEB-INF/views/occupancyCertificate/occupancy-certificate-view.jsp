@@ -131,6 +131,13 @@
 					<li><a data-toggle="tab" href="#view-inspection" data-tabidx=5><spring:message
 								code='lbl.inspection.appln' /></a></li>
 				</c:if>
+				<c:if test="${not empty appointmentScheduledList}">
+					<li>
+						<a data-toggle="tab" href="#view-appointments" data-tabidx=2>
+							<spring:message code='lbl.scheduled.appmnt' />
+						</a>
+					</li>
+				</c:if>
 				<c:if test="${captureTSRemarks}">
 					<li><a data-toggle="tab" href="#ts-remarks" data-tabidx=6><spring:message
 								code='lbl.town.surveyor.remarks' /></a></li>
@@ -183,6 +190,7 @@
 					<div class="panel panel-primary" data-collapsed="0">
 						<jsp:include page="citizen/disclaimer-oc.jsp" />
 					</div>
+
 					<c:if test="${showRejectionReasons}">
 						<div class="panel panel-primary" data-collapsed="0">
 							<jsp:include page="oc-rejection-reasons.jsp"></jsp:include>
@@ -219,6 +227,13 @@
 					<div id="doc-scrnty" class="tab-pane fade">
 						<div class="panel panel-primary" data-collapsed="0">
 							<jsp:include page="view-oc-document-scrutiny.jsp"></jsp:include>
+						</div>
+					</div>
+				</c:if>
+				<c:if test="${not empty appointmentScheduledList}">
+					<div id="view-appointments" class="tab-pane fade">
+						<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="view-oc-scheduled-appiontments.jsp"></jsp:include>
 						</div>
 					</div>
 				</c:if>

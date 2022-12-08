@@ -593,7 +593,7 @@ public class BpaConstants {
 	public static final String WF_GENERATE_RENEWAL_ORDER = "Generate Permit Renewal Order";
 	public static final String WF_GENERATE_OWNERSHIP_ORDER = "Generate Ownership Transfer Order";
 	public static final String WF_FORWARD_BUTTON = "Forward";
-	public static final String WF_VERIFY_BUTTON = "Verify";
+	public static final String WF_INSPECTION_APPROVED_BUTTON = "Inspection Approved";
 	// building details related constants
 	public static final String TOTAL_PLINT_AREA = "totalPlintArea";
 	public static final String BUILDINGHEIGHT_GROUND = "buildingheightGround";
