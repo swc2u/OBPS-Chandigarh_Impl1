@@ -279,6 +279,7 @@ public class BpaConstants {
 
 	public static final String WF_BA_VARIFICATION_INITIATED = "Forwarded to property documents verification";
 	public static final String WF_BA_CHECK_NOC_UPDATION = "Forwarded to check NOC updation";
+	public static final String WF_BA_CHIEF_ENG_CHECK_NOC_UPDATION = "Forwarded to Chief engineer to check NOC updation";
 	public static final String WF_BA_AE_APPROVAL = "Forwarded to E- Assistant Estate Officer for Approval";
 	public static final String WF_BA_INITIATE_GENERATE_PERMIT_ORDER = "Initiated process for generate permit Order";
 	public static final String WF_BA_SDO_APPROVAL = "Forwarded to SDO Building for Approval";
