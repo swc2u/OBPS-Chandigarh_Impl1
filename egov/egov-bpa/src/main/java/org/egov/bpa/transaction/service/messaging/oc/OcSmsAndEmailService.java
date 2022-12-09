@@ -124,8 +124,11 @@ public class OcSmsAndEmailService {
     private static final String EMLB_KEY_APRVL = "msg.oc.application.approval.email.body";
     private static final String EMLS_KEY_APRVL = "msg.oc.application.approval.email.subject";
     private static final String EMLS_KEY_PO = "msg.oc.permitorder.generation.email.subject";
+    private static final String EMLS_KEY_FC = "msg.oc.finalcertificate.generation.email.subject";
     private static final String SMS_KEY_PO = "msg.oc.permitorder.generation.sms";
+    private static final String SMS_KEY_FC = "msg.oc.finalcertificate.generation.sms";
     private static final String EMLB_KEY_PO = "msg.oc.permitorder.generation.email.body";
+    private static final String EMLB_KEY_FC = "msg.oc.finalcertificate.generation.email.body";
 
     private static final String MSG_KEY_SMS_OC_FIELD_INS = "msg.oc.field.ins.schedule.sms";
     private static final String BODY_KEY_EMAIL_OC_FIELD_INS = "msg.oc.field.ins.schedule.email.body";
@@ -519,6 +522,25 @@ public class OcSmsAndEmailService {
             }
         }
     }
+    
+    //// OC FINAL CERTIFICATE GENERATION
+    public void sendSmsAndEmailOnFinalCertificateGeneration(OccupancyCertificate occupancyCertificate, ReportOutput reportOutput) {
+
+        if (isSmsEnabled() || isEmailEnabled()) {
+            ApplicationStakeHolder applnStakeHolder = occupancyCertificate.getParent().getStakeHolder().get(0);
+            if (applnStakeHolder.getApplication() != null && applnStakeHolder.getApplication().getOwner() != null) {
+                Applicant owner = applnStakeHolder.getApplication().getOwner();
+                buildSmsAndEmailOnFinalCertificateGeneration(occupancyCertificate, owner.getName(), owner.getUser().getMobileNumber(),
+                        owner.getEmailId(), reportOutput);
+            }
+            if (applnStakeHolder.getStakeHolder() != null && applnStakeHolder.getStakeHolder().isActive()) {
+                StakeHolder stakeHolder = applnStakeHolder.getStakeHolder();
+                buildSmsAndEmailOnPermitOrderGeneration(occupancyCertificate, stakeHolder.getName(),
+                        stakeHolder.getMobileNumber(),
+                        stakeHolder.getEmailId(), reportOutput);
+            }
+        }
+    }
 
     private void buildSmsAndEmailOnPermitOrderGeneration(OccupancyCertificate occupancyCertificate, String name,
             String mobileNumber,
@@ -526,6 +548,21 @@ public class OcSmsAndEmailService {
         String smsMsg = buildMsgDetailsOnPermitOrderGeneration(occupancyCertificate, name, SMS_KEY_PO);
         String body = buildMsgDetailsOnPermitOrderGeneration(occupancyCertificate, name, EMLB_KEY_PO);
         String subject = buildEmailSubjectOnPermitOrderGeneration(occupancyCertificate, EMLS_KEY_PO);
+        if (isNotBlank(mobileNumber) && isNotBlank(smsMsg)) {
+            notificationService.sendSMS(mobileNumber, smsMsg);
+        }
+        if (isNotBlank(emailId) && isNotBlank(body)) {
+            notificationService.sendEmailWithAttachment(emailId, subject, body, APP_PDF,
+                    "occupancycertificate" + "order" + PDFEXTN, reportOutput.getReportOutputData());
+        }
+    }
+    
+    private void buildSmsAndEmailOnFinalCertificateGeneration(OccupancyCertificate occupancyCertificate, String name,
+            String mobileNumber,
+            String emailId, ReportOutput reportOutput) {
+        String smsMsg = buildMsgDetailsOnPermitOrderGeneration(occupancyCertificate, name, SMS_KEY_FC);
+        String body = buildMsgDetailsOnPermitOrderGeneration(occupancyCertificate, name, EMLB_KEY_FC);
+        String subject = buildEmailSubjectOnPermitOrderGeneration(occupancyCertificate, EMLS_KEY_FC);
         if (isNotBlank(mobileNumber) && isNotBlank(smsMsg)) {
             notificationService.sendSMS(mobileNumber, smsMsg);
         }

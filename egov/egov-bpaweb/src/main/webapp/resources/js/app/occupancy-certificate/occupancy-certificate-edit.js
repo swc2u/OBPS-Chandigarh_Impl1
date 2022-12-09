@@ -221,7 +221,7 @@ jQuery(document)
                                 e.preventDefault();
                             }
                             return false;
-                        } else if (action === 'Revert') {
+                        } else if (action === 'Revert' || action === 'Revert to BA') {
                             if (validateForm(validator) && validateOnRevert()) {
                                 bootbox
                                     .dialog({

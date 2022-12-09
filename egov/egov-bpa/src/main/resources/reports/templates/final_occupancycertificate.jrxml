@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="bpa_occupancy_certificate" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="923d3ab1-1460-4218-a5fa-27826c902134">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<import value="org.egov.infra.reporting.util.ReportUtil"/>
+	<parameter name="ulbName" class="java.lang.String"/>
+	<parameter name="applicationNumber" class="java.lang.String"/>
+	<parameter name="applicationDate" class="java.lang.String"/>
+	<parameter name="noticeGenerationDate" class="java.lang.String"/>
+	<parameter name="applicantName" class="java.lang.String"/>
+	<parameter name="logoPath" class="java.io.InputStream"/>
+	<parameter name="qrCode" class="java.io.File"/>
+	<parameter name="subheader" class="java.lang.String"/>
+	<parameter name="coApplicantName" class="java.lang.String"/>
+	<parameter name="applicantAddress" class="java.lang.String"/>
+	<parameter name="mobileNo" class="java.lang.String"/>
+	<parameter name="plotNo" class="java.lang.String"/>
+	<parameter name="sectorNo" class="java.lang.String"/>
+	<parameter name="maxFloorNumber" class="java.lang.String"/>
+	<parameter name="formRule" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<title>
+		<band height="113" splitType="Stretch">
+			<image hAlign="Center">
+				<reportElement isPrintRepeatedValues="false" x="22" y="15" width="83" height="79" uuid="d163ddf0-22ef-4e54-bdcb-5cab48e70f7b"/>
+				<imageExpression><![CDATA[$P{logoPath}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="120" y="18" width="338" height="22" uuid="5167f56d-0808-4c64-8e7d-3211128bcd11"/>
+				<textElement textAlignment="Center">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{ulbName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="40" width="338" height="22" uuid="a6664fe8-5a85-4f32-bba3-48ed1accb192"/>
+				<textElement textAlignment="Center">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{formRule}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="119" y="62" width="339" height="22" uuid="98dfcec8-9176-4fd4-b8b5-48d691f0e679"/>
+				<textElement textAlignment="Center">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OCCUPANCY CERTIFICATE]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="90">
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="1" y="21" width="554" height="19" uuid="26d07d46-c11c-4848-b2c1-1bf260f20dc1"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Sh. "+$P{applicantName} + " , "+$P{coApplicantName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="1" y="41" width="554" height="19" uuid="d7f228a9-a18b-44a9-9f6b-164d999799a4"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{applicantAddress} + " , " + "\n" + "Mobile number : " + $P{mobileNo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="1" y="71" width="336" height="19" uuid="1377960a-a9d2-4a8b-a1d0-167e68a8f9a1"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Memo No- SDO (B)/"+ $P{applicationNumber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="350" y="71" width="205" height="19" uuid="4cb622a8-fbbc-481e-b6ed-5e2e5f3d7078"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" Dated " + $P{noticeGenerationDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="0" width="339" height="22" uuid="77cdedcf-a1fd-483f-ab4c-aa660232b09f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[To,]]></text>
+			</staticText>
+		</band>
+		<band height="60">
+			<textField>
+				<reportElement x="1" y="4" width="554" height="55" uuid="b6d4471d-09fe-4edc-bd99-8be325ab642e"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Whereas Sh. "+$P{applicantName} + " , "+$P{coApplicantName}+" has given notice of completion of the building described below, I hereby: - " + "\n" + "1. Grant Permission for Occupation Certificate and use of said building upto "+$P{maxFloorNumber}+" floor ."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="69">
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="1" y="17" width="554" height="19" uuid="cd7df634-08b4-46a9-acc8-da785522a1fb"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Plot no - "+$P{plotNo}+", Sector No- "+$P{sectorNo}+", Chandigarh"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="1" y="44" width="553" height="20" uuid="7291a0f5-d57a-4ece-97e0-1e700208e94a">
+					<printWhenExpression><![CDATA[!$P{subheader}.isEmpty()]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{subheader}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="0" width="339" height="17" uuid="195614fe-819b-43f4-8709-6c3b981c793e"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Description of building]]></text>
+			</staticText>
+		</band>
+		<band height="93">
+			<staticText>
+				<reportElement x="258" y="20" width="297" height="73" uuid="54b9ab87-7cb1-4952-8dc2-5b763da70d79"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estate office
+exercising the power of
+Chief Administrator, UT- Chandigarh"]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="82">
+			<image>
+				<reportElement x="330" y="2" width="222" height="80" uuid="b60cbe9c-686e-4c35-af2f-c6827bbb25fc"/>
+				<imageExpression><![CDATA[$P{qrCode}]]></imageExpression>
+			</image>
+		</band>
+	</pageFooter>
+</jasperReport>

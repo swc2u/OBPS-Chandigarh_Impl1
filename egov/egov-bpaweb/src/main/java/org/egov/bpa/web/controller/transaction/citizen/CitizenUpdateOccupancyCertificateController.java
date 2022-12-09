@@ -87,6 +87,7 @@ import org.egov.bpa.transaction.entity.oc.OCBuilding;
 import org.egov.bpa.transaction.entity.oc.OCFloor;
 import org.egov.bpa.transaction.entity.oc.OCLetterToParty;
 import org.egov.bpa.transaction.entity.oc.OCNocDocuments;
+import org.egov.bpa.transaction.entity.oc.OCNotice;
 import org.egov.bpa.transaction.entity.oc.OCSlot;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.entity.oc.OccupancyNocApplication;
@@ -226,6 +227,10 @@ public class CitizenUpdateOccupancyCertificateController extends BpaGenericAppli
                         && !oc.getRescheduledByCitizen()) {
             model.addAttribute("mode", "showRescheduleToCitizen");
         }
+        
+        List<OCNotice> finalOCApp = oc.getOcNotices().stream().filter(notice->notice.getNoticeCommon().getNoticeType().equalsIgnoreCase(BpaConstants.FINAL_OCCUPANCY_CERTIFICATE_NOTICE_TYPE)).collect(Collectors.toList());
+        model.addAttribute("isFinalOCGenerated", !finalOCApp.isEmpty());
+        
         final OcInspectionService ocInspectionService = (OcInspectionService) specificNoticeService
                 .find(OcInspectionService.class, specificNoticeService.getCityDetails());
         model.addAttribute("inspectionList", ocInspectionService.findByOcOrderByIdAsc(oc));
@@ -307,6 +312,7 @@ public class CitizenUpdateOccupancyCertificateController extends BpaGenericAppli
 				else
 					model.addAttribute("nocUserExists",false);
 		}
+        
     }
 
     private void prepareFormData(final OccupancyCertificate oc, final Model model) {

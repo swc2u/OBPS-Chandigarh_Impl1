@@ -285,7 +285,15 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
                 pos = oc.getCurrentState().getPreviousOwner();
                 wfMatrix = workFlowMatrixService
                         .getWorkFlowObjectbyId(bpaWorkFlowService.getPreviousWfMatrixId(oc.getStateHistory(),oc.getState()));
-            } else if (BpaConstants.WF_AUTO_RESCHDLE_APPMNT_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
+            }else if ("Revert to BA".equalsIgnoreCase(wfBean.getWorkFlowAction())) {
+            	 wfMatrix = bpaApplicationWorkflowService.getWfMatrix(oc.getStateType(), null, wfBean.getAmountRule(),
+            			 wfBean.getAdditionalRule(), "NEW",
+                        null);
+            	pos= bpaUtils.getUserPositionByZone(wfMatrix.getNextDesignation(),
+            			bpaUtils.getBoundaryForWorkflow(oc.getParent().getSiteDetail().get(0)).getId());
+            } 
+            
+            else if (BpaConstants.WF_AUTO_RESCHDLE_APPMNT_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
                 wfMatrix = bpaApplicationWorkflowService.getWfMatrix(oc.getStateType(), null,
                         wfBean.getAmountRule(), wfBean.getAdditionalRule(),
                         oc.getCurrentState().getValue(), BpaConstants.WF_AUTO_RESCHEDULE_PENDING);
@@ -346,7 +354,7 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
                 if (status != null)
                     oc.setStatus(getStatusByCurrentMatrixStatus(wfMatrix));
 
-                if (BpaConstants.GENERATE_OCCUPANCY_CERTIFICATE.equalsIgnoreCase(wfBean.getWorkFlowAction()))
+                if (BpaConstants.WF_INSPECTION_APPROVED_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction()))
                     oc.transition().end()
                             .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
                             .withComments(wfBean.getApproverComments())

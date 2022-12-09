@@ -141,9 +141,10 @@ public class OccupancyCertificateScheduleAppointmentController extends BpaGeneri
             && !BpaConstants.FWD_TO_OVRSR_FOR_FIELD_INS.equalsIgnoreCase(oc.getCurrentState().getNextAction())) {
             appointmentSchedule.setPurpose(AppointmentSchedulePurpose.DOCUMENTSCRUTINY);
         } else*/
-        if ((APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(oc.getStatus().getCode())
+        if (((APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(oc.getStatus().getCode())
                     || BpaConstants.APPLICATION_STATUS_REGISTERED.equalsIgnoreCase(oc.getStatus().getCode()))
-                   && BpaConstants.FORWARDED_TO_REVIEW_APPLICATION_DOCUMENTS.equalsIgnoreCase(oc.getCurrentState().getNextAction())) {
+                   && BpaConstants.FORWARDED_TO_REVIEW_APPLICATION_DOCUMENTS.equalsIgnoreCase(oc.getCurrentState().getNextAction()))
+        		||(BpaConstants.APPLICATION_STATUS_APPROVED.equalsIgnoreCase(oc.getStatus().getCode()) && "Forwarded to JE inspection".equalsIgnoreCase(oc.getCurrentState().getNextAction()))) {
             appointmentSchedule.setPurpose(AppointmentSchedulePurpose.INSPECTION);
         }
         ocAppointmentSchedule.setAppointmentScheduleCommon(appointmentSchedule);

@@ -94,4 +94,8 @@ public class BpaApplicationSettings {
 	public boolean approveNocAsDeemedSchedulerEnabled() {
 		return environment.getProperty("bpa.noc.approve.deemed.job.enabled", Boolean.class);
 	}
+	
+	public boolean finalCertificateSchedulerEnabledForOC() {
+		return environment.getProperty("bpa.oc.final.certificate.job.enabled", Boolean.class);
+	}
 }

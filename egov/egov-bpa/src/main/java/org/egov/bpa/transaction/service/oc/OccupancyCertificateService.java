@@ -618,4 +618,8 @@ public class OccupancyCertificateService {
         }
         return ocFee;
     }
+
+	public List<Long> findFinalOCGenerationApplications(Date todayDate) {
+		return occupancyCertificateRepository.findAllFinalOCGenerationApplications(todayDate);
+	}
 }

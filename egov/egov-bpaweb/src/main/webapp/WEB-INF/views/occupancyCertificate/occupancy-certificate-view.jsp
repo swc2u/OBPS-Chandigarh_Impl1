@@ -131,6 +131,13 @@
 					<li><a data-toggle="tab" href="#view-inspection" data-tabidx=5><spring:message
 								code='lbl.inspection.appln' /></a></li>
 				</c:if>
+				<c:if test="${not empty appointmentScheduledList}">
+					<li>
+						<a data-toggle="tab" href="#view-appointments" data-tabidx=2>
+							<spring:message code='lbl.scheduled.appmnt' />
+						</a>
+					</li>
+				</c:if>
 				<c:if test="${captureTSRemarks}">
 					<li><a data-toggle="tab" href="#ts-remarks" data-tabidx=6><spring:message
 								code='lbl.town.surveyor.remarks' /></a></li>
@@ -183,6 +190,7 @@
 					<div class="panel panel-primary" data-collapsed="0">
 						<jsp:include page="citizen/disclaimer-oc.jsp" />
 					</div>
+
 					<c:if test="${showRejectionReasons}">
 						<div class="panel panel-primary" data-collapsed="0">
 							<jsp:include page="oc-rejection-reasons.jsp"></jsp:include>
@@ -219,6 +227,13 @@
 					<div id="doc-scrnty" class="tab-pane fade">
 						<div class="panel panel-primary" data-collapsed="0">
 							<jsp:include page="view-oc-document-scrutiny.jsp"></jsp:include>
+						</div>
+					</div>
+				</c:if>
+				<c:if test="${not empty appointmentScheduledList}">
+					<div id="view-appointments" class="tab-pane fade">
+						<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="view-oc-scheduled-appiontments.jsp"></jsp:include>
 						</div>
 					</div>
 				</c:if>
@@ -331,7 +346,7 @@
 					</div>
 				</div>
 			</c:if> --%>
-			<c:if test="${occupancyCertificate.status.code eq 'Approved'}">
+			<c:if test="${occupancyCertificate.status.code eq 'Approved' && occupancyCertificate.state.value ne 'JE inspection'}">
 				<div class="row">
 	                <label class="col-sm-3 control-label text-right"><spring:message code="lbl.comments"/></label>
 	                <div class="col-sm-8 add-margin">
@@ -352,6 +367,11 @@
 						<a href="/bpa/application/occupancy-certificate/generate-occupancy-certificate/${occupancyCertificate.applicationNumber}"
 						   target="popup" class="btn btn-primary" 
 						   onclick="window.open('/bpa/application/occupancy-certificate/generate-occupancy-certificate/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;">
+								Print Provisional Occupancy Certificate 
+						</a>
+						<a href="/bpa/application/occupancy-certificate/generate-final-occupancy-certificate/${occupancyCertificate.applicationNumber}"
+						   target="popup" class="btn btn-primary" 
+						   onclick="window.open('/bpa/application/occupancy-certificate/generate-final-occupancy-certificate/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;">
 								Print Occupancy Certificate 
 						</a>
 						<input type="button" name="button2" value="Close" class="btn btn-default" onclick="window.close();" />
