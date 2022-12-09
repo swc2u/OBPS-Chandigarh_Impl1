@@ -341,9 +341,9 @@ public class OCNoticeUtil {
         	exisitingBldgMaxFloorNumber = floorDtls.stream().max(Comparator.comparing(OCExistingBuildingFloor::getFloorNumber));
         }
         
-        if(proposedBldgMaxFloorNumber!=null && exisitingBldgMaxFloorNumber!=null) {
-       
-        	if(proposedBldgMaxFloorNumber.get().getFloorNumber()>exisitingBldgMaxFloorNumber.get().getFloorNumber()) {
+         if( exisitingBldgMaxFloorNumber!=null) {
+	    	 if(proposedBldgMaxFloorNumber!=null) {
+	    		 if(proposedBldgMaxFloorNumber.get().getFloorNumber()>exisitingBldgMaxFloorNumber.get().getFloorNumber()) {
 	            	OCFloor basement = oc.getBuildings().get(0).getFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
 	    		    .orElse(null);      	
 	    	
@@ -351,24 +351,33 @@ public class OCNoticeUtil {
 			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
 			    	else
 			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
-        	}else {
-        		OCExistingBuildingFloor basement = oc.getExistingBuildings().get(0).getExistingBuildingFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
-            		    .orElse(null);      	
-            	
-            	if(basement != null)
-            		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
-            	else
-            		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
-        	}
-        }else if(exisitingBldgMaxFloorNumber!=null) {
-        	OCExistingBuildingFloor basement = oc.getExistingBuildings().get(0).getExistingBuildingFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
-        		    .orElse(null);      	
-        	
-        	if(basement != null)
-        		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
-        	else
-        		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
-        }
+	         	}else {
+	         		OCExistingBuildingFloor basement = oc.getExistingBuildings().get(0).getExistingBuildingFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
+	             		    .orElse(null);      	
+	             	
+	             	if(basement != null)
+	             		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
+	             	else
+	             		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
+	         	}
+	    	 }else {
+	    		 OCExistingBuildingFloor basement = oc.getExistingBuildings().get(0).getExistingBuildingFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
+	             		    .orElse(null);      	
+	             	
+	             	if(basement != null)
+	             		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
+	             	else
+	             		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
+	    	 }
+         }else {
+        	 OCFloor basement = oc.getBuildings().get(0).getFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
+  	    		    .orElse(null);      	
+  	    	
+  			    	if(basement != null)
+  			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
+  			    	else
+  			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
+         }
         
         reportParams.put("maxFloorNumber", maxFloorCount);
 
