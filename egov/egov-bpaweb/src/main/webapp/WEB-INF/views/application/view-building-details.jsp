@@ -212,7 +212,7 @@
 					<spring:message code="lbl.floor.count" />
 				</div>
 				<div class="col-sm-3 add-margin view-content">
-					<c:out value="${bldg.floorCount}" default="N/A"></c:out>
+					<c:out value="${fn:length(bldg.applicationFloorDetails)}" default="N/A"></c:out>
 				</div>
 			</div>
 			<div class="row add-border">

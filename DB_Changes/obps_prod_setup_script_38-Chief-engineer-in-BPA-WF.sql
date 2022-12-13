@@ -29,7 +29,7 @@ Where currentstate = 'Fee details verification initiated' and nextdesignation='S
 
 
 INSERT INTO chandigarh.eg_wf_matrix (id,department,objecttype,currentstate,currentstatus,pendingactions,currentdesignation,additionalrule,nextstate,nextaction,nextdesignation,nextstatus,validactions,fromqty,toqty,fromdate,todate,"version",enablefields,forwardenabled,smsemailenabled,nextref,rejectenabled) VALUES 
-(nextval('chandigarh.SEQ_EG_WF_MATRIX'),'ANY','BpaApplication','NOC updation initiated','','','','High Risk','NOC updation in progress','Forwarded to check NOC updation','SDO Building Urban','Document Verification Completed','Forward,Revert to BA',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL);
+(nextval('chandigarh.SEQ_EG_WF_MATRIX'),'ANY','BpaApplication','NOC updation initiated','','','','High Risk','NOC updation in progress','Forwarded to check NOC updation','SDO Building Urban','Document Verification Completed','Forward,Revert to HDM',NULL,NULL,'2019-01-01','2099-04-01',0,NULL,NULL,NULL,NULL,NULL);
 
 
 

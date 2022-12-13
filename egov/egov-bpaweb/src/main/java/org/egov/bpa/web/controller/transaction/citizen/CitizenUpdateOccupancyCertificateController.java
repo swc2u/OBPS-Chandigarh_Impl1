@@ -265,6 +265,7 @@ public class CitizenUpdateOccupancyCertificateController extends BpaGenericAppli
         List<User> nocAutoUsers = new ArrayList<>();
 	    List<User> nocUsers = userService.getUsersByTypeAndTenants(UserType.BUSINESS);
         List<OccupancyNocApplication> ocNoc = ocNocService.findByOCApplicationNumber(oc.getApplicationNumber());
+        model.addAttribute("nocApplication", ocNoc);
         model.addAttribute("isOcApplFeeReq","NO");
         model.addAttribute("ocApplFeeCollected","NO");
         if(occupancyCertificateUtils.isApplicationFeeCollectionRequired() ){

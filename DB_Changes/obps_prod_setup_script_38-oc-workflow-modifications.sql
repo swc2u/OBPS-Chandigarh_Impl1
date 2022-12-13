@@ -30,6 +30,10 @@ WHERE objecttype='OccupancyCertificate' and additionalrule='High Risk' and curre
 UPDATE chandigarh.eg_wf_matrix
 SET nextdesignation='Building Assistant Urban'
 WHERE objecttype='OccupancyCertificate' and additionalrule='High Risk' and currentstate='Rejected' and nextdesignation='SDO Building Urban';
+
+UPDATE chandigarh.eg_wf_matrix
+SET pendingactions='Forwarded to check NOC updation',currentstate='Registered'
+WHERE objecttype='OccupancyCertificate' and additionalrule='High Risk' and pendingactions='Forwarded to E- Assistant Estate Officer for Approval' and currentstate='AEE Application Approval Pending'
 	
 
 --B2K OC workflow modification (adding new action Rever to BA )
@@ -44,7 +48,7 @@ and currentstatus='AEE Approval Completed' and currentstate='Final Approval Proc
 --JE in workflow
 
 UPDATE chandigarh.eg_wf_matrix
-SET nextaction='Forwarded to JE inspection',nextstate='JE inspection'
+SET nextaction='Forwarded to JE inspection',nextstate='JE inspection',nextdesignation='Junior Engineer Urban',nextstatus='Approved'
 WHERE objecttype='OccupancyCertificate' and additionalrule='Low Risk' and pendingactions='Forwarded to generate Occupancy Certificate' and currentstate='Record Approved';
 	
 
@@ -53,7 +57,7 @@ INSERT INTO chandigarh.eg_wf_matrix (id,department,objecttype,currentstate,curre
 
 
 UPDATE chandigarh.eg_wf_matrix
-SET nextaction='Forwarded to JE inspection',nextstate='JE inspection'
+SET nextaction='Forwarded to JE inspection',nextstate='JE inspection',nextdesignation='Junior Engineer Urban',nextstatus='Approved'
 WHERE objecttype='OccupancyCertificate' and additionalrule='High Risk' and pendingactions='Forwarded to generate Occupancy Certificate' and currentstate='Record Approved';
 	
 
@@ -63,10 +67,10 @@ INSERT INTO chandigarh.eg_wf_matrix (id,department,objecttype,currentstate,curre
 
 --Adding role action to generate final OC certificate API
 	
-Insert into EG_ACTION (id,name,url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,version,createdby,createddate,lastmodifiedby,lastmodifieddate,application)
-values (nextval('SEQ_EG_ACTION'),'Generate final Occupancy Certificate','/application/occupancy-certificate/generate-final-occupancy-certificate',null,(select id from eg_module where name='BPA Transanctions'),1,'Generate final Occupancy Certificate','false','bpa',0,1,now(),1,now(),
+Insert into chandigarh.EG_ACTION (id,name,url,queryparams,parentmodule,ordernumber,displayname,enabled,contextroot,version,createdby,createddate,lastmodifiedby,lastmodifieddate,application)
+values (nextval('chandigarh.SEQ_EG_ACTION'),'Generate final Occupancy Certificate','/application/occupancy-certificate/generate-final-occupancy-certificate',null,(select id from eg_module where name='BPA Transanctions'),1,'Generate final Occupancy Certificate','false','bpa',0,1,now(),1,now(),
 (select id from eg_module where name='BPA'));
 
-Insert into eg_roleaction (roleid,actionid) values((select id from eg_role where name='BPA Approver'),(select id from eg_action where name = 'Generate final Occupancy Certificate' and contextroot = 'bpa'));
-Insert into eg_roleaction (roleid,actionid) values((select id from eg_role where name='CITIZEN'),(select id from eg_action where name = 'Generate final Occupancy Certificate' and contextroot = 'bpa'));
-Insert into eg_roleaction (roleid,actionid) values((select id from eg_role where name='BUSINESS'),(select id from eg_action where name = 'Generate final Occupancy Certificate' and contextroot = 'bpa'));
+Insert into chandigarh.eg_roleaction (roleid,actionid) values((select id from state.eg_role where name='BPA Approver'),(select id from chandigarh.eg_action where name = 'Generate final Occupancy Certificate' and contextroot = 'bpa'));
+Insert into chandigarh.eg_roleaction (roleid,actionid) values((select id from state.eg_role where name='CITIZEN'),(select id from chandigarh.eg_action where name = 'Generate final Occupancy Certificate' and contextroot = 'bpa'));
+Insert into chandigarh.eg_roleaction (roleid,actionid) values((select id from state.eg_role where name='BUSINESS'),(select id from chandigarh.eg_action where name = 'Generate final Occupancy Certificate' and contextroot = 'bpa'));

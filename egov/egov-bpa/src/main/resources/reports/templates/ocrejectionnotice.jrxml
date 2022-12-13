@@ -34,8 +34,8 @@
 	</background>
 	<title>
 		<band height="96" splitType="Stretch">
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="88" y="29" width="428" height="20" uuid="ba5c4563-d93c-483f-86e2-5aae2755cd2f"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="88" y="13" width="428" height="20" uuid="ba5c4563-d93c-483f-86e2-5aae2755cd2f"/>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="12" isBold="true"/>
 				</textElement>
@@ -73,13 +73,6 @@
 				<reportElement x="12" y="0" width="60" height="60" uuid="81d01a85-baca-4d87-a163-f1f059c78074"/>
 				<imageExpression><![CDATA[$P{logoPath}]]></imageExpression>
 			</image>
-			<staticText>
-				<reportElement x="88" y="6" width="428" height="20" uuid="47a89ac7-ee81-4110-8781-02f638ae6777"/>
-				<textElement textAlignment="Center">
-					<font fontName="SansSerif" size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Urban Development And Housing Department, Govt of Bihar]]></text>
-			</staticText>
 		</band>
 	</title>
 	<pageHeader>
@@ -99,17 +92,17 @@
 				<reportElement x="0" y="0" width="555" height="20" uuid="97a7b5ad-99a3-4915-8420-916a97403840"/>
 				<textFieldExpression><![CDATA["To,"]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField>
 				<reportElement x="23" y="19" width="532" height="20" uuid="d7b21c92-04d4-4c38-8a61-56d9052898a3"/>
 				<textElement textAlignment="Justified"/>
-				<textFieldExpression><![CDATA["Shri1./Smt.\n"+$F{parent}.getApplicantName() +",\n"+$F{parent}.getOwner().getAddress()+"."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Shri./Smt.\n"+$F{parent}.getApplicantName() +",\n"+$F{parent}.getOwner().getAddress()+"."]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="80">
-			<textField isStretchWithOverflow="true">
+			<textField>
 				<reportElement x="0" y="30" width="555" height="48" uuid="d9ada7e9-755a-4e4a-aaab-6eea193e0e6f"/>
 				<textElement textAlignment="Justified"/>
-				<textFieldExpression><![CDATA["       Your application, dated "+DateUtils.toDefaultDateFormat($F{applicationDate})+" for occupancy certificate for "+$P{serviceType}+"  in "+ $P{ulbName} +" falling in "+$P{village}+" Locality,Revenue Ward "+$P{revenueWard}+",Electoral Ward "+$P{electionWard}+",Re-Survey No."+$P{surveyNo}+",is rejected due the following reason(s),"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["       Your application, dated "+DateUtils.toDefaultDateFormat($F{applicationDate})+" for occupancy certificate for "+$P{serviceType}+"  in "+ $P{ulbName} +" falling in "+$P{village}+" Locality,"+$P{revenueWard} +",is rejected due the following reason(s),"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="12" width="555" height="19" uuid="bd9a4c63-8f75-42e2-ab92-b852ddc19032"/>
@@ -117,7 +110,7 @@
 			</textField>
 		</band>
 		<band height="50">
-			<textField isStretchWithOverflow="true">
+			<textField>
 				<reportElement x="0" y="0" width="555" height="50" uuid="15bc4bc2-b4f7-4bdf-af6b-6eaab0e1dfe2">
 					<printWhenExpression><![CDATA[$P{rejectionReasons} != null]]></printWhenExpression>
 				</reportElement>
@@ -147,13 +140,6 @@
 				</textElement>
 				<text><![CDATA[Place        : ]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true">
-				<reportElement x="343" y="30" width="212" height="20" uuid="a67f4588-9df1-44f8-9ea5-f4dd4c5d9514"/>
-				<textElement textAlignment="Center">
-					<font fontName="SansSerif" size="10" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA["For Secretary"]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="0" y="30" width="65" height="20" uuid="4e4eb8e9-5fa0-4156-895b-3214d47f3736"/>
 				<textElement>
