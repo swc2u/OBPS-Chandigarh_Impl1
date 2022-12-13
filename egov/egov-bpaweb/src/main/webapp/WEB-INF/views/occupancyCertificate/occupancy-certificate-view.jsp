@@ -346,7 +346,7 @@
 					</div>
 				</div>
 			</c:if> --%>
-			<c:if test="${occupancyCertificate.status.code eq 'Approved' && occupancyCertificate.state.value ne 'JE inspection'}">
+			<c:if test="${occupancyCertificate.status.code eq 'Approved' }">
 				<div class="row">
 	                <label class="col-sm-3 control-label text-right"><spring:message code="lbl.comments"/></label>
 	                <div class="col-sm-8 add-margin">

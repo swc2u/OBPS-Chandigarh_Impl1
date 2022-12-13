@@ -57,6 +57,7 @@ import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_CANCELLED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_NOCUPDATED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REJECTED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_APPROVED;
 import static org.egov.bpa.utils.BpaConstants.APPROVED;
 import static org.egov.bpa.utils.BpaConstants.BPAREJECTIONFILENAME;
 import static org.egov.bpa.utils.BpaConstants.DISCLIMER_MESSAGE_ONSAVE;
@@ -784,7 +785,8 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
                 || APPLICATION_STATUS_DOC_REVIEWED.equalsIgnoreCase(oc.getStatus().getCode())
                 || (APPLICATION_STATUS_REGISTERED.equalsIgnoreCase(oc.getStatus().getCode()) && WF_BA_FINAL_APPROVAL_PROCESS_INITIATED.equalsIgnoreCase(oc.getState().getValue()))
                 || APPLICATION_STATUS_AEE_APPROVAL_COMPLETED.equalsIgnoreCase(oc.getStatus().getCode())
-                || APPLICATION_STATUS_REJECTED.equalsIgnoreCase(oc.getStatus().getCode())) {
+                || APPLICATION_STATUS_REJECTED.equalsIgnoreCase(oc.getStatus().getCode())
+                ||(APPLICATION_STATUS_APPROVED.equalsIgnoreCase(oc.getStatus().getCode()) && "JE inspection".equalsIgnoreCase(oc.getState().getValue()))) {
             model.addAttribute("showRejectionReasons", true);
             model.addAttribute("additionalRejectionReasons",
                     checklistServiceTypeService.findByActiveChecklistAndServiceType(
