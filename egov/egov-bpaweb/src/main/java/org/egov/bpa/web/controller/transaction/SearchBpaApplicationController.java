@@ -513,7 +513,9 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
         }
         model.addAttribute("inconstinspectionList", inConstInspections);
         model.addAttribute("lettertopartylist", lettertoPartyService.findByBpaApplicationOrderByIdDesc(application));
-        buildReceiptDetails(application.getDemand().getEgDemandDetails(), application.getReceipts());
+        
+        if(application.getIsPreviousPlan()==null || !application.getIsPreviousPlan())
+        	buildReceiptDetails(application.getDemand().getEgDemandDetails(), application.getReceipts());
         return "viewapplication-form";
     }
 

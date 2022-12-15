@@ -746,6 +746,7 @@ public class BpaAjaxController {
         nocTypeMap.put(BpaConstants.FIRENOCTYPE, odcrPlanInfo.getPlan().getPlanInformation().getNocFireDept().equals("YES"));
         nocTypeMap.put(BpaConstants.PACNOCTYPE, odcrPlanInfo.getPlan().getPlanInformation().getNocNearAirport().equals("YES"));
         nocTypeMap.put(BpaConstants.POLNOCTYPE, odcrPlanInfo.getPlan().getPlanInformation().getNocStateEnvImpact().equals("YES"));
+        nocTypeMap.put(BpaConstants.PLANNINGNOCTYPE, odcrPlanInfo.getPlan().getPlanInformation().getNocPlanningDept().equals("YES"));
         nocTypeMap.put(BpaConstants.ACTAXNOCTYPE, odcrPlanInfo.getPlan().getPlanInformation().getNocStateEnvImpact().equals("YES"));
 
         checklistServicetypeMappingService.findByActiveByServiceTypeAndChecklist(serviceType, checklistType).stream()

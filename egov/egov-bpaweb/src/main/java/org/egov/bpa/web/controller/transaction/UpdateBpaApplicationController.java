@@ -490,6 +490,16 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
                                     ? bpaApplication.getSiteDetail().get(0).getAdminBoundary().getId()
                                     : null);
         }
+        else if ("Revert to SDO".equalsIgnoreCase(workFlowAction)) {
+        	WorkFlowMatrix wfMatrix = bpaApplicationWorkflowService.getWfMatrix(bpaApplication.getStateType(), null, amountRule,
+        			bpaApplication.getApplicationType().getName(), "NOC updation initiated",
+                    null);
+        	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
+                    bpaApplication.getSiteDetail().get(0) != null
+                            && bpaApplication.getSiteDetail().get(0).getAdminBoundary() != null
+                                    ? bpaApplication.getSiteDetail().get(0).getAdminBoundary().getId()
+                                    : null);
+        }
         else if ("Send Back To SDOMC".equalsIgnoreCase(workFlowAction)) {
         	WorkFlowMatrix wfMatrix = bpaApplicationWorkflowService.getWfMatrix(bpaApplication.getStateType(), null, amountRule,
         			bpaApplication.getApplicationType().getName(), "Property documents verification initiated",
