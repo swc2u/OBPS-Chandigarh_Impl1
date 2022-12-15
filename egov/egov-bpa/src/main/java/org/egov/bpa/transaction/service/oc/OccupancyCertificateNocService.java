@@ -238,11 +238,13 @@ public class OccupancyCertificateNocService {
         nocTypeMap.put(BpaConstants.FIRENOCTYPE, "NO");
 		nocTypeMap.put(BpaConstants.PACNOCTYPE, "NO");
 		nocTypeMap.put(BpaConstants.POLNOCTYPE, "NO");
+		nocTypeMap.put(BpaConstants.PLANNINGNOCTYPE, "NO");
 		nocTypeMap.put(BpaConstants.ACTAXNOCTYPE, "NO");
 		if(edcrPlanInfo.getPlan()!=null){ 
 			edcrPlanInfo.getPlan().getPlanInformation().setNocPACDept("NO");
 			edcrPlanInfo.getPlan().getPlanInformation().setNocFireDept("NO");
 			edcrPlanInfo.getPlan().getPlanInformation().setNocPollutionDept("NO");
+			edcrPlanInfo.getPlan().getPlanInformation().setNocPlanningDept("NO");
 			edcrPlanInfo.getPlan().getPlanInformation().setNocAcTaxDept("NO");
 			if(null!=edcrPlanInfo.getPlan()) {
 				String boundaryType = "";
@@ -258,6 +260,7 @@ public class OccupancyCertificateNocService {
 						edcrPlanInfo.getPlan().getPlanInformation().setNocPACDept("YES");
 						edcrPlanInfo.getPlan().getPlanInformation().setNocFireDept("YES");
 						edcrPlanInfo.getPlan().getPlanInformation().setNocPollutionDept("YES");
+						edcrPlanInfo.getPlan().getPlanInformation().setNocPlanningDept("YES");
 					}
 				}else if(boundaryType.equalsIgnoreCase(BpaConstants.RURAL)){
 					edcrPlanInfo.getPlan().getPlanInformation().setNocFireDept("YES");
@@ -267,6 +270,7 @@ public class OccupancyCertificateNocService {
 			nocTypeMap.put(BpaConstants.FIRENOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocFireDept());
 			nocTypeMap.put(BpaConstants.PACNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPACDept());
 			nocTypeMap.put(BpaConstants.POLNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPollutionDept());
+			nocTypeMap.put(BpaConstants.PLANNINGNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPlanningDept());
 			nocTypeMap.put(BpaConstants.ACTAXNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocAcTaxDept());
 	   }
 	   return nocTypeMap;

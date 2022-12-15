@@ -345,6 +345,19 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
 						.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
 						.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
 			}
+		}else if ("Revert to SDO".equalsIgnoreCase(workFlowAction)) {
+			wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null, additionalRule,
+					"NOC updation initiated", null);
+
+			if (wfmatrix != null) {
+				application.setStatus(getStatusByCurrentMatrxiStatus(wfmatrix));
+				application.transition().progressWithStateCopy()
+						.withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+						.withComments(approvalComent).withRefFileId(application.getWfFileRefId())
+						.withStateValue(wfmatrix.getNextState()).withDateInfo(currentDate.toDate()).withOwner(pos)
+						.withOwner(ownerUser).withNextAction(wfmatrix.getNextAction())
+						.withNatureOfTask(BpaConstants.NATURE_OF_WORK);
+			}
 		} else if ("Send Back To SDOMC".equalsIgnoreCase(workFlowAction)) {
 			wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, null, additionalRule,
 					"Property documents verification initiated", "Forwarded to property documents verification");
