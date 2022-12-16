@@ -272,9 +272,9 @@
 			<version>8.0.30</version>
 		</dependency>
 		<dependency>
-			<groupId>com.paytm.pg.merchant</groupId>
-			<artifactId>PaytmChecksum</artifactId>
-			<version>1.0</version>
+			<groupId>com.paytm</groupId>
+			<artifactId>Paytm-checksum</artifactId>
+			<version>2.0.0</version>
 		</dependency>
 	</dependencies>
 
