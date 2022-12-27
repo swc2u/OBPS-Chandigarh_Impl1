@@ -232,7 +232,8 @@ public class BuildingHeight extends FeatureProcess {
 						|| DxfFileConstants.F_M.equals(occupancyTypeHelper.getSubtype().getCode())
 						|| DxfFileConstants.F_CFI.equals(occupancyTypeHelper.getSubtype().getCode())
 						|| DxfFileConstants.F_TCIM.equals(occupancyTypeHelper.getSubtype().getCode())
-						|| DxfFileConstants.G.equals(occupancyTypeHelper.getType().getCode())) {
+						|| DxfFileConstants.G.equals(occupancyTypeHelper.getType().getCode())
+						|| DxfFileConstants.B_HEI.equals(occupancyTypeHelper.getSubtype().getCode())) {
 
 					String suboccTypeCode = occupancyTypeHelper.getSubtype().getCode();
 					Map<String, String> keyArrgument = new HashMap<String, String>();
@@ -316,8 +317,8 @@ public class BuildingHeight extends FeatureProcess {
 				if (DxfFileConstants.B.equals(occupancyTypeHelper.getType().getCode())) {
 					if (DxfFileConstants.B_EC.equals(occupancyTypeHelper.getSubtype().getCode()))
 						exptectedHeight = new BigDecimal("17.52");
-					else if (DxfFileConstants.B_HEI.equals(occupancyTypeHelper.getSubtype().getCode()))
-						exptectedHeight = new BigDecimal("14.86");
+//					else if (DxfFileConstants.B_HEI.equals(occupancyTypeHelper.getSubtype().getCode()))
+//						exptectedHeight = new BigDecimal("14.86");
 					else if (DxfFileConstants.B_H.equals(occupancyTypeHelper.getSubtype().getCode()))
 						exptectedHeight = new BigDecimal("14.86");
 				}
