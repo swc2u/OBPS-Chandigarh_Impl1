@@ -173,3 +173,9 @@ egov/egov-services/.classpath
 egov/egov-services/.project
 
 egov/egov-egiweb/.tern-project
+egov/.idea/workspace.xml
+egov/.idea/misc.xml
+egov/.idea/jpa-buddy.xml
+egov/.idea/jarRepositories.xml
+egov/.idea/encodings.xml
+egov/.idea/compiler.xml
