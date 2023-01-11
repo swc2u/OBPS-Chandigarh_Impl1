@@ -196,17 +196,24 @@
 						<div class="panel-title">Comments</div>
 					</div>
 					&nbsp;&nbsp;&nbsp;&nbsp;
-					<c:out value="${permitNocApplication.bpaNocApplication.remarks}"
+					<c:out value="${permitNocApplication.bpaNocApplication.comments}"
 						default="N/A"></c:out>
 				</div>
 			</div>
 			<div align="center">
-
+				<c:if test="${permitNocApplication.bpaNocApplication.status.code eq 'Send Observations' && userType eq 'SSDO'}">
+					<a href="/bpa/nocapplication/reInitiateNoc/${permitNocApplication.bpaNocApplication.nocApplicationNumber}" target="_self" class="btn btn-secondary"> 
+						<spring:message code="lbl.re.initiate"/> 
+					</a>
+				</c:if>
 				<input type="button" name="button2" id="button2" value="Close"
 					class="btn btn-default" onclick="window.close();" />
 
 			</div>
 		</div>
+<input type="hidden" id="nocApplicationNo" value="${permitNocApplication.bpaNocApplication.nocApplicationNumber}"/>
+<%-- <input type="hidden" id="reInitiateNocApplication"
+					value="<spring:message code='msg.confirm.re.initiate.nocappln'/>" /> --%>
 </form:form>
 
 
@@ -228,5 +235,7 @@
 	src="<cdn:url value='/resources/js/app/documentsuploadvalidation.js?rnd=${app_release_no}'/>"></script>
 <script
 	src="<cdn:url value='/resources/js/app/document-upload-helper.js?rnd=${app_release_no}'/>"></script>
+<script
+	src="<cdn:url value='/resources/js/app/application-view.js?rnd=${app_release_no}'/>"></script>
 <link rel="stylesheet"
 	href="<c:url value='/resources/css/bpa-style.css?rnd=${app_release_no}'/>">

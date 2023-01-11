@@ -153,6 +153,39 @@ $(document)
         				url = url+"~"+$('#applicationNo').val();
         				window.open(url,'popup','scrollbars=yes,resizable=yes,height=700,width=800,status=yes');
         			}
-
-
-				});
+        			
+					$('#buttonSendObservations').click(function (e) {
+						document.getElementById("workFlowAction").value = 'Send Observations';
+						$('#comments').attr('required', 'required');
+						if ($('#editNocApplicationForm').valid()){
+					        bootbox
+					            .dialog({
+					                message: $('#sendObserveApplication').val(),
+					                buttons: {
+					                    'confirm': {
+					                        label: 'Yes',
+					                        className: 'btn-primary',
+					                        callback: function (result) {
+					                        	document.getElementById("editNocApplicationForm").submit()
+					                            return true;
+					                        }
+					                    },
+					                    'cancel': {
+					                        label: 'No',
+					                        className: 'btn-danger',
+					                        callback: function (result) {
+					                            e.stopPropagation();
+					                            e.preventDefault();
+					                        }
+					                    }
+					                }
+					            });
+						}
+					    return false;
+					    
+					});
+					
+					 
+				
+				
+});

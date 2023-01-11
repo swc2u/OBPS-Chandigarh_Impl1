@@ -481,6 +481,8 @@ public class BpaConstants {
 	public static final String NOC_REJECTED = "Rejected";
 	public static final String NOC_DEEMED_APPROVED = "Deemed Approved";
 	public static final String NOC_APPL_REJECTED = "Permit Application Rejected";
+	public static final String NOC_RE_INITIATED = "Re Initiated";
+	public static final String NOC_SEND_OBSERVATIONS = "Send Observations";
 	public static final String PERMIT = "Permit";
 	public static final String OC = "OC";
 

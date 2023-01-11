@@ -104,6 +104,10 @@ public class BpaNocApplication extends AbstractAuditable {
     private String remarks;
     private Date slaEndDate;
     private Date deemedApprovedDate;
+    
+    @SafeHtml
+    @Length(min = 1, max = 2000)
+    private String comments;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "egbpa_noc_certificate", joinColumns = @JoinColumn(name = "nocapplication"), inverseJoinColumns = @JoinColumn(name = "fileStore"))
@@ -189,6 +193,12 @@ public class BpaNocApplication extends AbstractAuditable {
 	}
 	public void setNocEvaluations(List<NocEvaluation> nocEvaluations) {
 		this.nocEvaluations = nocEvaluations;
+	}
+	public String getComments() {
+		return comments;
+	}
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 	
 	
