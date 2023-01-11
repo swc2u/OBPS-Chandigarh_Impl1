@@ -193,6 +193,37 @@ $('#buttonApprove').click(function (e) {
     return false;
 });
 
+$('#buttonSendObservations').click(function (e) {
+	document.getElementById("workFlowAction").value = 'Send Observations';
+	$('#comments').attr('required', 'required');
+	if ($('#editNocApplicationForm').valid()){
+        bootbox
+            .dialog({
+                message: $('#sendObserveApplication').val(),
+                buttons: {
+                    'confirm': {
+                        label: 'Yes',
+                        className: 'btn-primary',
+                        callback: function (result) {
+                        	document.getElementById("editNocApplicationForm").submit()
+                            return true;
+                        }
+                    },
+                    'cancel': {
+                        label: 'No',
+                        className: 'btn-danger',
+                        callback: function (result) {
+                            e.stopPropagation();
+                            e.preventDefault();
+                        }
+                    }
+                }
+            });
+	}
+    return false;
+    
+});
+
 $('#buttonReject').click(function (e) {
 	document.getElementById("workFlowAction").value = 'Rejected';
 	$('#remarks').attr('required', 'required');

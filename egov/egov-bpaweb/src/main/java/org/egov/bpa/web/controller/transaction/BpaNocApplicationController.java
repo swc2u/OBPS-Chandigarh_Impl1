@@ -60,7 +60,6 @@ import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BpaNocApplication;
 import org.egov.bpa.transaction.entity.BpaStatus;
 import org.egov.bpa.transaction.entity.NocEvaluation;
-import org.egov.bpa.transaction.entity.PermitDcrDocument;
 import org.egov.bpa.transaction.entity.PermitDocument;
 import org.egov.bpa.transaction.entity.PermitNocApplication;
 import org.egov.bpa.transaction.entity.PermitNocDocument;
@@ -109,7 +108,7 @@ public class BpaNocApplicationController {
 
 	@Autowired
 	private PermitNocApplicationRepository permitNocRepository;
-
+	
 	@Autowired
 	private BPASmsAndEmailService bpaSmsAndEmailService;
 
@@ -127,6 +126,16 @@ public class BpaNocApplicationController {
 						+ " with application number " + permitNoc.getBpaNocApplication().getNocApplicationNumber()
 						+ ".");
 		return "redirect:/nocapplication/success/" + permitNoc.getBpaNocApplication().getNocApplicationNumber();
+	}
+	
+	@RequestMapping(value = "/reInitiateNoc/{nocapplicationNumber}", method = RequestMethod.GET)
+	public String reInitiateNoc(@PathVariable final String nocapplicationNumber, final Model model,
+			final RedirectAttributes redirectAttributes) {
+		System.out.println("Value of noc app number"+nocapplicationNumber);
+		permitNocService.reInitiateNoc(nocapplicationNumber);
+		redirectAttributes.addFlashAttribute("message", "Noc Application with application number " + nocapplicationNumber + " is marked with status Re Initiated."
+						);
+		return "redirect:/nocapplication/success/" + nocapplicationNumber;
 	}
 
 	@RequestMapping(value = "/update/{applicationNumber}", method = RequestMethod.GET)
@@ -148,10 +157,13 @@ public class BpaNocApplicationController {
 		model.addAttribute("permitNocApplication", permitNoc);
 		List<Checklist> checklists = getListOfEvaluation(permitNoc);
 		model.addAttribute("checklists", checklists);
-		if (!permitNoc.getBpaNocApplication().getStatus().getCode().equals(BpaConstants.NOC_INITIATED))
+		if (!permitNoc.getBpaNocApplication().getStatus().getCode().equals(BpaConstants.NOC_INITIATED) && 
+				!permitNoc.getBpaNocApplication().getStatus().getCode().equals(BpaConstants.NOC_RE_INITIATED)) {
 			return "redirect:/nocapplication/view/" + permitNoc.getBpaNocApplication().getNocApplicationNumber();
-		else
+		}
+		else {
 			return "noc-details";
+		}
 	}
 
 	public List<Checklist> getListOfEvaluation(final PermitNocApplication permitNocApplication) {
@@ -198,6 +210,10 @@ public class BpaNocApplicationController {
 			redirectAttributes.addFlashAttribute("message", "Noc Application is approved with application number "
 					+ permitNocApplication.getBpaNocApplication().getNocApplicationNumber() + ".");
 			bpaSmsAndEmailService.sendSMSAndEmailForNocProcess(BpaConstants.NOC_APPROVED, permitNocApplication);
+		} else if (workFlowAction.equalsIgnoreCase(BpaConstants.NOC_SEND_OBSERVATIONS)) {
+			redirectAttributes.addFlashAttribute("message", "Noc Application with application number "
+					+ permitNocApplication.getBpaNocApplication().getNocApplicationNumber() + " is marked with Send Observations.");
+			bpaSmsAndEmailService.sendSMSAndEmailForNocProcess(BpaConstants.NOC_SEND_OBSERVATIONS, permitNocApplication);
 		} else {
 			redirectAttributes.addFlashAttribute("message", "Noc Application is rejected with "
 					+ permitNocApplication.getBpaNocApplication().getNocApplicationNumber() + ".");
@@ -220,6 +236,8 @@ public class BpaNocApplicationController {
 		permitNoc.getBpaApplication().setPermitOccupanciesTemp(permitNoc.getBpaApplication().getPermitOccupancies());
 		model.addAttribute("occupancyList", occupancyService.findAllOrderByOrderNumber());
 		model.addAttribute("permitNocApplication", permitNoc);
+		//Added By Narendra For NOC Changes
+		model.addAttribute("userType", bpaUtils.getCurrentUser().getUsername().substring(0, 4));
 		return "view-noc-details";
 	}
 

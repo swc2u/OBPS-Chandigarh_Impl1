@@ -395,5 +395,32 @@ jQuery(document)
 						$(".workAction").hide();
 						return false;
 					}
+					
+					$(document).on('click','#reInitiateNocAppBtn',function(){
+						alert("insider re initiate method");
+						alert("Value of noc application number ::::::::"+$('#nocApplicationNo').val());
+                          var nocAppNo = $('#nocApplicationNo').val();
+                    	$.ajax({
+                            url: "/bpa/nocapplication/reInitiateNoc",
+                            type: "POST",
+                            data: {
+                                code : nocAppNo
+                            },
+                            dataType: "text",
+                            success: function (response) {
+                                /*if(response==false){
+                                    bootbox.alert('Noc User doesnot exist');
+                                    return false;
+                                } else{   					      
+                					openPopup(nocurl);
+                                 	$('#btninitiatenoc').hide();
+                			   }*/
+                            },
+                            error: function (response) {
+                            }
+                        }); 
+
 
 				});
+
+});

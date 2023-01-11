@@ -201,6 +201,11 @@
 					<div class="panel panel-primary" data-collapsed="0">
 						<jsp:include page="applicationhistory-view.jsp"></jsp:include>
 					</div>
+					<c:if test="${userType eq 'SSDO'}">
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="nocWorkflowHistory.jsp"></jsp:include>
+					</div>
+					</c:if>
 					<div class="panel panel-primary" data-collapsed="0">
 							<jsp:include page="disclaimer.jsp" />
 					</div>

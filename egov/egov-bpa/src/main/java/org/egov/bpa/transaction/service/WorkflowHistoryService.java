@@ -53,12 +53,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BpaAppointmentSchedule;
+import org.egov.bpa.transaction.entity.BpaNocApplicationHistory;
 import org.egov.bpa.transaction.entity.InspectionAppointmentSchedule;
+import org.egov.bpa.transaction.entity.PermitNocApplication;
 import org.egov.bpa.transaction.entity.common.AppointmentScheduleCommon;
 import org.egov.bpa.transaction.entity.enums.AppointmentSchedulePurpose;
 import org.egov.bpa.transaction.entity.oc.OCAppointmentSchedule;
 import org.egov.bpa.transaction.entity.pl.PLAppointmentSchedule;
+import org.egov.bpa.transaction.repository.BpaNocApplicationHistoryRepository;
 import org.egov.bpa.transaction.workflow.BpaWorkFlowService;
 import org.egov.eis.entity.Assignment;
 import org.egov.eis.service.PositionMasterService;
@@ -88,6 +92,7 @@ public class WorkflowHistoryService {
     private static final String DEPARTMENT = "department";
     private static final String ATTACHMENT = "attachment";
     private static final String TEHSILDAR_USER = "MC_Tehsildar_T1";
+    private static final String NOCAPPNUMBER = "nocApplicationNumber";
     
     
     
@@ -102,6 +107,10 @@ public class WorkflowHistoryService {
     private UserService userService;
     @Autowired
     private WorkflowFileService workflowFileService;
+    @Autowired
+    PermitNocApplicationService permitNocApplicationService;
+    @Autowired
+    BpaNocApplicationHistoryRepository bpaNocApplicationHistoryRepository;
 
     public List<HashMap<String, Object>> getHistory(List<BpaAppointmentSchedule> appointmentSchedules, State<Position> state,
             List<StateHistory<Position>> stateHistories) {
@@ -132,7 +141,7 @@ public class WorkflowHistoryService {
         historyTable.sort(Comparator.comparing(history -> String.valueOf(history.get(DATE))));
         return historyTable;
     }
-
+    
     private void buildEmployeeInformation(State<Position> state, List<StateHistory<Position>> stateHistories,
             HashMap<String, Object> workFlowHistory, boolean b, String value, Position ownerPosition2, Date lastModifiedDate,
             User ownerUser) {
@@ -176,6 +185,39 @@ public class WorkflowHistoryService {
                     stateHistory.getOwnerPosition(), stateHistory.getLastModifiedDate(), stateHistory.getOwnerUser());
             historyTable.add(historyMap);
         }
+    }
+    
+    public List<HashMap<String, Object>> getNocWorkflowHistory(BpaApplication application) {
+    	final List<HashMap<String, Object>> historyTable = new ArrayList<>();
+    	List<PermitNocApplication> permitNocs = permitNocApplicationService.findByPermitApplicationNumber(application.getApplicationNumber());
+    	for (final PermitNocApplication permitNoc : permitNocs) {
+    		final HashMap<String, Object> historyMap = new HashMap<>(0);
+    		historyMap.put(NOCAPPNUMBER, permitNoc.getBpaNocApplication().getNocApplicationNumber());
+    		historyMap.put(DATE, permitNoc.getBpaNocApplication().getLastModifiedDate());
+    		historyMap.put(UPDATED_BY, permitNoc.getBpaNocApplication().getLastModifiedBy().getUsername() + "::"
+    				+ permitNoc.getBpaNocApplication().getLastModifiedBy().getName());
+    		historyMap.put(STATUS, permitNoc.getBpaNocApplication().getStatus().getCode());
+    		historyMap.put(DEPARTMENT, permitNoc.getBpaNocApplication().getNocType());
+    		historyMap.put(COMMENTS, StringUtils.isNotBlank(permitNoc.getBpaNocApplication().getComments())  ? permitNoc.getBpaNocApplication().getComments() : "");
+    		historyTable.add(historyMap);
+    	}
+
+    	for (final PermitNocApplication permitNoc : permitNocs) {
+    		List<BpaNocApplicationHistory> bpaNocAppHists = bpaNocApplicationHistoryRepository.findByNocApplicationNumber(permitNoc.getBpaNocApplication().getNocApplicationNumber());
+    		for (final BpaNocApplicationHistory bpaNocAppHist : bpaNocAppHists) {
+    			final HashMap<String, Object> historyMap1 = new HashMap<>(0);
+    			historyMap1.put(NOCAPPNUMBER, permitNoc.getBpaNocApplication().getNocApplicationNumber());
+    			historyMap1.put(DATE, permitNoc.getBpaNocApplication().getLastModifiedDate());
+    			historyMap1.put(UPDATED_BY, permitNoc.getBpaNocApplication().getLastModifiedBy().getUsername() + "::"
+    					+ permitNoc.getBpaNocApplication().getLastModifiedBy().getName());
+    			historyMap1.put(STATUS, permitNoc.getBpaNocApplication().getStatus().getCode());
+    			historyMap1.put(DEPARTMENT, permitNoc.getBpaNocApplication().getNocType());
+    			historyMap1.put(COMMENTS, StringUtils.isNotBlank(permitNoc.getBpaNocApplication().getComments())  ? permitNoc.getBpaNocApplication().getComments() : "");
+    			historyTable.add(historyMap1);
+    		}
+
+    	}
+    	return historyTable;
     }
 
     public List<HashMap<String, Object>> getHistoryForOC(List<OCAppointmentSchedule> appointmentSchedules, State<Position> state,

@@ -97,6 +97,7 @@ import static org.egov.bpa.utils.BpaConstants.WF_TS_INSPECTION_INITIATED;
 import static org.egov.bpa.utils.BpaConstants.WF_FORWARD_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_VARIFICATION_INITIATED;
 import static org.egov.bpa.utils.BpaConstants.APPROVED;
+import static org.egov.bpa.utils.BpaConstants.NOC_SEND_OBSERVATIONS;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_CHECK_NOC_UPDATION;
 import static org.egov.bpa.utils.BpaConstants.WF_PERMIT_FEE_COLL_PENDING;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_AE_APPROVAL;
@@ -267,7 +268,8 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         model.addAttribute("workFlowByNonEmp", applicationBpaService.applicationinitiatedByNonEmployee(application));
         model.addAttribute("nocApplication", nocApplication);
         model.addAttribute("citizenOrBusinessUser", bpaUtils.logedInuseCitizenOrBusinessUser());
-
+        //Added By Narendra For NOC Changes
+        model.addAttribute("userType", securityUtils.getCurrentUser().getUsername().substring(0, 4));
         if (application != null) {
             loadFormData(model, application);
             bpaUtils.loadBoundary(application);
@@ -832,6 +834,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         if (application.getState() != null && application.getState().getValue().equalsIgnoreCase(REJECTION_INITIATED)) {
             workflowContainer.setPendingActions(application.getState().getNextAction());
         }
+        //Narendra
         prepareWorkflow(model, application, workflowContainer);
         model.addAttribute("pendingActions", workflowContainer.getPendingActions());
         model.addAttribute(AMOUNT_RULE, workflowContainer.getAmountRule());
@@ -891,8 +894,10 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
             	int nocApplicationCount = permitNocApplied.size();
             	int nocApprovedCount = 0;
             	int ceVerificationNOCApprovedCount = 0;
+            	//Added By Narendra for Noc Re Initiate Changes
     	    	for(PermitNocApplication nocApplication:permitNocApplied) {
-    	    		if(APPROVED.equalsIgnoreCase(nocApplication.getBpaNocApplication().getStatus().getCode())) {
+    	    		if(APPROVED.equalsIgnoreCase(nocApplication.getBpaNocApplication().getStatus().getCode()) || 
+    	    				NOC_SEND_OBSERVATIONS.equalsIgnoreCase(nocApplication.getBpaNocApplication().getStatus().getCode())) {
     	    			nocApprovedCount++;
     	    		}
     	    		if(nocApplication.getBpaNocApplication().getNocType().matches(BpaConstants.STRCNOCTYPE+"|"+BpaConstants.ELECNOCTYPE+"|"+BpaConstants.PH7NOCTYPE) && (APPROVED.equalsIgnoreCase(nocApplication.getBpaNocApplication().getStatus().getCode()))) {
@@ -946,6 +951,9 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         model.addAttribute(APPLICATION_HISTORY,
                 workflowHistoryService.getHistory(application.getAppointmentSchedule(), application.getCurrentState(),
                         application.getStateHistory()));
+        //Added By Narendra For NOC Changes
+        model.addAttribute("nocWorkflowHistory",
+                workflowHistoryService.getNocWorkflowHistory(application));
         if(null!=application.getDemand()) {
         	buildReceiptDetails(application.getDemand().getEgDemandDetails(), application.getReceipts());
         }

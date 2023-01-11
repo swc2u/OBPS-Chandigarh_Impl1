@@ -39,17 +39,16 @@
  */
 package org.egov.bpa.transaction.service;
 
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_APPROVED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_ACCEPTED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_APPROVED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_CREATED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DIGI_SIGNED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFIED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFY_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_NOCUPDATED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_PREV_PLAN_UPDATED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REJECTED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SECTION_CLRK_APPROVED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SUBMITTED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_TS_INS_INITIATED;
 import static org.egov.bpa.utils.BpaConstants.BPASTATUS_MODULETYPE;
 import static org.egov.bpa.utils.BpaConstants.COMPOUND_WALL;
 import static org.egov.bpa.utils.BpaConstants.FILESTORE_MODULECODE;
@@ -64,15 +63,13 @@ import static org.egov.bpa.utils.BpaConstants.ROOF_CONVERSION;
 import static org.egov.bpa.utils.BpaConstants.SHUTTER_DOOR_CONVERSION;
 import static org.egov.bpa.utils.BpaConstants.WELL;
 import static org.egov.bpa.utils.BpaConstants.WF_APPROVE_BUTTON;
-import static org.egov.bpa.utils.BpaConstants.WF_FORWARD_FOR_PAYMENT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_CREATED_STATE;
+import static org.egov.bpa.utils.BpaConstants.WF_FORWARD_FOR_PAYMENT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_INITIATE_REJECTION_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_LBE_SUBMIT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_NEW_STATE;
 import static org.egov.bpa.utils.BpaConstants.WF_REJECT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_SAVE_BUTTON;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_PREV_PLAN_UPDATED;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.ByteArrayInputStream;
@@ -138,7 +135,6 @@ import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
 import org.egov.bpa.transaction.notice.PermitApplicationNoticesFormat;
 import org.egov.bpa.transaction.notice.impl.DemandDetailsFormatImpl;
-import org.egov.bpa.transaction.notice.impl.PermitOrderFormatImpl;
 import org.egov.bpa.transaction.repository.ApplicationBpaRepository;
 import org.egov.bpa.transaction.repository.DcrDocumentRepository;
 import org.egov.bpa.transaction.repository.PermitFeeRepository;
@@ -288,7 +284,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
     
     @Autowired
     private WorkflowFileService workflowFileService;
-
+    
     public Session getCurrentSession() {
         return entityManager.unwrap(Session.class);
     }
@@ -838,7 +834,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
     public BpaApplication findByPermitNumber(final String permitNumber) {
         return applicationBpaRepository.findByPlanPermissionNumber(permitNumber);
     }
-
+    
     private void processAndStoreNocDocuments(final BpaApplication application) {
         if (!application.getPermitNocDocuments().isEmpty()
                 && null == application.getPermitNocDocuments().get(0).getId())

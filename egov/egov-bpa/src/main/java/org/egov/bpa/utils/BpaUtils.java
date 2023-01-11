@@ -481,6 +481,16 @@ public class BpaUtils {
 		final PortalInbox portalInbox = portalInboxBuilder.build();
 		portalInboxService.pushInboxMessage(portalInbox);
 	}
+	
+	@Transactional
+	public void updateNocPortalUserInboxForReInitiation(final PermitNocApplication permitNoc, final User additionalPortalInboxUser) {
+		Module module = moduleService.getModuleByName(BpaConstants.NOCMODULE);
+		String status = permitNoc.getBpaNocApplication().getStatus().getCode();
+		String url = "/bpa/nocapplication/update/" + permitNoc.getBpaNocApplication().getNocApplicationNumber();
+		portalInboxService.updateInboxMessage(permitNoc.getBpaNocApplication().getNocApplicationNumber(),
+				module.getId(), status, false, new Date(), null, additionalPortalInboxUser,
+				permitNoc.getBpaApplication().getPlanPermissionNumber(), url);
+	}
 
 	@Transactional
 	public void updateNocPortalUserinbox(final PermitNocApplication permitNoc, final User additionalPortalInboxUser) {

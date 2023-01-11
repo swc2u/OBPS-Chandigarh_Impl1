@@ -168,6 +168,12 @@ public class BPASmsAndEmailService {
     private static final String SMS_BPA_NOC_REJECT = "msg.bpa.noc.reject.sms";
     private static final String SUB_BPA_NOC_REJECT = "msg.bpa.noc.reject.email.sub";
     private static final String BODY_BPA_NOC_REJECT = "msg.bpa.noc.reject.email.body";
+    private static final String SMS_BPA_NOC_SEND_OBSERVATIONS = "msg.bpa.noc.send_observations.email.body";
+    private static final String SUB_BPA_NOC_SEND_OBSERVATIONS = "msg.bpa.noc.send_observations.email.sub";
+    private static final String BODY_BPA_NOC_SEND_OBSERVATIONS = "msg.bpa.noc.reject.email.body";
+    private static final String SMS_BPA_NOC_RE_INITIATION = "msg.bpa.noc.re.initiation.sms";
+    private static final String SUB_BPA_NOC_RE_INITIATION = "msg.bpa.noc.re.initiation.email.sub";
+    private static final String BODY_BPA_NOC_RE_INITIATION = "msg.bpa.noc.re.initiation.email.body";
 
     @Autowired
     private NotificationService notificationService;
@@ -1117,12 +1123,20 @@ public class BPASmsAndEmailService {
 					buildSmsAndEmailForNocInitiation(permitNoc.getBpaApplication().getApplicationNumber(),
 							permitNoc.getBpaNocApplication(), owner.getName(), owner.getUser().getMobileNumber(),
 							owner.getEmailId());
+				}else if (status.equalsIgnoreCase(BpaConstants.NOC_RE_INITIATED)) {
+					buildSmsAndEmailForNocReInitiation(permitNoc.getBpaApplication().getApplicationNumber(),
+							permitNoc.getBpaNocApplication(), owner.getName(), owner.getUser().getMobileNumber(),
+							owner.getEmailId());
 				}else if (status.equalsIgnoreCase(BpaConstants.NOC_APPROVED)) {
 					buildSmsAndEmailForNocApproval(permitNoc.getBpaApplication().getApplicationNumber(),
 							permitNoc.getBpaNocApplication(), owner.getName(), owner.getUser().getMobileNumber(),
 							owner.getEmailId());
 				}else if (status.equalsIgnoreCase(BpaConstants.NOC_REJECTED)) {
 					buildSmsAndEmailForNocRejection(permitNoc.getBpaApplication().getApplicationNumber(),
+							permitNoc.getBpaNocApplication(), owner.getName(), owner.getUser().getMobileNumber(),
+							owner.getEmailId());
+				} else if (status.equalsIgnoreCase(BpaConstants.NOC_SEND_OBSERVATIONS)) {
+					buildSmsAndEmailForNocSendObservations(permitNoc.getBpaApplication().getApplicationNumber(),
 							permitNoc.getBpaNocApplication(), owner.getName(), owner.getUser().getMobileNumber(),
 							owner.getEmailId());
 				}
@@ -1186,6 +1200,36 @@ public class BPASmsAndEmailService {
         body = bpaMessageSource.getMessage(BODY_BPA_NOC_REJECT,
                 new String[] { name,noc.getNocApplicationNumber(),bpaApplno ,noc.getRemarks(),noc.getNocType(),getMunicipalityName() }, null);
         subject = bpaMessageSource.getMessage(SUB_BPA_NOC_REJECT, new String[] { getMunicipalityName() }, null);
+        if (isNotBlank(mobileNumber) && isNotBlank(smsMsg))
+            notificationService.sendSMS(mobileNumber, smsMsg);
+        if (isNotBlank(emailId) && isNotBlank(body))
+            notificationService.sendEmail(emailId, subject, body);
+    }
+    
+    private void buildSmsAndEmailForNocSendObservations(String bpaApplno, BpaNocApplication noc,
+            String name, String mobileNumber, String emailId) {
+        String smsMsg = EMPTY;
+        String body = EMPTY;
+        String subject = EMPTY;
+        smsMsg = bpaMessageSource.getMessage(SMS_BPA_NOC_SEND_OBSERVATIONS, new String[] { name,noc.getNocApplicationNumber(),bpaApplno,noc.getRemarks(),noc.getNocType(),getMunicipalityName() }, null);
+        body = bpaMessageSource.getMessage(BODY_BPA_NOC_SEND_OBSERVATIONS,
+                new String[] { name,noc.getNocApplicationNumber(),bpaApplno ,noc.getRemarks(),noc.getNocType(),getMunicipalityName() }, null);
+        subject = bpaMessageSource.getMessage(SUB_BPA_NOC_SEND_OBSERVATIONS, new String[] { getMunicipalityName() }, null);
+        if (isNotBlank(mobileNumber) && isNotBlank(smsMsg))
+            notificationService.sendSMS(mobileNumber, smsMsg);
+        if (isNotBlank(emailId) && isNotBlank(body))
+            notificationService.sendEmail(emailId, subject, body);
+    }
+    
+    private void buildSmsAndEmailForNocReInitiation(String bpaApplno,BpaNocApplication noc,
+            String name, String mobileNumber, String emailId) {
+        String smsMsg = EMPTY;
+        String body = EMPTY;
+        String subject = EMPTY;
+        smsMsg = bpaMessageSource.getMessage(SMS_BPA_NOC_RE_INITIATION, new String[] { name,noc.getNocApplicationNumber(),bpaApplno , getMunicipalityName() }, null);
+        body = bpaMessageSource.getMessage(BODY_BPA_NOC_RE_INITIATION,
+                new String[] { name,noc.getNocApplicationNumber(),bpaApplno , getMunicipalityName() }, null);
+        subject = bpaMessageSource.getMessage(SUB_BPA_NOC_RE_INITIATION, new String[] { getMunicipalityName() }, null);
         if (isNotBlank(mobileNumber) && isNotBlank(smsMsg))
             notificationService.sendSMS(mobileNumber, smsMsg);
         if (isNotBlank(emailId) && isNotBlank(body))
